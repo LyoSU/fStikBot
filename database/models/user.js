@@ -14,6 +14,10 @@ const userSchema = mongoose.Schema({
   },
   last_name: String,
   username: String,
+  stickerSet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StickerSet',
+  },
 }, {
   timestamps: true,
 })

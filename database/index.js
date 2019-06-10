@@ -28,9 +28,40 @@ db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
   resolve(user)
 })
 
-db.Sticker.addSticker = () => new Promise(async (resolve, reject) => {
+db.StickerSet.newSet = (stickerSetInfo) => new Promise(async (resolve, reject) => {
 
-  const sticker = new db.User()
+  const stickerSet = new db.StickerSet()
+
+  stickerSet.ownerId = stickerSetInfo.ownerId
+  stickerSet.name = stickerSetInfo.name
+  stickerSet.title = stickerSetInfo.title
+  stickerSet.emojiSufix = stickerSetInfo.emojiSufix
+  stickerSet.save()
+
+  resolve(stickerSet)
+})
+
+db.StickerSet.getSet = (stickerSetInfo) => new Promise(async (resolve, reject) => {
+  let stickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
+
+  if (!stickerSet) {
+    stickerSet = db.StickerSet.newSet(stickerSetInfo)
+  }
+
+  resolve(stickerSet)
+})
+
+db.Sticker.addSticker = (setId, emojis, md5, info, file) => new Promise(async (resolve, reject) => {
+
+  const sticker = new db.Sticker()
+
+  sticker.setId = setId
+  sticker.fileId = info.file_id
+  sticker.emojis = emojis
+  sticker.hash.md5 = md5
+  sticker.info = info
+  sticker.file = file
+  sticker.save()
 
   resolve(sticker)
 })
