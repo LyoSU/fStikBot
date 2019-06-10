@@ -32,7 +32,7 @@ bot.use((ctx, next) => {
 })
 bot.use(i18n.middleware())
 bot.use(async (ctx, next) => {
-  db.User.updateData(ctx.from)
+  await db.User.updateData(ctx.from)
   await next(ctx)
   const ms = new Date() - ctx.ms
 

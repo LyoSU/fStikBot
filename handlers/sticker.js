@@ -9,7 +9,9 @@ module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
   const stickerLinkPrefix = 't.me/addstickers/'
-  const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+
+  let { stickerSet } = user
 
   const titleSufix = ` via @${ctx.options.username}`
   const nameSufix = `_by_${ctx.options.username}`
@@ -24,8 +26,10 @@ module.exports = async (ctx) => {
   defaultStickerSet.title += titleSufix
   defaultStickerSet.name += nameSufix
 
+  if (!stickerSet) stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+
   let file
-  let emojis
+  let emojis = ''
 
   switch (ctx.updateSubTypes[0]) {
     case 'sticker':
@@ -34,7 +38,7 @@ module.exports = async (ctx) => {
       break
 
     case 'document':
-      if (ctx.message.documentmime_type === ['image/jpeg', 'image/png']) {
+      if (['image/jpeg', 'image/png'].indexOf(ctx.message.documentmime_type)) {
         file = ctx.message.document
       }
       break
@@ -48,18 +52,20 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  const stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
-  const sticker = await ctx.db.Sticker.findOne({ setId: stickerSet.id, 'file.file_id': file.file_id })
+  if (file) {
+    const sticker = await ctx.db.Sticker.findOne({ setId: stickerSet.id, 'file.file_id': file.file_id })
 
-  if (sticker) {
-    ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
-      reply_to_message_id: ctx.message.message_id,
-    })
-  }
-  else {
-    emojis += stickerSet.emojiSufix
+    emojis += stickerSet.emojiSufix || ''
+    user.stickerSet = stickerSet.id
+    user.save()
 
-    if (file) {
+    if (sticker) {
+      ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
+        reply_to_message_id: ctx.message.message_id,
+      })
+    }
+    else {
+
       const fileUrl = await ctx.telegram.getFileLink(file)
 
       https.get(fileUrl, (response) => {
@@ -71,9 +77,14 @@ module.exports = async (ctx) => {
 
         response.on('end', async () => {
           const tmpPath = `tmp/${file.file_id}_${Date.now()}.png`
-          const sharpImage = sharp(data.read())
+          const imageSharp = sharp(data.read())
 
-          await sharpImage.png().toFile(tmpPath)
+          const imageMetadata = await imageSharp.metadata()
+
+          if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
+          else imageSharp.resize({ width: 512 })
+
+          await imageSharp.png().toFile(tmpPath)
 
           const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
@@ -129,10 +140,10 @@ module.exports = async (ctx) => {
         })
       })
     }
-    else {
-      ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
-        reply_to_message_id: ctx.message.message_id,
-      })
-    }
+  }
+  else {
+    ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
+      reply_to_message_id: ctx.message.message_id,
+    })
   }
 }
