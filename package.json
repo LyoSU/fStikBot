@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,11 @@
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
     "dotenv": "^7.0.0",
-    "telegraf": "^3.27.1"
+    "hasha": "^5.0.0",
+    "mongoose": "^5.5.14",
+    "sharp": "^0.22.1",
+    "telegraf": "^3.27.1",
+    "telegraf-i18n": "^6.5.0"
   },
   "devDependencies": {
     "@atomix/eslint-config": "^6.4.0",
