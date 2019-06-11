@@ -64,7 +64,6 @@ module.exports = async (ctx) => {
       })
     }
     else {
-
       const fileUrl = await ctx.telegram.getFileLink(file)
 
       https.get(fileUrl, (response) => {
@@ -83,7 +82,7 @@ module.exports = async (ctx) => {
           if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
           else imageSharp.resize({ width: 512 })
 
-          await imageSharp.png().toFile(tmpPath)
+          await imageSharp.webp({ quality: 100 }).png({ compressionLevel: 9, force: false }).toFile(tmpPath)
 
           const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
