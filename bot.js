@@ -9,6 +9,7 @@ const {
   handleStart,
   handleSticker,
   handlePacks,
+  handleHidePack,
 } = require('./handlers')
 const {
   sceneNewPack,
@@ -68,7 +69,8 @@ bot.hears((['/packs', match('cmd.start.btn.packs')]), handlePacks)
 bot.hears((['/new', match('cmd.start.btn.new')]), (ctx) => ctx.scene.enter('newPack'))
 bot.on(['sticker', 'document', 'photo'], handleSticker)
 
-bot.action(/set_pack:(.*)/, handlePacks)
+bot.action(/(set_pack):(.*)/, handlePacks)
+bot.action(/(hide_pack):(.*)/, handleHidePack)
 
 // any message
 bot.on('message', handleStart)

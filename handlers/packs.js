@@ -3,21 +3,28 @@ const Markup = require('telegraf/markup')
 
 module.exports = async (ctx) => {
   const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
-  const stickerSets = await ctx.db.StickerSet.find({ ownerId: user.id })
+  const stickerSets = await ctx.db.StickerSet.find({ ownerId: user.id, create: true, hide: false })
 
-  if (ctx.updateType === 'callback_query' && ctx.match) {
-    const stickerSet = await ctx.db.StickerSet.findById(ctx.match[1])
+  if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
+    const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
     if (stickerSet.ownerId.toString() === user.id.toString()) {
       ctx.answerCbQuery()
       user.stickerSet = stickerSet.id
       user.save()
 
+      const btnName = stickerSet.hide === true ? 'cmd.packs.btn.restore' : 'cmd.packs.btn.hide'
+
       ctx.replyWithHTML(ctx.i18n.t('cmd.packs.set_pack', {
         title: stickerSet.title,
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
       }), {
         reply_to_message_id: ctx.callbackQuery.message.message_id,
+        reply_markup: Markup.inlineKeyboard([
+          [
+            Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`),
+          ],
+        ]),
       })
     }
     else {
@@ -25,23 +32,33 @@ module.exports = async (ctx) => {
     }
   }
 
-  const markup = []
+  let messageText = ''
+  const keyboardMarkup = []
 
-  stickerSets.forEach((pack) => {
-    let { title } = pack
+  if (stickerSets.length > 0) {
+    messageText = ctx.i18n.t('cmd.packs.info')
 
-    if (user.stickerSet.toString() === pack.id.toString()) title = `✔️ ${title}`
+    stickerSets.forEach((pack) => {
+      let { title } = pack
 
-    markup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
-  })
+      if (user.stickerSet.toString() === pack.id.toString()) title = `✔️ ${title}`
+      keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
+    })
+  }
+  else {
+    messageText = ctx.i18n.t('cmd.packs.empty')
+  }
 
   if (ctx.updateType === 'message') {
-    ctx.replyWithHTML(ctx.i18n.t('cmd.packs.info'), {
+    ctx.replyWithHTML(messageText, {
       reply_to_message_id: ctx.message.message_id,
-      reply_markup: Markup.inlineKeyboard(markup),
+      reply_markup: Markup.inlineKeyboard(keyboardMarkup),
     })
   }
   else if (ctx.updateType === 'callback_query') {
-    ctx.editMessageReplyMarkup(Markup.inlineKeyboard(markup)).catch(() => {})
+    ctx.editMessageText(messageText, {
+      reply_markup: Markup.inlineKeyboard(keyboardMarkup),
+      parse_mode: 'HTML',
+    }).catch(() => {})
   }
 }
