@@ -8,12 +8,11 @@ const hasha = require('hasha')
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
-  const stickerLinkPrefix = 't.me/addstickers/'
   const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
 
   let { stickerSet } = user
 
-  const titleSufix = ` via @${ctx.options.username}`
+  const titleSufix = ` by @${ctx.options.username}`
   const nameSufix = `_by_${ctx.options.username}`
 
   const defaultStickerSet = {
@@ -128,7 +127,7 @@ module.exports = async (ctx) => {
 
             ctx.replyWithHTML(ctx.i18n.t('sticker.add.ok', {
               title: stickerSet.title,
-              link: `${stickerLinkPrefix}${stickerSet.name}`,
+              link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
             }), {
               reply_to_message_id: ctx.message.message_id,
             })

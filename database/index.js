@@ -36,6 +36,7 @@ db.StickerSet.newSet = (stickerSetInfo) => new Promise(async (resolve, reject) =
   stickerSet.name = stickerSetInfo.name
   stickerSet.title = stickerSetInfo.title
   stickerSet.emojiSufix = stickerSetInfo.emojiSufix
+  stickerSet.create = stickerSetInfo.create || false
   stickerSet.save()
 
   resolve(stickerSet)
