@@ -1,39 +1,15 @@
-const fs = require('fs')
-const https = require('https')
-const Stream = require('stream').Transform
-const sharp = require('sharp')
-const hasha = require('hasha')
 const Markup = require('telegraf/markup')
+const { addSticker } = require('../utils')
 
 
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
   const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
-
-  let { stickerSet } = user
-
-  const titleSufix = ` by @${ctx.options.username}`
-  const nameSufix = `_by_${ctx.options.username}`
-
-  const defaultStickerSet = {
-    owner: user.id,
-    name: `favorite_${ctx.from.id}`,
-    title: 'Favorite stickers',
-    emojiSufix: '🌟',
-  }
-
-  defaultStickerSet.title += titleSufix
-  defaultStickerSet.name += nameSufix
-
-  if (!stickerSet) stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
-
   let file
-  let emojis = ''
 
   switch (ctx.updateSubTypes[0]) {
     case 'sticker':
-      emojis = ctx.message.sticker.emoji || ''
       file = ctx.message.sticker
       break
 
@@ -52,7 +28,7 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (file.set_name === stickerSet.name) {
+  if (file.set_name === user.stickerSet.name) {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
@@ -62,7 +38,7 @@ module.exports = async (ctx) => {
   }
   else if (file) {
     const sticker = await ctx.db.Sticker.findOne({
-      stickerSet: stickerSet.id,
+      stickerSet: user.stickerSet,
       'file.file_id': file.file_id,
       deleted: false,
     })
@@ -76,82 +52,26 @@ module.exports = async (ctx) => {
       })
     }
     else {
-      const fileUrl = await ctx.telegram.getFileLink(file)
+      const result = await addSticker(ctx, file)
 
-      emojis += stickerSet.emojiSufix || ''
+      let messageText = ''
 
-      https.get(fileUrl, (response) => {
-        const data = new Stream()
-
-        response.on('data', (chunk) => {
-          data.push(chunk)
+      if (result.ok) {
+        messageText = ctx.i18n.t('sticker.add.ok', {
+          title: result.ok.title,
+          link: result.ok.link,
         })
-
-        response.on('end', async () => {
-          const tmpPath = `tmp/${file.file_id}_${Date.now()}.png`
-          const imageSharp = sharp(data.read())
-
-          const imageMetadata = await imageSharp.metadata()
-
-          if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
-          else imageSharp.resize({ width: 512 })
-
-          await imageSharp.webp({ quality: 100 }).png({ compressionLevel: 9, force: false }).toFile(tmpPath)
-
-          const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
-
-          let stickerAdd = false
-
-          if (stickerSet.create === false) {
-            stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, stickerSet.name, stickerSet.title, {
-              png_sticker: { source: tmpPath },
-              emojis,
-            }).catch((error) => {
-              ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.telegram', {
-                error: error.description,
-              }), {
-                reply_to_message_id: ctx.message.message_id,
-              })
-            })
-
-            if (stickerAdd) {
-              stickerSet.create = true
-              stickerSet.save()
-              user.stickerSet = stickerSet.id
-              user.save()
-            }
-          }
-          else {
-            stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, stickerSet.name, {
-              png_sticker: { source: tmpPath },
-              emojis,
-            }).catch((error) => {
-              ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.telegram', {
-                error: error.description,
-              }), {
-                reply_to_message_id: ctx.message.message_id,
-              })
-            })
-          }
-
-          const getStickerSet = await ctx.telegram.getStickerSet(stickerSet.name)
-          const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
-          if (stickerAdd) {
-            ctx.db.Sticker.addSticker(stickerSet.id, emojis, hash, stickerInfo, file)
-
-            ctx.replyWithHTML(ctx.i18n.t('sticker.add.ok', {
-              title: stickerSet.title,
-              link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
-            }), {
-              reply_to_message_id: ctx.message.message_id,
-            })
-          }
-
-          fs.unlink(tmpPath, (err) => {
-            if (err) throw err
+      }
+      else if (result.error) {
+        if (result.error.telegram) {
+          messageText = ctx.i18n.t('sticker.add.error.telegram', {
+            error: result.error.description,
           })
-        })
+        }
+      }
+
+      ctx.replyWithHTML(messageText, {
+        reply_to_message_id: ctx.message.message_id,
       })
     }
   }

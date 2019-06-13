@@ -4,7 +4,7 @@ const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const {
   handleStart,
-} = require('./../handlers')
+} = require('../handlers')
 
 
 const { match } = I18n
