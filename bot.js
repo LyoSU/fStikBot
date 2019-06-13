@@ -12,6 +12,7 @@ const {
   handlePacks,
   handleHidePack,
   handleDeleteSticker,
+  handleDonate,
 } = require('./handlers')
 const {
   sceneNewPack,
@@ -77,11 +78,18 @@ bot.use(sceneNewPack)
 // main commands
 bot.hears((['/packs', match('cmd.start.btn.packs')]), handlePacks)
 bot.hears((['/new', match('cmd.start.btn.new')]), (ctx) => ctx.scene.enter('newPack'))
+bot.hears((['/donate', match('cmd.start.btn.donate')]), handleDonate)
 bot.on(['sticker', 'document', 'photo'], handleSticker)
 
+// callback
 bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
 bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
+
+// donate
+bot.action(/(donate):(.*)/, handleDonate)
+bot.on('pre_checkout_query', ({ answerPreCheckoutQuery }) => answerPreCheckoutQuery(true))
+bot.on('successful_payment', handleDonate)
 
 // any message
 bot.on('message', handleStart)

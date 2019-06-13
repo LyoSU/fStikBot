@@ -19,49 +19,54 @@ const downloadFileByUrl = (fileUrl) => new Promise(async (resolve, reject) => {
   }).on('error', reject)
 })
 
-module.exports = (ctx, file) => new Promise(async (resolve) => {
+module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
+  let stickerFile = inputFile
   const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+  const originalSticker = await ctx.db.Sticker.findOne({
+    'info.file_id': stickerFile.file_id,
+  })
+
+  if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
 
   let { stickerSet } = user
 
-  const titleSufix = ` by @${ctx.options.username}`
-  const nameSufix = `_by_${ctx.options.username}`
+  const nameSuffix = `_by_${ctx.options.username}`
+  const titleSuffix = ` by @${ctx.options.username}`
 
   const defaultStickerSet = {
     owner: user.id,
     name: `favorite_${ctx.from.id}`,
     title: 'Favorite stickers',
-    emojiSufix: '🌟',
+    emojiSuffix: '🌟',
   }
 
   let emojis = ''
 
   if (ctx.message.sticker) emojis = ctx.message.sticker.emoji || ''
-  emojis += stickerSet.emojiSufix || ''
+  emojis += stickerSet.emojiSuffix || ''
 
-  defaultStickerSet.title += titleSufix
-  defaultStickerSet.name += nameSufix
+  defaultStickerSet.name += nameSuffix
+  if (user.premium !== true) defaultStickerSet.title += titleSuffix
 
   if (!stickerSet) stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
 
-  const fileUrl = await ctx.telegram.getFileLink(file)
+  const fileUrl = await ctx.telegram.getFileLink(stickerFile)
   const data = await downloadFileByUrl(fileUrl)
-
-  const tmpPath = `tmp/${file.file_id}_${Date.now()}.png`
   const imageSharp = sharp(data.read())
-
   const imageMetadata = await imageSharp.metadata()
 
   if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
   else imageSharp.resize({ width: 512 })
 
+  const tmpPath = `tmp/${stickerFile.file_id}_${Date.now()}.png`
+
   await imageSharp.webp({ quality: 100 }).png({ compressionLevel: 9, force: false }).toFile(tmpPath)
 
   const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
-
   let stickerAdd = false
 
   if (stickerSet.create === false) {
+    // eslint-disable-next-line max-len
     stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, stickerSet.name, stickerSet.title, {
       png_sticker: { source: tmpPath },
       emojis,
@@ -97,7 +102,7 @@ module.exports = (ctx, file) => new Promise(async (resolve) => {
   const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
   if (stickerAdd) {
-    ctx.db.Sticker.addSticker(stickerSet.id, emojis, hash, stickerInfo, file)
+    ctx.db.Sticker.addSticker(stickerSet.id, emojis, hash, stickerInfo, stickerFile)
     resolve({
       ok: {
         title: stickerSet.title,

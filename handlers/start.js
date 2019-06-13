@@ -13,5 +13,8 @@ module.exports = async (ctx) => {
     [
       ctx.i18n.t('cmd.start.btn.new'),
     ],
+    [
+      ctx.i18n.t('cmd.start.btn.donate'),
+    ],
   ]).resize().extra())
 }

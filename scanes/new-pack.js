@@ -44,13 +44,17 @@ packName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'
 }))
 packName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
+    const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+
     ctx.session.newPack.name = ctx.message.text
 
-    const nameSufix = `_by_${ctx.options.username}`
-    const titleSufix = ` by @${ctx.options.username}`
+    const nameSuffix = `_by_${ctx.options.username}`
+    const titleSuffix = ` by @${ctx.options.username}`
 
-    const name = ctx.session.newPack.name + nameSufix
-    const title = ctx.session.newPack.title + titleSufix
+    let { name, title } = ctx.session.newPack
+
+    name += nameSuffix
+    if (user.premium !== true) title += titleSuffix
 
     const createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, {
       png_sticker: { source: 'sticker_placeholder.png' },
@@ -78,13 +82,11 @@ packName.on('message', async (ctx) => {
 
       ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
 
-      const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
-
       const stickerSet = await ctx.db.StickerSet.newSet({
         owner: user.id,
         name,
         title,
-        emojiSufix: '🌟',
+        emojiSuffix: '🌟',
         create: true,
       })
 
