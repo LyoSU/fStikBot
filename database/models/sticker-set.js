@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const stickerSetsSchema = mongoose.Schema({
-  ownerId: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },

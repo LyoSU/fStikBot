@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const stickersSchema = mongoose.Schema({
-  setId: {
+  stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet',
   },
@@ -21,6 +21,10 @@ const stickersSchema = mongoose.Schema({
   },
   info: Object,
   file: Object,
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   timestamps: true,
 })

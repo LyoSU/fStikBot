@@ -3,6 +3,7 @@ const https = require('https')
 const Stream = require('stream').Transform
 const sharp = require('sharp')
 const hasha = require('hasha')
+const Markup = require('telegraf/markup')
 
 
 module.exports = async (ctx) => {
@@ -16,7 +17,7 @@ module.exports = async (ctx) => {
   const nameSufix = `_by_${ctx.options.username}`
 
   const defaultStickerSet = {
-    ownerId: user.id,
+    owner: user.id,
     name: `favorite_${ctx.from.id}`,
     title: 'Favorite stickers',
     emojiSufix: '🌟',
@@ -51,20 +52,33 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (file) {
-    const sticker = await ctx.db.Sticker.findOne({ setId: stickerSet.id, 'file.file_id': file.file_id })
-
-    emojis += stickerSet.emojiSufix || ''
-    user.stickerSet = stickerSet.id
-    user.save()
+  if (file.set_name === stickerSet.name) {
+    ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
+      reply_to_message_id: ctx.message.message_id,
+      reply_markup: Markup.inlineKeyboard([
+        Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.remove'), `delete_sticker:${file.file_id}`),
+      ]),
+    })
+  }
+  else if (file) {
+    const sticker = await ctx.db.Sticker.findOne({
+      stickerSet: stickerSet.id,
+      'file.file_id': file.file_id,
+      deleted: false,
+    })
 
     if (sticker) {
       ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
+        reply_markup: Markup.inlineKeyboard([
+          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.remove'), `delete_sticker:${sticker.info.file_id}`),
+        ]),
       })
     }
     else {
       const fileUrl = await ctx.telegram.getFileLink(file)
+
+      emojis += stickerSet.emojiSufix || ''
 
       https.get(fileUrl, (response) => {
         const data = new Stream()
@@ -103,6 +117,8 @@ module.exports = async (ctx) => {
             if (stickerAdd) {
               stickerSet.create = true
               stickerSet.save()
+              user.stickerSet = stickerSet.id
+              user.save()
             }
           }
           else {

@@ -3,12 +3,12 @@ const Markup = require('telegraf/markup')
 
 module.exports = async (ctx) => {
   const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
-  const stickerSets = await ctx.db.StickerSet.find({ ownerId: user.id, create: true, hide: false })
+  const stickerSets = await ctx.db.StickerSet.find({ owner: user.id, create: true, hide: false })
 
   if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
     const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
-    if (stickerSet.ownerId.toString() === user.id.toString()) {
+    if (stickerSet.owner.toString() === user.id.toString()) {
       ctx.answerCbQuery()
       user.stickerSet = stickerSet.id
       user.save()

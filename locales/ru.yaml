@@ -1,3 +1,4 @@
+ratelimit: Не так часто!
 cmd:
   start:
     info: |
@@ -23,6 +24,9 @@ cmd:
     btn:
       hide: ❌ Скрыть стикерпак
       restore: ✔️ Восстановить
+  sticker:
+    btn:
+      remove: 🗑 Удалить
 sticker:
   add:
     ok: |

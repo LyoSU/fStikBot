@@ -1,7 +1,8 @@
 const handleStart = require('./start')
 const handleSticker = require('./sticker')
 const handlePacks = require('./packs')
-const handleHidePack = require('./hide-pack')
+const handleHidePack = require('./pack-hide')
+const handleDeleteSticker = require('./sticker-delete')
 
 
 module.exports = {
@@ -9,4 +10,5 @@ module.exports = {
   handleSticker,
   handlePacks,
   handleHidePack,
+  handleDeleteSticker,
 }

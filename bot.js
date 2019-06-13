@@ -1,5 +1,6 @@
 const path = require('path')
 const Telegraf = require('telegraf')
+const rateLimit = require('telegraf-ratelimit')
 const session = require('telegraf/session')
 const I18n = require('telegraf-i18n')
 const {
@@ -10,6 +11,7 @@ const {
   handleSticker,
   handlePacks,
   handleHidePack,
+  handleDeleteSticker,
 } = require('./handlers')
 const {
   sceneNewPack,
@@ -26,20 +28,6 @@ bot.use((ctx, next) => {
   next()
 })
 
-// bot config
-bot.context.config = require('./config.json')
-
-// get bot username
-bot.telegram.getMe().then((botInfo) => {
-  bot.options.username = botInfo.username
-})
-
-// db connect
-bot.context.db = db
-
-
-// use session
-bot.use(session())
 
 // I18n settings
 const { match } = I18n
@@ -51,6 +39,28 @@ const i18n = new I18n({
 // I18n middleware
 bot.use(i18n.middleware())
 
+// rate limit
+const limitConfig = {
+  window: 300,
+  limit: 1,
+  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit')),
+}
+
+bot.use(rateLimit(limitConfig))
+
+// bot config
+bot.context.config = require('./config.json')
+
+// get bot username
+bot.telegram.getMe().then((botInfo) => {
+  bot.options.username = botInfo.username
+})
+
+// db connect
+bot.context.db = db
+
+// use session
+bot.use(session())
 
 // response time logger
 bot.use(async (ctx, next) => {
@@ -71,6 +81,7 @@ bot.on(['sticker', 'document', 'photo'], handleSticker)
 
 bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
+bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
 
 // any message
 bot.on('message', handleStart)

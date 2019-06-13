@@ -81,7 +81,7 @@ packName.on('message', async (ctx) => {
       const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
 
       const stickerSet = await ctx.db.StickerSet.newSet({
-        ownerId: user.id,
+        owner: user.id,
         name,
         title,
         emojiSufix: '🌟',
