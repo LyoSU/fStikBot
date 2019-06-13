@@ -2,8 +2,6 @@ const Markup = require('telegraf/markup')
 
 
 module.exports = async (ctx) => {
-  ctx.answerCbQuery()
-
   const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
@@ -12,6 +10,7 @@ module.exports = async (ctx) => {
     stickerSet.save()
 
     if (stickerSet.hide === true) {
+      ctx.answerCbQuery(ctx.i18n.t('cmd.packs.hidden'))
       const userSet = await ctx.db.StickerSet.findOne({
         owner: user.id,
         create: true,
@@ -20,6 +19,9 @@ module.exports = async (ctx) => {
 
       user.stickerSet = userSet.id
       user.save()
+    }
+    else {
+      ctx.answerCbQuery(ctx.i18n.t('cmd.packs.restored'))
     }
 
     ctx.editMessageReplyMarkup(Markup.inlineKeyboard([

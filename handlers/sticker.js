@@ -56,7 +56,7 @@ module.exports = async (ctx) => {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.remove'), `delete_sticker:${file.file_id}`),
+        Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.delete'), `delete_sticker:${file.file_id}`),
       ]),
     })
   }
@@ -71,7 +71,7 @@ module.exports = async (ctx) => {
       ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.remove'), `delete_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
         ]),
       })
     }
