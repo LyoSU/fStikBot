@@ -13,6 +13,7 @@ const {
   handleHidePack,
   handleDeleteSticker,
   handleRestoreSticker,
+  handleRestorePack,
   handleDonate,
 } = require('./handlers')
 const {
@@ -87,6 +88,11 @@ bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
 bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, handleRestoreSticker)
+
+bot.on('text', (ctx, next) => {
+  if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) handleRestorePack(ctx)
+  else next()
+})
 
 // donate
 bot.action(/(donate):(.*)/, handleDonate)

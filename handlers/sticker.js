@@ -48,6 +48,7 @@ module.exports = async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.copy'), `copy_sticker:${sticker.info.file_id}`),
         ]),
       })
     }

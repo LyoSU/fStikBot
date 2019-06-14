@@ -13,7 +13,7 @@ module.exports = async (ctx) => {
       user.stickerSet = stickerSet.id
       user.save()
 
-      const btnName = stickerSet.hide === true ? 'cmd.packs.btn.restore' : 'cmd.packs.btn.hide'
+      const btnName = stickerSet.hide === true ? 'cmd.pack.btn.restore' : 'cmd.pack.btn.hide'
 
       ctx.replyWithHTML(ctx.i18n.t('cmd.packs.set_pack', {
         title: stickerSet.title,
