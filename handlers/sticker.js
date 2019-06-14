@@ -28,7 +28,7 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (file.set_name === user.stickerSet.name) {
+  if (user.stickerSet && file.set_name === user.stickerSet.name) {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([

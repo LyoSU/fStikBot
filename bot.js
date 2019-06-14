@@ -12,6 +12,7 @@ const {
   handlePacks,
   handleHidePack,
   handleDeleteSticker,
+  handleRestoreSticker,
   handleDonate,
 } = require('./handlers')
 const {
@@ -85,6 +86,7 @@ bot.on(['sticker', 'document', 'photo'], handleSticker)
 bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
 bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
+bot.action(/(restore_sticker):(.*)/, handleRestoreSticker)
 
 // donate
 bot.action(/(donate):(.*)/, handleDonate)

@@ -40,15 +40,14 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     emojiSuffix: '🌟',
   }
 
-  let emojis = ''
-
-  if (ctx.message.sticker) emojis = ctx.message.sticker.emoji || ''
-  emojis += stickerSet.emojiSuffix || ''
-
   defaultStickerSet.name += nameSuffix
   if (user.premium !== true) defaultStickerSet.title += titleSuffix
 
   if (!stickerSet) stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+
+  let emojis = inputFile.emoji || ''
+
+  emojis += stickerSet.emojiSuffix || ''
 
   const fileUrl = await ctx.telegram.getFileLink(stickerFile)
   const data = await downloadFileByUrl(fileUrl)
@@ -98,15 +97,23 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     })
   }
 
-  const getStickerSet = await ctx.telegram.getStickerSet(stickerSet.name)
-  const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
   if (stickerAdd) {
-    ctx.db.Sticker.addSticker(stickerSet.id, emojis, hash, stickerInfo, stickerFile)
+    const getStickerSet = await ctx.telegram.getStickerSet(stickerSet.name)
+    const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+
+    ctx.db.Sticker.addSticker(stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+      resolve({
+        error: {
+          telegram: error,
+        },
+      })
+    })
+
     resolve({
       ok: {
         title: stickerSet.title,
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
+        stickerInfo,
       },
     })
   }
