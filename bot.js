@@ -11,6 +11,7 @@ const {
   handleSticker,
   handlePacks,
   handleHidePack,
+  handleCopySticker,
   handleDeleteSticker,
   handleRestoreSticker,
   handleRestorePack,
@@ -86,6 +87,7 @@ bot.on(['sticker', 'document', 'photo'], handleSticker)
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
+bot.action(/(copy_sticker):(.*)/, handleCopySticker)
 bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, handleRestoreSticker)
 

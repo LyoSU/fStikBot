@@ -7,24 +7,27 @@ module.exports = async (ctx) => {
     'info.file_id': ctx.match[2],
   }).populate('stickerSet')
 
-  if (sticker.stickerSet.owner.toString() === user.id.toString()) {
+  if (sticker && sticker.stickerSet.owner.toString() === user.id.toString()) {
     const deleteStickerFromSet = await ctx.deleteStickerFromSet(sticker.info.file_id).catch((error) => {
-      ctx.answerCbQuery(ctx.i18n.t('cmd.sticker.delete.error.telegram', {
+      ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
         error: error.description,
       }), true)
     })
 
     if (deleteStickerFromSet) {
-      ctx.answerCbQuery(ctx.i18n.t('cmd.sticker.delete.ok'))
+      ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.delete'))
 
-      ctx.editMessageText(ctx.i18n.t('cmd.sticker.delete.ok'), {
+      ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.restore'), `restore_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.info.file_id}`),
         ]),
       }).catch(() => {})
 
       sticker.deleted = true
       sticker.save()
     }
+  }
+  else {
+    ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 }

@@ -12,7 +12,7 @@ module.exports = async (ctx) => {
     stickerSet.save()
 
     if (stickerSet.hide === true) {
-      answerCbQuer = ctx.i18n.t('cmd.pack.answerCbQuer.hidden')
+      answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.hidden')
 
       const userSet = await ctx.db.StickerSet.findOne({
         owner: user.id,
@@ -24,12 +24,12 @@ module.exports = async (ctx) => {
       user.save()
     }
     else {
-      answerCbQuer = ctx.i18n.t('cmd.pack.answerCbQuer.restored')
+      answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.restored')
     }
     ctx.answerCbQuery(answerCbQuer)
 
     ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
-      Markup.callbackButton(ctx.i18n.t(stickerSet.hide === true ? 'cmd.pack.btn.restore' : 'cmd.pack.btn.hide'), `hide_pack:${ctx.match[2]}`),
+      Markup.callbackButton(ctx.i18n.t(stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`),
     ])).catch(() => {})
   }
 }

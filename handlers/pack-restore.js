@@ -1,5 +1,5 @@
 module.exports = async (ctx) => {
-  let messageText = ctx.i18n.t('cmd.pack.error')
+  let messageText = ctx.i18n.t('callback.pack.error')
 
   if (ctx.message.entities) {
     const match = ctx.message.entities[0].url.match(/addstickers\/(.*)/)
@@ -17,7 +17,7 @@ module.exports = async (ctx) => {
             if (findStickerSet.hide === true) {
               findStickerSet.hide = false
               findStickerSet.save()
-              messageText = ctx.i18n.t('cmd.pack.restored', {
+              messageText = ctx.i18n.t('callback.pack.restored', {
                 title: findStickerSet.title,
                 link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`,
               })
@@ -38,7 +38,7 @@ module.exports = async (ctx) => {
           user.stickerSet = stickerSet.id
           user.save()
 
-          messageText = ctx.i18n.t('cmd.pack.restored', {
+          messageText = ctx.i18n.t('callback.pack.restored', {
             title: stickerSet.title,
             link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
           })

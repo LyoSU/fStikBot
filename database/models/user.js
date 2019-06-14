@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  donates: Array,
+  payments: Array,
 }, {
   timestamps: true,
 })

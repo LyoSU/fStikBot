@@ -13,9 +13,9 @@ module.exports = async (ctx) => {
       user.stickerSet = stickerSet.id
       user.save()
 
-      const btnName = stickerSet.hide === true ? 'cmd.pack.btn.restore' : 'cmd.pack.btn.hide'
+      const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
-      ctx.replyWithHTML(ctx.i18n.t('cmd.packs.set_pack', {
+      ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
         title: stickerSet.title,
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
       }), {

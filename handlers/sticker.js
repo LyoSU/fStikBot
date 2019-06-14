@@ -32,7 +32,7 @@ module.exports = async (ctx) => {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.delete'), `delete_sticker:${file.file_id}`),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${file.file_id}`),
       ]),
     })
   }
@@ -47,8 +47,8 @@ module.exports = async (ctx) => {
       ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
-          Markup.callbackButton(ctx.i18n.t('cmd.sticker.btn.copy'), `copy_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `copy_sticker:${sticker.info.file_id}`),
         ]),
       })
     }
@@ -65,8 +65,8 @@ module.exports = async (ctx) => {
       }
       else if (result.error) {
         if (result.error.telegram) {
-          messageText = ctx.i18n.t('sticker.add.error.telegram', {
-            error: result.error.description,
+          messageText = ctx.i18n.t('error.telegram', {
+            error: result.error.telegram.description,
           })
         }
       }

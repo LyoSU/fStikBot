@@ -67,7 +67,7 @@ packName.on('message', async (ctx) => {
         ctx.scene.reenter()
       }
       else {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.unknown', {
+        await ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
           error: error.description,
         }), {
           reply_to_message_id: ctx.message.message_id,

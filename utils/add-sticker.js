@@ -35,7 +35,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
   const defaultStickerSet = {
     owner: user.id,
-    name: `favorite_${ctx.from.id}`,
+    name: `${Math.random().toString(36).substring(5)}_${ctx.from.id}`,
     title: 'Favorite stickers',
     emojiSuffix: '🌟',
   }

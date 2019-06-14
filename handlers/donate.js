@@ -14,10 +14,10 @@ module.exports = async (ctx) => {
     const invoice = {
       provider_token: process.env.PROVIDER_TOKEN,
       start_parameter: 'donate',
-      title: ctx.i18n.t('cmd.donate.pay.title', {
+      title: ctx.i18n.t('callback.donate.title', {
         botUsername: ctx.options.username,
       }),
-      description: ctx.i18n.t('cmd.donate.pay.description'),
+      description: ctx.i18n.t('callback.donate.description'),
       currency: 'rub',
       prices: [
         { label: `Donate @${ctx.options.username}`, amount },
@@ -26,28 +26,28 @@ module.exports = async (ctx) => {
     }
 
     ctx.replyWithInvoice(invoice, Markup.inlineKeyboard([
-      Markup.payButton(ctx.i18n.t('cmd.donate.pay.btn.buy')),
+      Markup.payButton(ctx.i18n.t('callback.donate.btn.buy')),
     ]).extra())
   }
   else if (ctx.updateSubTypes[0] === 'successful_payment') {
-    ctx.replyWithHTML(ctx.i18n.t('cmd.donate.pay.successful'))
+    ctx.replyWithHTML(ctx.i18n.t('callback.donate.successful'))
 
     const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
 
     console.log()
     user.premium = true
-    user.donates.push(ctx.message.successful_payment)
+    user.payments.push(ctx.message.successful_payment)
     user.save()
   }
   else {
-    ctx.replyWithHTML(ctx.i18n.t('cmd.donate.info', {
+    ctx.replyWithHTML(ctx.i18n.t('cmd.donate', {
       titleSuffix: ` by @${ctx.options.username}`,
     }), {
       reply_markup: Markup.inlineKeyboard([
         [
 
           Markup.callbackButton('☕️ 100 RUB', 'donate:100'),
-          Markup.callbackButton('🍔 150 RUB', 'donate:200'),
+          Markup.callbackButton('🍔 150 RUB', 'donate:150'),
           Markup.callbackButton('🍰 300 RUB', 'donate:300'),
         ],
         [
