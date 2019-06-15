@@ -28,8 +28,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
   if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
 
-  if (!ctx.db.user || ctx.db.user.stickerSet.constructor.name === 'ObjectID') ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
-  let { stickerSet } = ctx.db.user
+  if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+  if (!ctx.db.stickerSet) ctx.db.stickerSet = await ctx.db.User.findById(ctx.db.user.stickerSet)
 
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` by @${ctx.options.username}`
@@ -44,11 +44,11 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   defaultStickerSet.name += nameSuffix
   if (ctx.db.user.premium !== true) defaultStickerSet.title += titleSuffix
 
-  if (!stickerSet) stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+  if (!ctx.db.stickerSet) ctx.db.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
 
   let emojis = inputFile.emoji || ''
 
-  emojis += stickerSet.emojiSuffix || ''
+  emojis += ctx.db.stickerSet.emojiSuffix || ''
 
   const fileUrl = await ctx.telegram.getFileLink(stickerFile)
   const data = await downloadFileByUrl(fileUrl)
@@ -65,9 +65,9 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
   let stickerAdd = false
 
-  if (stickerSet.create === false) {
+  if (ctx.db.stickerSet.create === false) {
     // eslint-disable-next-line max-len
-    stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, stickerSet.name, stickerSet.title, {
+    stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.db.stickerSet.name, ctx.db.stickerSet.title, {
       png_sticker: { source: tmpPath },
       emojis,
     }).catch((error) => {
@@ -79,14 +79,14 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     })
 
     if (stickerAdd) {
-      stickerSet.create = true
-      stickerSet.save()
-      ctx.db.user.stickerSet = stickerSet.id
+      ctx.db.stickerSet.create = true
+      ctx.db.stickerSet.save()
+      ctx.db.user.stickerSet = ctx.db.stickerSet.id
       ctx.db.user.save()
     }
   }
   else {
-    stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, stickerSet.name, {
+    stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.db.stickerSet.name, {
       png_sticker: { source: tmpPath },
       emojis,
     }).catch((error) => {
@@ -99,10 +99,10 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   }
 
   if (stickerAdd) {
-    const getStickerSet = await ctx.telegram.getStickerSet(stickerSet.name)
+    const getStickerSet = await ctx.telegram.getStickerSet(ctx.db.stickerSet.name)
     const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-    ctx.db.Sticker.addSticker(stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+    ctx.db.Sticker.addSticker(ctx.db.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
       resolve({
         error: {
           telegram: error,
@@ -112,8 +112,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
     resolve({
       ok: {
-        title: stickerSet.title,
-        link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
+        title: ctx.db.stickerSet.title,
+        link: `${ctx.config.stickerLinkPrefix}${ctx.db.stickerSet.name}`,
         stickerInfo,
       },
     })

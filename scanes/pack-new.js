@@ -40,7 +40,7 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 }))
 newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
-    if (!ctx.db.user) await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+    if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
 
     ctx.session.scane.newPack.name = ctx.message.text
 
@@ -78,7 +78,7 @@ newPackName.on('message', async (ctx) => {
 
       ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
 
-      const stickerSet = await ctx.db.StickerSet.newSet({
+      ctx.db.stickerSet = await ctx.db.StickerSet.newSet({
         owner: ctx.db.user.id,
         name,
         title,
@@ -86,7 +86,7 @@ newPackName.on('message', async (ctx) => {
         create: true,
       })
 
-      ctx.db.user.stickerSet = stickerSet.id
+      ctx.db.user.stickerSet = ctx.db.stickerSet.id
       ctx.db.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
@@ -121,7 +121,7 @@ newPackName.on('message', async (ctx) => {
               total: originalPack.stickers.length,
             }),
             { parse_mode: 'HTML' }
-          )
+          ).catch(() => {})
         }
 
         ctx.telegram.editMessageText(
