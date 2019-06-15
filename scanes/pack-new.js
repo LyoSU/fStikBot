@@ -112,7 +112,7 @@ newPackName.on('message', async (ctx) => {
           ctx.telegram.editMessageText(
             message.chat.id, message.message_id, null,
             ctx.i18n.t('scenes.copy.progress', {
-              originalTitle: originalPack.stickers.title,
+              originalTitle: originalPack.title,
               originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
               title,
               link: `${ctx.config.stickerLinkPrefix}${name}`,
