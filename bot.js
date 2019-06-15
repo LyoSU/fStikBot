@@ -8,18 +8,17 @@ const {
 } = require('./database')
 const {
   handleStart,
+  handleDonate,
   handleSticker,
-  handlePacks,
-  handleHidePack,
   handleCopySticker,
   handleDeleteSticker,
   handleRestoreSticker,
+  handlePacks,
+  handleHidePack,
   handleRestorePack,
-  handleDonate,
+  handleCopyPack,
 } = require('./handlers')
-const {
-  sceneNewPack,
-} = require('./scanes')
+const scanes = require('./scanes')
 
 
 global.startDate = new Date()
@@ -31,7 +30,6 @@ bot.use((ctx, next) => {
   ctx.ms = new Date()
   next()
 })
-
 
 // I18n settings
 const { match } = I18n
@@ -76,12 +74,15 @@ bot.use(async (ctx, next) => {
 })
 
 // scene
-bot.use(sceneNewPack)
+bot.use(scanes)
 
 // main commands
 bot.hears((['/packs', match('cmd.start.btn.packs')]), handlePacks)
 bot.hears((['/new', match('cmd.start.btn.new')]), (ctx) => ctx.scene.enter('newPack'))
-bot.hears((['/donate', match('cmd.start.btn.donate')]), handleDonate)
+bot.hears((['/donate', '/start donate', match('cmd.start.btn.donate')]), handleDonate)
+bot.hears(/addstickers\/(.*)/, handleCopyPack)
+
+// sticker detect
 bot.on(['sticker', 'document', 'photo'], handleSticker)
 
 // callback
@@ -91,6 +92,7 @@ bot.action(/(copy_sticker):(.*)/, handleCopySticker)
 bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, handleRestoreSticker)
 
+// forward from sticker bot
 bot.on('text', (ctx, next) => {
   if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) handleRestorePack(ctx)
   else next()

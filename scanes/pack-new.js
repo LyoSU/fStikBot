@@ -1,32 +1,27 @@
-const Stage = require('telegraf/stage')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const I18n = require('telegraf-i18n')
 const {
   handleStart,
 } = require('../handlers')
-
-
-const { match } = I18n
-
+const { addSticker } = require('../utils')
 
 const newPack = new Scene('newPack')
 
 newPack.enter((ctx) => {
-  ctx.session.newPack = {}
+  ctx.session.scane.newPack = {}
   ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
     reply_to_message_id: ctx.message.message_id,
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.new_pack.btn.cancel'),
+        ctx.i18n.t('scenes.btn.cancel'),
       ],
     ]).resize(),
   })
 })
 newPack.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charTitleMax) {
-    ctx.session.newPack.title = ctx.message.text
-    ctx.scene.enter('packName')
+    ctx.session.scane.newPack.title = ctx.message.text
+    ctx.scene.enter('newPackName')
   }
   else {
     ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
@@ -37,21 +32,21 @@ newPack.on('message', async (ctx) => {
   }
 })
 
-const packName = new Scene('packName')
+const newPackName = new Scene('newPackName')
 
-packName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
+newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
   reply_to_message_id: ctx.message.message_id,
 }))
-packName.on('message', async (ctx) => {
+newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
     const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
 
-    ctx.session.newPack.name = ctx.message.text
+    ctx.session.scane.newPack.name = ctx.message.text
 
     const nameSuffix = `_by_${ctx.options.username}`
     const titleSuffix = ` by @${ctx.options.username}`
 
-    let { name, title } = ctx.session.newPack
+    let { name, title } = ctx.session.scane.newPack
 
     name += nameSuffix
     if (user.premium !== true) title += titleSuffix
@@ -99,7 +94,44 @@ packName.on('message', async (ctx) => {
       }), {
         reply_to_message_id: ctx.message.message_id,
       })
-      ctx.scene.leave()
+      if (ctx.session.scane.copyPack) {
+        const originalPack = ctx.session.scane.copyPack
+
+        const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
+          originalTitle: originalPack.title,
+          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+          title,
+          link: `${ctx.config.stickerLinkPrefix}${name}`,
+          already: 0,
+          total: originalPack.stickers.length,
+        }))
+
+        for (let index = 0; index < originalPack.stickers.length; index++) {
+          await addSticker(ctx, originalPack.stickers[index])
+
+          ctx.telegram.editMessageText(
+            message.chat.id, message.message_id, null,
+            ctx.i18n.t('scenes.copy.progress', {
+              originalTitle: originalPack.stickers.title,
+              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+              title,
+              link: `${ctx.config.stickerLinkPrefix}${name}`,
+              already: index,
+              total: originalPack.stickers.length,
+            }),
+            { parse_mode: 'HTML' }
+          )
+        }
+
+        ctx.telegram.editMessageText(
+          message.chat.id, message.message_id, null,
+          'done',
+          { parse_mode: 'HTML' }
+        )
+
+        ctx.scene.leave()
+      }
+      else ctx.scene.leave()
       handleStart(ctx)
     }
   }
@@ -112,17 +144,4 @@ packName.on('message', async (ctx) => {
   }
 })
 
-const stage = new Stage()
-
-stage.register(newPack, packName)
-stage.hears((['/cancel', match('scenes.new_pack.btn.cancel')]), async (ctx) => {
-  ctx.session.newPack = null
-  await ctx.reply(ctx.i18n.t('scenes.new_pack.leave'), {
-    reply_to_message_id: ctx.message.message_id,
-  })
-  ctx.scene.leave()
-  handleStart(ctx)
-})
-stage.middleware()
-
-module.exports = stage
+module.exports = [newPack, newPackName]

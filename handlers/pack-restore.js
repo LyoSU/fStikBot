@@ -1,5 +1,5 @@
 module.exports = async (ctx) => {
-  let messageText = ctx.i18n.t('callback.pack.error')
+  let messageText = ctx.i18n.t('callback.pack.error.restore')
 
   if (ctx.message.entities) {
     const match = ctx.message.entities[0].url.match(/addstickers\/(.*)/)
