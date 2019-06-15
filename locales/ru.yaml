@@ -101,6 +101,8 @@ scenes:
       Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
 
       Прогресс: ${already}/${total}
+    done: |
+      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
   leave: |
       Действие отменено.
   btn:

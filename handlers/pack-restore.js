@@ -25,18 +25,18 @@ module.exports = async (ctx) => {
           }
         }
         else {
-          const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+          if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
 
           const stickerSet = await ctx.db.StickerSet.newSet({
-            owner: user.id,
+            owner: ctx.db.user.id,
             name: getStickerSet.name,
             title: getStickerSet.title,
             emojiSuffix: '🌟',
             create: true,
           })
 
-          user.stickerSet = stickerSet.id
-          user.save()
+          ctx.db.user.stickerSet = stickerSet.id
+          ctx.db.user.save()
 
           messageText = ctx.i18n.t('callback.pack.restored', {
             title: stickerSet.title,

@@ -5,7 +5,7 @@ const { addSticker } = require('../utils')
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
-  const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+  if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
   let file
 
   switch (ctx.updateSubTypes[0]) {
@@ -28,7 +28,7 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (user.stickerSet && file.set_name === user.stickerSet.name) {
+  if (ctx.db.user.stickerSet && file.set_name === ctx.db.user.stickerSet.name) {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
@@ -39,7 +39,7 @@ module.exports = async (ctx) => {
   }
   else if (file) {
     const sticker = await ctx.db.Sticker.findOne({
-      stickerSet: user.stickerSet,
+      stickerSet: ctx.db.user.stickerSet,
       'file.file_id': file.file_id,
       deleted: false,
     })

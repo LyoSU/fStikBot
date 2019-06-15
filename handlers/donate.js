@@ -32,12 +32,12 @@ module.exports = async (ctx) => {
   else if (ctx.updateSubTypes[0] === 'successful_payment') {
     ctx.replyWithHTML(ctx.i18n.t('callback.donate.successful'))
 
-    const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+    if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
 
     console.log()
-    user.premium = true
-    user.payments.push(ctx.message.successful_payment)
-    user.save()
+    ctx.db.user.premium = true
+    ctx.db.user.payments.push(ctx.message.successful_payment)
+    ctx.db.user.save()
   }
   else {
     ctx.replyWithHTML(ctx.i18n.t('cmd.donate', {

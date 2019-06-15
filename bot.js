@@ -66,7 +66,9 @@ bot.use(session())
 
 // response time logger
 bot.use(async (ctx, next) => {
-  db.User.updateData(ctx.from)
+  db.User.updateData(ctx.from).then((user) => {
+    ctx.db.user = user
+  })
   await next(ctx)
   const ms = new Date() - ctx.ms
 

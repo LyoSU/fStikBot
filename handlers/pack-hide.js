@@ -2,12 +2,12 @@ const Markup = require('telegraf/markup')
 
 
 module.exports = async (ctx) => {
-  const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
   let answerCbQuer = ''
 
-  if (stickerSet.owner.toString() === user.id.toString()) {
+  if (stickerSet.owner.toString() === ctx.db.user.id.toString()) {
     stickerSet.hide = stickerSet.hide !== true
     stickerSet.save()
 
@@ -15,13 +15,13 @@ module.exports = async (ctx) => {
       answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.hidden')
 
       const userSet = await ctx.db.StickerSet.findOne({
-        owner: user.id,
+        owner: ctx.db.user.id,
         create: true,
         hide: false,
       })
 
-      user.stickerSet = userSet.id
-      user.save()
+      ctx.db.user.stickerSet = userSet.id
+      ctx.db.user.save()
     }
     else {
       answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.restored')

@@ -5,6 +5,7 @@ const {
 } = require('../handlers')
 const { addSticker } = require('../utils')
 
+
 const newPack = new Scene('newPack')
 
 newPack.enter((ctx) => {
@@ -39,7 +40,7 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 }))
 newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
-    const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+    if (!ctx.db.user) await ctx.db.User.findOne({ telegram_id: ctx.from.id })
 
     ctx.session.scane.newPack.name = ctx.message.text
 
@@ -49,7 +50,7 @@ newPackName.on('message', async (ctx) => {
     let { name, title } = ctx.session.scane.newPack
 
     name += nameSuffix
-    if (user.premium !== true) title += titleSuffix
+    if (ctx.db.user.premium !== true) title += titleSuffix
 
     const createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, {
       png_sticker: { source: 'sticker_placeholder.png' },
@@ -78,15 +79,15 @@ newPackName.on('message', async (ctx) => {
       ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
 
       const stickerSet = await ctx.db.StickerSet.newSet({
-        owner: user.id,
+        owner: ctx.db.user.id,
         name,
         title,
         emojiSuffix: '🌟',
         create: true,
       })
 
-      user.stickerSet = stickerSet.id
-      user.save()
+      ctx.db.user.stickerSet = stickerSet.id
+      ctx.db.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
         title,
@@ -125,7 +126,12 @@ newPackName.on('message', async (ctx) => {
 
         ctx.telegram.editMessageText(
           message.chat.id, message.message_id, null,
-          'done',
+          ctx.i18n.t('scenes.copy.done', {
+            originalTitle: originalPack.title,
+            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+            title,
+            link: `${ctx.config.stickerLinkPrefix}${name}`,
+          }),
           { parse_mode: 'HTML' }
         )
 

@@ -21,27 +21,28 @@ const downloadFileByUrl = (fileUrl) => new Promise(async (resolve, reject) => {
 
 module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   let stickerFile = inputFile
-  const user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+
   const originalSticker = await ctx.db.Sticker.findOne({
     'info.file_id': stickerFile.file_id,
   })
 
   if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
 
-  let { stickerSet } = user
+  if (!ctx.db.user || ctx.db.user.stickerSet.constructor.name === 'ObjectID') ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+  let { stickerSet } = ctx.db.user
 
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` by @${ctx.options.username}`
 
   const defaultStickerSet = {
-    owner: user.id,
+    owner: ctx.db.user.id,
     name: `${Math.random().toString(36).substring(5)}_${ctx.from.id}`,
     title: 'Favorite stickers',
     emojiSuffix: '🌟',
   }
 
   defaultStickerSet.name += nameSuffix
-  if (user.premium !== true) defaultStickerSet.title += titleSuffix
+  if (ctx.db.user.premium !== true) defaultStickerSet.title += titleSuffix
 
   if (!stickerSet) stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
 
@@ -80,8 +81,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     if (stickerAdd) {
       stickerSet.create = true
       stickerSet.save()
-      user.stickerSet = stickerSet.id
-      user.save()
+      ctx.db.user.stickerSet = stickerSet.id
+      ctx.db.user.save()
     }
   }
   else {
