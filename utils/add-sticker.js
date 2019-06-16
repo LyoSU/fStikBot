@@ -42,6 +42,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
   defaultStickerSet.name += nameSuffix
   if (ctx.session.user.premium !== true) defaultStickerSet.title += titleSuffix
+  if (!ctx.session.user.stickerSet) ctx.session.user.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
 
   let emojis = inputFile.emoji || ''
 
