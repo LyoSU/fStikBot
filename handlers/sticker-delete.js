@@ -2,7 +2,7 @@ const Markup = require('telegraf/markup')
 
 
 module.exports = async (ctx) => {
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   const sticker = await ctx.db.Sticker.findOne({
     'info.file_id': ctx.match[2],
   }).populate('stickerSet')

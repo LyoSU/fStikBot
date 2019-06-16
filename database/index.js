@@ -8,7 +8,7 @@ Object.keys(collections).forEach((collectionName) => {
   db[collectionName] = connection.model(collectionName, collections[collectionName])
 })
 
-db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
+db.User.getData = (tgUser) => new Promise(async (resolve, reject) => {
   let telegramId = tgUser.id
 
   if (tgUser.telegram_id) telegramId = tgUser.telegram_id
@@ -20,6 +20,13 @@ db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
     user = new db.User()
     user.telegram_id = tgUser.id
   }
+
+  resolve(user)
+})
+
+db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
+  const user = await db.User.getData(tgUser)
+
   user.first_name = tgUser.first_name
   user.last_name = tgUser.last_name
   user.username = tgUser.username

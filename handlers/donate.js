@@ -32,7 +32,7 @@ module.exports = async (ctx) => {
   else if (ctx.updateSubTypes[0] === 'successful_payment') {
     ctx.replyWithHTML(ctx.i18n.t('callback.donate.successful'))
 
-    if (!ctx.session.user) ctx.session.user = await ctx.db.User({ telegram_id: ctx.from.id })
+    if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
     console.log()
     ctx.session.user.premium = true

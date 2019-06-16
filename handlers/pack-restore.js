@@ -25,9 +25,9 @@ module.exports = async (ctx) => {
           }
         }
         else {
-          if (!ctx.session.user) ctx.session.user = await ctx.db.User({ telegram_id: ctx.from.id })
+          if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
-          const stickerSet = await ctx.session.stickerSet.newSet({
+          const stickerSet = await ctx.session.user.stickerSet.newSet({
             owner: ctx.session.user.id,
             name: getStickerSet.name,
             title: getStickerSet.title,

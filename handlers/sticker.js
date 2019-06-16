@@ -5,8 +5,7 @@ const { addSticker } = require('../utils')
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
-  if (!ctx.session.stickerSet) ctx.session.stickerSet = await ctx.db.StickerSet.findById(ctx.session.user.stickerSet)
+  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   let stickerFile
 
   switch (ctx.updateSubTypes[0]) {
@@ -29,7 +28,7 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (ctx.session.stickerSet && stickerFile.set_name === ctx.session.stickerSet.name) {
+  if (ctx.session.user.stickerSet && stickerFile.set_name === ctx.session.user.stickerSet.name) {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
@@ -47,7 +46,7 @@ module.exports = async (ctx) => {
     if (originalSticker) findFile = originalSticker.file.file_id
 
     const sticker = await ctx.db.Sticker.findOne({
-      stickerSet: ctx.session.stickerSet,
+      stickerSet: ctx.session.user.stickerSet,
       'file.file_id': findFile,
       deleted: false,
     })

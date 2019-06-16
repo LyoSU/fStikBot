@@ -67,7 +67,6 @@ bot.use(Telegraf.session())
 bot.use(async (ctx, next) => {
   db.User.updateData(ctx.from).then((user) => {
     ctx.session.user = user
-    ctx.session.stickerSet = user.stickerSet
   })
   await next(ctx)
   const ms = new Date() - ctx.ms

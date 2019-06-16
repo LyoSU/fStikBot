@@ -2,7 +2,7 @@ const Markup = require('telegraf/markup')
 
 
 module.exports = async (ctx) => {
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   const stickerSets = await ctx.db.StickerSet.find({
     owner: ctx.session.user.id,
     create: true,
@@ -14,7 +14,7 @@ module.exports = async (ctx) => {
 
     if (stickerSet.owner.toString() === ctx.session.user.id.toString()) {
       ctx.answerCbQuery()
-      ctx.session.user.stickerSet = stickerSet.id
+      ctx.session.user.stickerSet = stickerSet
       ctx.session.user.save()
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
@@ -45,7 +45,7 @@ module.exports = async (ctx) => {
     stickerSets.forEach((pack) => {
       let { title } = pack
 
-      if (ctx.session.user.stickerSet.toString() === pack.id.toString()) title = `✔️ ${title}`
+      if (ctx.session.user.stickerSet.id.toString() === pack.id.toString()) title = `✔️ ${title}`
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
     })
   }
