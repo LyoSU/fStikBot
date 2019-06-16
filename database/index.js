@@ -14,6 +14,7 @@ db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
   if (tgUser.telegram_id) telegramId = tgUser.telegram_id
 
   let user = await db.User.findOne({ telegram_id: telegramId })
+    .populate('stickerSet')
 
   if (!user) {
     user = new db.User()

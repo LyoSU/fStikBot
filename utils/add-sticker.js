@@ -28,27 +28,26 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
   if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
 
-  if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
-  if (!ctx.db.stickerSet) ctx.db.stickerSet = await ctx.db.User.findById(ctx.db.user.stickerSet)
+  if (!ctx.session.user) ctx.session.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  if (!ctx.session.stickerSet) ctx.session.stickerSet = await ctx.db.StickerSet.findById(ctx.session.user.stickerSet)
 
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` by @${ctx.options.username}`
 
   const defaultStickerSet = {
-    owner: ctx.db.user.id,
-    name: `${Math.random().toString(36).substring(5)}_${ctx.from.id}`,
+    owner: ctx.session.user.id,
+    name: `f_${Math.random().toString(36).substring(5)}_${ctx.from.id}`,
     title: 'Favorite stickers',
     emojiSuffix: '🌟',
   }
 
   defaultStickerSet.name += nameSuffix
-  if (ctx.db.user.premium !== true) defaultStickerSet.title += titleSuffix
-
-  if (!ctx.db.stickerSet) ctx.db.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+  if (ctx.session.user.premium !== true) defaultStickerSet.title += titleSuffix
+  if (!ctx.session.stickerSet) ctx.session.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
 
   let emojis = inputFile.emoji || ''
 
-  emojis += ctx.db.stickerSet.emojiSuffix || ''
+  emojis += ctx.session.stickerSet.emojiSuffix || ''
 
   const fileUrl = await ctx.telegram.getFileLink(stickerFile)
   const data = await downloadFileByUrl(fileUrl)
@@ -65,9 +64,9 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
   let stickerAdd = false
 
-  if (ctx.db.stickerSet.create === false) {
+  if (ctx.session.stickerSet.create === false) {
     // eslint-disable-next-line max-len
-    stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.db.stickerSet.name, ctx.db.stickerSet.title, {
+    stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.stickerSet.name, ctx.session.stickerSet.title, {
       png_sticker: { source: tmpPath },
       emojis,
     }).catch((error) => {
@@ -79,14 +78,14 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     })
 
     if (stickerAdd) {
-      ctx.db.stickerSet.create = true
-      ctx.db.stickerSet.save()
-      ctx.db.user.stickerSet = ctx.db.stickerSet.id
-      ctx.db.user.save()
+      ctx.session.stickerSet.create = true
+      ctx.session.stickerSet.save()
+      ctx.session.user.stickerSet = ctx.session.stickerSet.id
+      ctx.session.user.save()
     }
   }
   else {
-    stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.db.stickerSet.name, {
+    stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.stickerSet.name, {
       png_sticker: { source: tmpPath },
       emojis,
     }).catch((error) => {
@@ -99,10 +98,10 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   }
 
   if (stickerAdd) {
-    const getStickerSet = await ctx.telegram.getStickerSet(ctx.db.stickerSet.name)
+    const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.stickerSet.name)
     const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-    ctx.db.Sticker.addSticker(ctx.db.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+    ctx.db.Sticker.addSticker(ctx.session.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
       resolve({
         error: {
           telegram: error,
@@ -112,8 +111,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
     resolve({
       ok: {
-        title: ctx.db.stickerSet.title,
-        link: `${ctx.config.stickerLinkPrefix}${ctx.db.stickerSet.name}`,
+        title: ctx.session.stickerSet.title,
+        link: `${ctx.config.stickerLinkPrefix}${ctx.session.stickerSet.name}`,
         stickerInfo,
       },
     })

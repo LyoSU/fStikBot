@@ -5,43 +5,50 @@ const { addSticker } = require('../utils')
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
-  if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
-  if (!ctx.db.stickerSet) ctx.db.stickerSet = await ctx.db.User.findById(ctx.db.user.stickerSet)
-  let file
+  if (!ctx.session.user) ctx.session.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  if (!ctx.session.stickerSet) ctx.session.stickerSet = await ctx.db.StickerSet.findById(ctx.session.user.stickerSet)
+  let stickerFile
 
   switch (ctx.updateSubTypes[0]) {
     case 'sticker':
-      file = ctx.message.sticker
+      stickerFile = ctx.message.sticker
       break
 
     case 'document':
       if (['image/jpeg', 'image/png'].indexOf(ctx.message.documentmime_type)) {
-        file = ctx.message.document
+        stickerFile = ctx.message.document
       }
       break
 
     case 'photo':
       // eslint-disable-next-line prefer-destructuring
-      file = ctx.message.photo.slice(-1)[0]
+      stickerFile = ctx.message.photo.slice(-1)[0]
       break
 
     default:
       console.log(ctx.updateSubTypes)
   }
 
-  if (ctx.db.stickerSet && file.set_name === ctx.db.stickerSet.name) {
+  if (ctx.session.stickerSet && stickerFile.set_name === ctx.session.stickerSet.name) {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${file.file_id}`),
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `copy_sticker:${file.file_id}`),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_id}`),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `copy_sticker:${stickerFile.file_id}`),
       ]),
     })
   }
-  else if (file) {
+  else if (stickerFile) {
+    let findFile = stickerFile.file_id
+    const originalSticker = await ctx.db.Sticker.findOne({
+      'info.file_id': stickerFile.file_id,
+    })
+
+    if (originalSticker) findFile = originalSticker.file.file_id
+
     const sticker = await ctx.db.Sticker.findOne({
-      stickerSet: ctx.db.stickerSet,
-      'file.file_id': file.file_id,
+      stickerSet: ctx.session.stickerSet,
+      'file.file_id': findFile,
       deleted: false,
     })
 
@@ -55,7 +62,7 @@ module.exports = async (ctx) => {
       })
     }
     else {
-      const result = await addSticker(ctx, file)
+      const result = await addSticker(ctx, stickerFile)
 
       let messageText = ''
 

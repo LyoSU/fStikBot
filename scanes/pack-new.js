@@ -40,7 +40,7 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 }))
 newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
-    if (!ctx.db.user) ctx.db.user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+    if (!ctx.session.user) ctx.session.user = await ctx.db.User({ telegram_id: ctx.from.id }).populate('stickerSet')
 
     ctx.session.scane.newPack.name = ctx.message.text
 
@@ -50,7 +50,7 @@ newPackName.on('message', async (ctx) => {
     let { name, title } = ctx.session.scane.newPack
 
     name += nameSuffix
-    if (ctx.db.user.premium !== true) title += titleSuffix
+    if (ctx.session.user.premium !== true) title += titleSuffix
 
     const createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, {
       png_sticker: { source: 'sticker_placeholder.png' },
@@ -78,16 +78,16 @@ newPackName.on('message', async (ctx) => {
 
       ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
 
-      ctx.db.stickerSet = await ctx.db.StickerSet.newSet({
-        owner: ctx.db.user.id,
+      ctx.session.stickerSet = await ctx.db.StickerSet.newSet({
+        owner: ctx.session.user.id,
         name,
         title,
         emojiSuffix: '🌟',
         create: true,
       })
 
-      ctx.db.user.stickerSet = ctx.db.stickerSet.id
-      ctx.db.user.save()
+      ctx.session.user.stickerSet = ctx.session.stickerSet.id
+      ctx.session.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
         title,
@@ -103,7 +103,7 @@ newPackName.on('message', async (ctx) => {
           originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
           title,
           link: `${ctx.config.stickerLinkPrefix}${name}`,
-          already: 0,
+          current: 0,
           total: originalPack.stickers.length,
         }))
 
@@ -117,7 +117,7 @@ newPackName.on('message', async (ctx) => {
               originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
               title,
               link: `${ctx.config.stickerLinkPrefix}${name}`,
-              already: index,
+              current: index,
               total: originalPack.stickers.length,
             }),
             { parse_mode: 'HTML' }

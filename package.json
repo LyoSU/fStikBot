@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,8 @@
     "sharp": "^0.22.1",
     "telegraf": "^3.27.1",
     "telegraf-i18n": "^6.5.0",
-    "telegraf-ratelimit": "^2.0.0"
+    "telegraf-ratelimit": "^2.0.0",
+    "telegraf-session-redis": "^5.1.0"
   },
   "devDependencies": {
     "@atomix/eslint-config": "^6.4.0",

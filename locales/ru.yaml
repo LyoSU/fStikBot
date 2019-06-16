@@ -100,7 +100,7 @@ scenes:
     progress: |
       Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
 
-      Прогресс: ${already}/${total}
+      Прогресс: ${current}/${total}
     done: |
       Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
   leave: |

@@ -1,7 +1,7 @@
 const path = require('path')
 const Telegraf = require('telegraf')
+const RedisSession = require('telegraf-session-redis')
 const rateLimit = require('telegraf-ratelimit')
-const session = require('telegraf/session')
 const I18n = require('telegraf-i18n')
 const {
   db,
@@ -62,12 +62,19 @@ bot.telegram.getMe().then((botInfo) => {
 bot.context.db = db
 
 // use session
-bot.use(session())
+const session = new RedisSession({
+  store: {
+    prefix: `${process.env.REDIS_PREFIX}:session:`,
+  },
+})
+
+bot.use(session)
 
 // response time logger
 bot.use(async (ctx, next) => {
   db.User.updateData(ctx.from).then((user) => {
-    ctx.db.user = user
+    ctx.session.user = user
+    ctx.session.stickerSet = user.stickerSet
   })
   await next(ctx)
   const ms = new Date() - ctx.ms
