@@ -45,7 +45,7 @@ module.exports = async (ctx) => {
     stickerSets.forEach((pack) => {
       let { title } = pack
 
-      if (ctx.session.user.stickerSet.id.toString() === pack.id.toString()) title = `✔️ ${title}`
+      if (ctx.session.user.stickerSet.id.toString() === pack.id.toString()) title = `✅ ${title}`
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
     })
   }
