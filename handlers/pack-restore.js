@@ -35,7 +35,7 @@ module.exports = async (ctx) => {
             create: true,
           })
 
-          ctx.session.user.stickerSet = stickerSet.id
+          ctx.session.user.stickerSet = stickerSet
           ctx.session.user.save()
 
           messageText = ctx.i18n.t('callback.pack.restored', {
