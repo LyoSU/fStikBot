@@ -1,7 +1,6 @@
 const handleStart = require('./start')
 const handleDonate = require('./donate')
 const handleSticker = require('./sticker')
-const handleCopySticker = require('./sticker-copy')
 const handleDeleteSticker = require('./sticker-delete')
 const handleRestoreSticker = require('./sticker-restore')
 const handlePacks = require('./packs')
@@ -14,7 +13,6 @@ module.exports = {
   handleStart,
   handleDonate,
   handleSticker,
-  handleCopySticker,
   handleDeleteSticker,
   handleRestoreSticker,
   handlePacks,
