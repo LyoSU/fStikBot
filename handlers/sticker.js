@@ -33,7 +33,7 @@ module.exports = async (ctx) => {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
         Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_id}`),
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `copy_sticker:${stickerFile.file_id}`),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${stickerFile.file_id}`),
       ]),
     })
   }
@@ -56,7 +56,7 @@ module.exports = async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `copy_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.info.file_id}`),
         ]),
       })
     }
