@@ -80,6 +80,8 @@ bot.use(scanes)
 // main commands
 bot.hears((['/packs', match('cmd.start.btn.packs')]), handlePacks)
 bot.hears((['/new', match('cmd.start.btn.new')]), (ctx) => ctx.scene.enter('newPack'))
+bot.hears((['/restore']), (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
+bot.hears((['/copy']), (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.hears((['/donate', '/start donate', match('cmd.start.btn.donate')]), handleDonate)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
 

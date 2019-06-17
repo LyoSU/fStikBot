@@ -79,7 +79,6 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     if (stickerAdd) {
       ctx.session.user.stickerSet.create = true
       ctx.session.user.stickerSet.save()
-      ctx.session.user.stickerSet = ctx.session.user.stickerSet.id
       ctx.session.user.save()
     }
   }
