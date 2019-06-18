@@ -25,7 +25,7 @@ newPack.on('message', async (ctx) => {
     ctx.scene.enter('newPackName')
   }
   else {
-    ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
+    ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
       max: ctx.config.charTitleMax,
     }), {
       reply_to_message_id: ctx.message.message_id,
@@ -86,7 +86,6 @@ newPackName.on('message', async (ctx) => {
         create: true,
       })
 
-      ctx.session.user.stickerSet = ctx.session.user.stickerSet.id
       ctx.session.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
