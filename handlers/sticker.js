@@ -73,9 +73,14 @@ module.exports = async (ctx) => {
       }
       else if (result.error) {
         if (result.error.telegram) {
-          messageText = ctx.i18n.t('error.telegram', {
-            error: result.error.telegram.description,
-          })
+          if (result.error.telegram.description === 'Bad Request: STICKERS_TOO_MUCH') {
+            messageText = ctx.i18n.t('sticker.add.error.stickers_too_musch')
+          }
+          else {
+            messageText = ctx.i18n.t('error.telegram', {
+              error: result.error.telegram.description,
+            })
+          }
         }
       }
 
