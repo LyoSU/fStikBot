@@ -2,6 +2,8 @@ const Markup = require('telegraf/markup')
 
 
 module.exports = async (ctx) => {
+  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+
   if (ctx.session.user.premium === true) {
     const getStickerSet = await ctx.getStickerSet(ctx.match[1]).catch(() => {})
 
