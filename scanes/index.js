@@ -8,9 +8,10 @@ const {
 const { match } = I18n
 
 const sceneNewPack = require('./pack-new')
+const originalSticker = require('./sricker-original')
 
 
-const stage = new Stage([].concat(sceneNewPack))
+const stage = new Stage([].concat(sceneNewPack, originalSticker))
 
 stage.use((ctx, next) => {
   if (!ctx.session.scane) ctx.session.scane = {}
