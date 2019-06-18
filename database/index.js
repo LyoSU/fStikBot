@@ -9,9 +9,10 @@ Object.keys(collections).forEach((collectionName) => {
 })
 
 db.User.getData = (tgUser) => new Promise(async (resolve, reject) => {
-  let telegramId = tgUser.id
+  let telegramId
 
   if (tgUser.telegram_id) telegramId = tgUser.telegram_id
+  else telegramId = tgUser.id
 
   let user = await db.User.findOne({ telegram_id: telegramId })
     .populate('stickerSet')

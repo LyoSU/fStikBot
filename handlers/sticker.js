@@ -52,7 +52,7 @@ module.exports = async (ctx) => {
     })
 
     if (sticker) {
-      ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
+      ctx.replyWithHTML(ctx.i18n.t('sticker.original.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
