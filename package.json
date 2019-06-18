@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/LyoSU/fStikBot.git"
   },
   "author": "LyoSU",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/LyoSU/fStikBot/issues"
   },
