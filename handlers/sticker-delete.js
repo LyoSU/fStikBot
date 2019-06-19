@@ -7,7 +7,7 @@ module.exports = async (ctx) => {
 
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   const sticker = await ctx.db.Sticker.findOne({
-    'info.file_id': ctx.match[2],
+    fileId: ctx.match[2],
   }).populate('stickerSet')
 
   let deleteSticker

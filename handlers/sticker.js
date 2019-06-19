@@ -40,7 +40,7 @@ module.exports = async (ctx) => {
   else if (stickerFile) {
     let findFile = stickerFile.file_id
     const originalSticker = await ctx.db.Sticker.findOne({
-      'info.file_id': stickerFile.file_id,
+      fileId: stickerFile.file_id,
     })
 
     if (originalSticker) findFile = originalSticker.file.file_id

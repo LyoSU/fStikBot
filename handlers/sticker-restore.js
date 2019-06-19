@@ -4,7 +4,7 @@ const { addSticker } = require('../utils')
 
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
-    'info.file_id': ctx.match[2],
+    fileId: ctx.match[2],
   }).populate('stickerSet')
 
   if (sticker) {

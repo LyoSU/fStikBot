@@ -18,7 +18,7 @@ originalSticker.enter((ctx) => {
 
 originalSticker.on('sticker', async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
-    'info.file_id': ctx.message.sticker.file_id,
+    fileId: ctx.message.sticker.file_id,
     file: { $ne: null },
   })
 
