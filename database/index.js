@@ -38,6 +38,16 @@ db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
 })
 
 db.StickerSet.newSet = (stickerSetInfo) => new Promise(async (resolve, reject) => {
+  const oldStickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
+
+  if (oldStickerSet) {
+    await db.Sticker.updateMany(
+      { stickerSet: oldStickerSet.id },
+      { $set: { deleted: true } }
+    )
+    await oldStickerSet.remove()
+  }
+
   const stickerSet = new db.StickerSet()
 
   stickerSet.owner = stickerSetInfo.owner
