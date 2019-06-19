@@ -23,7 +23,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   let stickerFile = inputFile
 
   const originalSticker = await ctx.db.Sticker.findOne({
-    'info.file_id': stickerFile.file_id,
+    fileId: stickerFile.file_id,
   })
 
   if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
