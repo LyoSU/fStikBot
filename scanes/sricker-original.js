@@ -25,10 +25,31 @@ originalSticker.on('sticker', async (ctx) => {
   if (sticker) {
     ctx.replyWithDocument(sticker.file.file_id, {
       reply_to_message_id: ctx.message.message_id,
+    }).catch((documentError) => {
+      if (documentError.description === 'Bad Request: type of file mismatch') {
+        ctx.replyWithPhoto(sticker.file.file_id, {
+          reply_to_message_id: ctx.message.message_id,
+        }).catch((pohotoError) => {
+          ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
+            error: pohotoError.description,
+          }), {
+            reply_to_message_id: ctx.message.message_id,
+          })
+        })
+      }
+      else {
+        ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
+          error: documentError.description,
+        }), {
+          reply_to_message_id: ctx.message.message_id,
+        })
+      }
     })
   }
   else {
-    ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
+    ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), {
+      reply_to_message_id: ctx.message.message_id,
+    })
   }
 })
 
