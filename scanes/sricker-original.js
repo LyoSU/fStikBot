@@ -1,10 +1,8 @@
-
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 
 
 const originalSticker = new Scene('originalSticker')
-
 
 originalSticker.enter((ctx) => {
   ctx.replyWithHTML(ctx.i18n.t('scenes.original.enter'), {

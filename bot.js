@@ -79,13 +79,13 @@ bot.use(async (ctx, next) => {
 bot.use(scanes)
 
 // main commands
-bot.hears((['/packs', match('cmd.start.btn.packs')]), handlePacks)
-bot.hears((['/new', match('cmd.start.btn.new')]), (ctx) => ctx.scene.enter('newPack'))
-bot.hears((['/restore']), (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
-bot.hears((['/copy']), (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
-bot.hears((['/original']), (ctx) => ctx.scene.enter('originalSticker'))
-bot.hears((['/donate', '/start donate', match('cmd.start.btn.donate')]), handleDonate)
+bot.hears(['/packs', match('cmd.start.btn.packs')], handlePacks)
+bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('newPack'))
+bot.hears(['/donate', '/start donate', match('cmd.start.btn.donate')], handleDonate)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
+bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
+bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
+bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 
 // sticker detect
 bot.on(['sticker', 'document', 'photo'], handleSticker)
