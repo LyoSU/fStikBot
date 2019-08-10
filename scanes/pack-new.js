@@ -109,7 +109,7 @@ newPackName.on('message', async (ctx) => {
         for (let index = 0; index < originalPack.stickers.length; index++) {
           await addSticker(ctx, originalPack.stickers[index])
 
-          ctx.telegram.editMessageText(
+          await ctx.telegram.editMessageText(
             message.chat.id, message.message_id, null,
             ctx.i18n.t('scenes.copy.progress', {
               originalTitle: originalPack.title,
@@ -123,7 +123,7 @@ newPackName.on('message', async (ctx) => {
           ).catch(() => {})
         }
 
-        ctx.telegram.editMessageText(
+        await ctx.telegram.editMessageText(
           message.chat.id, message.message_id, null,
           ctx.i18n.t('scenes.copy.done', {
             originalTitle: originalPack.title,

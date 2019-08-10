@@ -5,6 +5,8 @@ const { addSticker } = require('../utils')
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
+  let messageText = ''
+
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   let stickerFile
 
@@ -63,8 +65,6 @@ module.exports = async (ctx) => {
     else {
       const result = await addSticker(ctx, stickerFile)
 
-      let messageText = ''
-
       if (result.ok) {
         messageText = ctx.i18n.t('sticker.add.ok', {
           title: result.ok.title,
@@ -82,16 +82,20 @@ module.exports = async (ctx) => {
             })
           }
         }
+        else if (result.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
+        else {
+          messageText = ctx.i18n.t('error.telegram', {
+            error: result.error,
+          })
+        }
       }
-
-      ctx.replyWithHTML(messageText, {
-        reply_to_message_id: ctx.message.message_id,
-      })
     }
   }
   else {
-    ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
-      reply_to_message_id: ctx.message.message_id,
-    })
+    messageText = ctx.i18n.t('sticker.add.error.file_type')
   }
+
+  ctx.replyWithHTML(messageText, {
+    reply_to_message_id: ctx.message.message_id,
+  })
 }
