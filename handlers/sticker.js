@@ -16,7 +16,7 @@ module.exports = async (ctx) => {
       break
 
     case 'document':
-      if (['image/jpeg', 'image/png'].indexOf(ctx.message.documentmime_type)) {
+      if (['image/jpeg', 'image/png'].indexOf(ctx.message.document.mime_type)) {
         stickerFile = ctx.message.document
       }
       break
