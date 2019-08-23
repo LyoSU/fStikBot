@@ -48,75 +48,83 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
   emojis += ctx.session.user.stickerSet.emojiSuffix || ''
 
-  const fileUrl = await ctx.telegram.getFileLink(stickerFile)
-  const data = await downloadFileByUrl(fileUrl)
-  const imageSharp = sharp(data.read())
-  const imageMetadata = await imageSharp.metadata()
+  if (stickerFile.is_animated !== true) {
+    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
+    const data = await downloadFileByUrl(fileUrl)
+    const imageSharp = sharp(data.read())
+    const imageMetadata = await imageSharp.metadata()
 
-  if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
-  else imageSharp.resize({ width: 512 })
+    if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
+    else imageSharp.resize({ width: 512 })
 
-  const tmpPath = `tmp/${stickerFile.file_id}_${Date.now()}.png`
+    const tmpPath = `tmp/${stickerFile.file_id}_${Date.now()}.png`
 
-  await imageSharp.webp({ quality: 100 }).png({ compressionLevel: 9, force: false }).toFile(tmpPath)
+    await imageSharp.webp({ quality: 100 }).png({ compressionLevel: 9, force: false }).toFile(tmpPath)
 
-  const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
-  let stickerAdd = false
+    const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
-  if (ctx.session.user.stickerSet.create === false) {
+    let stickerAdd = false
+
+    if (ctx.session.user.stickerSet.create === false) {
     // eslint-disable-next-line max-len
-    stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.user.stickerSet.name, ctx.session.user.stickerSet.title, {
-      png_sticker: { source: tmpPath },
-      emojis,
-    }).catch((error) => {
-      resolve({
-        error: {
-          telegram: error,
-        },
+      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.user.stickerSet.name, ctx.session.user.stickerSet.title, {
+        png_sticker: { source: tmpPath },
+        emojis,
+      }).catch((error) => {
+        resolve({
+          error: {
+            telegram: error,
+          },
+        })
       })
-    })
+
+      if (stickerAdd) {
+        ctx.session.user.stickerSet.create = true
+        ctx.session.user.stickerSet.save()
+        ctx.session.user.save()
+      }
+    }
+    else {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.user.stickerSet.name, {
+        png_sticker: { source: tmpPath },
+        emojis,
+      }).catch((error) => {
+        resolve({
+          error: {
+            telegram: error,
+          },
+        })
+      })
+    }
 
     if (stickerAdd) {
-      ctx.session.user.stickerSet.create = true
-      ctx.session.user.stickerSet.save()
-      ctx.session.user.save()
+      const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.user.stickerSet.name)
+      const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+
+      ctx.db.Sticker.addSticker(ctx.session.user.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+        resolve({
+          error: {
+            telegram: error,
+          },
+        })
+      })
+
+      resolve({
+        ok: {
+          title: ctx.session.user.stickerSet.title,
+          link: `${ctx.config.stickerLinkPrefix}${ctx.session.user.stickerSet.name}`,
+          stickerInfo,
+        },
+      })
     }
+
+    fs.unlink(tmpPath, (err) => {
+      if (err) throw err
+    })
   }
   else {
-    stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.user.stickerSet.name, {
-      png_sticker: { source: tmpPath },
-      emojis,
-    }).catch((error) => {
-      resolve({
-        error: {
-          telegram: error,
-        },
-      })
-    })
-  }
-
-  if (stickerAdd) {
-    const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.user.stickerSet.name)
-    const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
-    ctx.db.Sticker.addSticker(ctx.session.user.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
-      resolve({
-        error: {
-          telegram: error,
-        },
-      })
-    })
-
     resolve({
-      ok: {
-        title: ctx.session.user.stickerSet.title,
-        link: `${ctx.config.stickerLinkPrefix}${ctx.session.user.stickerSet.name}`,
-        stickerInfo,
-      },
+      error: 'ITS_ANIMATED',
     })
   }
-
-  fs.unlink(tmpPath, (err) => {
-    if (err) throw err
-  })
 })
