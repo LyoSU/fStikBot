@@ -16,14 +16,16 @@ module.exports = async (ctx) => {
       break
 
     case 'document':
-      if (['image/jpeg', 'image/png'].indexOf(ctx.message.document.mime_type)) {
+      if (['image/jpeg', 'image/png'].indexOf(ctx.message.document.mime_type) >= 0) {
         stickerFile = ctx.message.document
+        if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
       }
       break
 
     case 'photo':
       // eslint-disable-next-line prefer-destructuring
       stickerFile = ctx.message.photo.slice(-1)[0]
+      if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
       break
 
     default:
@@ -95,7 +97,9 @@ module.exports = async (ctx) => {
     messageText = ctx.i18n.t('sticker.add.error.file_type')
   }
 
-  ctx.replyWithHTML(messageText, {
-    reply_to_message_id: ctx.message.message_id,
-  })
+  if (messageText) {
+    ctx.replyWithHTML(messageText, {
+      reply_to_message_id: ctx.message.message_id,
+    })
+  }
 }

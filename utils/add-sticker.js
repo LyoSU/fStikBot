@@ -65,6 +65,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
     let stickerAdd = false
 
+    console.log(emojis)
+
     if (ctx.session.user.stickerSet.create === false) {
     // eslint-disable-next-line max-len
       stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.user.stickerSet.name, ctx.session.user.stickerSet.title, {
