@@ -1,5 +1,13 @@
 const Markup = require('telegraf/markup')
 
+const escapeHTML = str => str.replace(/[&<>'"]/g,
+  tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag));
 
 module.exports = async (ctx) => {
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
@@ -20,7 +28,7 @@ module.exports = async (ctx) => {
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
       ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
-        title: stickerSet.title,
+        title: escapeHTML(stickerSet.title),
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
       }), {
         reply_to_message_id: ctx.callbackQuery.message.message_id,
