@@ -1,5 +1,5 @@
 const Markup = require('telegraf/markup')
-
+const handleStart = require('./start')
 
 module.exports = async (ctx) => {
   const locales = {
@@ -13,6 +13,9 @@ module.exports = async (ctx) => {
 
       ctx.session.user.locale = ctx.match[1]
       await ctx.session.user.save()
+
+      ctx.i18n.locale(ctx.session.user.locale)
+      await handleStart(ctx)
     }
   }
   else {
