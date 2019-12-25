@@ -23,6 +23,7 @@ const userSchema = mongoose.Schema({
     default: false,
   },
   payments: Array,
+  locale: String,
 }, {
   timestamps: true,
 })

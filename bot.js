@@ -15,6 +15,7 @@ const {
   handleHidePack,
   handleRestorePack,
   handleCopyPack,
+  handleLanguage
 } = require('./handlers')
 const scanes = require('./scanes')
 
@@ -65,10 +66,15 @@ bot.use(Telegraf.session())
 // response time logger
 bot.use(async (ctx, next) => {
   if (ctx.from) {
-    db.User.updateData(ctx.from).then((user) => {
-      ctx.session.user = user
-    })
+    if (!ctx.session.user) {
+      ctx.session.user = await db.User.updateData(ctx.from)
+    } else {
+      db.User.updateData(ctx.from).then((user) => {
+        ctx.session.user = user
+      })
+    }
   }
+  if (ctx.session.user && ctx.session.user.locale) ctx.i18n.locale(ctx.session.user.locale)
   await next(ctx)
   const ms = new Date() - ctx.ms
 
@@ -86,6 +92,7 @@ bot.hears(/addstickers\/(.*)/, handleCopyPack)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
+bot.command('lang', handleLanguage)
 
 // sticker detect
 bot.on(['sticker', 'document', 'photo'], handleSticker)
@@ -95,6 +102,7 @@ bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
 bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, handleRestoreSticker)
+bot.action(/set_language:(.*)/, handleLanguage)
 
 // forward from sticker bot
 bot.on('text', (ctx, next) => {
