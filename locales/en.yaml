@@ -1,0 +1,166 @@
+ratelimit: Not so often!
+cmd:
+  start:
+    info: |
+      Hi, <b>${name}</b>!
+      Send me a sticker or photo and I will add it to your sticker pack.
+
+      /packs - get your packs
+      /new - create a new sticker pack
+
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+
+      /donate - support the developer
+
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Developer channel: @LyBlog
+    btn:
+      packs: 🌟 Sticker packs
+      new: 🆕 Create a new sticker pack
+      donate: ☕️ 
+  restore: |
+      <b>🗃 Sticker pack restoration</b>
+
+      If you previously created a sticker pack through this bot and cannot find it in the list of your sticker packs, then you can restore it back.
+
+      <b>To do this, you need to perform several actions:</b>
+      1. Open @Stickers bot
+      2. Sned <code>/packstats</code> command
+      3. Find and choose the required sticker pack
+      4. Forward the received message to the bot
+      5. If restoration is successful - bot informs about it
+
+  copy: |
+      <b>🗄 Copy sticker pack</b>
+
+      If you supported the bot, copying all the stickers from any sticker pack with a new name will be available.
+      In order to copy the sticker pack you just need to send a link to it to the bot.
+  packs:
+    info: |
+      <b>🌟 Sticker packs:</b>
+    empty: |
+      <b>You have no sticker packs yet.</b>
+      To create, write a command /new
+  donate: |
+    <b>☕️ Supporting a bot development</b>
+
+    You can send money to me for coffee and get small bonuses in the bot in return.
+
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link 
+
+callback:
+  pack:
+    answerCbQuer:
+      hidden: Sticker pack successfully hidden
+      restored: Sticker pack successfully restored
+    set_pack: |
+      Selected sticker pack <a href="${link}">${title}</a>
+    hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
+    restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
+    btn:
+      hide: ❌ Hide sticker pack
+      restore: ✅ Restore
+    error:
+      restore: |
+        <b>Error!</b>
+        Cannot restore sticker pack.
+      copy: |
+        <b>Error!</b>
+        Cannot find sticker pack.
+  sticker:
+    answerCbQuery:
+      delete: The sticker was successfully removed from the sticker pack.
+      restored: The sticker was successfully saved to the current sticker pack.
+    delete: The sticker was successfully removed from the sticker pack.
+    restored: The sticker was successfully saved to the current sticker pack.
+    btn:
+      delete: 🗑 Delete
+      copy: 🌟 Copy
+      restore: ✅ Restore
+    error:
+      not_found: |
+        ERROR!
+        Cannot find a sticker.
+  donate:
+    title: Donate ${botUsername}
+    description: Direct support for the bot developer and additional features.
+    successful: |
+      <b>Thanks for supporting a bot development 💜</b>
+
+      You can write me @LyoSU with a suggestion of a feature that is missing, and I will try to implement it.
+    btn:
+      buy: 💜 Pay
+
+sticker:
+  add:
+    ok: |
+      <b>Sticker successfully added to sticker pack:</b>
+      <a href="${link}">${title}</a>
+    error:
+      stickers_too_musch: |
+        <b>Error!</b>
+        This sticker pack has the maximum number of stickers.
+        You can create a new sticker pack using the /new command.
+      have_already: |
+        <b>Error!</b>
+        This sticker is already in this sticker pack.
+      file_type: |
+        <b>Error!</b>
+        This file type is not supported.
+
+scenes:
+  new_pack:
+    pack_title: |
+      <b>Enter new stickers pack name:</b>
+    pack_name: |
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only latin letters, numbers and underscores.</i>
+    ok: |
+      Sticker pack <a href="${link}">${title}</a> successfully created!
+
+      <b>Sticker pack link:</b> <pre>${link}</pre>
+
+      You can edit it in the official @Stickers bot
+    error:
+      title_long: Name cannot be greater than ${max} symbols.
+      name_long: Address cannot be greater than ${max} символов.
+      telegram:
+        name_invalid: That address cannot be used.
+  copy:
+    enter: |
+      I can copy this sticker pack, for this you need to create a new sticker pack.
+    progress: |
+      Copying sticker pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+
+      Progress: ${current}/${total}
+    done: |
+      Sticker pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+    error:
+      premium: |
+        <b>Error!</b>
+        Unfortunately, this feature is only available to those who supported the bot.
+
+        You can do this by sending the /donate command.
+  original:
+    enter: |
+      Send the sticker that was added through this bot and I will show you its original sticker.
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the original sticker.
+  leave: |
+      Action canceled.
+  btn:
+      cancel: ❌ Cancel.
+
+error:
+  telegram: |
+    <b>Telegram returned an error!</b>
+    <code>${error}</code>
+  answerCbQuery:
+    telegram: |
+      Telegram returned an error:
+      ${error}
