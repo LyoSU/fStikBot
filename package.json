@@ -21,7 +21,7 @@
   "dependencies": {
     "dotenv": "^7.0.0",
     "hasha": "^5.0.0",
-    "mongoose": "^5.5.14",
+    "mongoose": "^5.7.5",
     "sharp": "^0.22.1",
     "telegraf": "^3.34.1",
     "telegraf-i18n": "^6.5.0",
