@@ -54,12 +54,17 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     const imageSharp = sharp(data.read())
     const imageMetadata = await imageSharp.metadata()
 
-    if (imageMetadata.height >= imageMetadata.width) imageSharp.resize({ height: 512 })
-    else imageSharp.resize({ width: 512 })
+    if (
+      imageMetadata.width > 512 || imageMetadata.height > 512
+      || (imageMetadata.width !== 512 && imageMetadata.height !== 512)
+    ) {
+      if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
+      else imageSharp.resize({ width: 512 })
+    }
 
     const tmpPath = `tmp/${stickerFile.file_id}_${Date.now()}.png`
 
-    await imageSharp.webp({ quality: 100 }).png({ compressionLevel: 9, force: false }).toFile(tmpPath)
+    await imageSharp.png().toFile(tmpPath)
 
     const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 

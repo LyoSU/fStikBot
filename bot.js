@@ -15,7 +15,7 @@ const {
   handleHidePack,
   handleRestorePack,
   handleCopyPack,
-  handleLanguage
+  handleLanguage,
 } = require('./handlers')
 const scanes = require('./scanes')
 
@@ -68,7 +68,8 @@ bot.use(async (ctx, next) => {
   if (ctx.from) {
     if (!ctx.session.user) {
       ctx.session.user = await db.User.updateData(ctx.from)
-    } else {
+    }
+    else {
       db.User.updateData(ctx.from).then((user) => {
         ctx.session.user = user
       })
