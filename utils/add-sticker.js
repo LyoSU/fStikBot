@@ -64,7 +64,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
     const tmpPath = `tmp/${stickerFile.file_id}_${Date.now()}.png`
 
-    await imageSharp.png().toFile(tmpPath)
+    await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath)
 
     const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
