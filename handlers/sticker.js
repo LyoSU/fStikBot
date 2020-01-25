@@ -36,22 +36,22 @@ module.exports = async (ctx) => {
     ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_id}`),
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${stickerFile.file_id}`),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_unique_id}`),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${stickerFile.file_unique_id}`),
       ]),
     })
   }
   else if (stickerFile) {
-    let findFile = stickerFile.file_id
+    let findFile = stickerFile.file_unique_id
     const originalSticker = await ctx.db.Sticker.findOne({
-      fileId: stickerFile.file_id,
+      fileUniqueId: stickerFile.file_unique_id,
     })
 
-    if (originalSticker) findFile = originalSticker.file.file_id
+    if (originalSticker) findFile = originalSticker.file.file_unique_id
 
     const sticker = await ctx.db.Sticker.findOne({
       stickerSet: ctx.session.user.stickerSet,
-      'file.file_id': findFile,
+      'file.file_unique_id': findFile,
       deleted: false,
     })
 
@@ -59,8 +59,8 @@ module.exports = async (ctx) => {
       ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_id}`),
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.info.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_unique_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.info.file_unique_id}`),
         ]),
       })
     }

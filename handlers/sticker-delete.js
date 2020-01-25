@@ -13,7 +13,7 @@ module.exports = async (ctx) => {
 
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   const sticker = await ctx.db.Sticker.findOne({
-    fileId: ctx.match[2],
+    fileUniqueId: ctx.match[2],
   }).populate('stickerSet')
 
   if (sticker && sticker.stickerSet.owner.toString() === ctx.session.user.id.toString()) {
@@ -35,7 +35,7 @@ module.exports = async (ctx) => {
 
       ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${deleteSticker}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.info.file_unique_id}`),
         ]),
       }).catch(() => {})
 

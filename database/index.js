@@ -75,6 +75,7 @@ db.Sticker.addSticker = (stickerSet, emojis, md5, info, file) => new Promise(asy
 
   sticker.stickerSet = stickerSet
   sticker.fileId = info.file_id
+  sticker.fileUniqueId = info.file_unique_id
   sticker.emojis = emojis
   sticker.hash.md5 = md5
   sticker.info = info

@@ -16,6 +16,7 @@ const {
   handleRestorePack,
   handleCopyPack,
   handleLanguage,
+  handleMessaging,
 } = require('./handlers')
 const scanes = require('./scanes')
 
@@ -27,7 +28,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.use((ctx, next) => {
   ctx.ms = new Date()
-  next()
+  return next()
 })
 
 // I18n settings
@@ -95,6 +96,8 @@ bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('lang', handleLanguage)
 
+// bot.command('mess', handleMessaging)
+
 // sticker detect
 bot.on(['sticker', 'document', 'photo'], handleSticker)
 
@@ -108,7 +111,7 @@ bot.action(/set_language:(.*)/, handleLanguage)
 // forward from sticker bot
 bot.on('text', (ctx, next) => {
   if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) handleRestorePack(ctx)
-  else next()
+  else return next()
 })
 
 // donate

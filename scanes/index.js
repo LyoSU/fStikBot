@@ -15,7 +15,7 @@ const stage = new Stage([].concat(sceneNewPack, originalSticker))
 
 stage.use((ctx, next) => {
   if (!ctx.session.scane) ctx.session.scane = {}
-  next()
+  return next()
 })
 
 stage.hears((['/cancel', match('scenes.btn.cancel')]), async (ctx) => {

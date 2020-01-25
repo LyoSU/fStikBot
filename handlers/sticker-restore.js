@@ -4,7 +4,7 @@ const { addSticker } = require('../utils')
 
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
-    fileId: ctx.match[2],
+    fileUniqueId: ctx.match[2],
   }).populate('stickerSet')
 
   if (sticker) {
@@ -15,8 +15,8 @@ module.exports = async (ctx) => {
 
       ctx.editMessageText(ctx.i18n.t('callback.sticker.restored'), {
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${result.ok.stickerInfo.file_id}`),
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${result.ok.stickerInfo.file_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${result.ok.stickerInfo.file_unique_id}`),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${result.ok.stickerInfo.file_unique_id}`),
         ]),
       }).catch(() => {})
     }

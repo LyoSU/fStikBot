@@ -24,5 +24,5 @@ module.exports = (ctx, next) => {
     }
   })
 
-  next()
+  return next()
 }
