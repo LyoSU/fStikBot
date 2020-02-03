@@ -61,20 +61,6 @@ bot.telegram.getMe().then((botInfo) => {
 // db connect
 bot.context.db = db
 
-;(async () => {
-  const stickers = db.Sticker.find({
-    fileUniqueId: { $exists: false }
-  }).cursor()
-
-  stickers.on('data', async (sticker) => {
-    const sendSticker = await bot.telegram.sendDocument(-1001238533953, sticker.fileId)
-
-    sticker.fileId = sendSticker.sticker.file_id
-    sticker.fileUniqueId = sendSticker.sticker.file_unique_id
-    sticker.save()
-  })
-})()
-
 // use session
 bot.use(Telegraf.session())
 
