@@ -49,11 +49,15 @@ module.exports = async (ctx) => {
 
     if (originalSticker) findFile = originalSticker.file.file_unique_id
 
-    const sticker = await ctx.db.Sticker.findOne({
-      stickerSet: ctx.session.user.stickerSet,
-      'file.file_unique_id': findFile,
-      deleted: false,
-    })
+    let sticker
+
+    if (findFile) {
+      sticker = await ctx.db.Sticker.findOne({
+        stickerSet: ctx.session.user.stickerSet,
+        'file.file_unique_id': findFile,
+        deleted: false,
+      })
+    }
 
     if (sticker) {
       ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
