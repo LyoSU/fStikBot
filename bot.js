@@ -128,5 +128,21 @@ bot.catch((error) => {
 })
 
 // start bot
-bot.launch()
-console.log('bot start')
+db.connection.once('open', async () => {
+  console.log('Connected to MongoDB')
+  if (process.env.BOT_DOMAIN) {
+    bot.launch({
+      webhook: {
+        domain: process.env.BOT_DOMAIN,
+        hookPath: `/fStikBot:${process.env.BOT_TOKEN}`,
+        port: process.env.WEBHOOK_PORT || 2500,
+      }
+    }).then(() => {
+      console.log('bot start webhook')
+    })
+  } else {
+    bot.launch().then(() => {
+      console.log('bot start polling')
+    })
+  }
+})
