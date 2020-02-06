@@ -24,7 +24,11 @@ const scanes = require('./scanes')
 global.startDate = new Date()
 
 // init bot
-const bot = new Telegraf(process.env.BOT_TOKEN)
+const bot = new Telegraf(process.env.BOT_TOKEN, {
+  telegram: {
+    webhookReply: false,
+  },
+})
 
 bot.use((ctx, next) => {
   ctx.ms = new Date()
