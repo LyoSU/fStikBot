@@ -1,5 +1,6 @@
 const path = require('path')
 const Telegraf = require('telegraf')
+const session = require('telegraf/session')
 const rateLimit = require('telegraf-ratelimit')
 const I18n = require('telegraf-i18n')
 const {
@@ -30,11 +31,6 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   },
 })
 
-bot.use((ctx, next) => {
-  ctx.ms = new Date()
-  return next()
-})
-
 // I18n settings
 const { match } = I18n
 const i18n = new I18n({
@@ -43,7 +39,7 @@ const i18n = new I18n({
 })
 
 // I18n middleware
-bot.use(i18n.middleware())
+bot.use(i18n)
 
 // rate limit
 const limitConfig = {
@@ -54,22 +50,24 @@ const limitConfig = {
 
 bot.use(rateLimit(limitConfig))
 
+// error handling
+bot.catch((error, ctx) => {
+  console.error(`error for ${ctx.updateType}`, error)
+})
+
 // bot config
 bot.context.config = require('./config.json')
-
-// get bot username
-bot.telegram.getMe().then((botInfo) => {
-  bot.options.username = botInfo.username
-})
 
 // db connect
 bot.context.db = db
 
 // use session
-bot.use(Telegraf.session())
+bot.use(session({ ttl: 60 * 5 }))
 
 // response time logger
 bot.use(async (ctx, next) => {
+  const ms = new Date()
+
   if (ctx.from) {
     if (!ctx.session.user) {
       ctx.session.user = await db.User.updateData(ctx.from)
@@ -81,10 +79,10 @@ bot.use(async (ctx, next) => {
     }
   }
   if (ctx.session.user && ctx.session.user.locale) ctx.i18n.locale(ctx.session.user.locale)
-  await next(ctx)
-  const ms = new Date() - ctx.ms
-
-  console.log('Response time %sms', ms)
+  return next(ctx).then(() => {
+    if (ctx.callbackQuery) ctx.answerCbQuery(...ctx.state.answerCbQuery)
+    console.log('Response time %sms', new Date() - ms)
+  })
 })
 
 // scene
@@ -126,11 +124,6 @@ bot.on('successful_payment', handleDonate)
 // any message
 bot.on('message', handleStart)
 
-// error handling
-bot.catch((error) => {
-  console.log('Oops', error)
-})
-
 // start bot
 db.connection.once('open', async () => {
   console.log('Connected to MongoDB')
@@ -140,11 +133,12 @@ db.connection.once('open', async () => {
         domain: process.env.BOT_DOMAIN,
         hookPath: `/fStikBot:${process.env.BOT_TOKEN}`,
         port: process.env.WEBHOOK_PORT || 2500,
-      }
+      },
     }).then(() => {
       console.log('bot start webhook')
     })
-  } else {
+  }
+  else {
     bot.launch().then(() => {
       console.log('bot start polling')
     })

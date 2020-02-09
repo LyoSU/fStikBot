@@ -64,9 +64,9 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
     const tmpPath = `tmp/${stickerFile.file_id}_${Date.now()}.png`
 
-    await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath)
+    await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath).catch(() => {})
 
-    const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
+    const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' }).catch(() => {})
 
     let stickerAdd = false
 
@@ -123,9 +123,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
       })
     }
 
-    fs.unlink(tmpPath, (err) => {
-      if (err) throw err
-    })
+    fs.unlinkSync(tmpPath).catch(() => {})
   }
   else {
     resolve({
