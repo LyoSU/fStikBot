@@ -52,7 +52,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
     const imageSharp = sharp(data.read())
-    const imageMetadata = await imageSharp.metadata()
+    const imageMetadata = await imageSharp.metadata().catch(() => {})
 
     if (
       imageMetadata.width > 512 || imageMetadata.height > 512

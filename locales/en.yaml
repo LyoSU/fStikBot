@@ -19,7 +19,7 @@ cmd:
     btn:
       packs: 🌟 Sticker packs
       new: 🆕 Create a new sticker pack
-      donate: ☕️ 
+      donate: ☕️
   restore: |
       <b>🗃 Sticker pack restoration</b>
 
@@ -49,7 +49,7 @@ cmd:
     You can send money to me for coffee and get small bonuses in the bot in return.
 
     ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link 
+    ➖ Copying of other sticker packs by link
 
 callback:
   pack:
@@ -154,7 +154,7 @@ scenes:
   leave: |
       Action canceled.
   btn:
-      cancel: ❌ Cancel.
+    cancel: ❌ Cancel
 
 error:
   telegram: |
