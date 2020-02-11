@@ -77,6 +77,7 @@ bot.use(async (ctx, next) => {
     }
   }
   if (ctx.session.user && ctx.session.user.locale) ctx.i18n.locale(ctx.session.user.locale)
+  if (ctx.callbackQuery) ctx.state.answerCbQuery = []
   return next(ctx).then(() => {
     if (ctx.callbackQuery) ctx.answerCbQuery(...ctx.state.answerCbQuery)
     console.log('Response time %sms', new Date() - ms)
