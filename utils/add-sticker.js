@@ -123,7 +123,12 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
       })
     }
 
-    fs.unlinkSync(tmpPath).catch(() => {})
+    try {
+      fs.unlinkSync(tmpPath)
+    }
+    catch (error) {
+      console.error(error)
+    }
   }
   else {
     resolve({
