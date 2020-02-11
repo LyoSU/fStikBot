@@ -1,32 +1,30 @@
 const mongoose = require('mongoose')
 
-
 const userSchema = mongoose.Schema({
   telegram_id: {
     type: Number,
     index: true,
     unique: true,
-    required: true,
+    required: true
   },
   first_name: {
     type: String,
-    required: true,
+    required: true
   },
   last_name: String,
   username: String,
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet',
+    ref: 'StickerSet'
   },
   premium: {
     type: Boolean,
-    default: false,
+    default: false
   },
   payments: Array,
-  locale: String,
+  locale: String
 }, {
-  timestamps: true,
+  timestamps: true
 })
-
 
 module.exports = userSchema

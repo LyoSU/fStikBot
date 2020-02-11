@@ -1,7 +1,6 @@
 const Markup = require('telegraf/markup')
 const { addSticker } = require('../utils')
 
-
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
@@ -37,14 +36,13 @@ module.exports = async (ctx) => {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
         Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_unique_id}`),
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${stickerFile.file_unique_id}`),
-      ]),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${stickerFile.file_unique_id}`)
+      ])
     })
-  }
-  else if (stickerFile) {
+  } else if (stickerFile) {
     let findFile = stickerFile.file_unique_id
     const originalSticker = await ctx.db.Sticker.findOne({
-      fileUniqueId: stickerFile.file_unique_id,
+      fileUniqueId: stickerFile.file_unique_id
     })
 
     if (originalSticker) findFile = originalSticker.file.file_unique_id
@@ -55,7 +53,7 @@ module.exports = async (ctx) => {
       sticker = await ctx.db.Sticker.findOne({
         stickerSet: ctx.session.user.stickerSet,
         'file.file_unique_id': findFile,
-        deleted: false,
+        deleted: false
       })
     }
 
@@ -64,46 +62,41 @@ module.exports = async (ctx) => {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_unique_id}`),
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.info.file_unique_id}`),
-        ]),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.info.file_unique_id}`)
+        ])
       })
-    }
-    else {
+    } else {
       const result = await addSticker(ctx, stickerFile)
 
       if (result.ok) {
         messageText = ctx.i18n.t('sticker.add.ok', {
           title: result.ok.title,
-          link: result.ok.link,
+          link: result.ok.link
         })
-      }
-      else if (result.error) {
+      } else if (result.error) {
         if (result.error.telegram) {
           if (result.error.telegram.description === 'Bad Request: STICKERS_TOO_MUCH') {
             messageText = ctx.i18n.t('sticker.add.error.stickers_too_musch')
-          }
-          else {
+          } else {
             messageText = ctx.i18n.t('error.telegram', {
-              error: result.error.telegram.description,
+              error: result.error.telegram.description
             })
           }
-        }
-        else if (result.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
+        } else if (result.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
         else {
           messageText = ctx.i18n.t('error.telegram', {
-            error: result.error,
+            error: result.error
           })
         }
       }
     }
-  }
-  else {
+  } else {
     messageText = ctx.i18n.t('sticker.add.error.file_type')
   }
 
   if (messageText) {
     ctx.replyWithHTML(messageText, {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx.message.message_id
     })
   }
 }

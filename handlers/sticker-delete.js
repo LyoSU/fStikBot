@@ -1,6 +1,5 @@
 const Markup = require('telegraf/markup')
 
-
 module.exports = async (ctx) => {
   let packBotUsername
   let deleteSticker
@@ -13,20 +12,19 @@ module.exports = async (ctx) => {
 
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   const sticker = await ctx.db.Sticker.findOne({
-    fileUniqueId: ctx.match[2],
+    fileUniqueId: ctx.match[2]
   }).populate('stickerSet')
 
   if (sticker && sticker.stickerSet.owner.toString() === ctx.session.user.id.toString()) {
     deleteSticker = sticker.info.file_id
-  }
-  else if (packBotUsername && packBotUsername === ctx.options.username) {
+  } else if (packBotUsername && packBotUsername === ctx.options.username) {
     deleteSticker = ctx.callbackQuery.message.reply_to_message.sticker.file_id
   }
 
   if (deleteSticker) {
     const deleteStickerFromSet = await ctx.deleteStickerFromSet(deleteSticker).catch((error) => {
       ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
-        error: error.description,
+        error: error.description
       }), true)
     })
 
@@ -35,8 +33,8 @@ module.exports = async (ctx) => {
 
       ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.info.file_unique_id}`),
-        ]),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.info.file_unique_id}`)
+        ])
       }).catch(() => {})
 
       if (sticker) {
@@ -44,6 +42,5 @@ module.exports = async (ctx) => {
         sticker.save()
       }
     }
-  }
-  else ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
+  } else ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
 }

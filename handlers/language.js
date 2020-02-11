@@ -4,7 +4,7 @@ const handleStart = require('./start')
 module.exports = async (ctx) => {
   const locales = {
     en: '🇺🇸',
-    ru: '🇷🇺',
+    ru: '🇷🇺'
   }
 
   if (ctx.updateType === 'callback_query') {
@@ -17,8 +17,7 @@ module.exports = async (ctx) => {
       ctx.i18n.locale(ctx.session.user.locale)
       await handleStart(ctx)
     }
-  }
-  else {
+  } else {
     const button = []
 
     Object.keys(locales).map((key) => {
@@ -27,8 +26,8 @@ module.exports = async (ctx) => {
 
     ctx.reply('🇷🇺 Выберите язык\n🇺🇸 Choose language', {
       reply_markup: Markup.inlineKeyboard(button, {
-        columns: 5,
-      }),
+        columns: 5
+      })
     })
   }
 }

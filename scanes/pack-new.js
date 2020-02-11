@@ -1,10 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const {
-  handleStart,
+  handleStart
 } = require('../handlers')
 const { addSticker } = require('../utils')
-
 
 const newPack = new Scene('newPack')
 
@@ -14,21 +13,20 @@ newPack.enter((ctx) => {
     reply_to_message_id: ctx.message.message_id,
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel'),
-      ],
-    ]).resize(),
+        ctx.i18n.t('scenes.btn.cancel')
+      ]
+    ]).resize()
   })
 })
 newPack.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charTitleMax) {
     ctx.session.scane.newPack.title = ctx.message.text
     ctx.scene.enter('newPackName')
-  }
-  else {
+  } else {
     ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
-      max: ctx.config.charTitleMax,
+      max: ctx.config.charTitleMax
     }), {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx.message.message_id
     })
   }
 })
@@ -36,7 +34,7 @@ newPack.on('message', async (ctx) => {
 const newPackName = new Scene('newPackName')
 
 newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
-  reply_to_message_id: ctx.message.message_id,
+  reply_to_message_id: ctx.message.message_id
 }))
 newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
@@ -54,19 +52,18 @@ newPackName.on('message', async (ctx) => {
 
     const createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, {
       png_sticker: { source: 'sticker_placeholder.png' },
-      emojis: '🌟',
+      emojis: '🌟'
     }).catch(async (error) => {
       if (error.description === 'Bad Request: sticker set name invalid') {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid'), {
-          reply_to_message_id: ctx.message.message_id,
+          reply_to_message_id: ctx.message.message_id
         })
         ctx.scene.reenter()
-      }
-      else {
+      } else {
         await ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
-          error: error.description,
+          error: error.description
         }), {
-          reply_to_message_id: ctx.message.message_id,
+          reply_to_message_id: ctx.message.message_id
         })
         ctx.scene.reenter()
       }
@@ -83,16 +80,16 @@ newPackName.on('message', async (ctx) => {
         name,
         title,
         emojiSuffix: '🌟',
-        create: true,
+        create: true
       })
 
       ctx.session.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
         title,
-        link: `${ctx.config.stickerLinkPrefix}${name}`,
+        link: `${ctx.config.stickerLinkPrefix}${name}`
       }), {
-        reply_to_message_id: ctx.message.message_id,
+        reply_to_message_id: ctx.message.message_id
       })
       if (ctx.session.scane.copyPack) {
         const originalPack = ctx.session.scane.copyPack
@@ -103,7 +100,7 @@ newPackName.on('message', async (ctx) => {
           title,
           link: `${ctx.config.stickerLinkPrefix}${name}`,
           current: 0,
-          total: originalPack.stickers.length,
+          total: originalPack.stickers.length
         }))
 
         for (let index = 0; index < originalPack.stickers.length; index++) {
@@ -117,7 +114,7 @@ newPackName.on('message', async (ctx) => {
               title,
               link: `${ctx.config.stickerLinkPrefix}${name}`,
               current: index,
-              total: originalPack.stickers.length,
+              total: originalPack.stickers.length
             }),
             { parse_mode: 'HTML' }
           ).catch(() => {})
@@ -129,22 +126,20 @@ newPackName.on('message', async (ctx) => {
             originalTitle: originalPack.title,
             originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
             title,
-            link: `${ctx.config.stickerLinkPrefix}${name}`,
+            link: `${ctx.config.stickerLinkPrefix}${name}`
           }),
           { parse_mode: 'HTML' }
         )
 
         ctx.scene.leave()
-      }
-      else ctx.scene.leave()
+      } else ctx.scene.leave()
       handleStart(ctx)
     }
-  }
-  else {
+  } else {
     ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
-      max: ctx.config.charNameMax,
+      max: ctx.config.charNameMax
     }), {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx.message.message_id
     })
   }
 })

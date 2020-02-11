@@ -1,6 +1,5 @@
 const Markup = require('telegraf/markup')
 
-
 const escapeHTML = (str) => str.replace(
   /[&<>'"]/g,
   (tag) => ({
@@ -8,7 +7,7 @@ const escapeHTML = (str) => str.replace(
     '<': '&lt;',
     '>': '&gt;',
     "'": '&#39;',
-    '"': '&quot;',
+    '"': '&quot;'
   }[tag] || tag)
 )
 
@@ -17,7 +16,7 @@ module.exports = async (ctx) => {
   const stickerSets = await ctx.db.StickerSet.find({
     owner: ctx.session.user.id,
     create: true,
-    hide: false,
+    hide: false
   })
 
   if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
@@ -32,17 +31,16 @@ module.exports = async (ctx) => {
 
       ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
         title: escapeHTML(stickerSet.title),
-        link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
+        link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
       }), {
         reply_to_message_id: ctx.callbackQuery.message.message_id,
         reply_markup: Markup.inlineKeyboard([
           [
-            Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`),
-          ],
-        ]),
+            Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
+          ]
+        ])
       })
-    }
-    else {
+    } else {
       ctx.answerCbQuery('error', true)
     }
   }
@@ -59,21 +57,19 @@ module.exports = async (ctx) => {
       if (ctx.session.user.stickerSet.id.toString() === pack.id.toString()) title = `✅ ${title}`
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
     })
-  }
-  else {
+  } else {
     messageText = ctx.i18n.t('cmd.packs.empty')
   }
 
   if (ctx.updateType === 'message') {
     ctx.replyWithHTML(messageText, {
       reply_to_message_id: ctx.message.message_id,
-      reply_markup: Markup.inlineKeyboard(keyboardMarkup),
+      reply_markup: Markup.inlineKeyboard(keyboardMarkup)
     })
-  }
-  else if (ctx.updateType === 'callback_query') {
+  } else if (ctx.updateType === 'callback_query') {
     ctx.editMessageText(messageText, {
       reply_markup: Markup.inlineKeyboard(keyboardMarkup),
-      parse_mode: 'HTML',
+      parse_mode: 'HTML'
     }).catch(() => {})
   }
 }

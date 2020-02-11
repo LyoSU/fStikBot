@@ -1,39 +1,37 @@
 const mongoose = require('mongoose')
 
-
 const stickersSchema = mongoose.Schema({
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet',
+    ref: 'StickerSet'
   },
   fileId: {
     type: String,
     index: true,
     unique: true,
-    required: true,
+    required: true
   },
   fileUniqueId: {
     type: String,
     index: true,
     unique: true,
-    required: true,
+    required: true
   },
   emojis: String,
   hash: {
     md5: {
       type: String,
-      index: true,
-    },
+      index: true
+    }
   },
   info: Object,
   file: Object,
   deleted: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 }, {
-  timestamps: true,
+  timestamps: true
 })
-
 
 module.exports = stickersSchema

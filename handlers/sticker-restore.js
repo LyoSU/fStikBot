@@ -1,10 +1,9 @@
 const Markup = require('telegraf/markup')
 const { addSticker } = require('../utils')
 
-
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
-    fileUniqueId: ctx.match[2],
+    fileUniqueId: ctx.match[2]
   }).populate('stickerSet')
 
   if (sticker) {
@@ -16,19 +15,17 @@ module.exports = async (ctx) => {
       ctx.editMessageText(ctx.i18n.t('callback.sticker.restored'), {
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${result.ok.stickerInfo.file_unique_id}`),
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${result.ok.stickerInfo.file_unique_id}`),
-        ]),
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${result.ok.stickerInfo.file_unique_id}`)
+        ])
       }).catch(() => {})
-    }
-    else if (result.error) {
+    } else if (result.error) {
       if (result.error.telegram) {
         ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
-          error: result.error.telegram.description,
+          error: result.error.telegram.description
         }), true)
       }
     }
-  }
-  else {
+  } else {
     ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 }

@@ -4,7 +4,7 @@ const session = require('telegraf/session')
 const rateLimit = require('telegraf-ratelimit')
 const I18n = require('telegraf-i18n')
 const {
-  db,
+  db
 } = require('./database')
 const {
   handleStart,
@@ -16,26 +16,25 @@ const {
   handleHidePack,
   handleRestorePack,
   handleCopyPack,
-  handleLanguage,
-  handleMessaging,
+  handleLanguage
+  // handleMessaging
 } = require('./handlers')
 const scanes = require('./scanes')
-
 
 global.startDate = new Date()
 
 // init bot
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
-    webhookReply: false,
-  },
+    webhookReply: false
+  }
 })
 
 // I18n settings
 const { match } = I18n
 const i18n = new I18n({
   directory: path.resolve(__dirname, 'locales'),
-  defaultLanguage: 'ru',
+  defaultLanguage: 'ru'
 })
 
 // I18n middleware
@@ -45,7 +44,7 @@ bot.use(i18n)
 const limitConfig = {
   window: 300,
   limit: 1,
-  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit')),
+  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
 }
 
 bot.use(rateLimit(limitConfig))
@@ -71,8 +70,7 @@ bot.use(async (ctx, next) => {
   if (ctx.from) {
     if (!ctx.session.user) {
       ctx.session.user = await db.User.updateData(ctx.from)
-    }
-    else {
+    } else {
       db.User.updateData(ctx.from).then((user) => {
         ctx.session.user = user
       })
@@ -132,13 +130,12 @@ db.connection.once('open', async () => {
       webhook: {
         domain: process.env.BOT_DOMAIN,
         hookPath: `/fStikBot:${process.env.BOT_TOKEN}`,
-        port: process.env.WEBHOOK_PORT || 2500,
-      },
+        port: process.env.WEBHOOK_PORT || 2500
+      }
     }).then(() => {
       console.log('bot start webhook')
     })
-  }
-  else {
+  } else {
     bot.launch().then(() => {
       console.log('bot start polling')
     })

@@ -1,9 +1,8 @@
 const collections = require('./models')
 const connection = require('./connection')
 
-
 const db = {
-  connection,
+  connection
 }
 
 Object.keys(collections).forEach((collectionName) => {
@@ -88,5 +87,5 @@ db.Sticker.addSticker = (stickerSet, emojis, md5, info, file) => new Promise(asy
 })
 
 module.exports = {
-  db,
+  db
 }

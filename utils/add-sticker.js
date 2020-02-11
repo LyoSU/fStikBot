@@ -4,7 +4,6 @@ const Stream = require('stream').Transform
 const sharp = require('sharp')
 const hasha = require('hasha')
 
-
 const downloadFileByUrl = (fileUrl) => new Promise(async (resolve, reject) => {
   const data = new Stream()
 
@@ -23,7 +22,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
   let stickerFile = inputFile
 
   const originalSticker = await ctx.db.Sticker.findOne({
-    fileUniqueId: stickerFile.file_unique_id,
+    fileUniqueId: stickerFile.file_unique_id
   })
 
   if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
@@ -37,7 +36,7 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     owner: ctx.session.user.id,
     name: `f_${Math.random().toString(36).substring(5)}_${ctx.from.id}`,
     title: 'Favorite stickers',
-    emojiSuffix: '🌟',
+    emojiSuffix: '🌟'
   }
 
   defaultStickerSet.name += nameSuffix
@@ -55,8 +54,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     const imageMetadata = await imageSharp.metadata().catch(() => {})
 
     if (
-      imageMetadata.width > 512 || imageMetadata.height > 512
-      || (imageMetadata.width !== 512 && imageMetadata.height !== 512)
+      imageMetadata.width > 512 || imageMetadata.height > 512 ||
+      (imageMetadata.width !== 512 && imageMetadata.height !== 512)
     ) {
       if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
       else imageSharp.resize({ width: 512 })
@@ -74,12 +73,12 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
     // eslint-disable-next-line max-len
       stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.user.stickerSet.name, ctx.session.user.stickerSet.title, {
         png_sticker: { source: tmpPath },
-        emojis,
+        emojis
       }).catch((error) => {
         resolve({
           error: {
-            telegram: error,
-          },
+            telegram: error
+          }
         })
       })
 
@@ -88,16 +87,15 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
         ctx.session.user.stickerSet.save()
         ctx.session.user.save()
       }
-    }
-    else {
+    } else {
       stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.user.stickerSet.name, {
         png_sticker: { source: tmpPath },
-        emojis,
+        emojis
       }).catch((error) => {
         resolve({
           error: {
-            telegram: error,
-          },
+            telegram: error
+          }
         })
       })
     }
@@ -109,8 +107,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
       ctx.db.Sticker.addSticker(ctx.session.user.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
         resolve({
           error: {
-            telegram: error,
-          },
+            telegram: error
+          }
         })
       })
 
@@ -118,21 +116,19 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
         ok: {
           title: ctx.session.user.stickerSet.title,
           link: `${ctx.config.stickerLinkPrefix}${ctx.session.user.stickerSet.name}`,
-          stickerInfo,
-        },
+          stickerInfo
+        }
       })
     }
 
     try {
       fs.unlinkSync(tmpPath)
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error)
     }
-  }
-  else {
+  } else {
     resolve({
-      error: 'ITS_ANIMATED',
+      error: 'ITS_ANIMATED'
     })
   }
 })

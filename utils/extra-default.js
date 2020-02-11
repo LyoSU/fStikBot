@@ -1,11 +1,11 @@
 module.exports = (ctx, next) => {
   const extraDefault = {
-    parse_mode: 'HTML',
+    parse_mode: 'HTML'
   }
 
   const methods = {
     reply: ctx.reply,
-    editMessageText: ctx.editMessageText,
+    editMessageText: ctx.editMessageText
   }
 
   Object.keys(methods).forEach((method) => {
@@ -15,8 +15,7 @@ module.exports = (ctx, next) => {
       if (typeof extra === 'object') {
         parm = parm.slice(0, parm.length - 1)
         extra = { ...extraDefault, ...extra }
-      }
-      else {
+      } else {
         extra = extraDefault
       }
 

@@ -1,9 +1,7 @@
 const Queue = require('bull')
 const Telegram = require('telegraf/telegram')
 
-
 const telegram = new Telegram(process.env.BOT_TOKEN)
-
 
 module.exports = (findUser, text, extra) => new Promise((resolve) => {
   const users = findUser.cursor()
@@ -13,8 +11,8 @@ module.exports = (findUser, text, extra) => new Promise((resolve) => {
   const queue = new Queue(jobName, {
     limiter: {
       max: 10,
-      duration: 1000,
-    },
+      duration: 1000
+    }
   })
 
   queue.process((job, done) => {
@@ -29,7 +27,7 @@ module.exports = (findUser, text, extra) => new Promise((resolve) => {
     queue.add({
       chatId: user.telegram_id,
       text,
-      extra,
+      extra
     })
   })
 

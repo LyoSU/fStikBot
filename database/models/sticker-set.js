@@ -1,34 +1,32 @@
 const mongoose = require('mongoose')
 
-
 const stickerSetsSchema = mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   name: {
     type: String,
     index: true,
     unique: true,
-    required: true,
+    required: true
   },
   title: {
     type: String,
     index: true,
-    required: true,
+    required: true
   },
   emojiSuffix: String,
   create: {
     type: Boolean,
-    default: false,
+    default: false
   },
   hide: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 }, {
-  timestamps: true,
+  timestamps: true
 })
-
 
 module.exports = stickerSetsSchema

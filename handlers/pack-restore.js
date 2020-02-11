@@ -9,7 +9,7 @@ module.exports = async (ctx) => {
 
       if (getStickerSet.name.split('_').pop(-1) === ctx.options.username) {
         const findStickerSet = await ctx.db.StickerSet.findOne({
-          name: getStickerSet.name,
+          name: getStickerSet.name
         })
 
         if (findStickerSet) {
@@ -19,12 +19,11 @@ module.exports = async (ctx) => {
               findStickerSet.save()
               messageText = ctx.i18n.t('callback.pack.restored', {
                 title: findStickerSet.title,
-                link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`,
+                link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
               })
             }
           }
-        }
-        else {
+        } else {
           if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
           const stickerSet = await ctx.db.StickerSet.newSet({
@@ -32,7 +31,7 @@ module.exports = async (ctx) => {
             name: getStickerSet.name,
             title: getStickerSet.title,
             emojiSuffix: '🌟',
-            create: true,
+            create: true
           })
 
           ctx.session.user.stickerSet = stickerSet
@@ -40,7 +39,7 @@ module.exports = async (ctx) => {
 
           messageText = ctx.i18n.t('callback.pack.restored', {
             title: stickerSet.title,
-            link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
+            link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
           })
         }
       }
@@ -48,6 +47,6 @@ module.exports = async (ctx) => {
   }
 
   ctx.replyWithHTML(messageText, {
-    reply_to_message_id: ctx.message.message_id,
+    reply_to_message_id: ctx.message.message_id
   })
 }

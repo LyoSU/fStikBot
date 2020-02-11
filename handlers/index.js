@@ -10,7 +10,6 @@ const handleCopyPack = require('./pack-copy')
 const handleLanguage = require('./language')
 const handleMessaging = require('./messaging')
 
-
 module.exports = {
   handleStart,
   handleDonate,
@@ -22,5 +21,5 @@ module.exports = {
   handleRestorePack,
   handleCopyPack,
   handleLanguage,
-  handleMessaging,
+  handleMessaging
 }
