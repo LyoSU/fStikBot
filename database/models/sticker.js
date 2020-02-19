@@ -3,13 +3,11 @@ const mongoose = require('mongoose')
 const stickerSchema = mongoose.Schema({
   file_id: {
     type: String,
-    index: true,
-    required: true
+    index: true
   },
   file_unique_id: {
     type: String,
-    index: true,
-    required: true
+    index: true
   },
   width: Number,
   height: Number,
