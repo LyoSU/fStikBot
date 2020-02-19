@@ -1,23 +1,5 @@
 const mongoose = require('mongoose')
 
-const stickerSchema = mongoose.Schema({
-  file_id: {
-    type: String,
-    index: true
-  },
-  file_unique_id: {
-    type: String,
-    index: true
-  },
-  width: Number,
-  height: Number,
-  is_animated: Boolean,
-  thumb: Object,
-  emoji: String,
-  set_name: String,
-  file_size: Number
-})
-
 const stickersSchema = mongoose.Schema({
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,8 +24,8 @@ const stickersSchema = mongoose.Schema({
       index: true
     }
   },
-  info: stickerSchema,
-  file: stickerSchema,
+  info: Object,
+  file: Object,
   deleted: {
     type: Boolean,
     default: false
