@@ -9,7 +9,7 @@ Object.keys(collections).forEach((collectionName) => {
   db[collectionName] = connection.model(collectionName, collections[collectionName])
 })
 
-db.User.getData = (tgUser) => new Promise(async (resolve, reject) => {
+db.User.getData = async (tgUser) => {
   let telegramId
 
   if (tgUser.telegram_id) telegramId = tgUser.telegram_id
@@ -23,10 +23,10 @@ db.User.getData = (tgUser) => new Promise(async (resolve, reject) => {
     user.telegram_id = tgUser.id
   }
 
-  resolve(user)
-})
+  return user
+}
 
-db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
+db.User.updateData = async (tgUser) => {
   const user = await db.User.getData(tgUser)
 
   user.first_name = tgUser.first_name
@@ -35,10 +35,10 @@ db.User.updateData = (tgUser) => new Promise(async (resolve, reject) => {
   user.updatedAt = new Date()
   await user.save()
 
-  resolve(user)
-})
+  return user
+}
 
-db.StickerSet.newSet = (stickerSetInfo) => new Promise(async (resolve, reject) => {
+db.StickerSet.newSet = async (stickerSetInfo) => {
   const oldStickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
 
   if (oldStickerSet) {
@@ -58,20 +58,20 @@ db.StickerSet.newSet = (stickerSetInfo) => new Promise(async (resolve, reject) =
   stickerSet.create = stickerSetInfo.create || false
   stickerSet.save()
 
-  resolve(stickerSet)
-})
+  return stickerSet
+}
 
-db.StickerSet.getSet = (stickerSetInfo) => new Promise(async (resolve, reject) => {
+db.StickerSet.getSet = async (stickerSetInfo) => {
   let stickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
 
   if (!stickerSet) {
     stickerSet = db.StickerSet.newSet(stickerSetInfo)
   }
 
-  resolve(stickerSet)
-})
+  return stickerSet
+}
 
-db.Sticker.addSticker = (stickerSet, emojis, md5, info, file) => new Promise(async (resolve, reject) => {
+db.Sticker.addSticker = async (stickerSet, emojis, md5, info, file) => {
   const sticker = new db.Sticker()
 
   sticker.stickerSet = stickerSet
@@ -83,8 +83,8 @@ db.Sticker.addSticker = (stickerSet, emojis, md5, info, file) => new Promise(asy
   sticker.file = file
   sticker.save()
 
-  resolve(sticker)
-})
+  return sticker
+}
 
 module.exports = {
   db

@@ -4,7 +4,7 @@ const Stream = require('stream').Transform
 const sharp = require('sharp')
 const hasha = require('hasha')
 
-const downloadFileByUrl = (fileUrl) => new Promise(async (resolve, reject) => {
+const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
   const data = new Stream()
 
   https.get(fileUrl, (response) => {
@@ -18,7 +18,7 @@ const downloadFileByUrl = (fileUrl) => new Promise(async (resolve, reject) => {
   }).on('error', reject)
 })
 
-module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
+module.exports = async (ctx, inputFile) => {
   let stickerFile = inputFile
 
   const originalSticker = await ctx.db.Sticker.findOne({
@@ -75,11 +75,11 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
         png_sticker: { source: tmpPath },
         emojis
       }).catch((error) => {
-        resolve({
+        return {
           error: {
             telegram: error
           }
-        })
+        }
       })
 
       if (stickerAdd) {
@@ -92,11 +92,11 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
         png_sticker: { source: tmpPath },
         emojis
       }).catch((error) => {
-        resolve({
+        return {
           error: {
             telegram: error
           }
-        })
+        }
       })
     }
 
@@ -105,20 +105,20 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
       ctx.db.Sticker.addSticker(ctx.session.user.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
-        resolve({
+        return {
           error: {
             telegram: error
           }
-        })
+        }
       })
 
-      resolve({
+      return {
         ok: {
           title: ctx.session.user.stickerSet.title,
           link: `${ctx.config.stickerLinkPrefix}${ctx.session.user.stickerSet.name}`,
           stickerInfo
         }
-      })
+      }
     }
 
     try {
@@ -127,8 +127,8 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
       console.error(error)
     }
   } else {
-    resolve({
+    return {
       error: 'ITS_ANIMATED'
-    })
+    }
   }
-})
+}
