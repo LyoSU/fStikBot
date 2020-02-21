@@ -30,7 +30,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   }
 })
 
-bot.on('channel_post', () => {})
+bot.on(['channel_post', 'edited_channel_post'], () => {})
 
 // I18n settings
 const { match } = I18n
