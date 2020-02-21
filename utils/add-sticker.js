@@ -47,8 +47,6 @@ module.exports = (ctx, inputFile) => new Promise(async (resolve) => {
 
   emojis += ctx.session.user.stickerSet.emojiSuffix || ''
 
-  console.log(stickerFile)
-
   if (stickerFile.is_animated !== true) {
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
