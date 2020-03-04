@@ -36,7 +36,8 @@ const newPackName = new Scene('newPackName')
 newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
   reply_to_message_id: ctx.message.message_id
 }))
-newPackName.on('message', async (ctx) => {
+
+newPackName.on('message', async (ctx, next) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
     if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
@@ -92,48 +93,53 @@ newPackName.on('message', async (ctx) => {
         reply_to_message_id: ctx.message.message_id
       })
       if (ctx.session.scane.copyPack) {
-        const originalPack = ctx.session.scane.copyPack
+        (async () => {
+          const originalPack = ctx.session.scane.copyPack
 
-        const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
-          originalTitle: originalPack.title,
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-          title,
-          link: `${ctx.config.stickerLinkPrefix}${name}`,
-          current: 0,
-          total: originalPack.stickers.length
-        }))
-
-        for (let index = 0; index < originalPack.stickers.length; index++) {
-          await addSticker(ctx, originalPack.stickers[index])
-
-          await ctx.telegram.editMessageText(
-            message.chat.id, message.message_id, null,
-            ctx.i18n.t('scenes.copy.progress', {
-              originalTitle: originalPack.title,
-              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-              title,
-              link: `${ctx.config.stickerLinkPrefix}${name}`,
-              current: index,
-              total: originalPack.stickers.length
-            }),
-            { parse_mode: 'HTML' }
-          ).catch(() => {})
-        }
-
-        await ctx.telegram.editMessageText(
-          message.chat.id, message.message_id, null,
-          ctx.i18n.t('scenes.copy.done', {
+          const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
             originalTitle: originalPack.title,
             originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
             title,
-            link: `${ctx.config.stickerLinkPrefix}${name}`
-          }),
-          { parse_mode: 'HTML' }
-        )
+            link: `${ctx.config.stickerLinkPrefix}${name}`,
+            current: 0,
+            total: originalPack.stickers.length
+          }))
 
+          for (let index = 0; index < originalPack.stickers.length; index++) {
+            await addSticker(ctx, originalPack.stickers[index])
+
+            await ctx.telegram.editMessageText(
+              message.chat.id, message.message_id, null,
+              ctx.i18n.t('scenes.copy.progress', {
+                originalTitle: originalPack.title,
+                originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+                title,
+                link: `${ctx.config.stickerLinkPrefix}${name}`,
+                current: index,
+                total: originalPack.stickers.length
+              }),
+              { parse_mode: 'HTML' }
+            ).catch(() => {})
+          }
+
+          await ctx.telegram.editMessageText(
+            message.chat.id, message.message_id, null,
+            ctx.i18n.t('scenes.copy.done', {
+              originalTitle: originalPack.title,
+              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+              title,
+              link: `${ctx.config.stickerLinkPrefix}${name}`
+            }),
+            { parse_mode: 'HTML' }
+          )
+
+          ctx.scene.leave()
+          handleStart(ctx)
+        })()
+      } else {
         ctx.scene.leave()
-      } else ctx.scene.leave()
-      handleStart(ctx)
+        handleStart(ctx)
+      }
     }
   } else {
     ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
