@@ -34,10 +34,10 @@ cmd:
       5. Eğer sıfırlama başarılı olursa bot sana bildirecektir
 
   copy: |
-      <b>🗄 Çıkartma Paketi Kopyalama</b>
+    <b>🗄 Çıkartma Paketi Kopyalama</b>
 
-      Botu desteklediyseniz, herhangi bir çıkartma paketindeki tüm çıkartmaları yeni bir adla kopyalamak mümkün olacaktır.
-       Çıkartma paketini kopyalamak için sadece bota bir bağlantı göndermeniz gerekir.
+    Botu desteklediyseniz, herhangi bir çıkartma paketindeki tüm çıkartmaları yeni bir adla kopyalamak mümkün olacaktır.
+    Çıkartma paketini kopyalamak için sadece bota bir bağlantı göndermeniz gerekir.
   packs:
     info: |
       <b>🌟 Çıkartma Paketleri:</b>
