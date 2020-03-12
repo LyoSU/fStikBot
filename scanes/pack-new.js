@@ -37,7 +37,7 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
   reply_to_message_id: ctx.message.message_id
 }))
 
-newPackName.on('message', async (ctx, next) => {
+newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
     if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
@@ -142,7 +142,7 @@ newPackName.on('message', async (ctx, next) => {
       }
     }
   } else {
-    ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
       max: ctx.config.charNameMax
     }), {
       reply_to_message_id: ctx.message.message_id
