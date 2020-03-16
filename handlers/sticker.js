@@ -2,7 +2,7 @@ const Markup = require('telegraf/markup')
 const { addSticker } = require('../utils')
 
 module.exports = async (ctx) => {
-  ctx.replyWithChatAction('upload_document')
+  await ctx.replyWithChatAction('upload_document')
 
   let messageText = ''
 
