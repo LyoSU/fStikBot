@@ -32,7 +32,7 @@ module.exports = async (ctx) => {
   }
 
   if (ctx.session.user.stickerSet && stickerFile.set_name === ctx.session.user.stickerSet.name) {
-    ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
+    await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
         Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_unique_id}`),
@@ -58,7 +58,7 @@ module.exports = async (ctx) => {
     }
 
     if (sticker) {
-      ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
+      await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_unique_id}`),
@@ -95,7 +95,7 @@ module.exports = async (ctx) => {
   }
 
   if (messageText) {
-    ctx.replyWithHTML(messageText, {
+    await ctx.replyWithHTML(messageText, {
       reply_to_message_id: ctx.message.message_id
     })
   }

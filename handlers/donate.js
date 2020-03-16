@@ -24,11 +24,11 @@ module.exports = async (ctx) => {
       payload: {}
     }
 
-    ctx.replyWithInvoice(invoice, Markup.inlineKeyboard([
+    await ctx.replyWithInvoice(invoice, Markup.inlineKeyboard([
       Markup.payButton(ctx.i18n.t('callback.donate.btn.buy'))
     ]).extra())
   } else if (ctx.updateSubTypes[0] === 'successful_payment') {
-    ctx.replyWithHTML(ctx.i18n.t('callback.donate.successful'))
+    await ctx.replyWithHTML(ctx.i18n.t('callback.donate.successful'))
 
     if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
@@ -37,7 +37,7 @@ module.exports = async (ctx) => {
     ctx.session.user.payments.push(ctx.message.successful_payment)
     ctx.session.user.save()
   } else {
-    ctx.replyWithHTML(ctx.i18n.t('cmd.donate', {
+    await ctx.replyWithHTML(ctx.i18n.t('cmd.donate', {
       titleSuffix: ` by @${ctx.options.username}`
     }), {
       reply_markup: Markup.inlineKeyboard([

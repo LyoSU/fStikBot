@@ -2,7 +2,7 @@ const Markup = require('telegraf/markup')
 const { userName } = require('../utils')
 
 module.exports = async (ctx) => {
-  ctx.replyWithHTML(ctx.i18n.t('cmd.start.info', {
+  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.info', {
     name: userName(ctx.from)
   }), Markup.keyboard([
     [

@@ -3,8 +3,8 @@ const Markup = require('telegraf/markup')
 
 const originalSticker = new Scene('originalSticker')
 
-originalSticker.enter((ctx) => {
-  ctx.replyWithHTML(ctx.i18n.t('scenes.original.enter'), {
+originalSticker.enter(async (ctx) => {
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.original.enter'), {
     reply_markup: Markup.keyboard([
       [
         ctx.i18n.t('scenes.btn.cancel')
@@ -20,7 +20,7 @@ originalSticker.on('sticker', async (ctx) => {
   })
 
   if (sticker) {
-    ctx.replyWithDocument(sticker.file.file_id, {
+    await ctx.replyWithDocument(sticker.file.file_id, {
       caption: sticker.emojis,
       reply_to_message_id: ctx.message.message_id
     }).catch((documentError) => {
@@ -44,7 +44,7 @@ originalSticker.on('sticker', async (ctx) => {
       }
     })
   } else {
-    ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), {
       reply_to_message_id: ctx.message.message_id
     })
   }

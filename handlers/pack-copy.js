@@ -19,17 +19,17 @@ module.exports = async (ctx) => {
         })
         ctx.scene.enter('newPack')
       } else {
-        ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
+        await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
           reply_to_message_id: ctx.message.message_id
         })
       }
     } else {
-      ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
+      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
         reply_to_message_id: ctx.message.message_id
       })
     }
   } else {
-    ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.premium'), {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.premium'), {
       reply_to_message_id: ctx.message.message_id
     })
   }

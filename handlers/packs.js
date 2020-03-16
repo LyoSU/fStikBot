@@ -29,7 +29,7 @@ module.exports = async (ctx) => {
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
-      ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
+      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
         title: escapeHTML(stickerSet.title),
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
       }), {
@@ -62,12 +62,12 @@ module.exports = async (ctx) => {
   }
 
   if (ctx.updateType === 'message') {
-    ctx.replyWithHTML(messageText, {
+    await ctx.replyWithHTML(messageText, {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard(keyboardMarkup)
     })
   } else if (ctx.updateType === 'callback_query') {
-    ctx.editMessageText(messageText, {
+    await ctx.editMessageText(messageText, {
       reply_markup: Markup.inlineKeyboard(keyboardMarkup),
       parse_mode: 'HTML'
     }).catch(() => {})

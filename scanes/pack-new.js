@@ -7,9 +7,9 @@ const { addSticker } = require('../utils')
 
 const newPack = new Scene('newPack')
 
-newPack.enter((ctx) => {
+newPack.enter(async (ctx) => {
   ctx.session.scane.newPack = {}
-  ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
     reply_to_message_id: ctx.message.message_id,
     reply_markup: Markup.keyboard([
       [
@@ -23,7 +23,7 @@ newPack.on('message', async (ctx) => {
     ctx.session.scane.newPack.title = ctx.message.text
     ctx.scene.enter('newPackName')
   } else {
-    ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
       max: ctx.config.charTitleMax
     }), {
       reply_to_message_id: ctx.message.message_id
