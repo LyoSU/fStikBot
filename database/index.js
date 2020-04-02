@@ -54,6 +54,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.owner = stickerSetInfo.owner
   stickerSet.name = stickerSetInfo.name
   stickerSet.title = stickerSetInfo.title
+  stickerSet.animated = stickerSetInfo.animated || false
   stickerSet.emojiSuffix = stickerSetInfo.emojiSuffix
   stickerSet.create = stickerSetInfo.create || false
   stickerSet.save()
@@ -73,6 +74,8 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
 
 db.Sticker.addSticker = async (stickerSet, emojis, md5, info, file) => {
   const sticker = new db.Sticker()
+
+  console.log(info.file_id, file.file_id)
 
   sticker.stickerSet = stickerSet
   sticker.fileId = info.file_id

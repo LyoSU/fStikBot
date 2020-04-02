@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.4.23",
+  "version": "0.5.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "hasha": "^5.0.0",
     "mongoose": "^5.7.5",
     "sharp": "^0.22.1",
-    "telegraf": "^3.34.1",
+    "telegraf": "^3.37.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-ratelimit": "^2.0.0"
   },

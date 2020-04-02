@@ -31,7 +31,17 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (ctx.session.user.stickerSet && stickerFile.set_name === ctx.session.user.stickerSet.name) {
+  let stickerSet = ctx.session.user.stickerSet
+  if (stickerFile.is_animated === true) {
+    stickerSet = await ctx.db.StickerSet.findOne({
+      owner: ctx.session.user.id,
+      animated: true,
+      create: true,
+      hide: false
+    })
+  }
+
+  if (stickerSet && stickerFile.set_name === stickerSet.name) {
     await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard([
@@ -51,7 +61,7 @@ module.exports = async (ctx) => {
 
     if (findFile) {
       sticker = await ctx.db.Sticker.findOne({
-        stickerSet: ctx.session.user.stickerSet,
+        stickerSet,
         'file.file_unique_id': findFile,
         deleted: false
       })

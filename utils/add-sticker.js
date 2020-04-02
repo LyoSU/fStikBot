@@ -1,11 +1,10 @@
 const fs = require('fs')
 const https = require('https')
-const Stream = require('stream').Transform
 const sharp = require('sharp')
 const hasha = require('hasha')
 
 const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
-  const data = new Stream()
+  const data = []
 
   https.get(fileUrl, (response) => {
     response.on('data', (chunk) => {
@@ -13,13 +12,13 @@ const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
     })
 
     response.on('end', () => {
-      resolve(data)
+      resolve(Buffer.concat(data))
     })
   }).on('error', reject)
 })
 
 module.exports = async (ctx, inputFile) => {
-  const tmpPath = `tmp/${inputFile.file_id}_${Date.now()}.png`
+  let tmpPath = `tmp/${inputFile.file_id}_${Date.now()}`
 
   const result = await (async () => {
     let stickerFile = inputFile
@@ -53,7 +52,7 @@ module.exports = async (ctx, inputFile) => {
     if (stickerFile.is_animated !== true) {
       const fileUrl = await ctx.telegram.getFileLink(stickerFile)
       const data = await downloadFileByUrl(fileUrl)
-      const imageSharp = sharp(data.read())
+      const imageSharp = sharp(data)
       const imageMetadata = await imageSharp.metadata().catch(() => {})
 
       if (
@@ -66,7 +65,7 @@ module.exports = async (ctx, inputFile) => {
 
       await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath).catch(() => {})
 
-      const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' }).catch(() => {})
+      const hash = hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
       let stickerAdd = false
 
@@ -121,14 +120,84 @@ module.exports = async (ctx, inputFile) => {
         }
       }
     } else {
-      return {
-        error: 'ITS_ANIMATED'
+      tmpPath = false
+      const fileUrl = await ctx.telegram.getFileLink(stickerFile)
+      const data = await downloadFileByUrl(fileUrl)
+
+      const hash = hasha(data, { algorithm: 'md5' })
+
+      let animatedStickerSet = await ctx.db.StickerSet.findOne({
+        owner: ctx.session.user.id,
+        animated: true,
+        create: true,
+        hide: false
+      })
+
+      let stickerAdd = false
+
+      if (!animatedStickerSet) {
+        animatedStickerSet = new ctx.db.StickerSet()
+
+        animatedStickerSet.owner = defaultStickerSet.owner
+        animatedStickerSet.name = defaultStickerSet.name
+        animatedStickerSet.title = 'Animated ' + defaultStickerSet.title
+        animatedStickerSet.animated = true
+        animatedStickerSet.emojiSuffix = defaultStickerSet.emojiSuffix
+        animatedStickerSet.create = false
+
+        stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, animatedStickerSet.name, animatedStickerSet.title, {
+          tgs_sticker: { source: data },
+          emojis
+        }).catch((error) => {
+          return {
+            error: {
+              telegram: error
+            }
+          }
+        })
+
+        if (stickerAdd) {
+          animatedStickerSet.create = true
+          animatedStickerSet.save()
+        }
+      } else {
+        stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, animatedStickerSet.name, {
+          tgs_sticker: { source: data },
+          emojis
+        }).catch((error) => {
+          return {
+            error: {
+              telegram: error
+            }
+          }
+        })
+      }
+
+      if (stickerAdd) {
+        const getStickerSet = await ctx.telegram.getStickerSet(animatedStickerSet.name)
+        const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+
+        ctx.db.Sticker.addSticker(animatedStickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+          return {
+            error: {
+              telegram: error
+            }
+          }
+        })
+
+        return {
+          ok: {
+            title: animatedStickerSet.title,
+            link: `${ctx.config.stickerLinkPrefix}${animatedStickerSet.name}`,
+            stickerInfo
+          }
+        }
       }
     }
   })()
 
   try {
-    fs.unlinkSync(tmpPath)
+    if (tmpPath) fs.unlinkSync(tmpPath)
   } catch (error) {
     console.error(error)
   }
