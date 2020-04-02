@@ -75,8 +75,6 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
 db.Sticker.addSticker = async (stickerSet, emojis, md5, info, file) => {
   const sticker = new db.Sticker()
 
-  console.log(info.file_id, file.file_id)
-
   sticker.stickerSet = stickerSet
   sticker.fileId = info.file_id
   sticker.fileUniqueId = info.file_unique_id

@@ -65,7 +65,7 @@ module.exports = async (ctx, inputFile) => {
 
       await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath).catch(() => {})
 
-      const hash = hasha.fromFile(tmpPath, { algorithm: 'md5' })
+      const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
       let stickerAdd = false
 
