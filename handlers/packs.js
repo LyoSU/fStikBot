@@ -15,7 +15,7 @@ module.exports = async (ctx) => {
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
   const stickerSets = await ctx.db.StickerSet.find({
     owner: ctx.session.user.id,
-    animated: false,
+    animated: { $ne: true },
     create: true,
     hide: false
   })
