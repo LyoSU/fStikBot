@@ -27,7 +27,7 @@ cmd:
 
       <b>To do this, you need to perform several actions:</b>
       1. Open @Stickers bot
-      2. Sned <code>/packstats</code> command
+      2. Send <code>/packstats</code> command
       3. Find and choose the required sticker pack
       4. Forward the received message to the bot
       5. If restoration is successful - bot informs about it
