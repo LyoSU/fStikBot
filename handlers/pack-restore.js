@@ -21,6 +21,17 @@ module.exports = async (ctx) => {
                 title: findStickerSet.title,
                 link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
               })
+            } else {
+              const packOwner = await ctx.db.User.findById(findStickerSet.owner)
+
+              if (!packOwner) {
+                findStickerSet.owner = ctx.session.user.id
+                findStickerSet.save()
+                messageText = ctx.i18n.t('callback.pack.restored', {
+                  title: findStickerSet.title,
+                  link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
+                })
+              }
             }
           }
         } else {
