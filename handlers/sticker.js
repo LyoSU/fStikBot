@@ -41,15 +41,7 @@ module.exports = async (ctx) => {
     })
   }
 
-  if (stickerSet && stickerFile.set_name === stickerSet.name) {
-    await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
-      reply_to_message_id: ctx.message.message_id,
-      reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${stickerFile.file_unique_id}`),
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${stickerFile.file_unique_id}`)
-      ])
-    })
-  } else if (stickerFile) {
+  if (stickerFile) {
     let findFile = stickerFile.file_unique_id
     const originalSticker = await ctx.db.Sticker.findOne({
       fileUniqueId: stickerFile.file_unique_id
