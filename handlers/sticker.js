@@ -47,14 +47,14 @@ module.exports = async (ctx) => {
       fileUniqueId: stickerFile.file_unique_id
     })
 
-    if (originalSticker && originalSticker.file && originalSticker.file.file_unique_id) findFile = originalSticker.file.file_unique_id
+    if (originalSticker) findFile = originalSticker.file.file_unique_id
 
     let sticker
 
     if (findFile) {
       sticker = await ctx.db.Sticker.findOne({
         stickerSet,
-        'file.file_unique_id': findFile,
+        fileUniqueId: findFile,
         deleted: false
       })
     }
