@@ -43,17 +43,15 @@ module.exports = async (ctx) => {
 
   if (stickerFile) {
     const originalSticker = await ctx.db.Sticker.findOne({
-      fileUniqueId: stickerFile.file_unique_id
+      stickerSet,
+      fileUniqueId: stickerFile.file_unique_id,
+      deleted: false
     })
 
     let sticker
 
-    if (originalSticker && originalSticker.file && originalSticker.file.file_unique_id) {
-      sticker = await ctx.db.Sticker.findOne({
-        stickerSet,
-        'file.file_unique_id': originalSticker.file.file_unique_id,
-        deleted: false
-      })
+    if (originalSticker) {
+      sticker = originalSticker
     } else {
       sticker = await ctx.db.Sticker.findOne({
         stickerSet,
