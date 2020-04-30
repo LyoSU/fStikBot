@@ -4,7 +4,8 @@ const handleStart = require('./start')
 module.exports = async (ctx) => {
   const locales = {
     en: '🇺🇸',
-    ru: '🇷🇺'
+    ru: '🇷🇺',
+    tr: '🇹🇷'
   }
 
   if (ctx.updateType === 'callback_query') {
