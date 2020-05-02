@@ -12,11 +12,12 @@ module.exports = async (ctx) => {
           name: getStickerSet.name
         })
 
+        findStickerSet.title = getStickerSet.title
+
         if (findStickerSet) {
           if (findStickerSet.create === true) {
             if (findStickerSet.hide === true) {
               findStickerSet.hide = false
-              findStickerSet.save()
               messageText = ctx.i18n.t('callback.pack.restored', {
                 title: findStickerSet.title,
                 link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
@@ -26,7 +27,31 @@ module.exports = async (ctx) => {
 
               if (!packOwner) {
                 findStickerSet.owner = ctx.session.user.id
-                findStickerSet.save()
+                messageText = ctx.i18n.t('callback.pack.restored', {
+                  title: findStickerSet.title,
+                  link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
+                })
+              } else {
+                getStickerSet.stickers.forEach(async (sticker) => {
+                  let findSticker = await ctx.db.Sticker.findOne({
+                    fileUniqueId: sticker.file_unique_id
+                  })
+
+                  if (!findSticker) {
+                    findSticker = new ctx.db.Sticker()
+
+                    findSticker.fileUniqueId = sticker.file_unique_id
+                    findSticker.emoji = sticker.emoji + findStickerSet.emojiSuffix
+                  }
+
+                  findSticker.deleted = false
+                  findSticker.fileId = sticker.file_id
+                  findSticker.info = sticker
+                  findSticker.stickerSet = findStickerSet
+
+                  findSticker.save()
+                })
+
                 messageText = ctx.i18n.t('callback.pack.restored', {
                   title: findStickerSet.title,
                   link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
@@ -53,6 +78,8 @@ module.exports = async (ctx) => {
             link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
           })
         }
+
+        findStickerSet.save()
       }
     }
   }
