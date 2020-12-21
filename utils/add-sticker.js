@@ -43,17 +43,24 @@ module.exports = async (ctx, inputFile) => {
 
     defaultStickerSet.name += nameSuffix
     if (ctx.session.user.premium !== true) defaultStickerSet.title += titleSuffix
-    if (!ctx.session.user.stickerSet) ctx.session.user.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+
+    const defaultAnimatedStickerSet = {
+      owner: defaultStickerSet.owner,
+      name: defaultStickerSet.name,
+      title: 'Animated ' + defaultStickerSet.title,
+      animated: true,
+      emojiSuffix: defaultStickerSet.emojiSuffix
+    }
 
     let emojis = inputFile.emoji || ''
 
-    emojis += ctx.session.user.stickerSet.emojiSuffix || ''
-
     if (stickerFile.is_animated !== true) {
+      if (!ctx.session.user.stickerSet) ctx.session.user.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+      emojis += ctx.session.user.stickerSet.emojiSuffix || ''
       const fileUrl = await ctx.telegram.getFileLink(stickerFile)
       const data = await downloadFileByUrl(fileUrl)
       const imageSharp = sharp(data)
-      const imageMetadata = await imageSharp.metadata().catch(() => {})
+      const imageMetadata = await imageSharp.metadata().catch(() => { })
 
       if (
         imageMetadata.width > 512 || imageMetadata.height > 512 ||
@@ -63,7 +70,7 @@ module.exports = async (ctx, inputFile) => {
         else imageSharp.resize({ width: 512 })
       }
 
-      await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath).catch(() => {})
+      await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath).catch(() => { })
 
       const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
 
@@ -80,7 +87,9 @@ module.exports = async (ctx, inputFile) => {
             }
           }
         })
-
+        if (stickerAdd.error) {
+          return stickerAdd
+        }
         if (stickerAdd) {
           ctx.session.user.stickerSet.create = true
           ctx.session.user.stickerSet.save()
@@ -97,19 +106,25 @@ module.exports = async (ctx, inputFile) => {
             }
           }
         })
+        if (stickerAdd.error) {
+          return stickerAdd
+        }
       }
 
       if (stickerAdd) {
-        const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.user.stickerSet.name)
-        const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
-        ctx.db.Sticker.addSticker(ctx.session.user.stickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+        const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.user.stickerSet.name).catch((error) => {
           return {
             error: {
               telegram: error
             }
           }
         })
+        if (getStickerSet.error) {
+          return getStickerSet
+        }
+        const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+
+        ctx.db.Sticker.addSticker(ctx.session.user.stickerSet.id, emojis, hash, stickerInfo, stickerFile)
 
         return {
           ok: {
@@ -120,32 +135,18 @@ module.exports = async (ctx, inputFile) => {
         }
       }
     } else {
+      if (!ctx.session.user.animatedStickerSet) ctx.session.user.animatedStickerSet = await ctx.db.StickerSet.getSet(defaultAnimatedStickerSet)
+      emojis += ctx.session.user.animatedStickerSet.emojiSuffix || ''
       tmpPath = false
       const fileUrl = await ctx.telegram.getFileLink(stickerFile)
       const data = await downloadFileByUrl(fileUrl)
 
       const hash = hasha(data, { algorithm: 'md5' })
 
-      let animatedStickerSet = await ctx.db.StickerSet.findOne({
-        owner: ctx.session.user.id,
-        animated: true,
-        create: true,
-        hide: false
-      })
-
       let stickerAdd = false
 
-      if (!animatedStickerSet) {
-        animatedStickerSet = new ctx.db.StickerSet()
-
-        animatedStickerSet.owner = defaultStickerSet.owner
-        animatedStickerSet.name = defaultStickerSet.name
-        animatedStickerSet.title = 'Animated ' + defaultStickerSet.title
-        animatedStickerSet.animated = true
-        animatedStickerSet.emojiSuffix = defaultStickerSet.emojiSuffix
-        animatedStickerSet.create = false
-
-        stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, animatedStickerSet.name, animatedStickerSet.title, {
+      if (ctx.session.user.animatedStickerSet.create === false) {
+        stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.user.animatedStickerSet.name, ctx.session.user.animatedStickerSet.title, {
           tgs_sticker: { source: data },
           emojis
         }).catch((error) => {
@@ -155,13 +156,17 @@ module.exports = async (ctx, inputFile) => {
             }
           }
         })
+        if (stickerAdd.error) {
+          return stickerAdd
+        }
 
         if (stickerAdd) {
-          animatedStickerSet.create = true
-          animatedStickerSet.save()
+          ctx.session.user.animatedStickerSet.create = true
+          ctx.session.user.animatedStickerSet.save()
+          ctx.session.user.save()
         }
       } else {
-        stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, animatedStickerSet.name, {
+        stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.user.animatedStickerSet.name, {
           tgs_sticker: { source: data },
           emojis
         }).catch((error) => {
@@ -171,24 +176,30 @@ module.exports = async (ctx, inputFile) => {
             }
           }
         })
+        if (stickerAdd.error) {
+          return stickerAdd
+        }
       }
 
       if (stickerAdd) {
-        const getStickerSet = await ctx.telegram.getStickerSet(animatedStickerSet.name)
-        const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
-        ctx.db.Sticker.addSticker(animatedStickerSet.id, emojis, hash, stickerInfo, stickerFile).catch((error) => {
+        const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.user.animatedStickerSet.name).catch((error) => {
           return {
             error: {
               telegram: error
             }
           }
         })
+        if (getStickerSet.error) {
+          return getStickerSet
+        }
+        const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+
+        ctx.db.Sticker.addSticker(ctx.session.user.animatedStickerSet.id, emojis, hash, stickerInfo, stickerFile)
 
         return {
           ok: {
-            title: animatedStickerSet.title,
-            link: `${ctx.config.stickerLinkPrefix}${animatedStickerSet.name}`,
+            title: ctx.session.user.animatedStickerSet.title,
+            link: `${ctx.config.stickerLinkPrefix}${ctx.session.user.animatedStickerSet.name}`,
             stickerInfo
           }
         }

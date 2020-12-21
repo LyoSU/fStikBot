@@ -7,7 +7,7 @@ module.exports = async (ctx) => {
   let messageText = ''
 
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
-  let stickerFile
+  let stickerFile, stickerSet
 
   switch (ctx.updateSubTypes[0]) {
     case 'sticker':
@@ -31,14 +31,10 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  let stickerSet = ctx.session.user.stickerSet
-  if (stickerFile.is_animated === true) {
-    stickerSet = await ctx.db.StickerSet.findOne({
-      owner: ctx.session.user.id,
-      animated: true,
-      create: true,
-      hide: false
-    })
+  if (stickerFile.is_animated) {
+    stickerSet = ctx.session.user.animatedStickerSet
+  } else {
+    stickerSet = ctx.session.user.stickerSet
   }
 
   if (stickerFile) {
@@ -79,7 +75,9 @@ module.exports = async (ctx) => {
       } else if (result.error) {
         if (result.error.telegram) {
           if (result.error.telegram.description === 'Bad Request: STICKERS_TOO_MUCH') {
-            messageText = ctx.i18n.t('sticker.add.error.stickers_too_musch')
+            messageText = ctx.i18n.t('sticker.add.error.stickers_too_much')
+          } else if (result.error.telegram.description === 'Bad Request: STICKERSET_INVALID') {
+            messageText = ctx.i18n.t('sticker.add.error.stickerset_invalid')
           } else {
             messageText = ctx.i18n.t('error.telegram', {
               error: result.error.telegram.description

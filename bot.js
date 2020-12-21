@@ -16,10 +16,11 @@ const {
   handleHidePack,
   handleRestorePack,
   handleCopyPack,
-  handleLanguage
+  handleLanguage,
+  handleEmoji
   // handleMessaging
 } = require('./handlers')
-const scanes = require('./scanes')
+const scenes = require('./scenes')
 
 global.startDate = new Date()
 
@@ -36,7 +37,8 @@ bot.on(['channel_post', 'edited_channel_post'], () => {})
 const { match } = I18n
 const i18n = new I18n({
   directory: path.resolve(__dirname, 'locales'),
-  defaultLanguage: 'ru'
+  defaultLanguage: 'ru',
+  defaultLanguageOnMissing: true
 })
 
 // I18n middleware
@@ -87,13 +89,15 @@ bot.use(async (ctx, next) => {
 })
 
 // scene
-bot.use(scanes)
+bot.use(scenes)
 
 // main commands
 bot.hears(['/packs', match('cmd.start.btn.packs')], handlePacks)
-bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('newPack'))
+bot.hears(['/animpacks', match('cmd.start.btn.animpacks')], handlePacks)
+bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.hears(['/donate', '/start donate', match('cmd.start.btn.donate')], handleDonate)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
+bot.command('emoji', handleEmoji)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))

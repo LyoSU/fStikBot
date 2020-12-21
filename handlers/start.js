@@ -9,6 +9,9 @@ module.exports = async (ctx) => {
       ctx.i18n.t('cmd.start.btn.packs')
     ],
     [
+      ctx.i18n.t('cmd.start.btn.animpacks')
+    ],
+    [
       ctx.i18n.t('cmd.start.btn.new')
     ],
     [

@@ -1,17 +1,53 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const {
+  rword
+} = require('rword')
+const {
   handleStart
 } = require('../handlers')
 const { addSticker } = require('../utils')
 
+const сhoosePackType = new Scene('сhoosePackType')
+
+сhoosePackType.enter(async (ctx) => {
+  ctx.session.scene.newPack = {}
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
+    reply_to_message_id: ctx.message.message_id,
+    reply_markup: Markup.keyboard([
+      [
+        ctx.i18n.t('scenes.new_pack.common'),
+        ctx.i18n.t('scenes.new_pack.animated')
+      ],
+      [
+        ctx.i18n.t('scenes.btn.cancel')
+      ]
+    ]).resize()
+  })
+})
+сhoosePackType.on('message', async (ctx) => {
+  if (ctx.message.text === ctx.i18n.t('scenes.new_pack.animated')) {
+    ctx.session.scene.newPack.animated = true
+    ctx.scene.enter('newPack')
+  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.common')) {
+    ctx.session.scene.newPack.animated = false
+    ctx.scene.enter('newPack')
+  } else {
+    ctx.scene.reenter()
+  }
+})
+
 const newPack = new Scene('newPack')
 
 newPack.enter(async (ctx) => {
-  ctx.session.scane.newPack = {}
+  if (!ctx.session.scene.newPack) ctx.session.scene.newPack = { animated: ctx.session.scene.copyPack.is_animated }
+  const generatedName = rword.generate(3, { length: '3-5', capitalize: 'first' }).join('')
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
     reply_to_message_id: ctx.message.message_id,
     reply_markup: Markup.keyboard([
+      [
+        generatedName
+      ],
       [
         ctx.i18n.t('scenes.btn.cancel')
       ]
@@ -20,10 +56,10 @@ newPack.enter(async (ctx) => {
 })
 newPack.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charTitleMax) {
-    ctx.session.scane.newPack.title = ctx.message.text
+    ctx.session.scene.newPack.title = ctx.message.text
     ctx.scene.enter('newPackName')
   } else {
-    await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
       max: ctx.config.charTitleMax
     }), {
       reply_to_message_id: ctx.message.message_id
@@ -41,22 +77,32 @@ newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
     if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
-    ctx.session.scane.newPack.name = ctx.message.text
+    ctx.session.scene.newPack.name = ctx.message.text
 
     const nameSuffix = `_by_${ctx.options.username}`
     const titleSuffix = ` by @${ctx.options.username}`
 
-    let { name, title } = ctx.session.scane.newPack
+    let { name, title, animated } = ctx.session.scene.newPack
 
     name += nameSuffix
     if (ctx.session.user.premium !== true) title += titleSuffix
 
-    const createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, {
-      png_sticker: { source: 'sticker_placeholder.png' },
-      emojis: '🌟'
-    }).catch(async (error) => {
-      if (error.description === 'Bad Request: sticker set name invalid') {
+    const stickers = { emojis: '🌟' }
+    if (animated) {
+      stickers.tgs_sticker = { source: 'sticker_placeholder.tgs' }
+    } else {
+      stickers.png_sticker = { source: 'sticker_placeholder.png' }
+    }
+
+    const createNewStickerSet = await ctx.telegram.createNewStickerSet(
+      ctx.from.id, name, title, stickers).catch(async (error) => {
+      if (error.description === 'Bad Request: invalid sticker set name is specified') {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid'), {
+          reply_to_message_id: ctx.message.message_id
+        })
+        ctx.scene.reenter()
+      } else if (error.description === 'Bad Request: sticker set name is already occupied') {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
           reply_to_message_id: ctx.message.message_id
         })
         ctx.scene.reenter()
@@ -74,16 +120,22 @@ newPackName.on('message', async (ctx) => {
       const getStickerSet = await ctx.telegram.getStickerSet(name)
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-      ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
+      await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
 
-      ctx.session.user.stickerSet = await ctx.db.StickerSet.newSet({
+      const userStickerSet = await ctx.db.StickerSet.newSet({
         owner: ctx.session.user.id,
         name,
         title,
+        animated,
         emojiSuffix: '🌟',
         create: true
       })
 
+      if (ctx.session.scene.newPack.animated) {
+        ctx.session.user.animatedStickerSet = userStickerSet
+      } else {
+        ctx.session.user.stickerSet = userStickerSet
+      }
       ctx.session.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
@@ -92,9 +144,9 @@ newPackName.on('message', async (ctx) => {
       }), {
         reply_to_message_id: ctx.message.message_id
       })
-      if (ctx.session.scane.copyPack) {
+      if (ctx.session.scene.copyPack) {
         (async () => {
-          const originalPack = ctx.session.scane.copyPack
+          const originalPack = ctx.session.scene.copyPack
 
           const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
             originalTitle: originalPack.title,
@@ -119,7 +171,7 @@ newPackName.on('message', async (ctx) => {
                 total: originalPack.stickers.length
               }),
               { parse_mode: 'HTML' }
-            ).catch(() => {})
+            ).catch(() => { })
           }
 
           await ctx.telegram.editMessageText(
@@ -142,7 +194,7 @@ newPackName.on('message', async (ctx) => {
       }
     }
   } else {
-    await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
       max: ctx.config.charNameMax
     }), {
       reply_to_message_id: ctx.message.message_id
@@ -150,4 +202,4 @@ newPackName.on('message', async (ctx) => {
   }
 })
 
-module.exports = [newPack, newPackName]
+module.exports = [сhoosePackType, newPack, newPackName]

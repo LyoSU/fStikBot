@@ -4,13 +4,17 @@ cmd:
     info: |
       Hi, <b>${name}</b>!
       Send me a sticker or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
       /packs - get your packs
+      /animpacks - get your animated packs
       /new - create a new sticker pack
 
       /original - find original sticker
       /restore - restore a sticker pack
       /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack.
+      /lang - change language
 
       /donate - support the developer
 
@@ -18,6 +22,7 @@ cmd:
       👨🏻‍💻 Developer channel: @LyBlog
     btn:
       packs: 🌟 Sticker packs
+      animpacks: ✨ Animated sticker packs
       new: 🆕 Create a new sticker pack
       donate: ☕️
   restore: |
@@ -50,6 +55,9 @@ cmd:
 
     ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
+  emoji:
+    info: Please, specify an emoji. For example - <code>/emoji 💜</code> changes current pack suffix to 💜 for all new stickers.
+    done: Emoji suffix successfully changed.
 
 callback:
   pack:
@@ -100,24 +108,35 @@ sticker:
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
     error:
-      stickers_too_musch: |
+      stickers_too_much: |
         <b>Error!</b>
         This sticker pack has the maximum number of stickers.
         You can create a new sticker pack using the /new command.
       have_already: |
         <b>Error!</b>
         This sticker is already in this sticker pack.
+      stickerset_invalid: |
+        <b>Error!</b>
+        Bot cannot access your current chosen sticker pack. 
+        Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
         This file type is not supported.
 
 scenes:
   new_pack:
+    common: Common
+    animated: Animated
+    pack_type: |
+      <b>Choose stickerpack type:</b>
     pack_title: |
       <b>Enter new stickers pack name:</b>
+      <i>You can choose random name on button.<i>
     pack_name: |
       <b>Enter a short link for new stickers pack:</b>
       <i>Use only latin letters, numbers and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals</i>
+      <i>You can choose random short link on button.</i>
     ok: |
       Sticker pack <a href="${link}">${title}</a> successfully created!
 
@@ -126,9 +145,10 @@ scenes:
       You can edit it in the official @Stickers bot
     error:
       title_long: Name cannot be greater than ${max} symbols.
-      name_long: Address cannot be greater than ${max} символов.
+      name_long: Address cannot be greater than ${max} symbols.
       telegram:
         name_invalid: That address cannot be used.
+        name_occupied: This address is already taken. 
   copy:
     enter: |
       I can copy this sticker pack, for this you need to create a new sticker pack.

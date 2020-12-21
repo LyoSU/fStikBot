@@ -6,46 +6,48 @@ module.exports = async (ctx) => {
 
     if (match) {
       let restored = false
+      let findStickerSet
       const getStickerSet = await ctx.getStickerSet(match[1])
 
       if (getStickerSet.name.split('_').pop(-1) === ctx.options.username) {
-        const findStickerSet = await ctx.db.StickerSet.findOne({
+        findStickerSet = await ctx.db.StickerSet.findOne({
           name: getStickerSet.name
         })
 
-        findStickerSet.title = getStickerSet.title
-
         if (findStickerSet) {
+          findStickerSet.title = getStickerSet.title
           if (findStickerSet.create === true) {
             if (findStickerSet.hide === true) {
               findStickerSet.hide = false
             } else {
               const packOwner = await ctx.db.User.findById(findStickerSet.owner)
-
               if (!packOwner) {
                 findStickerSet.owner = ctx.session.user.id
               }
             }
-
+            findStickerSet.save()
             restored = true
           }
         } else {
           if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
-          const stickerSet = await ctx.db.StickerSet.newSet({
+          findStickerSet = await ctx.db.StickerSet.newSet({
             owner: ctx.session.user.id,
             name: getStickerSet.name,
             title: getStickerSet.title,
+            animated: getStickerSet.is_animated || false,
             emojiSuffix: '🌟',
             create: true
           })
 
-          ctx.session.user.stickerSet = stickerSet
+          if (getStickerSet.is_animated) {
+            ctx.session.user.animatedStickerSet = findStickerSet
+          } else {
+            ctx.session.user.stickerSet = findStickerSet
+          }
           ctx.session.user.save()
           restored = true
         }
-
-        findStickerSet.save()
 
         if (restored) {
           await ctx.db.Sticker.updateMany({ stickerSet: findStickerSet }, { $set: { deleted: true } })
@@ -59,14 +61,13 @@ module.exports = async (ctx) => {
               findSticker = new ctx.db.Sticker()
 
               findSticker.fileUniqueId = sticker.file_unique_id
-              findStickerSet.emoji = sticker.emoji + findStickerSet.emojiSuffix
+              findSticker.emoji = sticker.emoji + findStickerSet.emojiSuffix
             }
 
             findSticker.deleted = false
             findSticker.fileId = sticker.file_id
             findSticker.info = sticker
             findSticker.stickerSet = findStickerSet
-
             findSticker.save()
           })
 
