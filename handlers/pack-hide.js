@@ -19,10 +19,9 @@ module.exports = async (ctx) => {
         hide: false
       })
 
-      if (userSet.animated) {
-        ctx.session.user.animatedStickerSet = userSet.id
-      } else {
-        ctx.session.user.stickerSet = userSet.id
+      if (userSet) {
+        if (userSet.animated) ctx.session.user.animatedStickerSet = userSet.id
+        else ctx.session.user.stickerSet = userSet.id
       }
 
       ctx.session.user.save()
