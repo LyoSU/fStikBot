@@ -58,7 +58,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.animated = stickerSetInfo.animated || false
   stickerSet.emojiSuffix = stickerSetInfo.emojiSuffix
   stickerSet.create = stickerSetInfo.create || false
-  stickerSet.save()
+  await stickerSet.save()
 
   return stickerSet
 }

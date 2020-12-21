@@ -56,11 +56,12 @@ module.exports = async (ctx) => {
 
   if (stickerSets.length > 0 && ctx.updateType === 'message') {
     messageText = ctx.i18n.t('cmd.packs.info')
-
+    const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.user.stickerSet : ctx.session.user.animatedStickerSet
     stickerSets.forEach((pack) => {
       let { title } = pack
-      const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.user.stickerSet.id : ctx.session.user.animatedStickerSet.id
-      if (selectedStickerSet.toString() === pack.id.toString()) title = `✅ ${title}`
+      if (selectedStickerSet) {
+        if (selectedStickerSet.id.toString() === pack.id.toString()) title = `✅ ${title}`
+      }
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
     })
   } else {
@@ -72,5 +73,10 @@ module.exports = async (ctx) => {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: Markup.inlineKeyboard(keyboardMarkup)
     })
+  } else if (ctx.updateType === 'callback_query') {
+    await ctx.editMessageText(messageText, {
+      reply_markup: Markup.inlineKeyboard(keyboardMarkup),
+      parse_mode: 'HTML'
+    }).catch(() => { })
   }
 }

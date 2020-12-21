@@ -131,7 +131,7 @@ scenes:
       <b>Choose stickerpack type:</b>
     pack_title: |
       <b>Enter new stickers pack name:</b>
-      <i>You can choose random name on button.<i>
+      <i>You can choose random name on button.</i>
     pack_name: |
       <b>Enter a short link for new stickers pack:</b>
       <i>Use only latin letters, numbers and underscores.</i>
