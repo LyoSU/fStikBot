@@ -17,6 +17,7 @@ db.User.getData = async (tgUser) => {
 
   let user = await db.User.findOne({ telegram_id: telegramId })
     .populate('stickerSet')
+    .populate('animatedStickerSet')
 
   if (!user) {
     user = new db.User()

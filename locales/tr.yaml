@@ -101,7 +101,7 @@ sticker:
       <b>Çıkartma başarılı bir şekilde çıkartma paketine eklendi:</b>
       <a href="${link}">${title}</a>
     error:
-      stickers_too_musch: |
+      stickers_too_much: |
         <b>Hata!</b>
         Çıkartma paketinde bulunması gereken maksimum limit dolu.
         /new komutunu kullanarak yeni bir çıkartma paketi oluşturabilirsin.

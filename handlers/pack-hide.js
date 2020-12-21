@@ -19,7 +19,12 @@ module.exports = async (ctx) => {
         hide: false
       })
 
-      ctx.session.user.stickerSet = userSet.id
+      if (userSet.animated) {
+        ctx.session.user.animatedStickerSet = userSet.id
+      } else {
+        ctx.session.user.stickerSet = userSet.id
+      }
+
       ctx.session.user.save()
     } else {
       answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.restored')

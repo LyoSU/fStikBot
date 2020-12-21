@@ -17,6 +17,10 @@ const userSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet'
   },
+  animatedStickerSet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StickerSet'
+  },
   premium: {
     type: Boolean,
     default: false
