@@ -25,6 +25,9 @@ module.exports = async (ctx) => {
   if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
     const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
+    if (stickerSet.animated) query.animated = { $ne: false }
+    else query.animated = { $ne: true }
+
     if (stickerSet.owner.toString() === ctx.session.user.id.toString()) {
       ctx.answerCbQuery()
 
@@ -54,7 +57,7 @@ module.exports = async (ctx) => {
   let messageText = ''
   const keyboardMarkup = []
 
-  if (stickerSets.length > 0 && ctx.updateType === 'message') {
+  if (stickerSets.length > 0) {
     messageText = ctx.i18n.t('cmd.packs.info')
     const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.user.stickerSet : ctx.session.user.animatedStickerSet
     stickerSets.forEach((pack) => {
