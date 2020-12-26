@@ -38,7 +38,7 @@ module.exports = async (ctx) => {
     ctx.session.user.save()
   } else {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.donate', {
-      titleSuffix: ` by @${ctx.options.username}`
+      titleSuffix: ` :: @${ctx.options.username}`
     }), {
       reply_markup: Markup.inlineKeyboard([
         [

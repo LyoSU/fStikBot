@@ -32,7 +32,7 @@ module.exports = async (ctx, inputFile) => {
     if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
     const nameSuffix = `_by_${ctx.options.username}`
-    const titleSuffix = ` by @${ctx.options.username}`
+    const titleSuffix = ` :: @${ctx.options.username}`
 
     const defaultStickerSet = {
       owner: ctx.session.user.id,

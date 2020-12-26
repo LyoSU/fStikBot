@@ -80,7 +80,7 @@ newPackName.on('message', async (ctx) => {
     ctx.session.scene.newPack.name = ctx.message.text
 
     const nameSuffix = `_by_${ctx.options.username}`
-    const titleSuffix = ` by @${ctx.options.username}`
+    const titleSuffix = ` :: @${ctx.options.username}`
 
     let { name, title, animated } = ctx.session.scene.newPack
 
