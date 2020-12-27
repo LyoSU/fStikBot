@@ -10,7 +10,7 @@ module.exports = async (ctx) => {
     packBotUsername = setName.split('_').pop(-1)
   }
 
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet')

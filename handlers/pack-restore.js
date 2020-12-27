@@ -29,7 +29,7 @@ module.exports = async (ctx) => {
             restored = true
           }
         } else {
-          if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+          if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
           findStickerSet = await ctx.db.StickerSet.newSet({
             owner: ctx.session.userInfo.id,

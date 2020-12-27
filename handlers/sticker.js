@@ -6,7 +6,7 @@ module.exports = async (ctx) => {
 
   let messageText = ''
 
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   let stickerFile, stickerSet
 
   switch (ctx.updateSubTypes[0]) {

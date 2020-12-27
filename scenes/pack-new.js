@@ -75,7 +75,7 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 
 newPackName.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
-    if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+    if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
     ctx.session.scene.newPack.name = ctx.message.text
 

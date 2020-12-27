@@ -29,7 +29,7 @@ module.exports = async (ctx, inputFile) => {
 
     if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
 
-    if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+    if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
     const nameSuffix = `_by_${ctx.options.username}`
     const titleSuffix = ` :: @${ctx.options.username}`

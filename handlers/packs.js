@@ -12,7 +12,7 @@ const escapeHTML = (str) => str.replace(
 )
 
 module.exports = async (ctx) => {
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
   const query = {
     owner: ctx.session.userInfo.id,
@@ -59,6 +59,7 @@ module.exports = async (ctx) => {
   if (stickerSets.length > 0) {
     messageText = ctx.i18n.t('cmd.packs.info')
     const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.userInfo.stickerSet : ctx.session.userInfo.animatedStickerSet
+    
     stickerSets.forEach((pack) => {
       let { title } = pack
       if (selectedStickerSet) {

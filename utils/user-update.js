@@ -1,7 +1,7 @@
 module.exports = async (ctx) => {
   let user
 
-  if (!ctx.session.userInfo) user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
+  if (!ctx.session.userInfo) user = await ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet').populate('animatedStickerSet')
   else user = ctx.session.userInfo
 
   const now = Math.floor(new Date().getTime() / 1000)

@@ -30,7 +30,7 @@ module.exports = async (ctx) => {
   } else if (ctx.updateSubTypes[0] === 'successful_payment') {
     await ctx.replyWithHTML(ctx.i18n.t('callback.donate.successful'))
 
-    if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+    if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
     console.log()
     ctx.session.userInfo.premium = true

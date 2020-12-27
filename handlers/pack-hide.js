@@ -1,7 +1,7 @@
 const Markup = require('telegraf/markup')
 
 module.exports = async (ctx) => {
-  if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
+  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
   let answerCbQuer = ''
