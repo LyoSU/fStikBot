@@ -15,7 +15,7 @@ module.exports = async (ctx) => {
   if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
   const query = {
-    owner: ctx.session.user.id,
+    owner: ctx.session.userInfo.id,
     create: true,
     hide: false
   }
@@ -28,12 +28,11 @@ module.exports = async (ctx) => {
     if (stickerSet.animated) query.animated = { $ne: false }
     else query.animated = { $ne: true }
 
-    if (stickerSet.owner.toString() === ctx.session.user.id.toString()) {
+    if (stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
       ctx.answerCbQuery()
 
-      if (stickerSet.animated) ctx.session.user.animatedStickerSet = stickerSet
-      if (stickerSet.animated === false) ctx.session.user.stickerSet = stickerSet
-      ctx.session.user.save()
+      if (stickerSet.animated) ctx.session.userInfo.animatedStickerSet = stickerSet
+      if (stickerSet.animated === false) ctx.session.userInfo.stickerSet = stickerSet
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
@@ -59,7 +58,7 @@ module.exports = async (ctx) => {
 
   if (stickerSets.length > 0) {
     messageText = ctx.i18n.t('cmd.packs.info')
-    const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.user.stickerSet : ctx.session.user.animatedStickerSet
+    const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.userInfo.stickerSet : ctx.session.userInfo.animatedStickerSet
     stickerSets.forEach((pack) => {
       let { title } = pack
       if (selectedStickerSet) {

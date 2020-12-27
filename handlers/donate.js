@@ -33,9 +33,8 @@ module.exports = async (ctx) => {
     if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
     console.log()
-    ctx.session.user.premium = true
-    ctx.session.user.payments.push(ctx.message.successful_payment)
-    ctx.session.user.save()
+    ctx.session.userInfo.premium = true
+    ctx.session.userInfo.payments.push(ctx.message.successful_payment)
   } else {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.donate', {
       titleSuffix: ` :: @${ctx.options.username}`

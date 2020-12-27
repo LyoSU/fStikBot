@@ -22,7 +22,7 @@ module.exports = async (ctx) => {
             } else {
               const packOwner = await ctx.db.User.findById(findStickerSet.owner)
               if (!packOwner) {
-                findStickerSet.owner = ctx.session.user.id
+                findStickerSet.owner = ctx.session.userInfo.id
               }
             }
             findStickerSet.save()
@@ -32,7 +32,7 @@ module.exports = async (ctx) => {
           if (!ctx.session.user) ctx.session.user = await ctx.db.User.getData(ctx.from)
 
           findStickerSet = await ctx.db.StickerSet.newSet({
-            owner: ctx.session.user.id,
+            owner: ctx.session.userInfo.id,
             name: getStickerSet.name,
             title: getStickerSet.title,
             animated: getStickerSet.is_animated || false,
@@ -41,11 +41,10 @@ module.exports = async (ctx) => {
           })
 
           if (getStickerSet.is_animated) {
-            ctx.session.user.animatedStickerSet = findStickerSet
+            ctx.session.userInfo.animatedStickerSet = findStickerSet
           } else {
-            ctx.session.user.stickerSet = findStickerSet
+            ctx.session.userInfo.stickerSet = findStickerSet
           }
-          ctx.session.user.save()
           restored = true
         }
 

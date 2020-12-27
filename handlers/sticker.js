@@ -32,9 +32,9 @@ module.exports = async (ctx) => {
   }
 
   if (stickerFile.is_animated) {
-    stickerSet = ctx.session.user.animatedStickerSet
+    stickerSet = ctx.session.userInfo.animatedStickerSet
   } else {
-    stickerSet = ctx.session.user.stickerSet
+    stickerSet = ctx.session.userInfo.stickerSet
   }
 
   if (stickerFile) {
@@ -74,15 +74,15 @@ module.exports = async (ctx) => {
         })
       } else if (result.error) {
         if (result.error.telegram) {
-          if (result.error.telegram.description === 'Bad Request: STICKERS_TOO_MUCH') {
+          if (result.error.telegram.description.includes('TOO_MUCH')) {
             messageText = ctx.i18n.t('sticker.add.error.stickers_too_much')
-          } else if (result.error.telegram.description === 'Bad Request: STICKERSET_INVALID') {
+          } else if (result.error.telegram.description.includes('STICKERSET_INVALID')) {
             messageText = ctx.i18n.t('sticker.add.error.stickerset_invalid')
           } else {
             messageText = ctx.i18n.t('error.telegram', {
               error: result.error.telegram.description
             })
-          }
+          }6
         } else if (result.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
         else {
           messageText = ctx.i18n.t('error.telegram', {

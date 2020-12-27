@@ -85,7 +85,7 @@ newPackName.on('message', async (ctx) => {
     let { name, title, animated } = ctx.session.scene.newPack
 
     name += nameSuffix
-    if (ctx.session.user.premium !== true) title += titleSuffix
+    if (ctx.session.userInfo.premium !== true) title += titleSuffix
 
     const stickers = { emojis: '🌟' }
     if (animated) {
@@ -123,7 +123,7 @@ newPackName.on('message', async (ctx) => {
       await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
 
       const userStickerSet = await ctx.db.StickerSet.newSet({
-        owner: ctx.session.user.id,
+        owner: ctx.session.userInfo.id,
         name,
         title,
         animated,
@@ -132,11 +132,10 @@ newPackName.on('message', async (ctx) => {
       })
 
       if (ctx.session.scene.newPack.animated) {
-        ctx.session.user.animatedStickerSet = userStickerSet
+        ctx.session.userInfo.animatedStickerSet = userStickerSet
       } else {
-        ctx.session.user.stickerSet = userStickerSet
+        ctx.session.userInfo.stickerSet = userStickerSet
       }
-      ctx.session.user.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
         title,

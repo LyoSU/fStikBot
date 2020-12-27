@@ -15,7 +15,7 @@ module.exports = async (ctx) => {
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet')
 
-  if (sticker && sticker.stickerSet.owner.toString() === ctx.session.user.id.toString()) {
+  if (sticker && sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
     deleteSticker = sticker.info.file_id
   } else if (packBotUsername && packBotUsername === ctx.options.username) {
     deleteSticker = ctx.callbackQuery.message.reply_to_message.sticker.file_id

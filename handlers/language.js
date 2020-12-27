@@ -12,10 +12,9 @@ module.exports = async (ctx) => {
     if (locales[ctx.match[1]]) {
       ctx.answerCbQuery(locales[ctx.match[1]])
 
-      ctx.session.user.locale = ctx.match[1]
-      await ctx.session.user.save()
+      ctx.session.userInfo.locale = ctx.match[1]
 
-      ctx.i18n.locale(ctx.session.user.locale)
+      ctx.i18n.locale(ctx.session.userInfo.locale)
       await handleStart(ctx)
     }
   } else {

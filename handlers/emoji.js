@@ -4,9 +4,9 @@ module.exports = async (ctx) => {
   const emojiSymbols = uncleanUserInput.match(emojiRegExp)
   if (emojiSymbols) {
     const emoji = emojiSymbols.join('')
-    if (ctx.session.user.stickerSet) {
-      ctx.session.user.stickerSet.emojiSuffix = emoji
-      ctx.session.user.stickerSet.save()
+    if (ctx.session.userInfo.stickerSet) {
+      ctx.session.userInfo.stickerSet.emojiSuffix = emoji
+      ctx.session.userInfo.stickerSet.save()
       await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.done'), {
         reply_to_message_id: ctx.message.message_id
       })

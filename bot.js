@@ -1,5 +1,6 @@
 const path = require('path')
 const Telegraf = require('telegraf')
+const Composer = require('telegraf/composer')
 const session = require('telegraf/session')
 const rateLimit = require('telegraf-ratelimit')
 const I18n = require('telegraf-i18n')
@@ -21,6 +22,9 @@ const {
   // handleMessaging
 } = require('./handlers')
 const scenes = require('./scenes')
+const {
+  updateUser
+} = require('./utils')
 
 global.startDate = new Date()
 
@@ -70,23 +74,18 @@ bot.use(session({ ttl: 60 * 5 }))
 // response time logger
 bot.use(async (ctx, next) => {
   const ms = new Date()
-
-  if (ctx.from) {
-    if (!ctx.session.user) {
-      ctx.session.user = await db.User.updateData(ctx.from)
-    } else {
-      db.User.updateData(ctx.from).then((user) => {
-        ctx.session.user = user
-      })
-    }
-  }
-  if (ctx.session.user && ctx.session.user.locale) ctx.i18n.locale(ctx.session.user.locale)
   if (ctx.callbackQuery) ctx.state.answerCbQuery = []
   return next(ctx).then(() => {
     if (ctx.callbackQuery) ctx.answerCbQuery(...ctx.state.answerCbQuery)
     console.log('Response time %sms', new Date() - ms)
   })
 })
+
+bot.use(Composer.privateChat(async (ctx, next) => {
+  await updateUser(ctx)
+  await next(ctx)
+  await ctx.session.userInfo.save().catch(() => {})
+}))
 
 // scene
 bot.use(scenes)
