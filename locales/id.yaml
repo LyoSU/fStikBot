@@ -1,0 +1,186 @@
+ratelimit: Tidak terlalu sering!
+cmd:
+  start:
+    info: |
+      Hai, <b>${name}</b>!
+      Kirimkan saya stiker atau foto dan saya akan menambahkannya ke paket stiker anda.
+      Ingin menghapusnya dari paket stiker anda? Kirimkan sekali lagi.
+
+      /packs - dapatkan paket anda
+      /animpacks - dapatkan paket animasi anda
+      /new - buat paket stiker baru
+
+      /original - temukan stiker asli
+      /restore - mengembalikan paket stiker
+      /copy - salin paket stiker
+      /emoji - ubah sufiks emoji untuk paket stiker saat ini.
+      /lang - ganti bahasa
+
+      /donate - dukung pengembang
+
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Blog pengembang: @LyBlog
+    btn:
+      packs: 🌟 Paket stiker
+      animpacks: ✨ Paket stiker animasi
+      new: 🆕 Buat paket stiker baru
+      donate: ☕️
+  restore: |
+      <b>🗃 Pemulihan paket stiker</b>
+
+      Jika sebelumnya anda membuat paket stiker melalui bot ini dan tidak dapat menemukannya di daftar paket stiker anda, maka anda dapat memulihkannya kembali.
+
+      <b>Untuk melakukan ini, Anda perlu melakukan beberapa tindakan:</b>
+      1. Buka bot @Stickers
+      2. Kirim perintah <code>/packstats</code>
+      3. Temukan dan pilih paket stiker yang diperlukan
+      4. Meneruskan pesan yang diterima ke bot
+      5. Jika pemulihan berhasil - bot menginformasikannya
+
+  copy: |
+      <b>🗄 Salin paket stiker</b>
+
+      Jika anda mendukung bot, menyalin semua stiker dari paket stiker mana pun dengan nama baru akan tersedia.
+      Untuk menyalin paket stiker, anda hanya perlu mengirim tautan ke bot.
+  packs:
+    info: |
+      <b>🌟 Paket stiker:</b>
+    empty: |
+      <b>Anda belum memiliki paket stiker.</b>
+      Untuk membuat, tulis perintah /new
+  donate: |
+    <b>☕️ Mendukung pengembangan bot</b>
+
+    Anda dapat mengirim uang kepada saya untuk minum kopi dan mendapatkan bonus kecil di bot sebagai gantinya.
+
+    ➖ Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
+    ➖ Menyalin paket stiker lain melalui tautan
+  emoji:
+    info: Harap tentukan emoji. Sebagai contoh - <code>/emoji 💜</code> mengubah akhiran paket saat ini menjadi 💜 untuk semua stiker baru.
+    done: Sufiks emoji berhasil diubah.
+
+callback:
+  pack:
+    answerCbQuer:
+      hidden: Paket stiker berhasil disembunyikan
+      restored: Paket stiker berhasil dipulihkan
+    set_pack: |
+      Paket stiker yang dipilih <a href="${link}">${title}</a>
+    hidden: Paket stiker <a href="${link}">${title}</a> tersembunyi dari daftar anda.
+    restored: Paket stiker <a href="${link}">${title}</a> dikembalikan ke daftar anda.
+    btn:
+      hide: ❌ Sembunyikan paket stiker
+      restore: ✅ Mengembalikan
+    error:
+      restore: |
+        <b>Error!</b>
+        Tidak dapat memulihkan paket stiker.
+      copy: |
+        <b>Error!</b>
+        Tidak dapat menemukan paket stiker.
+  sticker:
+    answerCbQuery:
+      delete: Stiker berhasil dihapus dari paket stiker.
+      restored: Stiker berhasil disimpan ke paket stiker saat ini.
+    delete: Stiker berhasil dihapus dari paket stiker.
+    restored: Stiker berhasil disimpan ke paket stiker saat ini.
+    btn:
+      delete: 🗑 Hapus
+      copy: 🌟 Salin
+      restore: ✅ Mengembalikan
+    error:
+      not_found: |
+        KESALAHAN!
+        Tidak dapat menemukan stiker.
+  donate:
+    title: Donasi ${botUsername}
+    description: Dukungan langsung untuk pengembang bot dan fitur tambahan.
+    successful: |
+      <b>Terima kasih telah mendukung pengembangan bot 💜</b>
+
+      Anda bisa menulis kepada saya @LyoSU dengan saran tentang fitur yang hilang, dan saya akan mencoba menerapkannya.
+    btn:
+      buy: 💜 Bayar
+
+sticker:
+  add:
+    ok: |
+      <b>Stiker berhasil ditambahkan ke paket stiker:</b>
+      <a href="${link}">${title}</a>
+    error:
+      stickers_too_much: |
+        <b>Kesalahan!</b>
+        Paket stiker ini memiliki jumlah stiker maksimum.
+        Anda dapat membuat paket stiker baru menggunakan perintah /new.
+      have_already: |
+        <b>Error!</b>
+        Stiker ini sudah ada di paket stiker ini.
+      stickerset_invalid: |
+        <b>Error!</b>
+        Bot tidak dapat mengakses paket stiker yang anda pilih saat ini. 
+        Silakan, buat (/new) atau pilih (/packs) paket stiker lain.
+      file_type: |
+        <b>Error!</b>
+        Jenis file ini tidak didukung.
+
+scenes:
+  new_pack:
+    common: Umum
+    animated: Animasi
+    pack_type: |
+      <b>Pilih jenis paket stiker:</b>
+    pack_title: |
+      <b>Masukkan nama paket stiker baru:</b>
+      <i>Anda dapat memilih nama acak pada tombol.</i>
+    pack_name: |
+      <b>Masukkan tautan pendek untuk paket stiker baru:</b>
+      <i>Use Gunakan hanya huruf latin, angka, dan garis bawah.</i>
+      <i>Misalnya, paket ini menggunakan 'Animals' sebagai tautan pendek: https://t.me/addstickers/Animals</i>
+      <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
+    ok: |
+      Paket stiker <a href="${link}">${title}</a> berhasil dibuat!
+
+      <b>Tautan paket stiker:</b> <pre>${link}</pre>
+
+      Anda dapat mengeditnya secara resmi di @Stickers bot
+    error:
+      title_long: Nama tidak boleh lebih dari ${max} simbol.
+      name_long: Alamat tidak boleh lebih dari ${max} simbol.
+      telegram:
+        name_invalid: Alamat itu tidak dapat digunakan.
+        name_occupied: Alamat ini sudah dipakai. 
+  copy:
+    enter: |
+      Saya dapat menyalin paket stiker ini, untuk ini anda perlu membuat paket stiker baru.
+    progress: |
+      Copying sticker pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+
+      Progress: ${current}/${total}
+    done: |
+      Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a> berhasil diselesaikan.
+    error:
+      premium: |
+        <b>Error!</b>
+        Sayangnya, fitur ini hanya tersedia bagi mereka yang mendukung bot.
+
+        Anda dapat melakukan ini dengan mengirimkan perintah /donate.
+  original:
+    enter: |
+      Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
+    error:
+      not_found: |
+        <b>Kesalahan!</b>
+        Saya tidak dapat menemukan stiker aslinya.
+  leave: |
+      Aksi dibatalkan.
+  btn:
+    cancel: ❌ Batal
+
+error:
+  telegram: |
+    <b>Telegram mengembalikan kesalahan!</b>
+    <code>${error}</code>
+  answerCbQuery:
+    telegram: |
+      Telegram mengembalikan kesalahan:
+      ${error}
