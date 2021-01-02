@@ -7,7 +7,6 @@ const stickersSchema = mongoose.Schema({
   },
   fileId: {
     type: String,
-    index: true,
     unique: true,
     required: true
   },

@@ -5,7 +5,8 @@ module.exports = async (ctx) => {
   const locales = {
     en: '🇺🇸',
     ru: '🇷🇺',
-    tr: '🇹🇷'
+    tr: '🇹🇷',
+    id: '🇮🇳'
   }
 
   if (ctx.updateType === 'callback_query') {

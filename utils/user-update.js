@@ -19,6 +19,7 @@ module.exports = async (ctx) => {
 
   ctx.session.userInfo = user
   if (ctx.session.userInfo.locale) ctx.i18n.locale(ctx.session.userInfo.locale)
+  else ctx.session.userInfo.locale = ctx.i18n.languageCode
 
   return true
 }
