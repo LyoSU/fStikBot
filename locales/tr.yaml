@@ -1,125 +1,122 @@
 ---
-ratelimit: Не так часто!
+ratelimit: Not so often!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Merhaba, <b>${name}</b>!
+      Bana bir çıkartma veya fotoğraf gönder, ben de çıkartma paketine ekleyeceğim.
 
-      /packs - список стикерпаков
-      /animpacks - список анимированных стикерпаков
-      /new - создать новый стикерпак
+      /packs - paketlerini getir
+      /new - yeni bir çıkartma paketi oluştur
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /lang - change language
+      /original - orjinal çıkartmayı bul
+      /restore - çıkartma paketini sıfırla
+      /copy - çıkartma paketini kopyala
 
-      /donate - поддержать разработчика
+      /donate - yapımcıyı destekle
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      👨🏻‍💻 Yapımcı Kanalı: @LyBlog
+      Çeviriyi Yapan: @By_Azade
     btn:
-      packs: '🌟 Стикерпаки'
+      packs: '🌟 Çıkartma paketleri'
       animpacks: '✨ Анимированные стикерпаки'
-      new: '🆕 Создать стикерпак'
-      donate: '☕️ Поддержать разработчика'
+      new: '🆕 Yeni bir çıkartma paketi oluştur'
+      donate: '☕️'
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Çıkartma Paketi Sıfırlama</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Daha önce bu bot üzerinden bir çıkartma paketi oluşturduysanız ve çıkartma paketleri listenizde bulamıyorsanız, geri yükleyebilirsiniz.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Bunu yapmak için birkaç işlem yapmanız gerekir:</b>
+    1. @Stickers botunu aç
+    2. <code>/packstats</code> komutunu gönder
+    3. Gerekli olan çıkartma paketini bul
+    4. Aldığın mesajı bu bota yolla
+    5. Eğer sıfırlama başarılı olursa bot sana bildirecektir
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Çıkartma Paketi Kopyalama</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Botu desteklediyseniz, herhangi bir çıkartma paketindeki tüm çıkartmaları yeni bir adla kopyalamak mümkün olacaktır.
+    Çıkartma paketini kopyalamak için sadece bota bir bağlantı göndermeniz gerekir.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Çıkartma Paketleri:</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
+      <b>Henüz bir çıkartma paketin yok</b>
+      To create, write a command /new
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Botun geliştirilmesine yardım et</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Bana kahve için para gönderebilir ve karşılığında botta küçük bonuslar alabilirsiniz.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ <b>"${titleSuffix}</b> çıkartma başlığını kapatma
+    ➖ Diğer çıkartma paketlerini link ile kopyalama
   emoji:
     info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
     done: Эмодзи-суффикс успешно изменен.
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Çıkartma paketi başarılı bir şekilde gizlendi
+      restored: Çıkartma başarılı bir şekilde sıfırlandı
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      Seçilen çıkartma paketi <a href="${link}">${title}</a>
+    hidden: <a href="${link}">${title}</a> çıkartma paketini listende gizlendi.
+    restored: <a href="${link}">${title}</a> çıkartma paketi listende sıfırlandı.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
+      hide: '❌ Çıkartma Paketini Gizle'
+      restore: '✅ Sıfırla'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>Hata!</b>
+        Çıkartma paketini sıfırlayamazsın.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>Hata!</b>
+        Çıkartma paketini bulamıyorum.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: Çıkartma başarılı bir şekilde çıkartma paketinden silindi.
+      restored: Çıkartma başarılı bir şekilde şimdiki çıkartma paketine eklendi.
+    delete: Çıkartma başarılı bir şekilde çıkartma paketinden silindi.
+    restored: Çıkartma başarılı bir şekilde şimdiki çıkartma paketine eklendi.
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 Sil'
+      copy: '🌟 Kopyala'
+      restore: '✅ Sıfırla'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        Hata!
+        Çıkartmayı bulamıyorum.
   donate:
-    title: Донат ${botUsername}
-    description: Прямая поддержка разработчика бота и получение дополнительных возможностей.
+    title: Bağış yap ${botUsername}
+    description: Direk destek ve ekstra özellikler
     successful: |
-      <b>Спасибо за поддержку бота 💜</b>
+      <b>Botun geliştirilmesinde yardımcı olduğun için teşekkürler 💜</b>
 
-      Вы можете написать мне @LyoSU с предложением фичи, которой не хватает, и я попробую её реализовать.
+      Eğer bir önerin , sorun veya eksik özellikleri bildirme durumun olursa @LyoSU adresinden bana ulaşabilir, elimden geleni yaparım.
     btn:
-      buy: '💜 Оплатить'
+      buy: '💜 Öde'
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Çıkartma başarılı bir şekilde çıkartma paketine eklendi:</b>
       <a href="${link}">${title}</a>
     error:
       stickers_too_much: |
-        <b>Ошибка!</b>
-        В этом стикерпаке максимальное количество стикеров.
-        Вы можете создать новый стикерпак командой /new
+        <b>Hata!</b>
+        Çıkartma paketinde bulunması gereken maksimum limit dolu.
+        /new komutunu kullanarak yeni bir çıkartma paketi oluşturabilirsin.
       have_already: |
-        <b>Ошибка!</b>
-        Этот стикер уже есть в этом стикерпаке.
+        <b>Hata!</b>
+        Bu çıkartma zaten senin çıkartma paketinde bulunuyor.
       stickerset_invalid: |
         <b>Ошибка!</b>
         Бот не может получить доступ к текущему выбранному стикерпаку.
         Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Hata!</b>
+        Bu dosya tipi desteklenmiyor
 scenes:
   new_pack:
     common: Обычный
@@ -127,56 +124,53 @@ scenes:
     pack_type: |
       <b>Выбери тип стикерпака:</b>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Çıkartma paketin için kısa bir link gir:</b>
+      <i>Yalnızca latin harfleri, rakamlar ve alt çizgiler kullanın.</i>
     ok: |
-      Стикерпак <a href="${link}">${title}</a> успешно создан!
+      <a href="${link}">${title}</a> çıkartma paketi başarılı bir şekilde oluşturuldu!
 
-      <b>Ссылка на стикерпак:</b> <pre>${link}</pre>
+      <b>Çıkartma paketinin linki:</b> <pre>${link}</pre>
 
-      Редактировать его можно в официальном боте @Stickers
+      @Stickers botu kullanarak çıkartmalarını düzenleyebilirsin.
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: İsim ${max}  değerinden büyük olamaz.
+      name_long: Kısa link ${max} değerinden büyük olamaz.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
+        name_invalid: Bu adres kullanılamaz.
         name_occupied: Такой адрес уже занят.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      Bu çıkartma paketini kopyalayabilirim, bunun için yeni bir çıkartma paketi oluşturmanız gerekir.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama
 
-      Прогресс: ${current}/${total}
+      Durum: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama başarılı sonuçlandı.
     error:
       premium: |
-        <b>Ошибка!</b>
-        К сожалению, эта функция доступна только тем, кто поддержал бота.
+        <b>Hata!</b>
+        Ne yazık ki, bu özellik yalnızca botu destekleyen kişiler tarafından kullanılabilir.
 
-        Вы можете это сделать, отправив команду /donate
+        Bunu yapmak için /donate komutunu kullanabilirsin.
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Bu botla eklenen çıkartmayı gönderin, size orijinal çıkartmasını göstereceğim.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>Hata!</b>
+        Orijinal çıkartmayı bulamıyorum.
   leave: |
-    Действие отменено.
+    Eylem iptal edildi!
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ İptal'
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram hatası!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram hatası:
       ${error}
