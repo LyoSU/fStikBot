@@ -22,27 +22,26 @@ cmd:
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Developer channel: @LyBlog
     btn:
-      packs: 🌟 Sticker packs
-      animpacks: ✨ Animated sticker packs
-      new: 🆕 Create a new sticker pack
-      donate: ☕️
+      packs: '🌟 Sticker packs'
+      animpacks: '✨ Animated sticker packs'
+      new: '🆕 Create a new sticker pack'
+      donate: '☕️'
   restore: |
-      <b>🗃 Sticker pack restoration</b>
+    <b>🗃 Sticker pack restoration</b>
 
-      If you previously created a sticker pack through this bot and cannot find it in the list of your sticker packs, then you can restore it back.
+    If you previously created a sticker pack through this bot and cannot find it in the list of your sticker packs, then you can restore it back.
 
-      <b>To do this, you need to perform several actions:</b>
-      1. Open @Stickers bot
-      2. Send <code>/packstats</code> command
-      3. Find and choose the required sticker pack
-      4. Forward the received message to the bot
-      5. If restoration is successful - bot informs about it
-
+    <b>To do this, you need to perform several actions:</b>
+    1. Open @Stickers bot
+    2. Send <code>/packstats</code> command
+    3. Find and choose the required sticker pack
+    4. Forward the received message to the bot
+    5. If restoration is successful - bot informs about it
   copy: |
-      <b>🗄 Copy sticker pack</b>
+    <b>🗄 Copy sticker pack</b>
 
-      If you supported the bot, copying all the stickers from any sticker pack with a new name will be available.
-      In order to copy the sticker pack you just need to send a link to it to the bot.
+    If you supported the bot, copying all the stickers from any sticker pack with a new name will be available.
+    In order to copy the sticker pack you just need to send a link to it to the bot.
   packs:
     info: |
       <b>🌟 Sticker packs:</b>
@@ -59,7 +58,6 @@ cmd:
   emoji:
     info: Please, specify an emoji. For example - <code>/emoji 💜</code> changes current pack suffix to 💜 for all new stickers.
     done: Emoji suffix successfully changed.
-
 callback:
   pack:
     answerCbQuer:
@@ -70,8 +68,8 @@ callback:
     hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
     restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
-      hide: ❌ Hide sticker pack
-      restore: ✅ Restore
+      hide: '❌ Hide sticker pack'
+      restore: '✅ Restore'
     error:
       restore: |
         <b>Error!</b>
@@ -86,9 +84,9 @@ callback:
     delete: The sticker was successfully removed from the sticker pack.
     restored: The sticker was successfully saved to the current sticker pack.
     btn:
-      delete: 🗑 Delete
-      copy: 🌟 Copy
-      restore: ✅ Restore
+      delete: '🗑 Delete'
+      copy: '🌟 Copy'
+      restore: '✅ Restore'
     error:
       not_found: |
         ERROR!
@@ -101,8 +99,7 @@ callback:
 
       You can write me @LyoSU with a suggestion of a feature that is missing, and I will try to implement it.
     btn:
-      buy: 💜 Pay
-
+      buy: '💜 Pay'
 sticker:
   add:
     ok: |
@@ -118,12 +115,11 @@ sticker:
         This sticker is already in this sticker pack.
       stickerset_invalid: |
         <b>Error!</b>
-        Bot cannot access your current chosen sticker pack. 
+        Bot cannot access your current chosen sticker pack.
         Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
         This file type is not supported.
-
 scenes:
   new_pack:
     common: Common
@@ -149,7 +145,7 @@ scenes:
       name_long: Address cannot be greater than ${max} symbols.
       telegram:
         name_invalid: That address cannot be used.
-        name_occupied: This address is already taken. 
+        name_occupied: This address is already taken.
   copy:
     enter: |
       I can copy this sticker pack, for this you need to create a new sticker pack.
@@ -173,10 +169,9 @@ scenes:
         <b>Error!</b>
         I could not find the original sticker.
   leave: |
-      Action canceled.
+    Action canceled.
   btn:
-    cancel: ❌ Cancel
-
+    cancel: '❌ Cancel'
 error:
   telegram: |
     <b>Telegram returned an error!</b>

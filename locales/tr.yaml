@@ -19,21 +19,21 @@ cmd:
       👨🏻‍💻 Yapımcı Kanalı: @LyBlog
       Çeviriyi Yapan: @By_Azade
     btn:
-      packs: 🌟 Çıkartma paketleri
-      new: 🆕 Yeni bir çıkartma paketi oluştur
-      donate: ☕️
+      packs: '🌟 Çıkartma paketleri'
+      animpacks: '✨ Анимированные стикерпаки'
+      new: '🆕 Yeni bir çıkartma paketi oluştur'
+      donate: '☕️'
   restore: |
-      <b>🗃 Çıkartma Paketi Sıfırlama</b>
+    <b>🗃 Çıkartma Paketi Sıfırlama</b>
 
-      Daha önce bu bot üzerinden bir çıkartma paketi oluşturduysanız ve çıkartma paketleri listenizde bulamıyorsanız, geri yükleyebilirsiniz.
+    Daha önce bu bot üzerinden bir çıkartma paketi oluşturduysanız ve çıkartma paketleri listenizde bulamıyorsanız, geri yükleyebilirsiniz.
 
-      <b>Bunu yapmak için birkaç işlem yapmanız gerekir:</b>
-      1. @Stickers botunu aç
-      2. <code>/packstats</code> komutunu gönder
-      3. Gerekli olan çıkartma paketini bul
-      4. Aldığın mesajı bu bota yolla
-      5. Eğer sıfırlama başarılı olursa bot sana bildirecektir
-
+    <b>Bunu yapmak için birkaç işlem yapmanız gerekir:</b>
+    1. @Stickers botunu aç
+    2. <code>/packstats</code> komutunu gönder
+    3. Gerekli olan çıkartma paketini bul
+    4. Aldığın mesajı bu bota yolla
+    5. Eğer sıfırlama başarılı olursa bot sana bildirecektir
   copy: |
     <b>🗄 Çıkartma Paketi Kopyalama</b>
 
@@ -52,7 +52,9 @@ cmd:
 
     ➖ <b>"${titleSuffix}</b> çıkartma başlığını kapatma
     ➖ Diğer çıkartma paketlerini link ile kopyalama
-
+  emoji:
+    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
+    done: Эмодзи-суффикс успешно изменен.
 callback:
   pack:
     answerCbQuer:
@@ -63,8 +65,8 @@ callback:
     hidden: <a href="${link}">${title}</a> çıkartma paketini listende gizlendi.
     restored: <a href="${link}">${title}</a> çıkartma paketi listende sıfırlandı.
     btn:
-      hide: ❌ Çıkartma Paketini Gizle
-      restore: ✅ Sıfırla
+      hide: '❌ Çıkartma Paketini Gizle'
+      restore: '✅ Sıfırla'
     error:
       restore: |
         <b>Hata!</b>
@@ -79,9 +81,9 @@ callback:
     delete: Çıkartma başarılı bir şekilde çıkartma paketinden silindi.
     restored: Çıkartma başarılı bir şekilde şimdiki çıkartma paketine eklendi.
     btn:
-      delete: 🗑 Sil
-      copy: 🌟 Kopyala
-      restore: ✅ Sıfırla
+      delete: '🗑 Sil'
+      copy: '🌟 Kopyala'
+      restore: '✅ Sıfırla'
     error:
       not_found: |
         Hata!
@@ -94,8 +96,7 @@ callback:
 
       Eğer bir önerin , sorun veya eksik özellikleri bildirme durumun olursa @LyoSU adresinden bana ulaşabilir, elimden geleni yaparım.
     btn:
-      buy: 💜 Öde
-
+      buy: '💜 Öde'
 sticker:
   add:
     ok: |
@@ -109,12 +110,19 @@ sticker:
       have_already: |
         <b>Hata!</b>
         Bu çıkartma zaten senin çıkartma paketinde bulunuyor.
+      stickerset_invalid: |
+        <b>Ошибка!</b>
+        Бот не может получить доступ к текущему выбранному стикерпаку.
+        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
       file_type: |
         <b>Hata!</b>
         Bu dosya tipi desteklenmiyor
-
 scenes:
   new_pack:
+    common: Обычный
+    animated: Анимированный
+    pack_type: |
+      <b>Выбери тип стикерпака:</b>
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
@@ -131,6 +139,7 @@ scenes:
       name_long: Kısa link ${max} değerinden büyük olamaz.
       telegram:
         name_invalid: Bu adres kullanılamaz.
+        name_occupied: Такой адрес уже занят.
   copy:
     enter: |
       Bu çıkartma paketini kopyalayabilirim, bunun için yeni bir çıkartma paketi oluşturmanız gerekir.
@@ -154,10 +163,9 @@ scenes:
         <b>Hata!</b>
         Orijinal çıkartmayı bulamıyorum.
   leave: |
-      Eylem iptal edildi!
+    Eylem iptal edildi!
   btn:
-    cancel: ❌ İptal
-
+    cancel: '❌ İptal'
 error:
   telegram: |
     <b>Telegram hatası!</b>

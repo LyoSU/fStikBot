@@ -22,27 +22,26 @@ cmd:
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Blog pengembang: @LyBlog
     btn:
-      packs: 🌟 Paket stiker
-      animpacks: ✨ Paket stiker animasi
-      new: 🆕 Buat paket stiker baru
-      donate: ☕️
+      packs: '🌟 Paket stiker'
+      animpacks: '✨ Paket stiker animasi'
+      new: '🆕 Buat paket stiker baru'
+      donate: '☕️'
   restore: |
-      <b>🗃 Pemulihan paket stiker</b>
+    <b>🗃 Pemulihan paket stiker</b>
 
-      Jika sebelumnya anda membuat paket stiker melalui bot ini dan tidak dapat menemukannya di daftar paket stiker anda, maka anda dapat memulihkannya kembali.
+    Jika sebelumnya anda membuat paket stiker melalui bot ini dan tidak dapat menemukannya di daftar paket stiker anda, maka anda dapat memulihkannya kembali.
 
-      <b>Untuk melakukan ini, Anda perlu melakukan beberapa tindakan:</b>
-      1. Buka bot @Stickers
-      2. Kirim perintah <code>/packstats</code>
-      3. Temukan dan pilih paket stiker yang diperlukan
-      4. Meneruskan pesan yang diterima ke bot
-      5. Jika pemulihan berhasil - bot menginformasikannya
-
+    <b>Untuk melakukan ini, Anda perlu melakukan beberapa tindakan:</b>
+    1. Buka bot @Stickers
+    2. Kirim perintah <code>/packstats</code>
+    3. Temukan dan pilih paket stiker yang diperlukan
+    4. Meneruskan pesan yang diterima ke bot
+    5. Jika pemulihan berhasil - bot menginformasikannya
   copy: |
-      <b>🗄 Salin paket stiker</b>
+    <b>🗄 Salin paket stiker</b>
 
-      Jika anda mendukung bot, menyalin semua stiker dari paket stiker mana pun dengan nama baru akan tersedia.
-      Untuk menyalin paket stiker, anda hanya perlu mengirim tautan ke bot.
+    Jika anda mendukung bot, menyalin semua stiker dari paket stiker mana pun dengan nama baru akan tersedia.
+    Untuk menyalin paket stiker, anda hanya perlu mengirim tautan ke bot.
   packs:
     info: |
       <b>🌟 Paket stiker:</b>
@@ -59,7 +58,6 @@ cmd:
   emoji:
     info: Harap tentukan emoji. Sebagai contoh - <code>/emoji 💜</code> mengubah akhiran paket saat ini menjadi 💜 untuk semua stiker baru.
     done: Sufiks emoji berhasil diubah.
-
 callback:
   pack:
     answerCbQuer:
@@ -70,8 +68,8 @@ callback:
     hidden: Paket stiker <a href="${link}">${title}</a> tersembunyi dari daftar anda.
     restored: Paket stiker <a href="${link}">${title}</a> dikembalikan ke daftar anda.
     btn:
-      hide: ❌ Sembunyikan paket stiker
-      restore: ✅ Mengembalikan
+      hide: '❌ Sembunyikan paket stiker'
+      restore: '✅ Mengembalikan'
     error:
       restore: |
         <b>Error!</b>
@@ -86,9 +84,9 @@ callback:
     delete: Stiker berhasil dihapus dari paket stiker.
     restored: Stiker berhasil disimpan ke paket stiker saat ini.
     btn:
-      delete: 🗑 Hapus
-      copy: 🌟 Salin
-      restore: ✅ Mengembalikan
+      delete: '🗑 Hapus'
+      copy: '🌟 Salin'
+      restore: '✅ Mengembalikan'
     error:
       not_found: |
         KESALAHAN!
@@ -101,8 +99,7 @@ callback:
 
       Anda bisa menulis kepada saya @LyoSU dengan saran tentang fitur yang hilang, dan saya akan mencoba menerapkannya.
     btn:
-      buy: 💜 Bayar
-
+      buy: '💜 Bayar'
 sticker:
   add:
     ok: |
@@ -118,12 +115,11 @@ sticker:
         Stiker ini sudah ada di paket stiker ini.
       stickerset_invalid: |
         <b>Error!</b>
-        Bot tidak dapat mengakses paket stiker yang anda pilih saat ini. 
+        Bot tidak dapat mengakses paket stiker yang anda pilih saat ini.
         Silakan, buat (/new) atau pilih (/packs) paket stiker lain.
       file_type: |
         <b>Error!</b>
         Jenis file ini tidak didukung.
-
 scenes:
   new_pack:
     common: Umum
@@ -149,7 +145,7 @@ scenes:
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
       telegram:
         name_invalid: Alamat itu tidak dapat digunakan.
-        name_occupied: Alamat ini sudah dipakai. 
+        name_occupied: Alamat ini sudah dipakai.
   copy:
     enter: |
       Saya dapat menyalin paket stiker ini, untuk ini anda perlu membuat paket stiker baru.
@@ -173,10 +169,9 @@ scenes:
         <b>Kesalahan!</b>
         Saya tidak dapat menemukan stiker aslinya.
   leave: |
-      Aksi dibatalkan.
+    Aksi dibatalkan.
   btn:
-    cancel: ❌ Batal
-
+    cancel: '❌ Batal'
 error:
   telegram: |
     <b>Telegram mengembalikan kesalahan!</b>
