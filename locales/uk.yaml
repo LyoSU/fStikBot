@@ -1,6 +1,6 @@
 ---
-language_name: '🇷🇺 Русский'
-ratelimit: Не так часто!
+language_name: '🇺🇦 Українська'
+ratelimit: Занадто часто!
 cmd:
   start:
     info: |
