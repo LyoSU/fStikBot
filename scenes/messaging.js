@@ -248,7 +248,7 @@ adminMessagingСonfirmation.enter(async (ctx) => {
   if (ctx.session.scene.type === 'all') {
     findUsers = await ctx.db.User.find({
       blocked: { $ne: true }
-    }).cursor();
+    }).cursor()
   }
 
   let userList = ''
@@ -354,12 +354,12 @@ adminMessagingPublish.enter(async (ctx) => {
       }
     })
 
-    ctx.session.scene.users.forEach(chatId => {
+    for (let chatId of ctx.session.scene.users) {
       queue.add({
         chatId,
         message: ctx.session.scene.message
       })
-    })
+    }
   })
 
   const resultText = ctx.i18n.t('admin.messaging.create.publish', {
