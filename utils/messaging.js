@@ -40,8 +40,8 @@ const messaging = (messagingData) => new Promise((resolve) => {
   })
 
   queue.process((job, done) => {
-    const method = replicators.copyMethods[job.data.message.type]
-    const opts = Object.assign(job.data.message.data, {
+    const method = replicators.copyMethods[messagingData.message.type]
+    const opts = Object.assign(messagingData.message.data, {
       chat_id: job.data.chatId,
       disable_notification: true
     })

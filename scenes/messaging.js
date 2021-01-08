@@ -354,10 +354,9 @@ adminMessagingPublish.enter(async (ctx) => {
       }
     })
 
-    for (let chatId of ctx.session.scene.users) {
+    for (const chatId of ctx.session.scene.users) {
       queue.add({
-        chatId,
-        message: ctx.session.scene.message
+        chatId
       })
     }
   })
