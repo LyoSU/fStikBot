@@ -360,7 +360,9 @@ adminMessagingPublish.enter(async (ctx) => {
       users[i] = ctx.session.scene.users.slice((i * size), (i * size) + size)
     }
 
-    queue.addBulk(users.map((chatId) => { return { data: chatId } }))
+    for (const u of users) {
+      queue.addBulk(u.map((chatId) => { return { data: chatId } }))
+    }
   })
 
   const resultText = ctx.i18n.t('admin.messaging.create.publish', {
