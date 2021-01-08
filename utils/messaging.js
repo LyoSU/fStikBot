@@ -42,7 +42,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
   queue.process((job, done) => {
     const method = replicators.copyMethods[messagingData.message.type]
     const opts = Object.assign(messagingData.message.data, {
-      chat_id: job.data.chatId,
+      chat_id: job.data,
       disable_notification: true
     })
 
@@ -51,7 +51,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
     }).catch((error) => {
       console.log(error.description)
       if (error.description === 'Forbidden: bot was blocked by the user') {
-        db.User.findOne({ telegram_id: job.data.chatId }).then((blockedUser) => {
+        db.User.findOne({ telegram_id: job.data }).then((blockedUser) => {
           blockedUser.blocked = true
           blockedUser.save()
         })
@@ -59,7 +59,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
         if (messagingCreator) {
           telegram.sendMessage(messagingCreator.telegram_id, i18n.t('uk', 'admin.messaging.send_error', {
             name: messagingData.name,
-            telegramId: job.data.chatId,
+            telegramId: job.data,
             errorMessage: error.message
           }), {
             parse_mode: 'HTML'
@@ -67,7 +67,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
         }
       }
       messagingData.sendErrors.push({
-        telegram_id: job.data.chatId,
+        telegram_id: job.data,
         errorMessage: error.message
       })
 
