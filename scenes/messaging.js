@@ -354,7 +354,13 @@ adminMessagingPublish.enter(async (ctx) => {
       }
     })
 
-    queue.addBulk(ctx.session.scene.users.map((chatId) => { return { data: chatId } }))
+    const size = 10000
+    const users = []
+    for (let i = 0; i < Math.ceil(ctx.session.scene.users.length / size); i++) {
+      users[i] = ctx.session.scene.users.slice((i * size), (i * size) + size)
+    }
+
+    queue.addBulk(users.map((chatId) => { return { data: chatId } }))
   })
 
   const resultText = ctx.i18n.t('admin.messaging.create.publish', {
