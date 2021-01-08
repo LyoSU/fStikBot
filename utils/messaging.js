@@ -40,6 +40,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
   })
 
   queue.process((job, done) => {
+    console.log(job)
     const method = replicators.copyMethods[messagingData.message.type]
     const opts = Object.assign(messagingData.message.data, {
       chat_id: job.data,

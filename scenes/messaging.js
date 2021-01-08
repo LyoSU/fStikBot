@@ -251,7 +251,7 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     }).cursor()
   }
 
-  let userList = ''
+  const userList = ''
 
   ctx.session.scene.users = []
 
@@ -354,9 +354,7 @@ adminMessagingPublish.enter(async (ctx) => {
       }
     })
 
-    ctx.session.scene.users.forEach((chatId) => {
-      queue.add(chatId)
-    })
+    queue.addBulk(ctx.session.scene.users.map((chatId) => { return { data: chatId } }))
   })
 
   const resultText = ctx.i18n.t('admin.messaging.create.publish', {
