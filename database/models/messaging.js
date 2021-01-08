@@ -10,8 +10,6 @@ const messagingSchema = mongoose.Schema({
     type: { type: String },
     data: Object
   },
-  users: Array,
-  messages: Object,
   sendErrors: Array,
   status: {
     type: Number,

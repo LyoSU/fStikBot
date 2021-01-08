@@ -26,7 +26,11 @@ const userSchema = mongoose.Schema({
     default: false
   },
   payments: Array,
-  locale: String
+  locale: String,
+  blocked: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 })

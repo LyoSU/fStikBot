@@ -1,3 +1,4 @@
+const Queue = require('bull')
 const Markup = require('telegraf/markup')
 const Scene = require('telegraf/scenes/base')
 const replicators = require('telegraf/core/replicators')
@@ -339,11 +340,26 @@ adminMessagingPublish.enter(async (ctx) => {
     result: {
       waiting: ctx.session.scene.users.length
     },
-    users: ctx.session.scene.users,
     date: ctx.session.scene.date
   })
 
-  messaging.save()
+  messaging.save().then((messaging) => {
+    const jobName = `messaging_${messaging.id}`
+
+    const queue = new Queue(jobName, {
+      limiter: {
+        max: ctx.config.messaging.limit.max || 10,
+        duration: ctx.config.messaging.limit.duration || 1000
+      }
+    })
+
+    ctx.session.scene.users.forEach(chatId => {
+      queue.add({
+        chatId,
+        message: ctx.session.scene.message
+      })
+    })
+  })
 
   const resultText = ctx.i18n.t('admin.messaging.create.publish', {
     name: messaging.name

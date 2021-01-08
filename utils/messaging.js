@@ -18,12 +18,9 @@ const i18n = new I18n({
 
 const messaging = (messagingData) => new Promise((resolve) => {
   console.log(`messaging ${messagingData.name} start`)
-  let newMessaging = true
-  if (messagingData.status === -1) newMessaging = false
 
   messagingData.status = 1
   messagingData.save()
-  const messages = {}
 
   let messagingCreator
 
@@ -50,12 +47,14 @@ const messaging = (messagingData) => new Promise((resolve) => {
     })
 
     telegram.callApi(method, opts).then((result) => {
-      messages[job.data.chatId] = result.message_id
-
-      done()
+      done(null, { messageId: result.message_id })
     }).catch((error) => {
       console.log(error.description)
       if (error.description === 'Forbidden: bot was blocked by the user') {
+        db.User.findOne({ telegram_id: job.data.chatId }).then((blockedUser) => {
+          blockedUser.blocked = true
+          blockedUser.save()
+        })
       } else {
         if (messagingCreator) {
           telegram.sendMessage(messagingCreator.telegram_id, i18n.t('uk', 'admin.messaging.send_error', {
@@ -76,15 +75,6 @@ const messaging = (messagingData) => new Promise((resolve) => {
     })
   })
 
-  if (newMessaging) {
-    messagingData.users.forEach(chatId => {
-      queue.add({
-        chatId,
-        message: messagingData.message
-      })
-    })
-  }
-
   const interval = setInterval(async () => {
     const jobCounts = await queue.getJobCounts()
 
@@ -102,8 +92,6 @@ const messaging = (messagingData) => new Promise((resolve) => {
       clearInterval(interval)
 
       console.log(`messaging ${messagingData.name} end`, jobCounts)
-
-      messagingData.messages = messages
     }
 
     await messagingData.save()
@@ -111,27 +99,34 @@ const messaging = (messagingData) => new Promise((resolve) => {
 })
 
 const messagingEdit = (messagingData) => new Promise((resolve) => {
-  let newMessaging = true
-  if (messagingData.status === -1) {
-    messagingData.status = 2
-    newMessaging = false
-  }
-
   messagingData.editStatus = 2
   messagingData.save()
 
-  const jobName = `messaging_edit_${messagingData.id}`
+  const jobName = `messaging_${messagingData.id}`
+  const jobEditName = `messaging_edit_${messagingData.id}`
 
   const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
-  const queue = new Queue(jobName, {
+  const queue = new Queue(jobName)
+
+  const queueEdit = new Queue(jobEditName, {
     limiter: {
       max: config.messaging.limit.max || 10,
       duration: config.messaging.limit.duration || 1000
     }
   })
 
-  queue.process((job, done) => {
+  queue.getCompleted().then((completed) => {
+    completed.forEach(job => {
+      queueEdit.add({
+        chatId: job.data.chatId,
+        messageId: job.returnvalue.messageId,
+        message: messagingData.message
+      })
+    })
+  })
+
+  queueEdit.process((job, done) => {
     if (job.data.message.type === 'text') {
       telegram.editMessageText(job.data.chatId, job.data.messageId, null, job.data.message.data.text, {
         parse_mode: job.data.message.data.parse_mode,
@@ -162,23 +157,12 @@ const messagingEdit = (messagingData) => new Promise((resolve) => {
     }
   })
 
-  if (newMessaging) {
-    messagingData.users.forEach(chatId => {
-      console.log(messagingData.messages)
-      queue.add({
-        chatId,
-        messageId: messagingData.messages[chatId],
-        message: messagingData.message
-      })
-    })
-  }
-
   const interval = setInterval(async () => {
-    const jobCounts = await queue.getJobCounts()
+    const jobCounts = await queueEdit.getJobCounts()
 
     messagingData = await db.Messaging.findById(messagingData.id)
 
-    if (messagingData.editStatus === 0) queue.clean(0, 'delayed')
+    if (messagingData.editStatus === 0) queueEdit.clean(0, 'delayed')
 
     messagingData.result = jobCounts
 
@@ -220,28 +204,16 @@ setTimeout(async function f () {
 
 const restartMessaging = async () => {
   const cursorMessaging = await db.Messaging.find({
-    status: 1,
-    date: {
-      $lte: new Date()
-    }
+    status: 1
   }).cursor()
 
-  cursorMessaging.on('data', (messagingData) => {
-    messagingData.status = -1
-    messagingData.save()
-  })
+  cursorMessaging.on('data', messaging)
 
   const cursorMessagingEdit = await db.Messaging.find({
-    editStatus: 2,
-    date: {
-      $lte: new Date()
-    }
+    editStatus: 2
   }).cursor()
 
-  cursorMessagingEdit.on('data', (messagingData) => {
-    messagingData.status = -1
-    messagingData.save()
-  })
+  cursorMessagingEdit.on('data', messagingEdit)
 }
 
 restartMessaging()
