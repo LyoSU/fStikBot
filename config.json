@@ -1,5 +1,12 @@
 {
+  "mainAdminId": 66478514,
   "stickerLinkPrefix": "t.me/addstickers/",
   "charTitleMax": 30,
-  "charNameMax": 30
+  "charNameMax": 30,
+  "messaging": {
+    "limit": {
+      "max": 1,
+      "duration": 10000
+    }
+  }
 }
