@@ -248,15 +248,16 @@ adminMessagingСonfirmation.enter(async (ctx) => {
   if (ctx.session.scene.type === 'all') {
     findUsers = await ctx.db.User.find({
       blocked: { $ne: true }
-    }).populate('personal')
+    }).cursor();
   }
 
   let userList = ''
 
-  ctx.session.scene.users = findUsers.map((user, key) => {
-    if (key + 1 <= 20) userList += `<a href="tg://user?id=${user.telegram_id}">${user.first_name}</a>\n`
-    return user.telegram_id
-  })
+  ctx.session.scene.users = []
+
+  for (let user = await findUsers.next(); user != null; user = await findUsers.next()) {
+    ctx.session.scene.users.push(user.telegram_id)
+  }
 
   const resultText = ctx.i18n.t('admin.messaging.create.found', {
     userCount: ctx.session.scene.users.length,
