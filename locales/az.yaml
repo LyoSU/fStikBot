@@ -128,44 +128,44 @@ sticker:
 scenes:
   new_pack:
     common: Adi
-    animated: Анимированный
+    animated: Anime 
     pack_type: |
-      <b>Выбери тип стикерпака:</b>
+      <b>Etiket paketinin növünü seçin:</b>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Yeni stiker paketi üçün bir ad daxil edin:</b>
+      <i>Aşağıda təsadüfi olaraq yaradılan bir ad da seçə bilərsiniz.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Yeni stiker paketi üçün qısa ünvanı daxil edin:</b>
+      <i>Ünvan yalnız ingilis hərflərindən, rəqəmlərdən və alt xətlərdən ibarət ola bilər.</i>
+      <i>Məsələn, bu dəstin 'Heyvanlar' qısa bir ünvanı var: https://t.me/addstickers/Heyvanlar</i>
+      <i>Aşağıda təsadüfi olaraq yaradılan bir ünvan da seçə bilərsiniz.</i>
     ok: |
-      Стикерпак <a href="${link}">${title}</a> успешно создан!
+      Stickerpack <a href="${link}">${title}</a> uğurla yaradıldı!
 
-      <b>Ссылка на стикерпак:</b> <pre>${link}</pre>
+      <b>Etiket paketinə keçid:</b> <pre>${link}</pre>
 
-      Редактировать его можно в официальном боте @Stickers
+      Rəsmi @Stickers botunda redaktə edə bilərsiniz
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Ad ${max} simvoldan çox olmamalıdır
+      name_long: Ünvan ${max} simvoldan çox olmamalıdır.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: Bu ünvan istifadə edilə bilməz.
+        name_occupied: Bu ünvan artıq alınmışdır.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      Bu stiker paketini yeni bir stiker paketi yaradaraq kopyalaya bilərəm.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Stikerpack çıxarmaq <a href="${originalLink}">${originalTitle}</a> üçün <a href="${link}">${title}</a>
 
-      Прогресс: ${current}/${total}
+      Tərəqqi: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      <a href="${originalLink}">${originalTitle}</a> - <a href="${link}">${title}</a> etiket paketinin kopyalanması uğurla </a> çatdı.
     error:
       premium: |
-        <b>Ошибка!</b>
-        К сожалению, эта функция доступна только тем, кто поддержал бота.
+        <b>səhv!</b>
+        Təəssüf ki, bu xüsusiyyət yalnız botu dəstəkləyənlər üçün mövcuddur.
 
-        Вы можете это сделать, отправив команду /donate
+        /donate yazarağ ianə edə bilərsiniz
   original:
     enter: |
       Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
