@@ -145,13 +145,13 @@ scenes:
         name_occupied: Ushbu manzil band.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      Men ushbu stikerlar to'plamini nusxalashim mumkin, buning uchun yangi stikerlar to'plamini yaratish kerak bo'ladi.
     progress: |
       Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
 
       Прогресс: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      <a href="${originalLink}">${originalTitle}</a> dan <a href="${link}">${title}</a> ga stikerlar to'plamini nusxalash muvaffaqiyatli yakunlandi.
     error:
       premium: |
         <b>Ошибка!</b>
