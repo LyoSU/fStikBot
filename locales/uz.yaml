@@ -173,11 +173,11 @@ admin:
   not_allowed: Ushbu bo'lim siz uchun emas! 😡
   info: Admin paneli
   menu:
-    messaging: '✉️ Рассылка'
+    messaging: '✉️ Shaxsiy xabar'
     admin: '😎 Admin paneli'
   messaging:
     info: |
-      ✉️ Рассылки
+      ✉️ Shaxsiy xabarlar
     menu:
       create: Yaratish
       scheduled: Rejalashtirilgan
@@ -205,16 +205,16 @@ admin:
         all: Barchasi
       select_all: Barchasi
       found: |
-        Нашлось человек: ${userCount}
+        Topilgan odamlar soni: ${userCount}
 
         ${userList}
-        Начать рассылку?
+        Shaxsiy xabalarni yuborishni boshlaymi?
       back: Ortga
       continue: Davom etish
       publish: |
-        Рассылка  ${name} создана
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
+        Shaxsiy xabar  ${name} yaratildi
+        Ko'rish uchun tugmani bosing
+      status: Shaxsiy xabar yuborish holati
     edit:
       started: |
         Tahrirlash boshlandi
@@ -223,21 +223,21 @@ admin:
          [${type}] asl nusxadan [${originalType}] farq qiladi.
         Tahrirlashning iloji yo'q
     list:
-      info: Состояние рассылки
+      info: Shaxsiy xabar yuborish holati
     status:
       info: |
-        <b>Рассылка ${name}</b> (${createdAt})
-        Створив ${creatorName}
+        <b>Shaxsiy xabar ${name}</b> (${createdAt})
+        Yaratdi ${creatorName}
 
-        Дата отправки: ${date}
+        Yuborilish sanasi: ${date}
 
-        Прогресс отправки:
-          Ожидают: ${waiting}
-          Отправлено: ${completed}
-          Ошибки: ${failed}
+        Yuborish jarayoni:
+          Kutilayotgan: ${waiting}
+          Yuborilgan: ${completed}
+          Xatolar: ${failed}
         ${userErrors}
 
-        Статус: ${status}
+        Holat: ${status}
       status_type: |
         Yaratildi
         Jarayonda
@@ -249,10 +249,10 @@ admin:
       change_name: Sarlavhani o'zgartirish
       update: Yangilash
     canceled: |
-      <b>Рассылка ${name}</b> отменена.
+      <b>Shaxsiy xabar ${name}</b> bekor qilindi.
     send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+      <b>Shaxsiy xabar yuborishda xatolik ${name}</b>
+       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi. 
 
       <code>${errorMessage}</code>
 error:
