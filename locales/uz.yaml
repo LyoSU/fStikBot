@@ -1,5 +1,5 @@
 ---
-language_name: '🇷🇺 Rus tili'
+language_name: '🇺🇿'
 ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
@@ -82,67 +82,67 @@ callback:
     restored: Ushbu stiker, joriy stikerlar to'plamiga muvaffaqiyatli ravishda saqlab qo'yildi.
     btn:
       delete: '🗑O''chirish'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      copy: '🌟Nusxalash'
+      restore: '✅Qayta tiklash'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        Tizimda xatolik!
+        Stikerni topib bo'lmadi.
   donate:
-    title: Донат ${botUsername}
-    description: Прямая поддержка разработчика бота и получение дополнительных возможностей.
+    title: Xayriya ${botUsername}
+    description: Ushbu botning dasturlovchsini bevosita qo'llab-quvatlash va qo'shimcha imkoniyatlarga ega bo'lish.
     successful: |
-      <b>Спасибо за поддержку бота 💜</b>
+      <b>Botni qo'llab-quvatlaganingiz uchun tashakkur💜</b>
 
-      Вы можете написать мне @LyoSU с предложением фичи, которой не хватает, и я попробую её реализовать.
+      Siz menga @LyoSU botda yetishmayotgan funksiya bo'yicha ta'klif bilan yozishingiz mumkin va men uni ishlab chiqishga harakat qilaman.
     btn:
-      buy: '💜 Оплатить'
+      buy: '💜 To''lash'
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Ushbu stiker, stikerlar to'plamiga muvaffaqiyatli ravishda qo'shildi:</b>
       <a href="${link}">${title}</a>
     error:
       stickers_too_much: |
-        <b>Ошибка!</b>
-        В этом стикерпаке максимальное количество стикеров.
-        Вы можете создать новый стикерпак командой /new
+        <b>Tizimda xatolik!</b>
+        Ushbu stikerlar to'plamida, maksimal miqdordagi stikerlar mavjud.
+        /new buyrug'i bilan yangi stikerlar to'plamini yaratishingiz mumkin
       have_already: |
-        <b>Ошибка!</b>
-        Этот стикер уже есть в этом стикерпаке.
+        <b>Tizimda xatolik!</b>
+        Ushbu stiker allaqchon ushbu stikerlar to'plamida mavjud.
       stickerset_invalid: |
-        <b>Ошибка!</b>
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+        <b>Tizimda xatolik!</b>
+        Bot hozirda tanlangan stikerlar to'plamiga kira olmaydi.
+        Iltimos, yangi yarating (/new) yoki boshqa stikerlar to'plamini tanlang (/packs).
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Tizimda xatolik!</b>
+        Ushbu fayl turi qo'llab-quvatlanmaydi.
 scenes:
   new_pack:
-    common: Обычный
-    animated: Анимированный
+    common: Oddiy
+    animated: Animatsiya qilingan
     pack_type: |
-      <b>Выбери тип стикерпака:</b>
+      <b>Stikerlar to'plamining turini tanlang:</b>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
+      <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Yangi stikerlar to'plami uchun qisqa manzilni kiriting:</b>
+      <i>Manzil faqat inglizcha harflar, raqamlar va pastki chiziqlardan iborat bo'lishi mumkin.</i>
+      <i>Masalan ushbu to'plam qisqa manzilni o'z ichiga oladi 'Animals': https://t.me/addstickers/Animals</i>
+      <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin. </i>
     ok: |
-      Стикерпак <a href="${link}">${title}</a> успешно создан!
+      Stikerlar to'plami <a href="${link}">${title}</a> muvaffaqiyatli ravishda yaratildi!
 
-      <b>Ссылка на стикерпак:</b> <pre>${link}</pre>
+      <b>Stikerlar to'plamiga havola</b> <pre>${link}</pre>
 
-      Редактировать его можно в официальном боте @Stickers
+      Siz uni rasmiy @Stickers botida tahrirlashingiz mumkin
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Ism ${max} belgidan oshmasligi kerak.
+      name_long: Manzil ${max} belgidan oshmasligi kerak.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: Ushbu manzilni ishlatib bo'lmaydi.
+        name_occupied: Ushbu manzil band.
   copy:
     enter: |
       Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
