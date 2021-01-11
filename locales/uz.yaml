@@ -4,66 +4,62 @@ ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Assalomu alaykum <b>${name}</b>!
+      Menga Stiker yoki fotosurat yuboring, men uni stikerlar to'plamingizga qo'shib qo'yaman.
+      O'chirish uchun - Stikerni qayta yuboring
 
-      /packs - список стикерпаков
-      /animpacks - список анимированных стикерпаков
-      /new - создать новый стикерпак
+      /packs - stikerlar to'plamining ro'yxati
+      /animpacks - animatsion stikerlarlar to'plamining ro'yxati
+      /new - yangi stikerlar to'plamini yaratish
+      /original - asl stikerni topish
+      /restore - stikerlar to'plamini qayta tiklash
+      /copy - stikerlar to'plamidan nusxa olish
+      /lang - tilni o'zgartirish
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /lang - change language
-
-      /donate - поддержать разработчика
+      /donate - dasturchini qo'llab-quvatlash
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      👨🏻‍💻 Dasturchining kanali: @LyBlog
     btn:
       packs: '🌟 Stikerlar to''plami'
-      animpacks: '✨ Animatsiyalangan Stikerlar to''plami'
+      animpacks: '✨ Animatsion Stikerlar to''plami'
       new: '🆕 Stiker yaratish'
-      donate: '☕️ Поддержать разработчика'
+      donate: '☕️ Dasturchini qo''llab-quvatlash'
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Stikerlar to'plamini qayta tiklash</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Agar siz ilgari ushbu bot orqali stikerlar to'plamini yaratgan bo'lsangiz va uni stikerlar to'plamingiz ro'yxatidan topa olmagan bo'lsangiz, uni qayta tiklashingiz mumkin.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Buning uchun siz bir nechta amallarni bajarishingiz kerak: </b>
+    1. @Stickers botga kiring
+    2. Unga <code>/packstats</code> buyrug'ini yuboring
+    3. Kerakli stikerlar to'plamini topib tanlang
+    4. Kelgan xabarni ushbu botga jo'nating
+    5. Muvaffaqiyatli qayta tiklanishdan so'ng, bot bu haqida xabar beradi
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Stikerlar to'plamini nusxalash</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Agar siz botni qo'llab-quvatlagan bo'lsangiz, barcha stikerlarni, har qanday stikerlar to'plamidan yangi nom bilan nusxalash imkoniyati paydo bo'ladi. Stikerlar to'plamini nusxalash uchun, siz botga stikerning havolasini yuborishingiz kifoya.
   packs:
     info: |
       <b>🌟 Stikerlar to'plami</b>
     empty: |
       <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
-      Для создания напиши /new
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Dasturchini qo'llab-quvatlash</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Siz menga kofega pul yuborib, evaziga yoqimli bonuslarni olishingiz mumkin.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Yangi stikerlar to'plamidan <b>"${titleSuffix}</b> nomini o'chirish
+    ➖ Boshqa stikerlar to'plamidan, ularning havolasi orqali to'liq nusxa ko'chirish
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    info: Iltimos, emodjini kiriting. Masalan, <code>/emoji 💜</code> keyingi barcha yangi stikerlar uchun qo'shimchani 💜 ga o'zgartiradi.
+    done: Emodji-qo'shimchasi muvaffaqiyatli o'zgartirildi.
 callback:
   pack:
     answerCbQuer:
-      hidden: Stikerlar to'plami yashirildi
-      restored: Stikerlar to'plami qayta tiklandi
+      hidden: Stikerlar to'plami muvaffaqiyatli ravishda yashirildi
+      restored: Stikerlar to'plami muvaffaqiyatli ravishda qayta tiklandi
     set_pack: |
       Tanlangan Stiker to'plami <a href="${link}">${title}</a>
     hidden: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizdan yashirildi.
@@ -74,18 +70,18 @@ callback:
     error:
       restore: |
         <b>Tizimda xatolik!</b>
-        Stikerlar to'plami tiklab bo'lmadi.
+        Stikerlar to'plamini tiklab bo'lmadi.
       copy: |
         <b>Tizimda xatolik!</b>
         Stikerlar to'plamini topib bo'lmadi.
   sticker:
     answerCbQuery:
-      delete: Ushbu Stiker, stikerlar to'plamidan o'chirildi
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: Ushbu stiker, stikerlar to'plamidan o'chirildi
+      restored: Ushbu stiker, joriy stikerlar to'plamiga muvaffaqiyatli ravishda saqlab qo'yildi
+    delete: Ushbu stiker, stikerlar to'plamidan o'chirildi.
+    restored: Ushbu stiker, joriy stikerlar to'plamiga muvaffaqiyatli ravishda saqlab qo'yildi.
     btn:
-      delete: '🗑 Удалить'
+      delete: '🗑O''chirish'
       copy: '🌟 Копировать'
       restore: '✅ Восстановить'
     error:
