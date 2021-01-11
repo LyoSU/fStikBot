@@ -1,6 +1,6 @@
 ---
 language_name: '🇷🇺 Rus tili'
-ratelimit: Не так часто!
+ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
     info: |
@@ -23,9 +23,9 @@ cmd:
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Канал разработчика: @LyBlog
     btn:
-      packs: '🌟 Стикерпаки'
-      animpacks: '✨ Анимированные стикерпаки'
-      new: '🆕 Создать стикерпак'
+      packs: '🌟 Stikerlar to''plami'
+      animpacks: '✨ Animatsiyalangan Stikerlar to''plami'
+      new: '🆕 Stiker yaratish'
       donate: '☕️ Поддержать разработчика'
   restore: |
     <b>🗃 Восстановление стикерпака</b>
@@ -45,9 +45,9 @@ cmd:
     Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Stikerlar to'plami</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
+      <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
       Для создания напиши /new
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
@@ -62,25 +62,25 @@ cmd:
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Stikerlar to'plami yashirildi
+      restored: Stikerlar to'plami qayta tiklandi
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      Tanlangan Stiker to'plami <a href="${link}">${title}</a>
+    hidden: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizdan yashirildi.
+    restored: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizga qayta qo'shildi.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
+      hide: '❌ Stikerlar to''plamini yashirish'
+      restore: '✅ Qayta tiklash'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>Tizimda xatolik!</b>
+        Stikerlar to'plami tiklab bo'lmadi.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>Tizimda xatolik!</b>
+        Stikerlar to'plamini topib bo'lmadi.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
+      delete: Ushbu Stiker, stikerlar to'plamidan o'chirildi
       restored: Стикер был успешно сохранен в текущий стикерпак
     delete: Стикер был успешно удален из стикерпака.
     restored: Стикер был успешно сохранен в текущий стикерпак.
