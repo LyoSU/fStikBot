@@ -8,20 +8,21 @@ cmd:
       Bir stiker və ya fotoşəkil göndərin, onu stikerlər paketinizə əlavə edəcəyəm.
       Silmək üçün - stikeri yenidən göndərin.
 
-      / paketlər - etiket paketlərinin siyahısı
-      / animpacks - animasiya etiket paketlərinin siyahısı
-      / yeni - yeni bir stiker paketi yaradın
+      /pack - etiket paketlərinin siyahısı
+      /animpacks - animasiya etiket paketlərinin siyahısı
+      /new - yeni bir stiker paketi yaradın
 
-      / orijinal - orijinal stikeri tapın
-      / bərpa edin - stiker paketini bərpa edin
-      / surət - stiker paketini kopyalayın
-      / emoji - cari stiker paketi üçün emoji şəkilçisini dəyişdirin
-      / lang - dili dəyişdir
+      /original - orijinal stikeri tapın
+      /restore - stiker paketini bərpa edin
+      /copy - stiker paketini kopyalayın
+      /emoji - cari stiker paketi üçün emoji şəkilçisini dəyişdirin
+      /lang - dili dəyişdir
 
-      / bağış et - inkişaf etdirəni bağışla
+      /donate - inkişaf etdirəni bağışla
 
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Geliştirici kanalı: @LyBlog
+      Lang Developer; @TheMiri
     btn:
       packs: '🌟 Sticker Paketleri'
       animpacks: '✨ Cizgi etiket paketləri'
@@ -38,8 +39,6 @@ cmd:
     3. Lazım olan stickerpack'i tapın və seçin
     4. Alınan mesajı bota yönləndirin
     5. Uğurlu bərpa edildikdən sonra bot bu barədə məlumat verəcəkdir
-
-    Çevirmen: @TheMiri
   copy: |
     <b>🗄 Etiket paketinin kopyalanması</b>
 
@@ -168,106 +167,107 @@ scenes:
         /donate yazarağ ianə edə bilərsiniz
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Bu bot vasitəsilə əlavə olunan stikeri göndərin, sizə orijinalını göstərim.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>səhv!</b>
+        Bu stikerin əslini tapa bilmədim.
   leave: |
-    Действие отменено.
+    Fəaliyyət uğurla ləğv edildi.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Ləğv et'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
+  not_allowed: Bu bölmə sizin üçün deyil! 😡
+  info: Admin Paneli
   menu:
-    messaging: '✉️ Рассылка'
-    admin: '😎 Админ-панель'
+    messaging: '✉️ Bülleten'
+    admin: '😎 Admin Paneli'
   messaging:
     info: |
-      ✉️ Рассылки
+      ✉️ Bülleten
     menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
+      create: Yarat
+      scheduled: Planlanmışdır
+      archive: Arxiv
     create:
-      name: Заголовок
-      send_message: Отправь текст или медиа
-      date: Укажи дату публикации <b>дд.мм чч:мм</b>
+      name: Etiket
+      send_message: Mətn və ya media göndərin
+      date: 'Nəşr tarixini göstərin <b>dd.mm hh: mm</b>'
       date_format: |
-        Сообщение будет отправлено:
+        Mesaj göndəriləcək:
           ${date}
       date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
+        Yanlış tarix formatı
+        Tarixi <b>dd.mm hh: mm</b>formatında göstərilməlidir
+      add_url: Bağlantı yarat
+      clear_url: Linki silin
       add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
+        Düymə Siyahısını Göndər
+        <pre>Düymə Mətn 1 - http://www.example.com/ | Düymə 2 mətni - http://www.example2.com/
+        Düymə 3 mətn - http://www.example3.com/
         </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
+        $ {cari? '\ncari düymələr:\n' + cari: ''}
+      group_select: İstifadəçi qrupunu seçin
       group_type:
-        all: Все
-      select_all: Всі
+        all: Hamısı
+      select_all: Hamısı
       found: |
-        Нашлось человек: ${userCount}
+        Şəxslər tapıldı: ${userCount}
 
         ${userList}
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
+        Məktub göndərməyə başlayım?
+      back: '«Geri'
+      continue: Davam
       publish: |
-        Рассылка  ${name} создана
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
+        Bülleten  ${name} yaradıldı
+        Baxmaq üçün düyməni vurun
+      status: Poçt statusu
     edit:
       started: |
-        Редактирование началось
+        Redaktə başladı
       wrong_type: |
-        Ошибка!
-        Типо сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
+        Xəta!
+        Mesaj 
+         [${type}] orijinaldan [${originalType}] fərqlidir.
+        Redaktə etmək mümkün deyil
     list:
-      info: Состояние рассылки
+      info: Poçt statusu
     status:
       info: |
-        <b>Рассылка ${name}</b> (${createdAt})
-        Створив ${creatorName}
+        <b>Newsletter ${name}</b> (${createdAt})
+        Tamamlandı ${creatorName}
 
-        Дата отправки: ${date}
+        təqdim tarixi: ${date}
 
-        Прогресс отправки:
-          Ожидают: ${waiting}
-          Отправлено: ${completed}
-          Ошибки: ${failed}
+        təqdim tərəqqi:
+          Gözləyən: ${waiting}
+          təqdim: ${completed}
+          Səhvlər: ${failed}
         ${userErrors}
 
-        Статус: ${status}
+        Status: ${status}
       status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
+        Yarandı
+        Davam edir
+        Arxiv
+      name_changed: Başlıq dəyişdirildi
+      cancel: '❌ Ləğv et'
+      view: Göstər
+      edit: Redaktə et
+      change_name: Başlığı dəyişdirin
+      update: Yenilə
     canceled: |
-      <b>Рассылка ${name}</b> отменена.
+      <b>Yayım ${name}</b> ləğv edildi.
     send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+      <b>Yayım xətası ${name}</b>
+       <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
-      <code>${errorMessage}</code>
+      <code>${errorMessage}</code>nömrəsinə mesaj göndərilmədi!
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram xəta!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram xəta qaytardı:
       ${error}
