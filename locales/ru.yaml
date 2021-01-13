@@ -207,7 +207,7 @@ admin:
       group_select: Выбери группу пользователей
       group_type:
         all: Все
-      select_all: Всі
+      select_all: Все
       found: |
         Нашлось человек: ${userCount}
 
