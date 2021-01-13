@@ -210,42 +210,38 @@ admin:
       group_select: İstifadəçi qrupunu seçin
       group_type:
         all: Hamısı
-      select_all: Hamısı
+      select_all: Все
       found: |
         Şəxslər tapıldı: ${userCount}
 
         ${userList}
         Məktub göndərməyə başlayım?
       back: '«Geri'
-      continue: Davam
-      publish: |
-        Bülleten  ${name} yaradıldı
-        Baxmaq üçün düyməni vurun
+      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
       status: Poçt statusu
     edit:
       started: |
         Redaktə başladı
       wrong_type: |
-        Xəta!
-        Mesaj 
-         [${type}] orijinaldan [${originalType}] fərqlidir.
-        Redaktə etmək mümkün deyil
+        Ошибка!
+        Тип сообщения [${type}] отличается от оригинала [${originalType}].
+        Редактирование невозможно
     list:
       info: Poçt statusu
     status:
       info: |
-        <b>Newsletter ${name}</b> (${createdAt})
-        Tamamlandı ${creatorName}
+        <b>Рассылка ${name}</b> (${createdAt})
+        Создал ${creatorName}
 
-        təqdim tarixi: ${date}
+        Дата отправки: ${date}
 
-        təqdim tərəqqi:
-          Gözləyən: ${waiting}
-          təqdim: ${completed}
-          Səhvlər: ${failed}
+        Прогресс отправки:
+          Ожидают: ${waiting}
+          Отправлено: ${completed}
+          Ошибки: ${failed}
         ${userErrors}
 
-        Status: ${status}
+        Статус: ${status}
       status_type: |
         Yarandı
         Davam edir
