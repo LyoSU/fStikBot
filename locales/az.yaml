@@ -1,182 +1,273 @@
 ---
-ratelimit: Не так часто!
+language_name: '🇦🇿 Azərbaycanca'
+ratelimit: Çox vaxt deyil!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Salam <b>${name}</b>!
+      Bir stiker və ya fotoşəkil göndərin, onu stikerlər paketinizə əlavə edəcəyəm.
+      Silmək üçün - stikeri yenidən göndərin.
 
-      /packs - список стикерпаков
-      /animpacks - список анимированных стикерпаков
-      /new - создать новый стикерпак
+      /pack - etiket paketlərinin siyahısı
+      /animpacks - animasiya etiket paketlərinin siyahısı
+      /new - yeni bir stiker paketi yaradın
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /lang - change language
+      /original - orijinal stikeri tapın
+      /restore - stiker paketini bərpa edin
+      /copy - stiker paketini kopyalayın
+      /emoji - cari stiker paketi üçün emoji şəkilçisini dəyişdirin
+      /lang - dili dəyişdir
 
-      /donate - поддержать разработчика
+      /donate - inkişaf etdirəni bağışla
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      👨🏻‍💻 Geliştirici kanalı: @LyBlog
+      Lang Developer; @TheMiri
     btn:
-      packs: '🌟 Стикерпаки'
-      animpacks: '✨ Анимированные стикерпаки'
-      new: '🆕 Создать стикерпак'
-      donate: '☕️ Поддержать разработчика'
+      packs: '🌟 Sticker Paketleri'
+      animpacks: '✨ Cizgi etiket paketləri'
+      new: 'Stick paketi yaradın'
+      donate: 'İanə ver'
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Etiket paketinin bərpası</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Əvvəllər bu botdan istifadə edərək bir stiker paketi yaratmısınızsa və stiker paketlər siyahısında tapa bilmirsinizsə, onu geri qaytara bilərsiniz.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Bunu etmək üçün bir neçə hərəkət etməlisiniz:</b>
+    1. Botu açın @Stickers
+    2. Komanda göndərin <code>/ packstats</code>
+    3. Lazım olan stickerpack'i tapın və seçin
+    4. Alınan mesajı bota yönləndirin
+    5. Uğurlu bərpa edildikdən sonra bot bu barədə məlumat verəcəkdir
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Etiket paketinin kopyalanması</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Botu dəstəkləmisinizsə, bütün stikerləri yeni bir adla hər hansı bir stiker paketindən kopyalamaq mümkün olacaq.
+    Etiket paketini kopyalamaq üçün bota keçid göndərməyiniz kifayətdir.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Etiket paketləri:</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
+      <b>Hələ bir stiker paketiniz yoxdur.</b>
+      /new yazarağ yenisini yarada bilersiniz
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Bot inkişaf etdiricisi dəstəyi</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Mənə qəhvə üçün pul göndərə və əvəzində botda kiçik bonuslar ala bilərsiniz.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    , Yeni stiker paketləri adında <b>"${titleSuffix}</b> -nı söndürmək
+    " Digər stiker paketlərini onlara keçiddən tam surətdə çıxarmaq
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    info: Xahiş edirəm emoji əlavə edin. Məsələn, <code>/emoji 💜</code> , sonrakı bütün yeni stikerlər üçün şəkilçini 💜 olaraq dəyişdirəcəkdir.
+    done: Emoji şəkilçisi uğurla dəyişdirildi.
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Stickerpack uğurla gizlədildi!
+      restored: Stickerpack uğurla bərpa edildi!
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      Seçilmiş stiker paketi: <a href="${link}">${title}</a>
+    hidden: Stickerpack <a href="${link}">${title}</a> siyahınızdan gizlidir.
+    restored: Stickerpack <a href="${link}">${title}</a> siyahınıza bərpa edildi.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
+      hide: 'Stick Etiket paketini gizlədin.'
+      restore: 'Bərpa et'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>XƏTA!</b>
+        Etiket paketini bərpa etmək uğursuz oldu.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>XƏTA!</b>
+        Sticker paketi tapılmadı.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: Etiket stiker paketindən uğurla çıxarıldı!
+      restored: "Etiket cari stiker paketinə uğurla yaddaşda saxlanıldı, artığ istifadə edilə bilər\n\nTranslator: @TheMiri"
+    delete: Etiket stiker paketindən uğurla çıxarıldı!
+    restored: "Etiket cari stiker paketinə uğurla yaddaşda saxlanıldı, artığ istifadə edilə bilər\n\nTranslator: @TheMiri."
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 Sil'
+      copy: '🌟 Kopyala'
+      restore: '✅ bərpa edin'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        Xəta!
+        Sticker tapılmadı.
   donate:
-    title: Донат ${botUsername}
-    description: Прямая поддержка разработчика бота и получение дополнительных возможностей.
+    title: İanə ${botUsername}
+    description: Bot developerinin birbaşa dəstəyi və əlavə xüsusiyyətləri əldə edin.
     successful: |
-      <b>Спасибо за поддержку бота 💜</b>
+      <b>Botu dəstəklədiyiniz üçün təşəkkür edirəm 💜</b>
 
-      Вы можете написать мне @LyoSU с предложением фичи, которой не хватает, и я попробую её реализовать.
+      Mənə @LyoSU yaza bilmədiyiniz bir xüsusiyyət üçün bir təklif yaza bilərsiniz və onu tətbiq etməyə çalışacağam.
     btn:
-      buy: '💜 Оплатить'
+      buy: '💜 Ödə'
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Etiket paketinə uğurla əlavə edildi:</b>
       <a href="${link}">${title}</a>
+
+      Translator: @TheMiri
     error:
       stickers_too_much: |
-        <b>Ошибка!</b>
-        В этом стикерпаке максимальное количество стикеров.
-        Вы можете создать новый стикерпак командой /new
+        <b>XƏTA!</b>
+        Bu stiker paketi maksimum stiker sayını aşır.
+        /new yazarağ yeni bir etiket paketi yarada bilərsiniz
       have_already: |
-        <b>Ошибка!</b>
-        Этот стикер уже есть в этом стикерпаке.
+        <b>XƏTA!</b>
+        Bu stiker artıq bu stiker paketindədir.
       stickerset_invalid: |
-        <b>Ошибка!</b>
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+        <b>XƏTA!</b>
+        Bot hazırda seçilmiş stiker paketinə daxil ola bilmir.
+        Zəhmət olmasa yeni (/new) yaradın və ya başqa bir stickerpack seçin (/packs).
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Xəta!</b>
+        Bu fayl növü dəstəklənmir.
 scenes:
   new_pack:
-    common: Обычный
-    animated: Анимированный
+    common: Adi
+    animated: Anime 
     pack_type: |
-      <b>Выбери тип стикерпака:</b>
+      <b>Etiket paketinin növünü seçin:</b>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Yeni stiker paketi üçün bir ad daxil edin:</b>
+      <i>Aşağıda təsadüfi olaraq yaradılan bir ad da seçə bilərsiniz.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Yeni stiker paketi üçün qısa ünvanı daxil edin:</b>
+      <i>Ünvan yalnız ingilis hərflərindən, rəqəmlərdən və alt xətlərdən ibarət ola bilər.</i>
+      <i>Məsələn, bu dəstin 'Heyvanlar' qısa bir ünvanı var: https://t.me/addstickers/Heyvanlar</i>
+      <i>Aşağıda təsadüfi olaraq yaradılan bir ünvan da seçə bilərsiniz.</i>
     ok: |
-      Стикерпак <a href="${link}">${title}</a> успешно создан!
+      Stickerpack <a href="${link}">${title}</a> uğurla yaradıldı!
 
-      <b>Ссылка на стикерпак:</b> <pre>${link}</pre>
+      <b>Etiket paketinə keçid:</b> <pre>${link}</pre>
 
-      Редактировать его можно в официальном боте @Stickers
+      Rəsmi @Stickers botunda redaktə edə bilərsiniz
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Ad ${max} simvoldan çox olmamalıdır
+      name_long: Ünvan ${max} simvoldan çox olmamalıdır.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: Bu ünvan istifadə edilə bilməz.
+        name_occupied: Bu ünvan artıq alınmışdır.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      Bu stiker paketini yeni bir stiker paketi yaradaraq kopyalaya bilərəm.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Stikerpack çıxarmaq <a href="${originalLink}">${originalTitle}</a> üçün <a href="${link}">${title}</a>
 
-      Прогресс: ${current}/${total}
+      Tərəqqi: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      <a href="${originalLink}">${originalTitle}</a> - <a href="${link}">${title}</a> etiket paketinin kopyalanması uğurla </a> çatdı.
     error:
       premium: |
-        <b>Ошибка!</b>
-        К сожалению, эта функция доступна только тем, кто поддержал бота.
+        <b>səhv!</b>
+        Təəssüf ki, bu xüsusiyyət yalnız botu dəstəkləyənlər üçün mövcuddur.
 
-        Вы можете это сделать, отправив команду /donate
+        /donate yazarağ ianə edə bilərsiniz
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Bu bot vasitəsilə əlavə olunan stikeri göndərin, sizə orijinalını göstərim.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>səhv!</b>
+        Bu stikerin əslini tapa bilmədim.
   leave: |
-    Действие отменено.
+    Fəaliyyət uğurla ləğv edildi.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Ləğv et'
+admin:
+  not_allowed: Bu bölmə sizin üçün deyil! 😡
+  info: Admin Paneli
+  menu:
+    messaging: '✉️ Bülleten'
+    admin: '😎 Admin Paneli'
+  messaging:
+    info: |
+      ✉️ Bülleten
+    menu:
+      create: Yarat
+      scheduled: Planlanmışdır
+      archive: Arxiv
+    create:
+      name: Etiket
+      send_message: Mətn və ya media göndərin
+      date: 'Nəşr tarixini göstərin <b>dd.mm hh: mm</b>'
+      date_format: |
+        Mesaj göndəriləcək:
+          ${date}
+      date_invalid: |
+        Yanlış tarix formatı
+        Tarixi <b>dd.mm hh: mm</b>formatında göstərilməlidir
+      add_url: Bağlantı yarat
+      clear_url: Linki silin
+      add_url_info: |
+        Düymə Siyahısını Göndər
+        <pre>Düymə Mətn 1 - http://www.example.com/ | Düymə 2 mətni - http://www.example2.com/
+        Düymə 3 mətn - http://www.example3.com/
+        </pre>
+        $ {cari? '\ncari düymələr:\n' + cari: ''}
+      group_select: İstifadəçi qrupunu seçin
+      group_type:
+        all: Hamısı
+      select_all: Hamısı
+      found: |
+        Şəxslər tapıldı: ${userCount}
+
+        ${userList}
+        Məktub göndərməyə başlayım?
+      back: '«Geri'
+      continue: Davam
+      publish: |
+        Bülleten  ${name} yaradıldı
+        Baxmaq üçün düyməni vurun
+      status: Poçt statusu
+    edit:
+      started: |
+        Redaktə başladı
+      wrong_type: |
+        Xəta!
+        Mesaj 
+         [${type}] orijinaldan [${originalType}] fərqlidir.
+        Redaktə etmək mümkün deyil
+    list:
+      info: Poçt statusu
+    status:
+      info: |
+        <b>Newsletter ${name}</b> (${createdAt})
+        Tamamlandı ${creatorName}
+
+        təqdim tarixi: ${date}
+
+        təqdim tərəqqi:
+          Gözləyən: ${waiting}
+          təqdim: ${completed}
+          Səhvlər: ${failed}
+        ${userErrors}
+
+        Status: ${status}
+      status_type: |
+        Yarandı
+        Davam edir
+        Arxiv
+      name_changed: Başlıq dəyişdirildi
+      cancel: '❌ Ləğv et'
+      view: Göstər
+      edit: Redaktə et
+      change_name: Başlığı dəyişdirin
+      update: Yenilə
+    canceled: |
+      <b>Yayım ${name}</b> ləğv edildi.
+    send_error: |
+      <b>Yayım xətası ${name}</b>
+       <a href="tg://user?id=${telegramId}">${telegramId}</a>
+
+      <code>${errorMessage}</code>nömrəsinə mesaj göndərilmədi!
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram xəta!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram xəta qaytardı:
       ${error}
