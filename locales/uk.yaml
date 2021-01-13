@@ -207,31 +207,28 @@ admin:
       group_select: Выбери группу пользователей
       group_type:
         all: Все
-      select_all: Всі
+      select_all: Все
       found: |
         Нашлось человек: ${userCount}
 
         ${userList}
         Начать рассылку?
       back: '« Назад'
-      continue: Продолжить »
-      publish: |
-        Рассылка  ${name} создана
-        Для просмотра нажми кнопку
+      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
       status: Состояние рассылки
     edit:
       started: |
         Редактирование началось
       wrong_type: |
         Ошибка!
-        Типо сообщения [${type}] отличается от оригинала [${originalType}].
+        Тип сообщения [${type}] отличается от оригинала [${originalType}].
         Редактирование невозможно
     list:
       info: Состояние рассылки
     status:
       info: |
         <b>Рассылка ${name}</b> (${createdAt})
-        Створив ${creatorName}
+        Создал ${creatorName}
 
         Дата отправки: ${date}
 
