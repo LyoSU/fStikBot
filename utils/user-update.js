@@ -15,6 +15,7 @@ module.exports = async (ctx) => {
   user.last_name = ctx.from.last_name
   user.full_name = `${ctx.from.first_name}${ctx.from.last_name ? ` ${ctx.from.last_name}` : ''}`
   user.username = ctx.from.username
+  user.blocked = false
   user.updatedAt = new Date()
 
   ctx.session.userInfo = user

@@ -19,7 +19,6 @@ const {
   handleCopyPack,
   handleLanguage,
   handleEmoji
-  // handleMessaging
 } = require('./handlers')
 const scenes = require('./scenes')
 const {
@@ -90,6 +89,8 @@ bot.use(Composer.privateChat(async (ctx, next) => {
 // scene
 bot.use(scenes)
 
+bot.use(require('./handlers/admin'))
+
 // main commands
 bot.hears(['/packs', match('cmd.start.btn.packs')], handlePacks)
 bot.hears(['/animpacks', match('cmd.start.btn.animpacks')], handlePacks)
@@ -101,8 +102,6 @@ bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('lang', handleLanguage)
-
-// bot.command('mess', handleMessaging)
 
 // sticker detect
 bot.on(['sticker', 'document', 'photo'], handleSticker)
@@ -146,4 +145,5 @@ db.connection.once('open', async () => {
       console.log('bot start polling')
     })
   }
+  require('./utils/messaging')
 })

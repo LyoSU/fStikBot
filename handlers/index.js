@@ -8,7 +8,6 @@ const handleHidePack = require('./pack-hide')
 const handleRestorePack = require('./pack-restore')
 const handleCopyPack = require('./pack-copy')
 const handleLanguage = require('./language')
-const handleMessaging = require('./messaging')
 const handleEmoji = require('./emoji')
 
 module.exports = {
@@ -22,6 +21,5 @@ module.exports = {
   handleRestorePack,
   handleCopyPack,
   handleLanguage,
-  handleEmoji,
-  handleMessaging
+  handleEmoji
 }

@@ -6,10 +6,11 @@ const {
 
 const { match } = I18n
 
+const messaging = require('./messaging')
 const sceneNewPack = require('./pack-new')
 const originalSticker = require('./sricker-original')
 
-const stage = new Stage([].concat(sceneNewPack, originalSticker))
+const stage = new Stage([].concat(sceneNewPack, originalSticker, messaging))
 
 stage.use((ctx, next) => {
   if (!ctx.session.scene) ctx.session.scene = {}
