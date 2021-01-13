@@ -203,41 +203,38 @@ admin:
       group_select: Foydalanuvchilar guruhini tanlang
       group_type:
         all: Barchasi
-      select_all: Barchasi
+      select_all: Все
       found: |
         Topilgan odamlar soni: ${userCount}
 
         ${userList}
         Shaxsiy xabalarni yuborishni boshlaymi?
-      back: Ortga
-      continue: Davom etish
-      publish: |
-        Shaxsiy xabar  ${name} yaratildi
-        Ko'rish uchun tugmani bosing
+      back: 'Ortga'
+      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
       status: Shaxsiy xabar yuborish holati
     edit:
       started: |
         Tahrirlash boshlandi
       wrong_type: |
-        Tizimda xatolik!
-         [${type}] asl nusxadan [${originalType}] farq qiladi.
-        Tahrirlashning iloji yo'q
+        Ошибка!
+        Тип сообщения [${type}] отличается от оригинала [${originalType}].
+        Редактирование невозможно
     list:
       info: Shaxsiy xabar yuborish holati
     status:
       info: |
-        <b>Shaxsiy xabar ${name}</b> (${createdAt})
-        Yaratdi ${creatorName}
+        <b>Рассылка ${name}</b> (${createdAt})
+        Создал ${creatorName}
 
-        Yuborilish sanasi: ${date}
+        Дата отправки: ${date}
 
-        Yuborish jarayoni:
-          Kutilayotgan: ${waiting}
-          Yuborilgan: ${completed}
-          Xatolar: ${failed}
+        Прогресс отправки:
+          Ожидают: ${waiting}
+          Отправлено: ${completed}
+          Ошибки: ${failed}
         ${userErrors}
 
-        Holat: ${status}
+        Статус: ${status}
       status_type: |
         Yaratildi
         Jarayonda
