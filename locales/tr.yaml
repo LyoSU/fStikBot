@@ -21,7 +21,7 @@ cmd:
       Çeviriyi Yapan: @By_Azade
     btn:
       packs: '🌟 Çıkartma paketleri'
-      animpacks: '✨ Анимированные стикерпаки'
+      animpacks: '✨ Animasyonlu çıkartma paketleri'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   restore: |
@@ -54,7 +54,7 @@ cmd:
     ➖ <b>"${titleSuffix}</b> çıkartma başlığını kapatma
     ➖ Diğer çıkartma paketlerini link ile kopyalama
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
+    info: /emoji
     done: Эмодзи-суффикс успешно изменен.
 callback:
   pack:
