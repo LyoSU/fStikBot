@@ -21,7 +21,7 @@ cmd:
       Çeviriyi Yapan: @By_Azade
     btn:
       packs: '🌟 Çıkartma paketleri'
-      animpacks: '✨ Анимированные стикерпаки'
+      animpacks: '✨ Animasyonlu çıkartma paketleri'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   restore: |

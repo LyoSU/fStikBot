@@ -1,5 +1,5 @@
 ---
-language_name: '🇷🇺 Русский'
+language_name: '🇺🇸 English'
 ratelimit: Not so often!
 cmd:
   start:
@@ -220,9 +220,9 @@ admin:
       started: |
         Редактирование началось
       wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
+        Error!
+        Message type [${type}] differs from original [${originalType}].
+        Editing is not possible
     list:
       info: Состояние рассылки
     status:
@@ -240,15 +240,15 @@ admin:
 
         Статус: ${status}
       status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
+        Created
+        Processing
+        Archived
+      name_changed: The title has been changed
+      cancel: '❌ Cancel'
+      view: View
+      edit: Edit
+      change_name: Change title
+      update: Refresh
     canceled: |
       <b>Рассылка ${name}</b> отменена.
     send_error: |
