@@ -26,36 +26,36 @@ cmd:
       packs: 'Pack de stickers'
       animpacks: 'Pack de stickers animados'
       new: 'Crear pack de stickers'
-      donate: '☕️ Поддержать разработчика'
+      donate: 'Apoya al desarrollador'
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Restauración de un pack de stickers</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Si ha creado previamente un pack de stickers a través de este bot y no puede encontrarlo en la lista de sus pack de sticker, puede restaurarlo.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Para hacer esto, necesita realizar varias acciones:</b>
+    1. Abra el bot @Stickers
+    2. Envíele el comando <code>/ packstats</code>
+    3. Busque y seleccione el pack de stickers requerido 
+    4. Reenvíe el mensaje recibido a el bot
+    5. Tras la restauración exitosa, el bot lo informará
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Copiar un pack de stickers</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Si apoyaste el bot, podrás copiar todas los stickers de cualquier pack de stickers con un nuevo nombre.
+    Para copiar un pack de stickers, solo necesita enviar un enlace al bot.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Pack de stickers:</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
+      <b>Aún no tienes ningún pack de stickers.</b>
+      Para crear uno escribe /new
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Soporte para los desarrolladores del bot</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Puedes enviarme dinero para un café y recibir pequeñas bonificaciones en el bot a cambio.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Deshabilitar <b>"${titleSuffix}</b> en el nombre de los nuevos pack de stickers
+    ➖ Copia completa de otros packs de stickers desde el enlace a ellos
   emoji:
     info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
     done: Эмодзи-суффикс успешно изменен.
