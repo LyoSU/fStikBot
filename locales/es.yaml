@@ -1,6 +1,6 @@
 ---
 language_name: '🇪🇸 Español'
-ratelimit: Не так часто!
+ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     info: |
@@ -57,17 +57,17 @@ cmd:
     ➖ Deshabilitar <b>"${titleSuffix}</b> en el nombre de los nuevos pack de stickers
     ➖ Copia completa de otros packs de stickers desde el enlace a ellos
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    info: Incluir emoji. Por ejemplo, <code>/emoji 💜</code> cambiará el sufijo a 💜 para todos los stickers nuevos y posteriores.
+    done: El sufijo del emoji cambió correctamente.
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Pack de stickers oculto con éxito
+      restored: Pack de stickers restaurado con éxito
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      Pack de stickers seleccionado <a href="${link}">${title}</a>
+    hidden: El pack de stickers <a href="${link}">${title}</a> está oculto en tu lista.
+    restored: El pack de stickers <a href="${link}">${title}</a> ha sido restaurado a tu lista.
     btn:
       hide: '❌ Скрыть стикерпак'
       restore: '✅ Восстановить'
