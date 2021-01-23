@@ -1,266 +1,266 @@
 ---
-language_name: '🇷🇺 Русский'
-ratelimit: Не так часто!
+language_name: '🇪🇸 Español'
+ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      ¡Hola <b>${name}</b>!
+      Envíame un sticker o una foto y la añadiré a tu pack de stickers.
+      Para eliminar, envíe el sticker de nuevo.
 
-      /packs - список стикерпаков
-      /animpacks - список анимированных стикерпаков
-      /new - создать новый стикерпак
+      /packs - lista de packs de stickers
+      /animpacks - lista de packs de stickers animados
+      /new - crear un nuevo pack de stickers
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /lang - change language
+      /original - encontrar el sticker original
+      /restore - restaurar el pack de stickers
+      /copy - copiar el pack de stickers
+      /emoji - cambiar el sufijo de emoji para el pack de stickers actual
+      /lang - cambiar idioma
 
-      /donate - поддержать разработчика
+      /donate - donar al desarrollador
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      👨🏻‍💻 Canal de desarrollador: @LyBlog
     btn:
-      packs: '🌟 Стикерпаки'
-      animpacks: '✨ Анимированные стикерпаки'
-      new: '🆕 Создать стикерпак'
-      donate: '☕️ Поддержать разработчика'
+      packs: 'Pack de stickers'
+      animpacks: 'Pack de stickers animados'
+      new: 'Crear pack de stickers'
+      donate: 'Apoya al desarrollador'
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Restauración de un pack de stickers</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Si ha creado previamente un pack de stickers a través de este bot y no puede encontrarlo en la lista de sus pack de sticker, puede restaurarlo.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Para hacer esto, necesita realizar varias acciones:</b>
+    1. Abra el bot @Stickers
+    2. Envíele el comando <code>/ packstats</code>
+    3. Busque y seleccione el pack de stickers requerido 
+    4. Reenvíe el mensaje recibido a el bot
+    5. Tras la restauración exitosa, el bot lo informará
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Copiar un pack de stickers</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Si apoyaste el bot, podrás copiar todas los stickers de cualquier pack de stickers con un nuevo nombre.
+    Para copiar un pack de stickers, solo necesita enviar un enlace al bot.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Pack de stickers:</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
+      <b>Aún no tienes ningún pack de stickers.</b>
+      Para crear uno escribe /new
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Soporte para los desarrolladores del bot</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Puedes enviarme dinero para un café y recibir pequeñas bonificaciones en el bot a cambio.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Deshabilitar <b>"${titleSuffix}</b> en el nombre de los nuevos pack de stickers
+    ➖ Copia completa de otros packs de stickers desde el enlace a ellos
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    info: Incluir emoji. Por ejemplo, <code>/emoji 💜</code> cambiará el sufijo a 💜 para todos los stickers nuevos y posteriores.
+    done: El sufijo del emoji cambió correctamente.
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Pack de stickers oculto con éxito
+      restored: Pack de stickers restaurado con éxito
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      Pack de stickers seleccionado <a href="${link}">${title}</a>
+    hidden: El pack de stickers <a href="${link}">${title}</a> está oculto en tu lista.
+    restored: El pack de stickers <a href="${link}">${title}</a> ha sido restaurado a tu lista.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
+      hide: 'Ocultar pack de stickers'
+      restore: 'Recuperar'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>¡Error!</b>
+        No se pudo restaurar el pack de stickers.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>¡Error!</b>
+        No se pudo encontrar el pack de stickers.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: El sticker se ha eliminado correctamente del pack de stickers
+      restored: El sticker se guardó correctamente en el pack de stickers actual
+    delete: El sticker se ha eliminado correctamente del pack de stickers.
+    restored: El sticker se guardó correctamente en el pack de stickers actual.
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 Eliminar'
+      copy: '🌟 Copiar'
+      restore: 'Recuperar'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        ¡Error!
+        No se pudo encontrar el pack de stickers.
   donate:
-    title: Донат ${botUsername}
-    description: Прямая поддержка разработчика бота и получение дополнительных возможностей.
+    title: Donar ${botUsername}
+    description: Soporte directo del desarrollador del bot y obtención de funciones adicionales.
     successful: |
-      <b>Спасибо за поддержку бота 💜</b>
+      <b>Gracias por apoyar el bot 💜</b>
 
-      Вы можете написать мне @LyoSU с предложением фичи, которой не хватает, и я попробую её реализовать.
+      Puedes escribirme a @LyoSU con una sugerencia para una característica que falta, e intentaré implementarla.
     btn:
-      buy: '💜 Оплатить'
+      buy: '💜 Pagar'
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>sticker agregado al pack de stickers con éxito:</b>
       <a href="${link}">${title}</a>
     error:
       stickers_too_much: |
-        <b>Ошибка!</b>
-        В этом стикерпаке максимальное количество стикеров.
-        Вы можете создать новый стикерпак командой /new
+        <b>¡Error!</b>
+        Este pack de stickers contiene el número máximo de stickers.
+        Puede crear un nuevo pack de stickers con el comando /new
       have_already: |
-        <b>Ошибка!</b>
-        Этот стикер уже есть в этом стикерпаке.
+        <b>¡Error!</b>
+        Este sticker ya está en este pack de stickers.
       stickerset_invalid: |
-        <b>Ошибка!</b>
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+        <b>¡Error!</b>
+        bot no puede acceder al pack de stickers seleccionado actualmente.
+        Cree uno nuevo (/new) o seleccione (/packs) otro paquete de pegatinas.
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>¡Error!</b>
+        Este tipo de archivo no es compatible.
 scenes:
   new_pack:
-    common: Обычный
-    animated: Анимированный
+    common: Normal
+    animated: Animado
     pack_type: |
-      <b>Выбери тип стикерпака:</b>
+      <b>Elija el tipo de pack de stickers:</b>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Introduzca un nombre para el nuevo pack de stickers:</b>
+      <i>También puede elegir un nombre generado aleatoriamente a continuación.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Introduzca un enlace corto para el nuevo pack de stickers:</b>
+      <i>El enlace corto solo puede contener letras, números y guiones bajos.</i>
+      <i>Por ejemplo, este conjunto tiene el enlace corto 'Animals': https://t.me/addstickers/Animals</i>
+      <i>También puede elegir un enlace corto aleatoriamente a continuación.</i>
     ok: |
-      Стикерпак <a href="${link}">${title}</a> успешно создан!
+      Pack de stickers <a href="${link}">${title}</a> creado con éxito!
 
-      <b>Ссылка на стикерпак:</b> <pre>${link}</pre>
+      <b>Enlace al pack de stickers:</b> <pre>${link}</pre>
 
-      Редактировать его можно в официальном боте @Stickers
+      Puede editarlo en el bot oficial de @Stickers
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: El nombre no debe tener más de ${max} caracteres.
+      name_long: El enlace no debe tener más de ${max} caracteres.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: Este enlace no se puede utilizar.
+        name_occupied: Este enlace ya está en uso.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      Puedo copiar este pack de stickers, para esto necesitas crear un nuevo pack de stickers.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Copia del pack de stickers <a href="${originalLink}">${originalTitle}</a> a <a href="${link}">${title}</a>
 
-      Прогресс: ${current}/${total}
+      Progreso: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      La copia del pack de stickers <a href="${originalLink}">${originalTitle}</a> a <a href="${link}">${title}</a> completado correctamente.
     error:
       premium: |
-        <b>Ошибка!</b>
-        К сожалению, эта функция доступна только тем, кто поддержал бота.
+        <b>¡Error!</b>
+        Desafortunadamente, esta función solo está disponible para aquellos que apoyaron el bot.
 
-        Вы можете это сделать, отправив команду /donate
+        Puede hacer esto enviando el comando /donar
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Envíe el sticker que se agregó a través de este bot y le mostraré la original.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>¡Error!</b>
+        No pude encontrar el sticker original.
   leave: |
-    Действие отменено.
+    Acción cancelada.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Cancelar'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
+  not_allowed: '¡Esta sección no es para ti! 😡'
+  info: Panel de administrador
   menu:
-    messaging: '✉️ Рассылка'
-    admin: '😎 Админ-панель'
+    messaging: '✉️ Boletín'
+    admin: '😎 Panel de administrador'
   messaging:
     info: |
-      ✉️ Рассылки
+      ✉️ Boletín
     menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
+      create: Crear
+      scheduled: Planificado
+      archive: Archivo
     create:
-      name: Заголовок
-      send_message: Отправь текст или медиа
-      date: Укажи дату публикации <b>дд.мм чч:мм</b>
+      name: Tema
+      send_message: Envía mensajes de texto o multimedia
+      date: 'Indicar fecha de publicación <b>dd.mm hh: mm</b>'
       date_format: |
-        Сообщение будет отправлено:
+        Se enviará el mensaje:
           ${date}
       date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
+        Formato de fecha no válido
+        Introduzca la fecha en formato <b>dd.mm hh: mm</b>
+      add_url: Agregar Enlace
+      clear_url: Eliminar enlace
       add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
+        Enviar lista de botones
+        <pre>Texto de botón 1 - http://www.example.com/ | Texto del botón 2: http://www.example2.com/
+        Texto del botón 3: http://www.example3.com/
         </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
+        $ {¿actual? '\nBotones actuales:\n' + actual: ''}
+      group_select: Seleccionar grupo de usuarios
       group_type:
-        all: Все
-      select_all: Все
+        all: Todos
+      select_all: Todo
       found: |
-        Нашлось человек: ${userCount}
+        Personas encontradas: ${userCount}
 
         ${userList}
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
-      status: Состояние рассылки
+        Empezar a enviar correos?
+      back: '« Atrás'
+      continue: Continuar » Boletín  ${name} creado Haga clic en el botón para ver
+      status: Estado de envío
     edit:
       started: |
-        Редактирование началось
+        Se inició la edición
       wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
+        ¡Error!
+        El tipo de mensaje [${type}] difiere del original [${originalType}].
+        No es posible editar
     list:
-      info: Состояние рассылки
+      info: Estado de envío
     status:
       info: |
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
+        <b>Envío ${name}</b> (${createdAt})
+        Creado ${creatorName}
 
-        Дата отправки: ${date}
+        Fecha de envío: ${date}
 
-        Прогресс отправки:
-          Ожидают: ${waiting}
-          Отправлено: ${completed}
-          Ошибки: ${failed}
+        Progreso de envío:
+          Pendiente: ${waiting}
+          Enviado: ${completed}
+          Errores: ${failed}
         ${userErrors}
 
-        Статус: ${status}
+        Estado: ${status}
       status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
+        Creado
+        En curso
+        Archivado
+      name_changed: Título cambiado
+      cancel: '❌ Cancelar'
+      view: Ver
+      edit: Editar
+      change_name: Cambiar el título
+      update: Actualizar
     canceled: |
-      <b>Рассылка ${name}</b> отменена.
+      <b>Transmisión ${name}</b> cancelada.
     send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+      <b>Error de envío ${name}</b>
+      No se pudo enviar el mensaje a <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
       <code>${errorMessage}</code>
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram dió un error!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram dió un error:
       ${error}
