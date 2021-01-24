@@ -1,12 +1,14 @@
 const fs = require('fs')
 const path = require('path')
-const Queue = require('bull')
+const Redis = require('ioredis')
 const Telegram = require('telegraf/telegram')
 const I18n = require('telegraf-i18n')
 const replicators = require('telegraf/core/replicators')
 const {
   db
 } = require('../database')
+
+const redis = new Redis()
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 
@@ -28,156 +30,129 @@ const messaging = (messagingData) => new Promise((resolve) => {
     messagingCreator = data
   })
 
-  const jobName = `messaging_${messagingData.id}`
-
   const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
-  const queue = new Queue(jobName, {
-    limiter: {
-      max: config.messaging.limit.max || 10,
-      duration: config.messaging.limit.duration || 1000
-    }
-  })
-
-  queue.process((job, done) => {
-    const method = replicators.copyMethods[messagingData.message.type]
-    const opts = Object.assign(messagingData.message.data, {
-      chat_id: job.data,
-      disable_notification: true
-    })
-
-    telegram.callApi(method, opts).then((result) => {
-      done(null, { messageId: result.message_id })
-    }).catch((error) => {
-      console.log(error.description)
-      if (error.description === 'Forbidden: bot was blocked by the user') {
-        db.User.findOne({ telegram_id: job.data }).then((blockedUser) => {
-          blockedUser.blocked = true
-          blockedUser.save()
-        })
-      } else {
-        if (messagingCreator) {
-          telegram.sendMessage(messagingCreator.telegram_id, i18n.t('uk', 'admin.messaging.send_error', {
-            name: messagingData.name,
-            telegramId: job.data,
-            errorMessage: error.message
-          }), {
-            parse_mode: 'HTML'
-          })
-        }
-      }
-      messagingData.sendErrors.push({
-        telegram_id: job.data,
-        errorMessage: error.message
-      })
-
-      done(new Error(error))
-    })
-  })
+  const key = `messaging:${messagingData.id}`
+  const count = config.messaging.limit.max || 10
 
   const interval = setInterval(async () => {
-    const jobCounts = await queue.getJobCounts()
+    console.log('messaging')
+    const state = parseInt(await redis.get(key + ':state')) || 0
 
-    messagingData = await db.Messaging.findById(messagingData.id)
-
-    if (messagingData.status >= 2) queue.clean(0, 'delayed')
-
-    messagingData.result = jobCounts
-
-    if (jobCounts.waiting <= 0 && jobCounts.delayed <= 0) {
+    if (state >= messagingData.result.total) {
+      console.log(`messaging ${messagingData.name} end`)
       messagingData.status = 2
-      resolve({
-        jobCounts
-      })
+      messagingData.save()
       clearInterval(interval)
-
-      console.log(`messaging ${messagingData.name} end`, jobCounts)
+      resolve()
     }
 
-    await messagingData.save()
-  }, 5000)
+    const users = await redis.lrange(key, state, state + count).catch(() => {
+      clearInterval(interval)
+    })
+
+    if (users && users.length > 0) {
+      users.forEach(chatId => {
+        const method = replicators.copyMethods[messagingData.message.type]
+        const opts = Object.assign(messagingData.message.data, {
+          chat_id: chatId,
+          disable_notification: true
+        })
+
+        telegram.callApi(method, opts).then((result) => {
+          redis.set(key + ':messages:' + chatId, result.message_id)
+        }).catch((error) => {
+          redis.incr(key + ':error')
+          console.log(`messaging error ${messagingData.name}`, error.description)
+          if (error.description === 'Forbidden: bot was blocked by the user') {
+            db.User.findOne({ telegram_id: chatId }).then((blockedUser) => {
+              blockedUser.blocked = true
+              blockedUser.save()
+            })
+          } else {
+            if (messagingCreator) {
+              telegram.sendMessage(messagingCreator.telegram_id, i18n.t('uk', 'admin.messaging.send_error', {
+                name: messagingData.name,
+                telegramId: chatId,
+                errorMessage: error.message
+              }), {
+                parse_mode: 'HTML'
+              })
+            }
+          }
+          messagingData.sendErrors.push({
+            telegram_id: chatId,
+            errorMessage: error.message
+          })
+        })
+      })
+
+      const errorCount = parseInt(await redis.get(key + ':error')) || 0
+      messagingData.result.error = errorCount
+      messagingData.result.state = state
+      messagingData.save()
+
+      await redis.set(key + ':state', state + count)
+    }
+  }, config.messaging.limit.duration || 1000)
 })
 
 const messagingEdit = (messagingData) => new Promise((resolve) => {
+  console.log(`messaging edit ${messagingData.name} start`)
+
   messagingData.editStatus = 2
   messagingData.save()
 
-  const jobName = `messaging_${messagingData.id}`
-  const jobEditName = `messaging_edit_${messagingData.id}`
-
   const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
-  const queue = new Queue(jobName)
-
-  const queueEdit = new Queue(jobEditName, {
-    limiter: {
-      max: config.messaging.limit.max || 10,
-      duration: config.messaging.limit.duration || 1000
-    }
-  })
-
-  queue.getCompleted().then((completed) => {
-    completed.forEach(job => {
-      queueEdit.add({
-        chatId: job.data.chatId,
-        messageId: job.returnvalue.messageId,
-        message: messagingData.message
-      })
-    })
-  })
-
-  queueEdit.process((job, done) => {
-    if (job.data.message.type === 'text') {
-      telegram.editMessageText(job.data.chatId, job.data.messageId, null, job.data.message.data.text, {
-        parse_mode: job.data.message.data.parse_mode,
-        disable_web_page_preview: job.data.message.data.disable_web_page_preview,
-        reply_markup: job.data.message.data.reply_markup
-      }).then((result) => {
-        done()
-      }).catch((error) => {
-        console.log(error)
-        done(new Error(error))
-      })
-    } else {
-      telegram.editMessageMedia(job.data.chatId, job.data.messageId, null, {
-        type: job.data.message.type,
-        media: job.data.message.data[job.data.message.type],
-        caption: job.data.message.data.caption || '',
-        parse_mode: job.data.message.data.parse_mode
-      }, {
-        parse_mode: job.data.message.data.parse_mode,
-        disable_web_page_preview: job.data.message.data.disable_web_page_preview,
-        reply_markup: job.data.message.data.reply_markup
-      }).then((result) => {
-        done()
-      }).catch((error) => {
-        console.log(error)
-        done(new Error(error))
-      })
-    }
-  })
+  const key = `messaging:${messagingData.id}`
+  const count = config.messaging.limit.max || 10
 
   const interval = setInterval(async () => {
-    const jobCounts = await queueEdit.getJobCounts()
+    console.log('messaging edit')
+    const state = parseInt(await redis.get(key + ':edit_state')) || 0
 
-    messagingData = await db.Messaging.findById(messagingData.id)
-
-    if (messagingData.editStatus === 0) queueEdit.clean(0, 'delayed')
-
-    messagingData.result = jobCounts
-
-    if (jobCounts.waiting <= 0 && jobCounts.delayed <= 0) {
+    if (state >= messagingData.result.total) {
+      console.log(`messaging edit ${messagingData.name} end`)
       messagingData.editStatus = 0
-      resolve({
-        jobCounts
-      })
+      messagingData.save()
       clearInterval(interval)
-
-      console.log(`messaging edit ${messagingData.name} end`, jobCounts)
+      resolve()
     }
 
-    await messagingData.save()
-  }, 5000)
+    const users = await redis.lrange(key, state, state + count).catch(() => {
+      clearInterval(interval)
+    })
+
+    if (users && users.length > 0) {
+      users.forEach(async (chatId) => {
+        const messageId = await redis.get(key + ':messages:' + chatId)
+        if (messagingData.message.type === 'text') {
+          telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
+            parse_mode: messagingData.message.data.parse_mode,
+            disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
+            reply_markup: messagingData.message.data.reply_markup
+          }).catch((error) => {
+            console.log(error)
+          })
+        } else {
+          telegram.editMessageMedia(chatId, messageId, null, {
+            type: messagingData.message.type,
+            media: messagingData.message.data[messagingData.message.type],
+            caption: messagingData.message.data.caption || '',
+            parse_mode: messagingData.message.data.parse_mode
+          }, {
+            parse_mode: messagingData.message.data.parse_mode,
+            disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
+            reply_markup: messagingData.message.data.reply_markup
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
+      })
+      await redis.set(key + ':edit_state', state + count)
+    }
+  }, config.messaging.limit.duration || 1000)
 })
 
 setTimeout(async function f () {

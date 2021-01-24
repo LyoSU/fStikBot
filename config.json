@@ -5,7 +5,7 @@
   "charNameMax": 30,
   "messaging": {
     "limit": {
-      "max": 10,
+      "max": 15,
       "duration": 1000
     }
   }

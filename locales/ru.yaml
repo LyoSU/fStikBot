@@ -223,7 +223,6 @@ admin:
       found: |
         Нашлось человек: ${userCount}
 
-        ${userList}
         Начать рассылку?
 
       back: « Назад
@@ -253,9 +252,9 @@ admin:
         Дата отправки: ${date}
 
         Прогресс отправки:
-          Ожидают: ${waiting}
+          Всего: ${total}
           Отправлено: ${completed}
-          Ошибки: ${failed}
+          Ошибки: ${error}
         ${userErrors}
 
         Статус: ${status}
