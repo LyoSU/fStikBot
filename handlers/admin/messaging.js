@@ -143,6 +143,7 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
       createdAt: moment(messaging.createdAt).format('DD.MM HH:mm'),
       total: messaging.result.total,
       completed: messaging.result.total - messaging.result.state,
+      left: messaging.result.state - messaging.result.total,
       error: messaging.result.error,
       userErrors,
       status: statusTypes[messaging.status]
