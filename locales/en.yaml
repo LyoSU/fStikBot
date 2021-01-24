@@ -174,8 +174,8 @@ scenes:
   btn:
     cancel: '❌ Cancel'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
+  not_allowed: This section is not for you! 😡
+  info: Admin panel
   menu:
     messaging: '✉️ Рассылка'
     admin: '😎 Админ-панель'
