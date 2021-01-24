@@ -209,12 +209,14 @@ admin:
         all: Todos
       select_all: Todo
       found: |
-        Personas encontradas: ${userCount}
+        Нашлось человек: ${userCount}
 
-        ${userList}
-        Empezar a enviar correos?
+        Начать рассылку?
       back: '« Atrás'
-      continue: Continuar » Boletín  ${name} creado Haga clic en el botón para ver
+      continue: Продолжить »
+      publish: |
+        Рассылка  ${name} создана Для просмотра нажми кнопку
+        Для просмотра нажми кнопку
       status: Estado de envío
     edit:
       started: |
@@ -227,18 +229,18 @@ admin:
       info: Estado de envío
     status:
       info: |
-        <b>Envío ${name}</b> (${createdAt})
-        Creado ${creatorName}
+        <b>Рассылка ${name}</b> (${createdAt})
+        Создал ${creatorName}
 
-        Fecha de envío: ${date}
+        Дата отправки: ${date}
 
-        Progreso de envío:
-          Pendiente: ${waiting}
-          Enviado: ${completed}
-          Errores: ${failed}
+        Прогресс отправки:
+          Всего: ${total}
+          Отправлено: ${completed}
+          Ошибки: ${error}
         ${userErrors}
 
-        Estado: ${status}
+        Статус: ${status}
       status_type: |
         Creado
         En curso
