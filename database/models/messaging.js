@@ -33,7 +33,6 @@ const messagingSchema = mongoose.Schema({
       default: 0
     }
   },
-  adminRights: Array,
   date: Date
 }, {
   timestamps: true

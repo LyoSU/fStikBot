@@ -46,7 +46,6 @@ const messaging = (messagingData) => new Promise((resolve) => {
       clearInterval(interval)
       resolve()
     }
-
     const users = await redis.lrange(key, state, state + count).catch(() => {
       clearInterval(interval)
     })
@@ -93,7 +92,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
       messagingData.result.state = state
       messagingData.save()
 
-      await redis.set(key + ':state', state + count)
+      await redis.set(key + ':state', state + count + 1)
     }
   }, config.messaging.limit.duration || 1000)
 })
