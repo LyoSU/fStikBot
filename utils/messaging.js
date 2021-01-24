@@ -64,7 +64,7 @@ const messaging = (messagingData) => new Promise((resolve) => {
         }).catch((error) => {
           redis.incr(key + ':error')
           console.log(`messaging error ${messagingData.name}`, error.description)
-          if (error.description === 'Forbidden: bot was blocked by the user') {
+          if (error.description.includes('blocked by the user') || error.description.includes('user is deactivated')) {
             db.User.findOne({ telegram_id: chatId }).then((blockedUser) => {
               blockedUser.blocked = true
               blockedUser.save()
@@ -79,11 +79,12 @@ const messaging = (messagingData) => new Promise((resolve) => {
                 parse_mode: 'HTML'
               })
             }
+
+            messagingData.sendErrors.push({
+              telegram_id: chatId,
+              errorMessage: error.message
+            })
           }
-          messagingData.sendErrors.push({
-            telegram_id: chatId,
-            errorMessage: error.message
-          })
         })
       })
 
