@@ -1,182 +1,262 @@
 ---
-ratelimit: Не так часто!
+language_name: '🇺🇿'
+ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Assalomu alaykum <b>${name}</b>!
+      Menga Stiker yoki fotosurat yuboring, men uni stikerlar to'plamingizga qo'shib qo'yaman.
+      O'chirish uchun - Stikerni qayta yuboring
 
-      /packs - список стикерпаков
-      /animpacks - список анимированных стикерпаков
-      /new - создать новый стикерпак
+      /packs - stikerlar to'plamining ro'yxati
+      /animpacks - animatsion stikerlarlar to'plamining ro'yxati
+      /new - yangi stikerlar to'plamini yaratish
+      /original - asl stikerni topish
+      /restore - stikerlar to'plamini qayta tiklash
+      /copy - stikerlar to'plamidan nusxa olish
+      /lang - tilni o'zgartirish
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /lang - change language
-
-      /donate - поддержать разработчика
+      /donate - dasturchini qo'llab-quvatlash
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      👨🏻‍💻 Dasturchining kanali: @LyBlog
     btn:
-      packs: '🌟 Стикерпаки'
-      animpacks: '✨ Анимированные стикерпаки'
-      new: '🆕 Создать стикерпак'
-      donate: '☕️ Поддержать разработчика'
+      packs: '🌟 Stikerlar to''plami'
+      animpacks: '✨ Animatsion Stikerlar to''plami'
+      new: '🆕 Stiker yaratish'
+      donate: '☕️ Dasturchini qo''llab-quvatlash'
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Stikerlar to'plamini qayta tiklash</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Agar siz ilgari ushbu bot orqali stikerlar to'plamini yaratgan bo'lsangiz va uni stikerlar to'plamingiz ro'yxatidan topa olmagan bo'lsangiz, uni qayta tiklashingiz mumkin.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Buning uchun siz bir nechta amallarni bajarishingiz kerak: </b>
+    1. @Stickers botga kiring
+    2. Unga <code>/packstats</code> buyrug'ini yuboring
+    3. Kerakli stikerlar to'plamini topib tanlang
+    4. Kelgan xabarni ushbu botga jo'nating
+    5. Muvaffaqiyatli qayta tiklanishdan so'ng, bot bu haqida xabar beradi
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Stikerlar to'plamini nusxalash</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Agar siz botni qo'llab-quvatlagan bo'lsangiz, barcha stikerlarni, har qanday stikerlar to'plamidan yangi nom bilan nusxalash imkoniyati paydo bo'ladi. Stikerlar to'plamini nusxalash uchun, siz botga stikerning havolasini yuborishingiz kifoya.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Stikerlar to'plami</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
+      <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Dasturchini qo'llab-quvatlash</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Siz menga kofega pul yuborib, evaziga yoqimli bonuslarni olishingiz mumkin.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Yangi stikerlar to'plamidan <b>"${titleSuffix}</b> nomini o'chirish
+    ➖ Boshqa stikerlar to'plamidan, ularning havolasi orqali to'liq nusxa ko'chirish
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    info: Iltimos, emodjini kiriting. Masalan, <code>/emoji 💜</code> keyingi barcha yangi stikerlar uchun qo'shimchani 💜 ga o'zgartiradi.
+    done: Emodji-qo'shimchasi muvaffaqiyatli o'zgartirildi.
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Stikerlar to'plami muvaffaqiyatli ravishda yashirildi
+      restored: Stikerlar to'plami muvaffaqiyatli ravishda qayta tiklandi
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      Tanlangan Stiker to'plami <a href="${link}">${title}</a>
+    hidden: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizdan yashirildi.
+    restored: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizga qayta qo'shildi.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
+      hide: '❌ Stikerlar to''plamini yashirish'
+      restore: '✅ Qayta tiklash'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>Tizimda xatolik!</b>
+        Stikerlar to'plamini tiklab bo'lmadi.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>Tizimda xatolik!</b>
+        Stikerlar to'plamini topib bo'lmadi.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: Ushbu stiker, stikerlar to'plamidan o'chirildi
+      restored: Ushbu stiker, joriy stikerlar to'plamiga muvaffaqiyatli ravishda saqlab qo'yildi
+    delete: Ushbu stiker, stikerlar to'plamidan o'chirildi.
+    restored: Ushbu stiker, joriy stikerlar to'plamiga muvaffaqiyatli ravishda saqlab qo'yildi.
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑O''chirish'
+      copy: '🌟Nusxalash'
+      restore: '✅Qayta tiklash'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        Tizimda xatolik!
+        Stikerni topib bo'lmadi.
   donate:
-    title: Донат ${botUsername}
-    description: Прямая поддержка разработчика бота и получение дополнительных возможностей.
+    title: Xayriya ${botUsername}
+    description: Ushbu botning dasturlovchsini bevosita qo'llab-quvatlash va qo'shimcha imkoniyatlarga ega bo'lish.
     successful: |
-      <b>Спасибо за поддержку бота 💜</b>
+      <b>Botni qo'llab-quvatlaganingiz uchun tashakkur💜</b>
 
-      Вы можете написать мне @LyoSU с предложением фичи, которой не хватает, и я попробую её реализовать.
+      Siz menga @LyoSU botda yetishmayotgan funksiya bo'yicha ta'klif bilan yozishingiz mumkin va men uni ishlab chiqishga harakat qilaman.
     btn:
-      buy: '💜 Оплатить'
+      buy: '💜 To''lash'
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Ushbu stiker, stikerlar to'plamiga muvaffaqiyatli ravishda qo'shildi:</b>
       <a href="${link}">${title}</a>
     error:
       stickers_too_much: |
-        <b>Ошибка!</b>
-        В этом стикерпаке максимальное количество стикеров.
-        Вы можете создать новый стикерпак командой /new
+        <b>Tizimda xatolik!</b>
+        Ushbu stikerlar to'plamida, maksimal miqdordagi stikerlar mavjud.
+        /new buyrug'i bilan yangi stikerlar to'plamini yaratishingiz mumkin
       have_already: |
-        <b>Ошибка!</b>
-        Этот стикер уже есть в этом стикерпаке.
+        <b>Tizimda xatolik!</b>
+        Ushbu stiker allaqchon ushbu stikerlar to'plamida mavjud.
       stickerset_invalid: |
-        <b>Ошибка!</b>
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+        <b>Tizimda xatolik!</b>
+        Bot hozirda tanlangan stikerlar to'plamiga kira olmaydi.
+        Iltimos, yangi yarating (/new) yoki boshqa stikerlar to'plamini tanlang (/packs).
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Tizimda xatolik!</b>
+        Ushbu fayl turi qo'llab-quvatlanmaydi.
 scenes:
   new_pack:
-    common: Обычный
-    animated: Анимированный
+    common: Oddiy
+    animated: Animatsiya qilingan
     pack_type: |
-      <b>Выбери тип стикерпака:</b>
+      <b>Stikerlar to'plamining turini tanlang:</b>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
+      <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Yangi stikerlar to'plami uchun qisqa manzilni kiriting:</b>
+      <i>Manzil faqat inglizcha harflar, raqamlar va pastki chiziqlardan iborat bo'lishi mumkin.</i>
+      <i>Masalan ushbu to'plam qisqa manzilni o'z ichiga oladi 'Animals': https://t.me/addstickers/Animals</i>
+      <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin. </i>
     ok: |
-      Стикерпак <a href="${link}">${title}</a> успешно создан!
+      Stikerlar to'plami <a href="${link}">${title}</a> muvaffaqiyatli ravishda yaratildi!
 
-      <b>Ссылка на стикерпак:</b> <pre>${link}</pre>
+      <b>Stikerlar to'plamiga havola</b> <pre>${link}</pre>
 
-      Редактировать его можно в официальном боте @Stickers
+      Siz uni rasmiy @Stickers botida tahrirlashingiz mumkin
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Ism ${max} belgidan oshmasligi kerak.
+      name_long: Manzil ${max} belgidan oshmasligi kerak.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: Ushbu manzilni ishlatib bo'lmaydi.
+        name_occupied: Ushbu manzil band.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      Men ushbu stikerlar to'plamini nusxalashim mumkin, buning uchun yangi stikerlar to'plamini yaratish kerak bo'ladi.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Stikerlar to'plamidan nusxa olish bajarilmoqda <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
 
-      Прогресс: ${current}/${total}
+      Jarayon: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      <a href="${originalLink}">${originalTitle}</a> dan <a href="${link}">${title}</a> ga stikerlar to'plamini nusxalash muvaffaqiyatli yakunlandi.
     error:
       premium: |
-        <b>Ошибка!</b>
-        К сожалению, эта функция доступна только тем, кто поддержал бота.
+        <b>Tizimda Xatolik! </b>
+        Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud. 
 
-        Вы можете это сделать, отправив команду /donate
+        Siz buni /donate buyrug'ini yuborish orqali qilishingiz mumkin
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Ushbu bot orqali qo'shilgan stikerni yuboring va men sizga asl nusxasini ko'rsataman.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>Tizimda xatolik!</b>
+        Ushbu stikerning asl nusxasini topolmadim.
   leave: |
-    Действие отменено.
+    Harakat bekor qilindi.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Bekor qilish'
+admin:
+  not_allowed: Ushbu bo'lim siz uchun emas! 😡
+  info: Admin paneli
+  menu:
+    messaging: '✉️ Shaxsiy xabar'
+    admin: '😎 Admin paneli'
+  messaging:
+    info: |
+      ✉️ Shaxsiy xabarlar
+    menu:
+      create: Yaratish
+      scheduled: Rejalashtirilgan
+      archive: Arxiv
+    create:
+      name: Mavzu
+      send_message: Matn yoki ommaviy axborot vositalarini yuboring
+      date: Nashr qilingan sanani kiriting <b>kk.oo ss:mm</b>
+      date_format: |
+        Xabar yuboriladi:
+          ${date}
+      date_invalid: |
+        Sana formati xato
+        Sanani <b>kk.oo ss:mm</b> formatida ko'rsating
+      add_url: Havola qo'shish
+      clear_url: Havolani o'chirish
+      add_url_info: |
+        Tugmalar ro'yxatini yuboring
+        <pre>Tugma matni 1 - http://www.example.com/ | Tugma matni 2 - http://www.example2.com/
+        Tugma matni 3 - http://www.example3.com/
+        </pre>
+        ${current ? '\nJoriy turgmalar:\n' + current : ''}
+      group_select: Foydalanuvchilar guruhini tanlang
+      group_type:
+        all: Barchasi
+      select_all: Все
+      found: |
+        Topilgan odamlar soni: ${userCount}
+
+        ${userList}
+        Shaxsiy xabalarni yuborishni boshlaymi?
+      back: 'Ortga'
+      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
+      status: Shaxsiy xabar yuborish holati
+    edit:
+      started: |
+        Tahrirlash boshlandi
+      wrong_type: |
+        Ошибка!
+        Тип сообщения [${type}] отличается от оригинала [${originalType}].
+        Редактирование невозможно
+    list:
+      info: Shaxsiy xabar yuborish holati
+    status:
+      info: |
+        <b>Рассылка ${name}</b> (${createdAt})
+        Создал ${creatorName}
+
+        Дата отправки: ${date}
+
+        Прогресс отправки:
+          Ожидают: ${waiting}
+          Отправлено: ${completed}
+          Ошибки: ${failed}
+        ${userErrors}
+
+        Статус: ${status}
+      status_type: |
+        Yaratildi
+        Jarayonda
+        Arxiv
+      name_changed: Sarlavha o'zgartirildi
+      cancel: '❌ Bekor qilish'
+      view: Ko'rish
+      edit: Tahrirlash
+      change_name: Sarlavhani o'zgartirish
+      update: Yangilash
+    canceled: |
+      <b>Shaxsiy xabar ${name}</b> bekor qilindi.
+    send_error: |
+      <b>Shaxsiy xabar yuborishda xatolik ${name}</b>
+       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi. 
+
+      <code>${errorMessage}</code>
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram xatolikni qaytardi!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram xatolikni qaytardi:
       ${error}

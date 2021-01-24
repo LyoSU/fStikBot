@@ -1,3 +1,4 @@
+---
 language_name: '🇺🇸 English'
 ratelimit: Not so often!
 cmd:
@@ -172,6 +173,89 @@ scenes:
     Action canceled.
   btn:
     cancel: '❌ Cancel'
+admin:
+  not_allowed: Этот раздел не для тебя! 😡
+  info: Админ-панель
+  menu:
+    messaging: '✉️ Рассылка'
+    admin: '😎 Админ-панель'
+  messaging:
+    info: |
+      ✉️ Рассылки
+    menu:
+      create: Создать
+      scheduled: Запланировано
+      archive: Архив
+    create:
+      name: Заголовок
+      send_message: Отправь текст или медиа
+      date: Укажи дату публикации <b>дд.мм чч:мм</b>
+      date_format: |
+        Сообщение будет отправлено:
+          ${date}
+      date_invalid: |
+        Неправильный формат даты
+        Укажи дату в формате <b>дд.мм чч:мм</b>
+      add_url: Добавить ссылку
+      clear_url: Удалить ссылку
+      add_url_info: |
+        Отправь список кнопок
+        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
+        Текст кнопки 3 - http://www.example3.com/
+        </pre>
+        ${current ? '\nТекущие кнопки:\n' + current : ''}
+      group_select: Выбери группу пользователей
+      group_type:
+        all: Все
+      select_all: Все
+      found: |
+        Нашлось человек: ${userCount}
+
+        ${userList}
+        Начать рассылку?
+      back: '« Назад'
+      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
+      status: Состояние рассылки
+    edit:
+      started: |
+        Редактирование началось
+      wrong_type: |
+        Error!
+        Message type [${type}] differs from original [${originalType}].
+        Editing is not possible
+    list:
+      info: Состояние рассылки
+    status:
+      info: |
+        <b>Рассылка ${name}</b> (${createdAt})
+        Создал ${creatorName}
+
+        Дата отправки: ${date}
+
+        Прогресс отправки:
+          Ожидают: ${waiting}
+          Отправлено: ${completed}
+          Ошибки: ${failed}
+        ${userErrors}
+
+        Статус: ${status}
+      status_type: |
+        Created
+        Processing
+        Archived
+      name_changed: The title has been changed
+      cancel: '❌ Cancel'
+      view: View
+      edit: Edit
+      change_name: Change title
+      update: Refresh
+    canceled: |
+      <b>Рассылка ${name}</b> отменена.
+    send_error: |
+      <b>Ошибка рассылки ${name}</b>
+      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+
+      <code>${errorMessage}</code>
 error:
   telegram: |
     <b>Telegram returned an error!</b>
