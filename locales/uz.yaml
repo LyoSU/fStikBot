@@ -205,12 +205,14 @@ admin:
         all: Barchasi
       select_all: Все
       found: |
-        Topilgan odamlar soni: ${userCount}
+        Нашлось человек: ${userCount}
 
-        ${userList}
-        Shaxsiy xabalarni yuborishni boshlaymi?
+        Начать рассылку?
       back: 'Ortga'
-      continue: Продолжить » Рассылка  ${name} создана Для просмотра нажми кнопку
+      continue: Продолжить »
+      publish: |
+        Рассылка  ${name} создана Для просмотра нажми кнопку
+        Для просмотра нажми кнопку
       status: Shaxsiy xabar yuborish holati
     edit:
       started: |
@@ -229,9 +231,9 @@ admin:
         Дата отправки: ${date}
 
         Прогресс отправки:
-          Ожидают: ${waiting}
+          Всего: ${total}
           Отправлено: ${completed}
-          Ошибки: ${failed}
+          Ошибки: ${error}
         ${userErrors}
 
         Статус: ${status}
