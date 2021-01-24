@@ -237,6 +237,7 @@ admin:
         Прогресс отправки:
           Всего: ${total}
           Отправлено: ${completed}
+          Осталось: ${left}
           Ошибки: ${error}
         ${userErrors}
 
