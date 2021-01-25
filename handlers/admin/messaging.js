@@ -123,21 +123,6 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
   const statusTypes = ctx.i18n.t('admin.messaging.status.status_type').split('\n')
 
   if (messaging) {
-    let waiting = 0
-    let completed = 0
-    let failed = 0
-
-    if (messaging.result) {
-      waiting += messaging.result.waiting || 0
-      waiting += messaging.result.active || 0
-      waiting += messaging.result.delayed || 0
-      waiting += messaging.result.paused || 0
-
-      completed += messaging.result.completed || 0
-
-      failed += messaging.result.failed || 0
-    }
-
     let creatorName = ctx.me
     if (messaging.creator) creatorName = messaging.creator.full_name
 
@@ -156,9 +141,10 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
       creatorName,
       date: moment(messaging.date).format('DD.MM HH:mm'),
       createdAt: moment(messaging.createdAt).format('DD.MM HH:mm'),
-      waiting,
-      completed,
-      failed,
+      total: messaging.result.total,
+      completed: messaging.result.state,
+      left: messaging.result.total - messaging.result.state,
+      error: messaging.result.error,
       userErrors,
       status: statusTypes[messaging.status]
     })

@@ -5,8 +5,8 @@
   "charNameMax": 30,
   "messaging": {
     "limit": {
-      "max": 10,
-      "duration": 1000
+      "max": 20,
+      "duration": 2000
     }
   }
 }

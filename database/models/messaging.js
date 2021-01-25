@@ -19,8 +19,20 @@ const messagingSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
-  result: Object,
-  adminRights: Array,
+  result: {
+    total: {
+      type: Number,
+      default: 0
+    },
+    state: {
+      type: Number,
+      default: 0
+    },
+    error: {
+      type: Number,
+      default: 0
+    }
+  },
   date: Date
 }, {
   timestamps: true

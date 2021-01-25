@@ -1,8 +1,11 @@
-const Queue = require('bull')
+const mongoose = require('mongoose')
+const Redis = require('ioredis')
 const Markup = require('telegraf/markup')
 const Scene = require('telegraf/scenes/base')
 const replicators = require('telegraf/core/replicators')
 const moment = require('moment')
+
+const redis = new Redis()
 
 const adminMessagingName = new Scene('adminMessagingName')
 
@@ -246,22 +249,13 @@ adminMessagingСonfirmation.enter(async (ctx) => {
   let findUsers = {}
 
   if (ctx.session.scene.type === 'all') {
-    findUsers = await ctx.db.User.find({
+    findUsers = await ctx.db.User.count({
       blocked: { $ne: true }
-    }).cursor()
-  }
-
-  const userList = ''
-
-  ctx.session.scene.users = []
-
-  for (let user = await findUsers.next(); user != null; user = await findUsers.next()) {
-    ctx.session.scene.users.push(user.telegram_id)
+    })
   }
 
   const resultText = ctx.i18n.t('admin.messaging.create.found', {
-    userCount: ctx.session.scene.users.length,
-    userList
+    userCount: findUsers
   })
 
   const replyMarkup = Markup.inlineKeyboard([
@@ -289,6 +283,8 @@ adminMessagingMessageEdit.enter(async (ctx) => {
     messaging.message = ctx.session.scene.message
     messaging.editStatus = 1
     await messaging.save()
+
+    redis.set(`messaging:${messaging.id}:edit_state`, 0)
 
     const resultText = ctx.i18n.t('admin.messaging.edit.started', {
       name: messaging.name
@@ -332,46 +328,44 @@ adminMessagingPublish.enter(async (ctx) => {
 
   ctx.session.scene.message.data.reply_markup = Markup.inlineKeyboard(inlineKeyboard)
 
+  const usersCursor = ctx.db.User.count({
+    blocked: { $ne: true }
+  }).cursor()
+
+  const users = []
+
+  for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
+    users.push(user.telegram_id)
+  }
+
+  const messagingId = mongoose.Types.ObjectId()
+
+  const key = `messaging:${messagingId}`
+
+  redis.rpush(key, users)
+
   const messaging = new ctx.db.Messaging()
 
   Object.assign(messaging, {
+    _id: messagingId,
     creator: ctx.session.user,
     name: ctx.session.scene.name,
     message: ctx.session.scene.message,
     result: {
-      waiting: ctx.session.scene.users.length
+      total: users.length
     },
     date: ctx.session.scene.date
   })
 
-  messaging.save().then((messaging) => {
-    const jobName = `messaging_${messaging.id}`
-
-    const queue = new Queue(jobName, {
-      limiter: {
-        max: ctx.config.messaging.limit.max || 10,
-        duration: ctx.config.messaging.limit.duration || 1000
-      }
-    })
-
-    const size = 10000
-    const users = []
-    for (let i = 0; i < Math.ceil(ctx.session.scene.users.length / size); i++) {
-      users[i] = ctx.session.scene.users.slice((i * size), (i * size) + size)
-    }
-
-    for (const u of users) {
-      queue.addBulk(u.map((chatId) => { return { data: chatId } }))
-    }
-  })
+  messaging.save()
 
   const resultText = ctx.i18n.t('admin.messaging.create.publish', {
-    name: messaging.name
+    name: ctx.session.scene.name
   })
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.messaging.create.status'), `admin:messaging:status:${messaging.id}`)
+      Markup.callbackButton(ctx.i18n.t('admin.messaging.create.status'), `admin:messaging:status:${messagingId}`)
     ],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
