@@ -212,7 +212,6 @@ admin:
         Нашлось человек: ${userCount}
 
         Начать рассылку?
-
       back: '« Назад'
       continue: Продолжить »
       publish: |
