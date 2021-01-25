@@ -211,10 +211,13 @@ admin:
       found: |
         Personas encontradas: ${userCount}
 
-        ${userList}
         Empezar a enviar correos?
       back: '« Atrás'
-      continue: Continuar » Boletín  ${name} creado Haga clic en el botón para ver
+      continue: Continuar »
+      publish: |
+        Publicación ${name} creada 
+        Presione el botón para ver 
+        Presione el botón para ver
       status: Estado de envío
     edit:
       started: |
@@ -227,15 +230,16 @@ admin:
       info: Estado de envío
     status:
       info: |
-        <b>Envío ${name}</b> (${createdAt})
+        <b>Mensaje ${name}</b> (${createdAt})
         Creado ${creatorName}
 
         Fecha de envío: ${date}
 
         Progreso de envío:
-          Pendiente: ${waiting}
+          Total: ${total}
           Enviado: ${completed}
-          Errores: ${failed}
+          Restante: ${left}
+          Errores: ${error}
         ${userErrors}
 
         Estado: ${status}
