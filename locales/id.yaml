@@ -50,12 +50,12 @@ cmd:
       <b>Anda belum memiliki paket stiker.</b>
       Untuk membuat, tulis perintah /new
   donate: |
-    <b>☕️ Mendukung pengembangan bot</b>
+    <b>☕️ Поддержка разработчика бота</b>
 
-    Anda dapat mengirim uang kepada saya untuk minum kopi dan mendapatkan bonus kecil di bot sebagai gantinya.
+    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
 
-    ➖ Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
-    ➖ Menyalin paket stiker lain melalui tautan
+    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
+    ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Harap tentukan emoji. Sebagai contoh - <code>/emoji 💜</code> mengubah akhiran paket saat ini menjadi 💜 untuk semua stiker baru.
     done: Sufiks emoji berhasil diubah.
