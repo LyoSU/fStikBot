@@ -50,12 +50,12 @@ cmd:
       <b>Aún no tienes ningún pack de stickers.</b>
       Para crear uno escribe /new
   donate: |
-    <b>☕️ Soporte para los desarrolladores del bot</b>
+    <b>☕️ Поддержка разработчика бота</b>
 
-    Puedes enviarme dinero para un café y recibir pequeñas bonificaciones en el bot a cambio.
+    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
 
-    ➖ Deshabilitar <b>"${titleSuffix}</b> en el nombre de los nuevos pack de stickers
-    ➖ Copia completa de otros packs de stickers desde el enlace a ellos
+    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
+    ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Incluir emoji. Por ejemplo, <code>/emoji 💜</code> cambiará el sufijo a 💜 para todos los stickers nuevos y posteriores.
     done: El sufijo del emoji cambió correctamente.
