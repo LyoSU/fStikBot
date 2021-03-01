@@ -31,7 +31,8 @@ global.startDate = new Date()
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
     webhookReply: false
-  }
+  },
+  handlerTimeout: 1
 })
 
 bot.on(['channel_post', 'edited_channel_post'], () => {})
@@ -49,8 +50,8 @@ bot.use(i18n)
 
 // rate limit
 const limitConfig = {
-  window: 300,
-  limit: 1,
+  window: 1000,
+  limit: 10,
   onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
 }
 
