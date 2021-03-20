@@ -62,6 +62,11 @@ bot.catch((error, ctx) => {
   console.error(`error for ${ctx.updateType}`, error)
 })
 
+bot.use((ctx, next) => {
+  if (ctx.update.my_chat_member) console.log(ctx.update)
+  else return next()
+})
+
 // bot config
 bot.context.config = require('./config.json')
 
