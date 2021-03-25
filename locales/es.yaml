@@ -229,7 +229,7 @@ admin:
     list:
       info: Estado de envío
     status:
-      info: |
+      info: |2
         <b>Mensaje ${name}</b> (${createdAt})
         Creado ${creatorName}
 
