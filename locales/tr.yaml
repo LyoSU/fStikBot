@@ -222,7 +222,7 @@ admin:
     list:
       info: Состояние рассылки
     status:
-      info: |
+      info: |2
         <b>Рассылка ${name}</b> (${createdAt})
         Создал ${creatorName}
 

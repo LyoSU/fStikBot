@@ -231,7 +231,7 @@ admin:
     list:
       info: Poçt statusu
     status:
-      info: |
+      info: |2
         <b>Рассылка ${name}</b> (${createdAt})
         Создал ${creatorName}
 
