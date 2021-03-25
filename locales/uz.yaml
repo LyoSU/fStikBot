@@ -224,7 +224,7 @@ admin:
     list:
       info: Shaxsiy xabar yuborish holati
     status:
-      info: |
+      info: |2
         <b>Рассылка ${name}</b> (${createdAt})
         Создал ${creatorName}
 
