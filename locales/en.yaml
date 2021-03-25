@@ -50,12 +50,12 @@ cmd:
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
   donate: |
-    <b>☕️ Supporting a bot development</b>
+    <b>☕️ Поддержка разработчика бота</b>
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
+    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
+    ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Please, specify an emoji. For example - <code>/emoji 💜</code> changes current pack suffix to 💜 for all new stickers.
     done: Emoji suffix successfully changed.
@@ -228,7 +228,7 @@ admin:
     list:
       info: Состояние рассылки
     status:
-      info: |
+      info: |2
         <b>Рассылка ${name}</b> (${createdAt})
         Создал ${creatorName}
 
