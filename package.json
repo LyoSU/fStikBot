@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
+    "@pm2/io": "^4.3.5",
     "dotenv": "^7.0.0",
     "ioredis": "^4.19.4",
     "moment": "^2.29.1",

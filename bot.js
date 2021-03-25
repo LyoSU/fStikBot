@@ -22,7 +22,8 @@ const {
 } = require('./handlers')
 const scenes = require('./scenes')
 const {
-  updateUser
+  updateUser,
+  stats
 } = require('./utils')
 
 global.startDate = new Date()
@@ -63,6 +64,8 @@ bot.catch((error, ctx) => {
   ctx.reply('error :(')
 })
 
+bot.use(stats)
+
 bot.use((ctx, next) => {
   if (ctx.update.my_chat_member) console.log(ctx.update)
   else return next()
@@ -79,11 +82,11 @@ bot.use(session({ ttl: 60 * 5 }))
 
 // response time logger
 bot.use(async (ctx, next) => {
-  const ms = new Date()
+  // const ms = new Date()
   if (ctx.callbackQuery) ctx.state.answerCbQuery = []
   return next(ctx).then(() => {
     if (ctx.callbackQuery) ctx.answerCbQuery(...ctx.state.answerCbQuery)
-    console.log('Response time %sms', new Date() - ms)
+    // console.log('Response time %sms', new Date() - ms)
   })
 })
 
