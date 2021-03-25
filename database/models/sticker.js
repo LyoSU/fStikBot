@@ -5,11 +5,6 @@ const stickersSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet'
   },
-  fileId: {
-    type: String,
-    unique: true,
-    required: true
-  },
   fileUniqueId: {
     type: String,
     index: true,
@@ -17,12 +12,6 @@ const stickersSchema = mongoose.Schema({
     required: true
   },
   emojis: String,
-  hash: {
-    md5: {
-      type: String,
-      index: true
-    }
-  },
   info: Object,
   file: Object,
   deleted: {

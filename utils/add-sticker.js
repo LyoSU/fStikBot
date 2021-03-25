@@ -1,7 +1,5 @@
-const fs = require('fs')
 const https = require('https')
 const sharp = require('sharp')
-const hasha = require('hasha')
 
 const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
   const data = []
@@ -18,8 +16,6 @@ const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
 })
 
 module.exports = async (ctx, inputFile) => {
-  let tmpPath = `tmp/${inputFile.file_id}_${Date.now()}`
-
   const result = await (async () => {
     let stickerFile = inputFile
 
@@ -70,15 +66,13 @@ module.exports = async (ctx, inputFile) => {
         else imageSharp.resize({ width: 512 })
       }
 
-      await imageSharp.webp({ quality: 100 }).png({ force: false }).toFile(tmpPath).catch(() => { })
-
-      const hash = await hasha.fromFile(tmpPath, { algorithm: 'md5' })
+      const fileBuffer = await imageSharp.webp({ quality: 100 }).png({ force: false }).toBuffer()
 
       let stickerAdd = false
 
       if (ctx.session.userInfo.stickerSet.create === false) {
         stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, ctx.session.userInfo.stickerSet.title, {
-          png_sticker: { source: tmpPath },
+          png_sticker: { source: fileBuffer },
           emojis
         }).catch((error) => {
           return {
@@ -96,7 +90,7 @@ module.exports = async (ctx, inputFile) => {
         }
       } else {
         stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, {
-          png_sticker: { source: tmpPath },
+          png_sticker: { source: fileBuffer },
           emojis
         }).catch((error) => {
           return {
@@ -123,7 +117,7 @@ module.exports = async (ctx, inputFile) => {
         }
         const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-        ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, hash, stickerInfo, stickerFile)
+        ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, stickerInfo, stickerFile)
 
         return {
           ok: {
@@ -139,8 +133,6 @@ module.exports = async (ctx, inputFile) => {
       tmpPath = false
       const fileUrl = await ctx.telegram.getFileLink(stickerFile)
       const data = await downloadFileByUrl(fileUrl)
-
-      const hash = hasha(data, { algorithm: 'md5' })
 
       let stickerAdd = false
 
@@ -192,7 +184,7 @@ module.exports = async (ctx, inputFile) => {
         }
         const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-        ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, hash, stickerInfo, stickerFile)
+        ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, stickerInfo, stickerFile)
 
         return {
           ok: {
@@ -205,11 +197,11 @@ module.exports = async (ctx, inputFile) => {
     }
   })()
 
-  try {
-    if (tmpPath) fs.unlinkSync(tmpPath)
-  } catch (error) {
-    console.error(error)
-  }
+  // try {
+  //   if (tmpPath) fs.unlinkSync(tmpPath)
+  // } catch (error) {
+  //   console.error(error)
+  // }
 
   return result
 }

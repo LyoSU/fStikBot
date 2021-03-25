@@ -13,7 +13,6 @@ const stickerSetsSchema = mongoose.Schema({
   },
   title: {
     type: String,
-    index: true,
     required: true
   },
   animated: {

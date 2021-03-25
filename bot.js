@@ -35,7 +35,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   handlerTimeout: 1
 })
 
-bot.on(['channel_post', 'edited_channel_post'], () => {})
+bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
 // I18n settings
 const { match } = I18n
@@ -60,6 +60,7 @@ bot.use(rateLimit(limitConfig))
 // error handling
 bot.catch((error, ctx) => {
   console.error(`error for ${ctx.updateType}`, error)
+  ctx.reply('error :(')
 })
 
 bot.use((ctx, next) => {
