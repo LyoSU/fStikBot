@@ -46,12 +46,12 @@ cmd:
     empty: |
       <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
   donate: |
-    <b>☕️ Dasturchini qo'llab-quvatlash</b>
+    <b>☕️ Поддержка разработчика бота</b>
 
-    Siz menga kofega pul yuborib, evaziga yoqimli bonuslarni olishingiz mumkin.
+    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
 
-    ➖ Yangi stikerlar to'plamidan <b>"${titleSuffix}</b> nomini o'chirish
-    ➖ Boshqa stikerlar to'plamidan, ularning havolasi orqali to'liq nusxa ko'chirish
+    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
+    ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Iltimos, emodjini kiriting. Masalan, <code>/emoji 💜</code> keyingi barcha yangi stikerlar uchun qo'shimchani 💜 ga o'zgartiradi.
     done: Emodji-qo'shimchasi muvaffaqiyatli o'zgartirildi.
@@ -224,7 +224,7 @@ admin:
     list:
       info: Shaxsiy xabar yuborish holati
     status:
-      info: |
+      info: |2
         <b>Рассылка ${name}</b> (${createdAt})
         Создал ${creatorName}
 
