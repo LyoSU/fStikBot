@@ -193,66 +193,65 @@ admin:
       add_url: Link ekle
       clear_url: Bağlantıyı kaldır
       add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
+        Düğme Listesi Gönder
+        <pre>Düğme Metni 1 - http://www.example.com/ | Düğme 2 metni - http://www.example2.com/
+        Düğme 3 metni - http://www.example3.com/
         </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
+        $ {current ? '\nGeçerli düğmeler:\n' + current: ''}
+      group_select: Bir kullanıcı grubu seçin
       group_type:
-        all: Все
-      select_all: Все
+        all: Tümünü göster
+      select_all: Tümünü göster
       found: |
-        Нашлось человек: ${userCount}
+        Bulunan kişiler: ${userCount}
 
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
+        Postaya başlasın mı?
+      back: '« Geri'
+      continue: Devam et
       publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
+        Haber bülteni  ${name} oluşturuldu. Görüntüle
+      status: Posta durumu
     edit:
       started: |
-        Редактирование началось
+        Düzenleme başladı
       wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
+        Hata!
+        Mesaj türü [${type}], orijinalden [${originalType}] farklı.
+        Düzenleme mümkün değil
     list:
-      info: Состояние рассылки
+      info: Posta durumu
     status:
       info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
+        <b>Haber Bülteni ${name}</b> (${createdAt})
+        Oluşturuldu ${creatorName}
 
-        Дата отправки: ${date}
+        Gönderim tarihi: ${date}
 
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
+        Gönderim ilerlemesi:
+          Toplam: ${total}
+          Gönderildi: ${completed}
+          Kalan: ${left}
+          Hata: ${error}
         ${userErrors}
 
-        Статус: ${status}
+        Durum: ${status}
       status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
+        Oluşturuldu
+        Devam ediyor
+        Arşiv
+      name_changed: Başlık değişti
+      cancel: '❌ İptal'
+      view: Git ve gör
+      edit: Düzenle
+      change_name: Başlığı değiştir
+      update: Yenile
     canceled: |
-      <b>Рассылка ${name}</b> отменена.
+      <b>Yayın ${name}</b> iptal edildi.
     send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+      <b>Yayın hatası ${name}</b>
+       <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
-      <code>${errorMessage}</code>
+      <code>${errorMessage}</code> mesaj gönderilemedi
 error:
   telegram: |
     <b>Telegram hatası!</b>
