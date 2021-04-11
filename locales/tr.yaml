@@ -47,15 +47,15 @@ cmd:
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Botun geliştirilmesine yardım et</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    Bana kahve için para gönderebilir ve karşılığında botta küçük bonuslar alabilirsiniz.
 
-    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ <b>"${titleSuffix}</b> çıkartma başlığını kapatma
+    ➖ Diğer çıkartma paketlerini link ile kopyalama
   emoji:
-    info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    info: Lütfen emoji ekleyin. Örneğin, <code>/emoji 💜</code>, sonraki tüm yeni çıkartmalar için soneki 💜 olarak değiştirecektir.
+    done: Emoji son eki başarıyla değiştirildi.
 callback:
   pack:
     answerCbQuer:
@@ -112,18 +112,18 @@ sticker:
         <b>Hata!</b>
         Bu çıkartma zaten senin çıkartma paketinde bulunuyor.
       stickerset_invalid: |
-        <b>Ошибка!</b>
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+        <b>Hata!</b>
+         Bot, şu anda seçili olan çıkartma paketine erişemiyor.
+         Lütfen yeni bir (/new) oluşturun veya başka bir çıkartma paketi seçin (/packs).
       file_type: |
         <b>Hata!</b>
         Bu dosya tipi desteklenmiyor
 scenes:
   new_pack:
-    common: Обычный
-    animated: Анимированный
+    common: Normal
+    animated: Animasyonlu
     pack_type: |
-      <b>Выбери тип стикерпака:</b>
+      <b>Çıkartma paketinin türünü seçin:</b>
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
@@ -140,7 +140,7 @@ scenes:
       name_long: Kısa link ${max} değerinden büyük olamaz.
       telegram:
         name_invalid: Bu adres kullanılamaz.
-        name_occupied: Такой адрес уже занят.
+        name_occupied: Bu adres zaten alınmış.
   copy:
     enter: |
       Bu çıkartma paketini kopyalayabilirim, bunun için yeni bir çıkartma paketi oluşturmanız gerekir.
@@ -168,30 +168,30 @@ scenes:
   btn:
     cancel: '❌ İptal'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
+  not_allowed: Bu bölüm size göre değil! 😡
+  info: Admin Paneli
   menu:
-    messaging: '✉️ Рассылка'
-    admin: '😎 Админ-панель'
+    messaging: '✉️ Bülten'
+    admin: '😎 Admin Paneli'
   messaging:
     info: |
-      ✉️ Рассылки
+      ✉️ Bülten
     menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
+      create: Oluştur
+      scheduled: Planlı
+      archive: Arşiv
     create:
-      name: Заголовок
-      send_message: Отправь текст или медиа
-      date: Укажи дату публикации <b>дд.мм чч:мм</b>
+      name: Başlık
+      send_message: Metin veya medya gönderin
+      date: 'Yayın tarihini <b>gg.aa ss: dd</b>'
       date_format: |
-        Сообщение будет отправлено:
+        Mesaj gönderilecek:
           ${date}
       date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
+        Geçersiz tarih biçimi
+        Tarihi <b>gg.aa sa: dd</b>
+      add_url: Link ekle
+      clear_url: Bağlantıyı kaldır
       add_url_info: |
         Отправь список кнопок
         <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
