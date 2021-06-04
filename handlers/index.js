@@ -1,3 +1,4 @@
+const handleError = require('./catch')
 const handleStart = require('./start')
 const handleDonate = require('./donate')
 const handleSticker = require('./sticker')
@@ -11,6 +12,7 @@ const handleLanguage = require('./language')
 const handleEmoji = require('./emoji')
 
 module.exports = {
+  handleError,
   handleStart,
   handleDonate,
   handleSticker,

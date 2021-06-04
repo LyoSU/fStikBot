@@ -17,5 +17,5 @@ module.exports = async (ctx) => {
     [
       ctx.i18n.t('cmd.start.btn.donate')
     ]
-  ]).resize().extra())
+  ]).resize().extra({ disable_web_page_preview: true }))
 }

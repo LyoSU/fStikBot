@@ -8,6 +8,17 @@ const {
 } = require('../handlers')
 const { addSticker } = require('../utils')
 
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 const сhoosePackType = new Scene('сhoosePackType')
 
 сhoosePackType.enter(async (ctx) => {
@@ -138,7 +149,7 @@ newPackName.on('message', async (ctx) => {
       }
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
-        title,
+        title: escapeHTML(title),
         link: `${ctx.config.stickerLinkPrefix}${name}`
       }), {
         reply_to_message_id: ctx.message.message_id
@@ -150,7 +161,7 @@ newPackName.on('message', async (ctx) => {
           const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
             originalTitle: originalPack.title,
             originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title,
+            title: escapeHTML(title),
             link: `${ctx.config.stickerLinkPrefix}${name}`,
             current: 0,
             total: originalPack.stickers.length
@@ -164,7 +175,7 @@ newPackName.on('message', async (ctx) => {
               ctx.i18n.t('scenes.copy.progress', {
                 originalTitle: originalPack.title,
                 originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-                title,
+                title: escapeHTML(title),
                 link: `${ctx.config.stickerLinkPrefix}${name}`,
                 current: index,
                 total: originalPack.stickers.length
@@ -178,7 +189,7 @@ newPackName.on('message', async (ctx) => {
             ctx.i18n.t('scenes.copy.done', {
               originalTitle: originalPack.title,
               originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-              title,
+              title: escapeHTML(title),
               link: `${ctx.config.stickerLinkPrefix}${name}`
             }),
             { parse_mode: 'HTML' }

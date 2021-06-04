@@ -1,6 +1,17 @@
 const Markup = require('telegraf/markup')
 const { addSticker } = require('../utils')
 
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 module.exports = async (ctx) => {
   await ctx.replyWithChatAction('upload_document')
 
@@ -69,7 +80,7 @@ module.exports = async (ctx) => {
 
       if (result.ok) {
         messageText = ctx.i18n.t('sticker.add.ok', {
-          title: result.ok.title,
+          title: escapeHTML(result.ok.title),
           link: result.ok.link
         })
       } else if (result.error) {

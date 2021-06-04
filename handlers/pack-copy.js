@@ -1,5 +1,7 @@
 const Markup = require('telegraf/markup')
 
+
+
 module.exports = async (ctx) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 

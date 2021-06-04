@@ -52,14 +52,14 @@ module.exports = async (ctx) => {
     }
   }
 
-  const stickerSets = await ctx.db.StickerSet.find(query)
+  const stickerSets = await ctx.db.StickerSet.find(query).sort({ updatedAt: -1 }).limit(100)
   let messageText = ''
   const keyboardMarkup = []
 
   if (stickerSets.length > 0) {
     messageText = ctx.i18n.t('cmd.packs.info')
     const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.userInfo.stickerSet : ctx.session.userInfo.animatedStickerSet
-    
+
     stickerSets.forEach((pack) => {
       let { title } = pack
       if (selectedStickerSet) {

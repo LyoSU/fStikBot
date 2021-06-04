@@ -8,6 +8,7 @@ const {
   db
 } = require('./database')
 const {
+  handleError,
   handleStart,
   handleDonate,
   handleSticker,
@@ -58,11 +59,7 @@ const limitConfig = {
 
 bot.use(rateLimit(limitConfig))
 
-// error handling
-bot.catch((error, ctx) => {
-  console.error(`error for ${ctx.updateType}`, error)
-  ctx.reply('error :(')
-})
+bot.catch(handleError)
 
 bot.use(stats)
 
