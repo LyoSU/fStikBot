@@ -52,7 +52,7 @@ module.exports = async (ctx) => {
     }
   }
 
-  const stickerSets = await ctx.db.StickerSet.find(query).sort({ updatedAt: -1 }).limit(100)
+  const stickerSets = await ctx.db.StickerSet.find(query).sort({ updatedAt: -1 }).limit(50)
   let messageText = ''
   const keyboardMarkup = []
 
