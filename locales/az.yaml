@@ -210,6 +210,7 @@ admin:
       group_select: İstifadəçi qrupunu seçin
       group_type:
         all: Hamısı
+        ru: Russian
       select_all: Все
       found: |
         Нашлось человек: ${userCount}

@@ -207,6 +207,7 @@ admin:
       group_select: Выбери группу пользователей
       group_type:
         all: Все
+        ru: Russian
       select_all: Все
       found: |
         Нашлось человек: ${userCount}

@@ -201,6 +201,7 @@ admin:
       group_select: Bir kullanıcı grubu seçin
       group_type:
         all: Tümünü göster
+        ru: Russian
       select_all: Tümünü göster
       found: |
         Bulunan kişiler: ${userCount}

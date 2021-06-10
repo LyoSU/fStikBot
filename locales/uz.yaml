@@ -203,6 +203,7 @@ admin:
       group_select: Foydalanuvchilar guruhini tanlang
       group_type:
         all: Barchasi
+        ru: Russian
       select_all: Все
       found: |
         Нашлось человек: ${userCount}
