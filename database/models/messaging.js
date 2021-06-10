@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const messagingSchema = mongoose.Schema({
+const schema = mongoose.Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -38,4 +38,4 @@ const messagingSchema = mongoose.Schema({
   timestamps: true
 })
 
-module.exports = messagingSchema
+module.exports = schema

@@ -223,6 +223,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
 
   const replyMarkup = Markup.inlineKeyboard([
     [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.all'), 'admin:messaging:group:all')],
+    [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.ru'), 'admin:messaging:group:ru')],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
       Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
@@ -238,9 +239,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
 adminMessagingSelectGroup.action(/admin:messaging:group:(.*)/, async (ctx) => {
   ctx.session.scene.type = ctx.match[1]
 
-  if (['all'].includes(ctx.session.scene.type)) {
-    ctx.scene.enter('adminMessagingСonfirmation')
-  }
+  ctx.scene.enter('adminMessagingСonfirmation')
 })
 
 const adminMessagingСonfirmation = new Scene('adminMessagingСonfirmation')
@@ -251,6 +250,10 @@ adminMessagingСonfirmation.enter(async (ctx) => {
   if (ctx.session.scene.type === 'all') {
     findUsers = await ctx.db.User.count({
       blocked: { $ne: true }
+    })
+  } else if (ctx.session.scene.type === 'ru') {
+    findUsers = await ctx.db.User.count({
+      locale: 'ru'
     })
   }
 
@@ -328,9 +331,16 @@ adminMessagingPublish.enter(async (ctx) => {
 
   ctx.session.scene.message.data.reply_markup = Markup.inlineKeyboard(inlineKeyboard)
 
-  const usersCursor = ctx.db.User.count({
-    blocked: { $ne: true }
-  }).cursor()
+  let usersCursor
+  if (ctx.session.scene.type === 'all') {
+    usersCursor = await ctx.db.User.find({
+      blocked: { $ne: true }
+    }).cursor()
+  } else if (ctx.session.scene.type === 'ru') {
+    usersCursor = await ctx.db.User.find({
+      locale: 'ru'
+    }).cursor()
+  }
 
   const users = []
 
@@ -342,7 +352,7 @@ adminMessagingPublish.enter(async (ctx) => {
 
   const key = `messaging:${messagingId}`
 
-  redis.rpush(key, users)
+  redis.rpush(key + ':users', users)
 
   const messaging = new ctx.db.Messaging()
 

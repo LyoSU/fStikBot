@@ -8,6 +8,8 @@ const {
   db
 } = require('../database')
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const redis = new Redis()
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
@@ -18,11 +20,17 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
-const messaging = (messagingData) => new Promise((resolve) => {
-  console.log(`messaging ${messagingData.name} start`)
+const messaging = async (messagingData) => {
+  console.log(messagingData.id, `messaging ${messagingData.name} start`)
+
+  const key = `messaging:${messagingData.id}`
+
+  const usersCount = await redis.lrange(key + ':users', 0, -1).catch(console.error)
+
+  if (!usersCount) return {}
 
   messagingData.status = 1
-  messagingData.save()
+  await messagingData.save()
 
   let messagingCreator
 
@@ -32,37 +40,34 @@ const messaging = (messagingData) => new Promise((resolve) => {
 
   const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
-  const key = `messaging:${messagingData.id}`
   const count = config.messaging.limit.max || 10
 
-  const interval = setInterval(async () => {
-    console.log('messaging')
+  const messagingSend = async () => {
     const state = parseInt(await redis.get(key + ':state')) || 0
 
-    if (state >= messagingData.result.total) {
-      console.log(`messaging ${messagingData.name} end`)
-      messagingData.status = 2
-      messagingData.save()
-      clearInterval(interval)
-      resolve()
-    }
-    const users = await redis.lrange(key, state, state + count).catch(() => {
-      clearInterval(interval)
-    })
+    const users = await redis.lrange(key + ':users', state, state + count - 1).catch(() => {})
 
     if (users && users.length > 0) {
-      users.forEach(chatId => {
-        const method = replicators.copyMethods[messagingData.message.type]
-        const opts = Object.assign(messagingData.message.data, {
+      for (const chatId of users) {
+        let method = replicators.copyMethods[messagingData.message.type]
+        let opts = Object.assign({}, messagingData.message.data, {
           chat_id: chatId,
           disable_notification: true
         })
 
-        telegram.callApi(method, opts).then((result) => {
+        if (messagingData.message.type === 'forward') {
+          method = 'forwardMessage'
+          opts = {
+            chat_id: chatId,
+            from_chat_id: messagingData.message.data.chat_id,
+            message_id: messagingData.message.data.message_id
+          }
+        }
+        await telegram.callApi(method, opts).then((result) => {
           redis.set(key + ':messages:' + chatId, result.message_id)
         }).catch((error) => {
           redis.incr(key + ':error')
-          console.log(`messaging error ${messagingData.name}`, error.description)
+          console.log(`messaging error ${messagingData.name}`, chatId, error.description)
           if (error.description.includes('blocked by the user') || error.description.includes('user is deactivated')) {
             db.User.findOne({ telegram_id: chatId }).then((blockedUser) => {
               blockedUser.blocked = true
@@ -85,17 +90,30 @@ const messaging = (messagingData) => new Promise((resolve) => {
             })
           }
         })
-      })
+      }
 
       const errorCount = parseInt(await redis.get(key + ':error')) || 0
       messagingData.result.error = errorCount
-      messagingData.result.state = state
-      messagingData.save()
+      messagingData.result.state = state + users.length
 
-      await redis.set(key + ':state', state + count + 1)
+      await redis.set(key + ':state', state + users.length)
     }
-  }, config.messaging.limit.duration || 1000)
-})
+
+    if (state + users.length >= messagingData.result.total) {
+      console.log(`messaging ${messagingData.name} end`)
+      messagingData.status = 2
+    }
+
+    await messagingData.save()
+    return messagingData
+  }
+
+  while (true) {
+    const messagingData = await messagingSend()
+    if (messagingData.status >= 2 || messagingData.result.total === 0 || messagingData.result.state === 0) return messagingData
+    await delay(config.messaging.limit.duration || 1000)
+  }
+}
 
 const messagingEdit = (messagingData) => new Promise((resolve) => {
   console.log(`messaging edit ${messagingData.name} start`)
@@ -178,17 +196,18 @@ setTimeout(async function f () {
 }, 5000)
 
 const restartMessaging = async () => {
-  const cursorMessaging = await db.Messaging.find({
+  const messagingData = await db.Messaging.findOne({
     status: 1
-  }).cursor()
+  })
 
-  cursorMessaging.on('data', messaging)
+  if (messagingData) await messaging(messagingData)
 
-  const cursorMessagingEdit = await db.Messaging.find({
+  const messagingDataEdit = await db.Messaging.findOne({
     editStatus: 2
-  }).cursor()
+  })
 
-  cursorMessagingEdit.on('data', messagingEdit)
+  if (messagingDataEdit) await messagingEdit(messagingDataEdit)
 }
 
 restartMessaging()
+
