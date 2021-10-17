@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const stickersSchema = mongoose.Schema({
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet'
+    ref: 'StickerSet',
+    index: true
   },
   fileUniqueId: {
     type: String,

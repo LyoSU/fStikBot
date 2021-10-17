@@ -12,7 +12,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const redis = new Redis()
 
-const telegram = new Telegram(process.env.BOT_TOKEN)
+const telegram = new Telegram(process.env.MAIN_BOT_TOKEN)
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -52,6 +52,7 @@ const messaging = async (messagingData) => {
         let method = replicators.copyMethods[messagingData.message.type]
         let opts = Object.assign({}, messagingData.message.data, {
           chat_id: chatId,
+          disable_web_page_preview: true,
           disable_notification: true
         })
 
@@ -63,7 +64,7 @@ const messaging = async (messagingData) => {
             message_id: messagingData.message.data.message_id
           }
         }
-        await telegram.callApi(method, opts).then((result) => {
+        telegram.callApi(method, opts).then((result) => {
           redis.set(key + ':messages:' + chatId, result.message_id)
         }).catch((error) => {
           redis.incr(key + ':error')
@@ -210,4 +211,3 @@ const restartMessaging = async () => {
 }
 
 restartMessaging()
-

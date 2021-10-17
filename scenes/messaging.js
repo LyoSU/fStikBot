@@ -103,6 +103,7 @@ adminMessagingMessageData.enter(async (ctx) => {
     const method = replicators.copyMethods[ctx.session.scene.message.type]
     const opts = Object.assign({}, ctx.session.scene.message.data, {
       chat_id: ctx.chat.id,
+      disable_web_page_preview: true,
       reply_markup: replyMarkup
     })
 
@@ -253,7 +254,10 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     })
   } else if (ctx.session.scene.type === 'ru') {
     findUsers = await ctx.db.User.count({
-      locale: 'ru'
+      blocked: { $ne: true },
+      premium: { $ne: true },
+      locale: 'ru',
+      updatedAt: { $gte: moment().subtract(1, 'months') }
     })
   }
 
@@ -338,7 +342,10 @@ adminMessagingPublish.enter(async (ctx) => {
     }).cursor()
   } else if (ctx.session.scene.type === 'ru') {
     usersCursor = await ctx.db.User.find({
-      locale: 'ru'
+      blocked: { $ne: true },
+      premium: { $ne: true },
+      locale: 'ru',
+      updatedAt: { $gte: moment().subtract(1, 'months') }
     }).cursor()
   }
 
