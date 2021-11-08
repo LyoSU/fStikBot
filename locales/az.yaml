@@ -78,7 +78,7 @@ callback:
     btn:
       hide: 'Stick Etiket paketini gizlədin.'
       restore: 'Bərpa et'
-      use_private: Использовать стикерпак
+      use_pack: Использовать стикерпак
     error:
       restore: |
         <b>XƏTA!</b>
