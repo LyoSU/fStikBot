@@ -23,7 +23,7 @@ module.exports = async (ctx) => {
 
   if (deleteSticker) {
     let deleteStickerFromSet
-    if (ctx.session.userInfo.stickerSet.private) {
+    if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.private) {
       deleteStickerFromSet = true
     } else {
       deleteStickerFromSet = await ctx.deleteStickerFromSet(deleteSticker).catch((error) => {

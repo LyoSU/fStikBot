@@ -43,7 +43,7 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (ctx.session.userInfo.stickerSet.private) {
+  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.private) {
     stickerFile = ctx.message[stickerType]
     stickerFile.stickerType = stickerType
   }

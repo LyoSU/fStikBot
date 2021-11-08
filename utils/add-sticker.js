@@ -49,7 +49,7 @@ module.exports = async (ctx, inputFile) => {
 
   let emojis = inputFile.emoji || ''
 
-  if (ctx.session.userInfo.stickerSet.private) {
+  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.private) {
     await ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, stickerFile, null)
 
     return {
