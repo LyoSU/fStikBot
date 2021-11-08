@@ -50,6 +50,7 @@ cmd:
     empty: |
       <b>Hələ bir stiker paketiniz yoxdur.</b>
       /new yazarağ yenisini yarada bilersiniz
+    private_title: Приватный стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -67,11 +68,17 @@ callback:
       restored: Stickerpack uğurla bərpa edildi!
     set_pack: |
       Seçilmiş stiker paketi: <a href="${link}">${title}</a>
+    set_private_pack: |
+      Выбран приватный стикерпак
+
+      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
+      Также можно его использовать нажва кнопку снизу
     hidden: Stickerpack <a href="${link}">${title}</a> siyahınızdan gizlidir.
     restored: Stickerpack <a href="${link}">${title}</a> siyahınıza bərpa edildi.
     btn:
       hide: 'Stick Etiket paketini gizlədin.'
       restore: 'Bərpa et'
+      use_private: Использовать стикерпак
     error:
       restore: |
         <b>XƏTA!</b>
@@ -109,6 +116,8 @@ sticker:
       <a href="${link}">${title}</a>
 
       Translator: @TheMiri
+    ok_private: |
+      <b>Стикер успешно добавлен в приватный стикерпак</b>
     error:
       stickers_too_much: |
         <b>XƏTA!</b>
