@@ -12,7 +12,8 @@ composer.on('inline_query', async (ctx) => {
   })
 
   const stickers = await ctx.db.Sticker.find({
-    stickerSet: privateSet
+    stickerSet: privateSet,
+    deleted: false
   })
 
   stickers.forEach(sticker => {
