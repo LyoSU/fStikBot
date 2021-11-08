@@ -49,6 +49,7 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
+    private_title: Приватный стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -66,11 +67,17 @@ callback:
       restored: Sticker pack successfully restored
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
+    set_private_pack: |
+      Выбран приватный стикерпак
+
+      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
+      Также можно его использовать нажва кнопку снизу
     hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
     restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
       hide: '❌ Hide sticker pack'
       restore: '✅ Restore'
+      use_private: Использовать стикерпак
     error:
       restore: |
         <b>Error!</b>
@@ -106,11 +113,8 @@ sticker:
     ok: |
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-
-    offer_publish: |
-      😉 You can publish your sticker pack in the sticker catalog and more people can find it
-      To do this, use the command: /publish
-
+    ok_private: |
+      <b>Стикер успешно добавлен в приватный стикерпак</b>
     error:
       stickers_too_much: |
         <b>Error!</b>
@@ -126,18 +130,6 @@ sticker:
       file_type: |
         <b>Error!</b>
         This file type is not supported.
-catalog:
-  publish:
-    info: |
-      🗂 You are going to place the sticker pack NAME in the catalog
-      To select another use the command /packs
-
-    description: |
-      <b>Send a description for the sticker pack:</b>
-
-      • It will be used to search the sticker catalog
-      • Use #tags to place sticker pack in the appropriate category (no more than 8)
-
 scenes:
   new_pack:
     common: Common
@@ -190,7 +182,6 @@ scenes:
     Action canceled.
   btn:
     cancel: '❌ Cancel'
-
 admin:
   not_allowed: This section is not for you! 😡
   info: Admin panel
@@ -247,7 +238,7 @@ admin:
     list:
       info: Состояние рассылки
     status:
-      info: |
+      info: |2
         <b>Рассылка ${name}</b> (${createdAt})
         Создал ${creatorName}
 
