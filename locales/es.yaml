@@ -49,6 +49,7 @@ cmd:
     empty: |
       <b>Aún no tienes ningún pack de stickers.</b>
       Para crear uno escribe /new
+    private_title: Приватный стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -66,11 +67,17 @@ callback:
       restored: Pack de stickers restaurado con éxito
     set_pack: |
       Pack de stickers seleccionado <a href="${link}">${title}</a>
+    set_private_pack: |
+      Выбран приватный стикерпак
+
+      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
+      Также можно его использовать нажва кнопку снизу
     hidden: El pack de stickers <a href="${link}">${title}</a> está oculto en tu lista.
     restored: El pack de stickers <a href="${link}">${title}</a> ha sido restaurado a tu lista.
     btn:
       hide: 'Ocultar pack de stickers'
       restore: 'Recuperar'
+      use_private: Использовать стикерпак
     error:
       restore: |
         <b>¡Error!</b>
@@ -106,6 +113,8 @@ sticker:
     ok: |
       <b>sticker agregado al pack de stickers con éxito:</b>
       <a href="${link}">${title}</a>
+    ok_private: |
+      <b>Стикер успешно добавлен в приватный стикерпак</b>
     error:
       stickers_too_much: |
         <b>¡Error!</b>
