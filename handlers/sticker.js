@@ -44,7 +44,8 @@ module.exports = async (ctx) => {
   }
 
   if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.private) {
-    stickerFile = ctx.message[stickerType]
+    if (stickerType === 'photo') stickerFile = ctx.message[stickerType].pop()
+    else stickerFile = ctx.message[stickerType]
     stickerFile.stickerType = stickerType
   }
 
