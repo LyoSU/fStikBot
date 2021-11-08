@@ -46,6 +46,7 @@ cmd:
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
+    private_title: Приватный стикерпак
   donate: |
     <b>☕️ Botun geliştirilmesine yardım et</b>
 
@@ -63,11 +64,17 @@ callback:
       restored: Çıkartma başarılı bir şekilde sıfırlandı
     set_pack: |
       Seçilen çıkartma paketi <a href="${link}">${title}</a>
+    set_private_pack: |
+      Выбран приватный стикерпак
+
+      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
+      Также можно его использовать нажва кнопку снизу
     hidden: <a href="${link}">${title}</a> çıkartma paketini listende gizlendi.
     restored: <a href="${link}">${title}</a> çıkartma paketi listende sıfırlandı.
     btn:
       hide: '❌ Çıkartma Paketini Gizle'
       restore: '✅ Sıfırla'
+      use_private: Использовать стикерпак
     error:
       restore: |
         <b>Hata!</b>
@@ -103,6 +110,8 @@ sticker:
     ok: |
       <b>Çıkartma başarılı bir şekilde çıkartma paketine eklendi:</b>
       <a href="${link}">${title}</a>
+    ok_private: |
+      <b>Стикер успешно добавлен в приватный стикерпак</b>
     error:
       stickers_too_much: |
         <b>Hata!</b>
