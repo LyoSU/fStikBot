@@ -26,7 +26,7 @@ module.exports = async (ctx) => {
     } else {
       answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.restored')
     }
-    ctx.answerCbQuery(answerCbQuer)
+    await ctx.answerCbQuery(answerCbQuer)
 
     ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
       Markup.callbackButton(ctx.i18n.t(stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`)

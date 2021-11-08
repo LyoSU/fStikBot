@@ -22,11 +22,16 @@ module.exports = async (ctx) => {
   }
 
   if (deleteSticker) {
-    const deleteStickerFromSet = await ctx.deleteStickerFromSet(deleteSticker).catch((error) => {
-      ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
-        error: error.description
-      }), true)
-    })
+    let deleteStickerFromSet
+    if (ctx.session.userInfo.stickerSet.private) {
+      deleteStickerFromSet = true
+    } else {
+      deleteStickerFromSet = await ctx.deleteStickerFromSet(deleteSticker).catch((error) => {
+        ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
+          error: error.description
+        }), true)
+      })
+    }
 
     if (deleteStickerFromSet) {
       ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.delete'))

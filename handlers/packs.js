@@ -17,7 +17,8 @@ module.exports = async (ctx) => {
   const query = {
     owner: ctx.session.userInfo.id,
     create: true,
-    hide: false
+    private: { $ne: true },
+    hide: { $ne: true }
   }
   if (ctx.updateType === 'message' && ['/packs', ctx.i18n.t('cmd.start.btn.packs')].includes(ctx.message.text)) query.animated = { $ne: true }
   else if (ctx.updateType === 'message' && ['/animpacks', ctx.i18n.t('cmd.start.btn.animpacks')].includes(ctx.message.text)) query.animated = { $ne: false }
@@ -36,23 +37,57 @@ module.exports = async (ctx) => {
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
-        title: escapeHTML(stickerSet.title),
-        link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
-      }), {
-        reply_markup: Markup.inlineKeyboard([
-          [
-            Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-          ]
-        ]),
-        parse_mode: 'HTML'
-      })
+      if (stickerSet.private) {
+        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_private_pack', {
+          botUsername: ctx.options.username
+        }), {
+          reply_markup: Markup.inlineKeyboard([
+            Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_private'), '')
+          ]),
+          parse_mode: 'HTML'
+        })
+      } else {
+        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
+          title: escapeHTML(stickerSet.title),
+          link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+        }), {
+          reply_markup: Markup.inlineKeyboard([
+            [
+              Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
+            ]
+          ]),
+          parse_mode: 'HTML'
+        })
+      }
     } else {
       ctx.answerCbQuery('error', true)
     }
   }
 
-  const stickerSets = await ctx.db.StickerSet.find(query).sort({ updatedAt: -1 }).limit(50)
+  let privateSet = await ctx.db.StickerSet.findOne({
+    owner: ctx.session.userInfo.id,
+    private: true
+  })
+
+  if (!privateSet) {
+    privateSet = await ctx.db.StickerSet.newSet({
+      owner: ctx.session.userInfo.id,
+      name: 'private_' + ctx.from.id,
+      title: 'private',
+      emojiSuffix: '🌟',
+      create: true,
+      private: true
+    })
+  }
+
+  privateSet.title = ctx.i18n.t('cmd.packs.private_title')
+
+  const stickerSets = await ctx.db.StickerSet.find(query).sort({
+    updatedAt: -1
+  }).limit(50)
+
+  stickerSets.unshift(privateSet)
+
   let messageText = ''
   const keyboardMarkup = []
 

@@ -1,7 +1,5 @@
 const Markup = require('telegraf/markup')
 
-
-
 module.exports = async (ctx) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -18,7 +16,7 @@ module.exports = async (ctx) => {
           ]
         ]).resize()
       })
-      ctx.scene.enter('newPack')
+      return ctx.scene.enter('newPack')
     } else {
       await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
         reply_to_message_id: ctx.message.message_id

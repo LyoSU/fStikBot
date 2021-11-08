@@ -1,27 +1,16 @@
-const handleError = require('./catch')
-const handleStart = require('./start')
-const handleDonate = require('./donate')
-const handleSticker = require('./sticker')
-const handleDeleteSticker = require('./sticker-delete')
-const handleRestoreSticker = require('./sticker-restore')
-const handlePacks = require('./packs')
-const handleHidePack = require('./pack-hide')
-const handleRestorePack = require('./pack-restore')
-const handleCopyPack = require('./pack-copy')
-const handleLanguage = require('./language')
-const handleEmoji = require('./emoji')
-
 module.exports = {
-  handleError,
-  handleStart,
-  handleDonate,
-  handleSticker,
-  handleDeleteSticker,
-  handleRestoreSticker,
-  handlePacks,
-  handleHidePack,
-  handleRestorePack,
-  handleCopyPack,
-  handleLanguage,
-  handleEmoji
+  handleError: require('./catch'),
+  handleStart: require('./start'),
+  handleDonate: require('./donate'),
+  handleSticker: require('./sticker'),
+  handleDeleteSticker: require('./sticker-delete'),
+  handleRestoreSticker: require('./sticker-restore'),
+  handlePacks: require('./packs'),
+  handleHidePack: require('./pack-hide'),
+  handleRestorePack: require('./pack-restore'),
+  handleCopyPack: require('./pack-copy'),
+  handleLanguage: require('./language'),
+  handleEmoji: require('./emoji'),
+  handlePublish: require('./publish'),
+  handleInlineQuery: require('./inline-query')
 }

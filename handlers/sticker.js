@@ -19,8 +19,9 @@ module.exports = async (ctx) => {
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   let stickerFile, stickerSet
+  const stickerType = ctx.updateSubTypes[0]
 
-  switch (ctx.updateSubTypes[0]) {
+  switch (stickerType) {
     case 'sticker':
       stickerFile = ctx.message.sticker
       break
@@ -42,13 +43,18 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (stickerFile.is_animated) {
-    stickerSet = ctx.session.userInfo.animatedStickerSet
-  } else {
-    stickerSet = ctx.session.userInfo.stickerSet
+  if (ctx.session.userInfo.stickerSet.private) {
+    stickerFile = ctx.message[stickerType]
+    stickerFile.stickerType = stickerType
   }
 
   if (stickerFile) {
+    if (stickerFile.is_animated) {
+      stickerSet = ctx.session.userInfo.animatedStickerSet
+    } else {
+      stickerSet = ctx.session.userInfo.stickerSet
+    }
+
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
       fileUniqueId: stickerFile.file_unique_id,
@@ -76,28 +82,40 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      const result = await addSticker(ctx, stickerFile)
+      const addStickerResult = await addSticker(ctx, stickerFile)
 
-      if (result.ok) {
-        messageText = ctx.i18n.t('sticker.add.ok', {
-          title: escapeHTML(result.ok.title),
-          link: result.ok.link
-        })
-      } else if (result.error) {
-        if (result.error.telegram) {
-          if (result.error.telegram.description.includes('TOO_MUCH')) {
+      if (addStickerResult.ok) {
+        if (addStickerResult.ok.private) {
+          messageText = ctx.i18n.t('sticker.add.ok_private', {
+            botUsername: ctx.options.username
+          })
+        } else {
+          messageText = ctx.i18n.t('sticker.add.ok', {
+            title: escapeHTML(addStickerResult.ok.title),
+            link: addStickerResult.ok.link
+          })
+        }
+
+        // const stickersCount = await ctx.db.Sticker.count({ stickerSet, deleted: false })
+
+        // if ([7, 10, 15, 20, 30, 50, 70].includes(stickersCount)) {
+        //   await ctx.replyWithHTML(ctx.i18n.t('sticker.add.offer_publish'))
+        // }
+      } else if (addStickerResult.error) {
+        if (addStickerResult.error.telegram) {
+          if (addStickerResult.error.telegram.description.includes('TOO_MUCH')) {
             messageText = ctx.i18n.t('sticker.add.error.stickers_too_much')
-          } else if (result.error.telegram.description.includes('STICKERSET_INVALID')) {
+          } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
             messageText = ctx.i18n.t('sticker.add.error.stickerset_invalid')
           } else {
             messageText = ctx.i18n.t('error.telegram', {
-              error: result.error.telegram.description
+              error: addStickerResult.error.telegram.description
             })
-          }6
-        } else if (result.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
+          }
+        } else if (addStickerResult.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
         else {
           messageText = ctx.i18n.t('error.telegram', {
-            error: result.error
+            error: addStickerResult.error
           })
         }
       }

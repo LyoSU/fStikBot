@@ -19,7 +19,9 @@ const {
   handleRestorePack,
   handleCopyPack,
   handleLanguage,
-  handleEmoji
+  handleEmoji,
+  handlePublish,
+  handleInlineQuery
 } = require('./handlers')
 const scenes = require('./scenes')
 const {
@@ -75,15 +77,30 @@ bot.context.config = require('./config.json')
 bot.context.db = db
 
 // use session
-bot.use(session({ ttl: 60 * 5 }))
+bot.use(
+  session({
+    getSessionKey: (ctx) => {
+      if (ctx.from && ctx.chat) {
+        return `${ctx.from.id}:${ctx.chat.id}`
+      } else if (ctx.from) {
+        return `user:${ctx.from.id}`
+      }
+      return null
+    }
+  })
+)
 
 // response time logger
 bot.use(async (ctx, next) => {
   // const ms = new Date()
+  if (ctx.inlineQuery) {
+    await updateUser(ctx)
+    ctx.state.answerIQ = []
+  }
   if (ctx.callbackQuery) ctx.state.answerCbQuery = []
   return next(ctx).then(() => {
+    if (ctx.inlineQuery) return ctx.answerInlineQuery(...ctx.state.answerIQ)
     if (ctx.callbackQuery) ctx.answerCbQuery(...ctx.state.answerCbQuery)
-    // console.log('Response time %sms', new Date() - ms)
   })
 })
 
@@ -110,8 +127,11 @@ bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('lang', handleLanguage)
 
+bot.use(handlePublish)
+bot.use(handleInlineQuery)
+
 // sticker detect
-bot.on(['sticker', 'document', 'photo'], handleSticker)
+bot.on(['sticker', 'document', 'photo', 'video'], handleSticker)
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)

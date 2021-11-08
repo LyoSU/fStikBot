@@ -20,6 +20,10 @@ const stickerSetsSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  private: {
+    type: Boolean,
+    default: false
+  },
   emojiSuffix: String,
   create: {
     type: Boolean,
