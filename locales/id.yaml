@@ -77,7 +77,7 @@ callback:
     btn:
       hide: '❌ Sembunyikan paket stiker'
       restore: '✅ Mengembalikan'
-      use_private: Использовать стикерпак
+      use_pack: Использовать стикерпак
     error:
       restore: |
         <b>Error!</b>

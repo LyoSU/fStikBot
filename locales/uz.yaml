@@ -73,7 +73,7 @@ callback:
     btn:
       hide: '❌ Stikerlar to''plamini yashirish'
       restore: '✅ Qayta tiklash'
-      use_private: Использовать стикерпак
+      use_pack: Использовать стикерпак
     error:
       restore: |
         <b>Tizimda xatolik!</b>

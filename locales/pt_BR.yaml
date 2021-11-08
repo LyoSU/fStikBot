@@ -77,7 +77,7 @@ callback:
     btn:
       hide: '❌ Скрыть стикерпак'
       restore: '✅ Восстановить'
-      use_private: Использовать стикерпак
+      use_pack: Использовать стикерпак
     error:
       restore: |
         <b>Ошибка!</b>
