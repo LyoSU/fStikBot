@@ -74,7 +74,7 @@ callback:
     btn:
       hide: '❌ Çıkartma Paketini Gizle'
       restore: '✅ Sıfırla'
-      use_private: Использовать стикерпак
+      use_pack: Использовать стикерпак
     error:
       restore: |
         <b>Hata!</b>
