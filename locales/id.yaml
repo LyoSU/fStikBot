@@ -71,7 +71,7 @@ callback:
       Выбран приватный стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажва кнопку снизу
+      Также можно его использовать нажав кнопку снизу
     hidden: Paket stiker <a href="${link}">${title}</a> tersembunyi dari daftar anda.
     restored: Paket stiker <a href="${link}">${title}</a> dikembalikan ke daftar anda.
     btn:
@@ -128,8 +128,10 @@ sticker:
         Bot tidak dapat mengakses paket stiker yang anda pilih saat ini.
         Silakan, buat (/new) atau pilih (/packs) paket stiker lain.
       file_type: |
-        <b>Error!</b>
-        Jenis file ini tidak didukung.
+        <b>Ошибка!</b>
+        Данный тип файла не поддерживается.
+
+        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Umum

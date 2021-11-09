@@ -67,7 +67,7 @@ callback:
       Выбран приватный стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажва кнопку снизу
+      Также можно его использовать нажав кнопку снизу
     hidden: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizdan yashirildi.
     restored: Stikerlar to'plami <a href="${link}">${title}</a> sizning ro'yxatingizga qayta qo'shildi.
     btn:
@@ -124,8 +124,10 @@ sticker:
         Bot hozirda tanlangan stikerlar to'plamiga kira olmaydi.
         Iltimos, yangi yarating (/new) yoki boshqa stikerlar to'plamini tanlang (/packs).
       file_type: |
-        <b>Tizimda xatolik!</b>
-        Ushbu fayl turi qo'llab-quvatlanmaydi.
+        <b>Ошибка!</b>
+        Данный тип файла не поддерживается.
+
+        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Oddiy
