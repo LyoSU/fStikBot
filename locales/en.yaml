@@ -49,14 +49,14 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
-    private_title: Приватный стикерпак
+    private_title: Private sticker pack
   donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+    <b>☕️ Supporting a bot development</b>
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
   emoji:
     info: Please, specify an emoji. For example - <code>/emoji 💜</code> changes current pack suffix to 💜 for all new stickers.
     done: Emoji suffix successfully changed.
@@ -68,16 +68,16 @@ callback:
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
     set_private_pack: |
-      Выбран приватный стикерпак
+      Selected private sticker pack
 
-      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажав кнопку снизу
+      To use it, write in any chat <code>@${botUsername} </code>and space
+      You can also use it by clicking the button below
     hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
     restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
       hide: '❌ Hide sticker pack'
       restore: '✅ Restore'
-      use_pack: Использовать стикерпак
+      use_pack: Use sticker pack
     error:
       restore: |
         <b>Error!</b>
@@ -114,7 +114,7 @@ sticker:
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
     ok_private: |
-      <b>Стикер успешно добавлен в приватный стикерпак</b>
+      <b>Sticker was successfully added to the private sticker pack</b>
     error:
       stickers_too_much: |
         <b>Error!</b>
@@ -128,10 +128,10 @@ sticker:
         Bot cannot access your current chosen sticker pack.
         Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Error!</b>
+        This file type is not supported.
 
-        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
+        <i>You can add this file to your private sticker pack, for this select it with the command /packs</i>
 scenes:
   new_pack:
     common: Common
@@ -188,17 +188,17 @@ admin:
   not_allowed: This section is not for you! 😡
   info: Admin panel
   menu:
-    messaging: '✉️ Рассылка'
-    admin: '😎 Админ-панель'
+    messaging: '✉️ Newsletter'
+    admin: '😎 Admin panel'
   messaging:
     info: |
-      ✉️ Рассылки
+      ✉️ Newsletter
     menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
+      create: Create
+      scheduled: Planned
+      archive: Archived
     create:
-      name: Заголовок
+      name: Title
       send_message: Отправь текст или медиа
       date: Укажи дату публикации <b>дд.мм чч:мм</b>
       date_format: |
