@@ -69,7 +69,7 @@ const messaging = async (messagingData) => {
         }).catch((error) => {
           redis.incr(key + ':error')
           console.log(`messaging error ${messagingData.name}`, chatId, error.description)
-          if (error.description.includes('blocked by the user') || error.description.includes('user is deactivated')) {
+          if (['blocked by the user', 'user is deactivated', 'chat not found'].some(e => new RegExp(e).test(error.description))) {
             db.User.findOne({ telegram_id: chatId }).then((blockedUser) => {
               blockedUser.blocked = true
               blockedUser.save()

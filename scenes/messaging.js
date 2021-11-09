@@ -339,27 +339,26 @@ adminMessagingPublish.enter(async (ctx) => {
   if (ctx.session.scene.type === 'all') {
     usersCursor = await ctx.db.User.find({
       blocked: { $ne: true }
-    }).cursor()
+    }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'ru') {
     usersCursor = await ctx.db.User.find({
       blocked: { $ne: true },
       premium: { $ne: true },
       locale: 'ru',
       updatedAt: { $gte: moment().subtract(1, 'months') }
-    }).cursor()
+    }).select({ _id: 1, telegram_id: 1 }).cursor()
   }
 
-  const users = []
-
-  for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
-    users.push(user.telegram_id)
-  }
-
+  // const users = []
   const messagingId = mongoose.Types.ObjectId()
-
   const key = `messaging:${messagingId}`
 
-  redis.rpush(key + ':users', users)
+  let usersCount = 0
+
+  for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
+    await redis.rpush(key + ':users', [user.telegram_id])
+    usersCount++
+  }
 
   const messaging = new ctx.db.Messaging()
 
@@ -369,7 +368,7 @@ adminMessagingPublish.enter(async (ctx) => {
     name: ctx.session.scene.name,
     message: ctx.session.scene.message,
     result: {
-      total: users.length
+      total: usersCount
     },
     date: ctx.session.scene.date
   })
