@@ -1,9 +1,10 @@
 const Composer = require('telegraf/composer')
-const Markup = require('telegraf/markup')
 
 const composer = new Composer()
 
 composer.on('inline_query', async (ctx) => {
+  const offset = parseInt(ctx.inlineQuery.offset) || 0
+  const limit = 50
   const stickersResult = []
 
   const privateSet = await ctx.db.StickerSet.findOne({
@@ -14,7 +15,7 @@ composer.on('inline_query', async (ctx) => {
   const stickers = await ctx.db.Sticker.find({
     stickerSet: privateSet,
     deleted: false
-  })
+  }).limit(limit).skip(offset)
 
   stickers.forEach(sticker => {
     if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
@@ -33,7 +34,8 @@ composer.on('inline_query', async (ctx) => {
 
   ctx.state.answerIQ = [stickersResult, {
     is_personal: true,
-    cache_time: 5
+    cache_time: 5,
+    next_offset: offset + limit
   }]
 })
 

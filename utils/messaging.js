@@ -210,4 +210,4 @@ const restartMessaging = async () => {
   if (messagingDataEdit) await messagingEdit(messagingDataEdit)
 }
 
-restartMessaging()
+// restartMessaging()
