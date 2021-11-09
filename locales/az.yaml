@@ -72,7 +72,7 @@ callback:
       Выбран приватный стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажва кнопку снизу
+      Также можно его использовать нажав кнопку снизу
     hidden: Stickerpack <a href="${link}">${title}</a> siyahınızdan gizlidir.
     restored: Stickerpack <a href="${link}">${title}</a> siyahınıza bərpa edildi.
     btn:
@@ -131,8 +131,10 @@ sticker:
         Bot hazırda seçilmiş stiker paketinə daxil ola bilmir.
         Zəhmət olmasa yeni (/new) yaradın və ya başqa bir stickerpack seçin (/packs).
       file_type: |
-        <b>Xəta!</b>
-        Bu fayl növü dəstəklənmir.
+        <b>Ошибка!</b>
+        Данный тип файла не поддерживается.
+
+        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Adi

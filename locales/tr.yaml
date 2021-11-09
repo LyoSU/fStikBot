@@ -68,7 +68,7 @@ callback:
       Выбран приватный стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажва кнопку снизу
+      Также можно его использовать нажав кнопку снизу
     hidden: <a href="${link}">${title}</a> çıkartma paketini listende gizlendi.
     restored: <a href="${link}">${title}</a> çıkartma paketi listende sıfırlandı.
     btn:
@@ -125,8 +125,10 @@ sticker:
          Bot, şu anda seçili olan çıkartma paketine erişemiyor.
          Lütfen yeni bir (/new) oluşturun veya başka bir çıkartma paketi seçin (/packs).
       file_type: |
-        <b>Hata!</b>
-        Bu dosya tipi desteklenmiyor
+        <b>Ошибка!</b>
+        Данный тип файла не поддерживается.
+
+        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Normal
