@@ -18,6 +18,7 @@ composer.on('inline_query', async (ctx) => {
   }).limit(limit).skip(offset)
 
   stickers.forEach(sticker => {
+    if (!sticker.info.stickerType) sticker.info.stickerType = 'sticker'
     if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
     let fieldFileIdName = sticker.info.stickerType + '_file_id'
     if (sticker.info.stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
