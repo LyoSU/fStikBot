@@ -4,7 +4,7 @@ module.exports = async (ctx) => {
   let packBotUsername
   let deleteSticker
 
-  if (ctx.callbackQuery.message.reply_to_message.sticker) {
+  if (ctx.callbackQuery.message.reply_to_message && ctx.callbackQuery.message.reply_to_message.sticker) {
     const setName = ctx.callbackQuery.message.reply_to_message.sticker.set_name
 
     packBotUsername = setName.split('_').pop(-1)

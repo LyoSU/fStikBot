@@ -40,16 +40,17 @@ module.exports = async (ctx) => {
       titleSuffix: ` :: @${ctx.options.username}`
     }), {
       reply_markup: Markup.inlineKeyboard([
-        [
-
-          Markup.callbackButton('☕️ 100 RUB', 'donate:100'),
-          Markup.callbackButton('🍔 150 RUB', 'donate:150'),
-          Markup.callbackButton('🍰 300 RUB', 'donate:300')
-        ],
-        [
-          Markup.callbackButton('🍱 500 RUB', 'donate:500'),
-          Markup.callbackButton('❤️ 1000 RUB', 'donate:1000')
-        ]
+        [Markup.urlButton('Telegram Donate', 'https://t.me/LyBlog/553')],
+        [Markup.urlButton('Other', 'https://donate.lyo.su')]
+        // [
+        //   Markup.callbackButton('☕️ 100 RUB', 'donate:100'),
+        //   Markup.callbackButton('🍔 150 RUB', 'donate:150'),
+        //   Markup.callbackButton('🍰 300 RUB', 'donate:300')
+        // ],
+        // [
+        //   Markup.callbackButton('🍱 500 RUB', 'donate:500'),
+        //   Markup.callbackButton('❤️ 1000 RUB', 'donate:1000')
+        // ]
       ])
     })
   }
