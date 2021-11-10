@@ -17,8 +17,14 @@ composer.on('inline_query', async (ctx) => {
     deleted: false
   }).limit(limit).skip(offset)
 
-  stickers.forEach(sticker => {
-    if (!sticker.info.stickerType) sticker.info.stickerType = 'sticker'
+  for (const sticker of stickers) {
+    if (!sticker.info.stickerType) {
+      const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
+      if (/document/.test(fileInfo.file_path)) sticker.info.stickerType = 'document'
+      else if (/photo/.test(fileInfo.file_path)) sticker.info.stickerType = 'photo'
+      else sticker.info.stickerType = 'sticker'
+      await sticker.save()
+    }
     if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
     let fieldFileIdName = sticker.info.stickerType + '_file_id'
     if (sticker.info.stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
@@ -31,7 +37,7 @@ composer.on('inline_query', async (ctx) => {
     data[fieldFileIdName] = sticker.info.file_id
 
     stickersResult.push(data)
-  })
+  }
 
   ctx.state.answerIQ = [stickersResult, {
     is_personal: true,
