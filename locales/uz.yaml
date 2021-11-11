@@ -22,9 +22,12 @@ cmd:
       👨🏻‍💻 Dasturchining kanali: @LyBlog
     btn:
       packs: '🌟 Stikerlar to''plami'
-      animpacks: '✨ Animatsion Stikerlar to''plami'
+      inline: '💫 Инлайн'
+      animpacks: '✨ Анимированные'
       new: '🆕 Stiker yaratish'
       donate: '☕️ Dasturchini qo''llab-quvatlash'
+  inline:
+    switch_pm: Выбрать стикер пак
   restore: |
     <b>🗃 Stikerlar to'plamini qayta tiklash</b>
 
@@ -45,7 +48,7 @@ cmd:
       <b>🌟 Stikerlar to'plami</b>
     empty: |
       <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
-    private_title: Приватный стикерпак
+    inline_title: Приватный стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -63,8 +66,8 @@ callback:
       restored: Stikerlar to'plami muvaffaqiyatli ravishda qayta tiklandi
     set_pack: |
       Tanlangan Stiker to'plami <a href="${link}">${title}</a>
-    set_private_pack: |
-      Выбран приватный стикерпак
+    set_inline_pack: |
+      Выбран <u>${title}</u> стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
       Также можно его использовать нажав кнопку снизу
@@ -109,8 +112,9 @@ sticker:
     ok: |
       <b>Ushbu stiker, stikerlar to'plamiga muvaffaqiyatli ravishda qo'shildi:</b>
       <a href="${link}">${title}</a>
-    ok_private: |
-      <b>Стикер успешно добавлен в приватный стикерпак</b>
+    ok_inline: |
+      <b>Стикер успешно добавлен в стикерпак:</b>
+      <u>${title}</u>
     error:
       stickers_too_much: |
         <b>Tizimda xatolik!</b>
@@ -131,6 +135,7 @@ sticker:
 scenes:
   new_pack:
     common: Oddiy
+    inline: Inline
     animated: Animatsiya qilingan
     pack_type: |
       <b>Stikerlar to'plamining turini tanlang:</b>
