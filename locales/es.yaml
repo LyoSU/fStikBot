@@ -38,7 +38,7 @@ cmd:
     <b>Para hacer esto, necesita realizar varias acciones:</b>
     1. Abra el bot @Stickers
     2. Envíele el comando <code>/ packstats</code>
-    3. Busque y seleccione el pack de stickers requerido
+    3. Busque y seleccione el pack de stickers requerido 
     4. Reenvíe el mensaje recibido a el bot
     5. Tras la restauración exitosa, el bot lo informará
   copy: |
@@ -232,8 +232,8 @@ admin:
       back: '« Atrás'
       continue: Continuar »
       publish: |
-        Publicación ${name} creada
-        Presione el botón para ver
+        Publicación ${name} creada 
+        Presione el botón para ver 
         Presione el botón para ver
       status: Estado de envío
     edit:
