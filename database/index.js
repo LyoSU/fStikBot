@@ -9,6 +9,15 @@ Object.keys(collections).forEach((collectionName) => {
   db[collectionName] = connection.model(collectionName, collections[collectionName])
 })
 
+const fileInfoNormalize = (fileInfo) => {
+  if (!fileInfo) return {}
+  return {
+    stickerType: fileInfo.stickerType || null,
+    file_id: fileInfo.file_id,
+    file_unique_id: fileInfo.file_unique_id
+  }
+}
+
 db.User.getData = async (tgUser) => {
   let telegramId
 
@@ -17,6 +26,7 @@ db.User.getData = async (tgUser) => {
 
   let user = await db.User.findOne({ telegram_id: telegramId })
     .populate('stickerSet')
+    .populate('inlineStickerSet')
     .populate('animatedStickerSet')
 
   if (!user) {
@@ -56,7 +66,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.name = stickerSetInfo.name
   stickerSet.title = stickerSetInfo.title
   stickerSet.animated = stickerSetInfo.animated || false
-  stickerSet.private = stickerSetInfo.private || false
+  stickerSet.inline = stickerSetInfo.inline || false
   stickerSet.emojiSuffix = stickerSetInfo.emojiSuffix
   stickerSet.create = stickerSetInfo.create || false
   await stickerSet.save()
@@ -81,9 +91,9 @@ db.Sticker.addSticker = async (stickerSet, emojis, info, file) => {
   sticker.fileId = info.file_id
   sticker.fileUniqueId = info.file_unique_id
   sticker.emojis = emojis
-  sticker.info = info
-  sticker.file = file
-  sticker.save()
+  sticker.info = fileInfoNormalize(info)
+  sticker.file = fileInfoNormalize(file)
+  await sticker.save()
 
   return sticker
 }

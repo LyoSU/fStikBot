@@ -50,7 +50,7 @@ cmd:
     empty: |
       <b>Hələ bir stiker paketiniz yoxdur.</b>
       /new yazarağ yenisini yarada bilersiniz
-    private_title: Приватный стикерпак
+    inline_title: Приватный стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -68,7 +68,7 @@ callback:
       restored: Stickerpack uğurla bərpa edildi!
     set_pack: |
       Seçilmiş stiker paketi: <a href="${link}">${title}</a>
-    set_private_pack: |
+    set_inline_pack: |
       Выбран приватный стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
@@ -116,7 +116,7 @@ sticker:
       <a href="${link}">${title}</a>
 
       Translator: @TheMiri
-    ok_private: |
+    ok_inline: |
       <b>Стикер успешно добавлен в приватный стикерпак</b>
     error:
       stickers_too_much: |
@@ -138,7 +138,7 @@ sticker:
 scenes:
   new_pack:
     common: Adi
-    animated: Anime 
+    animated: Anime
     pack_type: |
       <b>Etiket paketinin növünü seçin:</b>
     pack_title: |

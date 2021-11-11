@@ -50,7 +50,7 @@ cmd:
     empty: |
       <b>У тебе ще немає жодного стікерпаку.</b>
       Щоб створити, напиши /new
-    private_title: Приватний стікерпак
+    inline_title: Приватний стікерпак
   donate: |
     <b>☕ Підтримати розробника бота</b>
 
@@ -68,7 +68,7 @@ callback:
       restored: Стікерпак успішно відновлено
     set_pack: |
       Ви обрали <a href="${link}">${title}</a>
-    set_private_pack: |
+    set_inline_pack: |
       Вибраний приватний стікерпак
 
       Для його використання напишіть у будь-якому чаті <code>@${botUsername} </code>та пробіл
@@ -114,7 +114,7 @@ sticker:
     ok: |
       <b>Стікер успішно додано до стікерпаку:</b>
       <a href="${link}">${title}</a>
-    ok_private: |
+    ok_inline: |
       <b>Стикер успішно доданий у приватний стікерпак</b>
     error:
       stickers_too_much: |

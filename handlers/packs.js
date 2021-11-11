@@ -17,28 +17,35 @@ module.exports = async (ctx) => {
   const query = {
     owner: ctx.session.userInfo.id,
     create: true,
-    private: { $ne: true },
+    inline: { $ne: true },
+    animated: { $ne: true },
     hide: { $ne: true }
   }
-  if (ctx.updateType === 'message' && ['/packs', ctx.i18n.t('cmd.start.btn.packs')].includes(ctx.message.text)) query.animated = { $ne: true }
-  else if (ctx.updateType === 'message' && ['/animpacks', ctx.i18n.t('cmd.start.btn.animpacks')].includes(ctx.message.text)) query.animated = { $ne: false }
 
   if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
     const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
-    if (stickerSet.animated) query.animated = { $ne: false }
-    else query.animated = { $ne: true }
+    if (stickerSet.animated) {
+      ctx.state.type = 'animated'
+      query.animated = true
+    }
 
     if (stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
-      ctx.answerCbQuery()
+      await ctx.answerCbQuery()
+
+      if (stickerSet.inline) {
+        ctx.state.type = 'inline'
+        ctx.session.userInfo.inlineStickerSet = stickerSet
+      }
 
       if (stickerSet.animated) ctx.session.userInfo.animatedStickerSet = stickerSet
-      if (stickerSet.animated === false) ctx.session.userInfo.stickerSet = stickerSet
+      else ctx.session.userInfo.stickerSet = stickerSet
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
-      if (stickerSet.private) {
-        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_private_pack', {
+      if (stickerSet.inline) {
+        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
+          title: escapeHTML(stickerSet.title),
           botUsername: ctx.options.username
         }), {
           reply_markup: Markup.inlineKeyboard([
@@ -64,40 +71,47 @@ module.exports = async (ctx) => {
         })
       }
     } else {
-      ctx.answerCbQuery('error', true)
+      await ctx.answerCbQuery('error', true)
     }
   }
 
-  let privateSet = await ctx.db.StickerSet.findOne({
-    owner: ctx.session.userInfo.id,
-    private: true
-  })
-
-  if (!privateSet) {
-    privateSet = await ctx.db.StickerSet.newSet({
-      owner: ctx.session.userInfo.id,
-      name: 'private_' + ctx.from.id,
-      title: 'private',
-      emojiSuffix: '🌟',
-      create: true,
-      private: true
-    })
-  }
-
-  privateSet.title = ctx.i18n.t('cmd.packs.private_title')
+  if (ctx.state.type === 'animated') query.animated = true
+  else if (ctx.state.type === 'inline') query.inline = true
 
   const stickerSets = await ctx.db.StickerSet.find(query).sort({
     updatedAt: -1
   }).limit(50)
 
-  stickerSets.unshift(privateSet)
+  if (ctx.state.type === 'inline' && stickerSets.length <= 0) {
+    let inlineSet = await ctx.db.StickerSet.findOne({
+      owner: ctx.session.userInfo.id,
+      inline: true
+    })
+
+    if (!inlineSet) {
+      inlineSet = await ctx.db.StickerSet.newSet({
+        owner: ctx.session.userInfo.id,
+        name: 'inline_' + ctx.from.id,
+        title: ctx.i18n.t('cmd.packs.inline_title'),
+        emojiSuffix: '💫',
+        create: true,
+        inline: true
+      })
+    }
+
+    stickerSets.unshift(inlineSet)
+  }
 
   let messageText = ''
   const keyboardMarkup = []
 
   if (stickerSets.length > 0) {
     messageText = ctx.i18n.t('cmd.packs.info')
-    const selectedStickerSet = (query.animated.$ne === true) ? ctx.session.userInfo.stickerSet : ctx.session.userInfo.animatedStickerSet
+
+    let selectedStickerSet
+    if (ctx.state.type === 'inline') selectedStickerSet = ctx.session.userInfo.inlineStickerSet
+    else if (ctx.state.type === 'animated') selectedStickerSet = ctx.session.userInfo.animatedStickerSet
+    else selectedStickerSet = ctx.session.userInfo.stickerSet
 
     stickerSets.forEach((pack) => {
       let { title } = pack
@@ -109,6 +123,8 @@ module.exports = async (ctx) => {
   } else {
     messageText = ctx.i18n.t('cmd.packs.empty')
   }
+
+  keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), 'new_pack')])
 
   if (ctx.updateType === 'message') {
     await ctx.replyWithHTML(messageText, {

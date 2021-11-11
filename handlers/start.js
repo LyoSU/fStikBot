@@ -6,13 +6,10 @@ module.exports = async (ctx) => {
     name: userName(ctx.from)
   }), Markup.keyboard([
     [
-      ctx.i18n.t('cmd.start.btn.packs')
+      ctx.i18n.t('cmd.start.btn.packs'), ctx.i18n.t('cmd.start.btn.inline')
     ],
     [
       ctx.i18n.t('cmd.start.btn.animpacks')
-    ],
-    [
-      ctx.i18n.t('cmd.start.btn.new')
     ],
     [
       ctx.i18n.t('cmd.start.btn.donate')

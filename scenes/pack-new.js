@@ -24,10 +24,10 @@ const сhoosePackType = new Scene('сhoosePackType')
 сhoosePackType.enter(async (ctx) => {
   ctx.session.scene.newPack = {}
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
-    reply_to_message_id: ctx.message.message_id,
     reply_markup: Markup.keyboard([
       [
         ctx.i18n.t('scenes.new_pack.common'),
+        ctx.i18n.t('scenes.new_pack.inline'),
         ctx.i18n.t('scenes.new_pack.animated')
       ],
       [
@@ -39,22 +39,24 @@ const сhoosePackType = new Scene('сhoosePackType')
 сhoosePackType.on('message', async (ctx) => {
   if (ctx.message.text === ctx.i18n.t('scenes.new_pack.animated')) {
     ctx.session.scene.newPack.animated = true
-    ctx.scene.enter('newPack')
+    return ctx.scene.enter('newPackTitle')
+  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.inline')) {
+    ctx.session.scene.newPack.inline = true
+    return ctx.scene.enter('newPackTitle')
   } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.common')) {
     ctx.session.scene.newPack.animated = false
-    ctx.scene.enter('newPack')
+    return ctx.scene.enter('newPackTitle')
   } else {
-    ctx.scene.reenter()
+    return ctx.scene.reenter()
   }
 })
 
-const newPack = new Scene('newPack')
+const newPackTitle = new Scene('newPackTitle')
 
-newPack.enter(async (ctx) => {
+newPackTitle.enter(async (ctx) => {
   if (!ctx.session.scene.newPack) ctx.session.scene.newPack = { animated: ctx.session.scene.copyPack.is_animated }
   const generatedName = rword.generate(3, { length: '3-5', capitalize: 'first' }).join('')
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
-    reply_to_message_id: ctx.message.message_id,
     reply_markup: Markup.keyboard([
       [
         generatedName
@@ -65,10 +67,11 @@ newPack.enter(async (ctx) => {
     ]).resize()
   })
 })
-newPack.on('message', async (ctx) => {
+newPackTitle.on('message', async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charTitleMax) {
     ctx.session.scene.newPack.title = ctx.message.text
-    ctx.scene.enter('newPackName')
+    if (ctx.session.scene.newPack.inline) return ctx.scene.enter('newPackConfirm')
+    else return ctx.scene.enter('newPackName')
   } else {
     await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
       max: ctx.config.charTitleMax
@@ -85,9 +88,16 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 }))
 
 newPackName.on('message', async (ctx) => {
+  return ctx.scene.enter('newPackConfirm')
+})
+
+const newPackConfirm = new Scene('newPackConfirm')
+
+newPackConfirm.enter(async (ctx) => {
   if (ctx.message.text && ctx.message.text.length <= ctx.config.charNameMax) {
     if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
+    const inline = !!ctx.session.scene.newPack.inline
     ctx.session.scene.newPack.name = ctx.message.text
 
     const nameSuffix = `_by_${ctx.options.username}`
@@ -96,7 +106,7 @@ newPackName.on('message', async (ctx) => {
     let { name, title, animated } = ctx.session.scene.newPack
 
     name += nameSuffix
-    if (ctx.session.userInfo.premium !== true) title += titleSuffix
+    if (ctx.session.userInfo.premium !== true && !inline) title += titleSuffix
 
     const stickers = { emojis: '🌟' }
     if (animated) {
@@ -105,39 +115,61 @@ newPackName.on('message', async (ctx) => {
       stickers.png_sticker = { source: 'sticker_placeholder.png' }
     }
 
-    const createNewStickerSet = await ctx.telegram.createNewStickerSet(
-      ctx.from.id, name, title, stickers).catch(async (error) => {
-      if (error.description === 'Bad Request: invalid sticker set name is specified') {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid'), {
-          reply_to_message_id: ctx.message.message_id
-        })
-        ctx.scene.reenter()
-      } else if (error.description === 'Bad Request: sticker set name is already occupied') {
+    let createNewStickerSet
+
+    if (inline) {
+      createNewStickerSet = true
+    } else {
+      const stickerSetByName = await ctx.db.StickerSet.findOne({ name })
+
+      if (stickerSetByName) {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
           reply_to_message_id: ctx.message.message_id
         })
-        ctx.scene.reenter()
-      } else {
-        await ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
-          error: error.description
-        }), {
-          reply_to_message_id: ctx.message.message_id
-        })
-        ctx.scene.reenter()
+        return ctx.scene.enter('newPackName')
       }
-    })
+
+      createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, stickers).catch((error) => {
+        return { error }
+      })
+
+      if (createNewStickerSet.error) {
+        const { error } = createNewStickerSet
+
+        if (error.description === 'Bad Request: invalid sticker set name is specified') {
+          await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid'), {
+            reply_to_message_id: ctx.message.message_id
+          })
+          return ctx.scene.enter('newPackName')
+        } else if (error.description === 'Bad Request: sticker set name is already occupied') {
+          await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
+            reply_to_message_id: ctx.message.message_id
+          })
+          return ctx.scene.enter('newPackName')
+        } else {
+          await ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
+            error: error.description
+          }), {
+            reply_to_message_id: ctx.message.message_id
+          })
+          return ctx.scene.enter('newPackName')
+        }
+      }
+    }
 
     if (createNewStickerSet) {
-      const getStickerSet = await ctx.telegram.getStickerSet(name)
-      const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
-      await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
+      if (!inline) {
+        const getStickerSet = await ctx.telegram.getStickerSet(name)
+        const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+        await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
+      }
 
       const userStickerSet = await ctx.db.StickerSet.newSet({
         owner: ctx.session.userInfo.id,
         name,
         title,
         animated,
+        inline,
         emojiSuffix: '🌟',
         create: true
       })
@@ -148,12 +180,26 @@ newPackName.on('message', async (ctx) => {
         ctx.session.userInfo.stickerSet = userStickerSet
       }
 
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
-        title: escapeHTML(title),
-        link: `${ctx.config.stickerLinkPrefix}${name}`
-      }), {
-        reply_to_message_id: ctx.message.message_id
-      })
+      if (inline) {
+        ctx.session.userInfo.inlineStickerSet = userStickerSet
+        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
+          title: escapeHTML(userStickerSet.title),
+          botUsername: ctx.options.username
+        }), {
+          reply_to_message_id: ctx.message.message_id,
+          reply_markup: Markup.inlineKeyboard([
+            Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
+          ])
+        })
+      } else {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
+          title: escapeHTML(title),
+          link: `${ctx.config.stickerLinkPrefix}${name}`
+        }), {
+          reply_to_message_id: ctx.message.message_id
+        })
+      }
+
       if (ctx.session.scene.copyPack) {
         (async () => {
           const originalPack = ctx.session.scene.copyPack
@@ -212,4 +258,4 @@ newPackName.on('message', async (ctx) => {
   }
 })
 
-module.exports = [сhoosePackType, newPack, newPackName]
+module.exports = [сhoosePackType, newPackTitle, newPackName, newPackConfirm]

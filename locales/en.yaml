@@ -27,6 +27,8 @@ cmd:
       animpacks: '✨ Animated sticker packs'
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
+  inline:
+    switch_pm: Select sticker pack
   restore: |
     <b>🗃 Sticker pack restoration</b>
 
@@ -49,7 +51,7 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
-    private_title: Private sticker pack
+    inline_title: Inline sticker pack
   donate: |
     <b>☕️ Supporting a bot development</b>
 
@@ -67,8 +69,8 @@ callback:
       restored: Sticker pack successfully restored
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
-    set_private_pack: |
-      Selected private sticker pack
+    set_inline_pack: |
+      Selected <u>${title}</u> sticker pack
 
       To use it, write in any chat <code>@${botUsername} </code>and space
       You can also use it by clicking the button below
@@ -113,8 +115,9 @@ sticker:
     ok: |
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-    ok_private: |
-      <b>Sticker was successfully added to the private sticker pack</b>
+    ok_inline: |
+      <b>Sticker successfully added to:</b>
+      <u>${title}</u>
     error:
       stickers_too_much: |
         <b>Error!</b>
@@ -131,10 +134,11 @@ sticker:
         <b>Error!</b>
         This file type is not supported.
 
-        <i>You can add this file to your private sticker pack, for this select it with the command /packs</i>
+        <i>You can add this file to your inline sticker pack, for this select it with the command /packs</i>
 scenes:
   new_pack:
     common: Common
+    inline: Inline
     animated: Animated
     pack_type: |
       <b>Choose stickerpack type:</b>

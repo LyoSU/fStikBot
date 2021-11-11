@@ -49,7 +49,7 @@ cmd:
     empty: |
       <b>У тебя нет ещё ни одного стикерпака.</b>
       Для создания напиши /new
-    private_title: Приватный стикерпак
+    inline_title: Приватный стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -67,7 +67,7 @@ callback:
       restored: Стикерпак успешно восстановлен
     set_pack: |
       Выбран стикерпак <a href="${link}">${title}</a>
-    set_private_pack: |
+    set_inline_pack: |
       Выбран приватный стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
@@ -113,7 +113,7 @@ sticker:
     ok: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <a href="${link}">${title}</a>
-    ok_private: |
+    ok_inline: |
       <b>Стикер успешно добавлен в приватный стикерпак</b>
     error:
       stickers_too_much: |

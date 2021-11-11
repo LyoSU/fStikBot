@@ -7,13 +7,17 @@ composer.on('inline_query', async (ctx) => {
   const limit = 50
   const stickersResult = []
 
-  const privateSet = await ctx.db.StickerSet.findOne({
-    owner: ctx.session.userInfo.id,
-    private: true
-  })
+  let inlineSet = ctx.session.userInfo.inlineStickerSet
+
+  if (!inlineSet) {
+    inlineSet = await ctx.db.StickerSet.findOne({
+      owner: ctx.session.userInfo.id,
+      inline: true
+    })
+  }
 
   const stickers = await ctx.db.Sticker.find({
-    stickerSet: privateSet,
+    stickerSet: inlineSet,
     deleted: false
   }).limit(limit).skip(offset)
 
@@ -41,8 +45,10 @@ composer.on('inline_query', async (ctx) => {
 
   ctx.state.answerIQ = [stickersResult, {
     is_personal: true,
-    cache_time: 5,
-    next_offset: offset + limit
+    cache_time: 0,
+    next_offset: offset + limit,
+    switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+    switch_pm_parameter: 'inline_pack'
   }]
 })
 
