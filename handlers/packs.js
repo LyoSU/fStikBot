@@ -49,7 +49,12 @@ module.exports = async (ctx) => {
           botUsername: ctx.options.username
         }), {
           reply_markup: Markup.inlineKeyboard([
-            Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
+            [
+              Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
+            ],
+            [
+              Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
+            ]
           ]),
           parse_mode: 'HTML'
         })
@@ -61,7 +66,6 @@ module.exports = async (ctx) => {
           reply_markup: Markup.inlineKeyboard([
             [
               Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
-
             ],
             [
               Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
