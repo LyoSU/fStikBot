@@ -21,9 +21,12 @@ cmd:
       Çeviriyi Yapan: @By_Azade
     btn:
       packs: '🌟 Çıkartma paketleri'
-      animpacks: '✨ Animasyonlu çıkartma paketleri'
+      inline: '💫 Инлайн'
+      animpacks: '✨ Анимированные'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
+  inline:
+    switch_pm: Выбрать стикер пак
   restore: |
     <b>🗃 Çıkartma Paketi Sıfırlama</b>
 
@@ -46,7 +49,7 @@ cmd:
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
-    inline_title: Приватный стикерпак
+    inline_title: Инлайн стикерпак
   donate: |
     <b>☕️ Botun geliştirilmesine yardım et</b>
 
@@ -65,7 +68,7 @@ callback:
     set_pack: |
       Seçilen çıkartma paketi <a href="${link}">${title}</a>
     set_inline_pack: |
-      Выбран приватный стикерпак
+      Выбран <u>${title}</u> стикерпак
 
       Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
       Также можно его использовать нажав кнопку снизу
@@ -111,7 +114,8 @@ sticker:
       <b>Çıkartma başarılı bir şekilde çıkartma paketine eklendi:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Стикер успешно добавлен в приватный стикерпак</b>
+      <b>Стикер успешно добавлен в стикерпак:</b>
+      <u>${title}</u>
     error:
       stickers_too_much: |
         <b>Hata!</b>
@@ -128,10 +132,11 @@ sticker:
         <b>Ошибка!</b>
         Данный тип файла не поддерживается.
 
-        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
+        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Normal
+    inline: Inline
     animated: Animasyonlu
     pack_type: |
       <b>Çıkartma paketinin türünü seçin:</b>
