@@ -29,7 +29,7 @@ cmd:
       new: 'Crear pack de stickers'
       donate: 'Apoya al desarrollador'
   inline:
-    switch_pm: Выбрать стикер пак
+    switch_pm: Выбрать стикерпак
   restore: |
     <b>🗃 Restauración de un pack de stickers</b>
 

@@ -29,7 +29,7 @@ cmd:
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
   inline:
-    switch_pm: Select sticker pack
+    switch_pm: Выбрать стикерпак
   restore: |
     <b>🗃 Sticker pack restoration</b>
 

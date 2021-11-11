@@ -26,7 +26,7 @@ cmd:
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   inline:
-    switch_pm: Выбрать стикер пак
+    switch_pm: Выбрать стикерпак
   restore: |
     <b>🗃 Çıkartma Paketi Sıfırlama</b>
 

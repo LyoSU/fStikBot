@@ -27,7 +27,7 @@ cmd:
       new: '🆕 Stiker yaratish'
       donate: '☕️ Dasturchini qo''llab-quvatlash'
   inline:
-    switch_pm: Выбрать стикер пак
+    switch_pm: Выбрать стикерпак
   restore: |
     <b>🗃 Stikerlar to'plamini qayta tiklash</b>
 
