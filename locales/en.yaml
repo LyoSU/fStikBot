@@ -24,9 +24,12 @@ cmd:
       👨🏻‍💻 Developer channel: @LyBlog
     btn:
       packs: '🌟 Sticker packs'
-      animpacks: '✨ Animated sticker packs'
+      inline: '💫 Инлайн'
+      animpacks: '✨ Анимированные'
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
+  inline:
+    switch_pm: Выбрать стикер пак
   restore: |
     <b>🗃 Sticker pack restoration</b>
 
@@ -49,7 +52,7 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
-    private_title: Private sticker pack
+    inline_title: Приватный стикерпак
   donate: |
     <b>☕️ Supporting a bot development</b>
 
@@ -67,11 +70,11 @@ callback:
       restored: Sticker pack successfully restored
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
-    set_private_pack: |
-      Selected private sticker pack
+    set_inline_pack: |
+      Выбран <u>${title}</u> стикерпак
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by clicking the button below
+      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
+      Также можно его использовать нажав кнопку снизу
     hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
     restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
@@ -113,8 +116,9 @@ sticker:
     ok: |
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-    ok_private: |
-      <b>Sticker was successfully added to the private sticker pack</b>
+    ok_inline: |
+      <b>Стикер успешно добавлен в стикерпак:</b>
+      <u>${title}</u>
     error:
       stickers_too_much: |
         <b>Error!</b>
@@ -135,6 +139,7 @@ sticker:
 scenes:
   new_pack:
     common: Common
+    inline: Inline
     animated: Animated
     pack_type: |
       <b>Choose stickerpack type:</b>
