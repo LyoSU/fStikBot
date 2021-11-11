@@ -16,6 +16,16 @@ composer.on('inline_query', async (ctx) => {
     })
   }
 
+  if (ctx.inlineQuery.query.length >= 1) {
+    const search = await ctx.db.StickerSet.findOne({
+      owner: ctx.session.userInfo.id,
+      inline: true,
+      $text: { $search: ctx.inlineQuery.query }
+    })
+
+    if (search) inlineSet = search
+  }
+
   const stickers = await ctx.db.Sticker.find({
     stickerSet: inlineSet,
     deleted: false

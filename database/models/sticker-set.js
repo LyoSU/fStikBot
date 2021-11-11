@@ -14,6 +14,7 @@ const stickerSetsSchema = mongoose.Schema({
   },
   title: {
     type: String,
+    text: true,
     required: true
   },
   animated: {
@@ -36,5 +37,7 @@ const stickerSetsSchema = mongoose.Schema({
 }, {
   timestamps: true
 })
+
+stickerSetsSchema.index({ fields: 'text' })
 
 module.exports = stickerSetsSchema
