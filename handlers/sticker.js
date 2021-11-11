@@ -16,7 +16,7 @@ module.exports = async (ctx) => {
   await ctx.replyWithChatAction('upload_document')
 
   let messageText = ''
-  let replyMarkup = []
+  let replyMarkup = {}
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   let stickerFile, stickerSet
