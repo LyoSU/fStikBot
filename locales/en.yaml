@@ -24,12 +24,12 @@ cmd:
       👨🏻‍💻 Developer channel: @LyBlog
     btn:
       packs: '🌟 Sticker packs'
-      inline: '💫 Инлайн'
-      animpacks: '✨ Анимированные'
+      inline: '💫 Inline'
+      animpacks: '✨ Animated'
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
   inline:
-    switch_pm: Выбрать стикер пак
+    switch_pm: Select sticker pack
   restore: |
     <b>🗃 Sticker pack restoration</b>
 
@@ -52,7 +52,7 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
-    inline_title: Приватный стикерпак
+    inline_title: Инлайн стикерпак
   donate: |
     <b>☕️ Supporting a bot development</b>
 
@@ -71,10 +71,10 @@ callback:
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
     set_inline_pack: |
-      Выбран <u>${title}</u> стикерпак
+      Selected <u>${title}</u> stickerpack
 
-      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажав кнопку снизу
+      To use it, write in any chat <code>@${botUsername} </code>and space
+      You can also use it by pressing the button below
     hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
     restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
@@ -117,7 +117,7 @@ sticker:
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
     error:
       stickers_too_much: |
@@ -132,10 +132,10 @@ sticker:
         Bot cannot access your current chosen sticker pack.
         Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
-        <b>Error!</b>
-        This file type is not supported.
+        <b>Ошибка!</b>
+        Данный тип файла не поддерживается.
 
-        <i>You can add this file to your private sticker pack, for this select it with the command /packs</i>
+        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Common
@@ -204,61 +204,61 @@ admin:
       archive: Archived
     create:
       name: Title
-      send_message: Отправь текст или медиа
-      date: Укажи дату публикации <b>дд.мм чч:мм</b>
+      send_message: Send text or media
+      date: 'Indicate publication date <b>dd.mm hh: mm</b>'
       date_format: |
-        Сообщение будет отправлено:
+        Message will be sent:
           ${date}
       date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
+        Invalid date format
+        Specify the date in <b>dd.mm hh: mm</b>
+      add_url: Add link
+      clear_url: Remove link
       add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
+        Submit Button List
+        <pre>Button Text 1 - http://www.example.com/ | Button 2 text - http://www.example2.com/
+        Button 3 text - http://www.example3.com/
         </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
+        $ {current? '\nCurrent buttons:\n' + current: ''}
+      group_select: Choose a user group
       group_type:
-        all: Все
+        all: Everything
         ru: Russian
-      select_all: Все
+      select_all: Everything
       found: |
-        Нашлось человек: ${userCount}
+        People found: ${userCount}
 
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
+        Start mailing?
+      back: '« Back'
+      continue: Continue »
       publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
+        Newsletter  ${name} created To view, press the button
+        To view, press the button
+      status: Mailing status
     edit:
       started: |
-        Редактирование началось
+        Editing started
       wrong_type: |
         Error!
         Message type [${type}] differs from original [${originalType}].
         Editing is not possible
     list:
-      info: Состояние рассылки
+      info: Mailing status
     status:
       info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
+        <b>Newsletter ${name}</b> (${createdAt})
+        Created ${creatorName}
 
-        Дата отправки: ${date}
+        Submission date: ${date}
 
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
+        Submission progress:
+          Total: ${total}
+          Submitted: ${completed}
+          Remaining: ${left}
+          Errors: ${error}
         ${userErrors}
 
-        Статус: ${status}
+        Status: ${status}
       status_type: |
         Created
         Processing
@@ -270,10 +270,10 @@ admin:
       change_name: Change title
       update: Refresh
     canceled: |
-      <b>Рассылка ${name}</b> отменена.
+      <b>Broadcast ${name}</b> canceled.
     send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+      <b>Broadcast error ${name}</b>
+      Failed to send message to <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
       <code>${errorMessage}</code>
 error:
