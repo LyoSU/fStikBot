@@ -105,7 +105,7 @@ newPackConfirm.enter(async (ctx) => {
 
     let { name, title, animated } = ctx.session.scene.newPack
 
-    name += nameSuffix
+    if (!inline) name += nameSuffix
     if (ctx.session.userInfo.premium !== true && !inline) title += titleSuffix
 
     const stickers = { emojis: '🌟' }
