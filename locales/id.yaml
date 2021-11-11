@@ -29,7 +29,7 @@ cmd:
       new: '🆕 Buat paket stiker baru'
       donate: '☕️'
   inline:
-    switch_pm: Pilih paket stiker
+    switch_pm: Выбрать стикерпак
   restore: |
     <b>🗃 Pemulihan paket stiker</b>
 
