@@ -53,7 +53,7 @@ cmd:
     empty: |
       <b>Hələ bir stiker paketiniz yoxdur.</b>
       /new yazarağ yenisini yarada bilersiniz
-    inline_title: Приватный стикерпак
+    inline_title: Инлайн стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -138,7 +138,7 @@ sticker:
         <b>Ошибка!</b>
         Данный тип файла не поддерживается.
 
-        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
+        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Adi
