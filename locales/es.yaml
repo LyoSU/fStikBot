@@ -52,7 +52,7 @@ cmd:
     empty: |
       <b>Aún no tienes ningún pack de stickers.</b>
       Para crear uno escribe /new
-    inline_title: Приватный стикерпак
+    inline_title: Инлайн стикерпак
   donate: |
     <b>☕️ Поддержка разработчика бота</b>
 
@@ -135,7 +135,7 @@ sticker:
         <b>Ошибка!</b>
         Данный тип файла не поддерживается.
 
-        <i>Вы можете добавить этот файл в приватный стикерпак, для этого выберете его командой /packs</i>
+        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
 scenes:
   new_pack:
     common: Normal
