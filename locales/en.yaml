@@ -52,7 +52,7 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
-    inline_title: Инлайн стикерпак
+    inline_title: Inline sticker pack
   donate: |
     <b>☕️ Supporting a bot development</b>
 
@@ -117,7 +117,7 @@ sticker:
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Sticker added to stickerpack successfully:</b>
+      <b>Sticker successfully added to:</b>
       <u>${title}</u>
     error:
       stickers_too_much: |
@@ -135,7 +135,7 @@ sticker:
         <b>Ошибка!</b>
         Данный тип файла не поддерживается.
 
-        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
+        <i>You can add this file to your inline sticker pack, for this select it with the command /packs</i>
 scenes:
   new_pack:
     common: Common

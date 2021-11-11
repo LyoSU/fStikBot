@@ -16,7 +16,7 @@ module.exports = async (ctx) => {
           ]
         ]).resize()
       })
-      return ctx.scene.enter('newPack')
+      return ctx.scene.enter('newPackTitle')
     } else {
       await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
         reply_to_message_id: ctx.message.message_id

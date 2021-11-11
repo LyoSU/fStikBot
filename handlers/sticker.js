@@ -16,6 +16,7 @@ module.exports = async (ctx) => {
   await ctx.replyWithChatAction('upload_document')
 
   let messageText = ''
+  let replyMarkup = {}
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   let stickerFile, stickerSet
@@ -43,10 +44,11 @@ module.exports = async (ctx) => {
       console.log(ctx.updateSubTypes)
   }
 
-  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.private) {
+  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
     if (stickerType === 'photo') stickerFile = ctx.message[stickerType].pop()
     else stickerFile = ctx.message[stickerType]
     stickerFile.stickerType = stickerType
+    stickerFile.file_unique_id = ctx.session.userInfo.stickerSet.id + '_' + stickerFile.file_unique_id
   }
 
   if (stickerFile) {
@@ -86,15 +88,23 @@ module.exports = async (ctx) => {
       const addStickerResult = await addSticker(ctx, stickerFile)
 
       if (addStickerResult.ok) {
-        if (addStickerResult.ok.private) {
-          messageText = ctx.i18n.t('sticker.add.ok_private', {
-            botUsername: ctx.options.username
+        if (addStickerResult.ok.inline) {
+          messageText = ctx.i18n.t('sticker.add.ok_inline', {
+            title: escapeHTML(stickerSet.title)
           })
+
+          replyMarkup = Markup.inlineKeyboard([
+            Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
+          ])
         } else {
           messageText = ctx.i18n.t('sticker.add.ok', {
             title: escapeHTML(addStickerResult.ok.title),
             link: addStickerResult.ok.link
           })
+
+          replyMarkup = Markup.inlineKeyboard([
+            Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), addStickerResult.ok.link)
+          ])
         }
 
         // const stickersCount = await ctx.db.Sticker.count({ stickerSet, deleted: false })
@@ -127,7 +137,8 @@ module.exports = async (ctx) => {
 
   if (messageText) {
     await ctx.replyWithHTML(messageText, {
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      reply_markup: replyMarkup
     })
   }
 }

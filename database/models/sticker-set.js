@@ -20,7 +20,7 @@ const stickerSetsSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
-  private: {
+  inline: {
     type: Boolean,
     default: false
   },

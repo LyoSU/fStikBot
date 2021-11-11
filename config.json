@@ -6,7 +6,7 @@
   "messaging": {
     "limit": {
       "max": 60,
-      "duration": 1800
+      "duration": 2000
     }
   }
 }

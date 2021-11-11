@@ -80,10 +80,10 @@ bot.context.db = db
 bot.use(
   session({
     getSessionKey: (ctx) => {
-      if (ctx.from && ctx.chat) {
-        return `${ctx.from.id}:${ctx.chat.id}`
-      } else if (ctx.from) {
+      if ((ctx.from && ctx.chat && ctx.chat.id === ctx.from.id) || (!ctx.chat && ctx.from)) {
         return `user:${ctx.from.id}`
+      } else if (ctx.from && ctx.chat) {
+        return `${ctx.from.id}:${ctx.chat.id}`
       }
       return null
     }
@@ -100,7 +100,7 @@ bot.use(async (ctx, next) => {
   if (ctx.callbackQuery) ctx.state.answerCbQuery = []
   return next(ctx).then(() => {
     if (ctx.inlineQuery) return ctx.answerInlineQuery(...ctx.state.answerIQ)
-    if (ctx.callbackQuery) ctx.answerCbQuery(...ctx.state.answerCbQuery)
+    if (ctx.callbackQuery) return ctx.answerCbQuery(...ctx.state.answerCbQuery)
   })
 })
 
@@ -116,9 +116,28 @@ bot.use(scenes)
 bot.use(require('./handlers/admin'))
 
 // main commands
-bot.hears(['/packs', match('cmd.start.btn.packs')], handlePacks)
-bot.hears(['/animpacks', match('cmd.start.btn.animpacks')], handlePacks)
+bot.start((ctx, next) => {
+  if (ctx.startPayload === 'inline_pack') {
+    ctx.state.type = 'inline'
+    return handlePacks(ctx)
+  }
+  return next()
+})
+bot.hears(['/packs', match('cmd.start.btn.packs')], ctx => {
+  ctx.state.type = 'common'
+  return handlePacks(ctx)
+})
+bot.hears(['/inline', match('cmd.start.btn.inline')], ctx => {
+  ctx.state.type = 'inline'
+  return handlePacks(ctx)
+})
+bot.hears(['/animpacks', match('cmd.start.btn.animpacks')], ctx => {
+  ctx.state.type = 'animated'
+  return handlePacks(ctx)
+})
+
 bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoosePackType'))
+bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.hears(['/donate', '/start donate', match('cmd.start.btn.donate')], handleDonate)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
 bot.command('emoji', handleEmoji)
@@ -142,7 +161,7 @@ bot.action(/set_language:(.*)/, handleLanguage)
 
 // forward from sticker bot
 bot.on('text', (ctx, next) => {
-  if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) handleRestorePack(ctx)
+  if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) return handleRestorePack(ctx)
   else return next()
 })
 
@@ -173,4 +192,5 @@ db.connection.once('open', async () => {
     })
   }
   require('./utils/messaging')
+  require('./utils/optimize-db')
 })
