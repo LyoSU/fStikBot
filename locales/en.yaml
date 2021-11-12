@@ -29,7 +29,7 @@ cmd:
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
   inline:
-    switch_pm: Выбрать стикерпак
+    switch_pm: Select sticker pack
   restore: |
     <b>🗃 Sticker pack restoration</b>
 
@@ -52,7 +52,7 @@ cmd:
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
-    inline_title: Инлайн стикерпак
+    inline_title: Inline sticker pack
   donate: |
     <b>☕️ Supporting a bot development</b>
 
@@ -132,10 +132,10 @@ sticker:
         Bot cannot access your current chosen sticker pack.
         Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Error!</b>
+        This file type is not supported.
 
-        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
+        <i>You can add this file to the inline sticker pack, for this select it with the command /packs</i>
 scenes:
   new_pack:
     common: Common
