@@ -21,7 +21,7 @@ cmd:
       Çeviriyi Yapan: @By_Azade
     btn:
       packs: '🌟 Çıkartma paketleri'
-      inline: '💫 İnline'
+      inline: '💫 Satır içi'
       animpacks: '✨ Animasyonlu'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
@@ -49,7 +49,7 @@ cmd:
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
-    inline_title: Инлайн стикерпак
+    inline_title: Satır içi çıkartma paketi
   donate: |
     <b>☕️ Botun geliştirilmesine yardım et</b>
 
@@ -68,16 +68,16 @@ callback:
     set_pack: |
       Seçilen çıkartma paketi <a href="${link}">${title}</a>
     set_inline_pack: |
-      Выбран <u>${title}</u> стикерпак
+      Seçili <u>${title}</u> çıkartma paketi
 
-      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажав кнопку снизу
+      Kullanmak için herhangi bir sohbette <code>@${botUsername} </code>ve boşluk
+      yazınız. Aşağıdaki butona basarak da kullanabilirsiniz
     hidden: <a href="${link}">${title}</a> çıkartma paketini listende gizlendi.
     restored: <a href="${link}">${title}</a> çıkartma paketi listende sıfırlandı.
     btn:
       hide: '❌ Çıkartma Paketini Gizle'
       restore: '✅ Sıfırla'
-      use_pack: Использовать стикерпак
+      use_pack: Çıkartma paketini kullan
     error:
       restore: |
         <b>Hata!</b>
@@ -114,7 +114,7 @@ sticker:
       <b>Çıkartma başarılı bir şekilde çıkartma paketine eklendi:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
       <u>${title}</u>
     error:
       stickers_too_much: |
@@ -129,14 +129,14 @@ sticker:
          Bot, şu anda seçili olan çıkartma paketine erişemiyor.
          Lütfen yeni bir (/new) oluşturun veya başka bir çıkartma paketi seçin (/packs).
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Hata!</b>
+        Bu dosya türü desteklenmiyor.
 
-        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
+        <i>Bu dosyayı satır içi çıkartma paketine ekleyebilirsiniz, bunun için / packs</i>
 scenes:
   new_pack:
     common: Normal
-    inline: Inline
+    inline: Satır içi
     animated: Animasyonlu
     pack_type: |
       <b>Çıkartma paketinin türünü seçin:</b>
@@ -217,7 +217,7 @@ admin:
       group_select: Bir kullanıcı grubu seçin
       group_type:
         all: Tümünü göster
-        ru: Russian
+        ru: Turkish
       select_all: Tümünü göster
       found: |
         Bulunan kişiler: ${userCount}
