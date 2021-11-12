@@ -21,12 +21,12 @@ cmd:
       Çeviriyi Yapan: @By_Azade
     btn:
       packs: '🌟 Çıkartma paketleri'
-      inline: '💫 Инлайн'
-      animpacks: '✨ Анимированные'
+      inline: '💫 İnline'
+      animpacks: '✨ Animasyonlu'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   inline:
-    switch_pm: Выбрать стикерпак
+    switch_pm: Çıkartma paketi seçin
   restore: |
     <b>🗃 Çıkartma Paketi Sıfırlama</b>
 
