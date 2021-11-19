@@ -53,7 +53,7 @@ module.exports = async (ctx) => {
   }
 
   if (stickerFile) {
-    if (stickerFile.is_animated && !ctx.session.userInfo.stickerSet.inline) {
+    if (stickerFile.is_animated && (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline)) {
       stickerSet = ctx.session.userInfo.animatedStickerSet
     } else {
       stickerSet = ctx.session.userInfo.stickerSet

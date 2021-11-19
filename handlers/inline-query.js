@@ -43,7 +43,7 @@ composer.on('inline_query', async (ctx) => {
   if (searchStickers.length <= 0) {
     searchStickers = await ctx.db.Sticker.find({
       deleted: false,
-      stickerSet: inlineSet,
+      stickerSet: inlineSet
     }).limit(limit).skip(offset)
   }
 
