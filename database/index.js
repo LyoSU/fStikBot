@@ -86,13 +86,16 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
   return stickerSet
 }
 
-db.Sticker.addSticker = async (stickerSet, emojis, info, file) => {
+db.Sticker.addSticker = async (stickerSet, emojisText, info, file) => {
   const sticker = new db.Sticker()
+
+  const emojiRegExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+  const emojiSymbols = emojisText.match(emojiRegExp)
 
   sticker.stickerSet = stickerSet
   sticker.fileId = info.file_id
   sticker.fileUniqueId = info.file_unique_id
-  sticker.emojis = emojis
+  sticker.emojis = emojiSymbols.join('')
   sticker.info = fileInfoNormalize(info)
   sticker.file = fileInfoNormalize(file)
   await sticker.save()
