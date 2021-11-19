@@ -13,8 +13,20 @@ const stickersSchema = mongoose.Schema({
     required: true
   },
   emojis: String,
-  info: Object,
-  file: Object,
+  info: {
+    stickerType: String,
+    file_id: String,
+    file_unique_id: String,
+    caption: {
+      type: String,
+      text: true
+    }
+  },
+  file: {
+    stickerType: String,
+    file_id: String,
+    file_unique_id: String
+  },
   deleted: {
     type: Boolean,
     default: false
@@ -22,5 +34,7 @@ const stickersSchema = mongoose.Schema({
 }, {
   timestamps: true
 })
+
+stickersSchema.index({ fields: 'text' })
 
 module.exports = stickersSchema

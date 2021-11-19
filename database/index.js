@@ -11,10 +11,12 @@ Object.keys(collections).forEach((collectionName) => {
 
 const fileInfoNormalize = (fileInfo) => {
   if (!fileInfo) return {}
+  if (fileInfo.caption) fileInfo.caption = fileInfo.caption.substr(0, 150)
   return {
     stickerType: fileInfo.stickerType || null,
     file_id: fileInfo.file_id,
-    file_unique_id: fileInfo.file_unique_id
+    file_unique_id: fileInfo.file_unique_id,
+    caption: fileInfo.caption || null
   }
 }
 

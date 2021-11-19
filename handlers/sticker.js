@@ -48,11 +48,12 @@ module.exports = async (ctx) => {
     if (stickerType === 'photo') stickerFile = ctx.message[stickerType].pop()
     else stickerFile = ctx.message[stickerType]
     stickerFile.stickerType = stickerType
+    if (ctx.message.caption) stickerFile.caption = ctx.message.caption
     stickerFile.file_unique_id = ctx.session.userInfo.stickerSet.id + '_' + stickerFile.file_unique_id
   }
 
   if (stickerFile) {
-    if (stickerFile.is_animated) {
+    if (stickerFile.is_animated && !ctx.session.userInfo.stickerSet.inline) {
       stickerSet = ctx.session.userInfo.animatedStickerSet
     } else {
       stickerSet = ctx.session.userInfo.stickerSet

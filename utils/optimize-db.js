@@ -14,4 +14,4 @@ const privateToInline = async () => {
   }
 }
 
-privateToInline()
+// privateToInline()

@@ -176,6 +176,9 @@ newPackConfirm.enter(async (ctx) => {
 
       if (ctx.session.scene.newPack.animated) {
         ctx.session.userInfo.animatedStickerSet = userStickerSet
+        if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
+          ctx.session.userInfo.stickerSet = null
+        }
       } else {
         ctx.session.userInfo.stickerSet = userStickerSet
       }

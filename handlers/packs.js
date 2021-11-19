@@ -12,10 +12,12 @@ const escapeHTML = (str) => str.replace(
 )
 
 module.exports = async (ctx) => {
-  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
+  const { userInfo } = ctx.session
+
+  if (!userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
   const query = {
-    owner: ctx.session.userInfo.id,
+    owner: userInfo.id,
     create: true,
     inline: { $ne: true },
     animated: { $ne: true },
@@ -30,16 +32,21 @@ module.exports = async (ctx) => {
       query.animated = true
     }
 
-    if (stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
+    if (stickerSet.owner.toString() === userInfo.id.toString()) {
       await ctx.answerCbQuery()
 
       if (stickerSet.inline) {
         ctx.state.type = 'inline'
-        ctx.session.userInfo.inlineStickerSet = stickerSet
+        userInfo.inlineStickerSet = stickerSet
+        userInfo.animatedStickerSet = null
       }
 
-      if (stickerSet.animated) ctx.session.userInfo.animatedStickerSet = stickerSet
-      else ctx.session.userInfo.stickerSet = stickerSet
+      if (stickerSet.animated) {
+        userInfo.animatedStickerSet = stickerSet
+        if (userInfo.stickerSet && userInfo.stickerSet.inline) {
+          userInfo.stickerSet = null
+        }
+      } else userInfo.stickerSet = stickerSet
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
@@ -88,13 +95,13 @@ module.exports = async (ctx) => {
 
   if (ctx.state.type === 'inline' && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
-      owner: ctx.session.userInfo.id,
+      owner: userInfo.id,
       inline: true
     })
 
     if (!inlineSet) {
       inlineSet = await ctx.db.StickerSet.newSet({
-        owner: ctx.session.userInfo.id,
+        owner: userInfo.id,
         name: 'inline_' + ctx.from.id,
         title: ctx.i18n.t('cmd.packs.inline_title'),
         emojiSuffix: '💫',
@@ -113,9 +120,8 @@ module.exports = async (ctx) => {
     messageText = ctx.i18n.t('cmd.packs.info')
 
     let selectedStickerSet
-    if (ctx.state.type === 'inline') selectedStickerSet = ctx.session.userInfo.inlineStickerSet
-    else if (ctx.state.type === 'animated') selectedStickerSet = ctx.session.userInfo.animatedStickerSet
-    else selectedStickerSet = ctx.session.userInfo.stickerSet
+    if (ctx.state.type === 'animated') selectedStickerSet = userInfo.animatedStickerSet
+    else selectedStickerSet = userInfo.stickerSet
 
     stickerSets.forEach((pack) => {
       let { title } = pack

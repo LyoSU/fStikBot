@@ -16,6 +16,8 @@ composer.on('inline_query', async (ctx) => {
     })
   }
 
+  let searchStickers = []
+
   if (ctx.inlineQuery.query.length >= 1) {
     const search = await ctx.db.StickerSet.findOne({
       owner: ctx.session.userInfo.id,
@@ -24,14 +26,26 @@ composer.on('inline_query', async (ctx) => {
     })
 
     if (search) inlineSet = search
+    else {
+      const userStickerSet = await ctx.db.StickerSet.find({
+        owner: ctx.session.userInfo.id
+      })
+
+      searchStickers = await ctx.db.Sticker.find({
+        stickerSet: { $in: userStickerSet },
+        $text: { $search: ctx.inlineQuery.query }
+      }).limit(limit).skip(offset)
+    }
   }
 
-  const stickers = await ctx.db.Sticker.find({
-    stickerSet: inlineSet,
-    deleted: false
-  }).limit(limit).skip(offset)
+  if (searchStickers.length <= 0) {
+    searchStickers = await ctx.db.Sticker.find({
+      stickerSet: inlineSet,
+      deleted: false
+    }).limit(limit).skip(offset)
+  }
 
-  for (const sticker of stickers) {
+  for (const sticker of searchStickers) {
     if (!sticker.info.stickerType) {
       const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
       if (/document/.test(fileInfo.file_path)) sticker.info.stickerType = 'document'
@@ -46,7 +60,7 @@ composer.on('inline_query', async (ctx) => {
     const data = {
       type: sticker.info.stickerType,
       id: sticker._id,
-      title: '-'
+      title: sticker.info.caption || sticker.info.stickerType
     }
     data[fieldFileIdName] = sticker.info.file_id
 
