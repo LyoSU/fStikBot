@@ -110,6 +110,10 @@ bot.use(Composer.privateChat(async (ctx, next) => {
   await ctx.session.userInfo.save().catch(() => {})
 }))
 
+bot.command('json', ({ replyWithHTML, message }) =>
+  replyWithHTML('<code>' + JSON.stringify(message, null, 2) + '</code>')
+)
+
 // scene
 bot.use(scenes)
 

@@ -60,9 +60,7 @@ module.exports = async (ctx, inputFile) => {
   } else if (stickerFile.is_animated !== true) {
     if (!ctx.session.userInfo.stickerSet) ctx.session.userInfo.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
     emojis += ctx.session.userInfo.stickerSet.emojiSuffix || ''
-    const fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
-      console.error(error, stickerFile)
-    })
+    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
     const imageSharp = sharp(data)
     const imageMetadata = await imageSharp.metadata().catch(() => { })
@@ -139,9 +137,7 @@ module.exports = async (ctx, inputFile) => {
   } else {
     if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = await ctx.db.StickerSet.getSet(defaultAnimatedStickerSet)
     emojis += ctx.session.userInfo.animatedStickerSet.emojiSuffix || ''
-    const fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
-      console.error(error, stickerFile)
-    })
+    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
 
     let stickerAdd = false
