@@ -95,7 +95,7 @@ db.Sticker.addSticker = async (stickerSet, emojisText, info, file) => {
   sticker.stickerSet = stickerSet
   sticker.fileId = info.file_id
   sticker.fileUniqueId = info.file_unique_id
-  sticker.emojis = emojiSymbols.join('')
+  if (emojiSymbols) sticker.emojis = emojiSymbols.join('')
   sticker.info = fileInfoNormalize(info)
   sticker.file = fileInfoNormalize(file)
   await sticker.save()
