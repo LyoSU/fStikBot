@@ -28,10 +28,12 @@ composer.on('inline_query', async (ctx) => {
     if (search) inlineSet = search
     else {
       const userStickerSet = await ctx.db.StickerSet.find({
-        owner: ctx.session.userInfo.id
+        owner: ctx.session.userInfo.id,
+        hide: false
       })
 
       searchStickers = await ctx.db.Sticker.find({
+        deleted: false,
         stickerSet: { $in: userStickerSet },
         $text: { $search: ctx.inlineQuery.query }
       }).limit(limit).skip(offset)
@@ -40,8 +42,8 @@ composer.on('inline_query', async (ctx) => {
 
   if (searchStickers.length <= 0) {
     searchStickers = await ctx.db.Sticker.find({
+      deleted: false,
       stickerSet: inlineSet,
-      deleted: false
     }).limit(limit).skip(offset)
   }
 
