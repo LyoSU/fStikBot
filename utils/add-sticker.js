@@ -22,7 +22,7 @@ module.exports = async (ctx, inputFile) => {
     fileUniqueId: stickerFile.file_unique_id
   })
 
-  if (originalSticker && originalSticker.file) stickerFile = originalSticker.file
+  if (originalSticker && originalSticker.file && originalSticker.file_id) stickerFile = originalSticker.file
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
