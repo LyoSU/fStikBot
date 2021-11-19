@@ -38,6 +38,6 @@ const stickerSetsSchema = mongoose.Schema({
   timestamps: true
 })
 
-stickerSetsSchema.index({ fields: 'text' })
+stickerSetsSchema.index({ title: 'text' })
 
 module.exports = stickerSetsSchema

@@ -35,6 +35,6 @@ const stickersSchema = mongoose.Schema({
   timestamps: true
 })
 
-stickersSchema.index({ fields: 'text' })
+stickersSchema.index({ caption: 'text' })
 
 module.exports = stickersSchema
