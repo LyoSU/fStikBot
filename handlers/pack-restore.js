@@ -1,3 +1,14 @@
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 module.exports = async (ctx) => {
   let messageText = ctx.i18n.t('callback.pack.error.restore')
 
@@ -71,7 +82,7 @@ module.exports = async (ctx) => {
           })
 
           messageText = ctx.i18n.t('callback.pack.restored', {
-            title: findStickerSet.title,
+            title: escapeHTML(findStickerSet.title),
             link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
           })
         }
