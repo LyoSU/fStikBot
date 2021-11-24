@@ -45,7 +45,7 @@ bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 const { match } = I18n
 const i18n = new I18n({
   directory: path.resolve(__dirname, 'locales'),
-  defaultLanguage: 'ru',
+  defaultLanguage: 'en',
   defaultLanguageOnMissing: true
 })
 
