@@ -75,9 +75,9 @@ module.exports = async (ctx, inputFile) => {
 
   let emojis = inputFile.emoji || ''
 
-  if (ctx.session.userInfo.stickerSet && !ctx.session.userInfo.stickerSet.inline && inputFile.mime_type && inputFile.mime_type.match('video')) {
-    if (inputFile.file_size > 5242880) { // 5 mb
-      return
+  if ((!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline) && inputFile.mime_type && inputFile.mime_type.match('video')) {
+    if (inputFile.file_size > 1000 * 1000 || inputFile.duration >= 30) { // 1 mb or 30 sec
+      return ctx.reply('file too big')
     }
 
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
@@ -92,6 +92,8 @@ module.exports = async (ctx, inputFile) => {
     await ctx.replyWithDocument({
       source: result,
       filename: 'sticker.webm'
+    }, {
+      reply_to_message_id: ctx.message.message_id
     })
 
     return {
