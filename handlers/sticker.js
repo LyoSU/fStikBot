@@ -21,7 +21,6 @@ module.exports = async (ctx) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   let stickerFile, stickerSet
   const stickerType = ctx.updateSubTypes[0]
-  const mimeType = ctx.message.document.mime_type
 
   switch (stickerType) {
     case 'sticker':
@@ -29,7 +28,10 @@ module.exports = async (ctx) => {
       break
 
     case 'document':
-      if (['image/jpeg', 'image/png'].includes(mimeType) || mimeType.match('video')) {
+      if (
+        ['image/jpeg', 'image/png'].includes(ctx.message.document.mime_type) ||
+        ctx.message.document.mime_type.match('video')
+      ) {
         stickerFile = ctx.message.document
         if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
       }
