@@ -1,5 +1,31 @@
 const https = require('https')
 const sharp = require('sharp')
+const ffmpeg = require('fluent-ffmpeg')
+const temp = require('temp')
+const { writeFileSync } = require('fs')
+
+function convertToWebmSticker (input) {
+  const output = temp.path({ suffix: '.webm' })
+
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+      .input(input)
+      .on('error', (error) => {
+        reject(error)
+      })
+      .on('end', () => resolve(output))
+      .output(output)
+      .outputOptions(
+        '-t', '2.999',
+        '-c:v', 'libvpx-vp9',
+        '-pix_fmt', 'yuva420p',
+        '-vf', 'scale=512:512:force_original_aspect_ratio=decrease',
+        '-b:v', '500k',
+        '-an'
+      )
+      .run()
+  })
+}
 
 const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
   const data = []
@@ -49,7 +75,31 @@ module.exports = async (ctx, inputFile) => {
 
   let emojis = inputFile.emoji || ''
 
-  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
+  if (!ctx.session.userInfo.stickerSet.inline && inputFile.mime_type.match('video')) {
+    if (inputFile.file_size > 5242880) { // 5 mb
+      return
+    }
+
+    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
+    const data = await downloadFileByUrl(fileUrl)
+
+    const input = temp.path({ suffix: '.mp4' })
+
+    writeFileSync(input, data)
+
+    const result = await convertToWebmSticker(input)
+
+    await ctx.replyWithDocument({
+      source: result,
+      filename: 'sticker.webm'
+    })
+
+    return {
+      ok: {
+        webm: true
+      }
+    }
+  } else if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
     await ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, stickerFile, null)
 
     return {

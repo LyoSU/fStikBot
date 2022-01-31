@@ -28,10 +28,18 @@ module.exports = async (ctx) => {
       break
 
     case 'document':
-      if (['image/jpeg', 'image/png'].indexOf(ctx.message.document.mime_type) >= 0) {
+      if (['image/jpeg', 'image/png'].includes(ctx.message.document.mime_type)) {
         stickerFile = ctx.message.document
         if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
       }
+      break
+
+    case 'animation':
+      stickerFile = ctx.message.animation
+      break
+
+    case 'video':
+      stickerFile = ctx.message.video
       break
 
     case 'photo':
@@ -89,7 +97,9 @@ module.exports = async (ctx) => {
       const addStickerResult = await addSticker(ctx, stickerFile)
 
       if (addStickerResult.ok) {
-        if (addStickerResult.ok.inline) {
+        if (addStickerResult.ok.webm) {
+          return
+        } else if (addStickerResult.ok.inline) {
           messageText = ctx.i18n.t('sticker.add.ok_inline', {
             title: escapeHTML(stickerSet.title)
           })
