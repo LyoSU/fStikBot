@@ -75,7 +75,7 @@ module.exports = async (ctx, inputFile) => {
 
   let emojis = inputFile.emoji || ''
 
-  if (!ctx.session.userInfo.stickerSet.inline && inputFile.mime_type.match('video')) {
+  if (!ctx.session.userInfo.stickerSet.inline && inputFile.mime_type && inputFile.mime_type.match('video')) {
     if (inputFile.file_size > 5242880) { // 5 mb
       return
     }
