@@ -142,7 +142,7 @@ scenes:
   new_pack:
     common: Adi
     inline: Inline
-    animated: Anime 
+    animated: Anime
     pack_type: |
       <b>Etiket paketinin növünü seçin:</b>
     pack_title: |
