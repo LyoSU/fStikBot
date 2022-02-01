@@ -173,7 +173,7 @@ scenes:
     error:
       premium: |
         <b>Tizimda Xatolik! </b>
-        Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud. 
+        Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud.
 
         Siz buni /donate buyrug'ini yuborish orqali qilishingiz mumkin
   original:
@@ -203,7 +203,7 @@ admin:
     create:
       name: Mavzu
       send_message: Matn yoki ommaviy axborot vositalarini yuboring
-      date: Nashr qilingan sanani kiriting <b>kk.oo ss:mm</b>
+      date: 'Nashr qilingan sanani kiriting <b>kk.oo ss:mm</b>'
       date_format: |
         Xabar yuboriladi:
           ${date}
@@ -271,7 +271,7 @@ admin:
       <b>Shaxsiy xabar ${name}</b> bekor qilindi.
     send_error: |
       <b>Shaxsiy xabar yuborishda xatolik ${name}</b>
-       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi. 
+       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi.
 
       <code>${errorMessage}</code>
 error:
