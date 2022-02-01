@@ -22,7 +22,7 @@ function convertToWebmSticker (input) {
         '-b:v', '500k',
         '-an'
       )
-      .duration(3)
+      .duration(2.9)
       .run()
   })
 }
