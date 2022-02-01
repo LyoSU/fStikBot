@@ -48,6 +48,7 @@ setInterval(() => {
 
 module.exports = async (ctx, inputFile) => {
   let stickerFile = inputFile
+  let { stickerSet } = ctx.session.userInfo
 
   const originalSticker = await ctx.db.Sticker.findOne({
     fileUniqueId: stickerFile.file_unique_id
@@ -78,10 +79,18 @@ module.exports = async (ctx, inputFile) => {
     emojiSuffix: defaultStickerSet.emojiSuffix
   }
 
+  const defaultVideoStickerSet = {
+    owner: defaultStickerSet.owner,
+    name: defaultStickerSet.name,
+    title: 'Video ' + defaultStickerSet.title,
+    video: true,
+    emojiSuffix: defaultStickerSet.emojiSuffix
+  }
+
   let emojis = inputFile.emoji || ''
 
-  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
-    await ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, stickerFile, null)
+  if (stickerSet && stickerSet.inline) {
+    await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerFile, null)
 
     return {
       ok: {
@@ -89,8 +98,12 @@ module.exports = async (ctx, inputFile) => {
       }
     }
   } else if (stickerFile.is_animated !== true) {
-    if (!ctx.session.userInfo.stickerSet) ctx.session.userInfo.stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
-    emojis += ctx.session.userInfo.stickerSet.emojiSuffix || ''
+    if (!stickerSet) {
+      if (inputFile.mime_type.match('video')) stickerSet = await ctx.db.StickerSet.getSet(defaultVideoStickerSet)
+      else stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+      ctx.session.userInfo = stickerSet
+    }
+    emojis += stickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
 
@@ -98,7 +111,13 @@ module.exports = async (ctx, inputFile) => {
       emojis
     }
 
-    if (ctx.session.userInfo.stickerSet.video) {
+    if (stickerSet && !stickerSet.video && inputFile.mime_type.match('video')) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
+        reply_to_message_id: ctx.message.message_id
+      })
+    }
+
+    if (stickerSet.video || inputFile.mime_type.match('video')) {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
@@ -107,6 +126,7 @@ module.exports = async (ctx, inputFile) => {
       }
       userQueue.video = true
       if (inputFile.file_size > 1000 * 1000 * 3 || inputFile.duration >= 60) { // 3 mb or 60 sec
+        userQueue.video = false
         return ctx.reply('file too big')
       }
 
@@ -143,8 +163,8 @@ module.exports = async (ctx, inputFile) => {
 
     let stickerAdd = false
 
-    if (ctx.session.userInfo.stickerSet.create === false) {
-      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, ctx.session.userInfo.stickerSet.title, stickerExtra).catch((error) => {
+    if (stickerSet.create === false) {
+      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, stickerSet.name, stickerSet.title, stickerExtra).catch((error) => {
         return {
           error: {
             telegram: error
@@ -155,11 +175,11 @@ module.exports = async (ctx, inputFile) => {
         return stickerAdd
       }
       if (stickerAdd) {
-        ctx.session.userInfo.stickerSet.create = true
-        await ctx.session.userInfo.stickerSet.save()
+        stickerSet.create = true
+        await stickerSet.save()
       }
     } else {
-      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, stickerExtra).catch((error) => {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, stickerSet.name, stickerExtra).catch((error) => {
         return {
           error: {
             telegram: error
@@ -172,7 +192,7 @@ module.exports = async (ctx, inputFile) => {
     }
 
     if (stickerAdd) {
-      const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.userInfo.stickerSet.name).catch((error) => {
+      const getStickerSet = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
         return {
           error: {
             telegram: error
@@ -184,12 +204,12 @@ module.exports = async (ctx, inputFile) => {
       }
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-      await ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, stickerInfo, stickerFile)
+      await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerInfo, stickerFile)
 
       return {
         ok: {
-          title: ctx.session.userInfo.stickerSet.title,
-          link: `${ctx.config.stickerLinkPrefix}${ctx.session.userInfo.stickerSet.name}`,
+          title: stickerSet.title,
+          link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
           stickerInfo
         }
       }
