@@ -99,7 +99,7 @@ module.exports = async (ctx, inputFile) => {
     }
   } else if (stickerFile.is_animated !== true) {
     if (!stickerSet) {
-      if (inputFile.mime_type.match('video')) stickerSet = await ctx.db.StickerSet.getSet(defaultVideoStickerSet)
+      if (inputFile.mime_type && inputFile.mime_type.match('video')) stickerSet = await ctx.db.StickerSet.getSet(defaultVideoStickerSet)
       else stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
       ctx.session.userInfo = stickerSet
     }
