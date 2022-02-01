@@ -75,33 +75,7 @@ module.exports = async (ctx, inputFile) => {
 
   let emojis = inputFile.emoji || ''
 
-  if ((!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline) && inputFile.mime_type && inputFile.mime_type.match('video')) {
-    if (inputFile.file_size > 1000 * 1000 || inputFile.duration >= 30) { // 1 mb or 30 sec
-      return ctx.reply('file too big')
-    }
-
-    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
-    const data = await downloadFileByUrl(fileUrl)
-
-    const input = temp.path({ suffix: '.mp4' })
-
-    writeFileSync(input, data)
-
-    const result = await convertToWebmSticker(input)
-
-    await ctx.replyWithDocument({
-      source: result,
-      filename: 'sticker.webm'
-    }, {
-      reply_to_message_id: ctx.message.message_id
-    })
-
-    return {
-      ok: {
-        webm: true
-      }
-    }
-  } else if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
+  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
     await ctx.db.Sticker.addSticker(ctx.session.userInfo.stickerSet.id, emojis, stickerFile, null)
 
     return {
@@ -114,26 +88,44 @@ module.exports = async (ctx, inputFile) => {
     emojis += ctx.session.userInfo.stickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
-    const imageSharp = sharp(data)
-    const imageMetadata = await imageSharp.metadata().catch(() => { })
 
-    if (
-      imageMetadata.width > 512 || imageMetadata.height > 512 ||
-      (imageMetadata.width !== 512 && imageMetadata.height !== 512)
-    ) {
-      if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
-      else imageSharp.resize({ width: 512 })
+    const stickerExtra = {
+      emojis
     }
 
-    const fileBuffer = await imageSharp.webp({ quality: 100 }).png({ force: false }).toBuffer()
+    if (ctx.session.userInfo.stickerSet.video) {
+      if (inputFile.file_size > 1000 * 1000 * 3 || inputFile.duration >= 60) { // 3 mb or 60 sec
+        return ctx.reply('file too big')
+      }
+
+      const input = temp.path({ suffix: '.mp4' })
+
+      writeFileSync(input, data)
+
+      stickerExtra.webm_sticker = {
+        source: await convertToWebmSticker(input)
+      }
+    } else {
+      const imageSharp = sharp(data)
+      const imageMetadata = await imageSharp.metadata().catch(() => { })
+
+      if (
+        imageMetadata.width > 512 || imageMetadata.height > 512 ||
+        (imageMetadata.width !== 512 && imageMetadata.height !== 512)
+      ) {
+        if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
+        else imageSharp.resize({ width: 512 })
+      }
+
+      stickerExtra.png_sticker = {
+        source: await imageSharp.webp({ quality: 100 }).png({ force: false }).toBuffer()
+      }
+    }
 
     let stickerAdd = false
 
     if (ctx.session.userInfo.stickerSet.create === false) {
-      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, ctx.session.userInfo.stickerSet.title, {
-        png_sticker: { source: fileBuffer },
-        emojis
-      }).catch((error) => {
+      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, ctx.session.userInfo.stickerSet.title, stickerExtra).catch((error) => {
         return {
           error: {
             telegram: error
@@ -148,10 +140,7 @@ module.exports = async (ctx, inputFile) => {
         await ctx.session.userInfo.stickerSet.save()
       }
     } else {
-      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, {
-        png_sticker: { source: fileBuffer },
-        emojis
-      }).catch((error) => {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.stickerSet.name, stickerExtra).catch((error) => {
         return {
           error: {
             telegram: error

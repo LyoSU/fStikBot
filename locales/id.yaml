@@ -9,7 +9,7 @@ cmd:
       Ingin menghapusnya dari paket stiker anda? Kirimkan sekali lagi.
 
       /packs - dapatkan paket anda
-      /animpacks - dapatkan paket animasi anda
+      /anim - dapatkan paket animasi anda
       /new - buat paket stiker baru
 
       /original - temukan stiker asli
@@ -25,7 +25,7 @@ cmd:
     btn:
       packs: '🌟 Paket stiker'
       inline: '💫 Inline'
-      animpacks: '✨ Animasi'
+      anim: '✨ Animasi'
       new: '🆕 Buat paket stiker baru'
       donate: '☕️'
   inline:

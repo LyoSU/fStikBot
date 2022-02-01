@@ -9,7 +9,7 @@ module.exports = async (ctx) => {
       ctx.i18n.t('cmd.start.btn.packs'), ctx.i18n.t('cmd.start.btn.inline')
     ],
     [
-      ctx.i18n.t('cmd.start.btn.animpacks')
+      ctx.i18n.t('cmd.start.btn.video'), ctx.i18n.t('cmd.start.btn.anim')
     ],
     [
       ctx.i18n.t('cmd.start.btn.donate')

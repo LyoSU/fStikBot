@@ -9,7 +9,7 @@ cmd:
       Silmək üçün - stikeri yenidən göndərin.
 
       /pack - etiket paketlərinin siyahısı
-      /animpacks - animasiya etiket paketlərinin siyahısı
+      /anim - animasiya etiket paketlərinin siyahısı
       /new - yeni bir stiker paketi yaradın
 
       /original - orijinal stikeri tapın
@@ -26,7 +26,7 @@ cmd:
     btn:
       packs: '🌟 Sticker Paketleri'
       inline: '💫 Инлайн'
-      animpacks: '✨ Анимированные'
+      anim: '✨ Анимированные'
       new: 'Stick paketi yaradın'
       donate: 'İanə ver'
   inline:
@@ -143,7 +143,7 @@ scenes:
   new_pack:
     common: Adi
     inline: Inline
-    animated: Anime 
+    animated: Anime
     pack_type: |
       <b>Etiket paketinin növünü seçin:</b>
     pack_title: |

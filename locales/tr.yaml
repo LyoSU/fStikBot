@@ -22,7 +22,7 @@ cmd:
     btn:
       packs: '🌟 Çıkartma paketleri'
       inline: '💫 Satır içi'
-      animpacks: '✨ Animasyonlu'
+      anim: '✨ Animasyonlu'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   inline:

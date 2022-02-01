@@ -27,7 +27,10 @@ const сhoosePackType = new Scene('сhoosePackType')
     reply_markup: Markup.keyboard([
       [
         ctx.i18n.t('scenes.new_pack.common'),
-        ctx.i18n.t('scenes.new_pack.inline'),
+        ctx.i18n.t('scenes.new_pack.inline')
+      ],
+      [
+        ctx.i18n.t('scenes.new_pack.video'),
         ctx.i18n.t('scenes.new_pack.animated')
       ],
       [
@@ -42,6 +45,9 @@ const сhoosePackType = new Scene('сhoosePackType')
     return ctx.scene.enter('newPackTitle')
   } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.inline')) {
     ctx.session.scene.newPack.inline = true
+    return ctx.scene.enter('newPackTitle')
+  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.video')) {
+    ctx.session.scene.newPack.video = true
     return ctx.scene.enter('newPackTitle')
   } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.common')) {
     ctx.session.scene.newPack.animated = false
@@ -103,7 +109,7 @@ newPackConfirm.enter(async (ctx) => {
     const nameSuffix = `_by_${ctx.options.username}`
     const titleSuffix = ` :: @${ctx.options.username}`
 
-    let { name, title, animated } = ctx.session.scene.newPack
+    let { name, title, animated, video } = ctx.session.scene.newPack
 
     if (!inline) name += nameSuffix
     if (ctx.session.userInfo.premium !== true && !inline) title += titleSuffix
@@ -111,6 +117,8 @@ newPackConfirm.enter(async (ctx) => {
     const stickers = { emojis: '🌟' }
     if (animated) {
       stickers.tgs_sticker = { source: 'sticker_placeholder.tgs' }
+    } else if (video) {
+      stickers.webm_sticker = { source: 'sticker_placeholder.webm' }
     } else {
       stickers.png_sticker = { source: 'sticker_placeholder.png' }
     }
@@ -170,6 +178,7 @@ newPackConfirm.enter(async (ctx) => {
         title,
         animated,
         inline,
+        video,
         emojiSuffix: '🌟',
         create: true
       })

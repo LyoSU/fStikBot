@@ -9,7 +9,7 @@ cmd:
       O'chirish uchun - Stikerni qayta yuboring
 
       /packs - stikerlar to'plamining ro'yxati
-      /animpacks - animatsion stikerlarlar to'plamining ro'yxati
+      /anim - animatsion stikerlarlar to'plamining ro'yxati
       /new - yangi stikerlar to'plamini yaratish
       /original - asl stikerni topish
       /restore - stikerlar to'plamini qayta tiklash
@@ -23,7 +23,7 @@ cmd:
     btn:
       packs: '🌟 Stikerlar to''plami'
       inline: '💫 Инлайн'
-      animpacks: '✨ Анимированные'
+      anim: '✨ Анимированные'
       new: '🆕 Stiker yaratish'
       donate: '☕️ Dasturchini qo''llab-quvatlash'
   inline:
@@ -171,7 +171,7 @@ scenes:
     error:
       premium: |
         <b>Tizimda Xatolik! </b>
-        Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud. 
+        Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud.
 
         Siz buni /donate buyrug'ini yuborish orqali qilishingiz mumkin
   original:
@@ -269,7 +269,7 @@ admin:
       <b>Shaxsiy xabar ${name}</b> bekor qilindi.
     send_error: |
       <b>Shaxsiy xabar yuborishda xatolik ${name}</b>
-       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi. 
+       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi.
 
       <code>${errorMessage}</code>
 error:

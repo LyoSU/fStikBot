@@ -21,6 +21,7 @@ module.exports = async (ctx) => {
     create: true,
     inline: { $ne: true },
     animated: { $ne: true },
+    video: { $ne: true },
     hide: { $ne: true }
   }
 
@@ -30,6 +31,11 @@ module.exports = async (ctx) => {
     if (stickerSet.animated) {
       ctx.state.type = 'animated'
       query.animated = true
+    }
+
+    if (stickerSet.video) {
+      ctx.state.type = 'video'
+      query.video = true
     }
 
     if (stickerSet.owner.toString() === userInfo.id.toString()) {
@@ -88,6 +94,7 @@ module.exports = async (ctx) => {
 
   if (ctx.state.type === 'animated') query.animated = true
   else if (ctx.state.type === 'inline') query.inline = true
+  else if (ctx.state.type === 'video') query.video = true
 
   const stickerSets = await ctx.db.StickerSet.find(query).sort({
     updatedAt: -1

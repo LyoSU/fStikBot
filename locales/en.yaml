@@ -9,7 +9,7 @@ cmd:
       Want to remove it from your sticker pack? Send it once again.
 
       /packs - get your packs
-      /animpacks - get your animated packs
+      /anim - get your animated packs
       /new - create a new sticker pack
 
       /original - find original sticker
@@ -25,7 +25,8 @@ cmd:
     btn:
       packs: '🌟 Sticker packs'
       inline: '💫 Inline'
-      animpacks: '✨ Animated'
+      video: '📹 Video'
+      anim: '✨ Animated'
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
   inline:
@@ -141,6 +142,7 @@ scenes:
     common: Common
     inline: Inline
     animated: Animated
+    video: Video
     pack_type: |
       <b>Choose stickerpack type:</b>
     pack_title: |

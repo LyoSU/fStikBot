@@ -135,8 +135,13 @@ bot.hears(['/inline', match('cmd.start.btn.inline')], ctx => {
   ctx.state.type = 'inline'
   return handlePacks(ctx)
 })
-bot.hears(['/animpacks', match('cmd.start.btn.animpacks')], ctx => {
+bot.hears(['/anim', match('cmd.start.btn.anim')], ctx => {
   ctx.state.type = 'animated'
+  return handlePacks(ctx)
+})
+
+bot.hears(['/video', match('cmd.start.btn.video')], ctx => {
+  ctx.state.type = 'video'
   return handlePacks(ctx)
 })
 
