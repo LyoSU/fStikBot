@@ -4,28 +4,28 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Hi, <b>${name}</b>!
+       Send me a sticker or photo and I will add it to your sticker pack.
+       Want to remove it from your sticker pack? Send it once again.
 
-      /packs - список стикерпаков
-      /anim - список анимированных стикерпаков
-      /new - создать новый стикерпак
+       /packs - get your packs
+       /anim - get your animated packs
+       /new - create a new sticker pack
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /lang - change language
+       /original - find original sticker
+       /restore - restore a sticker pack
+       /copy - copy a sticker pack
+       /emoji - change emoji suffix for current sticker pack.
+       /lang - change language
 
-      /donate - поддержать разработчика
+       /donate - support the developer
 
-      GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+       GitHub: https://github.com/LyoSU/fStikBot
+       👨🏻‍💻 Developer channel: @LyBlog
     btn:
       packs: '🌟 Paket stiker'
       inline: '💫 Inline'
-      anim: '✨ Анимированные'
+      anim: '✨ Animated'
       new: '🆕 Buat paket stiker baru'
       donate: '☕️'
   inline:
