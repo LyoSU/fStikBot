@@ -133,10 +133,11 @@ sticker:
          Bot, şu anda seçili olan çıkartma paketine erişemiyor.
          Lütfen yeni bir (/new) oluşturun veya başka bir çıkartma paketi seçin (/packs).
       file_type: |
-        <b>Hata!</b>
-        Bu dosya türü desteklenmiyor.
+        <b>Error!</b>
+        This file type is not supported.
 
-        <i>Bu dosyayı satır içi çıkartma paketine ekleyebilirsiniz, bunun için / packs</i>
+        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
     common: Normal
