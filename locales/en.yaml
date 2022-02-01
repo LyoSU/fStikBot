@@ -26,6 +26,7 @@ cmd:
       packs: '🌟 Sticker packs'
       inline: '💫 Inline'
       anim: '✨ Animated'
+      video: '📹 Video'
       new: '🆕 Create a new sticker pack'
       donate: '☕️'
   inline:
@@ -141,6 +142,7 @@ scenes:
     common: Common
     inline: Inline
     animated: Animated
+    video: Video
     pack_type: |
       <b>Choose stickerpack type:</b>
     pack_title: |
