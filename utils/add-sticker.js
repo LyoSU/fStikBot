@@ -111,7 +111,7 @@ module.exports = async (ctx, inputFile) => {
       emojis
     }
 
-    if (stickerSet && !stickerSet.video && inputFile.mime_type.match('video')) {
+    if (stickerSet && !stickerSet.video && inputFile.mime_type && inputFile.mime_type.match('video')) {
       return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type'), {
         reply_to_message_id: ctx.message.message_id
       })
