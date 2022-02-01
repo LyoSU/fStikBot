@@ -4,7 +4,7 @@ const ffmpeg = require('fluent-ffmpeg')
 const temp = require('temp')
 const { writeFileSync } = require('fs')
 
-function convertToWebmSticker (input, seekInput = false) {
+function convertToWebmSticker (input) {
   const output = temp.path({ suffix: '.webm' })
 
   return new Promise((resolve, reject) => {
@@ -32,7 +32,6 @@ function convertToWebmSticker (input, seekInput = false) {
       )
       .duration(2.9)
 
-    if (seekInput) process.seekInput(seekInput)
     process.run()
   })
 }
@@ -142,7 +141,7 @@ module.exports = async (ctx, inputFile) => {
       if (inputFile.is_video) {
         stickerExtra.webm_sticker = inputFile.file_id
       } else {
-        const file = await convertToWebmSticker(fileUrl, 3)
+        const file = await convertToWebmSticker(fileUrl)
 
         if (!file.metadata) {
           const data = await downloadFileByUrl(fileUrl)
@@ -151,7 +150,7 @@ module.exports = async (ctx, inputFile) => {
 
           writeFileSync(input, data)
 
-          const file = await convertToWebmSticker(fileUrl, false)
+          const file = await convertToWebmSticker(fileUrl)
 
           stickerExtra.webm_sticker = {
             source: file.output
