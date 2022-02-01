@@ -134,10 +134,11 @@ sticker:
         Бот не має доступу до поточного стікерпаку.
         Будь ласка, створіть новий (/new) або виберіть (/packs) інший стікерпак.
       file_type: |
-        <b>Помилка!</b>
-        Цей тип файлу не підтримується.
+        <b>Error!</b>
+        This file type is not supported.
 
-        <i>Ви можете додати цей файл в інлайн стікерпак, для цього виберіть його командою /packs</i>
+        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
     common: Звичайний
