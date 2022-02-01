@@ -4,25 +4,28 @@ ratelimit: Not so often!
 cmd:
   start:
     info: |
-      Merhaba, <b>${name}</b>!
-      Bana bir çıkartma veya fotoğraf gönder, ben de çıkartma paketine ekleyeceğim.
+      Привет, <b>${name}</b>!
+      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
+      Для удаления - отправь стикер снова.
 
-      /packs - paketlerini getir
-      /new - yeni bir çıkartma paketi oluştur
+      /packs - список стикерпаков
+      /anim - список анимированных стикерпаков
+      /new - создать новый стикерпак
 
-      /original - orjinal çıkartmayı bul
-      /restore - çıkartma paketini sıfırla
-      /copy - çıkartma paketini kopyala
+      /original - найти оригинал стикера
+      /restore - восстановить стикерпак
+      /copy - копировать стикерпак
+      /emoji - сменить эмодзи-суффикс для текущего стикерпака
+      /lang - change language
 
-      /donate - yapımcıyı destekle
+      /donate - поддержать разработчика
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Yapımcı Kanalı: @LyBlog
-      Çeviriyi Yapan: @By_Azade
+      👨🏻‍💻 Канал разработчика: @LyBlog
     btn:
       packs: '🌟 Çıkartma paketleri'
       inline: '💫 Satır içi'
-      anim: '✨ Animasyonlu'
+      anim: '✨ Анимированные'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   inline:
