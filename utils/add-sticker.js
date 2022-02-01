@@ -117,7 +117,7 @@ module.exports = async (ctx, inputFile) => {
       })
     }
 
-    if (stickerSet.video || inputFile.mime_type.match('video')) {
+    if (stickerSet.video || (inputFile.mime_type && inputFile.mime_type.match('video'))) {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
