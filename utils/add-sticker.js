@@ -102,8 +102,14 @@ module.exports = async (ctx, inputFile) => {
 
       writeFileSync(input, data)
 
-      stickerExtra.webm_sticker = {
-        source: await convertToWebmSticker(input)
+      if (inputFile.is_video) {
+        stickerExtra.webm_sticker = {
+          source: input
+        }
+      } else {
+        stickerExtra.webm_sticker = {
+          source: await convertToWebmSticker(input)
+        }
       }
     } else {
       const imageSharp = sharp(data)
