@@ -136,7 +136,8 @@ sticker:
         <b>Error!</b>
         This file type is not supported.
 
-        <i>You can add this file to the inline sticker pack, for this select it with the command /packs</i>
+        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
     common: Common
