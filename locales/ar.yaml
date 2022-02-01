@@ -133,10 +133,11 @@ sticker:
         Бот не может получить доступ к текущему выбранному стикерпаку.
         Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
       file_type: |
-        <b>Ошибка!</b>
-        Данный тип файла не поддерживается.
+        <b>Error!</b>
+        This file type is not supported.
 
-        <i>Вы можете добавить этот файл в инлайн стикерпак, для этого выберете его командой /packs</i>
+        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
     common: Обычный
