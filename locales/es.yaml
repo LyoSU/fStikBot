@@ -26,6 +26,7 @@ cmd:
       packs: 'Pack de stickers'
       inline: '💫 Инлайн'
       anim: '✨ Animated'
+      video: '📹 Video'
       new: 'Crear pack de stickers'
       donate: 'Apoya al desarrollador'
   inline:
@@ -141,6 +142,7 @@ scenes:
     common: Normal
     inline: Inline
     animated: Animado
+    video: Video
     pack_type: |
       <b>Elija el tipo de pack de stickers:</b>
     pack_title: |

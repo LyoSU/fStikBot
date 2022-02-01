@@ -26,6 +26,7 @@ cmd:
       packs: '🌟 Çıkartma paketleri'
       inline: '💫 Satır içi'
       anim: '✨ Animated'
+      video: '📹 Video'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
       donate: '☕️'
   inline:
@@ -141,6 +142,7 @@ scenes:
     common: Normal
     inline: Satır içi
     animated: Animasyonlu
+    video: Video
     pack_type: |
       <b>Çıkartma paketinin türünü seçin:</b>
     pack_title: |

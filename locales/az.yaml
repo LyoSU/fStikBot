@@ -26,6 +26,7 @@ cmd:
       packs: '🌟 Sticker Paketleri'
       inline: '💫 Инлайн'
       anim: '✨ Animated'
+      video: '📹 Video'
       new: 'Stick paketi yaradın'
       donate: 'İanə ver'
   inline:
@@ -143,6 +144,7 @@ scenes:
     common: Adi
     inline: Inline
     animated: Anime
+    video: Video
     pack_type: |
       <b>Etiket paketinin növünü seçin:</b>
     pack_title: |

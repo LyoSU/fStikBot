@@ -26,6 +26,7 @@ cmd:
       packs: '🌟 Stikerlar to''plami'
       inline: '💫 Инлайн'
       anim: '✨ Animated'
+      video: '📹 Video'
       new: '🆕 Stiker yaratish'
       donate: '☕️ Dasturchini qo''llab-quvatlash'
   inline:
@@ -139,6 +140,7 @@ scenes:
     common: Oddiy
     inline: Inline
     animated: Animatsiya qilingan
+    video: Video
     pack_type: |
       <b>Stikerlar to'plamining turini tanlang:</b>
     pack_title: |

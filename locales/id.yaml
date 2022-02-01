@@ -26,6 +26,7 @@ cmd:
       packs: '🌟 Paket stiker'
       inline: '💫 Inline'
       anim: '✨ Animated'
+      video: '📹 Video'
       new: '🆕 Buat paket stiker baru'
       donate: '☕️'
   inline:
@@ -141,6 +142,7 @@ scenes:
     common: Umum
     inline: Inline
     animated: Animasi
+    video: Video
     pack_type: |
       <b>Pilih jenis paket stiker:</b>
     pack_title: |
