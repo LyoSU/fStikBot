@@ -4,16 +4,24 @@ const ffmpeg = require('fluent-ffmpeg')
 const temp = require('temp')
 const { writeFileSync } = require('fs')
 
-function convertToWebmSticker (input) {
+function convertToWebmSticker (input, seekInput = false) {
   const output = temp.path({ suffix: '.webm' })
 
   return new Promise((resolve, reject) => {
-    ffmpeg()
+    const process = ffmpeg()
       .input(input)
       .on('error', (error) => {
         reject(error)
       })
-      .on('end', () => resolve(output))
+      .on('end', () => {
+        ffmpeg.ffprobe(output, (_err, metadata) => {
+          resolve({
+            output,
+            metadata
+          })
+        })
+      })
+      .addInputOptions(['-t 3'])
       .output(output)
       .outputOptions(
         '-c:v', 'libvpx-vp9',
@@ -23,7 +31,9 @@ function convertToWebmSticker (input) {
         '-an'
       )
       .duration(2.9)
-      .run()
+
+    if (seekInput) process.seekInput(seekInput)
+    process.run()
   })
 }
 
@@ -105,7 +115,6 @@ module.exports = async (ctx, inputFile) => {
     }
     emojis += stickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
-    const data = await downloadFileByUrl(fileUrl)
 
     const stickerExtra = {
       emojis
@@ -130,21 +139,32 @@ module.exports = async (ctx, inputFile) => {
         return ctx.reply('file too big')
       }
 
-      const input = temp.path({ suffix: '.mp4' })
-
-      writeFileSync(input, data)
-
       if (inputFile.is_video) {
-        stickerExtra.webm_sticker = {
-          source: input
-        }
+        stickerExtra.webm_sticker = inputFile.file_id
       } else {
-        stickerExtra.webm_sticker = {
-          source: await convertToWebmSticker(input)
+        const file = await convertToWebmSticker(fileUrl, 3)
+
+        if (!file.metadata) {
+          const data = await downloadFileByUrl(fileUrl)
+
+          const input = temp.path({ suffix: '.mp4' })
+
+          writeFileSync(input, data)
+
+          const file = await convertToWebmSticker(fileUrl, false)
+
+          stickerExtra.webm_sticker = {
+            source: file.output
+          }
+        } else {
+          stickerExtra.webm_sticker = {
+            source: file.output
+          }
         }
       }
       userQueue.video = false
     } else {
+      const data = await downloadFileByUrl(fileUrl)
       const imageSharp = sharp(data)
       const imageMetadata = await imageSharp.metadata().catch(() => { })
 
