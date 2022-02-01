@@ -16,13 +16,13 @@ function convertToWebmSticker (input) {
       .on('end', () => resolve(output))
       .output(output)
       .outputOptions(
-        '-t', '2.999',
         '-c:v', 'libvpx-vp9',
         '-pix_fmt', 'yuva420p',
         '-vf', 'scale=512:512:force_original_aspect_ratio=decrease',
         '-b:v', '500k',
         '-an'
       )
+      .duration(3)
       .run()
   })
 }
