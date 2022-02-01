@@ -133,10 +133,11 @@ sticker:
         Bot tidak dapat mengakses paket stiker yang anda pilih saat ini.
         Silakan, buat (/new) atau pilih (/packs) paket stiker lain.
       file_type: |
-        <b>Kesalahan!</b>
-        Jenis file ini tidak didukung.
+        <b>Error!</b>
+        This file type is not supported.
 
-        <i>Anda dapat menambahkan file ini ke paket stiker inline, untuk ini pilih dengan perintah / paket</i>
+        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
     common: Umum
