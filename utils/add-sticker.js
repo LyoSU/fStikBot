@@ -41,6 +41,11 @@ const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
   }).on('error', reject)
 })
 
+let queue = {}
+setInterval(() => {
+  queue = {}
+}, 1000 * 30)
+
 module.exports = async (ctx, inputFile) => {
   let stickerFile = inputFile
 
@@ -94,6 +99,13 @@ module.exports = async (ctx, inputFile) => {
     }
 
     if (ctx.session.userInfo.stickerSet.video) {
+      if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
+      const userQueue = queue[ctx.from.id]
+
+      if (userQueue.video) {
+        return ctx.reply('wait load...')
+      }
+      userQueue.video = true
       if (inputFile.file_size > 1000 * 1000 * 3 || inputFile.duration >= 60) { // 3 mb or 60 sec
         return ctx.reply('file too big')
       }
@@ -111,6 +123,7 @@ module.exports = async (ctx, inputFile) => {
           source: await convertToWebmSticker(input)
         }
       }
+      userQueue.video = false
     } else {
       const imageSharp = sharp(data)
       const imageMetadata = await imageSharp.metadata().catch(() => { })
