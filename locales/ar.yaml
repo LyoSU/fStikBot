@@ -4,33 +4,33 @@ ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      مرحبا، <b>${name}</b>!
+       أرسل لي ملصق أو صورة وسأضفها إلى حزمة الملصقات الخاصة بك.
+       هل تريد إزالته من حزمة الملصقات الخاصة بك؟ ارسله مرة أخرى.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /new - create a new sticker pack
+       /pack - احصل على الباقات
+       /anim - احصل على الباقات المتحركة الخاصة بك
+       /جديد - إنشاء حزمة ملصقات جديدة
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack.
-       /lang - change language
+       /الأصلي - ابحث عن ملصق أصلي
+       /re- استعاد حزمة ملصقات
+       /نسخ - انسخ حزمة ملصقات
+       /emoji - غيّر لاحقة الإيموجي لحزمة الملصقات الحالية.
+       /lang - تغيير اللغة
 
-       /donate - support the developer
+       /donate - دعم المطور
 
        GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+       👨🏻‍💻 developer channel: @LyBlog
     btn:
-      packs: '🌟 Стикерпаки'
-      inline: '💫 Инлайн'
-      anim: '✨ Animated'
-      video: '📹 Video'
-      new: '🆕 Создать стикерпак'
-      donate: '☕️ Поддержать разработчика'
+      packs: '🌟 حزم الملصقات'
+      inline: '💫 مضمنة'
+      anim: '✨ متحرك'
+      video: '📹 فيديو'
+      new: '🆕 قم بإنشاء حزمة ملصقات جديدة'
+      donate: '☕️'
   inline:
-    switch_pm: Выбрать стикерпак
+    switch_pm: حدد حزمة ملصقات
   restore: |
     <b>🗃 Восстановление стикерпака</b>
 
