@@ -139,7 +139,11 @@ module.exports = async (ctx, inputFile) => {
       }
 
       if (inputFile.is_video) {
-        stickerExtra.webm_sticker = inputFile.file_id
+        const data = await downloadFileByUrl(fileUrl)
+
+        stickerExtra.webm_sticker = {
+          source: data
+        }
       } else {
         const file = await convertToWebmSticker(fileUrl)
 
