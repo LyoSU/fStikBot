@@ -92,7 +92,7 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      if (stickerFile.emoji) {
+      if (stickerFile.emoji || stickerSet.inline) {
         const stickerInfo = await addSticker(ctx, stickerFile)
 
         const result = await addStickerText(ctx, stickerInfo)

@@ -22,7 +22,7 @@ module.exports = async (ctx, addStickerResult) => {
 
     if (addStickerResult.ok.inline) {
       messageText = ctx.i18n.t('sticker.add.ok_inline', {
-        title: escapeHTML(addStickerResult.sticker.stickerSet.title)
+        title: escapeHTML(addStickerResult.ok.stickerSet.title)
       })
 
       replyMarkup = Markup.inlineKeyboard([

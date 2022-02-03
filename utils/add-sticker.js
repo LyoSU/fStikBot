@@ -103,7 +103,8 @@ module.exports = async (ctx, inputFile) => {
     return {
       ok: {
         inline: true,
-        sticker
+        sticker,
+        stickerSet
       }
     }
   } else if (stickerFile.is_animated !== true) {
