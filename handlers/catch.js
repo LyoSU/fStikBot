@@ -43,5 +43,5 @@ module.exports = async (error, ctx) => {
 
   if (error.description && error.description.includes('timeout')) return
 
-  await ctx.replyWithHTML('error :(\ntry again later').catch(() => {})
+  await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
 }

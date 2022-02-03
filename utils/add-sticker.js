@@ -111,7 +111,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         stickerSet
       }
     }
-  } else if (stickerFile.is_animated === true || stickerSet.animated) {
+  } else if (stickerFile.is_animated === true || (stickerSet && stickerSet.animated)) {
     if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = await ctx.db.StickerSet.getSet(defaultAnimatedStickerSet)
     emojis += ctx.session.userInfo.animatedStickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
@@ -135,6 +135,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
 
       if (stickerAdd) {
+        if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = stickerSet
         ctx.session.userInfo.animatedStickerSet.create = true
         await ctx.session.userInfo.animatedStickerSet.save()
       }
