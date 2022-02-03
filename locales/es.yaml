@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: 'Crear pack de stickers'
-      donate: 'Apoya al desarrollador'
+      donate: 'Donate'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
