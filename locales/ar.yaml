@@ -71,7 +71,9 @@ callback:
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
     set_pack: |
-      Выбран стикерпак <a href="${link}">${title}</a>
+      Selected sticker pack <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -116,26 +118,33 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
-        <b>Ошибка!</b>
-        В этом стикерпаке максимальное количество стикеров.
-        Вы можете создать новый стикерпак командой /new
+        <b>Error!</b>
+
+        This sticker pack has the maximum number of stickers.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        This sticker is already in the sticker pack.
+        <b>This sticker is already in the sticker pack</b>
+
         If you want to change the emoji, send it in the following message.
+        You can also edit the sticker pack via
       stickerset_invalid: |
-        <b>Ошибка!</b>
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+        <b>Error!</b>
+
+        Bot cannot access your current chosen sticker pack.
+        Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
+
         This file type is not supported.
 
         <i>You can add this video files to the video pack.
