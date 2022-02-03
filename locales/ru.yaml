@@ -71,9 +71,9 @@ callback:
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      Выбран набор стикеров <a href="${link}">${title}</a>
 
-      You can also edit the sticker pack via @Stickers
+      Вы также можете редактировать стикер-пак через @Stickers
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -118,38 +118,38 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Стикер успешно добавлен в стикер-пак:</b>
       <a href="${link}">${title}</a>
 
-      You can also edit the sticker pack via @Stickers
+      Вы также можете редактировать стикер-пак через @Stickers
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
     send_emoji: Отлично, теперь отправьте эмодзи, которые соответствуют стикеру
     error:
       stickers_too_much: |
-        <b>Error!</b>
+        <b>Ошибка!</b>
 
-        This sticker pack has the maximum number of stickers.
-        You can create a new sticker pack using the /new command.
+        Набор стикеров имеет максимальное количество стикеров.
+        Вы можете создать новый стикер-пакет с помощью /new команды.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Этот стикер уже находится в стикерпаке</b>
 
-        If you want to change the emoji, send it in the following message.
-        You can also edit the sticker pack via
+        Если вы хотите изменить эмодзи, отправить его в следующем сообщении.
+        Вы также можете редактировать стикер пакет через @Stickers
       stickerset_invalid: |
-        <b>Error!</b>
+        <b>Ошибка!</b>
 
-        Bot cannot access your current chosen sticker pack.
-        Please, create (/new) or choose (/packs) another sticker pack.
+        Бот не может получить доступ к текущему выбранному стикерпаку.
+        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
       file_type: |
-        <b>Error!</b>
+        <b>Ошибка!</b>
 
-        This file type is not supported.
+        Этот тип файла не поддерживается.
 
-        <i>You can add this video files to the video pack.
-        As well as all other files in the inline pack</i>
-        Create (/new) or choose (/packs) another sticker pack
+        <i>Вы можете добавить этот видеофайл в видеопакет.
+        Также как и все остальные файлы во встроенном пакете</i>
+        Создать (/new) или выбрать (/packs) другой стикер пакет
 scenes:
   new_pack:
     common: Обычный
@@ -300,7 +300,7 @@ error:
       Telegram вернул ошибку:
       ${error}
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Произошла неизвестная ошибка, попробуйте еще раз.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Если проблема не исчезнет, напишите @Ly_oBot.
+    Пожалуйста, напишите сразу о каком боте идет речь и подробно опишите проблему в одном сообщении.
