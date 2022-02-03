@@ -63,7 +63,8 @@ cmd:
     ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Xahiş edirəm emoji əlavə edin. Məsələn, <code>/emoji 💜</code> , sonrakı bütün yeni stikerlər üçün şəkilçini 💜 olaraq dəyişdirəcəkdir.
-    done: Emoji şəkilçisi uğurla dəyişdirildi.
+    done: Emoji successfully changed.
+    error: There was an error changing emoji!
 callback:
   pack:
     answerCbQuer:
@@ -122,14 +123,15 @@ sticker:
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
+    send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
         <b>XƏTA!</b>
         Bu stiker paketi maksimum stiker sayını aşır.
         /new yazarağ yeni bir etiket paketi yarada bilərsiniz
       have_already: |
-        <b>XƏTA!</b>
-        Bu stiker artıq bu stiker paketindədir.
+        This sticker is already in the sticker pack.
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
         <b>XƏTA!</b>
         Bot hazırda seçilmiş stiker paketinə daxil ola bilmir.
@@ -138,7 +140,8 @@ sticker:
         <b>Error!</b>
         This file type is not supported.
 
-        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        <i>You can add this video files to the video pack.
+        As well as all other files in the inline pack</i>
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
