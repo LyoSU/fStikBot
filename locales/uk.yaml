@@ -4,29 +4,29 @@ ratelimit: Занадто часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      Привіт, <b>${name}</b>!
+      Надішли мені стікер або фото, і я додам його у твій стікерпак.
+      Щоб видалити - відправ стікер знову.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /new - create a new sticker pack
+      /pack - список стікерпаків
+      /animpack - список анімованих стікерпаків
+      /new - створити новий стікерпак
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack.
-       /lang - change language
+      /original - знайти оригінал стікера
+      /restore - відновити стікерпак
+      /copy - скопіювати стікерпак
+      /emoji - змінити емодзі-суфікс для поточного стікерпаку
+      /lang - change language
 
-       /donate - support the developer
+      /donate - підтримати розробника
 
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Канал розробника: @LyBlog
     btn:
       packs: '🌟 Стікерпаки'
       inline: '💫 Інлайн'
-      anim: '✨ Animated'
-      video: '📹 Video'
+      anim: '✨ Анімований'
+      video: '📹 Відео'
       new: '🆕 Створити стікерпак'
       donate: '☕️ Підтримати розробника'
   inline:
@@ -64,17 +64,17 @@ cmd:
     ➖ Копіювати інші стікерпаки за посиланням на них
   emoji:
     info: Будь ласка, укажіть емодзі. Наприклад, <code>/emoji 💜</code> змінить суфікс на 💜 для всіх наступних стікерів.
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: Смайли успішно змінено.
+    error: Сталася помилка під час зміни емодзі!
 callback:
   pack:
     answerCbQuer:
       hidden: Стікерпак успішно приховано
       restored: Стікерпак успішно відновлено
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      Вибрана стікерпак <a href="${link}">${title}</a>
 
-      You can also edit the sticker pack via @Stickers
+      Також можна редагувати стікерпак за допомогою @Stickers
     set_inline_pack: |
       Вибрано <u>${title}</u> стікерпак
 
@@ -119,44 +119,43 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
-      <a href="${link}">${title}</a>
+      Вибрана стікерпак <a href="${link}">${title}</a>
 
-      You can also edit the sticker pack via @Stickers
+      Також можна редагувати стікерпак за допомогою @Stickers
     ok_inline: |
       <b>Стікер успішно доданий у стікерпак:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the sticker
+    send_emoji: Чудово, тепер відправте емодзі який відповідає стікеру
     error:
       stickers_too_much: |
-        <b>Error!</b>
+        <b>Помилка!</b>
 
-        This sticker pack has the maximum number of stickers.
-        You can create a new sticker pack using the /new command.
+        Цей пакет наклейок містить максимальну кількість наклейок.
+        Ви можете створити новий пакет наклейок за допомогою команди /new.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Цей стікер вже знаходиться в стікерпаку</b>
 
-        If you want to change the emoji, send it in the following message.
-        You can also edit the sticker pack via @Stickers
+        Якщо ви хочете змінити емоджі, надішліть це у наступному повідомленні.
+        Ви також можете редагувати стікерпак за допомогою @Stickers
       stickerset_invalid: |
-        <b>Error!</b>
+        <b>Помилка!</b>
 
-        Bot cannot access your current chosen sticker pack.
-        Please, create (/new) or choose (/packs) another sticker pack.
+        Бот не може отримати доступ до обраного вами пакета стікерів.
+        Будь ласка, створіть (/new) або оберіть (/packs) іншого стікерпака.
       file_type: |
-        <b>Error!</b>
+        <b>Помилка!</b>
 
-        This file type is not supported.
+        Цей тип файлу не підтримується.
 
-        <i>You can add this video files to the video pack.
-        As well as all other files in the inline pack</i>
-        Create (/new) or choose (/packs) another sticker pack
+        <i>Ви можете додати це відео файли до відеонабору.
+        Та і всі інші файли в вбудованому пакунку</i>
+        Створити (/new) або вибрати (/packs) інший стікерпак
 scenes:
   new_pack:
     common: Звичайний
     inline: Inline
     animated: Анімований
-    video: Video
+    video: Відео
     pack_type: |
       <b>Оберіть тип стікерпаку:</b>
     pack_title: |
@@ -300,7 +299,7 @@ error:
       Telegram повернув помилку:
       ${error}
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Сталася невідома помилка, спробуйте ще раз.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Якщо проблема не зникне, напишіть на @Ly_oBot.
+    Будь ласка, відразу напишіть, про якого бота йде мова, і детально опишіть проблему в одному повідомленні.
