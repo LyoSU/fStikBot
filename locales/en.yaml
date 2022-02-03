@@ -72,6 +72,8 @@ callback:
       restored: Sticker pack successfully restored
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     set_inline_pack: |
       Selected <u>${title}</u> stickerpack
 
@@ -118,6 +120,8 @@ sticker:
     ok: |
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     ok_inline: |
       <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
@@ -125,17 +129,22 @@ sticker:
     error:
       stickers_too_much: |
         <b>Error!</b>
+
         This sticker pack has the maximum number of stickers.
         You can create a new sticker pack using the /new command.
       have_already: |
-        This sticker is already in the sticker pack.
+        <b>This sticker is already in the sticker pack</b>
+
         If you want to change the emoji, send it in the following message.
+        You can also edit the sticker pack via
       stickerset_invalid: |
         <b>Error!</b>
+
         Bot cannot access your current chosen sticker pack.
         Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
+
         This file type is not supported.
 
         <i>You can add this video files to the video pack.
@@ -251,7 +260,7 @@ admin:
     list:
       info: Mailing status
     status:
-      info: |2
+      info: |
         <b>Newsletter ${name}</b> (${createdAt})
         Created ${creatorName}
 
