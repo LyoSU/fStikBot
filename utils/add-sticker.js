@@ -1,8 +1,7 @@
 const https = require('https')
 const sharp = require('sharp')
 const ffmpeg = require('fluent-ffmpeg')
-const temp = require('temp')
-const { writeFileSync } = require('fs')
+const temp = require('temp').track()
 
 function convertToWebmSticker (input) {
   const output = temp.path({ suffix: '.webm' })
@@ -110,7 +109,7 @@ module.exports = async (ctx, inputFile) => {
     if (!stickerSet) {
       if (inputFile.mime_type && inputFile.mime_type.match('video')) stickerSet = await ctx.db.StickerSet.getSet(defaultVideoStickerSet)
       else stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
-      ctx.session.userInfo = stickerSet
+      ctx.session.userInfo.stickerSet = stickerSet
     }
     emojis += stickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
@@ -148,17 +147,7 @@ module.exports = async (ctx, inputFile) => {
         const file = await convertToWebmSticker(fileUrl)
 
         if (!file.metadata) {
-          const data = await downloadFileByUrl(fileUrl)
 
-          const input = temp.path({ suffix: '.mp4' })
-
-          writeFileSync(input, data)
-
-          const file = await convertToWebmSticker(fileUrl)
-
-          stickerExtra.webm_sticker = {
-            source: file.output
-          }
         } else {
           stickerExtra.webm_sticker = {
             source: file.output
