@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: '🆕 Stiker yaratish'
-      donate: 'Donate'
+      donate: '☕️ Donate'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
