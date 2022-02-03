@@ -136,7 +136,7 @@ sticker:
         <b>This sticker is already in the sticker pack</b>
 
         If you want to change the emoji, send it in the following message.
-        You can also edit the sticker pack via
+        You can also edit the sticker pack via @Stickers
       stickerset_invalid: |
         <b>Error!</b>
 
@@ -260,7 +260,7 @@ admin:
     list:
       info: Mailing status
     status:
-      info: |2
+      info: |
         <b>Newsletter ${name}</b> (${createdAt})
         Created ${creatorName}
 
