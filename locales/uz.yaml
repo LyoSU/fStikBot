@@ -61,7 +61,8 @@ cmd:
     ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Iltimos, emodjini kiriting. Masalan, <code>/emoji 💜</code> keyingi barcha yangi stikerlar uchun qo'shimchani 💜 ga o'zgartiradi.
-    done: Emodji-qo'shimchasi muvaffaqiyatli o'zgartirildi.
+    done: Emoji successfully changed.
+    error: There was an error changing emoji!
 callback:
   pack:
     answerCbQuer:
@@ -118,14 +119,15 @@ sticker:
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
+    send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
         <b>Tizimda xatolik!</b>
         Ushbu stikerlar to'plamida, maksimal miqdordagi stikerlar mavjud.
         /new buyrug'i bilan yangi stikerlar to'plamini yaratishingiz mumkin
       have_already: |
-        <b>Tizimda xatolik!</b>
-        Ushbu stiker allaqchon ushbu stikerlar to'plamida mavjud.
+        This sticker is already in the sticker pack.
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
         <b>Tizimda xatolik!</b>
         Bot hozirda tanlangan stikerlar to'plamiga kira olmaydi.
@@ -134,7 +136,8 @@ sticker:
         <b>Error!</b>
         This file type is not supported.
 
-        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        <i>You can add this video files to the video pack.
+        As well as all other files in the inline pack</i>
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
