@@ -39,10 +39,12 @@ module.exports = async (ctx) => {
 
     case 'animation':
       stickerFile = ctx.message.animation
+      if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
       break
 
     case 'video':
       stickerFile = ctx.message.video
+      if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
       break
 
     case 'photo':
