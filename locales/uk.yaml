@@ -72,7 +72,9 @@ callback:
       hidden: Стікерпак успішно приховано
       restored: Стікерпак успішно відновлено
     set_pack: |
-      Ви обрали <a href="${link}">${title}</a>
+      Selected sticker pack <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     set_inline_pack: |
       Вибрано <u>${title}</u> стікерпак
 
@@ -117,26 +119,33 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Стікер успішно додано до стікерпаку:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     ok_inline: |
       <b>Стікер успішно доданий у стікерпак:</b>
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
-        <b>Помилка!</b>
-        Ви досягли максимальної кількості стікерів у цьому стікерпаці.
-        Створіть новий стікерпак за допомогою /new
+        <b>Error!</b>
+
+        This sticker pack has the maximum number of stickers.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        This sticker is already in the sticker pack.
+        <b>This sticker is already in the sticker pack</b>
+
         If you want to change the emoji, send it in the following message.
+        You can also edit the sticker pack via
       stickerset_invalid: |
-        <b>Помилка!</b>
-        Бот не має доступу до поточного стікерпаку.
-        Будь ласка, створіть новий (/new) або виберіть (/packs) інший стікерпак.
+        <b>Error!</b>
+
+        Bot cannot access your current chosen sticker pack.
+        Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
+
         This file type is not supported.
 
         <i>You can add this video files to the video pack.
