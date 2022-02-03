@@ -63,7 +63,8 @@ cmd:
     ➖ Diğer çıkartma paketlerini link ile kopyalama
   emoji:
     info: Lütfen emoji ekleyin. Örneğin, <code>/emoji 💜</code>, sonraki tüm yeni çıkartmalar için soneki 💜 olarak değiştirecektir.
-    done: Emoji son eki başarıyla değiştirildi.
+    done: Emoji successfully changed.
+    error: There was an error changing emoji!
 callback:
   pack:
     answerCbQuer:
@@ -120,14 +121,15 @@ sticker:
     ok_inline: |
       <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
       <u>${title}</u>
+    send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
         <b>Hata!</b>
         Çıkartma paketinde bulunması gereken maksimum limit dolu.
         /new komutunu kullanarak yeni bir çıkartma paketi oluşturabilirsin.
       have_already: |
-        <b>Hata!</b>
-        Bu çıkartma zaten senin çıkartma paketinde bulunuyor.
+        This sticker is already in the sticker pack.
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
         <b>Hata!</b>
          Bot, şu anda seçili olan çıkartma paketine erişemiyor.
@@ -136,7 +138,8 @@ sticker:
         <b>Error!</b>
         This file type is not supported.
 
-        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        <i>You can add this video files to the video pack.
+        As well as all other files in the inline pack</i>
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:

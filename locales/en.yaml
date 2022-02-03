@@ -121,8 +121,7 @@ sticker:
     ok_inline: |
       <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
-    send_emoji:
-      Great, now send the emoji that matches the sticker
+    send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
         <b>Error!</b>
