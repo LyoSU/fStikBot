@@ -26,7 +26,7 @@ module.exports = async (ctx, next) => {
 
   sticker.file.emoji = emoji
 
-  const stickerInfo = await addSticker(ctx, sticker.file)
+  const stickerInfo = await addSticker(ctx, sticker.file, sticker?.stickerSet)
 
   if (stickerInfo.ok) {
     ctx.session.previousSticker = {

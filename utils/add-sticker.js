@@ -54,9 +54,13 @@ setInterval(() => {
   queue = {}
 }, 1000 * 30)
 
-module.exports = async (ctx, inputFile) => {
+module.exports = async (ctx, inputFile, toStickerSet = false) => {
   let stickerFile = inputFile
   let { stickerSet } = ctx.session.userInfo
+
+  if (toStickerSet) {
+    stickerSet = toStickerSet
+  }
 
   const originalSticker = await ctx.db.Sticker.findOne({
     fileUniqueId: stickerFile.file_unique_id
@@ -107,7 +111,74 @@ module.exports = async (ctx, inputFile) => {
         stickerSet
       }
     }
-  } else if (stickerFile.is_animated !== true) {
+  } else if (stickerFile.is_animated === true || stickerSet.animated) {
+    if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = await ctx.db.StickerSet.getSet(defaultAnimatedStickerSet)
+    emojis += ctx.session.userInfo.animatedStickerSet.emojiSuffix || ''
+    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
+    const data = await downloadFileByUrl(fileUrl)
+
+    let stickerAdd = false
+
+    if (ctx.session.userInfo.animatedStickerSet.create === false) {
+      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.animatedStickerSet.name, ctx.session.userInfo.animatedStickerSet.title, {
+        tgs_sticker: { source: data },
+        emojis
+      }).catch((error) => {
+        return {
+          error: {
+            telegram: error
+          }
+        }
+      })
+      if (stickerAdd.error) {
+        return stickerAdd
+      }
+
+      if (stickerAdd) {
+        ctx.session.userInfo.animatedStickerSet.create = true
+        await ctx.session.userInfo.animatedStickerSet.save()
+      }
+    } else {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.animatedStickerSet.name, {
+        tgs_sticker: { source: data },
+        emojis
+      }).catch((error) => {
+        return {
+          error: {
+            telegram: error
+          }
+        }
+      })
+      if (stickerAdd.error) {
+        return stickerAdd
+      }
+    }
+
+    if (stickerAdd) {
+      const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.userInfo.animatedStickerSet.name).catch((error) => {
+        return {
+          error: {
+            telegram: error
+          }
+        }
+      })
+      if (getStickerSet.error) {
+        return getStickerSet
+      }
+      const stickerInfo = getStickerSet.stickers.slice(-1)[0]
+
+      const sticker = await ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, stickerInfo, stickerFile)
+
+      return {
+        ok: {
+          title: ctx.session.userInfo.animatedStickerSet.title,
+          link: `${ctx.config.stickerLinkPrefix}${ctx.session.userInfo.animatedStickerSet.name}`,
+          stickerInfo,
+          sticker
+        }
+      }
+    }
+  } else {
     if (!stickerSet) {
       if (inputFile.mime_type && inputFile.mime_type.match('video')) stickerSet = await ctx.db.StickerSet.getSet(defaultVideoStickerSet)
       else stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
@@ -224,73 +295,6 @@ module.exports = async (ctx, inputFile) => {
         ok: {
           title: stickerSet.title,
           link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
-          stickerInfo,
-          sticker
-        }
-      }
-    }
-  } else {
-    if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = await ctx.db.StickerSet.getSet(defaultAnimatedStickerSet)
-    emojis += ctx.session.userInfo.animatedStickerSet.emojiSuffix || ''
-    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
-    const data = await downloadFileByUrl(fileUrl)
-
-    let stickerAdd = false
-
-    if (ctx.session.userInfo.animatedStickerSet.create === false) {
-      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.animatedStickerSet.name, ctx.session.userInfo.animatedStickerSet.title, {
-        tgs_sticker: { source: data },
-        emojis
-      }).catch((error) => {
-        return {
-          error: {
-            telegram: error
-          }
-        }
-      })
-      if (stickerAdd.error) {
-        return stickerAdd
-      }
-
-      if (stickerAdd) {
-        ctx.session.userInfo.animatedStickerSet.create = true
-        await ctx.session.userInfo.animatedStickerSet.save()
-      }
-    } else {
-      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.animatedStickerSet.name, {
-        tgs_sticker: { source: data },
-        emojis
-      }).catch((error) => {
-        return {
-          error: {
-            telegram: error
-          }
-        }
-      })
-      if (stickerAdd.error) {
-        return stickerAdd
-      }
-    }
-
-    if (stickerAdd) {
-      const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.userInfo.animatedStickerSet.name).catch((error) => {
-        return {
-          error: {
-            telegram: error
-          }
-        }
-      })
-      if (getStickerSet.error) {
-        return getStickerSet
-      }
-      const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-
-      const sticker = await ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, stickerInfo, stickerFile)
-
-      return {
-        ok: {
-          title: ctx.session.userInfo.animatedStickerSet.title,
-          link: `${ctx.config.stickerLinkPrefix}${ctx.session.userInfo.animatedStickerSet.name}`,
           stickerInfo,
           sticker
         }
