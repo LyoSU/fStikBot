@@ -71,7 +71,9 @@ callback:
       hidden: Çıkartma paketi başarılı bir şekilde gizlendi
       restored: Çıkartma başarılı bir şekilde sıfırlandı
     set_pack: |
-      Seçilen çıkartma paketi <a href="${link}">${title}</a>
+      Selected sticker pack <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     set_inline_pack: |
       Seçili <u>${title}</u> çıkartma paketi
 
@@ -116,26 +118,33 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Çıkartma başarılı bir şekilde çıkartma paketine eklendi:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
+
+      You can also edit the sticker pack via @Stickers
     ok_inline: |
       <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
-        <b>Hata!</b>
-        Çıkartma paketinde bulunması gereken maksimum limit dolu.
-        /new komutunu kullanarak yeni bir çıkartma paketi oluşturabilirsin.
+        <b>Error!</b>
+
+        This sticker pack has the maximum number of stickers.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        This sticker is already in the sticker pack.
+        <b>This sticker is already in the sticker pack</b>
+
         If you want to change the emoji, send it in the following message.
+        You can also edit the sticker pack via
       stickerset_invalid: |
-        <b>Hata!</b>
-         Bot, şu anda seçili olan çıkartma paketine erişemiyor.
-         Lütfen yeni bir (/new) oluşturun veya başka bir çıkartma paketi seçin (/packs).
+        <b>Error!</b>
+
+        Bot cannot access your current chosen sticker pack.
+        Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
+
         This file type is not supported.
 
         <i>You can add this video files to the video pack.
