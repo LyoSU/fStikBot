@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
-      donate: 'Donate'
+      donate: '☕️ Donate'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
