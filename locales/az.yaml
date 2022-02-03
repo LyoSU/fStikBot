@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: 'Stick paketi yaradın'
-      donate: 'İanə ver'
+      donate: 'Donate'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
