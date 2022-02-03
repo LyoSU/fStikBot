@@ -63,7 +63,8 @@ cmd:
     ➖ Полное копирование других стикерпаков по ссылке на них
   emoji:
     info: Пожалуйста, укажите эмодзи. Например, <code>/emoji 💜</code> поменяет суффикс на 💜 для всех последующих новых стикеров.
-    done: Эмодзи-суффикс успешно изменен.
+    done: Emoji successfully changed.
+    error: There was an error changing emoji!
 callback:
   pack:
     answerCbQuer:
@@ -120,14 +121,15 @@ sticker:
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
+    send_emoji: Great, now send the emoji that matches the sticker
     error:
       stickers_too_much: |
         <b>Ошибка!</b>
         В этом стикерпаке максимальное количество стикеров.
         Вы можете создать новый стикерпак командой /new
       have_already: |
-        <b>Ошибка!</b>
-        Этот стикер уже есть в этом стикерпаке.
+        This sticker is already in the sticker pack.
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
         <b>Ошибка!</b>
         Бот не может получить доступ к текущему выбранному стикерпаку.
@@ -136,7 +138,8 @@ sticker:
         <b>Error!</b>
         This file type is not supported.
 
-        <i>You can add this video files to the video pack.\nAs well as all other files in the inline pack</i>
+        <i>You can add this video files to the video pack.
+        As well as all other files in the inline pack</i>
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
