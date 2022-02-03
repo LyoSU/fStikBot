@@ -11,6 +11,7 @@ module.exports = {
   handleCopyPack: require('./pack-copy'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
+  handleStickerUpade: require('./sticker-update'),
   handlePublish: require('./publish'),
   handleInlineQuery: require('./inline-query')
 }

@@ -20,6 +20,7 @@ const {
   handleCopyPack,
   handleLanguage,
   handleEmoji,
+  handleStickerUpade,
   handlePublish,
   handleInlineQuery
 } = require('./handlers')
@@ -154,6 +155,7 @@ bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('lang', handleLanguage)
+bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
 
 bot.use(handlePublish)
 bot.use(handleInlineQuery)

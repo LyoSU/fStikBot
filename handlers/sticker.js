@@ -1,16 +1,5 @@
 const Markup = require('telegraf/markup')
-const { addSticker } = require('../utils')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
+const { addSticker, addStickerText } = require('../utils')
 
 module.exports = async (ctx) => {
   await ctx.replyWithChatAction('upload_document')
@@ -91,6 +80,10 @@ module.exports = async (ctx) => {
     }
 
     if (sticker) {
+      ctx.session.previousSticker = {
+        id: sticker.id
+      }
+
       await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
         reply_markup: Markup.inlineKeyboard([
@@ -99,52 +92,19 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      const addStickerResult = await addSticker(ctx, stickerFile)
+      if (stickerFile.emoji) {
+        const stickerInfo = await addSticker(ctx, stickerFile)
 
-      if (addStickerResult.ok) {
-        if (addStickerResult.ok.webm) {
-          return
-        } else if (addStickerResult.ok.inline) {
-          messageText = ctx.i18n.t('sticker.add.ok_inline', {
-            title: escapeHTML(stickerSet.title)
-          })
+        const result = await addStickerText(ctx, stickerInfo)
 
-          replyMarkup = Markup.inlineKeyboard([
-            Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
-          ])
-        } else {
-          messageText = ctx.i18n.t('sticker.add.ok', {
-            title: escapeHTML(addStickerResult.ok.title),
-            link: addStickerResult.ok.link
-          })
-
-          replyMarkup = Markup.inlineKeyboard([
-            Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), addStickerResult.ok.link)
-          ])
+        messageText = result.messageText
+        replyMarkup = result.replyMarkup
+      } else {
+        ctx.session.previousSticker = {
+          file: stickerFile
         }
 
-        // const stickersCount = await ctx.db.Sticker.count({ stickerSet, deleted: false })
-
-        // if ([7, 10, 15, 20, 30, 50, 70].includes(stickersCount)) {
-        //   await ctx.replyWithHTML(ctx.i18n.t('sticker.add.offer_publish'))
-        // }
-      } else if (addStickerResult.error) {
-        if (addStickerResult.error.telegram) {
-          if (addStickerResult.error.telegram.description.includes('TOO_MUCH')) {
-            messageText = ctx.i18n.t('sticker.add.error.stickers_too_much')
-          } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
-            messageText = ctx.i18n.t('sticker.add.error.stickerset_invalid')
-          } else {
-            messageText = ctx.i18n.t('error.telegram', {
-              error: addStickerResult.error.telegram.description
-            })
-          }
-        } else if (addStickerResult.error === 'ITS_ANIMATED') messageText = ctx.i18n.t('sticker.add.error.file_type')
-        else {
-          messageText = ctx.i18n.t('error.telegram', {
-            error: addStickerResult.error
-          })
-        }
+        messageText = ctx.i18n.t('sticker.add.send_emoji')
       }
     }
   } else {

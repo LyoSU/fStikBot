@@ -1,0 +1,59 @@
+const { addSticker, addStickerText } = require('../utils')
+
+module.exports = async (ctx, next) => {
+  if (!ctx.session.previousSticker) return next()
+  await ctx.replyWithChatAction('upload_document')
+
+  let sticker, stickerIndex
+  const emoji = ctx.match.join('')
+
+  if (ctx.session.previousSticker.id) {
+    sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id).populate('stickerSet')
+
+    sticker.deleted = true
+    await sticker.save()
+
+    const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name)
+
+    stickerIndex = stickerSet.stickers.findIndex((v) => {
+      return v.file_unique_id === sticker.fileUniqueId
+    })
+
+    await ctx.deleteStickerFromSet(sticker.info.file_id)
+  } else {
+    sticker = ctx.session.previousSticker
+  }
+
+  sticker.file.emoji = emoji
+
+  const stickerInfo = await addSticker(ctx, sticker.file)
+
+  if (stickerInfo.ok) {
+    ctx.session.previousSticker = {
+      id: stickerInfo.ok.sticker.id
+    }
+  }
+
+  if (sticker.id) {
+    if (stickerInfo.ok) {
+      if (stickerIndex) await ctx.tg.setStickerPositionInSet(stickerInfo.ok.stickerInfo.file_id, stickerIndex)
+
+      await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.done'), {
+        reply_to_message_id: ctx.message.message_id
+      })
+    } else {
+      await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.error'), {
+        reply_to_message_id: ctx.message.message_id
+      })
+    }
+  } else {
+    const { messageText, replyMarkup } = await addStickerText(ctx, stickerInfo)
+
+    if (messageText) {
+      await ctx.replyWithHTML(messageText, {
+        reply_to_message_id: ctx.message.message_id,
+        reply_markup: replyMarkup
+      })
+    }
+  }
+}

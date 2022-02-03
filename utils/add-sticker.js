@@ -98,11 +98,12 @@ module.exports = async (ctx, inputFile) => {
   let emojis = inputFile.emoji || ''
 
   if (stickerSet && stickerSet.inline) {
-    await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerFile, null)
+    const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerFile, null)
 
     return {
       ok: {
-        inline: true
+        inline: true,
+        sticker
       }
     }
   } else if (stickerFile.is_animated !== true) {
@@ -216,13 +217,14 @@ module.exports = async (ctx, inputFile) => {
       }
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-      await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerInfo, stickerFile)
+      const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerInfo, stickerFile)
 
       return {
         ok: {
           title: stickerSet.title,
           link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
-          stickerInfo
+          stickerInfo,
+          sticker
         }
       }
     }
@@ -282,13 +284,14 @@ module.exports = async (ctx, inputFile) => {
       }
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-      ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, stickerInfo, stickerFile)
+      const sticker = await ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, stickerInfo, stickerFile)
 
       return {
         ok: {
           title: ctx.session.userInfo.animatedStickerSet.title,
           link: `${ctx.config.stickerLinkPrefix}${ctx.session.userInfo.animatedStickerSet.name}`,
-          stickerInfo
+          stickerInfo,
+          sticker
         }
       }
     }
