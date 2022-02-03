@@ -133,10 +133,10 @@ sticker:
         Набор стикеров имеет максимальное количество стикеров.
         Вы можете создать новый стикер-пакет с помощью /new команды.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Этот стикер уже находится в стикерпаке</b>
 
-        If you want to change the emoji, send it in the following message.
-        You can also edit the sticker pack via @Stickers
+        Если вы хотите изменить эмодзи, отправить его в следующем сообщении.
+        Вы также можете редактировать стикер пакет через @Stickers
       stickerset_invalid: |
         <b>Ошибка!</b>
 
