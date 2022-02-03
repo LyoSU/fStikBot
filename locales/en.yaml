@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: '🆕 Create a new sticker pack'
-      donate: 'Donate'
+      donate: '☕️ Donate'
   inline:
     switch_pm: Select sticker pack
   restore: |
