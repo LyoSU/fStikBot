@@ -133,6 +133,7 @@ module.exports = async (ctx) => {
 
     let selectedStickerSet
     if (ctx.state.type === 'animated') selectedStickerSet = userInfo.animatedStickerSet
+    else if (ctx.state.type === 'video') selectedStickerSet = userInfo.videoStickerSet
     else selectedStickerSet = userInfo.stickerSet
 
     stickerSets.forEach((pack) => {
