@@ -18,7 +18,7 @@ module.exports = async (error, ctx) => {
   let gitBlame
 
   for (const ei of errorInfo) {
-    if (!gitBlame) gitBlame = await exec(`git blame -L ${ei.lineNumber},${ei.lineNumber} -- ${ei.fileName}`).catch(console.error)
+    if (!gitBlame) gitBlame = await exec(`git blame -L ${ei.lineNumber},${ei.lineNumber} -- ${ei.fileName}`).catch(() => {})
   }
 
   let errorText = `<b>error for ${ctx.updateType}:</b>`
