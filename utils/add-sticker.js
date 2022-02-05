@@ -56,17 +56,38 @@ setInterval(() => {
 
 module.exports = async (ctx, inputFile, toStickerSet = false) => {
   let stickerFile = inputFile
-  let { stickerSet } = ctx.session.userInfo
-
-  if (toStickerSet) {
-    stickerSet = toStickerSet
-  }
 
   const originalSticker = await ctx.db.Sticker.findOne({
     fileUniqueId: stickerFile.file_unique_id
   })
 
   if (originalSticker && originalSticker.file && originalSticker.file_id) stickerFile = originalSticker.file
+
+  let {
+    stickerSet,
+    videoStickerSet,
+    animatedStickerSet
+  } = ctx.session.userInfo
+
+  if (toStickerSet) {
+    stickerSet = toStickerSet
+  }
+
+  let emojis = inputFile.emoji || ''
+
+  if (stickerSet && stickerSet.inline) {
+    const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerFile, null)
+
+    return {
+      ok: {
+        inline: true,
+        sticker,
+        stickerSet
+      }
+    }
+  }
+
+  const isVideo = (stickerSet?.video || inputFile.is_video || (inputFile.mime_type && inputFile.mime_type.match('video'))) || false
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -83,44 +104,27 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
   defaultStickerSet.name += nameSuffix
   if (ctx.session.userInfo.premium !== true) defaultStickerSet.title += titleSuffix
 
-  const defaultAnimatedStickerSet = {
-    owner: defaultStickerSet.owner,
-    name: defaultStickerSet.name,
-    title: 'Animated ' + defaultStickerSet.title,
-    animated: true,
-    emojiSuffix: defaultStickerSet.emojiSuffix
-  }
+  if (stickerFile.is_animated === true || stickerSet?.animated) {
+    if (!animatedStickerSet) {
+      animatedStickerSet = await ctx.db.StickerSet.getSet({
+        owner: defaultStickerSet.owner,
+        name: defaultStickerSet.name,
+        title: 'Animated ' + defaultStickerSet.title,
+        animated: true,
+        emojiSuffix: defaultStickerSet.emojiSuffix
+      })
 
-  const defaultVideoStickerSet = {
-    owner: defaultStickerSet.owner,
-    name: defaultStickerSet.name,
-    title: 'Video ' + defaultStickerSet.title,
-    video: true,
-    emojiSuffix: defaultStickerSet.emojiSuffix
-  }
-
-  let emojis = inputFile.emoji || ''
-
-  if (stickerSet && stickerSet.inline) {
-    const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, emojis, stickerFile, null)
-
-    return {
-      ok: {
-        inline: true,
-        sticker,
-        stickerSet
-      }
+      ctx.session.userInfo.animatedStickerSet = animatedStickerSet
     }
-  } else if (stickerFile.is_animated === true || (stickerSet && stickerSet.animated)) {
-    if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = await ctx.db.StickerSet.getSet(defaultAnimatedStickerSet)
-    emojis += ctx.session.userInfo.animatedStickerSet.emojiSuffix || ''
+
+    emojis += animatedStickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
     const data = await downloadFileByUrl(fileUrl)
 
     let stickerAdd = false
 
-    if (ctx.session.userInfo.animatedStickerSet.create === false) {
-      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, ctx.session.userInfo.animatedStickerSet.name, ctx.session.userInfo.animatedStickerSet.title, {
+    if (animatedStickerSet.create === false) {
+      stickerAdd = await ctx.telegram.createNewStickerSet(ctx.from.id, animatedStickerSet.name, animatedStickerSet.title, {
         tgs_sticker: { source: data },
         emojis
       }).catch((error) => {
@@ -135,12 +139,16 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
 
       if (stickerAdd) {
-        if (!ctx.session.userInfo.animatedStickerSet) ctx.session.userInfo.animatedStickerSet = stickerSet
-        ctx.session.userInfo.animatedStickerSet.create = true
-        await ctx.session.userInfo.animatedStickerSet.save()
+        if (!animatedStickerSet) {
+          animatedStickerSet = stickerSet
+          ctx.session.userInfo.animatedStickerSet = stickerSet
+        }
+
+        animatedStickerSet.create = true
+        await animatedStickerSet.save()
       }
     } else {
-      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, ctx.session.userInfo.animatedStickerSet.name, {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, animatedStickerSet.name, {
         tgs_sticker: { source: data },
         emojis
       }).catch((error) => {
@@ -156,7 +164,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     }
 
     if (stickerAdd) {
-      const getStickerSet = await ctx.telegram.getStickerSet(ctx.session.userInfo.animatedStickerSet.name).catch((error) => {
+      const getStickerSet = await ctx.telegram.getStickerSet(animatedStickerSet.name).catch((error) => {
         return {
           error: {
             telegram: error
@@ -168,23 +176,40 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
-      const sticker = await ctx.db.Sticker.addSticker(ctx.session.userInfo.animatedStickerSet.id, emojis, stickerInfo, stickerFile)
+      const sticker = await ctx.db.Sticker.addSticker(animatedStickerSet.id, emojis, stickerInfo, stickerFile)
 
       return {
         ok: {
-          title: ctx.session.userInfo.animatedStickerSet.title,
-          link: `${ctx.config.stickerLinkPrefix}${ctx.session.userInfo.animatedStickerSet.name}`,
+          title: animatedStickerSet.title,
+          link: `${ctx.config.stickerLinkPrefix}${animatedStickerSet.name}`,
           stickerInfo,
           sticker
         }
       }
     }
   } else {
-    if (!stickerSet) {
-      if (inputFile.mime_type && inputFile.mime_type.match('video')) stickerSet = await ctx.db.StickerSet.getSet(defaultVideoStickerSet)
-      else stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+    if (!stickerSet || (isVideo && !stickerSet.video)) {
+      if (isVideo) {
+        if (videoStickerSet) {
+          stickerSet = videoStickerSet
+        } else {
+          stickerSet = await ctx.db.StickerSet.getSet({
+            owner: defaultStickerSet.owner,
+            name: defaultStickerSet.name,
+            title: 'Video ' + defaultStickerSet.title,
+            video: true,
+            emojiSuffix: defaultStickerSet.emojiSuffix
+          })
+
+          ctx.session.userInfo.videoStickerSet = stickerSet
+        }
+      } else {
+        stickerSet = await ctx.db.StickerSet.getSet(defaultStickerSet)
+      }
+
       ctx.session.userInfo.stickerSet = stickerSet
     }
+
     emojis += stickerSet.emojiSuffix || ''
     const fileUrl = await ctx.telegram.getFileLink(stickerFile)
 
@@ -198,7 +223,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       })
     }
 
-    if (stickerSet.video || (inputFile.mime_type && inputFile.mime_type.match('video'))) {
+    if (isVideo) {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 

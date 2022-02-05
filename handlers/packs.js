@@ -47,12 +47,17 @@ module.exports = async (ctx) => {
         userInfo.animatedStickerSet = null
       }
 
-      if (stickerSet.animated) {
+      if (stickerSet.video) {
+        ctx.state.type = 'video'
+        userInfo.videoStickerSet = stickerSet
+      } else if (stickerSet.animated) {
         userInfo.animatedStickerSet = stickerSet
-        if (userInfo.stickerSet && userInfo.stickerSet.inline) {
+        if (userInfo?.stickerSet.inline) {
           userInfo.stickerSet = null
         }
-      } else userInfo.stickerSet = stickerSet
+      } else {
+        userInfo.stickerSet = stickerSet
+      }
 
       const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 

@@ -47,12 +47,15 @@ module.exports = async (ctx) => {
             name: getStickerSet.name,
             title: getStickerSet.title,
             animated: getStickerSet.is_animated || false,
+            video: getStickerSet.is_video || false,
             emojiSuffix: '🌟',
             create: true
           })
 
           if (getStickerSet.is_animated) {
             ctx.session.userInfo.animatedStickerSet = findStickerSet
+          } else if (getStickerSet.is_video) {
+            ctx.session.userInfo.videoStickerSet = findStickerSet
           } else {
             ctx.session.userInfo.stickerSet = findStickerSet
           }

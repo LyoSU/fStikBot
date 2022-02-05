@@ -17,6 +17,10 @@ const userSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet'
   },
+  videoStickerSet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StickerSet'
+  },
   inlineStickerSet: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet'
