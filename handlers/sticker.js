@@ -57,7 +57,7 @@ module.exports = async (ctx) => {
   if (stickerFile) {
     if (stickerFile.is_animated && (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline)) {
       stickerSet = ctx.session.userInfo.animatedStickerSet
-    } if (stickerFile.is_video && (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline)) {
+    } else if (stickerFile.is_video && (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline)) {
       stickerSet = ctx.session.userInfo.videoStickerSet
     } else {
       stickerSet = ctx.session.userInfo.stickerSet
