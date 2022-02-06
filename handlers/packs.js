@@ -50,6 +50,7 @@ module.exports = async (ctx) => {
       if (stickerSet.video) {
         ctx.state.type = 'video'
         userInfo.videoStickerSet = stickerSet
+        userInfo.stickerSet = stickerSet
       } else if (stickerSet.animated) {
         userInfo.animatedStickerSet = stickerSet
         if (userInfo?.stickerSet.inline) {
