@@ -10,7 +10,7 @@ const {
 const {
   handleError,
   handleStart,
-  handleDonate,
+  handleClub,
   handleSticker,
   handleDeleteSticker,
   handleRestoreSticker,
@@ -148,7 +148,7 @@ bot.hears(['/video', match('cmd.start.btn.video')], ctx => {
 
 bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
-bot.hears(['/donate', '/start donate', match('cmd.start.btn.donate')], handleDonate)
+bot.hears(['/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
 bot.command('emoji', handleEmoji)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
@@ -176,10 +176,8 @@ bot.on('text', (ctx, next) => {
   else return next()
 })
 
-// donate
-bot.action(/(donate):(.*)/, handleDonate)
-bot.on('pre_checkout_query', ({ answerPreCheckoutQuery }) => answerPreCheckoutQuery(true))
-bot.on('successful_payment', handleDonate)
+// club
+bot.action(/(club):(.*)/, handleClub)
 
 // any message
 bot.on('message', handleStart)

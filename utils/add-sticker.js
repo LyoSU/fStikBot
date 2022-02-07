@@ -20,14 +20,17 @@ function convertToWebmSticker (input) {
           })
         })
       })
+      .noAudio()
       .addInputOptions(['-t 3'])
       .output(output)
+      .videoFilters(
+        'scale=512:512:force_original_aspect_ratio=decrease',
+        'fps=30'
+      )
+      .videoBitrate('500k')
       .outputOptions(
         '-c:v', 'libvpx-vp9',
-        '-pix_fmt', 'yuva420p',
-        '-vf', 'scale=512:512:force_original_aspect_ratio=decrease',
-        '-b:v', '500k',
-        '-an'
+        '-pix_fmt', 'yuva420p'
       )
       .duration(2.9)
 
@@ -231,7 +234,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         return ctx.reply('wait load...')
       }
       userQueue.video = true
-      if (inputFile.file_size > 1000 * 1000 * 2 || inputFile.duration >= 35) { // 3 mb or 60 sec
+      if (inputFile.file_size > 1000 * 1000 * 5 || inputFile.duration >= 35) { // 5 mb or 35 sec
         userQueue.video = false
         return ctx.reply('file too big')
       }

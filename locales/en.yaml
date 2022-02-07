@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: '🆕 Create a new sticker pack'
-      donate: '☕️ Donate'
+      club: '☕️ Donate'
   inline:
     switch_pm: Select sticker pack
   restore: |
@@ -54,13 +54,23 @@ cmd:
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
     inline_title: Inline sticker pack
-  donate: |
-    <b>☕️ Supporting a bot development</b>
+  club: |
+    ☕️ Supporting a bot development
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Disabling " :: @fStikBot in sticker packs name
     ➖ Copying of other sticker packs by link
+
+  # club: |
+  #   <b>☕️ Bot developer club by Ly</b>
+
+  #   You can join the bot developer club, thereby supporting it.
+
+  #   Also, all club members get additional features in this bot:
+  #   ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+  #   ➖ Copying of other sticker packs by link
+
   emoji:
     info: Please, specify an emoji. For example - <code>/emoji 💜</code> changes current pack suffix to 💜 for all new stickers.
     done: Emoji successfully changed.
@@ -106,15 +116,6 @@ callback:
       not_found: |
         ERROR!
         Cannot find a sticker.
-  donate:
-    title: Donate ${botUsername}
-    description: Direct support for the bot developer and additional features.
-    successful: |
-      <b>Thanks for supporting a bot development 💜</b>
-
-      You can write me @LyoSU with a suggestion of a feature that is missing, and I will try to implement it.
-    btn:
-      buy: '💜 Pay'
 sticker:
   add:
     ok: |
@@ -190,9 +191,9 @@ scenes:
     error:
       premium: |
         <b>Error!</b>
-        Unfortunately, this feature is only available to those who supported the bot.
+        This feature is only available to club members.
 
-        You can do this by sending the /donate command.
+        You can do this by sending the /club command.
   original:
     enter: |
       Send the sticker that was added through this bot and I will show you its original sticker.
@@ -260,7 +261,7 @@ admin:
     list:
       info: Mailing status
     status:
-      info: |2
+      info: |
         <b>Newsletter ${name}</b> (${createdAt})
         Created ${creatorName}
 

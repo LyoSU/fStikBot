@@ -10,16 +10,11 @@ module.exports = async (ctx, next) => {
   if (ctx.session.previousSticker.id) {
     sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id).populate('stickerSet')
 
-    sticker.deleted = true
-    await sticker.save()
-
     const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name)
 
     stickerIndex = stickerSet.stickers.findIndex((v) => {
       return v.file_unique_id === sticker.fileUniqueId
     })
-
-    await ctx.deleteStickerFromSet(sticker.info.file_id).catch(() => {})
   } else {
     sticker = ctx.session.previousSticker
   }
@@ -37,6 +32,10 @@ module.exports = async (ctx, next) => {
   if (sticker.id) {
     if (stickerInfo.ok) {
       if (stickerIndex) await ctx.tg.setStickerPositionInSet(stickerInfo.ok.stickerInfo.file_id, stickerIndex).catch(() => {})
+      await ctx.deleteStickerFromSet(sticker.info.file_id).catch(() => {})
+
+      sticker.deleted = true
+      await sticker.save()
 
       await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.done'), {
         reply_to_message_id: ctx.message.message_id
