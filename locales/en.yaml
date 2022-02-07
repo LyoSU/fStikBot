@@ -61,16 +61,12 @@ cmd:
 
     ➖ Disabling " :: @fStikBot in sticker packs name
     ➖ Copying of other sticker packs by link
-
-  # club: |
-  #   <b>☕️ Bot developer club by Ly</b>
-
-  #   You can join the bot developer club, thereby supporting it.
-
-  #   Also, all club members get additional features in this bot:
-  #   ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-  #   ➖ Copying of other sticker packs by link
-
+  #club: |
+  #<b>☕️ Bot developer club by Ly</b>
+  #You can join the bot developer club, thereby supporting it.
+  #Also, all club members get additional features in this bot:
+  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+  #➖ Copying of other sticker packs by link
   emoji:
     info: Please, specify an emoji. For example - <code>/emoji 💜</code> changes current pack suffix to 💜 for all new stickers.
     done: Emoji successfully changed.
@@ -261,7 +257,7 @@ admin:
     list:
       info: Mailing status
     status:
-      info: |
+      info: |2
         <b>Newsletter ${name}</b> (${createdAt})
         Created ${creatorName}
 

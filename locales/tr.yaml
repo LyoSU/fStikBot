@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: '🆕 Yeni bir çıkartma paketi oluştur'
-      donate: '☕️ Donate'
+      club: '☕️ Donate'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
@@ -54,13 +54,19 @@ cmd:
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
     inline_title: Satır içi çıkartma paketi
-  donate: |
-    <b>☕️ Botun geliştirilmesine yardım et</b>
+  club: |
+    ☕️ Supporting a bot development
 
-    Bana kahve için para gönderebilir ve karşılığında botta küçük bonuslar alabilirsiniz.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ <b>"${titleSuffix}</b> çıkartma başlığını kapatma
-    ➖ Diğer çıkartma paketlerini link ile kopyalama
+    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Copying of other sticker packs by link
+  #club: |
+  #<b>☕️ Bot developer club by Ly</b>
+  #You can join the bot developer club, thereby supporting it.
+  #Also, all club members get additional features in this bot:
+  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+  #➖ Copying of other sticker packs by link
   emoji:
     info: Lütfen emoji ekleyin. Örneğin, <code>/emoji 💜</code>, sonraki tüm yeni çıkartmalar için soneki 💜 olarak değiştirecektir.
     done: Emoji successfully changed.
@@ -106,15 +112,6 @@ callback:
       not_found: |
         Hata!
         Çıkartmayı bulamıyorum.
-  donate:
-    title: Bağış yap ${botUsername}
-    description: Direk destek ve ekstra özellikler
-    successful: |
-      <b>Botun geliştirilmesinde yardımcı olduğun için teşekkürler 💜</b>
-
-      Eğer bir önerin , sorun veya eksik özellikleri bildirme durumun olursa @LyoSU adresinden bana ulaşabilir, elimden geleni yaparım.
-    btn:
-      buy: '💜 Öde'
 sticker:
   add:
     ok: |
@@ -186,10 +183,10 @@ scenes:
       Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama başarılı sonuçlandı.
     error:
       premium: |
-        <b>Hata!</b>
-        Ne yazık ki, bu özellik yalnızca botu destekleyen kişiler tarafından kullanılabilir.
+        <b>Error!</b>
+        This feature is only available to club members.
 
-        Bunu yapmak için /donate komutunu kullanabilirsin.
+        You can do this by sending the /club command.
   original:
     enter: |
       Bu botla eklenen çıkartmayı gönderin, size orijinal çıkartmasını göstereceğim.

@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: '🆕 Stiker yaratish'
-      donate: '☕️ Donate'
+      club: '☕️ Donate'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -52,13 +52,19 @@ cmd:
     empty: |
       <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
     inline_title: Инлайн стикерпак
-  donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+  club: |
+    ☕️ Supporting a bot development
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Copying of other sticker packs by link
+  #club: |
+  #<b>☕️ Bot developer club by Ly</b>
+  #You can join the bot developer club, thereby supporting it.
+  #Also, all club members get additional features in this bot:
+  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+  #➖ Copying of other sticker packs by link
   emoji:
     info: Iltimos, emodjini kiriting. Masalan, <code>/emoji 💜</code> keyingi barcha yangi stikerlar uchun qo'shimchani 💜 ga o'zgartiradi.
     done: Emoji successfully changed.
@@ -104,15 +110,6 @@ callback:
       not_found: |
         Tizimda xatolik!
         Stikerni topib bo'lmadi.
-  donate:
-    title: Xayriya ${botUsername}
-    description: Ushbu botning dasturlovchsini bevosita qo'llab-quvatlash va qo'shimcha imkoniyatlarga ega bo'lish.
-    successful: |
-      <b>Botni qo'llab-quvatlaganingiz uchun tashakkur💜</b>
-
-      Siz menga @LyoSU botda yetishmayotgan funksiya bo'yicha ta'klif bilan yozishingiz mumkin va men uni ishlab chiqishga harakat qilaman.
-    btn:
-      buy: '💜 To''lash'
 sticker:
   add:
     ok: |
@@ -187,10 +184,10 @@ scenes:
       <a href="${originalLink}">${originalTitle}</a> dan <a href="${link}">${title}</a> ga stikerlar to'plamini nusxalash muvaffaqiyatli yakunlandi.
     error:
       premium: |
-        <b>Tizimda Xatolik! </b>
-        Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud.
+        <b>Error!</b>
+        This feature is only available to club members.
 
-        Siz buni /donate buyrug'ini yuborish orqali qilishingiz mumkin
+        You can do this by sending the /club command.
   original:
     enter: |
       Ushbu bot orqali qo'shilgan stikerni yuboring va men sizga asl nusxasini ko'rsataman.
