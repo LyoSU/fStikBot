@@ -28,7 +28,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Video'
       new: 'Stick paketi yaradın'
-      donate: '☕️ Donate'
+      club: '☕️ Donate'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -54,13 +54,19 @@ cmd:
       <b>Hələ bir stiker paketiniz yoxdur.</b>
       /new yazarağ yenisini yarada bilersiniz
     inline_title: Инлайн стикерпак
-  donate: |
-    <b>☕️ Поддержка разработчика бота</b>
+  club: |
+    ☕️ Supporting a bot development
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Copying of other sticker packs by link
+  #club: |
+  #<b>☕️ Bot developer club by Ly</b>
+  #You can join the bot developer club, thereby supporting it.
+  #Also, all club members get additional features in this bot:
+  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+  #➖ Copying of other sticker packs by link
   emoji:
     info: Xahiş edirəm emoji əlavə edin. Məsələn, <code>/emoji 💜</code> , sonrakı bütün yeni stikerlər üçün şəkilçini 💜 olaraq dəyişdirəcəkdir.
     done: Emoji successfully changed.
@@ -106,15 +112,6 @@ callback:
       not_found: |
         Xəta!
         Sticker tapılmadı.
-  donate:
-    title: İanə ${botUsername}
-    description: Bot developerinin birbaşa dəstəyi və əlavə xüsusiyyətləri əldə edin.
-    successful: |
-      <b>Botu dəstəklədiyiniz üçün təşəkkür edirəm 💜</b>
-
-      Mənə @LyoSU yaza bilmədiyiniz bir xüsusiyyət üçün bir təklif yaza bilərsiniz və onu tətbiq etməyə çalışacağam.
-    btn:
-      buy: '💜 Ödə'
 sticker:
   add:
     ok: |
@@ -189,10 +186,10 @@ scenes:
       <a href="${originalLink}">${originalTitle}</a> - <a href="${link}">${title}</a> etiket paketinin kopyalanması uğurla </a> çatdı.
     error:
       premium: |
-        <b>səhv!</b>
-        Təəssüf ki, bu xüsusiyyət yalnız botu dəstəkləyənlər üçün mövcuddur.
+        <b>Error!</b>
+        This feature is only available to club members.
 
-        /donate yazarağ ianə edə bilərsiniz
+        You can do this by sending the /club command.
   original:
     enter: |
       Bu bot vasitəsilə əlavə olunan stikeri göndərin, sizə orijinalını göstərim.
