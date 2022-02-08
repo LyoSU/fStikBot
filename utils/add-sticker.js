@@ -11,7 +11,7 @@ const numOfCpus = os.cpus().length
 const convertQueue = new Queue('convert');
 
 convertQueue.process(numOfCpus, async (job, done) => {
-  const output = await convertToWebmSticker(job.data.fileUrl).catch(output)
+  const output = await convertToWebmSticker(job.data.fileUrl).catch(done)
 
   done(null, output);
 })
