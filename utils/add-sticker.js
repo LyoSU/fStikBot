@@ -267,7 +267,14 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           source: data
         }
       } else {
-        const job = await convertQueue.add({ fileUrl })
+        let priority = 100
+        if (ctx.session.userInfo.premium) priority = 90
+
+        const job = await convertQueue.add({ fileUrl }, {
+          priority,
+          attempts: 1,
+          removeOnComplete: true
+        })
 
         const file = await job.finished()
 
