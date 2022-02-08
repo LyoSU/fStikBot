@@ -12,10 +12,16 @@ const convertQueue = new Queue('convert', {
   redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST, password: process.env.REDIS_PASSWORD }
 });
 
+setInterval(() => {
+  convertQueue.clean(5000)
+}, 1000 * 5)
+
 convertQueue.process(numOfCpus, async (job, done) => {
+  console.time(`job convert #${job.id}`)
   const output = await convertToWebmSticker(job.data.fileUrl).catch(done)
 
   done(null, output);
+  console.timeEnd(`job convert #${job.id}`)
 })
 
 function convertToWebmSticker (input) {
