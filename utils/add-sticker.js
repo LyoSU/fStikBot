@@ -8,7 +8,9 @@ const Queue = require('bull');
 
 const numOfCpus = os.cpus().length
 
-const convertQueue = new Queue('convert');
+const convertQueue = new Queue('convert', {
+  redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST, password: process.env.REDIS_PASSWORD }
+});
 
 convertQueue.process(numOfCpus, async (job, done) => {
   const output = await convertToWebmSticker(job.data.fileUrl).catch(done)
