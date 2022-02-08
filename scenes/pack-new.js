@@ -102,7 +102,7 @@ const newPackConfirm = new Scene('newPackConfirm')
 newPackConfirm.enter(async (ctx) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  const inline = !!ctx.session.scene.newPack.inline
+  const inline = !!ctx.session.scene?.newPack?.inline
   ctx.session.scene.newPack.name = ctx.message.text
 
   const nameSuffix = `_by_${ctx.options.username}`

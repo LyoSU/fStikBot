@@ -1,7 +1,20 @@
+
+const os = require("os")
 const https = require('https')
 const sharp = require('sharp')
 const ffmpeg = require('fluent-ffmpeg')
 const temp = require('temp').track()
+const Queue = require('bull');
+
+const numOfCpus = os.cpus().length
+
+const convertQueue = new Queue('convert');
+
+convertQueue.process(numOfCpus, async (job, done) => {
+  const output = await convertToWebmSticker(job.data.fileUrl).catch(output)
+
+  done(null, output);
+})
 
 function convertToWebmSticker (input) {
   const output = temp.path({ suffix: '.webm' })
@@ -246,7 +259,9 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           source: data
         }
       } else {
-        const file = await convertToWebmSticker(fileUrl)
+        const job = await convertQueue.add({ fileUrl })
+
+        const file = await job.finished()
 
         if (!file.metadata) {
 

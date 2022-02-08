@@ -4,7 +4,8 @@ module.exports = async (ctx, next) => {
   if (!ctx.session.previousSticker) return next()
   await ctx.replyWithChatAction('upload_document')
 
-  let sticker, stickerIndex
+  let sticker
+  let stickerIndex = -1
   const emoji = ctx.match.join('')
 
   if (ctx.session.previousSticker.id) {
@@ -31,7 +32,7 @@ module.exports = async (ctx, next) => {
 
   if (sticker.id) {
     if (stickerInfo.ok) {
-      if (stickerIndex) await ctx.tg.setStickerPositionInSet(stickerInfo.ok.stickerInfo.file_id, stickerIndex).catch(() => {})
+      if (stickerIndex >= 0) await ctx.tg.setStickerPositionInSet(stickerInfo.ok.stickerInfo.file_id, stickerIndex).catch(() => {})
       await ctx.deleteStickerFromSet(sticker.info.file_id).catch(() => {})
 
       sticker.deleted = true

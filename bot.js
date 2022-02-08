@@ -67,7 +67,7 @@ bot.catch(handleError)
 bot.use(stats)
 
 bot.use((ctx, next) => {
-  if (ctx.update.my_chat_member) console.log(ctx.update)
+  if (ctx.update.my_chat_member) return false
   else return next()
 })
 

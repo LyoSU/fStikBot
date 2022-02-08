@@ -28,6 +28,10 @@ module.exports = async (ctx) => {
   if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
     const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
+    if (!stickerSet) {
+      return ctx.answerCbQuery('error', true)
+    }
+
     if (stickerSet.animated) {
       ctx.state.type = 'animated'
       query.animated = true
@@ -53,7 +57,7 @@ module.exports = async (ctx) => {
         userInfo.stickerSet = stickerSet
       } else if (stickerSet.animated) {
         userInfo.animatedStickerSet = stickerSet
-        if (userInfo?.stickerSet.inline) {
+        if (userInfo?.stickerSet?.inline) {
           userInfo.stickerSet = null
         }
       } else {

@@ -13,6 +13,8 @@ const escapeHTML = (str) => str.replace(/[&<>'"]/g,
 )
 
 module.exports = async (error, ctx) => {
+  if (error.description && error.description.includes('timeout')) return
+
   const errorInfo = errorStackParser.parse(error)
 
   let gitBlame
@@ -40,8 +42,6 @@ module.exports = async (error, ctx) => {
   await ctx.telegram.sendMessage(ctx.config.mainAdminId, errorText, {
     parse_mode: 'HTML'
   }).catch(() => {})
-
-  if (error.description && error.description.includes('timeout')) return
 
   await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
 }
