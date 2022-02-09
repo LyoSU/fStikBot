@@ -12,7 +12,7 @@ module.exports = async (ctx) => {
       ctx.i18n.t('cmd.start.btn.video'), ctx.i18n.t('cmd.start.btn.anim')
     ],
     [
-      ctx.i18n.t('cmd.start.btn.donate')
+      ctx.i18n.t('cmd.start.btn.club')
     ]
   ]).resize().extra({ disable_web_page_preview: true }))
 }
