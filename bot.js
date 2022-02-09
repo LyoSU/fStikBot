@@ -53,6 +53,13 @@ const i18n = new I18n({
 // I18n middleware
 bot.use(i18n)
 
+bot.use((ctx, next) => {
+  next().catch((error) => {
+    console.log('Oops', error)
+  })
+  return true
+})
+
 // rate limit
 const limitConfig = {
   window: 1000,
