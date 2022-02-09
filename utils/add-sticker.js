@@ -23,10 +23,10 @@ const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
   }).on('error', reject)
 })
 
-let queue = {}
-setInterval(() => {
-  queue = {}
-}, 1000 * 10)
+// let queue = {}
+// setInterval(() => {
+//   queue = {}
+// }, 1000 * 10)
 
 module.exports = async (ctx, inputFile, toStickerSet = false) => {
   let stickerFile = inputFile
@@ -198,15 +198,15 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     }
 
     if (isVideo) {
-      if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
-      const userQueue = queue[ctx.from.id]
+      // if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
+      // const userQueue = queue[ctx.from.id]
 
-      if (userQueue.video) {
-        return ctx.reply('wait load...')
-      }
-      userQueue.video = true
+      // if (userQueue.video) {
+      //   return ctx.reply('wait load...')
+      // }
+      // userQueue.video = true
       if (inputFile.file_size > 1000 * 1000 * 5 || inputFile.duration >= 35) { // 5 mb or 35 sec
-        userQueue.video = false
+        // userQueue.video = false
         return ctx.reply('file too big')
       }
 
@@ -234,7 +234,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           }
         }
       }
-      userQueue.video = false
+      // userQueue.video = false
     } else {
       const data = await downloadFileByUrl(fileUrl)
       const imageSharp = sharp(data)
