@@ -79,6 +79,8 @@ callback:
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
 
+      Send a file, photo, video or sticker so that I add it to your set
+
       You can also edit the sticker pack via @Stickers
     set_inline_pack: |
       Selected <u>${title}</u> stickerpack
@@ -168,7 +170,9 @@ scenes:
 
       <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      You can edit it in the official @Stickers bot
+      Send a file, photo, video or sticker so that I add it to your set
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: Name cannot be greater than ${max} symbols.
       name_long: Address cannot be greater than ${max} symbols.
