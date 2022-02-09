@@ -1,5 +1,6 @@
 
 const os = require("os")
+const fs = require('fs').promises
 const https = require('https')
 const sharp = require('sharp')
 const ffmpeg = require('fluent-ffmpeg')
@@ -18,9 +19,14 @@ setInterval(() => {
 
 convertQueue.process(numOfCpus, async (job, done) => {
   console.time(`job convert #${job.id}`)
-  const output = await convertToWebmSticker(job.data.fileUrl).catch(done)
+  const file = await convertToWebmSticker(job.data.fileUrl).catch(done)
 
-  done(null, output);
+  const content = await fs.readFile(file.output, { encoding: 'base64' });
+
+  done(null, {
+    metadata: file.metadata,
+    content
+  });
   console.timeEnd(`job convert #${job.id}`)
 })
 
@@ -267,8 +273,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           source: data
         }
       } else {
-        let priority = 100
-        if (ctx.session.userInfo.premium) priority = 90
+        let priority = 10
+        if (ctx.session.userInfo.premium) priority = 9
 
         const job = await convertQueue.add({ fileUrl }, {
           priority,
@@ -278,11 +284,9 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         const file = await job.finished()
 
-        if (!file.metadata) {
-
-        } else {
+        if (file.metadata) {
           stickerExtra.webm_sticker = {
-            source: file.output
+            source: Buffer.from(file.content, 'base64')
           }
         }
       }
