@@ -23,7 +23,7 @@ const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
 let queue = {}
 setInterval(() => {
   queue = {}
-}, 1000 * 30)
+}, 1000 * 10)
 
 module.exports = async (ctx, inputFile, toStickerSet = false) => {
   let stickerFile = inputFile
