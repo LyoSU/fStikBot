@@ -1,6 +1,9 @@
 const https = require('https')
 const sharp = require('sharp')
 const Queue = require('bull')
+const EventEmitter = require('events')
+
+EventEmitter.defaultMaxListeners = 30
 
 const convertQueue = new Queue('convert', {
   redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST, password: process.env.REDIS_PASSWORD }

@@ -42,6 +42,13 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
 
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
+bot.use((ctx, next) => {
+  next().catch((error) => {
+    console.log('Oops', error)
+  })
+  return true
+})
+
 // I18n settings
 const { match } = I18n
 const i18n = new I18n({
@@ -52,13 +59,6 @@ const i18n = new I18n({
 
 // I18n middleware
 bot.use(i18n)
-
-bot.use((ctx, next) => {
-  next().catch((error) => {
-    console.log('Oops', error)
-  })
-  return true
-})
 
 // rate limit
 const limitConfig = {
