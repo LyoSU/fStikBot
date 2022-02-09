@@ -55,12 +55,12 @@ cmd:
       Для создания напиши /new
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕️ Поддержка разработчика бота
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
+    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
+    ➖ Полное копирование других стикерпаков по ссылке на них
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -77,11 +77,11 @@ callback:
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      Выбранный стикерпак <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Отправьте файл, фото, видео или стикер, чтобы я добавил его в ваш набор
 
-      You can also edit the sticker pack via @Stickers
+      Вы также можете отредактировать стикерпак через @Stickers
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -166,13 +166,13 @@ scenes:
       <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
       <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      Набор стикеров <a href="${link}">${title}</a> успешно создан!
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>Ссылка на набор стикеров:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Отправьте файл, фото, видео или стикер, чтобы я добавил его в ваш набор
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Вы также можете отредактировать его через официальный бот @Stickers</i>
     error:
       title_long: Имя должно быть не больше ${max} символов.
       name_long: Адрес должен быть не больше ${max} символов.
@@ -190,10 +190,10 @@ scenes:
       Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to club members.
+        <b>Ошибка!</b>
+        Эта функция доступна только для членов клуба.
 
-        You can do this by sending the /club command.
+        Вы можете сделать это, отправив команду /club.
   original:
     enter: |
       Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
