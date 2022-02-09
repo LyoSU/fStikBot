@@ -4,27 +4,24 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      Hai, <b>${name}</b>
+      Kirimkan saya stiker atau foto dan saya akan menambahkannya ke pack anda.
+      Ingin menghapusnya dari paket stiker anda? Kirimkan sekali lagi.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /video - get your video packs
-       /inline - get your inline packs
+      /packs - dapatkan paket stiker anda
+      /anim - dapatkan paket animasi anda
+      /new - buat paket stiker baru
 
-       /new - create a new sticker pack
+      /original - temukan stiker asli
+      /restore - pulihkan paket stiker
+      /copy - salin paket stiker
+      /emoji - ubah akhiran emoji untuk paket stiker saat ini.
+      /lang - ubah bahasa
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack
-       /lang - change language
+      /donate - beri dukungan untuk pengembang
 
-       /donate - support the developer
-
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Kanal pengembang: @LyBlog
     btn:
       packs: '🌟 Paket stiker'
       inline: '💫 Inline'
@@ -58,12 +55,12 @@ cmd:
       Untuk membuat, tulis perintah /new
     inline_title: Paket stiker sebaris
   club: |
-    ☕️ Supporting a bot development
+    ️ Mendukung pengembangan bot
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Anda dapat mengirim uang kepada saya untuk minum kopi dan mendapatkan bonus kecil sebagai imbalannya.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
+    Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
+    Menyalin paket stiker lain melalui tautan
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -80,11 +77,11 @@ callback:
       hidden: Paket stiker berhasil disembunyikan
       restored: Paket stiker berhasil dipulihkan
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      Paket stiker pilihan <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Kirim file, foto, video, atau stiker untuk saya tambahkan ke set Anda
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Anda juga dapat mengeditnya melalui bot bot @Stickers resmi</i>
     set_inline_pack: |
       Dipilih <u>${title}</u> stickerpack
 
@@ -120,10 +117,8 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <a href="${link}">${title}</a>
-
-      <i>You can also edit it through the official @Stickers bot bot</i>
     ok_inline: |
       <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <u>${title}</u>
@@ -135,10 +130,10 @@ sticker:
         Paket stiker ini memiliki jumlah stiker maksimum.
         Anda dapat membuat paket stiker baru menggunakan perintah /new.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Stiker ini sudah ada di paket stiker</b>
 
-        If you want to change the emoji, send it in the following message.
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        Jika Anda ingin mengubah emoji, kirimkan dalam pesan berikut.
+        Anda juga dapat mengedit paket stiker melalui @Stickers
       stickerset_invalid: |
         <b>Kesalahan!</b>
 
@@ -169,13 +164,13 @@ scenes:
       <i>Misalnya, paket ini menggunakan 'Animals' sebagai tautan pendek: https://t.me/addstickers/Animals</i>
       <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      Paket stiker <a href="${link}">${title}</a> berhasil dibuat!
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>Tautan paket stiker:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Kirim file, foto, video, atau stiker agar saya tambahkan ke set Anda
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Anda juga dapat mengeditnya melalui bot bot @Stickers resmi</i>
     error:
       title_long: Nama tidak boleh lebih dari ${max} simbol.
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
