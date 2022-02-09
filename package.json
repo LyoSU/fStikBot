@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.19.1",
+  "version": "0.19.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,10 +20,8 @@
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
     "@pm2/io": "^4.3.5",
-    "bull": "^4.5.1",
     "dotenv": "^7.0.0",
     "error-stack-parser": "^2.0.6",
-    "fluent-ffmpeg": "^2.1.2",
     "ioredis": "^4.19.4",
     "moment": "^2.29.1",
     "mongoose": "^5.7.5",
@@ -31,8 +29,7 @@
     "sharp": "^0.29.1",
     "telegraf": "^3.37.0",
     "telegraf-i18n": "^6.5.0",
-    "telegraf-ratelimit": "^2.0.0",
-    "temp": "^0.9.4"
+    "telegraf-ratelimit": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^6.3.0",
