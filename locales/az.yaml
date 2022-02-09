@@ -5,17 +5,20 @@ cmd:
   start:
     info: |
       Hi, <b>${name}</b>!
-       Send me a sticker or photo and I will add it to your sticker pack.
+       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
        Want to remove it from your sticker pack? Send it once again.
 
        /packs - get your packs
        /anim - get your animated packs
+       /video - get your video packs
+       /inline - get your inline packs
+
        /new - create a new sticker pack
 
        /original - find original sticker
        /restore - restore a sticker pack
        /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack.
+       /emoji - change emoji suffix for current sticker pack
        /lang - change language
 
        /donate - support the developer
@@ -81,7 +84,7 @@ callback:
 
       Send a file, photo, video or sticker so that I add it to your set
 
-      You can also edit the sticker pack via @Stickers
+      <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -120,7 +123,7 @@ sticker:
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
 
-      You can also edit the sticker pack via @Stickers
+      <i>You can also edit it through the official @Stickers bot bot</i>
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
@@ -135,7 +138,7 @@ sticker:
         <b>This sticker is already in the sticker pack</b>
 
         If you want to change the emoji, send it in the following message.
-        You can also edit the sticker pack via @Stickers
+        <i>You can also edit it through the official @Stickers bot bot</i>
       stickerset_invalid: |
         <b>Error!</b>
 
