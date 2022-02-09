@@ -59,7 +59,7 @@ cmd:
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
@@ -78,6 +78,8 @@ callback:
       restored: Çıkartma başarılı bir şekilde sıfırlandı
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
+
+      Send a file, photo, video or sticker so that I add it to your set
 
       You can also edit the sticker pack via @Stickers
     set_inline_pack: |
@@ -161,11 +163,13 @@ scenes:
       <b>Çıkartma paketin için kısa bir link gir:</b>
       <i>Yalnızca latin harfleri, rakamlar ve alt çizgiler kullanın.</i>
     ok: |
-      <a href="${link}">${title}</a> çıkartma paketi başarılı bir şekilde oluşturuldu!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Çıkartma paketinin linki:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      @Stickers botu kullanarak çıkartmalarını düzenleyebilirsin.
+      Send a file, photo, video or sticker so that I add it to your set
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: İsim ${max}  değerinden büyük olamaz.
       name_long: Kısa link ${max} değerinden büyük olamaz.

@@ -59,7 +59,7 @@ cmd:
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
@@ -78,6 +78,8 @@ callback:
       restored: Pack de stickers restaurado con éxito
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
+
+      Send a file, photo, video or sticker so that I add it to your set
 
       You can also edit the sticker pack via @Stickers
     set_inline_pack: |
@@ -164,11 +166,13 @@ scenes:
       <i>Por ejemplo, este conjunto tiene el enlace corto 'Animals': https://t.me/addstickers/Animals</i>
       <i>También puede elegir un enlace corto aleatoriamente a continuación.</i>
     ok: |
-      Pack de stickers <a href="${link}">${title}</a> creado con éxito!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Enlace al pack de stickers:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Puede editarlo en el bot oficial de @Stickers
+      Send a file, photo, video or sticker so that I add it to your set
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: El nombre no debe tener más de ${max} caracteres.
       name_long: El enlace no debe tener más de ${max} caracteres.

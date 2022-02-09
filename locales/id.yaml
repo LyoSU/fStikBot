@@ -6,15 +6,15 @@ cmd:
     info: |
       Hai, <b>${name}</b>
       Kirimkan saya stiker atau foto dan saya akan menambahkannya ke pack anda.
-      Ingin menghapusnya dari pack stiker anda? Kirimkan sekali lagi.
+      Ingin menghapusnya dari paket stiker anda? Kirimkan sekali lagi.
 
-      /packs - dapatkan pack anda
-      /anim - dapatkan pack animasi anda
-      /new  - buat pack stiker baru
+      /packs - dapatkan paket stiker anda
+      /anim - dapatkan paket animasi anda
+      /new  - buat paket stiker baru
 
-      /original - cari stiker original
-      /restore - pulihkan pack stiker
-      /copy - salin pack stiker
+      /original - temukan stiker asli
+      /restore - pulihkan paket stiker
+      /copy - salin paket stiker
       /emoji - ubah akhiran emoji untuk paket stiker saat ini.
       /lang - ubah bahasa
 
@@ -24,7 +24,7 @@ cmd:
       👨🏻‍💻 Kanal pengembang: @LyBlog
     btn:
       packs: '🌟 Paket stiker'
-      inline: '💫 Tombol sebaris'
+      inline: '💫 Inline'
       anim: '✨ Animasi'
       video: '📹 Video'
       new: '🆕 Buat paket stiker baru'
@@ -59,7 +59,7 @@ cmd:
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
@@ -69,8 +69,8 @@ cmd:
   #➖ Copying of other sticker packs by link
   emoji:
     info: Harap tentukan emoji. Sebagai contoh - <code>/emoji 💜</code> mengubah akhiran paket saat ini menjadi 💜 untuk semua stiker baru.
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: Emoji berhasil diubah.
+    error: Ada kesalahan saat mengubah emoji!
 callback:
   pack:
     answerCbQuer:
@@ -78,6 +78,8 @@ callback:
       restored: Paket stiker berhasil dipulihkan
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
+
+      Send a file, photo, video or sticker so that I add it to your set
 
       You can also edit the sticker pack via @Stickers
     set_inline_pack: |
@@ -115,38 +117,36 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <a href="${link}">${title}</a>
-
-      You can also edit the sticker pack via @Stickers
     ok_inline: |
       <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the sticker
+    send_emoji: Bagus, sekarang kirim emoji yang cocok dengan stiker
     error:
       stickers_too_much: |
-        <b>Error!</b>
+        <b>Kesalahan!</b>
 
-        This sticker pack has the maximum number of stickers.
-        You can create a new sticker pack using the /new command.
+        Paket stiker ini memiliki jumlah stiker maksimum.
+        Anda dapat membuat paket stiker baru menggunakan perintah /new.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Stiker ini sudah ada di paket stiker</b>
 
-        If you want to change the emoji, send it in the following message.
-        You can also edit the sticker pack via @Stickers
+        Jika Anda ingin mengubah emoji, kirimkan dalam pesan berikut.
+        Anda juga dapat mengedit paket stiker melalui @Stickers
       stickerset_invalid: |
-        <b>Error!</b>
+        <b>Kesalahan!</b>
 
-        Bot cannot access your current chosen sticker pack.
-        Please, create (/new) or choose (/packs) another sticker pack.
+        Bot tidak dapat mengakses paket stiker pilihan Anda saat ini.
+        Silakan, buat (/new) atau pilih (/packs) paket stiker lain.
       file_type: |
-        <b>Error!</b>
+        <b>Kesalahan!</b>
 
-        This file type is not supported.
+        Tipe file tidak didukung.
 
-        <i>You can add this video files to the video pack.
-        As well as all other files in the inline pack</i>
-        Create (/new) or choose (/packs) another sticker pack
+        <i>Anda dapat menambahkan file video ini ke paket video.
+        Serta semua file lain dalam paket inline</i>
+        Buat (/new) atau pilih (/packs) paket stiker lainnya
 scenes:
   new_pack:
     common: Umum
@@ -164,11 +164,13 @@ scenes:
       <i>Misalnya, paket ini menggunakan 'Animals' sebagai tautan pendek: https://t.me/addstickers/Animals</i>
       <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
     ok: |
-      Paket stiker <a href="${link}">${title}</a> berhasil dibuat!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Tautan paket stiker:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Anda dapat mengeditnya secara resmi di @Stickers bot
+      Send a file, photo, video or sticker so that I add it to your set
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: Nama tidak boleh lebih dari ${max} simbol.
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
@@ -179,17 +181,17 @@ scenes:
     enter: |
       Saya dapat menyalin paket stiker ini, untuk ini anda perlu membuat paket stiker baru.
     progress: |
-      Copying sticker pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a>
 
-      Progress: ${current}/${total}
+      Proses: ${current}/${total}
     done: |
       Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a> berhasil diselesaikan.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to club members.
+        <b>Kesalahan!</b>
+        Fitur ini hanya tersedia untuk anggota klub.
 
-        You can do this by sending the /club command.
+        Anda dapat melakukan ini dengan mengirim perintah /club.
   original:
     enter: |
       Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
@@ -235,7 +237,7 @@ admin:
       group_select: Выбери группу пользователей
       group_type:
         all: Все
-        ru: Russian
+        ru: Rusia
       select_all: Все
       found: |
         Нашлось человек: ${userCount}
@@ -297,7 +299,7 @@ error:
       Telegram mengembalikan kesalahan:
       ${error}
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Kesalahan yang tidak diketahui telah terjadi, silakan coba lagi.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Jika masalah berlanjut, maka tulislah untuk @Ly_oBot.
+    Harap segera menulis tentang bot mana yang Anda bicarakan dan jelaskan masalahnya secara rinci dalam satu pesan.

@@ -57,7 +57,7 @@ cmd:
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
@@ -76,6 +76,8 @@ callback:
       restored: Stikerlar to'plami muvaffaqiyatli ravishda qayta tiklandi
     set_pack: |
       Selected sticker pack <a href="${link}">${title}</a>
+
+      Send a file, photo, video or sticker so that I add it to your set
 
       You can also edit the sticker pack via @Stickers
     set_inline_pack: |
@@ -162,11 +164,13 @@ scenes:
       <i>Masalan ushbu to'plam qisqa manzilni o'z ichiga oladi 'Animals': https://t.me/addstickers/Animals</i>
       <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin. </i>
     ok: |
-      Stikerlar to'plami <a href="${link}">${title}</a> muvaffaqiyatli ravishda yaratildi!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Stikerlar to'plamiga havola</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Siz uni rasmiy @Stickers botida tahrirlashingiz mumkin
+      Send a file, photo, video or sticker so that I add it to your set
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: Ism ${max} belgidan oshmasligi kerak.
       name_long: Manzil ${max} belgidan oshmasligi kerak.
