@@ -4,24 +4,27 @@ ratelimit: Занадто часто!
 cmd:
   start:
     info: |
-      Привіт, <b>${name}</b>!
-      Надішли мені стікер або фото, і я додам його у твій стікерпак.
-      Щоб видалити - відправ стікер знову.
+      Hi, <b>${name}</b>!
+       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+       Want to remove it from your sticker pack? Send it once again.
 
-      /pack - список стікерпаків
-      /animpack - список анімованих стікерпаків
-      /new - створити новий стікерпак
+       /packs - get your packs
+       /anim - get your animated packs
+       /video - get your video packs
+       /inline - get your inline packs
 
-      /original - знайти оригінал стікера
-      /restore - відновити стікерпак
-      /copy - скопіювати стікерпак
-      /emoji - змінити емодзі-суфікс для поточного стікерпаку
-      /lang - change language
+       /new - create a new sticker pack
 
-      /donate - підтримати розробника
+       /original - find original sticker
+       /restore - restore a sticker pack
+       /copy - copy a sticker pack
+       /emoji - change emoji suffix for current sticker pack
+       /lang - change language
 
-      GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал розробника: @LyBlog
+       /donate - support the developer
+
+       GitHub: https://github.com/LyoSU/fStikBot
+       👨🏻‍💻 Developer channel: @LyBlog
     btn:
       packs: '🌟 Стікерпаки'
       inline: '💫 Інлайн'
@@ -82,7 +85,7 @@ callback:
 
       Send a file, photo, video or sticker so that I add it to your set
 
-      You can also edit the sticker pack via @Stickers
+      <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Вибрано <u>${title}</u> стікерпак
 
@@ -118,9 +121,10 @@ callback:
 sticker:
   add:
     ok: |
-      Вибрана стікерпак <a href="${link}">${title}</a>
+      <b>Sticker successfully added to sticker pack:</b>
+      <a href="${link}">${title}</a>
 
-      Також можна редагувати стікерпак за допомогою @Stickers
+      <i>You can also edit it through the official @Stickers bot bot</i>
     ok_inline: |
       <b>Стікер успішно доданий у стікерпак:</b>
       <u>${title}</u>
@@ -132,10 +136,10 @@ sticker:
         Цей пакет наклейок містить максимальну кількість наклейок.
         Ви можете створити новий пакет наклейок за допомогою команди /new.
       have_already: |
-        <b>Цей стікер вже знаходиться в стікерпаку</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Якщо ви хочете змінити емоджі, надішліть це у наступному повідомленні.
-        Ви також можете редагувати стікерпак за допомогою @Stickers
+        If you want to change the emoji, send it in the following message.
+        <i>You can also edit it through the official @Stickers bot bot</i>
       stickerset_invalid: |
         <b>Помилка!</b>
 
