@@ -1,3 +1,4 @@
+require('dotenv').config({ path: './.env' })
 const os = require('os')
 const fs = require('fs').promises
 const ffmpeg = require('fluent-ffmpeg')
