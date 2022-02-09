@@ -78,9 +78,11 @@ callback:
       hidden: Стікерпак успішно приховано
       restored: Стікерпак успішно відновлено
     set_pack: |
-      Вибрана стікерпак <a href="${link}">${title}</a>
+      Selected sticker pack <a href="${link}">${title}</a>
 
-      Також можна редагувати стікерпак за допомогою @Stickers
+      Send a file, photo, video or sticker so that I add it to your set
+
+      You can also edit the sticker pack via @Stickers
     set_inline_pack: |
       Вибрано <u>${title}</u> стікерпак
 
@@ -164,11 +166,13 @@ scenes:
       <i>Наприклад, цей набір має коротку адресу 'Animals': https://t.me/addstickers/Animals</i>
       <i>Також ви можете вибрати випадково згенеровану адресу нижче.</i>
     ok: |
-      Стікерпак <a href="${link}">${title}</a> успішно створено!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Посилання на стікерпак:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Редагувати його можна в офіційному боті @Stickers
+      Send a file, photo, video or sticker so that I add it to your set
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: Ім'я не має бути довшим за ${max} символів.
       name_long: Адреса не має бути довшою за ${max} символів.
