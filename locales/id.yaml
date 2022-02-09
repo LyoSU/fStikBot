@@ -4,24 +4,27 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Hai, <b>${name}</b>
-      Kirimkan saya stiker atau foto dan saya akan menambahkannya ke pack anda.
-      Ingin menghapusnya dari paket stiker anda? Kirimkan sekali lagi.
+      Hi, <b>${name}</b>!
+       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+       Want to remove it from your sticker pack? Send it once again.
 
-      /packs - dapatkan paket stiker anda
-      /anim - dapatkan paket animasi anda
-      /new  - buat paket stiker baru
+       /packs - get your packs
+       /anim - get your animated packs
+       /video - get your video packs
+       /inline - get your inline packs
 
-      /original - temukan stiker asli
-      /restore - pulihkan paket stiker
-      /copy - salin paket stiker
-      /emoji - ubah akhiran emoji untuk paket stiker saat ini.
-      /lang - ubah bahasa
+       /new - create a new sticker pack
 
-      /donate - beri dukungan untuk pengembang
+       /original - find original sticker
+       /restore - restore a sticker pack
+       /copy - copy a sticker pack
+       /emoji - change emoji suffix for current sticker pack
+       /lang - change language
 
-      GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Kanal pengembang: @LyBlog
+       /donate - support the developer
+
+       GitHub: https://github.com/LyoSU/fStikBot
+       👨🏻‍💻 Developer channel: @LyBlog
     btn:
       packs: '🌟 Paket stiker'
       inline: '💫 Inline'
@@ -81,7 +84,7 @@ callback:
 
       Send a file, photo, video or sticker so that I add it to your set
 
-      You can also edit the sticker pack via @Stickers
+      <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Dipilih <u>${title}</u> stickerpack
 
@@ -117,8 +120,10 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Stiker berhasil ditambahkan ke paket stiker:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
+
+      <i>You can also edit it through the official @Stickers bot bot</i>
     ok_inline: |
       <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <u>${title}</u>
@@ -130,10 +135,10 @@ sticker:
         Paket stiker ini memiliki jumlah stiker maksimum.
         Anda dapat membuat paket stiker baru menggunakan perintah /new.
       have_already: |
-        <b>Stiker ini sudah ada di paket stiker</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Jika Anda ingin mengubah emoji, kirimkan dalam pesan berikut.
-        Anda juga dapat mengedit paket stiker melalui @Stickers
+        If you want to change the emoji, send it in the following message.
+        <i>You can also edit it through the official @Stickers bot bot</i>
       stickerset_invalid: |
         <b>Kesalahan!</b>
 
