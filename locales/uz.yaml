@@ -57,7 +57,7 @@ cmd:
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling " :: @fStikBot in sticker packs name
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
