@@ -4,31 +4,31 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      Hai, <b>${name}</b>
+      Kirimkan saya stiker atau foto dan saya akan menambahkannya ke pack anda.
+      Ingin menghapusnya dari pack stiker anda? Kirimkan sekali lagi.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /new - create a new sticker pack
+      /packs - dapatkan pack anda
+      /anim - dapatkan pack animasi anda
+      /new  - buat pack stiker baru
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack.
-       /lang - change language
+      /original - cari stiker original
+      /restore - pulihkan pack stiker
+      /copy - salin pack stiker
+      /emoji - ubah akhiran emoji untuk paket stiker saat ini.
+      /lang - ubah bahasa
 
-       /donate - support the developer
+      /donate - beri dukungan untuk pengembang
 
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Kanal pengembang: @LyBlog
     btn:
       packs: '🌟 Paket stiker'
-      inline: '💫 Inline'
-      anim: '✨ Animated'
+      inline: '💫 Tombol sebaris'
+      anim: '✨ Animasi'
       video: '📹 Video'
       new: '🆕 Buat paket stiker baru'
-      club: '☕️ Donate'
+      club: '☕️ Donasi'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
