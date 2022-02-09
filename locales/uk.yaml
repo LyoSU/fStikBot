@@ -4,34 +4,34 @@ ratelimit: Занадто часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      Привіт, <b>${name}</b>!
+       Надішліть мені стікер, GIF, відео, файл або фотографію, і я додам її до вашого стікерпака.
+       Хочете видалити його зі свого пакета наклейок? Надішліть ще раз.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /video - get your video packs
-       /inline - get your inline packs
+       /packs - отримати свої стікерпаки
+       /anim - отримати свої анімовані стікерпаки
+       /video - отримати ваші стікерпаки відео
+       /inline - отримати inline пакети
 
-       /new - create a new sticker pack
+       /new - створити новий пакет наклейок
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack
-       /lang - change language
+       /original - знайти оригінальну стікера
+       /resore - відновити пакет наклейок
+       /copy - скопіювати пакет наклейок
+       /emoji - змінити суфікс смайлів для поточного пакета наклейок
+       /lang - змінити мову
 
-       /donate - support the developer
+       /donate - підтримати розробника
 
        GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+       👨🏻‍💻 Канал розробника: @LyBlog
     btn:
       packs: '🌟 Стікерпаки'
       inline: '💫 Інлайн'
       anim: '✨ Анімований'
       video: '📹 Відео'
       new: '🆕 Створити стікерпак'
-      club: '☕️ Donate'
+      club: '☕ Пожертвувати'
   inline:
     switch_pm: Вибрати стікерпак
   restore: |
@@ -59,12 +59,12 @@ cmd:
       Щоб створити, напиши /new
     inline_title: Інлайн стікерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕️ Підтримка розробки бота
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Ви можете надіслати мені гроші на каву та отримати невеликі бонуси в боті натомість.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
+    ➖ Вимкнення <b>"${titleSuffix}</b> у назві пакетів стікерів
+    ➖ Копіювання інших пакетів стікерів за посиланням
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -81,11 +81,11 @@ callback:
       hidden: Стікерпак успішно приховано
       restored: Стікерпак успішно відновлено
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      Вибраний стікерпак <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Надішліть файл, фотографію, відео або стікер, щоб я додав його до вашого набору
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Ви також можете змінити його через офіційний бот @Stickers бот</i>
     set_inline_pack: |
       Вибрано <u>${title}</u> стікерпак
 
@@ -121,10 +121,10 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Стікер успішно доданий до стікерпака:</b>
       <a href="${link}">${title}</a>
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Ви також можете редагувати його через офіційного бота @Stickers бота</i>
     ok_inline: |
       <b>Стікер успішно доданий у стікерпак:</b>
       <u>${title}</u>
@@ -136,10 +136,10 @@ sticker:
         Цей пакет наклейок містить максимальну кількість наклейок.
         Ви можете створити новий пакет наклейок за допомогою команди /new.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Цей стікер вже знаходиться в стікерпаку</b>
 
-        If you want to change the emoji, send it in the following message.
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        Якщо ви хочете змінити емоджі, надішліть це у наступному повідомленні.
+        <i>Ви також можете редагувати його через офіційного бота @Stickers</i>
       stickerset_invalid: |
         <b>Помилка!</b>
 
@@ -170,13 +170,13 @@ scenes:
       <i>Наприклад, цей набір має коротку адресу 'Animals': https://t.me/addstickers/Animals</i>
       <i>Також ви можете вибрати випадково згенеровану адресу нижче.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      Стікерпак <a href="${link}">${title}</a> успішно створений!
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>Посилання на наклейку пакету:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Надіслати файл, фотографію, відео або стікер, так що я додаю його до вашого набору
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Ви також можете редагувати його через офіційного бота @Stickers</i>
     error:
       title_long: Ім'я не має бути довшим за ${max} символів.
       name_long: Адреса не має бути довшою за ${max} символів.
@@ -194,10 +194,10 @@ scenes:
       Копіювання стікерпаку <a href="${originalLink}">${originalTitle}</a> до <a href="${link}">${title}</a> успішно заверешно.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to club members.
+        <b>Помилка!</b>
+        Ця функція доступна тільки для учасників клубу.
 
-        You can do this by sending the /club command.
+        Ви можете зробити це, надіславши команду /club до клубу.
   original:
     enter: |
       Відправ стікер, доданий через цього бота, і я знайду тобі його оригінал.
