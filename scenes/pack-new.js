@@ -74,13 +74,14 @@ newPackTitle.enter(async (ctx) => {
   })
 })
 newPackTitle.on('message', async (ctx) => {
-  if (ctx.message.text && ctx.message.text.length <= ctx.config.charTitleMax) {
+  let charTitleMax = ctx.session.userInfo.premium ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
+  if (ctx.message.text && ctx.message.text.length <= charTitleMax) {
     ctx.session.scene.newPack.title = ctx.message.text
     if (ctx.session.scene.newPack.inline) return ctx.scene.enter('newPackConfirm')
     else return ctx.scene.enter('newPackName')
   } else {
     await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.title_long', {
-      max: ctx.config.charTitleMax
+      max: charTitleMax
     }), {
       reply_to_message_id: ctx.message.message_id
     })
