@@ -201,7 +201,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
-      if (userQueue.video) {
+      if (userQueue.video && !ctx.session.userInfo.premium) {
         return ctx.reply('wait load...')
       }
       userQueue.video = true
