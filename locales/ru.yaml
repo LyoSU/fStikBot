@@ -58,12 +58,13 @@ cmd:
       Для создания напиши /new
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Поддержка разработчика бота
+    ☕️ Supporting a bot development
 
-    Вы можете отправить деньги мне на кофе и получить взамен небольшие бонусы в боте.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Отключение <b>"${titleSuffix}"</b> в названии новых стикерпаков
-    ➖ Полное копирование других стикерпаков по ссылке на них
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
