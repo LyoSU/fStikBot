@@ -55,12 +55,13 @@ cmd:
       Untuk membuat, tulis perintah /new
     inline_title: Paket stiker sebaris
   club: |
-    ️ Mendukung pengembangan bot
+    ☕️ Mendukung pengembangan bot
 
     Anda dapat mengirim uang kepada saya untuk minum kopi dan mendapatkan bonus kecil sebagai imbalannya.
 
-    Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
-    Menyalin paket stiker lain melalui tautan
+    ➖ Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
+    ➖ Menyalin paket stiker lain melalui tautan
+    ➖ Prioritas saat mengonversi stiker video
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
