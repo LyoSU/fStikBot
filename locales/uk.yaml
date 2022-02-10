@@ -59,13 +59,13 @@ cmd:
       Щоб створити, напиши /new
     inline_title: Інлайн стікерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕ Підтримує розробку бота
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Ви можете послати гроші мені за каву та отримати невеликі бонуси у бота взамін.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
+    ➖ Відключення <b>"${titleSuffix}</b> в наборі стікерів
+    ➖ копіювання інших наклейок за посиланням
+    ➖ Пріоритет при конвертації відео стікерів
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
