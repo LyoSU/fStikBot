@@ -31,7 +31,7 @@ cmd:
       anim: '✨ Animated'
       video: '📹 Wideo'
       new: '🆕 Создать стикерпак'
-      club: '☕️ Donate'
+      club: '☕ Darowizna'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
