@@ -74,6 +74,7 @@ cmd:
   emoji:
     enabled: |
       Now each sticker will be assigned a default emoji.
+      Send the command again to change the mode.
 
       To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
       For example - <code>/emoji 🌟</code>
