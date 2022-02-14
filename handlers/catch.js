@@ -13,8 +13,6 @@ const escapeHTML = (str) => str.replace(/[&<>'"]/g,
 )
 
 module.exports = async (error, ctx) => {
-  if (error?.description.includes('timeout')) return
-
   const errorInfo = errorStackParser.parse(error)
 
   let gitBlame
@@ -36,6 +34,10 @@ module.exports = async (error, ctx) => {
   }
 
   errorText += `\n\n\n<code>${escapeHTML(error.stack)}</code>`
+
+  console.error(error)
+
+  if (error?.description.includes('timeout')) return
 
   if (!ctx.config) return console.error(errorText)
 
