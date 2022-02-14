@@ -74,11 +74,11 @@ cmd:
   #➖ Copying of other sticker packs by link
   emoji:
     enabled: |
-      Now each sticker will be assigned a default emoji.
-      Send the command again to change the mode.
+      Тепер кожному стікеру буде призначено емодзі за замовчуванням.
+      Надішліть команду ще раз, щоб змінити режим.
 
-      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
-      For example - <code>/emoji 🌟</code>
+      Щоб змінити емодзі за замовчуванням для поточного стікерпаку, введіть <code>/emoji</code> , а потім смайлик, розділений пробілом.
+      Наприклад - <code>/emoji 🌟</code>
     disabled: Тепер вам потрібно вводити emoji вручну.
     done: Смайли успішно змінено.
     error: Сталася помилка під час зміни емодзі!
