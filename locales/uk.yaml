@@ -73,7 +73,12 @@ cmd:
   #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
   #➖ Copying of other sticker packs by link
   emoji:
-    info: Будь ласка, укажіть емодзі. Наприклад, <code>/emoji 💜</code> змінить суфікс на 💜 для всіх наступних стікерів.
+    enabled: |
+      Now each sticker will be assigned a default emoji.
+
+      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      For example - <code>/emoji 🌟</code>
+    disabled: Now you need to enter emoji manually.
     done: Смайли успішно змінено.
     error: Сталася помилка під час зміни емодзі!
 callback:
