@@ -6,7 +6,7 @@ module.exports = async (ctx, next) => {
 
   let sticker
   let stickerIndex = -1
-  const emoji = ctx.match.join('')
+  const emoji = ctx.match.input
 
   if (ctx.session.previousSticker.id) {
     sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id).populate('stickerSet')
