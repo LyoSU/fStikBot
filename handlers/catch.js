@@ -13,7 +13,7 @@ const escapeHTML = (str) => str.replace(/[&<>'"]/g,
 )
 
 module.exports = async (error, ctx) => {
-  if (error.description && error.description.includes('timeout')) return
+  if (error?.description.includes('timeout')) return
 
   const errorInfo = errorStackParser.parse(error)
 
