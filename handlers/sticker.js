@@ -94,7 +94,7 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      if (stickerFile.emoji || ctx.session.userInfo?.stickerSet?.inline) {
+      if (ctx.session.userInfo.autoEmoji || stickerFile.emoji || ctx.session.userInfo?.stickerSet?.inline) {
         const stickerInfo = await addSticker(ctx, stickerFile)
 
         const result = await addStickerText(ctx, stickerInfo)

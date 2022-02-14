@@ -16,8 +16,15 @@ module.exports = async (ctx) => {
       })
     }
   } else {
-    await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.info'), {
-      reply_to_message_id: ctx.message.message_id
-    })
+    ctx.session.userInfo.autoEmoji = !ctx.session.userInfo.autoEmoji
+    if (ctx.session.userInfo.autoEmoji) {
+      await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.enabled'), {
+        reply_to_message_id: ctx.message.message_id
+      })
+    } else {
+      await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.disabled'), {
+        reply_to_message_id: ctx.message.message_id
+      })
+    }
   }
 }
