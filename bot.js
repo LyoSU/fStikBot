@@ -43,7 +43,12 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
 
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
-bot.catch(handleError)
+bot.use((ctx, next) => {
+  next().catch((error) => {
+    return handleError(error, ctx)
+  })
+  return true
+})
 
 // I18n settings
 const { match } = I18n
