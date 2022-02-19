@@ -37,7 +37,7 @@ module.exports = async (error, ctx) => {
 
   console.error(error)
 
-  if (error?.description.includes('timeout')) return
+  if (error.description && error.description.includes('timeout')) return
 
   if (!ctx.config) return console.error(errorText)
 
