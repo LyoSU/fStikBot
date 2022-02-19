@@ -15,6 +15,7 @@ const {
   handleDeleteSticker,
   handleRestoreSticker,
   handlePacks,
+  handleSelectPack,
   handleHidePack,
   handleRestorePack,
   handleCopyPack,
@@ -61,13 +62,19 @@ const i18n = new I18n({
 bot.use(i18n)
 
 // rate limit
-const limitConfig = {
+bot.use(rateLimit({
   window: 1000,
   limit: 10,
   onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
-}
+}))
 
-bot.use(rateLimit(limitConfig))
+const limitPublicPack = Composer.optional((ctx) => {
+  return ctx.session.userInfo.stickerSet.passcode === 'public'
+}, rateLimit({
+  window: 1000 * 60,
+  limit: 1,
+  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
+}))
 
 bot.catch(handleError)
 
@@ -153,10 +160,16 @@ bot.hears(['/video', match('cmd.start.btn.video')], ctx => {
   return handlePacks(ctx)
 })
 
+bot.start((ctx, next) => {
+  if (ctx.startPayload.match(/s_(.*)/)) return handleSelectPack(ctx)
+  return next()
+})
+
 bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.hears(['/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
+bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
@@ -168,13 +181,13 @@ bot.use(handlePublish)
 bot.use(handleInlineQuery)
 
 // sticker detect
-bot.on(['sticker', 'document', 'photo', 'video'], handleSticker)
+bot.on(['sticker', 'document', 'photo', 'video'], limitPublicPack, handleSticker)
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
-bot.action(/(delete_sticker):(.*)/, handleDeleteSticker)
-bot.action(/(restore_sticker):(.*)/, handleRestoreSticker)
+bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
+bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
 bot.action(/set_language:(.*)/, handleLanguage)
 
 // forward from sticker bot

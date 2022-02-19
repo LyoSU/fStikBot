@@ -6,6 +6,7 @@ module.exports = {
   handleDeleteSticker: require('./sticker-delete'),
   handleRestoreSticker: require('./sticker-restore'),
   handlePacks: require('./packs'),
+  handleSelectPack: require('./pack-select'),
   handleHidePack: require('./pack-hide'),
   handleRestorePack: require('./pack-restore'),
   handleCopyPack: require('./pack-copy'),
