@@ -12,7 +12,7 @@ const escapeHTML = (str) => str.replace(
 )
 
 module.exports = async (ctx) => {
-  const { userInfo } = fctx.session
+  const { userInfo } = ctx.session
 
   let passcode
 
