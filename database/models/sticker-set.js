@@ -6,7 +6,10 @@ const stickerSetsSchema = mongoose.Schema({
     ref: 'User',
     index: true
   },
-  passcode: String,
+  passcode: {
+    type: String,
+    index: true
+  },
   name: {
     type: String,
     index: true,
