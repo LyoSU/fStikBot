@@ -111,9 +111,11 @@ newPackConfirm.enter(async (ctx) => {
 
   let { name, title, animated, video } = ctx.session.scene.newPack
 
-  name = name.replace(/https/, '')
-  name = name.replace(/t.me\/addstickers\//, '')
-  name = name.replace(/[^0-9a-z_]/gi, '')
+  if (!ctx.session.scene.newPack.inline) {
+    name = name.replace(/https/, '')
+    name = name.replace(/t.me\/addstickers\//, '')
+    name = name.replace(/[^0-9a-z_]/gi, '')
+  }
 
   if (name.length >= ctx.config.charNameMax) {
     await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
