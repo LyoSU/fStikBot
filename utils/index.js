@@ -4,6 +4,7 @@ const addStickerText = require('./add-sticker-text')
 const messaging = require('./messaging')
 const updateUser = require('./user-update')
 const stats = require('./stats')
+const tenor = require('./tenor')
 
 module.exports = {
   userName,
@@ -11,5 +12,6 @@ module.exports = {
   addStickerText,
   messaging,
   updateUser,
-  stats
+  stats,
+  tenor
 }

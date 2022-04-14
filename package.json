@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.21.6",
+  "version": "0.22.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "bull": "^4.7.0",
     "dotenv": "^7.0.0",
     "error-stack-parser": "^2.0.6",
+    "got": "^10.7.0",
     "ioredis": "^4.19.4",
     "moment": "^2.29.1",
     "mongoose": "^5.7.5",

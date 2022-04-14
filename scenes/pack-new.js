@@ -198,7 +198,9 @@ newPackConfirm.enter(async (ctx) => {
       create: true
     })
 
-    if (ctx.session.scene.newPack.animated) {
+    if (ctx.session.scene.newPack.video) {
+      ctx.session.userInfo.videoStickerSet = userStickerSet
+    } else if (ctx.session.scene.newPack.animated) {
       ctx.session.userInfo.animatedStickerSet = userStickerSet
       if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
         ctx.session.userInfo.stickerSet = null

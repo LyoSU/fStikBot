@@ -185,7 +185,14 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     }
 
     emojis += stickerSet.emojiSuffix || ''
-    const fileUrl = await ctx.telegram.getFileLink(stickerFile)
+
+    let fileUrl
+
+    if (stickerFile.fileUrl) {
+      fileUrl = stickerFile.fileUrl
+    } else {
+      fileUrl = await ctx.telegram.getFileLink(stickerFile)
+    }
 
     const stickerExtra = {
       emojis

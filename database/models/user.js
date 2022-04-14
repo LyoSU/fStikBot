@@ -33,6 +33,9 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  inlineType: {
+    type: String
+  },
   premium: {
     type: Boolean,
     default: false

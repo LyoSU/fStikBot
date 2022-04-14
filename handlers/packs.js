@@ -26,79 +26,87 @@ module.exports = async (ctx) => {
   }
 
   if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
-    const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
+    if (ctx.match[2] === 'gif') {
+      ctx.session.userInfo.inlineType = 'gif'
+      ctx.state.type = 'inline'
+      if (userInfo?.stickerSet?.inline) userInfo.stickerSet = null
+      userInfo.inlineStickerSet = null
+    } else {
+      const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
-    if (!stickerSet) {
-      return ctx.answerCbQuery('error', true)
-    }
+      if (!stickerSet) {
+        return ctx.answerCbQuery('error', true)
+      }
 
-    if (stickerSet.animated) {
-      ctx.state.type = 'animated'
-      query.animated = true
-    }
-
-    if (stickerSet.video) {
-      ctx.state.type = 'video'
-      query.video = true
-    }
-
-    if (stickerSet.owner.toString() === userInfo.id.toString()) {
-      await ctx.answerCbQuery()
-
-      if (stickerSet.inline) {
-        ctx.state.type = 'inline'
-        userInfo.inlineStickerSet = stickerSet
-        userInfo.animatedStickerSet = null
+      if (stickerSet.animated) {
+        ctx.state.type = 'animated'
+        query.animated = true
       }
 
       if (stickerSet.video) {
         ctx.state.type = 'video'
-        userInfo.videoStickerSet = stickerSet
-        userInfo.stickerSet = stickerSet
-      } else if (stickerSet.animated) {
-        userInfo.animatedStickerSet = stickerSet
-        if (userInfo?.stickerSet?.inline) {
-          userInfo.stickerSet = null
+        query.video = true
+      }
+
+      if (stickerSet?.owner.toString() === userInfo.id.toString()) {
+        await ctx.answerCbQuery()
+
+        if (stickerSet.inline) {
+          ctx.state.type = 'inline'
+          ctx.session.userInfo.inlineType = 'packs'
+          userInfo.inlineStickerSet = stickerSet
+          userInfo.animatedStickerSet = null
+        }
+
+        if (stickerSet.video) {
+          ctx.state.type = 'video'
+          userInfo.videoStickerSet = stickerSet
+          userInfo.stickerSet = stickerSet
+        } else if (stickerSet.animated) {
+          userInfo.animatedStickerSet = stickerSet
+          if (userInfo?.stickerSet?.inline) {
+            userInfo.stickerSet = null
+          }
+        } else {
+          userInfo.stickerSet = stickerSet
+        }
+
+        const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
+
+        if (stickerSet.inline) {
+          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
+            title: escapeHTML(stickerSet.title),
+            botUsername: ctx.options.username
+          }), {
+            reply_markup: Markup.inlineKeyboard([
+              [
+                Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
+              ],
+              [
+                Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
+              ]
+            ]),
+            parse_mode: 'HTML'
+          })
+        } else {
+          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
+            title: escapeHTML(stickerSet.title),
+            link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+          }), {
+            reply_markup: Markup.inlineKeyboard([
+              [
+                Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
+              ],
+              [
+                Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
+              ]
+            ]),
+            parse_mode: 'HTML'
+          })
         }
       } else {
-        userInfo.stickerSet = stickerSet
+        await ctx.answerCbQuery('error', true)
       }
-
-      const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
-
-      if (stickerSet.inline) {
-        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
-          title: escapeHTML(stickerSet.title),
-          botUsername: ctx.options.username
-        }), {
-          reply_markup: Markup.inlineKeyboard([
-            [
-              Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
-            ],
-            [
-              Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-            ]
-          ]),
-          parse_mode: 'HTML'
-        })
-      } else {
-        await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
-          title: escapeHTML(stickerSet.title),
-          link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
-        }), {
-          reply_markup: Markup.inlineKeyboard([
-            [
-              Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
-            ],
-            [
-              Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-            ]
-          ]),
-          parse_mode: 'HTML'
-        })
-      }
-    } else {
-      await ctx.answerCbQuery('error', true)
     }
   }
 
@@ -140,6 +148,11 @@ module.exports = async (ctx) => {
     if (ctx.state.type === 'animated') selectedStickerSet = userInfo.animatedStickerSet
     else if (ctx.state.type === 'video') selectedStickerSet = userInfo.videoStickerSet
     else selectedStickerSet = userInfo.stickerSet
+
+    if (ctx.state.type === 'inline') {
+      const title = ctx.session.userInfo.inlineType !== 'gif' ? 'GIF' : '✅ GIF'
+      keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
+    }
 
     stickerSets.forEach((pack) => {
       let { title } = pack
