@@ -101,6 +101,7 @@ callback:
       hide: '❌ Stikerlar to''plamini yashirish'
       restore: '✅ Qayta tiklash'
       use_pack: Использовать стикерпак
+      search_gif: Search GIF
     error:
       restore: |
         <b>Tizimda xatolik!</b>

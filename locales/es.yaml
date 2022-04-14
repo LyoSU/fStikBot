@@ -103,6 +103,7 @@ callback:
       hide: 'Ocultar pack de stickers'
       restore: 'Recuperar'
       use_pack: Использовать стикерпак
+      search_gif: Search GIF
     error:
       restore: |
         <b>¡Error!</b>
