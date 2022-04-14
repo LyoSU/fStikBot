@@ -8,6 +8,8 @@ composer.on('inline_query', async (ctx) => {
   const limit = 50
   const query = ctx.inlineQuery.query
 
+  let nextOffest = offset + limit
+
   const stickersResult = []
 
   if (ctx.session.userInfo.inlineType === 'packs') {
@@ -81,7 +83,17 @@ composer.on('inline_query', async (ctx) => {
       switch_pm_parameter: 'inline_pack'
     }]
   } else {
-    const tenorResult = await tenor(query, offset)
+    let tenorResult
+
+    if (query.length >= 1) {
+      tenorResult = await tenor.search(query, limit, offset)
+
+      nextOffest = tenorResult.next
+    } else {
+      tenorResult = await tenor.trending(offset || false, ctx.session.userInfo.locale)
+
+      nextOffest = tenorResult.next
+    }
 
     for (const item of tenorResult.results) {
       const thumb = item.media[0].gif.url
@@ -101,7 +113,7 @@ composer.on('inline_query', async (ctx) => {
     ctx.state.answerIQ = [stickersResult, {
       is_personal: true,
       cache_time: 0,
-      next_offset: offset + limit
+      next_offset: nextOffest
     }]
   }
 })
