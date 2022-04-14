@@ -111,9 +111,11 @@ newPackConfirm.enter(async (ctx) => {
 
   let { name, title, animated, video } = ctx.session.scene.newPack
 
-  name = name.replace(/https/, '')
-  name = name.replace(/t.me\/addstickers\//, '')
-  name = name.replace(/[^0-9a-z_]/gi, '')
+  if (!ctx.session.scene.newPack.inline) {
+    name = name.replace(/https/, '')
+    name = name.replace(/t.me\/addstickers\//, '')
+    name = name.replace(/[^0-9a-z_]/gi, '')
+  }
 
   if (name.length >= ctx.config.charNameMax) {
     await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
@@ -196,7 +198,9 @@ newPackConfirm.enter(async (ctx) => {
       create: true
     })
 
-    if (ctx.session.scene.newPack.animated) {
+    if (ctx.session.scene.newPack.video) {
+      ctx.session.userInfo.videoStickerSet = userStickerSet
+    } else if (ctx.session.scene.newPack.animated) {
       ctx.session.userInfo.animatedStickerSet = userStickerSet
       if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
         ctx.session.userInfo.stickerSet = null

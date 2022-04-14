@@ -45,7 +45,7 @@ bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
 bot.use((ctx, next) => {
   next().catch((error) => {
-    console.log('Oops', error)
+    return handleError(error, ctx)
   })
   return true
 })
@@ -75,8 +75,6 @@ const limitPublicPack = Composer.optional((ctx) => {
   limit: 1,
   onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
 }))
-
-bot.catch(handleError)
 
 bot.use(stats)
 

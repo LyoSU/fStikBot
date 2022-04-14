@@ -27,8 +27,14 @@ module.exports = async (ctx) => {
       break
 
     case 'animation':
-      stickerFile = ctx.message.animation
-      if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
+      // if caption tenor gif
+      if (ctx.message.caption && ctx.message.caption.match('tenor.com')) {
+        stickerFile = ctx.message.animation
+        stickerFile.fileUrl = ctx.message.caption
+      } else {
+        stickerFile = ctx.message.animation
+        if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
+      }
       break
 
     case 'video':

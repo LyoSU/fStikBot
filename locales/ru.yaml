@@ -103,7 +103,7 @@ callback:
       hide: '❌ Скрыть стикерпак'
       restore: '✅ Восстановить'
       use_pack: Использовать стикерпак
-      search_gif: Search GIF
+      search_gif: Поиск GIF
     error:
       restore: |
         <b>Ошибка!</b>
