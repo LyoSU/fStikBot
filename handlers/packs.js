@@ -89,6 +89,12 @@ module.exports = async (ctx) => {
             parse_mode: 'HTML'
           })
         } else {
+          let searchGifBtn = []
+
+          if(stickerSet.video) {
+            searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), '')]
+          }
+
           await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
             title: escapeHTML(stickerSet.title),
             link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
@@ -97,6 +103,7 @@ module.exports = async (ctx) => {
               [
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
               ],
+              searchGifBtn,
               [
                 Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
               ]
