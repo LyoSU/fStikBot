@@ -103,6 +103,7 @@ callback:
       hide: '❌ Çıkartma Paketini Gizle'
       restore: '✅ Sıfırla'
       use_pack: Çıkartma paketini kullan
+      search_gif: Search GIF
     error:
       restore: |
         <b>Hata!</b>
