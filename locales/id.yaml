@@ -100,6 +100,7 @@ callback:
       hide: '❌ Sembunyikan paket stiker'
       restore: '✅ Mengembalikan'
       use_pack: Gunakan paket stiker
+      search_gif: Search GIF
     error:
       restore: |
         <b>Error!</b>
