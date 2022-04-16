@@ -104,7 +104,7 @@ callback:
       hide: '❌ Приховати стікерпак'
       restore: '✅ Відновити'
       use_pack: Використовувати стікерпак
-      search_gif: Пошук GIF
+      search_gif: Search GIF
     error:
       restore: |
         <b>Помилка!</b>
