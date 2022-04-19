@@ -37,12 +37,13 @@ global.startDate = new Date()
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
     webhookReply: false
-  }
+  },
+  handlerTimeout: 1
 })
 
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
-// I18n settings
+// I18n
 const { match } = I18n
 const i18n = new I18n({
   directory: path.resolve(__dirname, 'locales'),
@@ -50,23 +51,16 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
+bot.use(i18n)
+
 // rate limit
 bot.use(rateLimit({
   window: 1000,
-  limit: 3,
+  limit: 5,
   onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
 }))
 
-// async update
-bot.use((ctx, next) => {
-  next().catch((error) => {
-    return handleError(error, ctx)
-  })
-  return true
-})
-
-// I18n middleware
-bot.use(i18n)
+bot.catch(handleError)
 
 const limitPublicPack = Composer.optional((ctx) => {
   return ctx.session?.userInfo?.stickerSet?.passcode === 'public'
