@@ -37,12 +37,19 @@ global.startDate = new Date()
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
     webhookReply: false
-  },
-  handlerTimeout: 1
+  }
 })
 
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
+// rate limit
+bot.use(rateLimit({
+  window: 1000,
+  limit: 3,
+  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
+}))
+
+// async update
 bot.use((ctx, next) => {
   next().catch((error) => {
     return handleError(error, ctx)
@@ -60,13 +67,6 @@ const i18n = new I18n({
 
 // I18n middleware
 bot.use(i18n)
-
-// rate limit
-bot.use(rateLimit({
-  window: 1000,
-  limit: 10,
-  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
-}))
 
 const limitPublicPack = Composer.optional((ctx) => {
   return ctx.session?.userInfo?.stickerSet?.passcode === 'public'
@@ -165,7 +165,7 @@ bot.start((ctx, next) => {
 
 bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
-bot.hears(['/club', '/start club', match('cmd.start.btn.club')], handleClub)
+bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
 bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
@@ -219,5 +219,5 @@ db.connection.once('open', async () => {
     })
   }
   require('./utils/messaging')
-  require('./utils/optimize-db')
+  // require('./utils/optimize-db')
 })
