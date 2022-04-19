@@ -42,6 +42,14 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
 
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
+// I18n settings
+const { match } = I18n
+const i18n = new I18n({
+  directory: path.resolve(__dirname, 'locales'),
+  defaultLanguage: 'en',
+  defaultLanguageOnMissing: true
+})
+
 // rate limit
 bot.use(rateLimit({
   window: 1000,
@@ -55,14 +63,6 @@ bot.use((ctx, next) => {
     return handleError(error, ctx)
   })
   return true
-})
-
-// I18n settings
-const { match } = I18n
-const i18n = new I18n({
-  directory: path.resolve(__dirname, 'locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
 })
 
 // I18n middleware
