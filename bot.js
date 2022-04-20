@@ -55,8 +55,8 @@ bot.use(i18n)
 
 // rate limit
 bot.use(rateLimit({
-  window: 1000,
-  limit: 5,
+  window: 1100,
+  limit: 3,
   onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
 }))
 
