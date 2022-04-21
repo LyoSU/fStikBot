@@ -41,7 +41,7 @@ module.exports = async (error, ctx) => {
 
   if (!ctx.config) return console.error(errorText)
 
-  await ctx.telegram.sendMessage(ctx.config.mainAdminId, errorText, {
+  await ctx.telegram.sendMessage(ctx.config.logChatId, errorText, {
     parse_mode: 'HTML'
   }).catch(() => {})
 
