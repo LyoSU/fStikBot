@@ -199,6 +199,7 @@ newPackConfirm.enter(async (ctx) => {
     })
 
     if (ctx.session.scene.newPack.video) {
+      ctx.session.userInfo.stickerSet = userStickerSet
       ctx.session.userInfo.videoStickerSet = userStickerSet
     } else if (ctx.session.scene.newPack.animated) {
       ctx.session.userInfo.animatedStickerSet = userStickerSet

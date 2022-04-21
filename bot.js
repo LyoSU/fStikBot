@@ -99,6 +99,20 @@ bot.use(
 
 // response time logger
 bot.use(async (ctx, next) => {
+  if (!ctx.session.chainActions) ctx.session.chainActions = []
+  let action
+  if (ctx.updateSubTypes) action = `[${ctx.updateSubTypes.join(', ')}] `
+
+  if (ctx.message && ctx.message.text) action = ctx.message.text
+  else if (ctx.callbackQuery) action = ctx.callbackQuery.data
+  else if (ctx.updateType) action = `{${ctx.updateType}} `
+
+  if (!action) action = 'undefined'
+
+  if (ctx.session.chainActions.length > 15) ctx.session.chainActions.shift()
+  ctx.session.chainActions.push(action)
+
+
   // const ms = new Date()
   if (ctx.inlineQuery) {
     await updateUser(ctx)
@@ -167,6 +181,7 @@ bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('lang', handleLanguage)
+bot.command('error', ctx => ctx.replyWithHTML(error))
 bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
 
 bot.use(handlePublish)
