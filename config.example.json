@@ -1,0 +1,14 @@
+{
+  "mainAdminId": 66478514,
+  "logChatId": -1001665705393,
+  "stickerLinkPrefix": "t.me/addstickers/",
+  "charTitleMax": 35,
+  "premiumCharTitleMax": 64,
+  "charNameMax": 50,
+  "messaging": {
+    "limit": {
+      "max": 20,
+      "duration": 1500
+    }
+  }
+}
