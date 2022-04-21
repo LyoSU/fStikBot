@@ -63,3 +63,4 @@ typings/
 tmp
 
 .DS_Store
+config.json

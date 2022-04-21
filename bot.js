@@ -101,11 +101,12 @@ bot.use(
 bot.use(async (ctx, next) => {
   if (!ctx.session.chainActions) ctx.session.chainActions = []
   let action
-  if (ctx.updateSubTypes) action = `[${ctx.updateSubTypes.join(', ')}] `
 
   if (ctx.message && ctx.message.text) action = ctx.message.text
   else if (ctx.callbackQuery) action = ctx.callbackQuery.data
   else if (ctx.updateType) action = `{${ctx.updateType}} `
+
+  if (ctx.updateSubTypes) action += `[${ctx.updateSubTypes.join(', ')}] `
 
   if (!action) action = 'undefined'
 
