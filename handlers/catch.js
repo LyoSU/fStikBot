@@ -44,7 +44,11 @@ module.exports = async (error, ctx) => {
 
   await ctx.telegram.sendMessage(ctx.config.logChatId, errorText, {
     parse_mode: 'HTML'
-  }).catch(() => {})
+  }).catch((error) => {
+    console.error('send log error:', error)
+  })
 
-  await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
+  await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch((error) => {
+    console.error('send log error:', error)
+  })
 }
