@@ -28,10 +28,10 @@ cmd:
     btn:
       packs: '🌟 Стикерпаки'
       inline: '💫 Инлайн'
-      anim: '✨ Animated'
+      anim: '✨ Animiert'
       video: '📹 Video'
       new: '🆕 Создать стикерпак'
-      club: '☕️ Donate'
+      club: '☕ Spenden'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -80,7 +80,7 @@ cmd:
       For example - <code>/emoji 🌟</code>
     disabled: Now you need to enter emoji manually.
     done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    error: Beim Ändern von Emoji ist ein Fehler aufgetreten!
 callback:
   pack:
     answerCbQuer:
@@ -103,7 +103,7 @@ callback:
       hide: '❌ Скрыть стикерпак'
       restore: '✅ Восстановить'
       use_pack: Использовать стикерпак
-      search_gif: Search GIF
+      search_gif: GIF suchen
     error:
       restore: |
         <b>Ошибка!</b>
