@@ -212,7 +212,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         return ctx.reply('wait load...')
       }
       userQueue.video = true
-      if (inputFile.file_size > 1000 * 1000 * 5 || inputFile.duration >= 35) { // 5 mb or 35 sec
+      if (inputFile.file_size > 1000 * 1000 * 10 || inputFile.duration >= 35) { // 10 mb or 35 sec
         userQueue.video = false
         return ctx.reply('file too big')
       }
