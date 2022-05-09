@@ -227,7 +227,10 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         let priority = 10
         if (ctx.session.userInfo.premium) priority = 9
 
-        const job = await convertQueue.add({ fileUrl }, {
+        const job = await convertQueue.add({
+          fileUrl,
+          timestamp: Date.now(),
+        }, {
           priority,
           attempts: 1,
           removeOnComplete: true
