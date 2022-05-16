@@ -135,7 +135,14 @@ sticker:
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
-    send_emoji: Отлично, теперь отправьте эмодзи, которые соответствуют стикеру
+    send_emoji: Great, now send the emoji that matches the
+    converting_process: |
+      <b>Wait...</b>
+      Your file is in the queue for conversion. Wait for completion. This may take some time.
+
+      Progress: ${progress} / ${total}
+
+      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     error:
       stickers_too_much: |
         <b>Ошибка!</b>
@@ -201,10 +208,10 @@ scenes:
       Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
     error:
       premium: |
-        <b>Ошибка!</b>
-        Эта функция доступна только для членов клуба.
+        <b>Error!</b>
+        This feature is only available to donate members.
 
-        Вы можете сделать это, отправив команду /club.
+        You can do this by sending the /donate command.
   original:
     enter: |
       Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
@@ -222,6 +229,13 @@ admin:
   menu:
     messaging: '✉️ Рассылка'
     admin: '😎 Админ-панель'
+  premium:
+    changed: |
+      <b>Premium status changed:</b>
+      ${status}
+    user_not_found: |
+      <b>Error!</b>
+      User not found.
   messaging:
     info: |
       ✉️ Рассылки

@@ -130,7 +130,14 @@ sticker:
     ok_inline: |
       <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <u>${title}</u>
-    send_emoji: Bagus, sekarang kirim emoji yang cocok dengan stiker
+    send_emoji: Great, now send the emoji that matches the
+    converting_process: |
+      <b>Wait...</b>
+      Your file is in the queue for conversion. Wait for completion. This may take some time.
+
+      Progress: ${progress} / ${total}
+
+      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     error:
       stickers_too_much: |
         <b>Kesalahan!</b>
@@ -196,10 +203,10 @@ scenes:
       Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a> berhasil diselesaikan.
     error:
       premium: |
-        <b>Kesalahan!</b>
-        Fitur ini hanya tersedia untuk anggota klub.
+        <b>Error!</b>
+        This feature is only available to donate members.
 
-        Anda dapat melakukan ini dengan mengirim perintah /club.
+        You can do this by sending the /donate command.
   original:
     enter: |
       Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
@@ -217,6 +224,13 @@ admin:
   menu:
     messaging: '✉️ Рассылка'
     admin: '😎 Админ-панель'
+  premium:
+    changed: |
+      <b>Premium status changed:</b>
+      ${status}
+    user_not_found: |
+      <b>Error!</b>
+      User not found.
   messaging:
     info: |
       ✉️ Рассылки

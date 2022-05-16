@@ -129,7 +129,14 @@ sticker:
     ok_inline: |
       <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
       <u>${title}</u>
-    send_emoji: Harika, şimdi çıkartmayla eşleşen emojiyi gönder
+    send_emoji: Great, now send the emoji that matches the
+    converting_process: |
+      <b>Wait...</b>
+      Your file is in the queue for conversion. Wait for completion. This may take some time.
+
+      Progress: ${progress} / ${total}
+
+      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     error:
       stickers_too_much: |
         <b>Hata!</b>
@@ -192,10 +199,10 @@ scenes:
       Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama başarılı sonuçlandı.
     error:
       premium: |
-        <b>Hata!</b>
-        Bu özellik yalnızca kulüp üyeleri tarafından kullanılabilir.
+        <b>Error!</b>
+        This feature is only available to donate members.
 
-        Bunu /club komutunu göndererek yapabilirsiniz.
+        You can do this by sending the /donate command.
   original:
     enter: |
       Bu botla eklenen çıkartmayı gönderin, size orijinal çıkartmasını göstereceğim.
@@ -213,6 +220,13 @@ admin:
   menu:
     messaging: '✉️ Bülten'
     admin: '😎 Admin Paneli'
+  premium:
+    changed: |
+      <b>Premium status changed:</b>
+      ${status}
+    user_not_found: |
+      <b>Error!</b>
+      User not found.
   messaging:
     info: |
       ✉️ Bülten
