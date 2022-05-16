@@ -70,12 +70,12 @@ cmd:
   #➖ Copying of other sticker packs by link
   emoji:
     enabled: |
-      Now each sticker will be assigned a default emoji.
-      Send the command again to change the mode.
+      Sekarang setiap stiker akan diberi emoji default.
+      Kirim perintah lagi untuk mengubah mode.
 
-      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
-      For example - <code>/emoji 🌟</code>
-    disabled: Now you need to enter emoji manually.
+      Untuk mengubah emoji default untuk paket stiker saat ini, ketik <code>/emoji</code> diikuti dengan emoji yang dipisahkan oleh spasi.
+      Misalnya - <code>/emoji</code>
+    disabled: Sekarang Anda perlu memasukkan emoji secara manual.
     done: Emoji berhasil diubah.
     error: Ada kesalahan saat mengubah emoji!
 callback:
@@ -100,7 +100,7 @@ callback:
       hide: '❌ Sembunyikan paket stiker'
       restore: '✅ Mengembalikan'
       use_pack: Gunakan paket stiker
-      search_gif: Search GIF
+      search_gif: Cari GIF
     error:
       restore: |
         <b>Error!</b>
@@ -130,14 +130,14 @@ sticker:
     ok_inline: |
       <b>Stiker berhasil ditambahkan ke paket stiker:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Bagus, sekarang kirim emoji yang cocok dengan stiker
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Tunggu...</b>
+      File Anda sedang dalam antrian untuk konversi. Tunggu sampai selesai. Ini mungkin memakan waktu.
 
-      Progress: ${progress} / ${total}
+      Kemajuan: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Pengguna yang mendukung bot mendapatkan prioritas dalam antrian (lebih lanjut: /donasi)</i>
     error:
       stickers_too_much: |
         <b>Kesalahan!</b>
@@ -204,9 +204,9 @@ scenes:
     error:
       premium: |
         <b>Error!</b>
-        This feature is only available to donate members.
+        Sayangnya, fitur ini hanya tersedia bagi mereka yang mendukung bot.
 
-        You can do this by sending the /donate command.
+        Anda dapat melakukan ini dengan mengirimkan perintah /donate.
   original:
     enter: |
       Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
@@ -226,11 +226,11 @@ admin:
     admin: '😎 Админ-панель'
   premium:
     changed: |
-      <b>Premium status changed:</b>
+      <b>Status premium berubah:</b>
       ${status}
     user_not_found: |
-      <b>Error!</b>
-      User not found.
+      <b>Kesalahan!</b>
+      Pengguna tidak ditemukan.
   messaging:
     info: |
       ✉️ Рассылки
