@@ -240,7 +240,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         const waitMessage = await ctx.replyWithHTML('⏳')
 
-        if (!ctx.session.userInfo.premium) {
+        if (!ctx.session.userInfo.premium && total.waiting > 3) {
           const convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
             progress: total.waiting,
             total: total.waiting
