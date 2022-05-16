@@ -36,17 +36,17 @@ const main = async (ctx, next) => {
 }
 
 const setPremium = async (ctx, next) => {
-  const user = ctx.match[1]
+  const userId = ctx.match[1]
 
   let findUser
 
   findUser = await ctx.db.User.findOne({
-    telegram_id: parseInt(user)
+    telegram_id: parseInt(userId) || 0
   })
 
   if (!findUser) {
     findUser = await ctx.db.User.findOne({
-      username: user
+      username: userId
     })
   }
 
