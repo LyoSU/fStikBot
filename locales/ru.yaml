@@ -103,7 +103,7 @@ callback:
       hide: '❌ Скрыть стикерпак'
       restore: '✅ Восстановить'
       use_pack: Использовать стикерпак
-      search_gif: Search GIF
+      search_gif: Поиск GIF
     error:
       restore: |
         <b>Ошибка!</b>
@@ -135,14 +135,14 @@ sticker:
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Отлично, теперь отправьте эмодзи, которые соответствуют стикеру
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Подождите...</b>
+      Ваш файл находится в очереди для конвертации. Дождитесь завершения. Это может занять некоторое время.
 
-      Progress: ${progress} / ${total}
+      Прогресс: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Пользователи, поддерживающие бота, получают приоритет в очереди (подробнее: /donate)</i>
     error:
       stickers_too_much: |
         <b>Ошибка!</b>
@@ -208,10 +208,10 @@ scenes:
       Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>Ошибка!</b>
+        Эта функция доступна только для донатеров.
 
-        You can do this by sending the /donate command.
+        Вы можете сделать это, отправив команду /donate.
   original:
     enter: |
       Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
@@ -231,11 +231,11 @@ admin:
     admin: '😎 Админ-панель'
   premium:
     changed: |
-      <b>Premium status changed:</b>
+      <b>Премиум-статус изменен:</b>
       ${status}
     user_not_found: |
-      <b>Error!</b>
-      User not found.
+      <b>Ошибка!</b>
+      Пользователь не найден.
   messaging:
     info: |
       ✉️ Рассылки
