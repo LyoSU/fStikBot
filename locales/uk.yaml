@@ -104,7 +104,7 @@ callback:
       hide: '❌ Приховати стікерпак'
       restore: '✅ Відновити'
       use_pack: Використовувати стікерпак
-      search_gif: Search GIF
+      search_gif: Пошук GIF
     error:
       restore: |
         <b>Помилка!</b>
@@ -136,14 +136,14 @@ sticker:
     ok_inline: |
       <b>Стікер успішно доданий у стікерпак:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Чудово, тепер відправте емодзі який відповідає стікеру
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Зачекайте...</b>
+      Ваш файл знаходиться в черзі на конвертацію. Зачекайте на завершення. Це може зайняти деякий час.
 
-      Progress: ${progress} / ${total}
+      Прогрес: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Користувачі, що підтримували бота, отримають пріоритет у черзі (більше: /donate)</i>
     error:
       stickers_too_much: |
         <b>Помилка!</b>
@@ -209,10 +209,10 @@ scenes:
       Копіювання стікерпаку <a href="${originalLink}">${originalTitle}</a> до <a href="${link}">${title}</a> успішно заверешно.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>Помилка!</b>
+        На жаль, ця функція доступна тільки для тих, хто підтримав бота.
 
-        You can do this by sending the /donate command.
+        Ви можете це зробити, надіславши команду /donate.
   original:
     enter: |
       Відправ стікер, доданий через цього бота, і я знайду тобі його оригінал.
@@ -231,11 +231,11 @@ admin:
     admin: '😎 Адмін-панель'
   premium:
     changed: |
-      <b>Premium status changed:</b>
+      <b>Преміум статус змінено:</b>
       ${status}
     user_not_found: |
-      <b>Error!</b>
-      User not found.
+      <b>Помилка!</b>
+      Користувача не знайдено.
   messaging:
     info: |
       ✉️ Розсилки
