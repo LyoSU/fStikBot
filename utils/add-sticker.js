@@ -236,7 +236,43 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           removeOnComplete: true
         })
 
+        const total = await convertQueue.getJobCounts()
+
+        const waitMessage = await ctx.replyWithHTML('⏳')
+
+        if (!ctx.session.userInfo.premium) {
+          const convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
+            progress: total.waiting,
+            total: total.waiting
+          }))
+
+          const updateMessage = setInterval(async () => {
+            const waiting = await convertQueue.getWaiting()
+
+            const progress = waiting.findIndex((item) => {
+              return item.id === job.id
+            })
+
+            const total = await convertQueue.getJobCounts()
+
+            ctx.telegram.editMessageText(ctx.from.id, convertingMessage.message_id, null, ctx.i18n.t('sticker.add.converting_process', {
+              progress: progress + 1,
+              total: total.waiting
+            }), {
+              parse_mode: 'HTML'
+            }).catch(() => {})
+
+            if (progress <= 0) {
+              clearInterval(updateMessage)
+              ctx.tg.deleteMessage(ctx.from.id, convertingMessage.message_id)
+            }
+          }, 1000 * 5)
+        }
+
         const file = await job.finished()
+
+        ctx.tg.deleteMessage(ctx.from.id, waitMessage.message_id)
+
 
         if (file.metadata) {
           stickerExtra.webm_sticker = {
