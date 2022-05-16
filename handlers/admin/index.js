@@ -38,9 +38,17 @@ const main = async (ctx, next) => {
 const setPremium = async (ctx, next) => {
   const user = ctx.match[1]
 
-  const findUser = await ctx.db.User.findOne({
+  let findUser
+
+  findUser = await ctx.db.User.findOne({
     telegram_id: parseInt(user)
   })
+
+  if (!findUser) {
+    findUser = await ctx.db.User.findOne({
+      username: user
+    })
+  }
 
   if (!findUser) return ctx.replyWithHTML(ctx.i18n.t('admin.premium.user_not_found'))
 
