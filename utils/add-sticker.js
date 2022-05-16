@@ -212,7 +212,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         return ctx.reply('wait load...')
       }
       userQueue.video = true
-      if (inputFile.file_size > 1000 * 1000 * 5 || inputFile.duration >= 35) { // 5 mb or 35 sec
+      if (inputFile.file_size > 1000 * 1000 * 10 || inputFile.duration >= 35) { // 10 mb or 35 sec
         userQueue.video = false
         return ctx.reply('file too big')
       }
@@ -227,13 +227,52 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         let priority = 10
         if (ctx.session.userInfo.premium) priority = 9
 
-        const job = await convertQueue.add({ fileUrl }, {
+        const job = await convertQueue.add({
+          fileUrl,
+          timestamp: Date.now(),
+        }, {
           priority,
           attempts: 1,
           removeOnComplete: true
         })
 
+        const total = await convertQueue.getJobCounts()
+
+        const waitMessage = await ctx.replyWithHTML('⏳')
+
+        if (!ctx.session.userInfo.premium) {
+          const convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
+            progress: total.waiting,
+            total: total.waiting
+          }))
+
+          const updateMessage = setInterval(async () => {
+            const waiting = await convertQueue.getWaiting()
+
+            const progress = waiting.findIndex((item) => {
+              return item.id === job.id
+            })
+
+            const total = await convertQueue.getJobCounts()
+
+            ctx.telegram.editMessageText(ctx.from.id, convertingMessage.message_id, null, ctx.i18n.t('sticker.add.converting_process', {
+              progress: progress + 1,
+              total: total.waiting
+            }), {
+              parse_mode: 'HTML'
+            }).catch(() => {})
+
+            if (progress <= 0) {
+              clearInterval(updateMessage)
+              ctx.tg.deleteMessage(ctx.from.id, convertingMessage.message_id)
+            }
+          }, 1000 * 5)
+        }
+
         const file = await job.finished()
+
+        ctx.tg.deleteMessage(ctx.from.id, waitMessage.message_id)
+
 
         if (file.metadata) {
           stickerExtra.webm_sticker = {

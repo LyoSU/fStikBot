@@ -106,7 +106,7 @@ bot.use(async (ctx, next) => {
   else if (ctx.callbackQuery) action = ctx.callbackQuery.data
   else if (ctx.updateType) action = `{${ctx.updateType}} `
 
-  if (ctx.updateSubTypes) action += ` [${ctx.updateSubTypes.join(', ')}] `
+  if (ctx.updateSubTypes) action += ` [${ctx.updateSubTypes.join(', ')}]`
 
   if (!action) action = 'undefined'
 
