@@ -1,70 +1,70 @@
 ---
-language_name: '🇷🇺 Русский'
-ratelimit: Не так часто!
+language_name: '🇧🇷 Português'
+ratelimit: Nem com tanta frequência!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      Olá, <b>${name}</b>!
+       Envie-me um adesivo, GIF, vídeo, arquivo ou foto e eu o adicionarei ao seu pacote de adesivos.
+       Quer removê-lo do seu pacote de adesivos? Envie mais uma vez.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /video - get your video packs
-       /inline - get your inline packs
+       /packs - pegue seus pacotes
+       /anim - pegue seus pacotes animados
+       /video - pegue seus pacotes de vídeo
+       /inline - pegue seus pacotes inline
 
-       /new - create a new sticker pack
+       /new - crie um novo pacote de adesivos
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack
-       /lang - change language
+       /original - encontre o adesivo original
+       /restore - restaurar um pacote de figurinhas
+       /copiar - copiar um pacote de figurinhas
+       /emoji - alterar o sufixo emoji para o pacote de figurinhas atual
+       /lang - alterar idioma
 
-       /donate - support the developer
+       /donate - dar suporte ao desenvolvedor
 
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+       GitHub: https://github.com/LyoSU/ fStikBot
+       👨🏻‍💻 Canal do desenvolvedor: @LyBlog
     btn:
-      packs: '🌟 Стикерпаки'
-      inline: '💫 Инлайн'
-      anim: '✨ Animated'
-      video: '📹 Video'
-      new: '🆕 Создать стикерпак'
-      club: '☕️ Donate'
+      packs: '🌟 Pacotes de adesivos'
+      inline: '💫 Em linha'
+      anim: '✨ Animado'
+      video: '📹 Vídeo'
+      new: '🆕 Crie um novo pacote de adesivo'
+      club: '☕ Doar'
   inline:
-    switch_pm: Выбрать стикерпак
+    switch_pm: Selecionar pacote de sticker
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Restauração do pacote de adesivos</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Se você criou um pacote de adesivo anteriormente através deste bot e não pôde encontrá-lo na lista dos seus pacotes de adesivo, depois poderá recuperá-lo de volta.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Para fazer isso, você precisa executar várias ações:</b>
+    1. Abra o bot @Stickers
+    2. Envie o comando <code>/packstats</code>
+    3. Encontre e escolha o pacote de adesivos necessário
+    4. Encaminhar a mensagem recebida para o bot
+    5. Se a restauração for bem sucedida - o bot informa sobre isso
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Copiar pacote de sticker</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Se você suportou o bot, copiar todos os adesivos de qualquer pacote de adesivos com um novo nome estará disponível.
+    Para copiar o pacote de adesivos você precisa enviar um link para ele para o bot.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Pacotes de Adesivos:</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
-    inline_title: Инлайн стикерпак
+      <b>Você ainda não tem pacotes de adesivo.</b>
+      Para criar, escreva um comando /new
+    inline_title: Pacote de sticker embutido
   club: |
-    ☕️ Supporting a bot development
+    ☕ Apoiando um bot de desenvolvimento
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Você pode enviar dinheiro para mim por café e ganhar pequenos bônus no bot em troca.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
+    ➖ Desabilitando <b>"${titleSuffix}</b> no nome dos pacotes de sticker
+    ➖ Copiando outros pacotes de sticker por link
+    ➖ Prioridade na conversão de stickers de vídeo
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -73,37 +73,37 @@ cmd:
   #➖ Copying of other sticker packs by link
   emoji:
     enabled: |
-      Now each sticker will be assigned a default emoji.
-      Send the command again to change the mode.
+      Agora a cada sticker será atribuído um emoji padrão.
+      Envie o comando novamente para alterar o modo.
 
-      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
-      For example - <code>/emoji 🌟</code>
-    disabled: Now you need to enter emoji manually.
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+      Para alterar o emoji padrão para o tipo de pacote de adesivos <code>/emoji</code> seguido por um emoji separado por um espaço.
+      Por exemplo - <code>/emoji 🌟</code>
+    disabled: Agora você precisa inserir emoji manualmente.
+    done: Emoji alterado com sucesso.
+    error: Houve um erro ao mudar o emoji!
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Pacote de Adesivo oculto com sucesso
+      restored: Pacote de Sticker restaurado com sucesso
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      Pacote de adesivo selecionado <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Envie um arquivo, foto, vídeo ou adesivo para que eu o adicione ao seu grupo
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Você também pode editá-lo através do bot oficial @Stickers</i>
     set_inline_pack: |
-      Выбран <u>${title}</u> стикерпак
+      Pacote de stickerpack selecionado de <u>${title}</u>
 
-      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажав кнопку снизу
+      Para usá-lo, escreva em qualquer chat <code>@${botUsername} </code>e espaço
+      Você também pode usá-lo pressionando o botão abaixo
     hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
     restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
     btn:
       hide: '❌ Скрыть стикерпак'
       restore: '✅ Восстановить'
       use_pack: Использовать стикерпак
-      search_gif: Search GIF
+      search_gif: Buscar GIF
     error:
       restore: |
         <b>Ошибка!</b>
@@ -128,37 +128,37 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Adesivo adicionado com sucesso ao pacote de adesivo:</b>
       <a href="${link}">${title}</a>
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Você também pode editá-lo através do bot oficial @Stickers bot</i>
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Ótimo, agora envie os emojis que correspondam aos
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Aguarde...</b>
+      Seu arquivo está na fila para conversão. Espere por conclusão. Isso pode levar algum tempo.
 
-      Progress: ${progress} / ${total}
+      Progresso: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Os usuários que suportaram o bot obtiveram prioridade na fila (mais: /donate)</i>
     error:
       stickers_too_much: |
-        <b>Error!</b>
+        <b>Erro!</b>
 
-        This sticker pack has the maximum number of stickers.
-        You can create a new sticker pack using the /new command.
+        Este pacote de adesivos tem o número máximo de adesivos.
+        Você pode criar um novo pacote de adesivos usando o /new comando.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Este adesivo já está no pacote de adesivos</b>
 
-        If you want to change the emoji, send it in the following message.
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        Se quiser alterar o emoji, envie-a na seguinte mensagem.
+        <i>Você também pode editá-lo no bot oficial @Stickers</i>
       stickerset_invalid: |
-        <b>Error!</b>
+        <b>Erro!</b>
 
-        Bot cannot access your current chosen sticker pack.
-        Please, create (/new) or choose (/packs) another sticker pack.
+        O bot não pode acessar o seu atual pacote de sticker escolhido.
+        Por favor, crie (/new) ou escolha (/packs) outro pacote de sticking.
       file_type: |
         <b>Error!</b>
 
@@ -222,7 +222,7 @@ scenes:
   leave: |
     Действие отменено.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Cancelar'
 admin:
   not_allowed: Этот раздел не для тебя! 😡
   info: Админ-панель
