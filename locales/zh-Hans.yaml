@@ -1,70 +1,70 @@
 ---
-language_name: '🇷🇺 Русский'
-ratelimit: Не так часто!
+language_name: '🇨🇳 简体中文'
+ratelimit: 不经常如此！
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
+      嗨， <b>${name}</b>！
+       给我发送一张贴纸、GIF、视频、文件或照片，我会将其添加到您的贴纸包中。
+       想要将其从贴纸包中移除？再发送一次。
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /video - get your video packs
-       /inline - get your inline packs
+       /packs - 获取你的包
+       /anim - 获取你的动画包
+       /video - 获取你的视频包
+       /inline - 获取你的内联包
 
-       /new - create a new sticker pack
+       /new - 创建一个新的贴纸包
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack
-       /lang - change language
+       /original - 找到原始贴纸
+       /restore - 恢复贴纸包
+       /copy - 复制贴纸包
+       /emoji - 更改当前贴纸包的表情符号后缀
+       /lang - 更改语言
 
-       /donate - support the developer
+       /donate - 支持开发者
 
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+       GitHub：https://github.com/LyoSU/ fStikBot
+       👨🏻‍💻 开发者频道：@LyBlog
     btn:
-      packs: '🌟 Стикерпаки'
-      inline: '💫 Инлайн'
-      anim: '✨ Animated'
-      video: '📹 Video'
-      new: '🆕 Создать стикерпак'
-      club: '☕️ Donate'
+      packs: '🌟 貼圖包'
+      inline: '💫 内联'
+      anim: '✨ 动画'
+      video: '📹 视频'
+      new: '🆕 创建一个新的贴纸包'
+      club: '☕ 捐助'
   inline:
-    switch_pm: Выбрать стикерпак
+    switch_pm: 选择貼圖包
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Sticker pack 恢复</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    如果您先前通过此机器人创建了一个貼圖包，它无法在您的貼圖包列表中找到它， 然后你可以还原它。
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>要做到这一点，您需要执行几个操作：</b>
+    1。 打开 @Stickers bot
+    2. 发送 <code>/packstats</code> 命令
+    3. 查找并选择所需的貼圖包
+    4。 将收到的消息转发到bot
+    5。如果恢复成功，则通知它
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 复制貼圖包</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    如果您支持機器人， 从任何貼圖包复制所有貼圖包中的新名稱可用。
+    为了复制贴纸包，您只需要将链接发送到机器人。
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 貼圖包:</b>
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
-    inline_title: Инлайн стикерпак
+      <b>您还没有贴纸包。</b>
+      若要创建，请写一个命令/新
+    inline_title: 内联貼圖包
   club: |
-    ☕️ Supporting a bot development
+    ☕️ 支持机器人开发
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    你可以寄钱给我喝咖啡，并在机器人中获得小额奖金作为回报。
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
+    ➖ 禁用 <b>英寸${titleSuffix}</b> 贴纸包名称
+    ➖ 通过链接复制其他贴纸包
+    ➖ 转换视频贴纸时的优先级
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -73,106 +73,106 @@ cmd:
   #➖ Copying of other sticker packs by link
   emoji:
     enabled: |
-      Now each sticker will be assigned a default emoji.
-      Send the command again to change the mode.
+      现在每个贴纸将被分配为默认的 emoji。
+      再次发送命令以更改模式。
 
-      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
-      For example - <code>/emoji 🌟</code>
-    disabled: Now you need to enter emoji manually.
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+      更改当前贴纸包类型 <code>/emoji</code> 的默认表情符号，然后用空格隔开。
+      例如- <code>/emoji 🌟</code>
+    disabled: 现在您需要手动输入表情符号。
+    done: 表情已成功更改。
+    error: 更改表情时发生错误！
 callback:
   pack:
     answerCbQuer:
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
     set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+      选定的貼圖包 <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      傳送一個檔案，照片 视频或貼圖我將它添加到您的設定
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>您也可以通过 @Stickers 機器人</i> 編輯它
     set_inline_pack: |
-      Выбран <u>${title}</u> стикерпак
+      选择 <u>${title}</u> 贴箱
 
-      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажав кнопку снизу
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      以便使用 写入任何聊天 <code>@${botUsername} </code>和空格
+      您也可以按下下面的按钮使用它
+    hidden: 貼圖包 <a href="${link}">${title}</a> 已隐藏在您的列表中。
+    restored: 貼圖包 <a href="${link}">${title}</a> 已恢复到您的列表。
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
-      use_pack: Использовать стикерпак
-      search_gif: Search GIF
+      hide: '❌ 隐藏贴纸包'
+      restore: '✅ 恢复'
+      use_pack: 使用贴纸包
+      search_gif: 搜索 GIF
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>错误！</b>
+        无法还原贴纸包。
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>错误!</b>
+        找不到贴纸包。
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: 贴纸已成功从贴纸包中删除。
+      restored: 贴纸已成功保存到当前贴纸包。
+    delete: 贴纸已成功从贴纸包中删除。
+    restored: 贴纸已成功保存到当前贴纸包。
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 删除'
+      copy: '🌟 复制'
+      restore: '✅ 恢复'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        错误！
+        找不到标签。
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>貼圖成功添加到貼圖包：</b>
       <a href="${link}">${title}</a>
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>您也可以透過官方@貼圖機器人編輯它</i>
     ok_inline: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>贴纸添加到贴纸包成功：</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: 太好了，现在发送与之匹配的表情
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>等待...</b>
+      你的文件正在等待转换。等待完成。这可能需要一些时间。
 
-      Progress: ${progress} / ${total}
+      进度: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>支持机器人的用户在队列中获得优先级 (更多: /donate)</i>
     error:
       stickers_too_much: |
-        <b>Error!</b>
+        <b>错误！</b>
 
-        This sticker pack has the maximum number of stickers.
-        You can create a new sticker pack using the /new command.
+        这个贴纸包有最大数量的贴纸。
+        你可以使用 /new 命令创建一个新的贴纸包。
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>这张贴已经在貼圖包</b>
 
-        If you want to change the emoji, send it in the following message.
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        如果你想要更改表情符号， 在以下消息中发送。
+        <i>你也可以通过官方@Stickers bot 机器人进行编辑</i>
       stickerset_invalid: |
-        <b>Error!</b>
+        <b>错误！</b>
 
-        Bot cannot access your current chosen sticker pack.
-        Please, create (/new) or choose (/packs) another sticker pack.
+        Bot 无法访问您当前选择的贴纸包。
+        请创建(/new) 或选择 (/packs) 另一个贴纸包。
       file_type: |
-        <b>Error!</b>
+        <b>错误！</b>
 
-        This file type is not supported.
+        不支持此文件类型。
 
-        <i>You can add this video files to the video pack.
-        As well as all other files in the inline pack</i>
-        Create (/new) or choose (/packs) another sticker pack
+        <i>您可以将此视频文件添加到视频包。
+        内联包中的所有其他文件</i>
+        创建(/new) 或选择 (/packs) 另一个贴纸包
 scenes:
   new_pack:
-    common: Обычный
-    inline: Inline
+    common: 常用的
+    inline: 内嵌文件
     animated: Анимированный
-    video: Video
+    video: 视频
     pack_type: |
       <b>Выбери тип стикерпака:</b>
     pack_title: |
@@ -184,13 +184,13 @@ scenes:
       <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
       <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      貼圖包 <a href="${link}">${title}</a> 已成功创建！
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>贴画包链接：</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      发送文件，照片， 视频或貼圖我將它添加到您的設定
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>您也可以透過官方@Stickers 機器人編輯它</i>
     error:
       title_long: Имя должно быть не больше ${max} символов.
       name_long: Адрес должен быть не больше ${max} символов.
@@ -208,10 +208,10 @@ scenes:
       Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>错误！</b>
+        此功能仅用于捐赠成员。
 
-        You can do this by sending the /donate command.
+        您可以通过发送/捐赠命令来做到这一点。
   original:
     enter: |
       Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
@@ -222,20 +222,20 @@ scenes:
   leave: |
     Действие отменено.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ 取消'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
+  not_allowed: 这个部分不是你的! 😡
   info: Админ-панель
   menu:
     messaging: '✉️ Рассылка'
     admin: '😎 Админ-панель'
   premium:
     changed: |
-      <b>Premium status changed:</b>
+      <b>高级状态已改变：</b>
       ${status}
     user_not_found: |
-      <b>Error!</b>
-      User not found.
+      <b>错误 ！</b>
+      未找到用户。
   messaging:
     info: |
       ✉️ Рассылки
@@ -264,14 +264,14 @@ admin:
       group_select: Выбери группу пользователей
       group_type:
         all: Все
-        ru: Russian
+        ru: 俄文
       select_all: Все
       found: |
         Нашлось человек: ${userCount}
 
         Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
+      back: '« 后退'
+      continue: 继续 »
       publish: |
         Рассылка  ${name} создана Для просмотра нажми кнопку
         Для просмотра нажми кнопку
@@ -326,7 +326,7 @@ error:
       Telegram вернул ошибку:
       ${error}
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>出现未知错误，请再试一次。</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    如果问题仍然存在，请写到 @Ly_oBot。
+    请立即写出你谈论的机器人并在一个消息中详细描述问题。
