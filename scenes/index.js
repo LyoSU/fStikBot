@@ -17,7 +17,7 @@ stage.use((ctx, next) => {
   return next()
 })
 
-stage.hears((['/cancel', match('scenes.btn.cancel')]), async (ctx) => {
+stage.hears((['/start', '/cancel', match('scenes.btn.cancel')]), async (ctx) => {
   ctx.session.scene = null
   await ctx.reply(ctx.i18n.t('scenes.leave'), {
     reply_to_message_id: ctx.message.message_id
