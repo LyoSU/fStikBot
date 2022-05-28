@@ -1,5 +1,8 @@
+const StegCloak = require('stegcloak')
 const Composer = require('telegraf/composer')
 const { tenor } = require('../utils')
+
+const stegcloak = new StegCloak(false, false)
 
 const composer = new Composer()
 
@@ -12,7 +15,15 @@ composer.on('inline_query', async (ctx) => {
 
   const stickersResult = []
 
-  if (ctx.session.userInfo.inlineType === 'packs' && query !== '{gif}') {
+  let data
+
+  try {
+    data = stegcloak.reveal(`: ${query}`, '')
+  } catch (e) {
+    // do nothing
+  }
+
+  if (ctx.session.userInfo.inlineType === 'packs' && data !== '{gif}') {
     let inlineSet = ctx.session.userInfo.inlineStickerSet
 
     if (!inlineSet) {
@@ -85,8 +96,15 @@ composer.on('inline_query', async (ctx) => {
   } else {
     let tenorResult
 
-    if (query.length >= 1) {
-      tenorResult = await tenor.search(query, limit, offset)
+    let queryText = query
+
+    try {
+      queryText = query.match(/:(.*)/)[1]
+    } catch (error) {
+    }
+
+    if (queryText.length >= 1) {
+      tenorResult = await tenor.search(queryText, limit, offset)
 
       nextOffest = tenorResult.next
     } else {

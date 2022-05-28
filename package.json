@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.24.5",
+  "version": "0.25.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "mongoose": "^5.7.5",
     "rword": "3.1.2",
     "sharp": "^0.29.1",
+    "stegcloak": "^0.0.1",
     "telegraf": "^3.37.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-ratelimit": "^2.0.0"

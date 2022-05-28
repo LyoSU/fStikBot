@@ -1,4 +1,7 @@
+const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
+
+const stegcloak = new StegCloak(false, false)
 
 const escapeHTML = (str) => str.replace(
   /[&<>'"]/g,
@@ -92,7 +95,12 @@ module.exports = async (ctx) => {
           let searchGifBtn = []
 
           if(stickerSet.video) {
-            searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), '{gif}')]
+            let inlineData = ''
+            if (ctx.session.userInfo.inlineType === 'packs') {
+              inlineData = stegcloak.hide('{gif}', '', ' : ')
+            }
+
+            searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
           }
 
           await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
