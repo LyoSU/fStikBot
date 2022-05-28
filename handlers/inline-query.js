@@ -12,7 +12,7 @@ composer.on('inline_query', async (ctx) => {
 
   const stickersResult = []
 
-  if (ctx.session.userInfo.inlineType === 'packs') {
+  if (ctx.session.userInfo.inlineType === 'packs' && query !== '{gif}') {
     let inlineSet = ctx.session.userInfo.inlineStickerSet
 
     if (!inlineSet) {

@@ -92,7 +92,7 @@ module.exports = async (ctx) => {
           let searchGifBtn = []
 
           if(stickerSet.video) {
-            searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), '')]
+            searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), '{gif}')]
           }
 
           await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {

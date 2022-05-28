@@ -183,7 +183,6 @@ bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
-bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
 
 bot.use(handlePublish)
 bot.use(handleInlineQuery)
@@ -197,6 +196,8 @@ bot.action(/(hide_pack):(.*)/, handleHidePack)
 bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
 bot.action(/set_language:(.*)/, handleLanguage)
+
+bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
 
 // forward from sticker bot
 bot.on('text', (ctx, next) => {
