@@ -197,13 +197,13 @@ bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
 bot.action(/set_language:(.*)/, handleLanguage)
 
-bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
-
 // forward from sticker bot
 bot.on('text', (ctx, next) => {
   if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) return handleRestorePack(ctx)
   else return next()
 })
+
+bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
 
 // club
 bot.action(/(club):(.*)/, handleClub)
