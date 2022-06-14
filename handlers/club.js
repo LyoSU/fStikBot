@@ -6,7 +6,7 @@ module.exports = async (ctx) => {
     titleSuffix: ` :: @${ctx.options.username}`
   }), {
     reply_markup: Markup.inlineKeyboard([
-      [Markup.urlButton('Telegram Donate', 'https://t.me/LyBlog/553')],
+      [Markup.urlButton('Bank card', 'https://send.monobank.ua/jar/6RwLN9a9Yj')],
       [Markup.urlButton('Other', 'https://donate.lyo.su')]
     ])
   })
