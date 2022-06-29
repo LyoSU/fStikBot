@@ -2,7 +2,7 @@ const { addSticker, addStickerText } = require('../utils')
 
 module.exports = async (ctx, next) => {
   if (!ctx.session.previousSticker) return next()
-  await ctx.replyWithChatAction('upload_document').catch(() => {})
+  ctx.replyWithChatAction('upload_document').catch(() => {})
 
   let sticker
   let stickerIndex = -1
