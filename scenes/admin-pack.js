@@ -53,8 +53,12 @@ adminPackEdit.enter(async (ctx) => {
     return ctx.scene.enter('adminPackFind')
   }
 
+  const packOwner = await ctx.db.User.findById(editPack.owner)
+
   const resultText = ctx.i18n.t('admin.pack.edit.found', {
-    packName: editPack.name
+    packName: editPack.name,
+    creatorName: packOwner?.first_name,
+    packCreatorLink: `tg://user?id=${packOwner?.telegram_id}`
   })
 
   const replyMarkup = Markup.inlineKeyboard([
