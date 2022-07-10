@@ -322,6 +322,8 @@ admin:
         Відправте стікер із стікерпаку для пошуку
       found: |
         Стікерпак: ${packName}
+
+        Створив: <a href="${packCreatorLink}">${creatorName}</a>
       steal_button: Відібрати стікерпак
       remove_button: Видалити стікерпак
       steal: |
