@@ -10,7 +10,8 @@ const checkAdminRight = (ctx, next) => {
 }
 
 const adminType = [
-  'messaging'
+  'messaging',
+  'pack'
 ]
 
 const main = async (ctx, next) => {
