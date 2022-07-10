@@ -321,36 +321,25 @@ admin:
   pack:
     info: |
       ✉️ Пакети
-
     edit_button: Редагувати
-
     edit:
       find: |
         Відправте стікер із стікерпаку для пошуку
-
       found: |
         Стікерпак: ${packName}
-
       steal_button: Відібрати стікерпак
       remove_button: Видалити стікерпак
-
       steal: |
         Ви дійсно бажаєте відібрати стікерпак ${packName}?
-
       steal_success: |
         Ви успішно відібрали стікерпак ${packName}
-
       remove: |
         Ви дійсно бажаєте видалити стікерпак ${packName}?
-
       remove_success: |
         Ви успішно видалили стікерпак ${packName}
-
       yes: Так
       no: Ні
-
     not_found: Стікерпак не знайдено
-
 error:
   telegram: |
     <b>Telegram returned an error!</b>
