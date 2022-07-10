@@ -41,12 +41,10 @@ stage.hears(([
   '/inline',
   '/anim',
   '/video',
-  '/new',
   match('cmd.start.btn.packs'),
   match('cmd.start.btn.inline'),
   match('cmd.start.btn.anim'),
-  match('cmd.start.btn.video'),
-  match('cmd.start.btn.new')
+  match('cmd.start.btn.video')
 ]), async (ctx, next) => {
   ctx.session.scene = null
   ctx.scene.leave()
