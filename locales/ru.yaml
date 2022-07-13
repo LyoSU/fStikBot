@@ -195,18 +195,18 @@ scenes:
     video: Видео
     inline: Inline
     pack_type: |
-      <b><u>Choose stickerpack type</u></b>
+      <b><u>Выберите тип стикерпака</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular sticker pack - t.me/addstickers/Animals
+      <b>Обычный</b> - статичные (не двигаются), растровые, формат файла - перед добавлением PNG (бот занимается обработкой), после добавления - WEBP.
+      Пример обычного стикерпака - t.me/addstickers/Animals
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
+      <b>Анимированные</b> - анимированные, векторные (имеют точное описание объектов внутри файла, за счет чего отображаются четкими в любом масштабе), формат файла - TGS, разновидность формата Lottie. 
+      Пример анимированного стикерпака - t.me/addstickers/IsabelleShizue 
 
-      <b>Video</b> - animated, raster, file format - WEBM.
-      Sample video sticker pack - t.me/addstickers/TheMascot
+      <b>Видео</b> - анимированные, растровые, формат файла - WEBM.
+      Пример видео стикерпака - t.me/addstickers/TheMascot
 
-      <b>Inline</b> - access to any files through the inline mode of the bot.
+      <b>Инлайн</b> - додоступ к любым файлам через inline режим бота.
     pack_title: |
       <b>Введи имя для нового стикерпака:</b>
       <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
