@@ -4,36 +4,35 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Привет, <b>${name}</b>!
+      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
+      Для удаления - отправь стикер снова.
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      /packs - список стикерпаков
+      /new - создать новый стикерпак
 
-      /packs - get your packs
-      /new - create a new sticker pack
-
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
+      /original - найти оригинал стикера
+      /restore - восстановить стикерпак
+      /copy - копировать стикерпак
+      /emoji - сменить эмодзи-суффикс для текущего стикерпака
       /lang - change language
 
-      /donate - support the developer
+      /donate - поддержать разработчика
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      👨🏻‍💻 Канал разработчика: @LyBlog
     commands:
-      start: '📜 Start menu'
-      packs: '📁 Sticker packs'
-      new: '📥 Create a new sticker pack'
-      original: '🔍 Find original sticker'
-      restore: '🔀 Restore a sticker pack'
-      copy: '📋 Copy a sticker pack'
-      emoji: '📝 Change emoji suffix'
-      lang: '🌐 Change language'
-      donate: '☕️ Support the developer'
+      start: '📜 Справка бота'
+      packs: '📁 Стикерпаки'
+      new: '📥 Создать стикерпак'
+      original: '🔍 Найти оригинальный стикер'
+      restore: '🔀 Восстановить стикерпак'
+      copy: '📋 Скопировать стикерпак'
+      emoji: '📝 Изменить суффикс эмодзи'
+      lang: '🌐 Изменить язык'
+      donate: '☕ Поддержать разработчика'
     btn:
-      new: '📥 Create new'
+      new: '📥 Создать новый'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -56,10 +55,10 @@ cmd:
     info: |
       <b>🌟 Стикерпаки:</b>
     types:
-      static: '🌟 Static'
-      animated: '✨ Animated (vector)'
-      video: '📹 Video'
-      inline: '💫 Inline'
+      static: '🌟 Статический'
+      animated: '✨ Анимированный (вектор)'
+      video: '📹 Видео'
+      inline: '💫 Инлайн'
     empty: |
       <b>У тебя нет ещё ни одного стикерпака.</b>
       Для создания напиши /new
@@ -95,25 +94,25 @@ callback:
       restored: Стикерпак успешно восстановлен
     set_pack:
       static: |
-        Selected static sticker pack <a href="${link}">${title}</a>
+        Выбранный статический стикерпак <a href="${link}">${title}</a>
 
-        To add a new sticker send me a photo, another static sticker.
-        For a sticker to have no background, it must be sent as a file.
+        Чтобы добавить новый стикер, пришлите мне фото или другой статический стикер.
+        Для создания стикера без фона, фото необходимо отправить в виде файла.
 
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>Вы также можете отредактировать его через официального бота @Stickers</i>
       animated: |
-        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+        Выбран анимированный (векторный) стикерпак <a href="${link}">${title}</a>
 
-        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+        Чтобы добавить новый стикер, пришлите мне файл <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> или другой анимированный стикер.
 
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>Вы также можете отредактировать его через официального бота @Stickers</i>
       video: |
-        Selected video sticker pack <a href="${link}">${title}</a>
+        Выбран видео стикерпак <a href="${link}">${title}</a>
 
-        To add a new sticker send me any video or photo.
-        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
+        Чтобы добавить новый стикер пришлите мне любое видео или фото.
+        Видео будет обрезано до 3 секунд, поэтому желательно сделать это самостоятельно. Сожмите видео, если это возможно.
 
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>Вы также можете отредактировать его через официального бота @Stickers</i>
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -250,7 +249,7 @@ admin:
   info: Админ-панель
   menu:
     messaging: '✉️ Рассылка'
-    pack: '📦 Стікерпаки'
+    pack: '📦 Стикерпаки'
     admin: '😎 Админ-панель'
   premium:
     changed: |
