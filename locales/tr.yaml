@@ -4,28 +4,36 @@ ratelimit: Pek sık değil!
 cmd:
   start:
     info: |
-      Merhaba, <b>${name}</b>!
-      Bana bir çıkartma veya fotoğraf gönder, ben de çıkartma paketine ekleyeceğim.
+      Hi, <b>${name}</b>!
 
-      /packs - paketlerini getir
-      /new - yeni bir çıkartma paketi oluştur
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-      /original - orjinal çıkartmayı bul
-      /restore - çıkartma paketini sıfırla
-      /copy - çıkartma paketini kopyala
+      /packs - get your packs
+      /new - create a new sticker pack
 
-      /donate - yapımcıyı destekle
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /lang - change language
+
+      /donate - support the developer
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Yapımcı Kanalı: @LyBlog
-      Çeviriyi Yapan: @By_Azade
+      👨🏻‍💻 Developer channel: @LyBlog
+    commands:
+      start: '📜 Start menu'
+      packs: '📁 Sticker packs'
+      new: '📥 Create a new sticker pack'
+      original: '🔍 Find original sticker'
+      restore: '🔀 Restore a sticker pack'
+      copy: '📋 Copy a sticker pack'
+      emoji: '📝 Change emoji suffix'
+      lang: '🌐 Change language'
+      donate: '☕️ Support the developer'
     btn:
-      packs: '🌟 Çıkartma paketleri'
-      inline: '💫 Satır içi'
-      anim: '✨ Hareketli'
-      video: '📹 Video'
-      new: '🆕 Yeni bir çıkartma paketi oluştur'
-      club: '☕️ Bağış yap'
+      new: '📥 Create new'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
@@ -47,6 +55,11 @@ cmd:
   packs:
     info: |
       <b>🌟 Çıkartma Paketleri:</b>
+    types:
+      static: '🌟 Static'
+      animated: '✨ Animated (vector)'
+      video: '📹 Video'
+      inline: '💫 Inline'
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
@@ -80,12 +93,27 @@ callback:
     answerCbQuer:
       hidden: Çıkartma paketi başarılı bir şekilde gizlendi
       restored: Çıkartma başarılı bir şekilde sıfırlandı
-    set_pack: |
-      Seçili çıkartma paketi <a href="${link}">${title}</a>
+    set_pack:
+      static: |
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-      Setinize eklemem için bir dosya, fotoğraf, video veya çıkartma gönderin
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
 
-      <i>Ayrıca resmi @Stickers bot</i>aracılığıyla düzenleyebilirsiniz
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      animated: |
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      video: |
+        Selected video sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me any video or photo.
+        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Seçili <u>${title}</u> çıkartma paketi
 
@@ -219,6 +247,7 @@ admin:
   info: Admin Paneli
   menu:
     messaging: '✉️ Bülten'
+    pack: '📦 Стікерпаки'
     admin: '😎 Admin Paneli'
   premium:
     changed: |
@@ -307,6 +336,30 @@ admin:
        <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
       <code>${errorMessage}</code> mesaj gönderilemedi
+  pack:
+    info: |
+      ✉️ Пакети
+    edit_button: Редагувати
+    edit:
+      find: |
+        Відправте стікер із стікерпаку для пошуку
+      found: |
+        Стікерпак: ${packName}
+
+        Створив: <a href="${packCreatorLink}">${creatorName}</a>
+      steal_button: Відібрати стікерпак
+      remove_button: Видалити стікерпак
+      steal: |
+        Ви дійсно бажаєте відібрати стікерпак ${packName}?
+      steal_success: |
+        Ви успішно відібрали стікерпак ${packName}
+      remove: |
+        Ви дійсно бажаєте видалити стікерпак ${packName}?
+      remove_success: |
+        Ви успішно видалили стікерпак ${packName}
+      yes: Так
+      no: Ні
+    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram hatası!</b>
