@@ -4,34 +4,36 @@ ratelimit: 不经常如此！
 cmd:
   start:
     info: |
-      嗨， <b>${name}</b>！
-       给我发送一张贴纸、GIF、视频、文件或照片，我会将其添加到您的贴纸包中。
-       想要将其从贴纸包中移除？再发送一次。
+      Hi, <b>${name}</b>!
 
-       /packs - 获取你的包
-       /anim - 获取你的动画包
-       /video - 获取你的视频包
-       /inline - 获取你的内联包
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-       /new - 创建一个新的贴纸包
+      /packs - get your packs
+      /new - create a new sticker pack
 
-       /original - 找到原始贴纸
-       /restore - 恢复贴纸包
-       /copy - 复制贴纸包
-       /emoji - 更改当前贴纸包的表情符号后缀
-       /lang - 更改语言
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /lang - change language
 
-       /donate - 支持开发者
+      /donate - support the developer
 
-       GitHub：https://github.com/LyoSU/ fStikBot
-       👨🏻‍💻 开发者频道：@LyBlog
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Developer channel: @LyBlog
+    commands:
+      start: '📜 Start menu'
+      packs: '📁 Sticker packs'
+      new: '📥 Create a new sticker pack'
+      original: '🔍 Find original sticker'
+      restore: '🔀 Restore a sticker pack'
+      copy: '📋 Copy a sticker pack'
+      emoji: '📝 Change emoji suffix'
+      lang: '🌐 Change language'
+      donate: '☕️ Support the developer'
     btn:
-      packs: '🌟 貼圖包'
-      inline: '💫 内联'
-      anim: '✨ 动画'
-      video: '📹 视频'
-      new: '🆕 创建一个新的贴纸包'
-      club: '☕ 捐助'
+      new: '📥 Create new'
   inline:
     switch_pm: 选择貼圖包
   restore: |
@@ -53,6 +55,11 @@ cmd:
   packs:
     info: |
       <b>🌟 貼圖包:</b>
+    types:
+      static: '🌟 Static'
+      animated: '✨ Animated (vector)'
+      video: '📹 Video'
+      inline: '💫 Inline'
     empty: |
       <b>您还没有贴纸包。</b>
       若要创建，请写一个命令/新
@@ -86,12 +93,27 @@ callback:
     answerCbQuer:
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
-    set_pack: |
-      选定的貼圖包 <a href="${link}">${title}</a>
+    set_pack:
+      static: |
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-      傳送一個檔案，照片 视频或貼圖我將它添加到您的設定
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
 
-      <i>您也可以通过 @Stickers 機器人</i> 編輯它
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      animated: |
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      video: |
+        Selected video sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me any video or photo.
+        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       选择 <u>${title}</u> 贴箱
 
@@ -228,6 +250,7 @@ admin:
   info: Админ-панель
   menu:
     messaging: '✉️ Рассылка'
+    pack: '📦 Стікерпаки'
     admin: '😎 Админ-панель'
   premium:
     changed: |
@@ -317,6 +340,30 @@ admin:
       Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
       <code>${errorMessage}</code>
+  pack:
+    info: |
+      ✉️ Пакети
+    edit_button: Редагувати
+    edit:
+      find: |
+        Відправте стікер із стікерпаку для пошуку
+      found: |
+        Стікерпак: ${packName}
+
+        Створив: <a href="${packCreatorLink}">${creatorName}</a>
+      steal_button: Відібрати стікерпак
+      remove_button: Видалити стікерпак
+      steal: |
+        Ви дійсно бажаєте відібрати стікерпак ${packName}?
+      steal_success: |
+        Ви успішно відібрали стікерпак ${packName}
+      remove: |
+        Ви дійсно бажаєте видалити стікерпак ${packName}?
+      remove_success: |
+        Ви успішно видалили стікерпак ${packName}
+      yes: Так
+      no: Ні
+    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram вернул ошибку!</b>
