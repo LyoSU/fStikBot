@@ -63,7 +63,7 @@ module.exports = async (ctx) => {
         parse_mode: 'HTML'
       })
     } else {
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
+      await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack`, {
         title: escapeHTML(stickerSet.title),
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
       }), {

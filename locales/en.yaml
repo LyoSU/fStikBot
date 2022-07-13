@@ -5,33 +5,35 @@ cmd:
   start:
     info: |
       Hi, <b>${name}</b>!
-       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /video - get your video packs
-       /inline - get your inline packs
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-       /new - create a new sticker pack
+      /packs - get your packs
+      /new - create a new sticker pack
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack
-       /lang - change language
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /lang - change language
 
-       /donate - support the developer
+      /donate - support the developer
 
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Developer channel: @LyBlog
+    commands:
+      start: 📜 Start menu
+      packs: 📁 Sticker packs
+      new: 📥 Create a new sticker pack
+      original: 🔍 Find original sticker
+      restore: 🔀 Restore a sticker pack
+      copy: 📋 Copy a sticker pack
+      emoji: 📝 Change emoji suffix
+      lang: 🌐 Change language
+      donate: ☕️ Support the developer
     btn:
-      packs: '🌟 Sticker packs'
-      inline: '💫 Inline'
-      anim: '✨ Animated'
-      video: '📹 Video'
-      new: '🆕 Create a new sticker pack'
-      club: '☕️ Donate'
+      new: 📥 Create new
   inline:
     switch_pm: Select sticker pack
   restore: |
@@ -53,6 +55,12 @@ cmd:
   packs:
     info: |
       <b>🌟 Sticker packs:</b>
+
+    types:
+      static: '🌟 Static'
+      animated: '✨ Animated (vector)'
+      video: '📹 Video'
+      inline: '💫 Inline'
     empty: |
       <b>You have no sticker packs yet.</b>
       To create, write a command /new
@@ -86,12 +94,27 @@ callback:
     answerCbQuer:
       hidden: Sticker pack successfully hidden
       restored: Sticker pack successfully restored
-    set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+    set_pack:
+      static: |
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      animated: |
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      video: |
+        Selected video sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me any video or photo.
+        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Selected <u>${title}</u> stickerpack
 

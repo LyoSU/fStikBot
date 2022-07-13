@@ -22,47 +22,45 @@ module.exports = async (ctx) => {
   const query = {
     owner: userInfo.id,
     create: true,
-    inline: { $ne: true },
-    animated: { $ne: true },
-    video: { $ne: true },
+    // inline: { $ne: true },
+    // animated: { $ne: true },
+    // video: { $ne: true },
     hide: { $ne: true }
   }
 
-  if (ctx.updateType === 'callback_query' && ctx.match && ctx.match[1] === 'set_pack') {
+  let page = 0
+  let limit = 10
+
+  if (ctx.callbackQuery) {
+    page = parseInt(ctx.match[1]) || 0
+  }
+  if (page < 0) page = 0
+
+  if (ctx.callbackQuery && ctx.match && ctx.match[1] === 'set_pack') {
     if (ctx.match[2] === 'gif') {
       ctx.session.userInfo.inlineType = 'gif'
-      ctx.state.type = 'inline'
       if (userInfo?.stickerSet?.inline) userInfo.stickerSet = null
       userInfo.inlineStickerSet = null
     } else {
       const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
+      stickerSet.updatedAt = new Date()
+      await stickerSet.save()
+
       if (!stickerSet) {
         return ctx.answerCbQuery('error', true)
-      }
-
-      if (stickerSet.animated) {
-        ctx.state.type = 'animated'
-        query.animated = true
-      }
-
-      if (stickerSet.video) {
-        ctx.state.type = 'video'
-        query.video = true
       }
 
       if (stickerSet?.owner.toString() === userInfo.id.toString()) {
         await ctx.answerCbQuery()
 
         if (stickerSet.inline) {
-          ctx.state.type = 'inline'
           ctx.session.userInfo.inlineType = 'packs'
           userInfo.inlineStickerSet = stickerSet
           userInfo.animatedStickerSet = null
         }
 
         if (stickerSet.video) {
-          ctx.state.type = 'video'
           userInfo.videoStickerSet = stickerSet
           userInfo.stickerSet = stickerSet
         } else if (stickerSet.animated) {
@@ -103,7 +101,11 @@ module.exports = async (ctx) => {
             searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
           }
 
-          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
+          let type = 'static'
+          if (stickerSet.animated) type = 'animated'
+          if (stickerSet.video) type = 'video'
+
+          await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack.${type}`, {
             title: escapeHTML(stickerSet.title),
             link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
           }), {
@@ -125,13 +127,18 @@ module.exports = async (ctx) => {
     }
   }
 
-  if (ctx.state.type === 'animated') query.animated = true
-  else if (ctx.state.type === 'inline') query.inline = true
-  else if (ctx.state.type === 'video') query.video = true
+  if (ctx.state.type === 'inline') {
+    query.inline = true
+  }
 
   const stickerSets = await ctx.db.StickerSet.find(query).sort({
     updatedAt: -1
-  }).limit(50)
+  })
+  .sort({
+    updatedAt: -1
+  })
+  .limit(limit)
+  .skip(page * limit)
 
   if (ctx.state.type === 'inline' && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
@@ -159,26 +166,52 @@ module.exports = async (ctx) => {
   if (stickerSets.length > 0) {
     messageText = ctx.i18n.t('cmd.packs.info')
 
-    let selectedStickerSet
-    if (ctx.state.type === 'animated') selectedStickerSet = userInfo.animatedStickerSet
-    else if (ctx.state.type === 'video') selectedStickerSet = userInfo.videoStickerSet
-    else selectedStickerSet = userInfo.stickerSet
-
-    if (ctx.state.type === 'inline') {
-      const title = ctx.session.userInfo.inlineType !== 'gif' ? 'GIF' : '✅ GIF'
-      keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
-    }
-
     stickerSets.forEach((pack) => {
       let { title } = pack
-      if (selectedStickerSet) {
-        if (selectedStickerSet?.id.toString() === pack.id.toString()) title = `✅ ${title}`
-      }
+
+      if (pack.video === true) title = `📹 ${title}`
+      else if (pack.animated === true) title = `✨ ${title}`
+      else if (pack.inline === true) title = `💫 ${title}`
+      else title = `🌟 ${title}`
+
+      if (
+        userInfo.stickerSet?.id.toString() === pack.id.toString() ||
+        userInfo.animatedStickerSet?.id.toString() === pack.id.toString() ||
+        userInfo.videoStickerSet?.id.toString() === pack.id.toString()
+      ) title += ` ✅`
+
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
     })
   } else {
     messageText = ctx.i18n.t('cmd.packs.empty')
   }
+
+  if (ctx.state.type === 'inline') {
+    const title = ctx.session.userInfo.inlineType !== 'gif' ? 'GIF' : '✅ GIF'
+    keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
+  }
+
+  // keyboardMarkup.push([
+  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.static'), 'packs:static'),
+  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.animated'), 'packs:animated'),
+  // ])
+  // keyboardMarkup.push([
+  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.video'), 'packs:video'),
+  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.inline'), 'packs:inline')
+  // ])
+
+  const stickerSetsCount = await ctx.db.StickerSet.count(query)
+
+  const paginationKeyboard = []
+
+  if (page > 0) {
+    paginationKeyboard.push(Markup.callbackButton('◀️', `packs:${page - 1}`))
+  }
+  if (stickerSetsCount > (page + 1) * limit) {
+    paginationKeyboard.push(Markup.callbackButton('▶️', `packs:${page + 1}`))
+  }
+
+  keyboardMarkup.push(paginationKeyboard)
 
   keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), 'new_pack')])
 

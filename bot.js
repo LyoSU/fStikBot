@@ -149,23 +149,8 @@ bot.start((ctx, next) => {
   }
   return next()
 })
-bot.hears(['/packs', match('cmd.start.btn.packs')], ctx => {
-  ctx.state.type = 'common'
-  return handlePacks(ctx)
-})
-bot.hears(['/inline', match('cmd.start.btn.inline')], ctx => {
-  ctx.state.type = 'inline'
-  return handlePacks(ctx)
-})
-bot.hears(['/anim', match('cmd.start.btn.anim')], ctx => {
-  ctx.state.type = 'animated'
-  return handlePacks(ctx)
-})
-
-bot.hears(['/video', match('cmd.start.btn.video')], ctx => {
-  ctx.state.type = 'video'
-  return handlePacks(ctx)
-})
+bot.command('packs', handlePacks)
+bot.action(/packs:(.*)/, handlePacks)
 
 bot.start((ctx, next) => {
   if (ctx.startPayload.match(/s_(.*)/)) return handleSelectPack(ctx)
