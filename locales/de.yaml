@@ -5,33 +5,35 @@ cmd:
   start:
     info: |
       Hi, <b>${name}</b>!
-       Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-       Want to remove it from your sticker pack? Send it once again.
 
-       /packs - get your packs
-       /anim - get your animated packs
-       /video - get your video packs
-       /inline - get your inline packs
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-       /new - create a new sticker pack
+      /packs - get your packs
+      /new - create a new sticker pack
 
-       /original - find original sticker
-       /restore - restore a sticker pack
-       /copy - copy a sticker pack
-       /emoji - change emoji suffix for current sticker pack
-       /lang - change language
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /lang - change language
 
-       /donate - support the developer
+      /donate - support the developer
 
-       GitHub: https://github.com/LyoSU/fStikBot
-       👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Developer channel: @LyBlog
+    commands:
+      start: '📜 Start menu'
+      packs: '📁 Sticker packs'
+      new: '📥 Create a new sticker pack'
+      original: '🔍 Find original sticker'
+      restore: '🔀 Restore a sticker pack'
+      copy: '📋 Copy a sticker pack'
+      emoji: '📝 Change emoji suffix'
+      lang: '🌐 Change language'
+      donate: '☕️ Support the developer'
     btn:
-      packs: '🌟 Стикерпаки'
-      inline: '💫 Инлайн'
-      anim: '✨ Animiert'
-      video: '📹 Video'
-      new: '🆕 Создать стикерпак'
-      club: '☕ Spenden'
+      new: '📥 Create new'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -53,6 +55,11 @@ cmd:
   packs:
     info: |
       <b>🌟 Стикерпаки:</b>
+    types:
+      static: '🌟 Static'
+      animated: '✨ Animated (vector)'
+      video: '📹 Video'
+      inline: '💫 Inline'
     empty: |
       <b>У тебя нет ещё ни одного стикерпака.</b>
       Для создания напиши /new
@@ -86,12 +93,27 @@ callback:
     answerCbQuer:
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
-    set_pack: |
-      Selected sticker pack <a href="${link}">${title}</a>
+    set_pack:
+      static: |
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-      Send a file, photo, video or sticker so that I add it to your set
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      animated: |
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
+      video: |
+        Selected video sticker pack <a href="${link}">${title}</a>
+
+        To add a new sticker send me any video or photo.
+        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
+
+        <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -228,6 +250,7 @@ admin:
   info: Админ-панель
   menu:
     messaging: '✉️ Рассылка'
+    pack: '📦 Стікерпаки'
     admin: '😎 Админ-панель'
   premium:
     changed: |
@@ -317,6 +340,30 @@ admin:
       Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
       <code>${errorMessage}</code>
+  pack:
+    info: |
+      ✉️ Пакети
+    edit_button: Редагувати
+    edit:
+      find: |
+        Відправте стікер із стікерпаку для пошуку
+      found: |
+        Стікерпак: ${packName}
+
+        Створив: <a href="${packCreatorLink}">${creatorName}</a>
+      steal_button: Відібрати стікерпак
+      remove_button: Видалити стікерпак
+      steal: |
+        Ви дійсно бажаєте відібрати стікерпак ${packName}?
+      steal_success: |
+        Ви успішно відібрали стікерпак ${packName}
+      remove: |
+        Ви дійсно бажаєте видалити стікерпак ${packName}?
+      remove_success: |
+        Ви успішно видалили стікерпак ${packName}
+      yes: Так
+      no: Ні
+    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram вернул ошибку!</b>
