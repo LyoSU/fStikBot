@@ -23,17 +23,17 @@ cmd:
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Developer channel: @LyBlog
     commands:
-      start: 📜 Start menu
-      packs: 📁 Sticker packs
-      new: 📥 Create a new sticker pack
-      original: 🔍 Find original sticker
-      restore: 🔀 Restore a sticker pack
-      copy: 📋 Copy a sticker pack
-      emoji: 📝 Change emoji suffix
-      lang: 🌐 Change language
-      donate: ☕️ Support the developer
+      start: '📜 Start menu'
+      packs: '📁 Sticker packs'
+      new: '📥 Create a new sticker pack'
+      original: '🔍 Find original sticker'
+      restore: '🔀 Restore a sticker pack'
+      copy: '📋 Copy a sticker pack'
+      emoji: '📝 Change emoji suffix'
+      lang: '🌐 Change language'
+      donate: '☕️ Support the developer'
     btn:
-      new: 📥 Create new
+      new: '📥 Create new'
   inline:
     switch_pm: Select sticker pack
   restore: |
@@ -55,7 +55,6 @@ cmd:
   packs:
     info: |
       <b>🌟 Sticker packs:</b>
-
     types:
       static: '🌟 Static'
       animated: '✨ Animated (vector)'
@@ -344,38 +343,27 @@ admin:
   pack:
     info: |
       ✉️ Пакети
-
     edit_button: Редагувати
-
     edit:
       find: |
         Відправте стікер із стікерпаку для пошуку
-
       found: |
         Стікерпак: ${packName}
 
         Створив: <a href="${packCreatorLink}">${creatorName}</a>
-
       steal_button: Відібрати стікерпак
       remove_button: Видалити стікерпак
-
       steal: |
         Ви дійсно бажаєте відібрати стікерпак ${packName}?
-
       steal_success: |
         Ви успішно відібрали стікерпак ${packName}
-
       remove: |
         Ви дійсно бажаєте видалити стікерпак ${packName}?
-
       remove_success: |
         Ви успішно видалили стікерпак ${packName}
-
       yes: Так
       no: Ні
-
     not_found: Стікерпак не знайдено
-
 error:
   telegram: |
     <b>Telegram returned an error!</b>
