@@ -1,12 +1,13 @@
+const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const {
   rword
 } = require('rword')
-const {
-  handleStart
-} = require('../handlers')
 const { addSticker } = require('../utils')
+
+
+const stegcloak = new StegCloak(false, false)
 
 const escapeHTML = (str) => str.replace(
   /[&<>'"]/g,
@@ -21,7 +22,7 @@ const escapeHTML = (str) => str.replace(
 
 const сhoosePackType = new Scene('сhoosePackType')
 
-сhoosePackType.enter(async (ctx) => {
+сhoosePackType.enter(async (ctx, next) => {
   ctx.session.scene.newPack = {}
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
     reply_markup: Markup.keyboard([
@@ -60,7 +61,10 @@ const сhoosePackType = new Scene('сhoosePackType')
 const newPackTitle = new Scene('newPackTitle')
 
 newPackTitle.enter(async (ctx) => {
-  if (!ctx.session.scene.newPack) ctx.session.scene.newPack = { animated: ctx.session.scene.copyPack.is_animated }
+  if (!ctx.session.scene.newPack) ctx.session.scene.newPack = {
+    animated: ctx.session.scene.copyPack.is_animated,
+    video: ctx.session.scene.copyPack.is_video,
+  }
   const generatedName = rword.generate(3, { length: '3-5', capitalize: 'first' }).join('')
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
     reply_markup: Markup.keyboard([
@@ -100,7 +104,7 @@ newPackName.on('text', async (ctx) => {
 
 const newPackConfirm = new Scene('newPackConfirm')
 
-newPackConfirm.enter(async (ctx) => {
+newPackConfirm.enter(async (ctx, next) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
   const inline = !!ctx.session.scene?.newPack?.inline
@@ -198,10 +202,10 @@ newPackConfirm.enter(async (ctx) => {
       create: true
     })
 
-    if (ctx.session.scene.newPack.video) {
+    if (userStickerSet.video) {
       ctx.session.userInfo.stickerSet = userStickerSet
       ctx.session.userInfo.videoStickerSet = userStickerSet
-    } else if (ctx.session.scene.newPack.animated) {
+    } else if (userStickerSet.animated) {
       ctx.session.userInfo.animatedStickerSet = userStickerSet
       if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
         ctx.session.userInfo.stickerSet = null
@@ -222,62 +226,91 @@ newPackConfirm.enter(async (ctx) => {
         ])
       })
     } else {
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.ok', {
-        title: escapeHTML(title),
+      let searchGifBtn = []
+
+      if(userStickerSet.video) {
+        let inlineData = ''
+        if (ctx.session.userInfo.inlineType === 'packs') {
+          inlineData = stegcloak.hide('{gif}', '', ' : ')
+        }
+
+        searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
+      }
+
+
+      let type = 'static'
+      if (userStickerSet.animated) type = 'animated'
+      if (userStickerSet.video) type = 'video'
+
+      await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack.${type}`, {
+        title: escapeHTML(userStickerSet.title),
         link: `${ctx.config.stickerLinkPrefix}${name}`
       }), {
-        reply_to_message_id: ctx.message.message_id
+        reply_markup: Markup.inlineKeyboard([
+          [
+            Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${userStickerSet.name}`)
+          ],
+          searchGifBtn
+        ]),
+        parse_mode: 'HTML'
       })
     }
 
-    if (ctx.session.scene.copyPack) {
-      (async () => {
-        const originalPack = ctx.session.scene.copyPack
+    if (!ctx.session.scene.copyPack) {
+      await ctx.scene.leave()
+      return ctx.replyWithHTML('👌', {
+        reply_markup: {
+          remove_keyboard: true
+        }
+      })
+    }
 
-        const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
+    const originalPack = ctx.session.scene.copyPack
+
+    const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
+      originalTitle: originalPack.title,
+      originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+      title: escapeHTML(title),
+      link: `${ctx.config.stickerLinkPrefix}${name}`,
+      current: 0,
+      total: originalPack.stickers.length
+    }))
+
+    for (let index = 0; index < originalPack.stickers.length; index++) {
+      await addSticker(ctx, originalPack.stickers[index])
+
+      await ctx.telegram.editMessageText(
+        message.chat.id, message.message_id, null,
+        ctx.i18n.t('scenes.copy.progress', {
           originalTitle: originalPack.title,
           originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
           title: escapeHTML(title),
           link: `${ctx.config.stickerLinkPrefix}${name}`,
-          current: 0,
+          current: index,
           total: originalPack.stickers.length
-        }))
-
-        for (let index = 0; index < originalPack.stickers.length; index++) {
-          await addSticker(ctx, originalPack.stickers[index])
-
-          await ctx.telegram.editMessageText(
-            message.chat.id, message.message_id, null,
-            ctx.i18n.t('scenes.copy.progress', {
-              originalTitle: originalPack.title,
-              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-              title: escapeHTML(title),
-              link: `${ctx.config.stickerLinkPrefix}${name}`,
-              current: index,
-              total: originalPack.stickers.length
-            }),
-            { parse_mode: 'HTML' }
-          ).catch(() => { })
-        }
-
-        await ctx.telegram.editMessageText(
-          message.chat.id, message.message_id, null,
-          ctx.i18n.t('scenes.copy.done', {
-            originalTitle: originalPack.title,
-            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title: escapeHTML(title),
-            link: `${ctx.config.stickerLinkPrefix}${name}`
-          }),
-          { parse_mode: 'HTML' }
-        )
-
-        ctx.scene.leave()
-        handleStart(ctx)
-      })()
-    } else {
-      ctx.scene.leave()
-      handleStart(ctx)
+        }),
+        { parse_mode: 'HTML' }
+      ).catch(() => { })
     }
+
+    await ctx.telegram.editMessageText(
+      message.chat.id, message.message_id, null,
+      ctx.i18n.t('scenes.copy.done', {
+        originalTitle: originalPack.title,
+        originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+        title: escapeHTML(title),
+        link: `${ctx.config.stickerLinkPrefix}${name}`
+      }),
+      { parse_mode: 'HTML' }
+    )
+
+    await ctx.replyWithHTML('👌', {
+      reply_markup: {
+        remove_keyboard: true
+      }
+    })
+
+    await ctx.scene.leave()
   }
 })
 

@@ -29,6 +29,9 @@ stage.hears(([
 ]), async (ctx) => {
   ctx.session.scene = null
   await ctx.reply(ctx.i18n.t('scenes.leave'), {
+    reply_markup: {
+      remove_keyboard: true
+    },
     reply_to_message_id: ctx.message.message_id
   })
   ctx.scene.leave()
@@ -38,13 +41,9 @@ stage.hears(([
 stage.hears(([
   '/start',
   '/packs',
-  '/inline',
-  '/anim',
-  '/video',
-  match('cmd.start.btn.packs'),
-  match('cmd.start.btn.inline'),
-  match('cmd.start.btn.anim'),
-  match('cmd.start.btn.video')
+  '/emoji',
+  '/lang',
+  '/donate'
 ]), async (ctx, next) => {
   await ctx.scene.leave()
   ctx.session.scene = null
