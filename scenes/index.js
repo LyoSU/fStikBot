@@ -46,8 +46,8 @@ stage.hears(([
   match('cmd.start.btn.anim'),
   match('cmd.start.btn.video')
 ]), async (ctx, next) => {
+  await ctx.scene.leave()
   ctx.session.scene = null
-  ctx.scene.leave()
   await next()
 })
 stage.middleware()
