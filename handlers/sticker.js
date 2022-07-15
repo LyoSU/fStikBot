@@ -119,7 +119,7 @@ module.exports = async (ctx) => {
         messageText = result.messageText
         replyMarkup = result.replyMarkup
 
-        if (!stickerSet.public && !stickerSet.animated && !stickerSet.inline) {
+        if (stickerSet?.public !== true && !stickerSet.animated && !stickerSet.inline) {
           const countStickers = await ctx.db.Sticker.count({
             stickerSet,
             deleted: false
