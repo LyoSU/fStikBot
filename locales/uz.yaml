@@ -250,6 +250,13 @@ scenes:
       not_found: |
         <b>Tizimda xatolik!</b>
         Ushbu stikerning asl nusxasini topolmadim.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Harakat bekor qilindi.
   btn:
