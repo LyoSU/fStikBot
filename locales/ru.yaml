@@ -275,7 +275,7 @@ scenes:
       enter_description: |
         <b>Enter description for your sticker pack:</b>
         <i>For a more precise category, you can use the hashtag symbol [#].</i>
-        <i>Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
+        <i>Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Выберите, для каких языков предназначен ваш cтикерпак:</b>
         <i>Вы можете выбрать несколько языков</i>
