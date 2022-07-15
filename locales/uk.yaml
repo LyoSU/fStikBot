@@ -126,6 +126,7 @@ callback:
       restore: '✅ Відновити'
       use_pack: Використовувати стікерпак
       search_gif: Пошук GIF
+      add_to_catalog: '🗂 Add to catalog'
     error:
       restore: |
         <b>Помилка!</b>
@@ -165,6 +166,11 @@ sticker:
       Прогрес: ${progress} / ${total}
 
       <i>Користувачі, що підтримували бота, отримають пріоритет у черзі (більше: /donate)</i>
+    catalog_offer: |
+      <b>😲 Wow, you made a great sticker pack!</b>
+
+      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
+      <i>It does not take a lot of time</i>
     error:
       stickers_too_much: |
         <b>Помилка!</b>
@@ -258,6 +264,44 @@ scenes:
       not_found: |
         <b>Error!</b>
         I could not find the pack.
+  catalog:
+    publish:
+      enter: |
+        You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
+        It can be found by any user of the bot by name, tags or filter
+        Because of this, more people will install your sticker pack
+
+        To get started, provide more information about your sticker pack to make it easier to find.
+      enter_description: |
+        <b>Enter description for your sticker pack:</b>
+        <i>For a more precise category, you can use the hashtag symbol [#].
+        Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
+      select_language: |
+        <b>Choose which languages your sticker pack is for:</b>
+        <i>You can select multiple languages</i>
+      button_all_languages: All languages
+      button_confirm_language: Confirm
+      set_safe: |
+        <b>Is your sticker pack safe for users?</b>
+        <i>That is, it does not contain erotica and other shocking content</i>
+      button_safe:
+        safe: Yes, it is safe
+        not_safe: No, it is not safe
+      confirm: |
+        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
+
+        <b>Description:</b> <i>${description}</i>
+
+        <b>Tags:</b> ${tags}
+        <b>Languages:</b> ${languages}
+        <b>Safe:</b> ${safe}
+      button_confirm: '✅ Confirm publication'
+      success: |
+        Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
+
+        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+
+        <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
   leave: |
     Дію скасовано.
   btn:
