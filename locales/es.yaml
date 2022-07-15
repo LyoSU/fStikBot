@@ -252,6 +252,13 @@ scenes:
       not_found: |
         <b>¡Error!</b>
         No pude encontrar el sticker original.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Acción cancelada.
   btn:
