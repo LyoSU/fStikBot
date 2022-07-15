@@ -1,6 +1,17 @@
 const Markup = require('telegraf/markup')
 const { addSticker, addStickerText } = require('../utils')
 
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document').catch(() => {})
 
@@ -107,6 +118,26 @@ module.exports = async (ctx) => {
 
         messageText = result.messageText
         replyMarkup = result.replyMarkup
+
+        if (!stickerSet.public && !stickerSet.animated && !stickerSet.inline) {
+          const countStickers = await ctx.db.Sticker.count({
+            stickerSet,
+            deleted: false
+          })
+
+          if ([10, 15, 40, 50, 80, 120].includes(countStickers)) {
+            setTimeout(async () => {
+              await ctx.replyWithHTML(ctx.i18n.t('sticker.add.catalog_offer', {
+                title: escapeHTML(stickerSet.title),
+                link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+              }), {
+                reply_markup: Markup.inlineKeyboard([
+                  Markup.callbackButton(ctx.i18n.t('callback.pack.btn.add_to_catalog'), `publish:${stickerSet.id}`)
+                ])
+              })
+            }, 1000 * 2)
+          }
+        }
       } else {
         ctx.session.previousSticker = {
           file: stickerFile

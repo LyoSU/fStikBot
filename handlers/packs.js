@@ -101,6 +101,12 @@ module.exports = async (ctx) => {
             searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
           }
 
+          let addToCatalogButton = []
+
+          if (!stickerSet.animated && !stickerSet.inline) {
+            addToCatalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.add_to_catalog'), `publish:${stickerSet.id}`)]
+          }
+
           let type = 'static'
           if (stickerSet.animated) type = 'animated'
           if (stickerSet.video) type = 'video'
@@ -116,7 +122,8 @@ module.exports = async (ctx) => {
               searchGifBtn,
               [
                 Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-              ]
+              ],
+              addToCatalogButton
             ]),
             parse_mode: 'HTML'
           })

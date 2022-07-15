@@ -13,6 +13,5 @@ module.exports = {
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
   handleStickerUpade: require('./sticker-update'),
-  handlePublish: require('./publish'),
   handleInlineQuery: require('./inline-query')
 }

@@ -11,13 +11,15 @@ const sceneNewPack = require('./pack-new')
 const originalSticker = require('./sricker-original')
 const packEdit = require('./admin-pack')
 const searchStickerSet = require('./pack-search')
+const packCatalog = require('./pack-catalog')
 
 const stage = new Stage([].concat(
   sceneNewPack,
   originalSticker,
   messaging,
   packEdit,
-  searchStickerSet
+  searchStickerSet,
+  packCatalog
 ))
 
 stage.use((ctx, next) => {
