@@ -273,9 +273,9 @@ scenes:
 
         Чтобы получить запущен, предоставьте дополнительную информацию о своем наборе наклеек, чтобы его было легче найти.
       enter_description: |
-        <b>Введите описание для вашего набора наклеек:</b>
-        <i>Для более точной категории вы можете использовать символ хэштега [#].
-        Пример: #аниме #мем #животные #милые</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
+        <b>Enter description for your sticker pack:</b>
+        <i>For a more precise category, you can use the hashtag symbol [#].</i>
+        <i>Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Выберите, для каких языков предназначен ваш cтикерпак:</b>
         <i>Вы можете выбрать несколько языков</i>
