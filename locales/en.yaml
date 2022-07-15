@@ -126,7 +126,7 @@ callback:
       restore: '✅ Restore'
       use_pack: Use sticker pack
       search_gif: Search GIF
-      add_to_catalog: 🗂 Add to catalog
+      add_to_catalog: '🗂 Add to catalog'
     error:
       restore: |
         <b>Error!</b>
@@ -276,7 +276,7 @@ scenes:
       enter_description: |
         <b>Enter description for your sticker pack:</b>
         <i>For a more precise category, you can use the hashtag symbol [#].
-        Example: #anime #meme #animals #cute</i>
+        Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
@@ -285,11 +285,9 @@ scenes:
       set_safe: |
         <b>Is your sticker pack safe for users?</b>
         <i>That is, it does not contain erotica and other shocking content</i>
-
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-
       confirm: |
         <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
 
@@ -298,9 +296,7 @@ scenes:
         <b>Tags:</b> ${tags}
         <b>Languages:</b> ${languages}
         <b>Safe:</b> ${safe}
-
-      button_confirm: ✅ Confirm publication
-
+      button_confirm: '✅ Confirm publication'
       success: |
         Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
 
