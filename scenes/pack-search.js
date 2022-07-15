@@ -40,9 +40,7 @@ searchStickerSet.on('text', async (ctx) => {
     }
 
     if (packList.length > 0) {
-      return ctx.replyWithHTML(ctx.i18n.t('scenes.search.result', {
-        packs: packList.join('\n')
-      }))
+      return ctx.replyWithHTML(packList.join('\n'))
     }
   }
 
