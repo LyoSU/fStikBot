@@ -252,6 +252,13 @@ scenes:
       not_found: |
         <b>səhv!</b>
         Bu stikerin əslini tapa bilmədim.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Fəaliyyət uğurla ləğv edildi.
   btn:
