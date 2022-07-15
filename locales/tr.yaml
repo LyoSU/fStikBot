@@ -271,9 +271,9 @@ scenes:
 
         To get started, provide more information about your sticker pack to make it easier to find.
       enter_description: |
-        <b>Çıkartma paketiniz için açıklama girin:</b>
-        <i>Daha kesin bir kategori için hashtag simgesini [#] kullanabilirsiniz.</i>
-        <i>Örnek: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
+        <b>Enter description for your sticker pack:</b>
+        <i>For a more precise category, you can use the hashtag symbol [#].</i>
+        <i>Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
