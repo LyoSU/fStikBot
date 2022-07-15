@@ -275,8 +275,8 @@ scenes:
         To get started, provide more information about your sticker pack to make it easier to find.
       enter_description: |
         <b>Enter description for your sticker pack:</b>
-        <i>For a more precise category, you can use the hashtag symbol [#].
-        Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
+        <i>For a more precise category, you can use the hashtag symbol [#].</i>
+        <i>Example: #anime #meme #animals #cute</i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
