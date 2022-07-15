@@ -251,6 +251,13 @@ scenes:
     error:
       not_found: |
         Мені не вдалося знайти оригінал цього стікера.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Дію скасовано.
   btn:
