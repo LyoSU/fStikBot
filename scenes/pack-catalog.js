@@ -225,7 +225,7 @@ catalogPublishConfirm.enter(async (ctx) => {
     link: `${ctx.config.stickerLinkPrefix}${publish.stickerSet.name}`,
     title: escapeHTML(publish.stickerSet.title),
     description: escapeHTML(publish.description),
-    tags: tags.join(' '),
+    tags: tags.length > 0 ? tags.join(', ') : '-',
     languages: languages.join(', '),
     safe: publish.safe ? ctx.i18n.t('scenes.catalog.publish.button_safe.safe') : ctx.i18n.t('scenes.catalog.publish.button_safe.not_safe')
   })
@@ -239,6 +239,16 @@ catalogPublishConfirm.enter(async (ctx) => {
         ctx.i18n.t('scenes.btn.cancel')
       ]
     ]).resize()
+  })
+
+  ctx.session.scene.publish = null
+
+  ctx.scene.leave()
+
+  await ctx.replyWithHTML('👌', {
+    reply_markup: {
+      remove_keyboard: true
+    }
   })
 })
 
