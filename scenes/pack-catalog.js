@@ -242,16 +242,6 @@ catalogPublishConfirm.enter(async (ctx) => {
       ]
     ]).resize()
   })
-
-  ctx.session.scene.publish = null
-
-  ctx.scene.leave()
-
-  await ctx.replyWithHTML('👌', {
-    reply_markup: {
-      remove_keyboard: true
-    }
-  })
 })
 
 catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), async (ctx) => {
@@ -268,6 +258,16 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
   await publish.stickerSet.save()
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.success'))
+
+  ctx.session.scene.publish = null
+
+  ctx.scene.leave()
+
+  await ctx.replyWithHTML('👌', {
+    reply_markup: {
+      remove_keyboard: true
+    }
+  })
 })
 
 module.exports = [
