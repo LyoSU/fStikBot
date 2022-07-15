@@ -252,6 +252,13 @@ scenes:
       not_found: |
         <b>Ошибка!</b>
         У меня не получилось найти оригинал этого стикера.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Действие отменено.
   btn:
