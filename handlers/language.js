@@ -10,9 +10,9 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
-module.exports = async (ctx) => {
-  const localseFile = fs.readdirSync('./locales/')
+const localseFile = fs.readdirSync('./locales/')
 
+module.exports = async (ctx) => {
   const locales = {}
 
   localseFile.forEach((fileName) => {

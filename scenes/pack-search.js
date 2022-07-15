@@ -29,22 +29,24 @@ searchStickerSet.on('text', async (ctx) => {
     .limit(100)
 
   if (stickerSet?.length > 0) {
-    const packList = stickerSet.map((set) => {
-      return `<a href="${ctx.config.stickerLinkPrefix}${set.name}">${escapeHTML(set.title)}</a>`
-    })
+    const packList = []
 
-    await ctx.replyWithHTML(packList.join('\n'), {
-      reply_markup: Markup.keyboard([
-        [
-          ctx.i18n.t('scenes.btn.cancel')
-        ]
-      ]).resize()
-    })
-  } else {
-    await ctx.replyWithHTML(ctx.i18n.t('scenes.search.error.not_found'), {
-      reply_to_message_id: ctx.message.message_id
-    })
+    for (const pack of stickerSet) {
+      const stickerSetInfo = await ctx.telegram.getStickerSet(pack.name).catch(() => null)
+
+      if (stickerSetInfo && stickerSetInfo.stickers.length > 0) {
+        packList.push(`<a href="${ctx.config.stickerLinkPrefix}${pack.name}">${escapeHTML(pack.title)}</a>`)
+      }
+    }
+
+    if (packList.length > 0) {
+      return ctx.replyWithHTML(packList.join('\n'))
+    }
   }
+
+  return ctx.replyWithHTML(ctx.i18n.t('scenes.search.error.not_found'), {
+    reply_to_message_id: ctx.message.message_id
+  })
 })
 
 module.exports = [searchStickerSet]
