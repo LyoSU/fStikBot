@@ -206,8 +206,8 @@ scenes:
       <b>Обычный</b> - статичные (не двигаются), растровые, формат файла - перед добавлением PNG (бот занимается обработкой), после добавления - WEBP.
       Пример обычного стикерпака - t.me/addstickers/Animals
 
-      <b>Анимированные</b> - анимированные, векторные (имеют точное описание объектов внутри файла, за счет чего отображаются четкими в любом масштабе), формат файла - TGS, разновидность формата Lottie.
-      Пример анимированного стикерпака - t.me/addstickers/IsabelleShizue
+      <b>Анимированные</b> - анимированные, векторные (имеют точное описание объектов внутри файла, за счет чего отображаются четкими в любом масштабе), формат файла - TGS, разновидность формата Lottie. 
+      Пример анимированного стикерпака - t.me/addstickers/IsabelleShizue 
 
       <b>Видео</b> - анимированные, растровые, формат файла - WEBM.
       Пример видео стикерпака - t.me/addstickers/TheMascot
@@ -275,7 +275,7 @@ scenes:
       enter_description: |
         <b>Enter description for your sticker pack:</b>
         <i>For a more precise category, you can use the hashtag symbol [#].</i>
-        <i>Example: #anime #meme #animals #cute</i>
+        <i>Example: #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Выберите, для каких языков предназначен ваш cтикерпак:</b>
         <i>Вы можете выбрать несколько языков</i>
