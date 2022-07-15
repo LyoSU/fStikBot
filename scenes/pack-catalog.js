@@ -66,35 +66,37 @@ catalogEnterDescription.on('text', async (ctx) => {
 
   ctx.session.scene.publish.description = text.slice(0, 512)
 
-  const hashtags = []
-  let currnetHashtag = ''
-  let currentEntity = null
+  if (entities?.length > 0) {
+    const hashtags = []
+    let currnetHashtag = ''
+    let currentEntity = null
 
-  // find hashtags in text via entities
-  for (let offset = 0; offset < text.length; offset++) {
-    const entity = entities.find(entity => entity.offset === offset)
+    // find hashtags in text via entities
+    for (let offset = 0; offset < text.length; offset++) {
+      const entity = entities.find(entity => entity.offset === offset)
 
-    if (entity?.type === 'hashtag') {
-      currentEntity = entity
-    }
-
-    if (currentEntity) {
-      if (text[offset] !== '#') {
-        currnetHashtag += text[offset]
+      if (entity?.type === 'hashtag') {
+        currentEntity = entity
       }
 
-      if (currentEntity.length === currnetHashtag.length + 1) {
-        hashtags.push(currnetHashtag)
-        currnetHashtag = ''
-        currentEntity = null
+      if (currentEntity) {
+        if (text[offset] !== '#') {
+          currnetHashtag += text[offset]
+        }
+
+        if (currentEntity.length === currnetHashtag.length + 1) {
+          hashtags.push(currnetHashtag)
+          currnetHashtag = ''
+          currentEntity = null
+        }
       }
     }
+
+    // only unique hashtags
+    const uniqueHashtags = [...new Set(hashtags)]
+
+    ctx.session.scene.publish.tags = uniqueHashtags
   }
-
-  // only unique hashtags
-  const uniqueHashtags = [...new Set(hashtags)]
-
-  ctx.session.scene.publish.tags = uniqueHashtags
 
   return ctx.scene.enter('catalogSelectLanguage')
 })
