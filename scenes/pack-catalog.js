@@ -217,15 +217,17 @@ catalogPublishConfirm.enter(async (ctx) => {
 
   const tags = []
 
-  publish.tags.forEach((tag) => {
-    tags.push(`#${tag}`)
-  })
+  if (publish.tags && publish.tags.length > 0) {
+    publish.tags.forEach((tag) => {
+      tags.push(`#${tag}`)
+    })
+  }
 
   const resultText = ctx.i18n.t('scenes.catalog.publish.confirm', {
     link: `${ctx.config.stickerLinkPrefix}${publish.stickerSet.name}`,
     title: escapeHTML(publish.stickerSet.title),
     description: escapeHTML(publish.description),
-    tags: tags.length > 0 ? tags.join(', ') : '-',
+    tags: tags.join(' '),
     languages: languages.join(', '),
     safe: publish.safe ? ctx.i18n.t('scenes.catalog.publish.button_safe.safe') : ctx.i18n.t('scenes.catalog.publish.button_safe.not_safe')
   })
