@@ -1,6 +1,17 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 const searchStickerSet = new Scene('searchStickerSet')
 
 searchStickerSet.enter(async (ctx) => {
@@ -19,7 +30,7 @@ searchStickerSet.on('text', async (ctx) => {
 
   if (stickerSet?.length > 0) {
     const packList = stickerSet.map((set) => {
-      return `<a href="${ctx.config.stickerLinkPrefix}${set.name}">${set.title}</a>`
+      return `<a href="${ctx.config.stickerLinkPrefix}${set.name}">${escapeHTML(set.title)}</a>`
     })
 
     await ctx.replyWithHTML(packList.join('\n'), {
