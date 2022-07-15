@@ -250,6 +250,13 @@ scenes:
       not_found: |
         <b>Kesalahan!</b>
         Saya tidak dapat menemukan stiker aslinya.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Aksi dibatalkan.
   btn:
