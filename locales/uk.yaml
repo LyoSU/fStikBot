@@ -275,7 +275,7 @@ scenes:
       enter_description: |
         <b>Введіть опис вашого стікерпака</b>
         <i>Для більш точної категорії ви можете використати символ хештегу [#].
-        Приклад: #anime #meme #animals #милий</i> #anime #meme #animals #cute</i>
+        Приклад: #anime #меми #animals #милота</i> #anime #meme #animals #cute</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Виберіть, для яких мов призначено ваш набір наклейок:</b>
         <i>Ви можете вибрати кілька мов</i>
