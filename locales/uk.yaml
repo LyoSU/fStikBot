@@ -259,7 +259,7 @@ scenes:
         Мені не вдалося знайти оригінал цього стікера.
   search:
     enter: |
-      Send query to search sticker pack
+      Надіслати запит для пошуку набору наклейок
     error:
       not_found: |
         <b>Помилка!</b>
@@ -273,9 +273,9 @@ scenes:
 
         Щоб отримати розпочато, надайте більше інформації про свій набір наклейок, щоб його було легше знайти.
       enter_description: |
-        <b>Enter description for your sticker pack:</b>
-        <i>For a more precise category, you can use the hashtag symbol [#].</i>
-        <i>Example: #anime #meme #animals #cute</i>
+        <b>Введіть опис вашого стікерпака</b>
+        <i>Для більш точної категорії ви можете використати символ хештегу [#].</i>
+        <i>Приклад: #anime #meme #animals #милий</i> #anime #meme #animals #cute</i>
       select_language: |
         <b>Виберіть, для яких мов призначено ваш набір наклейок:</b>
         <i>Ви можете вибрати кілька мов</i>
