@@ -249,6 +249,13 @@ scenes:
       not_found: |
         <b>Hata!</b>
         Orijinal çıkartmayı bulamıyorum.
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
   leave: |
     Eylem iptal edildi!
   btn:
