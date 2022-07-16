@@ -103,7 +103,12 @@ module.exports = async (ctx) => {
 
           let addToCatalogButton = []
 
-          if (!stickerSet.animated && !stickerSet.inline) {
+          const stickersCount = await ctx.db.Sticker.countDocuments({
+            stickerSet: stickerSet.id,
+            deleted: false
+          })
+
+          if (!stickerSet.animated && !stickerSet.inline && stickersCount >= 10) {
             addToCatalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.add_to_catalog'), `publish:${stickerSet.id}`)]
           }
 
@@ -197,15 +202,6 @@ module.exports = async (ctx) => {
     const title = ctx.session.userInfo.inlineType !== 'gif' ? 'GIF' : '✅ GIF'
     keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
   }
-
-  // keyboardMarkup.push([
-  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.static'), 'packs:static'),
-  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.animated'), 'packs:animated'),
-  // ])
-  // keyboardMarkup.push([
-  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.video'), 'packs:video'),
-  //   Markup.callbackButton(ctx.i18n.t('cmd.packs.types.inline'), 'packs:inline')
-  // ])
 
   const stickerSetsCount = await ctx.db.StickerSet.count(query)
 
