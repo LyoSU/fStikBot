@@ -166,7 +166,7 @@ bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('search', (ctx) => ctx.scene.enter('searchStickerSet'))
-bot.action(/publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
+bot.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
