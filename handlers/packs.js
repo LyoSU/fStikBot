@@ -90,7 +90,7 @@ module.exports = async (ctx) => {
             parse_mode: 'HTML'
           })
         } else {
-          let searchGifBtn = []
+          let searchGifButton = []
 
           if(stickerSet.video) {
             let inlineData = ''
@@ -98,18 +98,23 @@ module.exports = async (ctx) => {
               inlineData = stegcloak.hide('{gif}', '', ' : ')
             }
 
-            searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
+            searchGifButton = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
           }
 
-          let addToCatalogButton = []
+          let catalogButton = []
 
           const stickersCount = await ctx.db.Sticker.countDocuments({
             stickerSet: stickerSet.id,
             deleted: false
           })
 
-          if (!stickerSet.animated && !stickerSet.inline && stickersCount >= 10) {
-            addToCatalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.add_to_catalog'), `publish:${stickerSet.id}`)]
+          if (stickerSet.public) {
+            catalogButton = [
+              Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_remove'), `catalog:remove:${stickerSet.id}`),
+              Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `publish:${stickerSet.id}`)
+            ]
+          } else if (!stickerSet.animated && !stickerSet.inline && stickersCount >= 10) {
+            catalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.add_to_catalog'), `catalog:publish:${stickerSet.id}`)]
           }
 
           let type = 'static'
@@ -124,11 +129,11 @@ module.exports = async (ctx) => {
               [
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
               ],
-              searchGifBtn,
+              searchGifButton,
+              catalogButton,
               [
                 Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-              ],
-              addToCatalogButton
+              ]
             ]),
             parse_mode: 'HTML'
           })

@@ -221,6 +221,10 @@ catalogPublishConfirm.enter(async (ctx) => {
     publish.tags.forEach((tag) => {
       tags.push(`#${tag}`)
     })
+
+    if (tags <= 0) {
+      tags.push(ctx.i18n.t('scenes.catalog.publish.no_tags'))
+    }
   }
 
   const resultText = ctx.i18n.t('scenes.catalog.publish.confirm', {
