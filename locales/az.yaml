@@ -127,6 +127,8 @@ callback:
       use_pack: Использовать стикерпак
       search_gif: Search GIF
       catalog_add: '🗂 Add to catalog'
+      catalog_edit: '📝 Edit in catalog'
+      catalog_delete: '❌ Delete from catalog'
     error:
       restore: |
         <b>XƏTA!</b>
