@@ -126,8 +126,8 @@ callback:
       use_pack: Использовать стикерпак
       search_gif: Поиск GIF
       catalog_add: '🗂 Добавить в каталог'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '❌ Delete from catalog'
+      catalog_edit: '📝 Изменить в каталоге'
+      catalog_delete: '❌ Удалить из каталога'
     error:
       restore: |
         <b>Ошибка!</b>
@@ -290,7 +290,7 @@ scenes:
         safe: Да, он безопасен
         not_safe: Нет, он небезопасен
       no_tags: |
-        were not specified
+        не были указаны
       confirm: |
         <b>Подтвердите публикацию стикерпака "<a href="${link}">${title}</a>"</b>
 
