@@ -128,7 +128,7 @@ callback:
       search_gif: Пошук GIF
       catalog_add: '🗂 Додати до каталогу'
       catalog_edit: '📝 Редагувати в каталозі'
-      catalog_delete: '🗑 Видалити з каталогу'
+      catalog_delete: '🗑 Delete from catalog'
     error:
       restore: |
         <b>Помилка!</b>
