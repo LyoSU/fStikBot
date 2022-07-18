@@ -128,7 +128,7 @@ callback:
       search_gif: Search GIF
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '❌ Delete from catalog'
+      catalog_remove: '❌ Delete from catalog'
     error:
       restore: |
         <b>Error!</b>
