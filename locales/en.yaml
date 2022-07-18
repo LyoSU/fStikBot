@@ -126,9 +126,7 @@ callback:
       restore: '✅ Restore'
       use_pack: Use sticker pack
       search_gif: Search GIF
-      catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '❌ Delete from catalog'
+      add_to_catalog: '🗂 Add to catalog'
     error:
       restore: |
         <b>Error!</b>
