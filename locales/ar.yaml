@@ -126,7 +126,7 @@ callback:
       restore: '✅ Восстановить'
       use_pack: Использовать стикерпак
       search_gif: Search GIF
-      add_to_catalog: '🗂 Add to catalog'
+      catalog_add: '🗂 Add to catalog'
     error:
       restore: |
         <b>Ошибка!</b>

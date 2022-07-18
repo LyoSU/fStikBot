@@ -111,10 +111,10 @@ module.exports = async (ctx) => {
           if (stickerSet.public) {
             catalogButton = [
               Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_remove'), `catalog:remove:${stickerSet.id}`),
-              Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `publish:${stickerSet.id}`)
+              Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`)
             ]
           } else if (!stickerSet.animated && !stickerSet.inline && stickersCount >= 10) {
-            catalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.add_to_catalog'), `catalog:publish:${stickerSet.id}`)]
+            catalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]
           }
 
           let type = 'static'
