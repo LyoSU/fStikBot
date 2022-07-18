@@ -126,7 +126,9 @@ callback:
       restore: '✅ Sıfırla'
       use_pack: Çıkartma paketini kullan
       search_gif: GIF ara
-      add_to_catalog: '🗂 Add to catalog'
+      catalog_add: '🗂 Add to catalog'
+      catalog_edit: '📝 Edit in catalog'
+      catalog_delete: '❌ Delete from catalog'
     error:
       restore: |
         <b>Hata!</b>
