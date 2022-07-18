@@ -222,7 +222,7 @@ catalogPublishConfirm.enter(async (ctx) => {
       tags.push(`#${tag}`)
     })
 
-    if (tags <= 0) {
+    if (tags.length <= 0) {
       tags.push(ctx.i18n.t('scenes.catalog.publish.no_tags'))
     }
   }
