@@ -126,7 +126,9 @@ callback:
       restore: '✅ 恢复'
       use_pack: 使用贴纸包
       search_gif: 搜索 GIF
-      add_to_catalog: '🗂 Add to catalog'
+      catalog_add: '🗂 Add to catalog'
+      catalog_edit: '📝 Edit in catalog'
+      catalog_delete: '❌ Delete from catalog'
     error:
       restore: |
         <b>错误！</b>
