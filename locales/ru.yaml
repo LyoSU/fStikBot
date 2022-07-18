@@ -127,7 +127,7 @@ callback:
       search_gif: Поиск GIF
       catalog_add: '🗂 Добавить в каталог'
       catalog_edit: '📝 Изменить в каталоге'
-      catalog_delete: '🗑 Delete from catalog'
+      catalog_delete: '🗑 Удалить из каталога'
     error:
       restore: |
         <b>Ошибка!</b>
