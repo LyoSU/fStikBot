@@ -126,7 +126,9 @@ callback:
       restore: '✅ Mengembalikan'
       use_pack: Gunakan paket stiker
       search_gif: Cari GIF
-      add_to_catalog: '🗂 Add to catalog'
+      catalog_add: '🗂 Add to catalog'
+      catalog_edit: '📝 Edit in catalog'
+      catalog_delete: '❌ Delete from catalog'
     error:
       restore: |
         <b>Error!</b>
