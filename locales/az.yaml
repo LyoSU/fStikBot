@@ -288,6 +288,8 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
+      no_tags: |
+        were not specified
       confirm: |
         <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
 
