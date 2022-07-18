@@ -287,6 +287,8 @@ scenes:
       button_safe:
         safe: Так, безпечний
         not_safe: Ні, він не безпечний
+      no_tags: |
+        were not specified
       confirm: |
         <b>Підтвердити публікацію стікерпака "<a href="${link}">${title}</a>"</b>
 
