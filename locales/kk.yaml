@@ -1,69 +1,69 @@
 ---
-language_name: '🇺🇸 English'
+language_name: '🇰🇿Қазақ'
 ratelimit: Not so often!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Сәлем, <b>${name}</b>!
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      Маған стикер, GIF, видео, файл немесе фото жіберсеңіз, мен оны стикер пакқа қосып қоямын.
+      Стикерпактан өшіремін десеңіз, оны қайтадан жіберіңіз
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - стикерпактарымды көру
+      /new - жаңа стикерпак құру
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /lang - change language
+      /original - стикердің түпнұсқасын табу
+      /restore - стикерпакті қалпына келтіру
+      /copy - стикерпакті көшіру
+      /emoji - ағымдағы стикерпактың эмодзи-суффискіни өзгерту
+      /lang - тіл ауыстыру
 
-      /donate - support the developer
+      /donate - құрастырушыны қолдау
 
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Developer channel: @LyBlog
     commands:
-      start: '📜 Start menu'
-      packs: '📁 Sticker packs'
-      new: '📥 Create a new sticker pack'
-      original: '🔍 Find original sticker'
-      restore: '🔀 Restore a sticker pack'
-      copy: '📋 Copy a sticker pack'
-      emoji: '📝 Change emoji suffix'
-      lang: '🌐 Change language'
-      donate: '☕️ Support the developer'
+      start: '📜 Бастапқы мәзір'
+      packs: '📁 Стикерпактарым'
+      new: '📥 Жаңа стикерпак құру'
+      original: '🔍 Стикердің түпнұсқасын табу'
+      restore: '🔀 Стикерпакті қалпына келтіру'
+      copy: '📋 Стикерпакті көшіру'
+      emoji: '📝 Эмодзи-суффискін өзгерту'
+      lang: '🌐 Тіл ауыстыру'
+      donate: '☕️ Құрастырушыны қолдау'
     btn:
-      new: '📥 Create new'
+      new: '📥 Жаңасын құру'
   inline:
-    switch_pm: Select sticker pack
+    switch_pm: Стикерпак таңдау
   restore: |
-    <b>🗃 Sticker pack restoration</b>
+    <b>🗃 Стикерпакты қалпына ү</b>
 
-    If you previously created a sticker pack through this bot and cannot find it in the list of your sticker packs, then you can restore it back.
+    Бұрын осы бот арқылы стикерпак құрып қазір оны стикерпак тізімінде таба алмай тұрсаңыз, оны қалпына келтіруге болады.
 
-    <b>To do this, you need to perform several actions:</b>
-    1. Open @Stickers bot
-    2. Send <code>/packstats</code> command
-    3. Find and choose the required sticker pack
-    4. Forward the received message to the bot
-    5. If restoration is successful - bot informs about it
+    <b>Ол үшін, келесідегідей әрекеттерді орындау керек: </b>
+    1. @Stickers ботын ашыңыз
+    2. <code>/packstats</code> командасын жіберіңіз
+    3. Керек стикерпакты тауып, таңдаңыз
+    4. Келген хабарламаны ботқа жөнелтіңіз
+    5. Қалпына келтіру сәтті орындалса бот хабар береді
   copy: |
-    <b>🗄 Copy sticker pack</b>
+    <b>🗄 Стикерпак көшіру</b>
 
-    If you supported the bot, copying all the stickers from any sticker pack with a new name will be available.
-    In order to copy the sticker pack you just need to send a link to it to the bot.
+    Ботты қолдаған болсаңыз, жаңа ат қойып кез келген стикерпактан барлық стикерді көшіру мүмкіндігі пайда болады.
+    Стикерпакты көшіру үшін сілтемесін осы ботқа жіберіңіз.
   packs:
     info: |
-      <b>🌟 Sticker packs:</b>
+      <b>🌟 Стикерпактарыңыз:</b>
     types:
-      static: '🌟 Static'
-      animated: '✨ Animated (vector)'
-      video: '📹 Video'
-      inline: '💫 Inline'
+      static: '🌟 Статикалық'
+      animated: '✨ Анимацияланған (вектор)'
+      video: '📹 Видео'
+      inline: '💫 Инлайн'
     empty: |
-      <b>You have no sticker packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline sticker pack
+      <b>Әзірше еш стикерпагыңыз жоқ көрінеді</b>
+      Құраймын десеңіз, /new командасын жіберіңіз
+    inline_title: Инлайн стикерпак
   club: |
     ☕️ Supporting a bot development
 
