@@ -46,7 +46,8 @@ const stickerSetsSchema = mongoose.Schema({
     default: false
   },
   publishDate: {
-    type: Date
+    type: Date,
+    index: true
   },
   about: {
     description: String,
@@ -62,6 +63,7 @@ const stickerSetsSchema = mongoose.Schema({
 })
 
 stickerSetsSchema.index({
+  public: 1,
   'about.description': 'text',
   title: 'text'
 }, {
