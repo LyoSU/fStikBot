@@ -258,6 +258,7 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
     safe: publish.safe
   }
   publish.stickerSet.public = true
+  publish.stickerSet.publishDate = new Date()
 
   await publish.stickerSet.save()
 
