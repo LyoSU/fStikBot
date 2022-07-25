@@ -258,7 +258,7 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
     safe: publish.safe
   }
 
-  if (publish.stickerSet.public !== true) {
+  if (!publish.stickerSet.publishDate) {
     publish.stickerSet.publishDate = new Date()
   }
 
