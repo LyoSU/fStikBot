@@ -18,6 +18,7 @@ const {
   handleSelectPack,
   handleHidePack,
   handleRestorePack,
+  handleCatalog,
   handleCopyPack,
   handleLanguage,
   handleEmoji,
@@ -160,6 +161,7 @@ bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoos
 bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
+bot.command('catalog', handleCatalog)
 bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))

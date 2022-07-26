@@ -10,6 +10,7 @@ module.exports = {
   handleHidePack: require('./pack-hide'),
   handleRestorePack: require('./pack-restore'),
   handleCopyPack: require('./pack-copy'),
+  handleCatalog: require('./catalog'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
   handleStickerUpade: require('./sticker-update'),
