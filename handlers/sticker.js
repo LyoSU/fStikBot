@@ -125,7 +125,7 @@ module.exports = async (ctx) => {
             deleted: false
           })
 
-          if ([10, 15, 40, 50, 80, 120].includes(countStickers)) {
+          if ([10, 15, 30, 50, 80, 120].includes(countStickers)) {
             setTimeout(async () => {
               await ctx.replyWithHTML(ctx.i18n.t('sticker.add.catalog_offer', {
                 title: escapeHTML(stickerSet.title),
