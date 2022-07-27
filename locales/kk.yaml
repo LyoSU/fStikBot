@@ -1,69 +1,69 @@
 ---
-language_name: '🇸🇦 عربي'
-ratelimit: ليس في الكثير من الاحيان!
+language_name: '🇰🇿Қазақ'
+ratelimit: Not so often!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Сәлем, <b>${name}</b>!
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      Маған стикер, GIF, видео, файл немесе фото жіберсеңіз, мен оны стикер пакқа қосып қоямын.
+      Стикерпактан өшіремін десеңіз, оны қайтадан жіберіңіз
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - стикерпактарымды көру
+      /new - жаңа стикерпак құру
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /lang - change language
+      /original - стикердің түпнұсқасын табу
+      /restore - стикерпакті қалпына келтіру
+      /copy - стикерпакті көшіру
+      /emoji - ағымдағы стикерпактың эмодзи-суффискіни өзгерту
+      /lang - тіл ауыстыру
 
-      /donate - support the developer
+      /donate - құрастырушыны қолдау
 
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Developer channel: @LyBlog
     commands:
-      start: '📜 Start menu'
-      packs: '📁 Sticker packs'
-      new: '📥 Create a new sticker pack'
-      original: '🔍 Find original sticker'
-      restore: '🔀 Restore a sticker pack'
-      copy: '📋 Copy a sticker pack'
-      emoji: '📝 Change emoji suffix'
-      lang: '🌐 Change language'
-      donate: '☕️ Support the developer'
+      start: '📜 Бастапқы мәзір'
+      packs: '📁 Стикерпактарым'
+      new: '📥 Жаңа стикерпак құру'
+      original: '🔍 Стикердің түпнұсқасын табу'
+      restore: '🔀 Стикерпакті қалпына келтіру'
+      copy: '📋 Стикерпакті көшіру'
+      emoji: '📝 Эмодзи-суффискін өзгерту'
+      lang: '🌐 Тіл ауыстыру'
+      donate: '☕️ Құрастырушыны қолдау'
     btn:
-      new: '📥 Create new'
+      new: '📥 Жаңасын құру'
       catalog: '🗂 Open catalog'
   inline:
-    switch_pm: حدد حزمة ملصقات
+    switch_pm: Стикерпак таңдау
   restore: |
-    <b>🗃 Восстановление стикерпака</b>
+    <b>🗃 Стикерпакты қалпына ү</b>
 
-    Если вы ранее создавали стикерпак через этого бота и не можете его найти в списке своих стикерпаков, то вы можете его восстановить обратно.
+    Бұрын осы бот арқылы стикерпак құрып қазір оны стикерпак тізімінде таба алмай тұрсаңыз, оны қалпына келтіруге болады.
 
-    <b>Для этого необходимо выполнить несколько действий:</b>
-    1. Открыть бота @Stickers
-    2. Отправить ему команду <code>/packstats</code>
-    3. Найти и выбрать необходимый стикерпак
-    4. Полученное сообщение переслать боту
-    5. При успешном восстановлении, бот сообщит об этом
+    <b>Ол үшін, келесідегідей әрекеттерді орындау керек: </b>
+    1. @Stickers ботын ашыңыз
+    2. <code>/packstats</code> командасын жіберіңіз
+    3. Керек стикерпакты тауып, таңдаңыз
+    4. Келген хабарламаны ботқа жөнелтіңіз
+    5. Қалпына келтіру сәтті орындалса бот хабар береді
   copy: |
-    <b>🗄 Копирование стикерпака</b>
+    <b>🗄 Стикерпак көшіру</b>
 
-    Если вы поддержали бота, будет доступно копирование всех стикеров из любого стикерпака с новым именем.
-    Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
+    Ботты қолдаған болсаңыз, жаңа ат қойып кез келген стикерпактан барлық стикерді көшіру мүмкіндігі пайда болады.
+    Стикерпакты көшіру үшін сілтемесін осы ботқа жіберіңіз.
   packs:
     info: |
-      <b>🌟 Стикерпаки:</b>
+      <b>🌟 Стикерпактарыңыз:</b>
     types:
-      static: '🌟 Static'
-      animated: '✨ Animated (vector)'
-      video: '📹 Video'
-      inline: '💫 Inline'
+      static: '🌟 Статикалық'
+      animated: '✨ Анимацияланған (вектор)'
+      video: '📹 Видео'
+      inline: '💫 Инлайн'
     empty: |
-      <b>У тебя нет ещё ни одного стикерпака.</b>
-      Для создания напиши /new
+      <b>Әзірше еш стикерпагыңыз жоқ көрінеді</b>
+      Құраймын десеңіз, /new командасын жіберіңіз
     inline_title: Инлайн стикерпак
   club: |
     ☕️ Supporting a bot development
@@ -92,8 +92,8 @@ cmd:
 callback:
   pack:
     answerCbQuer:
-      hidden: Стикерпак успешно скрыт
-      restored: Стикерпак успешно восстановлен
+      hidden: Sticker pack successfully hidden
+      restored: Sticker pack successfully restored
     set_pack:
       static: |
         Selected static sticker pack <a href="${link}">${title}</a>
@@ -116,41 +116,41 @@ callback:
 
         <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
-      Выбран <u>${title}</u> стикерпак
+      Selected <u>${title}</u> stickerpack
 
-      Для его использования напишите в любом чате <code>@${botUsername} </code>и пробел
-      Также можно его использовать нажав кнопку снизу
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+      To use it, write in any chat <code>@${botUsername} </code>and space
+      You can also use it by pressing the button below
+    hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
+    restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
-      use_pack: Использовать стикерпак
+      hide: '❌ Hide sticker pack'
+      restore: '✅ Restore'
+      use_pack: Use sticker pack
       search_gif: Search GIF
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Edit in catalog'
       catalog_delete: '🗑 Delete from catalog'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>Error!</b>
+        Cannot restore sticker pack.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>Error!</b>
+        Cannot find sticker pack.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: The sticker was successfully removed from the sticker pack.
+      restored: The sticker was successfully saved to the current sticker pack.
+    delete: The sticker was successfully removed from the sticker pack.
+    restored: The sticker was successfully saved to the current sticker pack.
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 Delete'
+      copy: '🌟 Copy'
+      restore: '✅ Restore'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        ERROR!
+        Cannot find a sticker.
 sticker:
   add:
     ok: |
@@ -159,7 +159,7 @@ sticker:
 
       <i>You can also edit it through the official @Stickers bot bot</i>
     ok_inline: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
@@ -200,8 +200,8 @@ sticker:
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
-    common: Обычный
-    animated: Анимированный
+    common: Common
+    animated: Animated
     video: Video
     inline: Inline
     pack_type: |
@@ -218,13 +218,13 @@ scenes:
 
       <b>Inline</b> - access to any files through the inline mode of the bot.
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Enter new stickers pack name:</b>
+      <i>You can choose random name on button.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only latin letters, numbers and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals</i>
+      <i>You can choose random short link on button.</i>
     ok: |
       Sticker pack <a href="${link}">${title}</a> successfully created!
 
@@ -234,20 +234,20 @@ scenes:
 
       <i>You can also edit it through the official @Stickers bot bot</i>
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Name cannot be greater than ${max} symbols.
+      name_long: Address cannot be greater than ${max} symbols.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: That address cannot be used.
+        name_occupied: This address is already taken.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      I can copy this sticker pack, for this you need to create a new sticker pack.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Copying sticker pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
-      Прогресс: ${current}/${total}
+      Progress: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      Sticker pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
     error:
       premium: |
         <b>Error!</b>
@@ -256,11 +256,11 @@ scenes:
         You can do this by sending the /donate command.
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Send the sticker that was added through this bot and I will show you its original sticker.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>Error!</b>
+        I could not find the original sticker.
   search:
     enter: |
       Send query to search sticker pack
@@ -308,16 +308,16 @@ scenes:
 
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
   leave: |
-    Действие отменено.
+    Action canceled.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Cancel'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
+  not_allowed: This section is not for you! 😡
+  info: Admin panel
   menu:
-    messaging: '✉️ Рассылка'
+    messaging: '✉️ Newsletter'
     pack: '📦 Стікерпаки'
-    admin: '😎 Админ-панель'
+    admin: '😎 Admin panel'
   premium:
     changed: |
       <b>Premium status changed:</b>
@@ -327,83 +327,83 @@ admin:
       User not found.
   messaging:
     info: |
-      ✉️ Рассылки
+      ✉️ Newsletter
     menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
+      create: Create
+      scheduled: Planned
+      archive: Archived
     create:
-      name: Заголовок
-      send_message: Отправь текст или медиа
-      date: 'Укажи дату публикации <b>дд.мм чч:мм</b>'
+      name: Title
+      send_message: Send text or media
+      date: 'Indicate publication date <b>dd.mm hh: mm</b>'
       date_format: |
-        Сообщение будет отправлено:
+        Message will be sent:
           ${date}
       date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
+        Invalid date format
+        Specify the date in <b>dd.mm hh: mm</b>
+      add_url: Add link
+      clear_url: Remove link
       add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
+        Submit Button List
+        <pre>Button Text 1 - http://www.example.com/ | Button 2 text - http://www.example2.com/
+        Button 3 text - http://www.example3.com/
         </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
+        $ {current? '\nCurrent buttons:\n' + current: ''}
+      group_select: Choose a user group
       group_type:
-        all: Все
+        all: Everything
         ru: Russian
-      select_all: Все
+      select_all: Everything
       found: |
-        Нашлось человек: ${userCount}
+        People found: ${userCount}
 
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
+        Start mailing?
+      back: '« Back'
+      continue: Continue »
       publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
+        Newsletter  ${name} created To view, press the button
+        To view, press the button
+      status: Mailing status
     edit:
       started: |
-        Редактирование началось
+        Editing started
       wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
+        Error!
+        Message type [${type}] differs from original [${originalType}].
+        Editing is not possible
     list:
-      info: Состояние рассылки
+      info: Mailing status
     status:
       info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
+        <b>Newsletter ${name}</b> (${createdAt})
+        Created ${creatorName}
 
-        Дата отправки: ${date}
+        Submission date: ${date}
 
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
+        Submission progress:
+          Total: ${total}
+          Submitted: ${completed}
+          Remaining: ${left}
+          Errors: ${error}
         ${userErrors}
 
-        Статус: ${status}
+        Status: ${status}
       status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
+        Created
+        Processing
+        Archived
+      name_changed: The title has been changed
+      cancel: '❌ Cancel'
+      view: View
+      edit: Edit
+      change_name: Change title
+      update: Refresh
     canceled: |
-      <b>Рассылка ${name}</b> отменена.
+      <b>Broadcast ${name}</b> canceled.
     send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+      <b>Broadcast error ${name}</b>
+      Failed to send message to <a href="tg://user?id=${telegramId}">${telegramId}</a>
 
       <code>${errorMessage}</code>
   pack:
@@ -432,11 +432,11 @@ admin:
     not_found: Стікерпак не знайдено
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram returned an error!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram returned an error:
       ${error}
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
