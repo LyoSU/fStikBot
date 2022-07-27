@@ -25,4 +25,21 @@ module.exports = async (ctx) => {
   await ctx.replyWithHTML(ctx.i18n.t('cmd.start.info', {
     name: userName(ctx.from)
   }), Markup.removeKeyboard().extra({ disable_web_page_preview: true }))
+
+  if (ctx.startPayload === 'catalog') {
+    await ctx.replyWithHTML('👇', {
+      reply_markup: JSON.stringify({
+        inline_keyboard: [
+          [
+            {
+              text: '🔍',
+              web_app: {
+                url: ctx.config.catalogUrl
+              }
+            }
+          ]
+        ]
+      })
+    })
+  }
 }
