@@ -34,6 +34,7 @@ cmd:
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
+      catalog: '🗂 Open catalog'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
