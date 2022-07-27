@@ -33,7 +33,7 @@ cmd:
       donate: '☕ Підтримати розробника'
     btn:
       new: '📥 Створити новий'
-      catalog: '🗂 Відкрити каталог'
+      catalog: '💖 Каталог'
   inline:
     switch_pm: Вибрати стікерпак
   restore: |
