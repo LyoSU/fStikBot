@@ -4,7 +4,7 @@ module.exports = async (ctx) => {
       inline_keyboard: [
         [
           {
-            text: '🔍',
+            text: ctx.i18n.t('cmd.start.btn.catalog'),
             web_app: {
               url: ctx.config.catalogUrl
             }
