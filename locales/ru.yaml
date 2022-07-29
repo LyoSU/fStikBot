@@ -270,9 +270,9 @@ scenes:
   catalog:
     publish:
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Ошибка!</b>
+        Вам запрещено использовать эту функцию.
+        Пожалуйста, свяжитесь с администратором.
       enter: |
         Вы собираетесь опубликовать стикерпак "<a href="${link}">${title}</a>" в общедоступном каталоге нашего бота
         Его может найти любой пользователь бота по имени, тегам или фильтру
