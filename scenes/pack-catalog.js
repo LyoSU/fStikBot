@@ -27,6 +27,11 @@ const escapeHTML = (str) => str.replace(
 const catalogPublish = new Scene('catalogPublish')
 
 catalogPublish.enter(async (ctx) => {
+  if (ctx.session.userInfo.publicBan === true) {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.bannded'))
+    return ctx.scene.leave()
+  }
+
   const stickerSetId = ctx.match[1]
 
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
