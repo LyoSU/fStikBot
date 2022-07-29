@@ -158,11 +158,11 @@ catalogSelectLanguage.enter(async (ctx) => {
 catalogSelectLanguage.action(/^catalog:set_language:(.*)$/, async (ctx) => {
   if (ctx.match[1] === 'all') {
     ctx.session.scene.publish.languages = []
-    return ctx.scene.enter('catalogSetSafe')
+    return ctx.scene.enter('catalogPublishConfirm')
   }
 
   if (ctx.match[1] === 'confirm') {
-    return ctx.scene.enter('catalogSetSafe')
+    return ctx.scene.enter('catalogPublishConfirm')
   }
 
   const language = ctx.match[1]
@@ -233,7 +233,7 @@ catalogPublishConfirm.enter(async (ctx) => {
     description: escapeHTML(publish.description),
     tags: tags.join(' '),
     languages: languages.join(', '),
-    safe: publish.safe ? ctx.i18n.t('scenes.catalog.publish.button_safe.safe') : ctx.i18n.t('scenes.catalog.publish.button_safe.not_safe')
+    // safe: publish.safe ? ctx.i18n.t('scenes.catalog.publish.button_safe.safe') : ctx.i18n.t('scenes.catalog.publish.button_safe.not_safe')
   })
 
   await ctx.replyWithHTML(resultText, {
@@ -255,7 +255,7 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
     description: publish.description,
     tags: publish.tags,
     languages: publish.languages,
-    safe: publish.safe
+    // safe: publish.safe
   }
 
   if (!publish.stickerSet.publishDate) {

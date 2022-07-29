@@ -45,6 +45,21 @@ const userSchema = mongoose.Schema({
   blocked: {
     type: Boolean,
     default: false
+  },
+  webapp: {
+    country: String,
+    platform: String,
+    browser: String,
+    version: String,
+    os: String
+  },
+  moderator: {
+    type: Boolean,
+    default: false
+  },
+  publicBan: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
