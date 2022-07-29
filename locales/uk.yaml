@@ -292,12 +292,12 @@ scenes:
         not_safe: Ні, він не безпечний
       no_tags: не були вказані
       confirm: |
-        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
+        <b>Підтвердити публікацію стікерпака "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Опис:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Теги:</b> ${tags}
+        <b>Мови:</b> ${languages}
       button_confirm: '✅ Підтвердити публікацію'
       success: |
         Вітаємо, ваш стікерпак опубліковано в загальному каталозі нашого бота, де його зможуть знайти інші користувачі!
