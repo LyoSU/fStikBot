@@ -269,6 +269,10 @@ scenes:
         Мені не вдалося знайти оригінал цього стікера.
   catalog:
     publish:
+      bannded: |
+        <b>Error!</b>
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
         Ви збираєтеся опублікувати набір стікерів «<a href="${link}">${title}</a>» у загальнодоступному каталозі нашого бота
         Його може знайти будь-який користувач бота за іменем, тегами чи фільтром
