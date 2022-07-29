@@ -292,13 +292,12 @@ scenes:
         not_safe: Нет, он небезопасен
       no_tags: не были указаны
       confirm: |
-        <b>Подтвердите публикацию стикерпака "<a href="${link}">${title}</a>"</b>
+        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
 
-        <b>Описание:</b> <i>${description}</i>
+        <b>Description:</b> <i>${description}</i>
 
-        <b>Метки:</b> ${tags}
-        <b>Языки:</b> ${languages}
-        <b>Безопасность:</b> ${safe}
+        <b>Tags:</b> ${tags}
+        <b>Languages:</b> ${languages}
       button_confirm: '✅ Подтвердите публикацию'
       success: |
         Поздравляем, ваш стикерпак опубликован в общем каталоге нашего бота, где его могут найти другие пользователи!
