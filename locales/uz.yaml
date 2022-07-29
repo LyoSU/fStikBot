@@ -297,7 +297,6 @@ scenes:
 
         <b>Tags:</b> ${tags}
         <b>Languages:</b> ${languages}
-        <b>Safe:</b> -
       button_confirm: '✅ Confirm publication'
       success: |
         Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
