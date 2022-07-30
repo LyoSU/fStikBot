@@ -275,12 +275,19 @@ scenes:
         You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
         Because of this, more people will install your sticker pack
+        Try to send high-quality sticker packs that will be understood by most
 
-        To get started, provide more information about your sticker pack to make it easier to find.
+        <b>Rules for publishing sticker packs:</b>
+        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
+        • Do not post sticker pressures that violate EU laws or other local laws
+
+        You will need to submit additional information for it to be published in the catalog
+      continue_button: Continue
       enter_description: |
-        <b>Enter description for your sticker pack:</b>
-        <i>For a more precise category, you can use the hashtag symbol [#].</i>
-        <i>Example: #anime #meme #animals #cute</i>
+        <b>Briefly describe your sticker pack so that others can find it</b>
+
+        <i>You can also use hashtags to categorize [#]</i>
+        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
