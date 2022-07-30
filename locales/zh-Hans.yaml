@@ -200,10 +200,10 @@ sticker:
         创建(/new) 或选择 (/packs) 另一个贴纸包
 scenes:
   new_pack:
-    common: 常用的
-    animated: Анимированный
-    video: 视频
-    inline: 内嵌文件
+    static: '🌟 Static'
+    animated: '✨ Animated (vector)'
+    video: '📹 Video'
+    inline: '💫 Inline'
     pack_type: |
       <b><u>Choose stickerpack type</u></b>
 
