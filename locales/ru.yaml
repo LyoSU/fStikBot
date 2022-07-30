@@ -277,7 +277,7 @@ scenes:
         You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
         Because of this, more people will install your sticker pack
-        Try to send high-quality sticker packs that will be understood by most
+        Try to send only high-quality sticker packs that may be of interest to a large number of people
 
         <b>Rules for publishing sticker packs:</b>
         • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
