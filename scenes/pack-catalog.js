@@ -42,6 +42,9 @@ catalogPublish.enter(async (ctx) => {
   }), {
     reply_markup: Markup.keyboard([
       [
+        ctx.i18n.t('scenes.catalog.publish.continue_button')
+      ],
+      [
         ctx.i18n.t('scenes.btn.cancel')
       ]
     ]).resize()
@@ -50,7 +53,9 @@ catalogPublish.enter(async (ctx) => {
   ctx.session.scene.publish = {
     stickerSet
   }
+})
 
+catalogPublish.hears(match('scenes.catalog.publish.continue_button'), async (ctx) => {
   return ctx.scene.enter('catalogEnterDescription')
 })
 
