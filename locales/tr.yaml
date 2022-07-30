@@ -34,7 +34,7 @@ cmd:
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Catalog'
+      catalog: '💖 Katalog'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
@@ -128,8 +128,8 @@ callback:
       use_pack: Çıkartma paketini kullan
       search_gif: GIF ara
       catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '🗑 Delete from catalog'
+      catalog_edit: '📝 Katalogda düzenle'
+      catalog_delete: '🗑 Katalogdan sil'
     error:
       restore: |
         <b>Hata!</b>
@@ -268,9 +268,9 @@ scenes:
   catalog:
     publish:
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Hata!</b>
+        Bu özelliği kullanmanız yasaklandı.
+        Lütfen yönetici ile iletişime geçin.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -292,14 +292,14 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: were not specified
+      no_tags: belirtilmemiş
       confirm: |
-        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
+        <b>Çıkartma paketinin yayınlandığını onaylayın "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Açıklama:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Etiketler:</b> ${tags}
+        <b>Diller:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
