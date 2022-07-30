@@ -274,15 +274,22 @@ scenes:
         Вам заборонено використовувати цю функцію.
         Зверніться до адміністратора.
       enter: |
-        Ви збираєтеся опублікувати набір стікерів «<a href="${link}">${title}</a>» у загальнодоступному каталозі нашого бота
-        Його може знайти будь-який користувач бота за іменем, тегами чи фільтром
-        Через це більше людей встановлять ваш набір стікерів
+        You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
+        It can be found by any user of the bot by name, tags or filter
+        Because of this, more people will install your sticker pack
+        Try to send high-quality sticker packs that will be understood by most
 
-        Для початку, надайте більше інформації про свій набір наклейок, щоб його було легше знайти.
+        <b>Rules for publishing sticker packs:</b>
+        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
+        • Do not post sticker pressures that violate EU laws or other local laws
+
+        You will need to submit additional information for it to be published in the catalog
+      continue_button: Continue
       enter_description: |
-        <b>Введіть опис вашого стікерпака</b>
-        <i>Для більш точної категорії ви можете використати символ хештегу [#].</i>
-        <i>Приклад: #anime #meme #animals #милий</i>
+        <b>Briefly describe your sticker pack so that others can find it</b>
+
+        <i>You can also use hashtags to categorize [#]</i>
+        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Виберіть, для яких мов призначено ваш набір наклейок:</b>
         <i>Ви можете вибрати кілька мов</i>
