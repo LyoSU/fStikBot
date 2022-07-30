@@ -25,8 +25,10 @@ searchStickerSet.enter(async (ctx) => {
 })
 
 searchStickerSet.on('text', async (ctx) => {
-  const stickerSet = await ctx.db.StickerSet.find({ $text: { $search: ctx.message.text } })
-    .limit(100)
+  const stickerSet = await ctx.db.StickerSet.find({
+    public: true,
+    $text: { $search: ctx.message.text }
+  }).limit(100)
 
   if (stickerSet?.length > 0) {
     const packList = []
