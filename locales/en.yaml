@@ -274,7 +274,6 @@ scenes:
         <b>Error!</b>
         You are banned from using this feature.
         Please, contact the administrator.
-
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -286,9 +285,7 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
-
       continue_button: Continue
-
       enter_description: |
         <b>Briefly describe your sticker pack so that others can find it</b>
 
