@@ -200,10 +200,10 @@ sticker:
         Başka bir çıkartma paketi oluşturun (/new) veya seçin (/packs)
 scenes:
   new_pack:
-    common: Normal
-    animated: Animasyonlu
-    video: Video
-    inline: Satır içi
+    static: '🌟 Static'
+    animated: '✨ Animated (vector)'
+    video: '📹 Video'
+    inline: '💫 Inline'
     pack_type: |
       <b><u>Choose stickerpack type</u></b>
 

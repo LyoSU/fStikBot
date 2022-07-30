@@ -198,10 +198,10 @@ sticker:
         Buat (/new) atau pilih (/packs) paket stiker lainnya
 scenes:
   new_pack:
-    common: Umum
-    animated: Animasi
-    video: Video
-    inline: Inline
+    static: '🌟 Static'
+    animated: '✨ Animated (vector)'
+    video: '📹 Video'
+    inline: '💫 Inline'
     pack_type: |
       <b><u>Choose stickerpack type</u></b>
 
