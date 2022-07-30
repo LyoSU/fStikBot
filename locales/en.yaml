@@ -200,10 +200,10 @@ sticker:
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
-    common: Common
-    animated: Animated
-    video: Video
-    inline: Inline
+    static: '🌟 Static'
+    animated: '✨ Animated (vector)'
+    video: '📹 Video'
+    inline: '💫 Inline'
     pack_type: |
       <b><u>Choose stickerpack type</u></b>
 
@@ -286,7 +286,9 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
+
       continue_button: Continue
+
       enter_description: |
         <b>Briefly describe your sticker pack so that others can find it</b>
 

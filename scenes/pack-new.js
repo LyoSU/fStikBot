@@ -27,7 +27,7 @@ const сhoosePackType = new Scene('сhoosePackType')
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.new_pack.common'),
+        ctx.i18n.t('scenes.new_pack.static'),
         ctx.i18n.t('scenes.new_pack.inline')
       ],
       [
@@ -50,7 +50,7 @@ const сhoosePackType = new Scene('сhoosePackType')
   } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.video')) {
     ctx.session.scene.newPack.video = true
     return ctx.scene.enter('newPackTitle')
-  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.common')) {
+  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.static')) {
     ctx.session.scene.newPack.animated = false
     return ctx.scene.enter('newPackTitle')
   } else {
