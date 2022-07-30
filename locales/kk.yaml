@@ -200,10 +200,10 @@ sticker:
         Create (/new) or choose (/packs) another sticker pack
 scenes:
   new_pack:
-    common: Common
-    animated: Animated
-    video: Video
-    inline: Inline
+    static: '🌟 Статикалық'
+    animated: '✨ Анимацияланған (вектор)'
+    video: '📹 Видео'
+    inline: '💫 Инлайн'
     pack_type: |
       <b><u>Choose stickerpack type</u></b>
 
