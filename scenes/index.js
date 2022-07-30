@@ -45,9 +45,6 @@ stage.hears(([
 stage.hears(([
   '/start',
   '/packs',
-  '/new',
-  '/original',
-  '/restore',
   '/emoji',
   '/lang',
   '/donate'
