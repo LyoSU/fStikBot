@@ -274,22 +274,22 @@ scenes:
         Вам заборонено використовувати цю функцію.
         Зверніться до адміністратора.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your sticker pack
-        Try to send only high-quality sticker packs that may be of interest to a large number of people
+        Ви збираєтеся опублікувати набір стікерів «<a href="${link}">${title}</a>» у загальнодоступному каталозі нашого бота
+        Його може знайти будь-який користувач бота за іменем, тегами чи фільтром
+        Через це більше людей встановлять ваш набір стікерів
+        Спробуйте надсилайте тільки якісні стікерпаки, які можуть зацікавити велику кількість людей
 
-        <b>Rules for publishing sticker packs:</b>
-        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Правила публікації стікерпаків:</b>
+        • Не публікуйте свої особисті стікерпаки, призначені для вузького кола осіб. Наприклад, обличчя ваших друзів або цитати з ваших повідомлень
+        • Не публікуйте наклейки, що порушують закони ЄС або інші місцеві закони
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        Вам потрібно буде надати додаткову інформацію, щоб її було опубліковано в каталозі
+      continue_button: Продовжити
       enter_description: |
-        <b>Briefly describe your sticker pack so that others can find it</b>
+        <b>Коротко опишіть свій набір наклейок, щоб інші могли його знайти</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>Ви також можете використовувати хештеги для категоризації [#]</i>
+        <i>Наприклад: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Виберіть, для яких мов призначено ваш набір наклейок:</b>
         <i>Ви можете вибрати кілька мов</i>
