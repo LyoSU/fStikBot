@@ -34,7 +34,7 @@ cmd:
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Catalog'
+      catalog: '💖 Katalog'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
@@ -128,8 +128,8 @@ callback:
       use_pack: Çıkartma paketini kullan
       search_gif: GIF ara
       catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '🗑 Delete from catalog'
+      catalog_edit: '📝 Katalogda düzenle'
+      catalog_delete: '🗑 Katalogdan sil'
     error:
       restore: |
         <b>Hata!</b>
@@ -268,19 +268,26 @@ scenes:
   catalog:
     publish:
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Hata!</b>
+        Bu özelliği kullanmanız yasaklandı.
+        Lütfen yönetici ile iletişime geçin.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
         Because of this, more people will install your sticker pack
+        Try to send only high-quality sticker packs that may be of interest to a large number of people
 
-        To get started, provide more information about your sticker pack to make it easier to find.
+        <b>Rules for publishing sticker packs:</b>
+        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
+        • Do not post sticker pressures that violate EU laws or other local laws
+
+        You will need to submit additional information for it to be published in the catalog
+      continue_button: Continue
       enter_description: |
-        <b>Enter description for your sticker pack:</b>
-        <i>For a more precise category, you can use the hashtag symbol [#].</i>
-        <i>Example: #anime #meme #animals #cute</i>
+        <b>Briefly describe your sticker pack so that others can find it</b>
+
+        <i>You can also use hashtags to categorize [#]</i>
+        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
@@ -292,14 +299,14 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: were not specified
+      no_tags: belirtilmemiş
       confirm: |
-        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
+        <b>Çıkartma paketinin yayınlandığını onaylayın "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Açıklama:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Etiketler:</b> ${tags}
+        <b>Diller:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
