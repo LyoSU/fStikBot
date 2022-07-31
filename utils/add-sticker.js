@@ -122,7 +122,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         await animatedStickerSet.save()
       }
     } else {
-      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, animatedStickerSet.name, {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, animatedStickerSet.name.toLowerCase(), {
         tgs_sticker: { source: data },
         emojis
       }).catch((error) => {
@@ -317,7 +317,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         await stickerSet.save()
       }
     } else {
-      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, stickerSet.name, stickerExtra).catch((error) => {
+      stickerAdd = await ctx.telegram.addStickerToSet(ctx.from.id, stickerSet.name.toLowerCase(), stickerExtra).catch((error) => {
         return {
           error: {
             telegram: error
