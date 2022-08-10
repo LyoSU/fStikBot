@@ -318,8 +318,7 @@ catalogPublishConfirm.enter(async (ctx) => {
     title: escapeHTML(publish.stickerSet.title),
     description: escapeHTML(publish.description),
     tags: tags.join(' '),
-    languages: languages.join(', '),
-    // safe: publish.safe ? ctx.i18n.t('scenes.catalog.publish.button_safe.safe') : ctx.i18n.t('scenes.catalog.publish.button_safe.not_safe')
+    languages: languages.join(', ')
   })
 
   await ctx.replyWithHTML(resultText, {
@@ -337,12 +336,11 @@ catalogPublishConfirm.enter(async (ctx) => {
 catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), async (ctx) => {
   const publish = ctx.session.scene.publish
 
-  publish.stickerSet.about = {
+  publish.stickerSet.about = Object.assign(publish.stickerSet.about, {
     description: publish.description,
     tags: publish.tags,
     languages: publish.languages,
-    // safe: publish.safe
-  }
+  })
 
   if (!publish.stickerSet.publishDate) {
     publish.stickerSet.publishDate = new Date()
