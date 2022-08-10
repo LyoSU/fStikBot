@@ -22,6 +22,12 @@ cmd:
 
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Developer channel: @LyBlog
+    catalog: |
+      <b>😻 You can find new sticker packs in our catalog</b>
+
+      • Click the button below and get access to a huge catalog of sticker packs for every taste
+      • Search by keywords or in prepared tabs
+      • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
@@ -34,7 +40,7 @@ cmd:
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Katalog'
+      catalog: '💖 Open catalog'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
