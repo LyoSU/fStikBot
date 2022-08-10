@@ -270,7 +270,7 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        To publish a third-party sticker pack, send me a link to the sticker pack or its sticker
+        Щоб опублікувати набір сторонніх стікерів, надішліть мені посилання на набір стікерів або стікер з нього
       publish_new_access_denied: |
         <b>Error!</b>
         This sticker pack is not yours.
