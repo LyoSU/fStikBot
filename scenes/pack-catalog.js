@@ -24,6 +24,68 @@ const escapeHTML = (str) => str.replace(
   }[tag] || tag)
 )
 
+const catalogPublishNew = new Scene('catalogPublishNew')
+
+catalogPublishNew.enter((ctx) => {
+  ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.publish_new'), {
+    reply_markup: Markup.keyboard([
+      [
+        ctx.i18n.t('scenes.btn.cancel')
+      ]
+    ]).resize()
+  })
+})
+
+catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
+  if (ctx.session.userInfo.moderator !== true) {
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.publish_new_access_denied'))
+  }
+
+  let packName
+
+  if (ctx.message.sticker) {
+    packName = ctx.message.sticker.set_name
+  } else {
+    const messageTextMatch = ctx.message.text.match(/addstickers\/(.*)/)
+
+    if(!messageTextMatch) {
+      return ctx.scene.reenter()
+    }
+
+    packName = messageTextMatch[1]
+  }
+
+  if (!packName) {
+    return ctx.scene.reenter()
+  }
+
+  const findStickerSet = await ctx.db.StickerSet.findOne({
+    name: packName
+  })
+
+  if (findStickerSet) {
+    ctx.session.scene.publish = {
+      stickerSet: findStickerSet
+    }
+
+    return ctx.scene.enter('catalogPublish')
+  }
+
+  const stickerSetInfo = await ctx.telegram.getStickerSet(packName)
+
+  const stickerSet = new ctx.db.StickerSet({
+    owner: ctx.session.userInfo,
+    name: stickerSetInfo.name,
+    title: stickerSetInfo.title,
+    animated: stickerSetInfo.is_animated,
+    video: stickerSetInfo.is_video,
+    create: false,
+    thirdParty: true
+  })
+
+  await stickerSet.save()
+})
+
 const catalogPublish = new Scene('catalogPublish')
 
 catalogPublish.enter(async (ctx) => {
@@ -32,7 +94,15 @@ catalogPublish.enter(async (ctx) => {
     return ctx.scene.leave()
   }
 
-  const stickerSetId = ctx.match[1]
+  let stickerSetId
+
+  if (ctx.match && ctx.match[1]) {
+    stickerSetId = ctx.match[1]
+  } else if (ctx.session.scene.publish) {
+    stickerSetId = ctx.session.scene.publish.stickerSet._id
+  } else {
+    return ctx.scene.leave()
+  }
 
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
 
@@ -290,6 +360,7 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
 })
 
 module.exports = [
+  catalogPublishNew,
   catalogPublish,
   catalogEnterDescription,
   catalogSelectLanguage,

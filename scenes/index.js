@@ -44,10 +44,12 @@ stage.hears(([
 
 stage.hears(([
   '/start',
+  '/help',
   '/packs',
   '/emoji',
   '/lang',
-  '/donate'
+  '/donate',
+  '/publish'
 ]), async (ctx, next) => {
   await ctx.scene.leave()
   ctx.session.scene = null

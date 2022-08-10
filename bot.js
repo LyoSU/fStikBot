@@ -161,6 +161,7 @@ bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoos
 bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
+bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.command('catalog', handleCatalog)
 bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
