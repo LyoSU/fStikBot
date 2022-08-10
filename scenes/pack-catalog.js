@@ -3,6 +3,7 @@ const path = require('path')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
+const mongoose = require('mongoose')
 
 const { match } = I18n
 const i18n = new I18n({
@@ -74,6 +75,7 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   const stickerSetInfo = await ctx.telegram.getStickerSet(packName)
 
   const stickerSet = new ctx.db.StickerSet({
+    _id: mongoose.Types.ObjectId(),
     owner: ctx.session.userInfo,
     name: stickerSetInfo.name,
     title: stickerSetInfo.title,
@@ -84,6 +86,12 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   })
 
   await stickerSet.save()
+
+  ctx.session.scene.publish = {
+    stickerSet: stickerSet._id
+  }
+
+  return ctx.scene.enter('catalogPublish')
 })
 
 const catalogPublish = new Scene('catalogPublish')
