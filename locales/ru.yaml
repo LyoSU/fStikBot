@@ -269,6 +269,13 @@ scenes:
         У меня не получилось найти оригинал этого стикера.
   catalog:
     publish:
+      publish_new: |
+        To publish a third-party sticker pack, send me a link to the sticker pack or its sticker
+      publish_new_access_denied: |
+        <b>Error!</b>
+        This sticker pack is not yours.
+
+        You can only publish your own sticker packs
       bannded: |
         <b>Ошибка!</b>
         Вам запрещено использовать эту функцию.
