@@ -27,7 +27,7 @@ module.exports = async (ctx) => {
   }), Markup.removeKeyboard().extra({ disable_web_page_preview: true }))
 
   // if (ctx.startPayload === 'catalog') {
-  await ctx.replyWithHTML('👇', {
+  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {
     reply_markup: JSON.stringify({
       inline_keyboard: [
         [
