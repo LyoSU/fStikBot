@@ -270,12 +270,12 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        To publish a third-party sticker pack, send me a link to the sticker pack or its sticker
+        Чтобы опубликовать сторонний стикерпак, пришлите мне ссылку на стикерпак или стикер из него
       publish_new_access_denied: |
-        <b>Error!</b>
-        This sticker pack is not yours.
+        <b>Ошибка!</b>
+        Этот стикерпак не ваш.
 
-        You can only publish your own sticker packs
+        Вы можете опубликовать только свои стикерпаки
       bannded: |
         <b>Ошибка!</b>
         Вам запрещено использовать эту функцию.
