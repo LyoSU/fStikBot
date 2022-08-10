@@ -60,30 +60,28 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
     return ctx.scene.reenter()
   }
 
-  const findStickerSet = await ctx.db.StickerSet.findOne({
+  let stickerSet = await ctx.db.StickerSet.findOne({
     name: packName
   })
 
-  if (findStickerSet) {
-    ctx.session.scene.publish = {
-      stickerSet: findStickerSet
-    }
+  if (!stickerSet) {
+    const stickerSetInfo = await ctx.telegram.getStickerSet(packName)
 
-    return ctx.scene.enter('catalogPublish')
+    stickerSet = new ctx.db.StickerSet({
+      _id: mongoose.Types.ObjectId(),
+      owner: ctx.session.userInfo,
+      name: stickerSetInfo.name,
+      title: stickerSetInfo.title,
+      animated: stickerSetInfo.is_animated,
+      video: stickerSetInfo.is_video,
+      create: false,
+      thirdParty: true
+    })
   }
 
-  const stickerSetInfo = await ctx.telegram.getStickerSet(packName)
-
-  const stickerSet = new ctx.db.StickerSet({
-    _id: mongoose.Types.ObjectId(),
-    owner: ctx.session.userInfo,
-    name: stickerSetInfo.name,
-    title: stickerSetInfo.title,
-    animated: stickerSetInfo.is_animated,
-    video: stickerSetInfo.is_video,
-    create: false,
-    thirdParty: true
-  })
+  if (ctx.session.userInfo.moderator === true) {
+    stickerSet.about.verified = true
+  }
 
   await stickerSet.save()
 

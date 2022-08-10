@@ -60,6 +60,11 @@ const stickerSetsSchema = mongoose.Schema({
     safe: {
       type: Boolean,
       default: false
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+      index: true
     }
   }
 }, {
