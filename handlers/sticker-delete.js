@@ -7,7 +7,11 @@ module.exports = async (ctx) => {
   if (ctx.callbackQuery.message.reply_to_message && ctx.callbackQuery.message.reply_to_message.sticker) {
     const setName = ctx.callbackQuery.message.reply_to_message.sticker.set_name
 
-    packBotUsername = setName.split('_').pop(-1)
+    if (setName) {
+      packBotUsername = setName.split('_').pop(-1)
+    } else {
+      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
+    }
   }
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)

@@ -176,7 +176,7 @@ bot.command('error', ctx => ctx.replyWithHTML(error))
 bot.use(handleInlineQuery)
 
 // sticker detect
-bot.on(['sticker', 'document', 'photo', 'video'], limitPublicPack, handleSticker)
+bot.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)

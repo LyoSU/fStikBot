@@ -44,6 +44,8 @@ module.exports = async (ctx, addStickerResult) => {
         messageText = ctx.i18n.t('sticker.add.error.stickers_too_much')
       } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
         messageText = ctx.i18n.t('sticker.add.error.stickerset_invalid')
+      } else if (addStickerResult.error.telegram.description.includes('file is too big')) {
+        messageText = ctx.i18n.t('sticker.add.error.too_big')
       } else {
         messageText = ctx.i18n.t('error.telegram', {
           error: addStickerResult.error.telegram.description
