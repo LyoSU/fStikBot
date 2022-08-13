@@ -217,6 +217,12 @@ sticker:
 
         Bot is still processing the previous video...
         You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+      convert: |
+        <b>Error!</b>
+        Unfortunately, the bot was unable to convert your video.
+
+        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
+        It may also be an internal error of the bot, try sending this video again.
       too_big: |
         <b>Error!</b>.
 
