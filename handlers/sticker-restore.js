@@ -7,6 +7,10 @@ module.exports = async (ctx) => {
   }).populate('stickerSet')
 
   if (sticker) {
+    if (sticker.stickerSet.video === true) {
+      sticker.file = sticker.info
+      sticker.file.skip_reencode = true
+    }
     const result = await addSticker(ctx, sticker.file)
 
     if (result.ok) {
@@ -19,7 +23,9 @@ module.exports = async (ctx) => {
         ])
       }).catch(() => {})
     } else if (result.error) {
-      if (result.error.telegram) {
+      if (result.error.telegram.description.includes('STICKERSET_INVALID')) {
+        ctx.answerCbQuery(ctx.i18n.t('callback.pack.error.copy'), true)
+      } else if (result.error.telegram) {
         ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
           error: result.error.telegram.description
         }), true)

@@ -1,4 +1,4 @@
-FROM node:12-alpine as base
+FROM node:lts-alpine as base
 FROM base as builder
 RUN mkdir /install
 WORKDIR /install

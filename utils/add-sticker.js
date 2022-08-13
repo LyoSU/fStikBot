@@ -62,6 +62,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
   }
 
   const isVideo = (stickerSet?.video || inputFile.is_video || (inputFile.mime_type && inputFile.mime_type.match('video'))) || false
+  const isVideoNote = (inputFile.video_note) || false
+  
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -162,8 +164,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
     }
   } else {
-    if (!stickerSet || (isVideo && !stickerSet.video)) {
-      if (isVideo) {
+    if (!stickerSet || (isVideo || isVideoNote && !stickerSet.video)) {
+      if (isVideo || isVideoNote) {
         if (videoStickerSet) {
           stickerSet = videoStickerSet
         } else {
@@ -184,14 +186,34 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       ctx.session.userInfo.stickerSet = stickerSet
     }
 
-    emojis += stickerSet.emojiSuffix || ''
+    const getStickerSet_check = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
+      return {
+        error: {
+          telegram: error
+        }
+      }
+    })
+    if (getStickerSet_check.error) {
+      return getStickerSet_check
+    }
 
+    emojis += stickerSet.emojiSuffix || ''
     let fileUrl
 
     if (stickerFile.fileUrl) {
       fileUrl = stickerFile.fileUrl
     } else {
-      fileUrl = await ctx.telegram.getFileLink(stickerFile)
+      fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
+        return {
+          error: {
+            telegram: error
+          }
+        }
+
+      })
+      if (fileUrl.error) {
+        return fileUrl
+      }
     }
 
     const stickerExtra = {
@@ -204,20 +226,25 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       })
     }
 
-    if (isVideo) {
+    if (isVideo || isVideoNote) {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
       if (userQueue.video && !ctx.session.userInfo.premium) {
-        return ctx.reply('wait load...')
+        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
+          reply_to_message_id: ctx.message.message_id
+        })
       }
       userQueue.video = true
       if (inputFile.file_size > 1000 * 1000 * 10 || inputFile.duration >= 35) { // 10 mb or 35 sec
         userQueue.video = false
-        return ctx.reply('file too big')
+        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
+          reply_to_message_id: ctx.message.message_id
+        })
       }
 
-      if (inputFile.is_video) {
+      if (inputFile.is_video || inputFile.skip_reencode) {
+        
         const data = await downloadFileByUrl(fileUrl)
 
         stickerExtra.webm_sticker = {
@@ -226,10 +253,14 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       } else {
         let priority = 10
         if (ctx.session.userInfo.premium) priority = 9
+        type = (isVideoNote) ? "circle" : "rounded"
+        forceCrop = (inputFile.forceCrop) || false
 
         const job = await convertQueue.add({
           fileUrl,
           timestamp: Date.now(),
+          type,
+          forceCrop
         }, {
           priority,
           attempts: 1,
