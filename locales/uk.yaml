@@ -64,7 +64,7 @@ cmd:
       <b>🌟 Стікерпаки:</b>
     types:
       static: '🌟 Статичний'
-      animated: '✨ Анімовані (вектор)'
+      animated: '✨ Vector'
       video: '📹 Відео'
       inline: '💫 Інлайн'
     empty: |
@@ -72,13 +72,14 @@ cmd:
       Щоб створити, напиши /new
     inline_title: Інлайн стікерпак
   club: |
-    ☕ Підтримує розробку бота
+    ☕️ Supporting a bot development
 
-    Ви можете послати гроші мені за каву та отримати невеликі бонуси у бота взамін.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Відключення <b>"${titleSuffix}</b> в наборі стікерів
-    ➖ копіювання інших наклейок за посиланням
-    ➖ Пріоритет при конвертації відео стікерів
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -204,6 +205,15 @@ sticker:
         <i>Ви можете додати це відео файли до відеонабору.
         Та і всі інші файли в вбудованому пакунку</i>
         Створити (/new) або вибрати (/packs) інший стікерпак
+      wait_load: |
+        <b>Wait!</b>
+
+        Bot is still processing the previous video...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+      too_big: |
+        <b>Error!</b>.
+
+        The file is too big to process. Please reduce the quality and duration before sending.
 scenes:
   new_pack:
     static: '🌟 Статичний'
