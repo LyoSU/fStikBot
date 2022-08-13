@@ -218,6 +218,12 @@ sticker:
 
         Бот все ще обробляє попереднє відео...
         Ви можете підтримати розробку бота (/donate), щоб збільшити пріоритет обробки та можливість додавати більше однієї наклейки в чергу.
+      convert: |
+        <b>Error!</b>
+        Unfortunately, the bot was unable to convert your video.
+
+        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
+        It may also be an internal error of the bot, try sending this video again.
       too_big: |
         <b>Помилка!</b>.
 
