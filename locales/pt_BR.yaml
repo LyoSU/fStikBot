@@ -64,7 +64,7 @@ cmd:
       <b>🌟 Pacotes de Adesivos:</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Animated (vector)'
+      animated: '✨ Vector'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
@@ -72,13 +72,14 @@ cmd:
       Para criar, escreva um comando /new
     inline_title: Pacote de sticker embutido
   club: |
-    ☕ Apoiando um bot de desenvolvimento
+    ☕️ Supporting a bot development
 
-    Você pode enviar dinheiro para mim por café e ganhar pequenos bônus no bot em troca.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Desabilitando <b>"${titleSuffix}</b> no nome dos pacotes de sticker
-    ➖ Copiando outros pacotes de sticker por link
-    ➖ Prioridade na conversão de stickers de vídeo
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -204,6 +205,15 @@ sticker:
         <i>You can add this video files to the video pack.
         As well as all other files in the inline pack</i>
         Create (/new) or choose (/packs) another sticker pack
+      wait_load: |
+        <b>Wait!</b>
+
+        Bot is still processing the previous video...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+      too_big: |
+        <b>Error!</b>.
+
+        The file is too big to process. Please reduce the quality and duration before sending.
 scenes:
   new_pack:
     static: '🌟 Static'
