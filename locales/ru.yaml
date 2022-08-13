@@ -4,23 +4,25 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Hi, <b>${name}</b>!
 
-      /packs - список стикерпаков
-      /new - создать новый стикерпак
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
+      /packs - get your packs
+      /new - create a new sticker pack
+
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /round - round shape video
       /lang - change language
 
-      /donate - поддержать разработчика
+      /donate - support the developer
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>😻 Новые стикерпаки вы можете найти в нашем каталоге</b>
 
@@ -35,6 +37,7 @@ cmd:
       restore: '🔀 Восстановить стикерпак'
       copy: '📋 Скопировать стикерпак'
       emoji: '📝 Изменить суффикс эмодзи'
+      round: '🎥 Round shape video'
       lang: '🌐 Изменить язык'
       donate: '☕ Поддержать разработчика'
     btn:
@@ -63,7 +66,7 @@ cmd:
       <b>🌟 Стикерпаки:</b>
     types:
       static: '🌟 Статический'
-      animated: '✨ Vector'
+      animated: '✨ Вектор'
       video: '📹 Видео'
       inline: '💫 Инлайн'
     empty: |
@@ -71,14 +74,14 @@ cmd:
       Для создания напиши /new
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕ Поддержка разработки ботов
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Вы можете отправить мне деньги на кофе и получить небольшие бонусы в боте взамен
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Отключение <b>"${titleSuffix}</b> в имени стикеров
+    ➖ Копирование других стикеров по ссылке
+    ➖ Приоритет при преобразовании видео стикеров
+    ➖ Возможность добавить больше одного стикера в очередь обработки
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -95,6 +98,11 @@ cmd:
     disabled: Теперь вам нужно вводить эмодзи вручную.
     done: Эмодзи успешно изменен.
     error: Произошла ошибка при изменении эмодзи!
+  round_video:
+    enabled: |
+      Videos will now have a rounded shape
+    disabled: |
+      Videos will no longer have a rounded shape
 callback:
   pack:
     answerCbQuer:
@@ -205,14 +213,14 @@ sticker:
         Все остальные файлы вы можете добавлять в inline стикерпак</i>
         Создать (/new) или выбрать (/packs) другой стикерпак
       wait_load: |
-        <b>Wait!</b>
+        <b>Подождите!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Бот все еще обрабатывает предыдущее видео...
+        Вы можете поддержать разработку бота (/donate) для увеличения приоритета обработки и возможности добавлять в очередь несколько стикеров.
       too_big: |
-        <b>Error!</b>.
+        <b>Ошибка!</b>.
 
-        The file is too big to process. Please reduce the quality and duration before sending.
+        Файл слишком большой для обработки. Пожалуйста, уменьшите качество и продолжительность перед отправкой.
 scenes:
   new_pack:
     static: '🌟 Статический'
