@@ -16,6 +16,7 @@ cmd:
       /restore - restore a sticker pack
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
+      /round - round shape video
       /lang - change language
 
       /donate - support the developer
@@ -36,6 +37,7 @@ cmd:
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
+      round: '🎥 Round shape video'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
@@ -64,7 +66,7 @@ cmd:
       <b>🌟 Paket stiker:</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Animated (vector)'
+      animated: '✨ Vector'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
@@ -72,13 +74,14 @@ cmd:
       Untuk membuat, tulis perintah /new
     inline_title: Paket stiker sebaris
   club: |
-    ☕️ Mendukung pengembangan bot
+    ☕️ Supporting a bot development
 
-    Anda dapat mengirim uang kepada saya untuk minum kopi dan mendapatkan bonus kecil sebagai imbalannya.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
-    ➖ Menyalin paket stiker lain melalui tautan
-    ➖ Prioritas saat mengonversi stiker video
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -95,6 +98,11 @@ cmd:
     disabled: Sekarang Anda perlu memasukkan emoji secara manual.
     done: Emoji berhasil diubah.
     error: Ada kesalahan saat mengubah emoji!
+  round_video:
+    enabled: |
+      Videos will now have a rounded shape
+    disabled: |
+      Videos will no longer have a rounded shape
 callback:
   pack:
     answerCbQuer:
@@ -202,6 +210,15 @@ sticker:
         <i>Anda dapat menambahkan file video ini ke paket video.
         Serta semua file lain dalam paket inline</i>
         Buat (/new) atau pilih (/packs) paket stiker lainnya
+      wait_load: |
+        <b>Wait!</b>
+
+        Bot is still processing the previous video...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+      too_big: |
+        <b>Error!</b>.
+
+        The file is too big to process. Please reduce the quality and duration before sending.
 scenes:
   new_pack:
     static: '🌟 Static'

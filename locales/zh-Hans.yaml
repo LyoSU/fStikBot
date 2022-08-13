@@ -16,6 +16,7 @@ cmd:
       /restore - restore a sticker pack
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
+      /round - round shape video
       /lang - change language
 
       /donate - support the developer
@@ -36,6 +37,7 @@ cmd:
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
+      round: '🎥 Round shape video'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
@@ -64,7 +66,7 @@ cmd:
       <b>🌟 貼圖包:</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Animated (vector)'
+      animated: '✨ Vector'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
@@ -72,13 +74,14 @@ cmd:
       若要创建，请写一个命令/新
     inline_title: 内联貼圖包
   club: |
-    ☕️ 支持机器人开发
+    ☕️ Supporting a bot development
 
-    你可以寄钱给我喝咖啡，并在机器人中获得小额奖金作为回报。
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ 禁用 <b>英寸${titleSuffix}</b> 贴纸包名称
-    ➖ 通过链接复制其他贴纸包
-    ➖ 转换视频贴纸时的优先级
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -95,6 +98,11 @@ cmd:
     disabled: 现在您需要手动输入表情符号。
     done: 表情已成功更改。
     error: 更改表情时发生错误！
+  round_video:
+    enabled: |
+      Videos will now have a rounded shape
+    disabled: |
+      Videos will no longer have a rounded shape
 callback:
   pack:
     answerCbQuer:
@@ -204,6 +212,15 @@ sticker:
         <i>您可以将此视频文件添加到视频包。
         内联包中的所有其他文件</i>
         创建(/new) 或选择 (/packs) 另一个贴纸包
+      wait_load: |
+        <b>Wait!</b>
+
+        Bot is still processing the previous video...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+      too_big: |
+        <b>Error!</b>.
+
+        The file is too big to process. Please reduce the quality and duration before sending.
 scenes:
   new_pack:
     static: '🌟 Static'
