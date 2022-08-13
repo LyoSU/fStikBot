@@ -4,23 +4,25 @@ ratelimit: Занадто часто!
 cmd:
   start:
     info: |
-      Привіт, <b>${name}</b>!
-      Надішліть мені стікер, GIF, відео, файл або фотографію, і я додам її до вашого стікерпака.
-      Хочете видалити його зі свого пакета наклейок? Надішліть ще раз.
+      Hi, <b>${name}</b>!
 
-      /packs - отримати свої стікерпаки
-      /new - створити новий пакет наклейок
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-      /original - знайти оригінальну стікера
-      /resore - відновити пакет наклейок
-      /copy - скопіювати пакет наклейок
-      /emoji - змінити суфікс смайлів для поточного пакета наклейок
-      /lang - змінити мову
+      /packs - get your packs
+      /new - create a new sticker pack
 
-      /donate - підтримати розробника
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /round - round shape video
+      /lang - change language
+
+      /donate - support the developer
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал розробника: @LyBlog
+      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>😻 Нові набори стікерів ви можете знайти у нашому каталозі</b>
 
@@ -35,6 +37,7 @@ cmd:
       restore: '🔀 Відновити стікерпак'
       copy: '📋 Копіювати стікерпак'
       emoji: '📝 Змінити суфікс emoji'
+      round: '🎥 Round shape video'
       lang: '🌐 Змінити мову'
       donate: '☕ Підтримати розробника'
     btn:
@@ -96,6 +99,11 @@ cmd:
     disabled: Тепер вам потрібно вводити emoji вручну.
     done: Смайли успішно змінено.
     error: Сталася помилка під час зміни емодзі!
+  round_video:
+    enabled: |
+      Videos will now have a rounded shape
+    disabled: |
+      Videos will no longer have a rounded shape
 callback:
   pack:
     answerCbQuer:
