@@ -304,7 +304,19 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           }, 1000 * 5)
         }
 
-        const file = await job.finished()
+        const file = await job.finished().catch(error => {
+            return {
+              error: {
+                convertQueue: error
+              }
+            }
+        })
+
+        if (file.error) {
+          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+            reply_to_message_id: ctx.message.message_id
+          })
+        }
 
         ctx.tg.deleteMessage(ctx.from.id, waitMessage.message_id)
 
