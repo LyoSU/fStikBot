@@ -224,7 +224,7 @@ sticker:
 scenes:
   new_pack:
     static: '🌟 Статикалық'
-    animated: '✨ Анимацияланған (вектор)'
+    animated: '✨ Vector'
     video: '📹 Видео'
     inline: '💫 Инлайн'
     pack_type: |
