@@ -63,7 +63,7 @@ cmd:
       <b>🌟 Стикерпаки:</b>
     types:
       static: '🌟 Статический'
-      animated: '✨ Вектор'
+      animated: '✨ Vector'
       video: '📹 Видео'
       inline: '💫 Инлайн'
     empty: |
@@ -71,14 +71,14 @@ cmd:
       Для создания напиши /new
     inline_title: Инлайн стикерпак
   club: |
-    ☕️Поддержка разработки бота
+    ☕️ Supporting a bot development
 
-    Вы можете отправить мне деньги на кофе и получить взамен небольшие бонусы в боте.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Отключение <b>"${titleSuffix}</b> в названии стикерпаков
-    ➖ Копирование других стикерпаков по ссылке
-    ➖ Приоритет при конвертации видео стикеров
-    ➖ Возможность добавлять больше одного стикера в очередь обработки
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -205,14 +205,14 @@ sticker:
         Все остальные файлы вы можете добавлять в inline стикерпак</i>
         Создать (/new) или выбрать (/packs) другой стикерпак
       wait_load: |
-        <b>Подождите!</b>
+        <b>Wait!</b>
 
-        Бот все еще обрабатывает предыдущее видео...
-        Вы можете поддержать разработку бота (/donate) для повышения приоритета обработки и возможности добавления больше одного стикера в очередь.
+        Bot is still processing the previous video...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       too_big: |
-        <b>Ошибка!</b>
+        <b>Error!</b>.
 
-        Файл слишком большой для обработки. Пожалуйста, уменьшите качество и длительность перед отправкой.
+        The file is too big to process. Please reduce the quality and duration before sending.
 scenes:
   new_pack:
     static: '🌟 Статический'
