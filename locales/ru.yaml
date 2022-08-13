@@ -223,7 +223,7 @@ sticker:
 scenes:
   new_pack:
     static: '🌟 Статический'
-    animated: '✨ Вектор'
+    animated: '✨ Vector'
     video: '📹 Видео'
     inline: '💫 Инлайн'
     pack_type: |

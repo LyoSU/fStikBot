@@ -225,7 +225,7 @@ sticker:
 scenes:
   new_pack:
     static: '🌟 Статичний'
-    animated: '✨ Анімовані (вектор)'
+    animated: '✨ Vector'
     video: '📹 Відео'
     inline: '💫 Інлайн'
     pack_type: |
