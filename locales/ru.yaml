@@ -217,11 +217,11 @@ sticker:
         Бот все еще обрабатывает предыдущее видео...
         Вы можете поддержать разработку бота (/donate) для увеличения приоритета обработки и возможности добавлять в очередь несколько стикеров.
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>Ошибка!</b>
+        К сожалению, бот не смог конвертировать ваше видео.
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        Возможно ваше видео сохранено в непонятном для бота формате. Убедитесь, что он в формате mp4.
+        Также это может быть внутренняя ошибка бота, попробуйте еще раз отправить это видео.
       too_big: |
         <b>Ошибка!</b>.
 
