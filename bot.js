@@ -22,6 +22,7 @@ const {
   handleCopyPack,
   handleLanguage,
   handleEmoji,
+  handleRoundVideo,
   handleStickerUpade,
   handleInlineQuery
 } = require('./handlers')
@@ -165,6 +166,7 @@ bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.command('catalog', handleCatalog)
 bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
+bot.command('round', handleRoundVideo)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))

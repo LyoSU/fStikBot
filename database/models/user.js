@@ -30,8 +30,11 @@ const userSchema = mongoose.Schema({
     ref: 'StickerSet'
   },
   autoEmoji: {
+    type: Boolean
+  },
+  roundVideo: {
     type: Boolean,
-    default: false
+    default: true
   },
   inlineType: {
     type: String

@@ -63,7 +63,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
   const isVideo = (stickerSet?.video || inputFile.is_video || (inputFile.mime_type && inputFile.mime_type.match('video'))) || false
   const isVideoNote = (inputFile.video_note) || false
-  
+
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -244,7 +244,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
 
       if (inputFile.is_video || inputFile.skip_reencode) {
-        
+
         const data = await downloadFileByUrl(fileUrl)
 
         stickerExtra.webm_sticker = {
@@ -255,6 +255,10 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         if (ctx.session.userInfo.premium) priority = 9
         type = (isVideoNote) ? "circle" : "rounded"
         forceCrop = (inputFile.forceCrop) || false
+
+        if (type === "rounded" && !ctx.session.userInfo.roundVideo) {
+          type = 'square'
+        }
 
         const job = await convertQueue.add({
           fileUrl,
