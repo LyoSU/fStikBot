@@ -30,49 +30,49 @@ cmd:
       • Procure por palavras-chave ou nas abas predefinidas
       • Não se esqueça de dar nota para promover ou rebaixar um pacote de stickes no ranking
     commands:
-      start: '📜 Start menu'
-      packs: '📁 Sticker packs'
-      new: '📥 Create a new sticker pack'
-      original: '🔍 Find original sticker'
-      restore: '🔀 Restore a sticker pack'
-      copy: '📋 Copy a sticker pack'
-      emoji: '📝 Change emoji suffix'
+      start: '📜 Menu inicial'
+      packs: '📁 Pacotes de stickers'
+      new: '📥 Crie um novo pacote de stickers'
+      original: '🔍 Encontre o sticker original'
+      restore: '🔀 Restaure um pacote de sticker'
+      copy: '📋 Copie um pacote de sticker'
+      emoji: '📝 Altere o emoji vinculado'
       round: '🎥 Deixe o vídeo redondo'
-      lang: '🌐 Change language'
-      donate: '☕️ Support the developer'
+      lang: '🌐 Mude o idioma'
+      donate: '☕️ Apoie o desenvolvedor'
     btn:
-      new: '📥 Create new'
+      new: '📥 Crie novo'
       catalog: '💖 Abrir catálogo'
   inline:
     switch_pm: Selecionar pacote de sticker
   restore: |
-    <b>🗃 Restauração do pacote de adesivos</b>
+    <b>🗃 Restauração do pacote de sticker</b>
 
-    Se você criou um pacote de adesivo anteriormente através deste bot e não pôde encontrá-lo na lista dos seus pacotes de adesivo, depois poderá recuperá-lo de volta.
+    Se você criou um pacote de sticker anteriormente através deste bot e não o conseguiu encontrar na lista dos seus pacotes de sticker, então você pode recuperá-lo.
 
     <b>Para fazer isso, você precisa executar várias ações:</b>
     1. Abra o bot @Stickers
     2. Envie o comando <code>/packstats</code>
-    3. Encontre e escolha o pacote de adesivos necessário
-    4. Encaminhar a mensagem recebida para o bot
-    5. Se a restauração for bem sucedida - o bot informa sobre isso
+    3. Encontre e escolha o pacote de sticker necessário 
+    4. Encaminhe a mensagem recebida para o bot
+    5. Se a restauração for bem sucedida - o bot informará sobre isso
   copy: |
     <b>🗄 Copiar pacote de sticker</b>
 
-    Se você suportou o bot, copiar todos os adesivos de qualquer pacote de adesivos com um novo nome estará disponível.
-    Para copiar o pacote de adesivos você precisa enviar um link para ele para o bot.
+    Se você apoiou o bot, copiar todos os stickers de qualquer pacote de sticker com um novo nome estará disponível.
+    Para copiar o pacote, você só precisa enviar um link para o bot.
   packs:
     info: |
-      <b>🌟 Pacotes de Adesivos:</b>
+      <b>🌟 Pacotes de sticker:</b>
     types:
-      static: '🌟 Static'
+      static: '🌟 Estático'
       animated: '✨ Vetor'
-      video: '📹 Video'
+      video: '📹 Vídeo'
       inline: '💫 Inline'
     empty: |
-      <b>Você ainda não tem pacotes de adesivo.</b>
+      <b>Você ainda não tem pacotes de sticker.</b>
       Para criar, escreva um comando /new
-    inline_title: Pacote de sticker embutido
+    inline_title: Pacote de sticker inline
   club: |
     ☕️ Apoiando desenvolvimento do bot
 
@@ -93,11 +93,11 @@ cmd:
       Agora a cada sticker será atribuído um emoji padrão.
       Envie o comando novamente para alterar o modo.
 
-      Para alterar o emoji padrão para o tipo de pacote de adesivos <code>/emoji</code> seguido por um emoji separado por um espaço.
+      Para alterar o emoji padrão para o pacote de adesivos atual, digite <code>/emoji</code> seguido por um emoji separado por um espaço.
       Por exemplo - <code>/emoji 🌟</code>
-    disabled: Agora você precisa inserir emoji manualmente.
+    disabled: Agora você precisa inserir o emoji manualmente.
     done: Emoji alterado com sucesso.
-    error: Houve um erro ao mudar o emoji!
+    error: Houve um erro ao alterar o emoji!
   round_video:
     enabled: |
       Os vídeos agora terão formato arrendondado
@@ -134,33 +134,33 @@ callback:
 
       Para usá-lo, escreva em qualquer chat <code>@${botUsername} </code>e espaço
       Você também pode usá-lo pressionando o botão abaixo
-    hidden: Стикерпак <a href="${link}">${title}</a> скрыт из вашего списка.
-    restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
+    hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
+    restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
     btn:
-      hide: '❌ Скрыть стикерпак'
-      restore: '✅ Восстановить'
-      use_pack: Использовать стикерпак
-      search_gif: Buscar GIF
+      hide: '❌ Hide sticker pack'
+      restore: '✅ Restore'
+      use_pack: Use sticker pack
+      search_gif: Search GIF
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Editar no catálogo'
       catalog_delete: '🗑 Excluir do catálogo'
     error:
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        <b>Error!</b>
+        Cannot restore sticker pack.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        <b>Error!</b>
+        Cannot find sticker pack.
   sticker:
     answerCbQuery:
-      delete: Стикер был успешно удален из стикерпака
-      restored: Стикер был успешно сохранен в текущий стикерпак
-    delete: Стикер был успешно удален из стикерпака.
-    restored: Стикер был успешно сохранен в текущий стикерпак.
+      delete: The sticker was successfully removed from the sticker pack.
+      restored: The sticker was successfully saved to the current sticker pack.
+    delete: The sticker was successfully removed from the sticker pack.
+    restored: The sticker was successfully saved to the current sticker pack.
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 Delete'
+      copy: '🌟 Copy'
+      restore: '✅ Restore'
     error:
       not_found: |
         Ошибка!
@@ -229,9 +229,9 @@ sticker:
         O arquivo é muito grande para ser processado. Por favor, reduza a qualidade e durante antes de enviar.
 scenes:
   new_pack:
-    static: '🌟 Static'
+    static: '🌟 Estático'
     animated: '✨ Vetor'
-    video: '📹 Video'
+    video: '📹 Vídeo'
     inline: '💫 Inline'
     pack_type: |
       <b><u>Choose stickerpack type</u></b>
