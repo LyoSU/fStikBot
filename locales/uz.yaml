@@ -1,34 +1,31 @@
 ---
-language_name: '🇺🇿'
+language_name: '🇺🇿 O''zbek'
 ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Assalomu alaykum <b>${name}</b>!
+      Menga Stiker yoki fotosurat yuboring, men uni stikerlar to'plamingizga qo'shib qo'yaman.
+      O'chirish uchun - Stikerni qayta yuboring
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      /packs - stikerlar to'plamining ro'yxati
+      /animpacks - animatsion stikerlarlar to'plamining ro'yxati
+      /new - yangi stikerlar to'plamini yaratish
+      /original - asl stikerni topish
+      /restore - stikerlar to'plamini qayta tiklash
+      /copy - stikerlar to'plamidan nusxa olish
+      /lang - tilni o'zgartirish
 
-      /packs - get your packs
-      /new - create a new sticker pack
-
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /round - round shape video
-      /lang - change language
-
-      /donate - support the developer
+      /donate - dasturchini qo'llab-quvatlash
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      👨🏻‍💻 Dasturchining kanali: @LyBlog
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      • Quyidagi tugmani bosing va har qanday didga mos stikerlar to‘plamining ulkan katalogiga kirish huquqiga ega bo‘ling
+      • Kalit so‘zlar yoki tayyorlangan varaqlar bo‘yicha qidiring
+      • Tashviqot uchun baho berishni unutmang. yoki stikerlar to'plamini reytingda pasaytiring
     commands:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
@@ -37,12 +34,12 @@ cmd:
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
+      round: '🎥 Dumaloq shakldagi video'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Open catalog'
+      catalog: '💖 Katalogni ochish'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -65,21 +62,21 @@ cmd:
       <b>🌟 Stikerlar to'plami</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Vector'
+      animated: '✨ Vektor'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
       <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕️ Bot rivojlanishini qo'llab-quvvatlash
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Siz menga kofe uchun pul yuborishingiz va buning evaziga botda kichik bonuslar olishingiz mumkin.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Stikerlar toʻplami nomidagi <b>"${titleSuffix}</b> ni oʻchirib qoʻyish
+    ➖ Boshqa stiker paketlarini havola orqali nusxalash
+    ➖ Video stikerlarni konvertatsiya qilishda ustuvorlik
+    ➖ Qayta ishlash navbatiga bir nechta stiker qoʻshish imkoniyati
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -98,9 +95,9 @@ cmd:
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Videolar endi yumaloq shaklga ega bo'ladi
     disabled: |
-      Videos will no longer have a rounded shape
+      Videolar endi yumaloq shaklga ega bo‘lmaydi
 callback:
   pack:
     answerCbQuer:
@@ -140,8 +137,8 @@ callback:
       use_pack: Использовать стикерпак
       search_gif: Search GIF
       catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '🗑 Delete from catalog'
+      catalog_edit: '📝 Katalogda tahrirlash'
+      catalog_delete: '🗑 Katalogdan oʻchirish'
     error:
       restore: |
         <b>Tizimda xatolik!</b>
@@ -211,24 +208,24 @@ sticker:
         As well as all other files in the inline pack</i>
         Create (/new) or choose (/packs) another sticker pack
       wait_load: |
-        <b>Wait!</b>
+        <b>Kutib turing!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot hali ham avvalgi videoni qayta ishlamoqda...
+        Qayta ishlash ustuvorligini oshirish va navbatga bir nechta stiker qo‘shish imkoniyatini oshirish uchun siz botni ishlab chiqishni (/dona) qo‘llab-quvvatlashingiz mumkin.
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>Xato!</b>
+        Afsuski, bot videongizni aylantira olmadi.
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        Ehtimol, videongiz bot uchun tushunarsiz formatda saqlangandir. U mp4 formatida ekanligiga ishonch hosil qiling.
+        Bu botning ichki xatosi ham boʻlishi mumkin, bu videoni qayta yuborishga urinib koʻring.
       too_big: |
-        <b>Error!</b>.
+        <b>Xato!</b>.
 
-        The file is too big to process. Please reduce the quality and duration before sending.
+        Faylni qayta ishlash uchun juda katta. Yuborishdan oldin sifat va muddatni kamaytiring.
 scenes:
   new_pack:
     static: '🌟 Static'
-    animated: '✨ Vector'
+    animated: '✨ Vektor'
     video: '📹 Video'
     inline: '💫 Inline'
     pack_type: |
@@ -298,33 +295,33 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        To publish a third-party sticker pack, send me a link to the sticker pack or its sticker
+        Uchinchi tomon stikerlar toʻplamini nashr qilish uchun menga stikerlar toʻplami yoki uning stikeriga havolani yuboring
       publish_new_access_denied: |
-        <b>Error!</b>
-        This sticker pack is not yours.
+        <b>Xato!</b>
+        Bu stikerlar toʻplami sizniki emas.
 
-        You can only publish your own sticker packs
+        Siz faqat o'zingizning stiker paketlaringizni nashr qilishingiz mumkin
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Xato!</b>
+        Sizga ushbu xususiyatdan foydalanish taqiqlangan.
+        Iltimos, administratorga murojaat qiling.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your sticker pack
-        Try to send only high-quality sticker packs that may be of interest to a large number of people
+        Siz “<a href="${link}">${title}</a>” stikerlar to‘plamini
+        umumiy katalogida nashr etmoqchisiz
+        Uni botning istalgan foydalanuvchisi nomi, teglari yoki filtri
+        topishi mumkin. faqat ko'p odamlarni qiziqtiradigan yuqori sifatli stiker paketlarini yuboring
 
-        <b>Rules for publishing sticker packs:</b>
-        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Stikerlar to'plamini nashr qilish qoidalari:</b>
+        • Tor doiradagi odamlar uchun mo'ljallangan shaxsiy stiker paketlaringizni nashr qilmang. Masalan, doʻstlaringizning yuzlari yoki xabarlaringizdan iqtiboslar
+        • Yevropa Ittifoqi qonunlarini yoki boshqa mahalliy qonunlarni buzuvchi stiker bosimlarini joylashtirmang
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        Katalogda chop etilishi uchun qoʻshimcha maʼlumotlarni taqdim etishingiz kerak boʻladi
+      continue_button: Davom eting
       enter_description: |
-        <b>Briefly describe your sticker pack so that others can find it</b>
+        <b>Boshqalar topishi uchun stikerlar to‘plamini qisqacha tavsiflab bering</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>Siz [#] ni turkumlash uchun xeshteglardan ham foydalanishingiz mumkin</i>
+        <i>Masalan: #anime #meme #hayvonlar #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
@@ -336,14 +333,14 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: were not specified
+      no_tags: belgilanmagan
       confirm: |
-        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
+        <b>"<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Tavsif:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Teglar:</b> ${tags}
+        <b>Tillar:</b> ${languages} stikerlar toʻplami nashr etilganligini tasdiqlang
       button_confirm: '✅ Confirm publication'
       success: |
         Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!

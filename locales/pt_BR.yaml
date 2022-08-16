@@ -44,7 +44,7 @@ cmd:
       new: '📥 Crie novo'
       catalog: '💖 Abrir catálogo'
   inline:
-    switch_pm: Selecionar pacote de sticker
+    switch_pm: Selecione o pacote de sticker
   restore: |
     <b>🗃 Restauração do pacote de sticker</b>
 
@@ -96,7 +96,7 @@ cmd:
       Para alterar o emoji padrão para o pacote de adesivos atual, digite <code>/emoji</code> seguido por um emoji separado por um espaço.
       Por exemplo - <code>/emoji 🌟</code>
     disabled: Agora você precisa inserir o emoji manualmente.
-    done: Emoji alterado com sucesso.
+    done: Emoji successfully changed.
     error: Houve um erro ao alterar o emoji!
   round_video:
     enabled: |
@@ -106,61 +106,59 @@ cmd:
 callback:
   pack:
     answerCbQuer:
-      hidden: Pacote de Adesivo oculto com sucesso
-      restored: Pacote de Sticker restaurado com sucesso
+      hidden: Pacote de sticker ocultado com sucesso
+      restored: Pacote de sticker restaurado com sucesso
     set_pack:
       static: |
-        Selected static sticker pack <a href="${link}">${title}</a>
+        Selecione o pacote de sticker estático <a href="${link}">${title}</a>
 
-        To add a new sticker send me a photo, another static sticker.
-        For a sticker to have no background, it must be sent as a file.
+        Para adicionar um novo sticker, me envie uma foto ou outro sticker estático.
 
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>Você também pode editar pelo bot oficial @Stickers</i>
       animated: |
-        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+        Selecione o pacote de sticker animado (vetor) <a href="${link}">${title}</a>
 
-        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+        Para adicionar um novo sticker, me envie um arquivo <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> ou outro sticker animado.
 
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>Você também pode editar pelo bot oficial @Stickers</i>
       video: |
-        Selected video sticker pack <a href="${link}">${title}</a>
+        Selecione o pacote de sticker de vídeo <a href="${link}">${title}</a>
 
-        To add a new sticker send me any video or photo.
-        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
+        Para adicionar um novo sticker, me envie qualquer vídeo ou foto. O vídeo será cortado para 3 segundos, então aconselhado que você mesmo faça isso. Comprima o vídeo se possível.
 
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        <i>Você também pode editar pelo bot oficial @Stickers</i>
     set_inline_pack: |
-      Pacote de stickerpack selecionado de <u>${title}</u>
+      Pacote de sticker <u>${title}</u> selecionado
 
-      Para usá-lo, escreva em qualquer chat <code>@${botUsername} </code>e espaço
-      Você também pode usá-lo pressionando o botão abaixo
+      Para usá-lo, digite em qualquer chat <code>@${botUsername} </code>e espaço.
+      Você também pode usá-lo selecionando o botão abaixo
     hidden: Pacote de sticker <a href="${link}">${title}</a> oculto da sua lista.
     restored: Pacote de sticker <a href="${link}">${title}</a> restaurado da sua lista.
     btn:
-      hide: '❌ Hide sticker pack'
-      restore: '✅ Restore'
-      use_pack: Use sticker pack
-      search_gif: Search GIF
-      catalog_add: '🗂 Add to catalog'
+      hide: '❌ Ocultar pacote de sticker'
+      restore: '✅ Restaurar'
+      use_pack: Usar pacote de sticker
+      search_gif: Procurar GIF
+      catalog_add: '🗂 Adicionar ao catálogo'
       catalog_edit: '📝 Editar no catálogo'
       catalog_delete: '🗑 Excluir do catálogo'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore sticker pack.
+        <b>Erro!</b>
+        Não foi possível restaurar pacote de sticker.
       copy: |
-        <b>Error!</b>
-        Cannot find sticker pack.
+        <b>Erro!</b>
+        Não foi possível encontrar pacote de sticker.
   sticker:
     answerCbQuery:
-      delete: The sticker was successfully removed from the sticker pack.
-      restored: The sticker was successfully saved to the current sticker pack.
-    delete: The sticker was successfully removed from the sticker pack.
-    restored: The sticker was successfully saved to the current sticker pack.
+      delete: O sticker foi removido do seu pacote de sticker com sucesso.
+      restored: O sticker foi salvo no seu pacote de sticker atual com sucesso.
+    delete: O sticker foi removido do seu pacote de sticker com sucesso.
+    restored: O sticker foi salvo ao pacote de sticker atual com sucesso.
     btn:
-      delete: '🗑 Delete'
-      copy: '🌟 Copy'
-      restore: '✅ Restore'
+      delete: '🗑 Excluir'
+      copy: '🌟 Copiar'
+      restore: '✅ Restaurar'
     error:
       not_found: |
         Ошибка!
@@ -173,37 +171,37 @@ sticker:
 
       <i>Você também pode editá-lo através do bot oficial @Stickers bot</i>
     ok_inline: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Sticker adicionado ao pacote de sticker com sucesso:</b>
       <u>${title}</u>
-    send_emoji: Ótimo, agora envie os emojis que correspondam aos
+    send_emoji: Great, now send the emoji that matches the
     converting_process: |
       <b>Aguarde...</b>
-      Seu arquivo está na fila para conversão. Espere por conclusão. Isso pode levar algum tempo.
+      Seu arquivo está na fila para conversão. Espere a conclusão. Isso pode levar algum tempo.
 
       Progresso: ${progress} / ${total}
 
-      <i>Os usuários que suportaram o bot obtiveram prioridade na fila (mais: /donate)</i>
+      <i>Os usuários que apoiam o bot têm prioridade na fila (para saber mais: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great sticker pack!</b>
+      <b>😲 Nossa, você fez um pacote de sticker demais!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
+      <i>Isso não toma muito tempo</i>
     error:
       stickers_too_much: |
         <b>Erro!</b>
 
-        Este pacote de adesivos tem o número máximo de adesivos.
-        Você pode criar um novo pacote de adesivos usando o /new comando.
+        Este pacote de sticker já possui o número máximo de stickers.
+        Você pode criar um novo pacote de sticker usando o comando /new.
       have_already: |
-        <b>Este adesivo já está no pacote de adesivos</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Se quiser alterar o emoji, envie-a na seguinte mensagem.
-        <i>Você também pode editá-lo no bot oficial @Stickers</i>
+        If you want to change the emoji, send it in the following message.
+        <i>You can also edit it through the official @Stickers bot bot</i>
       stickerset_invalid: |
-        <b>Erro!</b>
+        <b>Error!</b>
 
-        O bot não pode acessar o seu atual pacote de sticker escolhido.
-        Por favor, crie (/new) ou escolha (/packs) outro pacote de sticking.
+        Bot cannot access your current chosen sticker pack.
+        Please, create (/new) or choose (/packs) another sticker pack.
       file_type: |
         <b>Error!</b>
 
@@ -353,16 +351,16 @@ scenes:
 
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
   leave: |
-    Действие отменено.
+    Action canceled.
   btn:
-    cancel: '❌ Cancelar'
+    cancel: '❌ Cancel'
 admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
+  not_allowed: This section is not for you! 😡
+  info: Admin panel
   menu:
-    messaging: '✉️ Рассылка'
+    messaging: '✉️ Newsletter'
     pack: '📦 Стікерпаки'
-    admin: '😎 Админ-панель'
+    admin: '😎 Admin panel'
   premium:
     changed: |
       <b>Premium status changed:</b>
@@ -439,7 +437,7 @@ admin:
         В процессе
         Архив
       name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
+      cancel: '❌ Cancel'
       view: Посмотреть
       edit: Редактировать
       change_name: Изменить заголовок
