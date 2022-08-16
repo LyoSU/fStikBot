@@ -283,11 +283,11 @@ scenes:
         Você pode fazer isso enviando o comando /donate.
   original:
     enter: |
-      Send the sticker that was added through this bot and I will show you its original sticker.
+      Envie o sticker que foi adicionado através deste bot e mostrarei o original.
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the original sticker.
+        <b>Erro!</b>
+        Não encontrei o sticker original.
   search:
     enter: |
       Envie a pesquisa para procurar por pacote de sticker
@@ -325,13 +325,13 @@ scenes:
         <i>Você também pode usar hashtag para categorizar [#]</i>
         <i>Por exemplo: #anime #meme #animais #fofo #kpop #divertido #gato #jogo </i>
       select_language: |
-        <b>Choose which languages your sticker pack is for:</b>
-        <i>You can select multiple languages</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+        <b>Escolha para quais idiomas seu pacote de adesivos é:</b>
+        <i>Você pode selecionar vários idiomas</i>
+      button_all_languages: Todas os idiomas
+      button_confirm_language: Confirmar
       set_safe: |
-        <b>Is your sticker pack safe for users?</b>
-        <i>That is, it does not contain erotica and other shocking content</i>
+        <b>O seu pacote é seguro para os usuários?</b>
+        <i>Ou seja, não contém conteúdo erótico ou outros conteúdos chocantes</i>
       button_safe:
         safe: Sim, é seguro
         not_safe: Não, não é seguro
@@ -343,17 +343,17 @@ scenes:
 
         <b>Tags:</b> ${tags}
         <b>Idiomas:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Confirmar publicação'
       success: |
-        Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
+        Parabéns, seu pacote de sticker foi publicado no diretório geral do nosso bot, onde outros usuários podem encontrá-lo!
 
-        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+        Você pode editar as informações de pesquisa do pacote selecionando-o com o comando /packs.
 
-        <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
+        <i>Lembramos que as estatísticas do seu pacote de sticker podem ser visualizadas através do bot oficial @Stickers</i>
   leave: |
-    Action canceled.
+    Ação cancelada.
   btn:
-    cancel: '❌ Cancel'
+    cancel: '❌ Cancelar'
 admin:
   not_allowed: This section is not for you! 😡
   info: Admin panel
@@ -437,7 +437,7 @@ admin:
         В процессе
         Архив
       name_changed: Заголовок изменен
-      cancel: '❌ Cancel'
+      cancel: '❌ Cancelar'
       view: Посмотреть
       edit: Редактировать
       change_name: Изменить заголовок
@@ -475,14 +475,14 @@ admin:
     not_found: Стікерпак не знайдено
 error:
   telegram: |
-    <b>Telegram returned an error!</b>
+    <b>O Telegram retornou um erro!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram returned an error:
+      O Telegram retornou um erro:
       ${error}
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Ocorreu um erro desconhecido, por favor, tente novamente.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Se o problema persistir, escreva para @Ly_oBot.
+    Por favor, escreva imediatamente sobre qual bot você está falando e descreva o problema em detalhes em uma mensagem.
