@@ -96,7 +96,7 @@ cmd:
       Para alterar o emoji padrão para o pacote de adesivos atual, digite <code>/emoji</code> seguido por um emoji separado por um espaço.
       Por exemplo - <code>/emoji 🌟</code>
     disabled: Agora você precisa inserir o emoji manualmente.
-    done: Emoji successfully changed.
+    done: Emoji alterado com sucesso.
     error: Houve um erro ao alterar o emoji!
   round_video:
     enabled: |
@@ -173,7 +173,7 @@ sticker:
     ok_inline: |
       <b>Sticker adicionado ao pacote de sticker com sucesso:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Ótimo, agora envie os emojis que correspondam aos
     converting_process: |
       <b>Aguarde...</b>
       Seu arquivo está na fila para conversão. Espere a conclusão. Isso pode levar algum tempo.
@@ -290,7 +290,7 @@ scenes:
         I could not find the original sticker.
   search:
     enter: |
-      Send query to search sticker pack
+      Envie a pesquisa para procurar por pacote de sticker
     error:
       not_found: |
         <b>Error!</b>
@@ -333,8 +333,8 @@ scenes:
         <b>Is your sticker pack safe for users?</b>
         <i>That is, it does not contain erotica and other shocking content</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: Sim, é seguro
+        not_safe: Não, não é seguro
       no_tags: não foi especificado
       confirm: |
         <b>Confirme a publicação do pacote de sticker "<a href="${link}">${title}</a>"</b>
@@ -475,11 +475,11 @@ admin:
     not_found: Стікерпак не знайдено
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegram returned an error!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegram returned an error:
       ${error}
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
