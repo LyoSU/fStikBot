@@ -93,7 +93,7 @@ cmd:
       Agora a cada sticker será atribuído um emoji padrão.
       Envie o comando novamente para alterar o modo.
 
-      Para alterar o emoji padrão para o pacote de adesivos atual, digite <code>/emoji</code> seguido por um emoji separado por um espaço.
+      Para alterar o emoji padrão para o pacote de sticker atual, digite <code>/emoji</code> seguido por um emoji separado por um espaço.
       Por exemplo - <code>/emoji 🌟</code>
     disabled: Agora você precisa inserir o emoji manualmente.
     done: Emoji alterado com sucesso.
@@ -193,23 +193,23 @@ sticker:
         Este pacote de sticker já possui o número máximo de stickers.
         Você pode criar um novo pacote de sticker usando o comando /new.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>Este sticker já está no pacote de sticker</b>
 
-        If you want to change the emoji, send it in the following message.
-        <i>You can also edit it through the official @Stickers bot bot</i>
+        Se quiser alterar o emoji, o envie na mensagem seguinte.
+        <i>Você também pode editá-lo no bot oficial @Stickers</i>
       stickerset_invalid: |
-        <b>Error!</b>
+        <b>Erro!</b>
 
-        Bot cannot access your current chosen sticker pack.
-        Please, create (/new) or choose (/packs) another sticker pack.
+        O bot não pode acessar o seu pacote de sticker escolhido atual.
+        Por favor, crie (/new) ou escolha (/packs) outro pacote de sticker.
       file_type: |
-        <b>Error!</b>
+        <b>Erro!</b>
 
-        This file type is not supported.
+        Este tipo de arquivo não é suportado.
 
-        <i>You can add this video files to the video pack.
-        As well as all other files in the inline pack</i>
-        Create (/new) or choose (/packs) another sticker pack
+        <i>Você pode adicionar esse arquivo de vídeo ao pacote de vídeo.
+        Assim como todos os outros arquivos do pacote inline</i>
+        Crie (/new) ou escolha (/packs) outro pacote de sticker
       wait_load: |
         <b>Aguarde!</b>
 
@@ -232,55 +232,55 @@ scenes:
     video: '📹 Vídeo'
     inline: '💫 Inline'
     pack_type: |
-      <b><u>Choose stickerpack type</u></b>
+      <b><u>Escolha o tipo de pacote de sticker</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular sticker pack - t.me/addstickers/Animals
+      <b>Comum</b> - estático (não se mexe), raster, formato de arquivo - antes de adicionar PNG (o bot está processando), após adicionar - WEBP.
+      Um exemplo de um pacote de sticker comum - t.me/addstickers/Animals
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
+      <b>Animado</b> - animado, vetor (eles têm uma descrição exata dos objetos dentro do arquivo, visto que são exibidos claramente em qualquer escala), arquivo formato - TGS, uma variação do formato Lottie.
+      Um exemplo de pacote de adesivos animados - t.me/addstickers/IsabelleShizue
 
-      <b>Video</b> - animated, raster, file format - WEBM.
-      Sample video sticker pack - t.me/addstickers/TheMascot
+      <b>Vídeo</b> - formato de arquivo animado, rasterizado - WEBM.
+      Pacote de adesivos de vídeo de amostra - t.me/addstickers/TheMascot
 
-      <b>Inline</b> - access to any files through the inline mode of the bot.
+      <b>Inline</b> - acesso a qualquer arquivo através do modo inline do bot.
     pack_title: |
-      <b>Enter new stickers pack name:</b>
-      <i>You can choose random name on button.</i>
+      <b>Digite o nome do novo pacote de sticker:</b>
+      <i>Você pode escolher um nome aleatório no botão.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only latin letters, numbers and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals</i>
-      <i>You can choose random short link on button.</i>
+      <b>Insira um link curto para o novo pacote de sticker:</b>
+      <i>Use apenas letras latinas, números e sublinhados.</i>
+      <i>Por exemplo, este pacote usa 'Animals' como link curto: https://t.me/addstickers/Animals</i>
+      <i>Você pode escolher um link curto aleatório no botão.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      Pacote de sticker <a href="${link}">${title}</a> criado com sucesso!
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>Link do pacote:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Envie um arquivo, foto, vídeo ou sticker para que eu adicione ao seu conjunto.
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Você também pode editá-lo através do bot oficial @Stickers</i>
     error:
-      title_long: Name cannot be greater than ${max} symbols.
-      name_long: Address cannot be greater than ${max} symbols.
+      title_long: O nome não pode ser maior que ${max} símbolos.
+      name_long: O endereço não pode ser maior que ${max} símbolos.
       telegram:
-        name_invalid: That address cannot be used.
-        name_occupied: This address is already taken.
+        name_invalid: Esse endereço não pode ser usado.
+        name_occupied: Este endereço já foi pego.
   copy:
     enter: |
-      I can copy this sticker pack, for this you need to create a new sticker pack.
+      Eu posso copiar este pacote de sticker. Para isso, você precisa criar um novo pacote de sticker.
     progress: |
-      Copying sticker pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      Copiando pacote de sticker de <a href="${originalLink}">${originalTitle}</a> para <a href="${link}">${title}</a>
 
-      Progress: ${current}/${total}
+      Progresso: ${current}/${total}
     done: |
-      Sticker pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      Cópia de pacote de sticker de <a href="${originalLink}">${originalTitle}</a> para <a href="${link}">${title}</a> concluída com sucesso.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>Erro!</b>
+        Este recurso está disponível apenas para membros doadores.
 
-        You can do this by sending the /donate command.
+        Você pode fazer isso enviando o comando /donate.
   original:
     enter: |
       Send the sticker that was added through this bot and I will show you its original sticker.
@@ -293,8 +293,8 @@ scenes:
       Envie a pesquisa para procurar por pacote de sticker
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the pack.
+        <b>Erro!</b>
+        Não consegui encontrar o pacote.
   catalog:
     publish:
       publish_new: |
