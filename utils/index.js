@@ -5,6 +5,7 @@ const messaging = require('./messaging')
 const updateUser = require('./user-update')
 const stats = require('./stats')
 const tenor = require('./tenor')
+const telegramEmojiText = require('./telegram-emoji-text')
 
 module.exports = {
   userName,
@@ -13,5 +14,6 @@ module.exports = {
   messaging,
   updateUser,
   stats,
-  tenor
+  tenor,
+  telegramEmojiText
 }
