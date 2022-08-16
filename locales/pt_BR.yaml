@@ -134,8 +134,8 @@ callback:
 
       Para usá-lo, escreva em qualquer chat <code>@${botUsername} </code>e espaço
       Você também pode usá-lo pressionando o botão abaixo
-    hidden: Sticker pack <a href="${link}">${title}</a> hidden from your list.
-    restored: Sticker pack <a href="${link}">${title}</a> restored to your list.
+    hidden: Pacote de sticker <a href="${link}">${title}</a> oculto da sua lista.
+    restored: Pacote de sticker <a href="${link}">${title}</a> restaurado da sua lista.
     btn:
       hide: '❌ Hide sticker pack'
       restore: '✅ Restore'
@@ -247,13 +247,13 @@ scenes:
 
       <b>Inline</b> - access to any files through the inline mode of the bot.
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Enter new stickers pack name:</b>
+      <i>You can choose random name on button.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only latin letters, numbers and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals</i>
+      <i>You can choose random short link on button.</i>
     ok: |
       Sticker pack <a href="${link}">${title}</a> successfully created!
 
@@ -263,20 +263,20 @@ scenes:
 
       <i>You can also edit it through the official @Stickers bot bot</i>
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Name cannot be greater than ${max} symbols.
+      name_long: Address cannot be greater than ${max} symbols.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: That address cannot be used.
+        name_occupied: This address is already taken.
   copy:
     enter: |
-      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+      I can copy this sticker pack, for this you need to create a new sticker pack.
     progress: |
-      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+      Copying sticker pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
-      Прогресс: ${current}/${total}
+      Progress: ${current}/${total}
     done: |
-      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+      Sticker pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
     error:
       premium: |
         <b>Error!</b>
@@ -285,11 +285,11 @@ scenes:
         You can do this by sending the /donate command.
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Send the sticker that was added through this bot and I will show you its original sticker.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>Error!</b>
+        I could not find the original sticker.
   search:
     enter: |
       Send query to search sticker pack
