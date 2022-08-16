@@ -182,10 +182,10 @@ sticker:
 
       <i>Pengguna yang mendukung bot mendapatkan prioritas dalam antrian (lebih lanjut: /donasi)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great sticker pack!</b>
+      <b>😲 Wow, Anda membuat paket stiker yang bagus!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Apakah Anda ingin menambahkan <a href="${link}">${title}</a> ke katalog stiker publik sehingga pengguna bot lainnya juga dapat melihatnya?
+      <i>Tidak memakan banyak waktu</i>
     error:
       stickers_too_much: |
         <b>Kesalahan!</b>
@@ -245,21 +245,21 @@ scenes:
 
       <b>Inline</b> - access to any files through the inline mode of the bot.
     pack_title: |
-      <b>Masukkan nama paket stiker baru:</b>
-      <i>Anda dapat memilih nama acak pada tombol.</i>
+      <b>Enter new stickers pack name:</b>
+      <i>You can choose random name on button.</i>
     pack_name: |
-      <b>Masukkan tautan pendek untuk paket stiker baru:</b>
-      <i>Use Gunakan hanya huruf latin, angka, dan garis bawah.</i>
-      <i>Misalnya, paket ini menggunakan 'Animals' sebagai tautan pendek: https://t.me/addstickers/Animals</i>
-      <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only latin letters, numbers and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals</i>
+      <i>You can choose random short link on button.</i>
     ok: |
-      Paket stiker <a href="${link}">${title}</a> berhasil dibuat!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Tautan paket stiker:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Kirim file, foto, video, atau stiker agar saya tambahkan ke set Anda
+      Send a file, photo, video or sticker so that I add it to your set
 
-      <i>Anda juga dapat mengeditnya melalui bot bot @Stickers resmi</i>
+      <i>You can also edit it through the official @Stickers bot bot</i>
     error:
       title_long: Nama tidak boleh lebih dari ${max} simbol.
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
