@@ -103,7 +103,7 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   }
 
   if (
-    ctx.session.userInfo.moderators !== true
+    ctx.session.userInfo.moderator !== true
     && packOwner !== ctx.from.id
     ) {
       ctx.session.scene.publish.packName = packName
