@@ -32,7 +32,8 @@
     "stegcloak": "^0.0.1",
     "telegraf": "^3.37.0",
     "telegraf-i18n": "^6.5.0",
-    "telegraf-ratelimit": "^2.0.0"
+    "telegraf-ratelimit": "^2.0.0",
+    "tg-file-id": "^1.1.2"
   },
   "devDependencies": {
     "eslint": "^6.3.0",

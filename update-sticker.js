@@ -4,7 +4,7 @@ const {
   db
 } = require('./database')
 
-const telegram = new Telegram(process.env.BOT_TOKEN);
+const telegram = new Telegram(process.env.BOT_TOKEN)
 
 (async () => {
   const stickers = db.Sticker.find({
