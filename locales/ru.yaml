@@ -300,6 +300,12 @@ scenes:
     publish:
       publish_new: |
         Чтобы опубликовать сторонний стикерпак, пришлите мне ссылку на стикерпак или стикер из него
+      owner_proof: |
+        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
+        1. Open @Stickers bot
+        2. Send <code>/packstats</code> command
+        3. Find and choose the required sticker pack
+        4. Forward the received message to the bot
       publish_new_access_denied: |
         <b>Ошибка!</b>
         Этот стикерпак не ваш.
