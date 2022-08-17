@@ -301,6 +301,12 @@ scenes:
     publish:
       publish_new: |
         To publish a third-party sticker pack, send me a link to the sticker pack or its sticker
+      owner_proof: |
+        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
+        1. Open @Stickers bot
+        2. Send <code>/packstats</code> command
+        3. Find and choose the required sticker pack
+        4. Forward the received message to the bot
       publish_new_access_denied: |
         <b>Error!</b>
         This sticker pack is not yours.
