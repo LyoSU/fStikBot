@@ -296,6 +296,12 @@ scenes:
     publish:
       publish_new: |
         Uchinchi tomon stikerlar toʻplamini nashr qilish uchun menga stikerlar toʻplami yoki uning stikeriga havolani yuboring
+      owner_proof: |
+        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
+        1. Open @Stickers bot
+        2. Send <code>/packstats</code> command
+        3. Find and choose the required sticker pack
+        4. Forward the received message to the bot
       publish_new_access_denied: |
         <b>Xato!</b>
         Bu stikerlar toʻplami sizniki emas.
