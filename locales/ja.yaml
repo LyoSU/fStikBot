@@ -4,25 +4,25 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      こんにちは、 <b>${name}</b>!
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      ステッカー、GIF、ビデオ、ファイル、または写真を送ってください。ステッカー パックに追加します。
+      ステッカーパックから削除しますか?もう一度送信してください。
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - パックを入手する
+      /new - 新しいステッカー パックを作成する
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /round - round shape video
-      /lang - change language
+      /original - オリジナルのステッカーを見つける
+      /restore - ステッカー パックを復元する
+      /copy - ステッカー パックをコピーする
+      /emoji - 現在のステッカー パックの絵文字サフィックスを変更する
+      /round - 丸
+      /lang - 言語を変更する
 
-      /donate - support the developer
+      /donate - 開発者をサポートする
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      👨🏻‍💻 開発者チャンネル: @LyBlog
     catalog: |
       <b>😻 You can find new sticker packs in our catalog</b>
 
