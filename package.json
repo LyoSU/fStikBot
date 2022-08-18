@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.30.10",
+  "version": "0.31.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "telegraf": "^3.37.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-ratelimit": "^2.0.0",
-    "tg-file-id": "^1.1.2"
+    "telegram": "^2.10.10"
   },
   "devDependencies": {
     "eslint": "^6.3.0",

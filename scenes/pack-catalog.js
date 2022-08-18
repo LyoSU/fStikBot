@@ -1,12 +1,38 @@
 const fs = require('fs')
-const { FileId } = require('tg-file-id')
 const path = require('path')
+const { Api, TelegramClient } = require('telegram')
+const { StringSession } = require("telegram/sessions")
 const Telegram = require('telegraf/telegram')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const mongoose = require('mongoose')
 const { db } = require('../database')
+
+function stickerSetIdToOwnerId (u64) {
+  let u32 = u64 >> 32n
+
+  if ((u64 >> 24n & 0xffn) === 0xffn) {
+    return parseInt((u64 >> 32n) + 0x100000000n)
+  }
+  return parseInt(u32)
+}
+
+let telegramClinet = {}
+
+;(async () => {
+  telegramClinet = new TelegramClient(
+    new StringSession(""),
+    parseInt(process.env.TELEGRAM_API_ID),
+    process.env.TELEGRAM_API_HASH,
+    { connectionRetries: 5 }
+  );
+  await telegramClinet.start({
+    botAuthToken: process.env.BOT_TOKEN,
+  })
+
+  telegramClinet.setLogLevel("error") // only errors
+})()
 
 const telegram = new Telegram(process.env.BOT_TOKEN);
 
@@ -75,10 +101,8 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   ctx.session.scene.publish = {}
 
   let packName
-  let packOwner
 
   if (ctx.message.sticker) {
-    packOwner = FileId.fromFileId(ctx.message.sticker.file_id).getOwnerId()
     packName = ctx.message.sticker.set_name
   } else {
     const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
@@ -87,20 +111,25 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
       return ctx.scene.reenter()
     }
 
-    const stickerSetInfo = await ctx.telegram.getStickerSet(messageTextMatch[2]).catch(() => {})
-
-    if (!stickerSetInfo) {
-      return ctx.scene.reenter()
-    }
-
-    packOwner = FileId.fromFileId(stickerSetInfo.stickers[0].file_id).getOwnerId()
-
     packName = messageTextMatch[2]
   }
 
   if (!packName) {
     return ctx.scene.reenter()
   }
+
+  const getStickerSetInfo = await telegramClinet.invoke(new Api.messages.GetStickerSet({
+    stickerset: new Api.InputStickerSetShortName({
+      shortName: packName
+    }),
+    hash: 0
+  })).catch(() => {})
+
+  if (!getStickerSetInfo) {
+    return ctx.scene.reenter()
+  }
+
+  const packOwner = stickerSetIdToOwnerId(getStickerSetInfo.set.id.value)
 
   if (
     ctx.session.userInfo.moderator !== true
@@ -112,7 +141,11 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
 
   ctx.session.scene.publish.stickerSet = await createStickerSet(packName, ctx.session.userInfo)
 
-  return ctx.scene.enter('catalogPublish')
+  if (ctx.session.userInfo.moderator === true) {
+    return ctx.scene.enter('catalogEnterDescription')
+  } else {
+    return ctx.scene.enter('catalogPublish')
+  }
 })
 
 const catalogPublishOwnerProof = new Scene('catalogPublishOwnerProof')

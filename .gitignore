@@ -61,6 +61,7 @@ typings/
 .next
 
 tmp
+tgsnake
 
 .DS_Store
 config.json
