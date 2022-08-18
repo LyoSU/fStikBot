@@ -33,6 +33,8 @@ cmd:
       start: '📜 Стартове меню'
       packs: '📁 Стікерпаки'
       new: '📥 Створити стікерпак'
+      catalog: '📖 Catalog'
+      publish: '🌐 Publish sticker pack in catalog'
       original: '🔍 Знайдіть оригінальний стікер'
       restore: '🔀 Відновити стікерпак'
       copy: '📋 Копіювати стікерпак'
@@ -300,7 +302,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        Щоб опублікувати набір сторонніх стікерів, надішліть мені посилання на набір стікерів або стікер з нього
+        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+
+        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
         <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
         1. Open @Stickers bot
