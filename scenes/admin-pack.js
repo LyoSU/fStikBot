@@ -18,27 +18,42 @@ adminPackFind.enter(async (ctx) => {
   }).catch(() => {})
 })
 
-adminPackFind.on('sticker', async (ctx) => {
-  const { sticker } = ctx.message
+adminPackFind.on(['sticker', 'text'], async (ctx) => {
+  const { sticker, text } = ctx.message
 
-  if (!sticker) {
+  let packName
+
+  if (text) {
+    const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
+
+    if(!messageTextMatch || !messageTextMatch[2]) {
+      return ctx.scene.reenter()
+    }
+
+    packName = messageTextMatch[2]
+  } else if (sticker) {
+    packName = sticker.set_name
+  }
+
+
+  if (packName.split('_').pop(-1) !== ctx.options.username) {
     return ctx.replyWithHTML(ctx.i18n.t('admin.pack.not_found'))
   }
 
-  if (sticker.set_name.split('_').pop(-1) !== ctx.options.username) {
-    return ctx.replyWithHTML(ctx.i18n.t('admin.pack.not_found'))
-  }
+  const stickerSet = await ctx.tg.getStickerSet(packName)
 
-  const stickerSet = await ctx.db.StickerSet.findOne({
+  const info = await ctx.db.StickerSet.findOne({
     name: sticker.set_name
   })
+
 
   if (!stickerSet) {
     return ctx.replyWithHTML(ctx.i18n.t('admin.pack.not_found'))
   }
 
   ctx.session.admin = {
-    editPack: stickerSet
+    editPack: stickerSet,
+    info
   }
 
   await ctx.scene.enter('adminPackEdit')
@@ -47,13 +62,13 @@ adminPackFind.on('sticker', async (ctx) => {
 const adminPackEdit = new Scene('adminPackEdit')
 
 adminPackEdit.enter(async (ctx) => {
-  const { editPack } = ctx.session.admin
+  const { editPack, info } = ctx.session.admin
 
   if (!editPack) {
     return ctx.scene.enter('adminPackFind')
   }
 
-  const packOwner = await ctx.db.User.findById(editPack.owner)
+  const packOwner = await ctx.db.User.findById(info?.owner)
 
   const resultText = ctx.i18n.t('admin.pack.edit.found', {
     packName: editPack.name,
@@ -78,9 +93,9 @@ adminPackEdit.enter(async (ctx) => {
 })
 
 adminPackEdit.action(/^admin:pack:edit:steal$/, async (ctx) => {
-  const { editPack } = ctx.session.admin
+  const { editPack, info } = ctx.session.admin
 
-  if (!editPack) {
+  if (!info) {
     return ctx.scene.enter('adminPackFind')
   }
 
@@ -105,9 +120,9 @@ adminPackEdit.action(/^admin:pack:edit:steal$/, async (ctx) => {
 })
 
 adminPackEdit.action(/admin:pack:edit:steal:(.*)/, async (ctx) => {
-  const { editPack } = ctx.session.admin
+  const { info } = ctx.session.admin
 
-  if (!editPack) {
+  if (!info) {
     return ctx.scene.enter('adminPackFind')
   }
 
@@ -117,14 +132,14 @@ adminPackEdit.action(/admin:pack:edit:steal:(.*)/, async (ctx) => {
     return ctx.scene.enter('adminPackEdit')
   }
 
-  editPack.owner = ctx.session.userInfo.id
-  await editPack.save()
+  info.owner = ctx.session.userInfo.id
+  await info.save()
 
   await ctx.deleteMessage()
 
   ctx.state.answerCbQuery = [
     ctx.i18n.t('admin.pack.edit.steal_success', {
-      packName: editPack.name
+      packName: info.name
     }),
     true
   ]
