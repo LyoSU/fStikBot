@@ -43,7 +43,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
   const stickerSet = await ctx.tg.getStickerSet(packName)
 
   const info = await ctx.db.StickerSet.findOne({
-    name: sticker.set_name
+    name: packName
   })
 
 
