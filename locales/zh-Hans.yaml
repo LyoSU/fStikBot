@@ -33,6 +33,8 @@ cmd:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
+      catalog: '📖 Catalog'
+      publish: '🌐 Publish sticker pack in catalog'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
@@ -300,7 +302,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        To publish a third-party sticker pack, send me a link to the sticker pack or its sticker
+        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+
+        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
         <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
         1. Open @Stickers bot
