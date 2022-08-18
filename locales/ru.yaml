@@ -32,6 +32,8 @@ cmd:
       start: '📜 Справка бота'
       packs: '📁 Стикерпаки'
       new: '📥 Создать стикерпак'
+      catalog: '📖 Catalog'
+      publish: '🌐 Publish sticker pack in catalog'
       original: '🔍 Найти оригинальный стикер'
       restore: '🔀 Восстановить стикерпак'
       copy: '📋 Скопировать стикерпак'
@@ -299,7 +301,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        Чтобы опубликовать сторонний стикерпак, пришлите мне ссылку на стикерпак или стикер из него
+        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+
+        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
         <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
         1. Open @Stickers bot
