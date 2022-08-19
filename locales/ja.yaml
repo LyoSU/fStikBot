@@ -4,31 +4,31 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      こんにちは、 <b>${name}</b>!
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      ステッカー、GIF、ビデオ、ファイル、または写真を送ってください。ステッカー パックに追加します。
+      ステッカーパックから削除しますか?もう一度送信してください。
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - パックを入手する
+      /new - 新しいステッカー パックを作成する
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /round - round shape video
-      /lang - change language
+      /original - オリジナルのステッカーを見つける
+      /restore - ステッカー パックを復元する
+      /copy - ステッカー パックをコピーする
+      /emoji - 現在のステッカー パックの絵文字サフィックスを変更する
+      /round - 丸
+      /lang - 言語を変更する
 
-      /donate - support the developer
+      /donate - 開発者をサポートする
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      👨🏻‍💻 開発者チャンネル: @LyBlog
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 カタログで新たなステッカーを見つけよう〜</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      ・このボタンを押すと、色々なステッカーを手に入れる事ができます
+      ・キーボードまたはスペシャルターブで検索しよう
+      ・おすすめしたいまたはしたかないステッカーをレートして下さい
     commands:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
@@ -39,12 +39,12 @@ cmd:
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
+      round: '丸'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Open catalog'
+      catalog: '💖 カタログを開く'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -68,7 +68,7 @@ cmd:
       <b>🌟 Стикерпаки:</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Vector'
+      animated: '✨ ベクター'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
@@ -76,14 +76,14 @@ cmd:
       Для создания напиши /new
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕️ ボット開発のサポート
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    私にコーヒー代を送ってもらえませんか。見返りとして、ボットで少額のボーナスを受け取ることができます。
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
+    ➖ <b>"${titleSuffix}</b> in ステッカー パック名の無効化
+    ➖ リンクによる他のステッカー パックのコピー
+    ➖ ビデオ ステッカーを変換する際の優先度
+    ➖ 複数のステッカーを処理キューに追加する機能
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -102,9 +102,9 @@ cmd:
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      これから動画の形が丸くなります
     disabled: |
-      Videos will no longer have a rounded shape
+      動画の形はもう丸くではありません
 callback:
   pack:
     answerCbQuer:
@@ -144,8 +144,8 @@ callback:
       use_pack: Использовать стикерпак
       search_gif: Search GIF
       catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '🗑 Delete from catalog'
+      catalog_edit: '📝 カタログで編集'
+      catalog_delete: ' - カタログから削除する'
     error:
       restore: |
         <b>Ошибка!</b>
@@ -232,7 +232,7 @@ sticker:
 scenes:
   new_pack:
     static: '🌟 Static'
-    animated: '✨ Vector'
+    animated: '✨ ベクター'
     video: '📹 Video'
     inline: '💫 Inline'
     pack_type: |
