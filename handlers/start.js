@@ -50,7 +50,7 @@ module.exports = async (ctx) => {
           inline_keyboard: [
             [
               {
-                text: ctx.i18n.t('cmd.start.btn.catalog'),
+                text: ctx.i18n.t('cmd.start.btn.catalog_mini'),
                 web_app: {
                   url: ctx.config.catalogUrl
                 }
