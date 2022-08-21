@@ -45,6 +45,7 @@ cmd:
     btn:
       new: '📥 Жаңасын құру'
       catalog: '💖 Open catalog'
+      catalog_mini: '💖 Catalog'
   inline:
     switch_pm: Стикерпак таңдау
   restore: |
