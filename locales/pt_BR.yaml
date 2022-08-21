@@ -45,6 +45,7 @@ cmd:
     btn:
       new: '📥 Crie novo'
       catalog: '💖 Abrir catálogo'
+      catalog_mini: '💖 Catalog'
   inline:
     switch_pm: Selecione o pacote de sticker
   restore: |

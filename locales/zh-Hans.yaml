@@ -45,6 +45,7 @@ cmd:
     btn:
       new: '📥 Create new'
       catalog: '💖 Open catalog'
+      catalog_mini: '💖 Catalog'
   inline:
     switch_pm: 选择貼圖包
   restore: |

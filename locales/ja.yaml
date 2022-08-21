@@ -45,6 +45,7 @@ cmd:
     btn:
       new: '📥 Create new'
       catalog: '💖 カタログを開く'
+      catalog_mini: '💖 Catalog'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
