@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
-    "@pm2/io": "^4.3.5",
+    "@pm2/io": "^5.0.0",
     "bull": "^4.7.0",
     "dotenv": "^7.0.0",
     "error-stack-parser": "^2.0.6",
