@@ -59,13 +59,18 @@ const stickerSetsSchema = mongoose.Schema({
     languages: [String],
     safe: {
       type: Boolean,
-      default: false
+      default: false,
+      index: true
     },
     verified: {
       type: Boolean,
       default: false,
       index: true
     }
+  },
+  moderated: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

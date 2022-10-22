@@ -8,6 +8,10 @@ module.exports = async (ctx) => {
             web_app: {
               url: ctx.config.catalogUrl
             }
+            // login_url: {
+            //   url: ctx.config.catalogUrl,
+            //   request_write_access: true
+            // }
           }
         ]
       ]

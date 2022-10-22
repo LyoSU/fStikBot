@@ -430,7 +430,7 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
     languages: publish.languages,
   })
 
-  if (!publish.stickerSet.publishDate) {
+  if (!publish.stickerSet.public) {
     publish.stickerSet.publishDate = new Date()
   }
 
