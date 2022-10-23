@@ -220,6 +220,10 @@ sticker:
 
         Bot is still processing the previous video...
         You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+      timeout: |
+        <b>Error!</b>
+
+        Try again later.
       convert: |
         <b>Error!</b>
         Unfortunately, the bot was unable to convert your video.

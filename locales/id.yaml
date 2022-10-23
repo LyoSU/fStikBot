@@ -218,6 +218,10 @@ sticker:
 
         Bot masih memproses video sebelumnya...
         Anda dapat mendukung pengembangan bot (/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
+      timeout: |
+        <b>Error!</b>
+
+        Try again later.
       convert: |
         <b>Kesalahan!</b>
         Sayangnya, bot tidak dapat mengonversi video Anda.
