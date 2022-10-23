@@ -215,6 +215,10 @@ sticker:
 
         Bot hali ham avvalgi videoni qayta ishlamoqda...
         Qayta ishlash ustuvorligini oshirish va navbatga bir nechta stiker qo‘shish imkoniyatini oshirish uchun siz botni ishlab chiqishni (/dona) qo‘llab-quvvatlashingiz mumkin.
+      timeout: |
+        <b>Error!</b>
+
+        Try again later.
       convert: |
         <b>Xato!</b>
         Afsuski, bot videongizni aylantira olmadi.
