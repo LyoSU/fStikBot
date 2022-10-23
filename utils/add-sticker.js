@@ -304,15 +304,29 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           }, 1000 * 5)
         }
 
-        const file = await job.finished().catch(error => {
-            return {
-              error: {
-                convertQueue: error
-              }
+        const file = await Promise.race([job.finished().catch(error => {
+          return {
+            error: {
+              convertQueue: error
             }
-        })
+          }
+        }), new Promise(resolve => {
+          setTimeout(() => {
+            resolve({
+              error: {
+                convertQueue: 'timeout'
+              }
+            })
+          }, 1000 * 60)
+        })])
 
         if (file.error) {
+          if (file.error.convertQueue === 'timeout') {
+            return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
+              reply_to_message_id: ctx.message.message_id
+            })
+          }
+
           return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
             reply_to_message_id: ctx.message.message_id
           })
