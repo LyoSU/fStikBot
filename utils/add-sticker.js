@@ -317,7 +317,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
                 convertQueue: 'timeout'
               }
             })
-          }, 1000 * 60)
+          }, 1000 * 60 * 15)
         })])
 
         if (file.error) {
