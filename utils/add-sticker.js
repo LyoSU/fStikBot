@@ -321,8 +321,11 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         })])
 
         if (file.error) {
-          clearInterval(updateMessage)
-          ctx.tg.deleteMessage(ctx.from.id, convertingMessage.message_id)
+          try {
+            clearInterval(updateMessage)
+            ctx.tg.deleteMessage(ctx.from.id, convertingMessage.message_id)
+          } catch (error) {
+          }
 
           if (file.error.convertQueue === 'timeout') {
             return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
