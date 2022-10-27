@@ -1,9 +1,20 @@
+const fs = require('fs').promises
 const https = require('https')
 const sharp = require('sharp')
 const Queue = require('bull')
 const EventEmitter = require('events')
 
 EventEmitter.defaultMaxListeners = 100
+
+const redisConfig =  {
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PASSWORD
+}
+
+const removebgQueue = new Queue('removebg', {
+  redis: redisConfig
+})
 
 const convertQueue = new Queue('convert', {
   redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST, password: process.env.REDIS_PASSWORD }
@@ -63,7 +74,6 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
   const isVideo = (stickerSet?.video || inputFile.is_video || (inputFile.mime_type && inputFile.mime_type.match('video'))) || false
   const isVideoNote = (inputFile.video_note) || false
-
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -199,6 +209,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
     emojis += stickerSet.emojiSuffix || ''
     let fileUrl
+    let fileData
 
     if (stickerFile.fileUrl) {
       fileUrl = stickerFile.fileUrl
@@ -214,6 +225,19 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       if (fileUrl.error) {
         return fileUrl
       }
+    }
+
+    if (inputFile.removeBg) {
+      const job = await removebgQueue.add({
+        fileUrl,
+      }, {
+        attempts: 1,
+        removeOnComplete: true
+      })
+
+      const { content } = await job.finished()
+
+      fileData = Buffer.from(content, 'base64')
     }
 
     const stickerExtra = {
@@ -244,11 +268,10 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
 
       if (inputFile.is_video || inputFile.skip_reencode) {
-
-        const data = await downloadFileByUrl(fileUrl)
+        fileData = await downloadFileByUrl(fileUrl)
 
         stickerExtra.webm_sticker = {
-          source: data
+          source: fileData
         }
       } else {
         let priority = 10
@@ -262,6 +285,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         const job = await convertQueue.add({
           fileUrl,
+          fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
           timestamp: Date.now(),
           type,
           forceCrop
@@ -349,8 +373,11 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
       userQueue.video = false
     } else {
-      const data = await downloadFileByUrl(fileUrl)
-      const imageSharp = sharp(data)
+      if (!fileData) {
+        fileData = await downloadFileByUrl(fileUrl)
+      }
+
+      const imageSharp = sharp(fileData)
       const imageMetadata = await imageSharp.metadata().catch(() => { })
 
       if (

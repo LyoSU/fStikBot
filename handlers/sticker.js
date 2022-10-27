@@ -86,6 +86,7 @@ module.exports = async (ctx) => {
     }
     if (ctx.message.caption?.includes('roundit')) stickerFile.video_note = true
     if (ctx.message.caption?.includes('cropit')) stickerFile.forceCrop = true
+    if (ctx.message.caption?.includes('rmbg')) stickerFile.removeBg = true
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
       fileUniqueId: stickerFile.file_unique_id,
