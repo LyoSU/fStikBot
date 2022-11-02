@@ -127,7 +127,7 @@ newPackConfirm.enter(async (ctx, next) => {
     }), {
       reply_to_message_id: ctx.message.message_id
     })
-    return ctx.scene.reenter()
+    return ctx.scene.enter('newPackName')
   }
 
   if (!inline) name += nameSuffix
