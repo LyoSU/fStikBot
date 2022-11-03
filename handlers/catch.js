@@ -12,7 +12,7 @@ const escapeHTML = (str) => str.replace(/[&<>'"]/g,
   }[tag] || tag)
 )
 
-module.exports = async (error, ctx) => {
+async function errorLog (error, ctx) {
   const errorInfo = errorStackParser.parse(error)
 
   let gitBlame
@@ -24,7 +24,7 @@ module.exports = async (error, ctx) => {
   let errorText = `<b>error for ${ctx.updateType}:</b>`
   if (ctx.match) errorText += `\n<code>${ctx.match[0]}</code>`
   if (ctx.from && ctx.from.id) errorText += `\n\nuser: <a href="tg://user?id=${ctx.from.id}">${escapeHTML(ctx.from.first_name)}</a> #user_${ctx.from.id}`
-  if (ctx.session.chainActions && ctx.session.chainActions.length > 0) errorText += '\n\n🔗 ' + ctx.session.chainActions.map(v => `<code>${v}</code>`).join(' ➜ ')
+  if (ctx?.session?.chainActions && ctx?.session.chainActions.length > 0) errorText += '\n\n🔗 ' + ctx?.session.chainActions.map(v => `<code>${v}</code>`).join(' ➜ ')
 
   if (gitBlame && !gitBlame.stderr) {
     const parsedBlame = gitBlame.stdout.match(/^(?<SHA>[0-9a-f]+)\s+\((?<USER>.+)(?<DATE>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4}\s+)(?<line>\d+)\) ?(?<code>.*)$/m)
@@ -36,8 +36,6 @@ module.exports = async (error, ctx) => {
 
   errorText += `\n\n\n<code>${escapeHTML(error.stack)}</code>`
 
-  console.error(error)
-
   if (error.description && error.description.includes('timeout')) return
 
   if (!ctx.config) return console.error(errorText)
@@ -48,7 +46,13 @@ module.exports = async (error, ctx) => {
     console.error('send log error:', error)
   })
 
-  await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch((error) => {
-    console.error('send log error:', error)
+  await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
+}
+
+module.exports = async (error, ctx) => {
+  console.error(error)
+
+  errorLog(error, ctx).catch(e => {
+    console.error('errorLog error:', e)
   })
 }

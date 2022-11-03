@@ -40,6 +40,7 @@ const сhoosePackType = new Scene('сhoosePackType')
     ]).resize()
   })
 })
+
 сhoosePackType.on('message', async (ctx) => {
   if (ctx.message.text === ctx.i18n.t('scenes.new_pack.animated')) {
     ctx.session.scene.newPack.animated = true
