@@ -42,6 +42,14 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   handlerTimeout: 1
 })
 
+bot.use((ctx, next) => {
+  next().catch((error) => {
+    handleError(error, ctx)
+    return true
+  })
+  return true
+})
+
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
 // I18n
@@ -60,8 +68,6 @@ bot.use(rateLimit({
   limit: 3,
   onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
 }))
-
-bot.catch(handleError)
 
 const limitPublicPack = Composer.optional((ctx) => {
   return ctx.session?.userInfo?.stickerSet?.passcode === 'public'
