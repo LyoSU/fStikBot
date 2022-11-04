@@ -99,14 +99,14 @@ bot.use(
       } else if (ctx.from && ctx.chat) {
         return `${ctx.from.id}:${ctx.chat.id}`
       }
-      return null
+      return ctx.update.update_id
     }
   })
 )
 
 // response time logger
 bot.use(async (ctx, next) => {
-  if (!ctx.session.chainActions) ctx.session.chainActions = []
+  if (ctx.session && !ctx.session.chainActions) ctx.session.chainActions = []
   let action
 
   if (ctx.message && ctx.message.text) action = ctx.message.text
