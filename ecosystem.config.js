@@ -4,7 +4,7 @@ module.exports = {
     script: './index.js',
     max_memory_restart: '2000M',
     watch: true,
-    cron_restart: '0 * * * *',
+    cron_restart: '0 */6 * * *', // restart every 6 hours
     env: {
       NODE_ENV: 'development'
     },
