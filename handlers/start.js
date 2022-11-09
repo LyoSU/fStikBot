@@ -52,6 +52,7 @@ module.exports = async (ctx) => {
           inline_keyboard: [
             [
               {
+                text: ctx.i18n.t('cmd.start.btn.catalog'),
                 // web_app: {
                 login_url: {
                   url: ctx.config.catalogUrl,
