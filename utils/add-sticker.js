@@ -275,7 +275,9 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         }
       } else {
         let priority = 10
-        if (ctx.session.userInfo.premium) priority = 9
+        if (ctx.session.userInfo.premium) priority = 5
+        if (ctx.i18n.locale() === 'ru') priority = 15
+
         type = (isVideoNote) ? "circle" : "rounded"
         forceCrop = (inputFile.forceCrop) || false
 
