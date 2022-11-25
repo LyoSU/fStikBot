@@ -32,10 +32,6 @@ const userSchema = mongoose.Schema({
   autoEmoji: {
     type: Boolean
   },
-  roundVideo: {
-    type: Boolean,
-    default: true
-  },
   inlineType: {
     type: String
   },

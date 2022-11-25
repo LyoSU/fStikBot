@@ -22,7 +22,6 @@ const {
   handleCopyPack,
   handleLanguage,
   handleEmoji,
-  handleRoundVideo,
   handleStickerUpade,
   handleInlineQuery
 } = require('./handlers')
@@ -169,10 +168,10 @@ bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
 bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
 bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
+bot.command('frame', (ctx) => ctx.scene.enter('packFrame'))
 bot.command('catalog', handleCatalog)
 bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
-bot.command('round', handleRoundVideo)
 bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))

@@ -2,6 +2,9 @@ const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const {
+  match
+} = require('telegraf-i18n')
+const {
   rword
 } = require('rword')
 const { addSticker } = require('../utils')
@@ -100,6 +103,8 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 }))
 
 newPackName.on('text', async (ctx) => {
+  ctx.session.scene.newPack.name = ctx.message.text
+
   return ctx.scene.enter('newPackConfirm')
 })
 
@@ -109,7 +114,6 @@ newPackConfirm.enter(async (ctx, next) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
   const inline = !!ctx.session.scene?.newPack?.inline
-  ctx.session.scene.newPack.name = ctx.message.text
 
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` :: @${ctx.options.username}`
@@ -157,7 +161,12 @@ newPackConfirm.enter(async (ctx, next) => {
       return ctx.scene.enter('newPackName')
     }
 
-    createNewStickerSet = await ctx.telegram.createNewStickerSet(ctx.from.id, name, title, stickers).catch((error) => {
+    createNewStickerSet = await ctx.telegram.createNewStickerSet(
+      ctx.from.id,
+      name,
+      title,
+      stickers
+    ).catch((error) => {
       return { error }
     })
 
@@ -258,12 +267,17 @@ newPackConfirm.enter(async (ctx, next) => {
     }
 
     if (!ctx.session.scene.copyPack) {
-      await ctx.scene.leave()
-      return ctx.replyWithHTML('👌', {
-        reply_markup: {
-          remove_keyboard: true
-        }
-      })
+      if (video) {
+        return ctx.scene.enter('packFrame')
+      } else {
+        await ctx.replyWithHTML('👌', {
+          reply_markup: {
+            remove_keyboard: true
+          }
+        })
+
+        await ctx.scene.leave()
+      }
     }
 
     const originalPack = ctx.session.scene.copyPack
@@ -315,4 +329,9 @@ newPackConfirm.enter(async (ctx, next) => {
   }
 })
 
-module.exports = [сhoosePackType, newPackTitle, newPackName, newPackConfirm]
+module.exports = [
+  сhoosePackType,
+  newPackTitle,
+  newPackName,
+  newPackConfirm
+]

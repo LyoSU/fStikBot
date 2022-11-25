@@ -281,8 +281,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         type = (isVideoNote) ? "circle" : "rounded"
         forceCrop = (inputFile.forceCrop) || false
 
-        if (type === "rounded" && !ctx.session.userInfo.roundVideo) {
-          type = 'square'
+        if (type === "rounded") {
+          type = stickerSet.frameType || "square"
         }
 
         const job = await convertQueue.add({

@@ -13,7 +13,6 @@ module.exports = {
   handleCatalog: require('./catalog'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
-  handleRoundVideo: require('./video-round'),
   handleStickerUpade: require('./sticker-update'),
   handleInlineQuery: require('./inline-query')
 }

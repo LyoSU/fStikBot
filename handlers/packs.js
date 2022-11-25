@@ -137,6 +137,10 @@ module.exports = async (ctx) => {
             ]),
             parse_mode: 'HTML'
           })
+
+          if (stickerSet.video && !stickerSet.frameType) {
+            return ctx.scene.enter('packFrame')
+          }
         }
       } else {
         await ctx.answerCbQuery('error', true)

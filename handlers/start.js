@@ -11,7 +11,6 @@ module.exports = async (ctx) => {
     { command: 'original', description: ctx.i18n.t('cmd.start.commands.original') },
     { command: 'restore', description: ctx.i18n.t('cmd.start.commands.restore') },
     { command: 'copy', description: ctx.i18n.t('cmd.start.commands.copy') },
-    // { command: 'emoji', description: ctx.i18n.t('cmd.start.commands.emoji') },
     { command: 'lang', description: ctx.i18n.t('cmd.start.commands.lang') },
     { command: 'donate', description: ctx.i18n.t('cmd.start.commands.donate') }
   ]
