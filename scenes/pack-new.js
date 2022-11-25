@@ -126,6 +126,8 @@ newPackConfirm.enter(async (ctx, next) => {
     name = name.replace(/[^0-9a-z_]/gi, '')
   }
 
+  if (!name) return ctx.scene.reenter()
+
   if (name.length >= ctx.config.charNameMax) {
     await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.name_long', {
       max: ctx.config.charNameMax
@@ -276,7 +278,7 @@ newPackConfirm.enter(async (ctx, next) => {
           }
         })
 
-        await ctx.scene.leave()
+        return ctx.scene.leave()
       }
     }
 
