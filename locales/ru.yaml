@@ -371,22 +371,22 @@ scenes:
         <i>Напоминаем, что статистику вашего стикерпака можно посмотреть через официального бота @Stickers</i>
   frame:
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Тип кадра:</b>
+      Рамка - прозрачный фон вокруг стикера
 
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>lite</code> — the corners will be cut a little
-      <code>rounded</code> — the corners will be rounded
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>квадрат</code> - прямоугольная фигура рамки, то есть он никаким образом не изменится
+      <code>lite</code> — углы будут немного обрезаны
+      <code>округленные</code> — углы будут округлены
+      <code>окружности</code> — рамка будет в виде круга
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>В будущем, можно использовать команду /frame для установки типа кадра</i>
     types:
       square: '1. Square'
       lite: '2. Lite'
       rounded: '3. Rounded'
       circle: '4. Circle'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Выбранный тип рамки:</b> ${type}
   leave: |
     Действие отменено.
   btn:
