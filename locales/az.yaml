@@ -368,6 +368,24 @@ scenes:
         You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
 
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
+  frame:
+    select_type: |
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
+
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>lite</code> — the corners will be cut a little
+      <code>rounded</code> — the corners will be rounded
+      <code>circle</code> — the frame will be in the form of a circle
+
+      <i>In the future, you may use the /frame command to set the type of frame</i>
+    types:
+      square: '1. Square'
+      lite: '2. Lite'
+      rounded: '3. Rounded'
+      circle: '4. Circle'
+    selected: |
+      <b>Selected frame type:</b> ${type}
   leave: |
     Fəaliyyət uğurla ləğv edildi.
   btn:

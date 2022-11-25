@@ -365,6 +365,24 @@ scenes:
         Você pode editar as informações de pesquisa do pacote selecionando-o com o comando /packs.
 
         <i>Lembramos que as estatísticas do seu pacote de sticker podem ser visualizadas através do bot oficial @Stickers</i>
+  frame:
+    select_type: |
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
+
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>lite</code> — the corners will be cut a little
+      <code>rounded</code> — the corners will be rounded
+      <code>circle</code> — the frame will be in the form of a circle
+
+      <i>In the future, you may use the /frame command to set the type of frame</i>
+    types:
+      square: '1. Square'
+      lite: '2. Lite'
+      rounded: '3. Rounded'
+      circle: '4. Circle'
+    selected: |
+      <b>Selected frame type:</b> ${type}
   leave: |
     Ação cancelada.
   btn:
