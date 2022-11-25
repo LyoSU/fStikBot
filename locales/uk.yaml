@@ -222,9 +222,9 @@ sticker:
         Бот все ще обробляє попереднє відео...
         Ви можете підтримати розробку бота (/donate), щоб збільшити пріоритет обробки та можливість додавати більше однієї наклейки в чергу.
       timeout: |
-        <b>Error!</b>
+        <b>Помилка!</b>
 
-        Try again later.
+        Спробуйте пізніше.
       convert: |
         <b>Помилка!</b>
         На жаль, боту не вдалося конвертувати ваше відео.
@@ -370,22 +370,22 @@ scenes:
         <i>Нагадуємо, що статистику свого стікерпаку можна переглянути через офіційний бот @Stickers</i>
   frame:
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Виберіть тип рамки:</b>
+      Рамка — це прозорий фон навколо наклейки
 
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>lite</code> — the corners will be cut a little
-      <code>rounded</code> — the corners will be rounded
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>square</code> — прямокутна форма рамки, тобто вона не буде змінена жодним чином
+      <code>lite</code> — кути будуть трохи обрізані
+      <code>rounded</code> — кути будуть заокруглені
+      <code>circle</code> — рамка матиме форму кола
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>У майбутньому ви можете використовувати команду /frame для встановлення типу рамки</i>
     types:
       square: '1. Square'
       lite: '2. Lite'
       rounded: '3. Rounded'
       circle: '4. Circle'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Вибраний тип рамки:</b> ${type}
   leave: |
     Дію скасовано.
   btn:
