@@ -6,7 +6,15 @@ module.exports = async (ctx) => {
           {
             text: ctx.i18n.t('cmd.start.btn.catalog'),
             web_app: {
-            // login_url: {
+              url: ctx.config.catalogUrl,
+              request_write_access: true
+            }
+          }
+        ],
+        [
+          {
+            text: ctx.i18n.t('cmd.start.btn.catalog_browser'),
+            login_url: {
               url: ctx.config.catalogUrl,
               request_write_access: true
             }
