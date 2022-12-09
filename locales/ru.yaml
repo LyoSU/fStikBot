@@ -47,8 +47,8 @@ cmd:
       new: '📥 Создать новый'
       catalog: '💖 Открыть каталог'
       catalog_mini: '💖 Каталог'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
+      catalog_browser: '🌐 Открыть в браузере'
+      catalog_browser_mini: '🌐 В браузере'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
