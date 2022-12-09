@@ -46,6 +46,8 @@ cmd:
       new: '📥 Create new'
       catalog: '💖 Open catalog'
       catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |

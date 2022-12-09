@@ -43,6 +43,8 @@ cmd:
       new: '📥 Create new'
       catalog: '💖 Katalogni ochish'
       catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
