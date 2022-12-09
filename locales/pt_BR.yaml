@@ -46,6 +46,8 @@ cmd:
       new: '📥 Crie novo'
       catalog: '💖 Abrir catálogo'
       catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
   inline:
     switch_pm: Selecione o pacote de sticker
   restore: |
