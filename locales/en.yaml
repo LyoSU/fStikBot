@@ -124,12 +124,10 @@ coedit:
     ${editors}
 
     <i>To remove from editors, you must reset the link</i>
-
   no_editors: |
     No editors yet
   btn:
     reset: '🔁 Reset link'
-
   reset: |
     <b>🔁 Link reset successful</b>
 
