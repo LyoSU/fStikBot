@@ -109,6 +109,31 @@ cmd:
       Відео будуть мати закруглену форму
     disabled: |
       Відео більше не матимуть округлої форми
+coedit:
+  info: |
+    <b>👥 Co-editing sticker pack</b>
+
+    Link for co-editing <a href="${link}">${title}</a>:
+    <code>${colink}</code>
+
+    <b>How to use:</b>
+    1. Send the link to the person you want to give access to the sticker pack
+    2. After which it will be added to the list of editors
+    3. The editor can add, delete and edit stickers in the sticker pack
+
+    <b>Editors:</b>
+    ${editors}
+
+    <i>To remove from editors, you must reset the link</i>
+  no_editors: |
+    No editors yet
+  btn:
+    reset: '🔁 Reset link'
+  reset: |
+    <b>🔁 Link reset successful</b>
+
+    New link for co-editing <a href="${link}">${title}</a>:
+    <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
@@ -147,6 +172,7 @@ callback:
       restore: '✅ Відновити'
       use_pack: Використовувати стікерпак
       search_gif: Пошук GIF
+      coedit: '👥 Co-edit'
       catalog_add: '🗂 Додати до каталогу'
       catalog_edit: '📝 Редагувати в каталозі'
       catalog_delete: '🗑 Видалити з каталогу'
