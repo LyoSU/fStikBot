@@ -20,6 +20,7 @@ const {
   handleRestorePack,
   handleCatalog,
   handleCopyPack,
+  handleCoedit,
   handleLanguage,
   handleEmoji,
   handleStickerUpade,
@@ -180,6 +181,7 @@ bot.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
+bot.use(handleCoedit)
 bot.use(handleInlineQuery)
 
 // sticker detect

@@ -22,9 +22,6 @@ module.exports = async (ctx) => {
   const query = {
     owner: userInfo.id,
     create: true,
-    // inline: { $ne: true },
-    // animated: { $ne: true },
-    // video: { $ne: true },
     hide: { $ne: true }
   }
 
@@ -101,6 +98,12 @@ module.exports = async (ctx) => {
             searchGifButton = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
           }
 
+          let coeditButton = []
+
+          if (stickerSet.owner.toString() === userInfo.id.toString()) {
+            coeditButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.coedit'), `coedit:${stickerSet.id}`)]
+          }
+
           let catalogButton = []
 
           const stickersCount = await ctx.db.Sticker.countDocuments({
@@ -130,6 +133,7 @@ module.exports = async (ctx) => {
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
               ],
               searchGifButton,
+              coeditButton,
               catalogButton,
               [
                 Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)

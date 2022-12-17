@@ -8,7 +8,8 @@ const stickerSetsSchema = mongoose.Schema({
   },
   passcode: {
     type: String,
-    index: true
+    index: true,
+    unique: true
   },
   name: {
     type: String,
