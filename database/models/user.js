@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
   username: String,
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet'
+    ref: 'StickerSet',
+    index: true
   },
   videoStickerSet: {
     type: mongoose.Schema.Types.ObjectId,
