@@ -3,7 +3,7 @@ const Composer = require('telegraf/composer')
 const crypto = require('crypto')
 
 const generatePasscode = () => {
-  return crypto.randomBytes(16).toString('hex')
+  return crypto.randomBytes(4).toString('hex')
 }
 
 const escapeHTML = (str) => str.replace(
@@ -43,7 +43,7 @@ composer.action(/coedit:reset:(.*)/, async (ctx) => {
   })
 
   return ctx.replyWithHTML(ctx.i18n.t('coedit.reset', {
-    colink:`https://t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
+    colink:`t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
     title: stickerSet.title,
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
   }))
@@ -77,7 +77,7 @@ composer.action(/coedit:(.*)/, async (ctx) => {
   }).join(', ') || ctx.i18n.t('coedit.no_editors')
 
   return ctx.replyWithHTML(ctx.i18n.t('coedit.info', {
-    colink:`https://t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
+    colink:`t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
     title: stickerSet.title,
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
     editors
