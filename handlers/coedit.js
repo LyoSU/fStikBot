@@ -85,6 +85,16 @@ composer.action(/coedit:(.*)/, async (ctx) => {
     reply_markup: {
       inline_keyboard: [
         [{
+          text: ctx.i18n.t('coedit.btn.send'),
+          url: `https://t.me/share/url?url=t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}&text=${
+            encodeURIComponent(
+              ctx.i18n.t('coedit.share', {
+                title: stickerSet.title
+              })
+            )
+          }`
+        }],
+        [{
           text: ctx.i18n.t('coedit.btn.reset'),
           callback_data: `coedit:reset:${stickerSet._id}`
         }]
