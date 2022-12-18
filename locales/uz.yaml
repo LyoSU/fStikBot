@@ -112,13 +112,13 @@ coedit:
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the sticker pack
-    2. After which it will be added to the list of editors
+    2. After clicking on the link, he needs to press "start" and he will be added to the editor
     3. The editor can add, delete and edit stickers in the sticker pack
 
     <b>Editors:</b>
     ${editors}
 
-    <i>To remove from editors, you must reset the link</i>
+    <i>To remove editors, you need to reset the link</i>
   no_editors: |
     No editors yet
   btn:
