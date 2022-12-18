@@ -9,7 +9,8 @@ const stickerSetsSchema = mongoose.Schema({
   passcode: {
     type: String,
     index: true,
-    unique: true
+    unique: true,
+    sparse: true
   },
   name: {
     type: String,
