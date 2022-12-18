@@ -112,7 +112,7 @@ coedit:
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the sticker pack
-    2. After clicking on the link, he needs to press "start" and he will be added to the editor
+    2. After clicking on the link, they need to press "start" and they will be added to the editors
     3. The editor can add, delete and edit stickers in the sticker pack
 
     <b>Editors:</b>
@@ -122,7 +122,10 @@ coedit:
   no_editors: |
     No editors yet
   btn:
+    send: '📤 Send link'
     reset: '🔁 Reset link'
+  share: |
+    Follows the link and press "start" to co-edit the sticker pack "${title}"
   reset: |
     <b>🔁 Link reset successful</b>
 
