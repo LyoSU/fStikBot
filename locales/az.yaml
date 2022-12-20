@@ -16,7 +16,7 @@ cmd:
       /restore - restore a sticker pack
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
-      /round - round shape video
+      /frame - сhange frame for current sticker pack
       /lang - change language
 
       /donate - support the developer
