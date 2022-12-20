@@ -4,22 +4,25 @@ ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
     info: |
-      Assalomu alaykum <b>${name}</b>!
-      Menga Stiker yoki fotosurat yuboring, men uni stikerlar to'plamingizga qo'shib qo'yaman.
-      O'chirish uchun - Stikerni qayta yuboring
+      Hi, <b>${name}</b>!
 
-      /packs - stikerlar to'plamining ro'yxati
-      /animpacks - animatsion stikerlarlar to'plamining ro'yxati
-      /new - yangi stikerlar to'plamini yaratish
-      /original - asl stikerni topish
-      /restore - stikerlar to'plamini qayta tiklash
-      /copy - stikerlar to'plamidan nusxa olish
-      /lang - tilni o'zgartirish
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-      /donate - dasturchini qo'llab-quvatlash
+      /packs - get your packs
+      /new - create a new sticker pack
+
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
+
+      /donate - support the developer
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Dasturchining kanali: @LyBlog
+      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
