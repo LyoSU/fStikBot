@@ -44,7 +44,7 @@ composer.action(/coedit:reset:(.*)/, async (ctx) => {
 
   return ctx.replyWithHTML(ctx.i18n.t('coedit.reset', {
     colink:`t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
-    title: stickerSet.title,
+    title: escapeHTML(stickerSet.title),
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
   }))
 })
@@ -78,7 +78,7 @@ composer.action(/coedit:(.*)/, async (ctx) => {
 
   return ctx.replyWithHTML(ctx.i18n.t('coedit.info', {
     colink:`t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
-    title: stickerSet.title,
+    title: escapeHTML(stickerSet.title),
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
     editors
   }), {
@@ -89,7 +89,7 @@ composer.action(/coedit:(.*)/, async (ctx) => {
           url: `https://t.me/share/url?url=t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}&text=${
             encodeURIComponent(
               ctx.i18n.t('coedit.share', {
-                title: stickerSet.title
+                title: escapeHTML(stickerSet.title)
               })
             )
           }`
