@@ -4,25 +4,25 @@ ratelimit: Não tão frequente!
 cmd:
   start:
     info: |
-      Olá, <b>${name}</b>!
+      Hi, <b>${name}</b>!
 
-      Me envie um sticker, GIF, vídeo, arquivo, ou foto e vou adicionar ao seu pacote de stickers.
-      Quer remover do seu pacote de stickers? É só enviar novamente.
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-      /packs - liste os seus pacotes
-      /new - crie um novo pacote de stickers
+      /packs - get your packs
+      /new - create a new sticker pack
 
-      /original - encontre o sticker original
-      /restore - restore um pacote de sticker
-      /copy - copie um pacote de sticker
-      /emoji - mude o emoji vinculado ao pacote de sticker atual
-      /round - deixe o vídeo redondo
-      /lang - altere o idioma
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      /donate - apoie o desenvolvedor
+      /donate - support the developer
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
+      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>😻 Você pode encontrar novos pacotes de sticker no nosso catálogo</b>
 
