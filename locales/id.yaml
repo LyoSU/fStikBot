@@ -4,25 +4,25 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Hai, <b>${name}</b>!
+      Hi, <b>${name}</b>!
 
-      Kirimi saya stiker, GIF, video, file, atau foto dan saya akan menambahkannya ke paket stiker Anda.
-      Ingin menghapusnya dari paket stiker Anda? Kirim sekali lagi.
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
 
-      /packs - dapatkan paket Anda
-      /new - buat paket stiker baru
+      /packs - get your packs
+      /new - create a new sticker pack
 
-      /original - temukan stiker asli
-      /restore - pulihkan paket stiker
-      /copy - salin paket stiker
-      /emoji - ubah sufiks emoji untuk paket stiker saat ini
-      /round - video bentuk bulat
-      /lang - ganti bahasa
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      /donate - dukung pengembang
+      /donate - support the developer
 
       GitHub: https://github.com/LyoSU/fStikBot
-      Saluran pengembang: @LyBlog
+      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>Anda dapat menemukan paket stiker baru di katalog kami</b>
 
