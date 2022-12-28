@@ -48,6 +48,8 @@ cmd:
       catalog_mini: '💖 Catalog'
       catalog_browser: '🌐 Open in browser'
       catalog_browser_mini: '🌐 In browser'
+      catalog_app: '📱 Download Android app'
+      catalog_app_mini: '📱 Android app'
   inline:
     switch_pm: Selecione o pacote de sticker
   restore: |
