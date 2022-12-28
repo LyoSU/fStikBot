@@ -47,8 +47,8 @@ cmd:
       catalog_mini: '💖 Каталог'
       catalog_browser: '🌐 Открыть в браузере'
       catalog_browser_mini: '🌐 В браузере'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog_app: '📱 Скачать Android приложение'
+      catalog_app_mini: '📱 Android приложение'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
