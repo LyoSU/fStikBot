@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.34.6",
+  "version": "0.34.7",
   "description": "",
   "main": "index.js",
   "scripts": {

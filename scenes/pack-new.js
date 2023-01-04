@@ -198,7 +198,7 @@ newPackConfirm.enter(async (ctx, next) => {
     if (!inline) {
       const getStickerSet = await ctx.telegram.getStickerSet(name)
       const stickerInfo = getStickerSet.stickers.slice(-1)[0]
-      await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id)
+      await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id).catch(() => {})
     }
 
     const userStickerSet = await ctx.db.StickerSet.newSet({

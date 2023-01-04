@@ -327,7 +327,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
               clearInterval(updateMessage)
               ctx.tg.deleteMessage(ctx.from.id, convertingMessage.message_id)
             }
-          }, 1000 * 5)
+          }, 1000 * 15)
         }
 
         const file = await Promise.race([job.finished().catch(error => {

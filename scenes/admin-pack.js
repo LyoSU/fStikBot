@@ -190,7 +190,7 @@ adminPackEdit.action(/admin:pack:edit:remove:(.*)/, async (ctx) => {
   const stickerSet = await ctx.telegram.getStickerSet(editPack.name)
 
   for (const sticker of stickerSet.stickers) {
-    await ctx.telegram.deleteStickerFromSet(sticker.file_id)
+    await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
 
     await ctx.db.Sticker.deleteOne({
       fileUniqueId: sticker.file_unique_id
