@@ -21,7 +21,8 @@ module.exports = async (ctx) => {
         sticker.file = sticker.info
         sticker.file.skip_reencode = true
       }
-      const result = await addSticker(ctx, sticker.file.file_id, sticker.stickerSet)
+
+      const result = await addSticker(ctx, sticker.file, sticker.stickerSet)
 
       if (result.error) {
         if (result.error.telegram.description.includes('STICKERSET_INVALID')) {
