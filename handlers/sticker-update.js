@@ -11,7 +11,13 @@ module.exports = async (ctx, next) => {
   if (ctx.session.previousSticker.id) {
     sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id).populate('stickerSet')
 
-    const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name)
+    const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name).catch(() => {})
+
+    if (!stickerSet) {
+      return ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.error'), {
+        reply_to_message_id: ctx.message.message_id
+      })
+    }
 
     stickerIndex = stickerSet.stickers.findIndex((v) => {
       return v.file_unique_id === sticker.fileUniqueId

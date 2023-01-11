@@ -225,6 +225,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
   const replyMarkup = Markup.inlineKeyboard([
     [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.all'), 'admin:messaging:group:all')],
     [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.ru'), 'admin:messaging:group:ru')],
+    [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.uk'), 'admin:messaging:group:uk')],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
       Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
@@ -258,6 +259,10 @@ adminMessagingСonfirmation.enter(async (ctx) => {
       premium: { $ne: true },
       locale: 'ru',
       updatedAt: { $gte: moment().subtract(1, 'months') }
+    })
+  } else if (ctx.session.scene.type === 'uk') {
+    findUsers = await ctx.db.User.count({
+      locale: 'uk'
     })
   }
 
@@ -346,6 +351,10 @@ adminMessagingPublish.enter(async (ctx) => {
       premium: { $ne: true },
       locale: 'ru',
       updatedAt: { $gte: moment().subtract(1, 'months') }
+    }).select({ _id: 1, telegram_id: 1 }).cursor()
+  } else if (ctx.session.scene.type === 'uk') {
+    usersCursor = await ctx.db.User.find({
+      locale: 'uk'
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   }
 
