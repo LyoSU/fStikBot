@@ -4,25 +4,7 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
-
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
-
-      /packs - get your packs
-      /new - create a new sticker pack
-
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
-
-      /donate - support the developer
-
-      GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      ${name}
     catalog: |
       <b>😻 カタログで新たなステッカーを見つけよう〜</b>
 
@@ -33,8 +15,8 @@ cmd:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
-      catalog: '📖 Catalog'
-      publish: '🌐 Publish sticker pack in catalog'
+      catalog: '📖 Каталог'
+      publish: 'https://t. me/fStikChat'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
@@ -45,8 +27,8 @@ cmd:
     btn:
       new: '📥 Create new'
       catalog: '💖 カタログを開く'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
+      catalog_mini: '💖 Каталог'
+      catalog_browser: 'ブラウザで開く'
       catalog_browser_mini: '🌐 In browser'
       catalog_app: '📱 Download Android app'
       catalog_app_mini: '📱 Android app'
