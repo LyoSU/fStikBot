@@ -4,25 +4,25 @@ ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      ¡Hola, <b>${name}</b>
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      Envíame una pegatina, GIF, vídeo, archivo o foto y la añadiré a tu paquete de pegatina.
+      ¿Quieres eliminarlo de tu paquete de pegatinas? Envíalo de nuevo.
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - consigue tus packs
+      /new - crea un nuevo pack de stickers
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
+      /original - encuentra la sticker original
+      /restore - restaura el paquete de stickers
+      /copy - copia un paquete de stickers
+      /emoji - cambia el sufijo de emoji para el paquete de stickers actual
+      /frame - rellena el paquete de stickers
+      /lang - cambia el idioma
 
-      /donate - support the developer
+      /donate - apoya al desarrollador
 
-      GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github. om/LyoSU/fStikBot
+      👨🏻‍💻 Canal para desarrollador: @LyBlog
     catalog: |
       <b>😻 You can find new sticker packs in our catalog</b>
 
