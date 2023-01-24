@@ -4,54 +4,54 @@ ratelimit: 不经常如此！
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      您好， <b>${name}</b>！
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      给我发送贴纸，GIF，视频，文件或照片，我将把它添加到您的贴纸包。
+      想要从您的貼圖中移除它吗？再次發送它。
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - 获取您的素材
+      /frame - 创建一个新的贴纸包
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
+      /origin-找到原始贴纸
+      /return - 还原一个贴纸包
+      /copy - 复制一个贴纸包
+      /emoji - 更改当前贴纸包的表情符号后缀
+      /frame - 更改当前贴纸包的标准框架
+      /lang - 更改语言
 
-      /donate - support the developer
+      /donate - 支持开发人员
 
-      🧑‍🔧 Contacts: @ly_oBot
+      🧑 联系人：@ly_oBot
 
-      GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      GitHub: https://github. om/LyoSU/fStikBot
+      👨🏻‍💻 开发者通道: @LyBlogs
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 您可以在我们的目录中找到新的贴纸包</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      • 单击下面的按钮并访问适合各种口味的大量贴纸包目录
+      • 按关键字或在准备好的标签中搜索
+      • 不要忘记评价以进行促销或降低贴纸包的排名
     commands:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
-      catalog: '📖 Catalog'
-      publish: '🌐 Publish sticker pack in catalog'
+      catalog: '📖 目录'
+      publish: '🌐 在目录中发布贴纸包'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
+      round: '🎥 圆形视频'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog: '💖 打开目录'
+      catalog_mini: '💖目录'
+      catalog_browser: '🌐 在浏览器中打开'
+      catalog_browser_mini: '🌐 在浏览器中'
+      catalog_app: '📱 下载安卓应用'
+      catalog_app_mini: '📱 安卓应用'
   inline:
     switch_pm: 选择貼圖包
   restore: |
@@ -75,7 +75,7 @@ cmd:
       <b>🌟 貼圖包:</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Vector'
+      animated: '✨ 矢量'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
@@ -83,14 +83,13 @@ cmd:
       若要创建，请写一个命令/新
     inline_title: 内联貼圖包
   club: |
-    ☕️ Supporting a bot development
+    ☕️ 支持机器人开发
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    你可以寄钱给我喝咖啡，并在机器人中获得小额奖金作为回报。
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
+    ➖ 禁用 <b>英寸${titleSuffix}</b> 贴纸包名称
+    ➖ 通过链接复制其他贴纸包
+    ➖ 转换视频贴纸时的优先级
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -109,36 +108,36 @@ cmd:
     error: 更改表情时发生错误！
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      视频现在将呈圆形
     disabled: |
-      Videos will no longer have a rounded shape
+      视频将不再具有圆形
 coedit:
   info: |
-    <b>👥 Co-editing sticker pack</b>
+    <b>👥 共同编辑贴纸包</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
+    共同编辑链接 <a href="${link}">${title}</a>:
     <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the sticker pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the sticker pack
+    <b>如何使用：</b>
+    1. 将链接发送给您想要授予贴纸包访问权限的人
+    2. 单击链接后，他们需要按“开始”，他们将被添加到编辑器中
+    3. 编辑器可以在贴纸包中添加、删除和编辑贴纸
 
-    <b>Editors:</b>
+    <b>编辑器：</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>要删除编辑器，你需要重置链接</i>
   no_editors: |
-    No editors yet
+    还没有编辑
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 发送链接'
+    reset: '🔁 重置链接'
   share: |
-    Follows the link and press "start" to co-edit the sticker pack "${title}"
+    点击链接并按“开始”共同编辑贴纸包“${title}”
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 链接重置成功</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    共同编辑的新链接 <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -178,10 +177,10 @@ callback:
       restore: '✅ 恢复'
       use_pack: 使用贴纸包
       search_gif: 搜索 GIF
-      coedit: '👥 Co-edit'
+      coedit: '👥 共同编辑'
       catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '🗑 Delete from catalog'
+      catalog_edit: '📝 在目录中编辑'
+      catalog_delete: '🗑 从目录中删除'
     error:
       restore: |
         <b>错误！</b>
@@ -251,28 +250,28 @@ sticker:
         内联包中的所有其他文件</i>
         创建(/new) 或选择 (/packs) 另一个贴纸包
       wait_load: |
-        <b>Wait!</b>
+        <b>等等！</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot 仍在处理之前的视频...
+        您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
       timeout: |
-        <b>Error!</b>
+        <b>错误！</b>
 
-        Try again later.
+        稍后再试。
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>错误！</b>
+        不幸的是，机器人无法转换您的视频。
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        也许您的视频是以机器人无法理解的格式保存的。确保它是 mp4 格式。
+        也可能是bot内部错误，重新发送这个视频试试。
       too_big: |
-        <b>Error!</b>.
+        <b>错误！</b>.
 
-        The file is too big to process. Please reduce the quality and duration before sending.
+        文件太大，无法处理。请在发送前降低质量和持续时间。
 scenes:
   new_pack:
     static: '🌟 Static'
-    animated: '✨ Vector'
+    animated: '✨ 矢量'
     video: '📹 Video'
     inline: '💫 Inline'
     pack_type: |
@@ -342,41 +341,41 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+        👌 <b>将您要发布的贴纸包中的贴纸发送给我</b>
 
-        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
+        <i>您可以发布属于您的任何贴纸包，即使它们是在别处创建的</i>
       owner_proof: |
-        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required sticker pack
-        4. Forward the received message to the bot
+        <b>要验证此贴纸包的所有权，您需要执行几个简单的步骤：</b>
+        1. 打开@Stickers bot
+        2. 发送 <code>/packstats</code> 命令
+        3. 找到并选择所需的贴纸包
+        4. 转发收到发送给机器人的消息
       publish_new_access_denied: |
-        <b>Error!</b>
-        This sticker pack is not yours.
+        <b>错误！</b>
+        这个贴纸包不是你的。
 
-        You can only publish your own sticker packs
+        您只能发布自己的贴纸包
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>错误！</b>
+        您被禁止使用此功能。
+        请联系管理员。
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your sticker pack
-        Try to send only high-quality sticker packs that may be of interest to a large number of people
+        您即将在我们的 bot 的公共目录中发布“<a href="${link}">${title}</a>”贴纸包
+        该 bot 的任何用户都可以通过名称、标签或过滤器找到它
+        因此，更多人将安装您的贴纸包
+        尝试只发送大量人可能感兴趣的高质量贴纸包
 
-        <b>Rules for publishing sticker packs:</b>
-        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>发布贴纸包的规则：</b>
+        • 不要发布您的个人贴纸包，供少数人使用。例如，例如您朋友的面孔或您消息中的引述
+        • 不要张贴违反欧盟法律或其他当地法律的贴纸压力
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        您需要提交其他信息才能在目录中发布
+      continue_button: 继续
       enter_description: |
-        <b>Briefly describe your sticker pack so that others can find it</b>
+        <b>简要描述你的贴纸包，以便其他人可以找到它</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>你也可以使用主题标签对 [#] 进行分类</i>
+        <i>例如：#anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
@@ -388,14 +387,14 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: were not specified
+      no_tags: 不指定
       confirm: |
-        <b>Confirm the publication of the sticker pack "<a href="${link}">${title}</a>"</b>
+        <b>确认发布贴纸包“<a href="${link}">${title}</a>”</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>描述：</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>标签：</b> ${tags}
+        <b>语言：</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
@@ -405,22 +404,22 @@ scenes:
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
   frame:
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>选择框架类型：</b>
+      框架是贴纸周围的透明背景
 
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>lite</code> — the corners will be cut a little
-      <code>rounded</code> — the corners will be rounded
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>正方形</code> — 框架的矩形形状，即不会以任何方式改变
+      <code>lite</code> — 角将是切一点
+      <code>rounded</code> — 角会变圆
+      <code>circle</code> — frame 会变成圆形
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>以后可以使用 /frame 命令来设置 frame 的类型</i>
     types:
-      square: '1. Square'
-      lite: '2. Lite'
-      rounded: '3. Rounded'
-      circle: '4. Circle'
+      square: '1. 广场'
+      lite: '2. 精简版'
+      rounded: '3. 圆角'
+      circle: '4. 圆圈'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>所选帧类型：</b> ${type}
   leave: |
     Действие отменено.
   btn:
