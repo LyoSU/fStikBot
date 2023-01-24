@@ -21,6 +21,8 @@ cmd:
 
       /donate - support the developer
 
+      🧑‍🔧 Contacts: @ly_oBot
+
       GitHub: https://github.com/LyoSU/fStikBot
       👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
@@ -33,8 +35,8 @@ cmd:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
-      catalog: '📖 Catalog'
-      publish: '🌐 Publish sticker pack in catalog'
+      catalog: '📖 Каталог'
+      publish: 'https://t. me/fStikChat'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
@@ -45,8 +47,8 @@ cmd:
     btn:
       new: '📥 Create new'
       catalog: '💖 カタログを開く'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
+      catalog_mini: '💖 Каталог'
+      catalog_browser: 'ブラウザで開く'
       catalog_browser_mini: '🌐 In browser'
       catalog_app: '📱 Download Android app'
       catalog_app_mini: '📱 Android app'
