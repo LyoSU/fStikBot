@@ -4,54 +4,48 @@ ratelimit: Pek sık değil!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Merhaba, <b>${name}</b>!
+      Bana bir çıkartma veya fotoğraf gönder, ben de çıkartma paketine ekleyeceğim.
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      /packs - paketlerini getir
+      /new - yeni bir çıkartma paketi oluştur
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /original - orjinal çıkartmayı bul
+      /restore - çıkartma paketini sıfırla
+      /copy - çıkartma paketini kopyala
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
-
-      /donate - support the developer
-
-      🧑‍🔧 Contacts: @ly_oBot
+      /donate - yapımcıyı destekle
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      👨🏻‍💻 Yapımcı Kanalı: @LyBlog
+      Çeviriyi Yapan: @By_Azade
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      • Aşağıdaki düğmeyi tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
+      • Anahtar kelimelere göre veya hazırlanmış sekmelerde arama yapın
+      • Tanıtmak için puan vermeyi unutmayın veya çıkartma paketini sıralamada düşürün
     commands:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
-      catalog: '📖 Catalog'
-      publish: '🌐 Publish sticker pack in catalog'
+      catalog: '📖 Katalog'
+      publish: '🌐 Çıkartma paketini katalogda yayınla'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
+      round: '🎥 Yuvarlak şekil videosu'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog: '💖 Kataloğu aç'
+      catalog_mini: '💖 Katalog'
+      catalog_browser: '🌐 Tarayıcıda aç'
+      catalog_browser_mini: '🌐 Tarayıcıda'
+      catalog_app: '📱 Android uygulamasını indirin'
+      catalog_app_mini: '📱 Android uygulaması'
   inline:
     switch_pm: Çıkartma paketi seçin
   restore: |
@@ -75,7 +69,7 @@ cmd:
       <b>🌟 Çıkartma Paketleri:</b>
     types:
       static: '🌟 Static'
-      animated: '✨ Vector'
+      animated: '✨ vektör'
       video: '📹 Video'
       inline: '💫 Inline'
     empty: |
@@ -83,14 +77,13 @@ cmd:
       To create, write a command /new
     inline_title: Satır içi çıkartma paketi
   club: |
-    ☕️ Supporting a bot development
+    ☕️ Bir bot gelişimini desteklemek
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Bana kahve için para gönderebilir ve karşılığında botta küçük ikramiyeler alabilirsiniz.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Çıkartma paketlerinde <b>"${titleSuffix}</b> devre dışı bırakılması
+    ➖ Diğer çıkartma paketlerinin bağlantı ile kopyalanması
+    ➖ Video çıkartmalarını dönüştürürken öncelik
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -109,36 +102,36 @@ cmd:
     error: Emoji değiştirilirken bir hata oluştu!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Videolar artık yuvarlak bir şekle sahip olacak
     disabled: |
-      Videos will no longer have a rounded shape
+      Videolar artık yuvarlak bir şekle sahip olmayacak
 coedit:
   info: |
-    <b>👥 Co-editing sticker pack</b>
+    <b>👥 Ortak düzenleme çıkartma paketi</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
+    Ortak düzenleme bağlantısı <a href="${link}">${title}</a>:
     <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the sticker pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the sticker pack
+    <b>Nasıl kullanılır:</b>
+    1. Bağlantıyı çıkartma paketine erişim vermek istediğiniz kişiye gönderin
+    2. Linke tıkladıktan sonra "başlat"a basmaları gerekiyor ve editörlere eklenecekler
+    3. Editör, çıkartma paketindeki çıkartmaları ekleyebilir, silebilir ve düzenleyebilir
 
-    <b>Editors:</b>
+    <b>Editörler:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Editörleri kaldırmak için, bağlantıyı sıfırlamanız gerekiyor</i>
   no_editors: |
-    No editors yet
+    Henüz düzenleyici yok
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 Bağlantı gönder'
+    reset: '🔁 Bağlantıyı sıfırla'
   share: |
-    Follows the link and press "start" to co-edit the sticker pack "${title}"
+    Bağlantıyı takip eder ve "${title}" çıkartma paketini birlikte düzenlemek için "başlat"a basın
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Bağlantı sıfırlama başarılı</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    Ortak düzenleme için yeni bağlantı <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -178,7 +171,7 @@ callback:
       restore: '✅ Sıfırla'
       use_pack: Çıkartma paketini kullan
       search_gif: GIF ara
-      coedit: '👥 Co-edit'
+      coedit: '👥 Ortak düzenleme'
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Katalogda düzenle'
       catalog_delete: '🗑 Katalogdan sil'
@@ -251,28 +244,28 @@ sticker:
         Satır içi paketteki diğer tüm dosyaların yanı sıra</i>
         Başka bir çıkartma paketi oluşturun (/new) veya seçin (/packs)
       wait_load: |
-        <b>Wait!</b>
+        <b>Bekle!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot hala bir önceki videoyu işliyor...
+        İşleme önceliğini artırmak ve kuyruğa birden fazla çıkartma ekleyebilmek için bot geliştirmeyi (/donate) destekleyebilirsiniz.
       timeout: |
-        <b>Error!</b>
+        <b>Hata!</b>
 
-        Try again later.
+        Daha sonra tekrar deneyin.
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>Hata!</b>
+        Maalesef bot videonuzu dönüştüremedi.
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        Belki de videonuz bot için anlaşılmaz bir biçimde kaydedilmiştir. mp4 formatında olduğundan emin olun.
+        Botun dahili bir hatası da olabilir, bu videoyu tekrar göndermeyi deneyin.
       too_big: |
-        <b>Error!</b>.
+        <b>Hata!</b>.
 
-        The file is too big to process. Please reduce the quality and duration before sending.
+        Dosya işlenemeyecek kadar büyük. Lütfen göndermeden önce kaliteyi ve süreyi azaltın.
 scenes:
   new_pack:
     static: '🌟 Static'
-    animated: '✨ Vector'
+    animated: '✨ vektör'
     video: '📹 Video'
     inline: '💫 Inline'
     pack_type: |
@@ -339,41 +332,41 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+        👌 <b>Yayınlamak istediğiniz çıkartma paketinden çıkartmayı bana gönderin</b>
 
-        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
+        <i>Size ait olan herhangi bir çıkartma paketini başka bir yerde oluşturulmuş olsa bile yayınlayabilirsiniz</i>
       owner_proof: |
-        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required sticker pack
-        4. Forward the received message to the bot
+        <b>Bu çıkartma paketinin sahipliğini doğrulamak için birkaç basit adımı izlemeniz gerekir:</b>
+        1. @Stickers botunu açın
+        2. <code>/packstats</code> komutunu gönderin
+        3. Gerekli çıkartma paketini bulun ve seçin
+        4. bota mesaj alındı
       publish_new_access_denied: |
-        <b>Error!</b>
-        This sticker pack is not yours.
+        <b>Hata!</b>
+        Bu çıkartma paketi sizin değil.
 
-        You can only publish your own sticker packs
+        Yalnızca kendi çıkartma paketlerinizi yayınlayabilirsiniz
       bannded: |
         <b>Hata!</b>
         Bu özelliği kullanmanız yasaklandı.
         Lütfen yönetici ile iletişime geçin.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" sticker pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your sticker pack
-        Try to send only high-quality sticker packs that may be of interest to a large number of people
+        "<a href="${link}">${title}</a>" çıkartma paketini botumuzun genel dizininde yayınlamak üzeresiniz
+        Botun herhangi bir kullanıcısı tarafından ada, etiketlere veya filtreye göre bulunabilir
+        Bu nedenle, çıkartma paketinizi daha fazla kişi yükleyecektir
+        Deneyin yalnızca çok sayıda insanın ilgisini çekebilecek yüksek kaliteli çıkartma paketleri gönderin
 
-        <b>Rules for publishing sticker packs:</b>
-        • Do not publish your personal sticker packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Çıkartma paketleri yayınlama kuralları:</b>
+        • Dar bir insan grubuna yönelik kişisel çıkartma paketlerinizi yayınlamayın. Örneğin, arkadaşlarınızın yüzleri veya mesajlarınızdan alıntılar gibi
+        • AB yasalarını veya diğer yerel yasaları ihlal eden çıkartma baskıları göndermeyin
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        Katalogda yayınlanması için ek bilgiler göndermeniz gerekecek
+      continue_button: Devam
       enter_description: |
-        <b>Briefly describe your sticker pack so that others can find it</b>
+        <b>Diğerlerinin bulabilmesi için çıkartma paketinizi kısaca tanımlayın</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>[#] kategorize etmek için hashtag'leri de kullanabilirsiniz</i>
+        <i>Örneğin: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
         <b>Choose which languages your sticker pack is for:</b>
         <i>You can select multiple languages</i>
@@ -402,22 +395,22 @@ scenes:
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
   frame:
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Çerçeve tipini seçin:</b>
+      Çerçeve, çıkartmanın etrafında şeffaf bir arka plandır
 
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>lite</code> — the corners will be cut a little
-      <code>rounded</code> — the corners will be rounded
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>kare</code> — çerçevenin dikdörtgen şekli, yani hiçbir şekilde değiştirilmeyecek
+      <code>lite</code> — köşeler olacak biraz kes
+      <code>yuvarlatılmış</code> — köşeler yuvarlatılacak
+      <code>daire</code> — çerçeve daire şeklinde olacak
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>İleride /frame komutunu kullanarak çerçeve tipini belirleyebilirsiniz</i>
     types:
-      square: '1. Square'
-      lite: '2. Lite'
-      rounded: '3. Rounded'
-      circle: '4. Circle'
+      square: '1. Kare'
+      lite: '2. Basit'
+      rounded: '3. Yuvarlak'
+      circle: '4. Çember'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Seçilen çerçeve tipi:</b> ${type}
   leave: |
     Eylem iptal edildi!
   btn:
