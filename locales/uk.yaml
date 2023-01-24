@@ -4,27 +4,26 @@ ratelimit: Занадто часто!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Привіт, <b>${name}</b>!
+      Надішліть мені стікер, GIF, відео, файл або фотографію, і я додам її до вашого стікерпака.
+      Хочете видалити його зі свого стікерпаку? Надішліть ще раз.
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      /packs - отримати свої стікерпаки
+      /new - створити новий стікерпак
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /original - знайти оригінальну стікера
+      /resore - відновити стікерпак
+      /copy - скопіювати стікерпак
+      /emoji - змінити суфікс смайлів для поточного стікерпаку
+      /frame - змінити рамку для поточного стікерпаку
+      /lang - змінити мову
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
+      /donate - підтримати розробника
 
-      /donate - support the developer
-
-      🧑‍🔧 Contacts: @ly_oBot
+      🧑‍🔧 Зв'язок із розробником: @ly_oBot
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      👨🏻‍💻 Канал розробника: @LyBlog
     catalog: |
       <b>😻 Нові набори стікерів ви можете знайти у нашому каталозі</b>
 
