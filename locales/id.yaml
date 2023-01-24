@@ -4,27 +4,25 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Hai, <b>${name}</b>!
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
+      Kirimi saya stiker, GIF, video, file, atau foto dan saya akan menambahkannya ke paket stiker Anda.
+      Ingin menghapusnya dari paket stiker Anda? Kirim sekali lagi.
 
-      /packs - get your packs
-      /new - create a new sticker pack
+      /packs - dapatkan paket Anda
+      /new - buat paket stiker baru
 
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
+      /original - temukan stiker asli
+      /restore - pulihkan paket stiker
+      /copy - salin paket stiker
+      /emoji - ubah sufiks emoji untuk paket stiker saat ini
+      /frame - video bentuk bulat
+      /lang - ganti bahasa
 
-      /donate - support the developer
-
-      🧑‍🔧 Contacts: @ly_oBot
+      /donate - dukung pengembang
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      Saluran pengembang: @LyBlog
     catalog: |
       <b>Anda dapat menemukan paket stiker baru di katalog kami</b>
 
@@ -35,8 +33,8 @@ cmd:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
-      catalog: '📖 Catalog'
-      publish: '🌐 Publish sticker pack in catalog'
+      catalog: '📖 Katalog'
+      publish: '🌐 Publikasikan paket stiker di katalog'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
@@ -47,11 +45,11 @@ cmd:
     btn:
       new: '📥 Create new'
       catalog: 'Buka katalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog_mini: '💖 Katalog'
+      catalog_browser: '🌐 Buka di browser'
+      catalog_browser_mini: '🌐 Di browser'
+      catalog_app: '📱 Unduh aplikasi Android'
+      catalog_app_mini: '📱 Aplikasi Android'
   inline:
     switch_pm: Выбрать стикерпак
   restore: |
@@ -74,7 +72,7 @@ cmd:
     info: |
       <b>🌟 Paket stiker:</b>
     types:
-      static: '🌟 Static'
+      static: '🌟 Statis'
       animated: '✨ Vektor'
       video: '📹 Video'
       inline: '💫 Inline'
@@ -116,29 +114,29 @@ coedit:
   info: |
     <b>👥 Co-editing sticker pack</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
+    Tautan untuk co-editing <a href="${link}">${title}</a>:
     <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the sticker pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the sticker pack
+    <b>Cara menggunakan:</b>
+    1. Kirim tautan ke orang yang ingin Anda beri akses ke paket stiker
+    2. Setelah mengklik tautan, mereka perlu menekan "mulai" dan mereka akan ditambahkan ke editor
+    3. Editor dapat menambah, menghapus, dan mengedit stiker di paket stiker
 
-    <b>Editors:</b>
+    <b>Editor:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Untuk menghapus editor, Anda perlu mengatur ulang tautan</i>
   no_editors: |
-    No editors yet
+    Belum ada editor
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 Kirim tautan'
+    reset: '🔁 Setel ulang tautan'
   share: |
-    Follows the link and press "start" to co-edit the sticker pack "${title}"
+    Ikuti tautan dan tekan "mulai" untuk mengedit bersama paket stiker "${title}"
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Link reset berhasil</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    Link baru untuk co-editing <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -178,8 +176,8 @@ callback:
       restore: '✅ Mengembalikan'
       use_pack: Gunakan paket stiker
       search_gif: Cari GIF
-      coedit: '👥 Co-edit'
-      catalog_add: '🗂 Add to catalog'
+      coedit: '👥 Pengeditan bersama'
+      catalog_add: '🗂 Tambahkan ke katalog'
       catalog_edit: 'Edit di katalog'
       catalog_delete: 'Hapus dari katalog'
     error:
@@ -254,9 +252,9 @@ sticker:
         Bot masih memproses video sebelumnya...
         Anda dapat mendukung pengembangan bot (/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
       timeout: |
-        <b>Error!</b>
+        <b>Kesalahan!</b>
 
-        Try again later.
+        Coba lagi nanti.
       convert: |
         <b>Kesalahan!</b>
         Sayangnya, bot tidak dapat mengonversi video Anda.
@@ -269,7 +267,7 @@ sticker:
         File terlalu besar untuk diproses. Harap mengurangi kualitas dan durasi sebelum mengirim.
 scenes:
   new_pack:
-    static: '🌟 Static'
+    static: '🌟 Statis'
     animated: '✨ Vektor'
     video: '📹 Video'
     inline: '💫 Inline'
@@ -287,21 +285,21 @@ scenes:
 
       <b>Inline</b> - access to any files through the inline mode of the bot.
     pack_title: |
-      <b>Enter new stickers pack name:</b>
-      <i>You can choose random name on button.</i>
+      <b>Masukkan nama paket stiker baru:</b>
+      <i>Anda dapat memilih nama acak pada tombol.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only latin letters, numbers and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/Animals</i>
-      <i>You can choose random short link on button.</i>
+      <b>Masukkan tautan pendek untuk paket stiker baru:</b>
+      <i>Gunakan hanya huruf latin, angka, dan garis bawah.</i>
+      <i>Misalnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/addstickers/Animals</i>
+      <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      Paket stiker <a href="${link}">${title}</a> berhasil dibuat!
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>Tautan paket stiker:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Kirim file, foto, video, atau stiker agar saya tambahkan ke set Anda
 
-      <i>You can also edit it through the official @Stickers bot bot</i>
+      <i>Anda juga dapat mengeditnya melalui bot bot @Stickers resmi</i>
     error:
       title_long: Nama tidak boleh lebih dari ${max} simbol.
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
@@ -332,23 +330,23 @@ scenes:
         Saya tidak dapat menemukan stiker aslinya.
   search:
     enter: |
-      Send query to search sticker pack
+      Kirim permintaan untuk mencari paket stiker
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the pack.
+        <b>Kesalahan!</b>
+        Saya tidak dapat menemukan paketnya.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+        👌 <b>Kirimi saya stiker dari paket stiker yang ingin Anda publikasikan</b>
 
-        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
+        <i>Anda dapat menerbitkan paket stiker apa pun milik Anda, meskipun dibuat di tempat lain</i>
       owner_proof: |
-        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required sticker pack
-        4. Forward the received message to the bot
+        <b>Untuk memverifikasi kepemilikan paket stiker ini, Anda perlu mengikuti beberapa langkah mudah:</b>
+        1. Buka @Stickers bot
+        2. Perintah Kirim <code>/packstats</code>
+        3. Temukan dan pilih paket stiker yang diperlukan
+        4. Teruskan menerima pesan ke bot
       publish_new_access_denied: |
         <b>Kesalahan!</b>
         Paket stiker ini bukan milik Anda.
@@ -376,8 +374,8 @@ scenes:
         <i>Anda juga dapat menggunakan tagar untuk mengkategorikan [#]</i>
         <i>Misalnya: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
-        <b>Choose which languages your sticker pack is for:</b>
-        <i>You can select multiple languages</i>
+        <b>Pilih bahasa untuk paket stiker Anda:</b>
+        <i>Anda dapat memilih beberapa bahasa</i>
       button_all_languages: All languages
       button_confirm_language: Confirm
       set_safe: |
@@ -403,22 +401,22 @@ scenes:
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
   frame:
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Pilih jenis bingkai:</b>
+      Bingkai adalah latar belakang transparan di sekitar stiker
 
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>lite</code> — the corners will be cut a little
-      <code>rounded</code> — the corners will be rounded
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>persegi</code> — bingkai berbentuk persegi panjang, yaitu tidak akan diubah dengan cara apa pun
+      <code>lite</code> — sudutnya akan potong sedikit
+      <code>dibulatkan</code> — sudut akan dibulatkan
+      <code>lingkaran</code> — bingkai akan berbentuk lingkaran
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>Di masa mendatang, Anda dapat menggunakan perintah /frame untuk mengatur jenis bingkai</i>
     types:
-      square: '1. Square'
-      lite: '2. Lite'
-      rounded: '3. Rounded'
-      circle: '4. Circle'
+      square: '1. Persegi'
+      lite: '2. Ringan'
+      rounded: '3. Bulat'
+      circle: '4. Lingkaran'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Jenis bingkai yang dipilih:</b> ${type}
   leave: |
     Aksi dibatalkan.
   btn:
