@@ -4,7 +4,27 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      ${name}
+      Hi, <b>${name}</b>!
+
+      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
+      Want to remove it from your sticker pack? Send it once again.
+
+      /packs - get your packs
+      /new - create a new sticker pack
+
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
+
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+
+      GitHub: https://github.com/LyoSU/fStikBot
+      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>😻 カタログで新たなステッカーを見つけよう〜</b>
 
