@@ -39,7 +39,6 @@ composer.on('inline_query', async (ctx) => {
       const search = await ctx.db.StickerSet.findOne({
         owner: ctx.session.userInfo.id,
         inline: true,
-        public: false,
         $text: { $search: query }
       })
 
