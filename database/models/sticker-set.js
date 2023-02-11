@@ -81,14 +81,8 @@ const stickerSetsSchema = mongoose.Schema({
 })
 
 stickerSetsSchema.index({
-  public: 1,
   'about.description': 'text',
   title: 'text'
-}, {
-  weights: {
-    'about.description': 5,
-    title: 1
-  }
 })
 
 module.exports = stickerSetsSchema
