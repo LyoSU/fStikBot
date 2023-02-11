@@ -23,7 +23,7 @@
     "bull": "^4.7.0",
     "dotenv": "^7.0.0",
     "error-stack-parser": "^2.0.6",
-    "got": "^10.7.0",
+    "got": "^12.5.3",
     "ioredis": "^4.19.4",
     "moment": "^2.29.2",
     "mongoose": "^5.13.15",
