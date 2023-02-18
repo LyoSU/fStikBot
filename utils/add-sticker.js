@@ -285,12 +285,15 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           type = stickerSet.frameType || "square"
         }
 
+        const maxDuration = ctx.session.userInfo.premium ? 5 : 35
+
         const job = await convertQueue.add({
           fileUrl,
           fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
           timestamp: Date.now(),
           type,
-          forceCrop
+          forceCrop,
+          maxDuration
         }, {
           priority,
           attempts: 1,
