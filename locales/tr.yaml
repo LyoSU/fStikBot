@@ -10,7 +10,7 @@ cmd:
       /packs - paketlerini getir
       /new - yeni bir çıkartma paketi oluştur
 
-      /original - orjinal çıkartmayı bul
+      /original - orijinal çıkartmayı bul
       /restore - çıkartma paketini sıfırla
       /copy - çıkartma paketini kopyala
 
@@ -22,7 +22,7 @@ cmd:
     catalog: |
       <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
 
-      • Aşağıdaki düğmeyi tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
+      • Aşağıdaki butona tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
       • Anahtar kelimelere göre veya hazırlanmış sekmelerde arama yapın
       • Tanıtmak için puan vermeyi unutmayın veya çıkartma paketini sıralamada düşürün
     commands:
@@ -79,11 +79,12 @@ cmd:
   club: |
     ☕️ Bir bot gelişimini desteklemek
 
-    Bana kahve için para gönderebilir ve karşılığında botta küçük ikramiyeler alabilirsiniz.
+    Bana bir kahve ısmarlayabilir ve karşılığında botta küçük ikramiyeler alabilirsiniz.
 
     ➖ Çıkartma paketlerinde <b>"${titleSuffix}</b> devre dışı bırakılması
     ➖ Diğer çıkartma paketlerinin bağlantı ile kopyalanması
     ➖ Video çıkartmalarını dönüştürürken öncelik
+    ➖ İşlem sırasına birden fazla çıkartma ekleme imkanı
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
