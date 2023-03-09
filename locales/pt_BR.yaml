@@ -4,14 +4,15 @@ ratelimit: Não tão frequente!
 cmd:
   start:
     info: |
-      Hi, <b>${name}</b>!
+      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
 
-      Send me a sticker, GIF, video, file, or photo and I will add it to your sticker pack.
-      Want to remove it from your sticker pack? Send it once again.
-
-      /packs - get your packs
       /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
+      /packs - list of your sticker packs
+
+      /delete - delete sticker from sticker pack
       /original - find original sticker
       /restore - restore a sticker pack
       /copy - copy a sticker pack
@@ -22,9 +23,9 @@ cmd:
       /donate - support the developer
 
       🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Developer channel: @LyBlog
     catalog: |
       <b>😻 Você pode encontrar novos pacotes de sticker no nosso catálogo</b>
 
@@ -35,8 +36,10 @@ cmd:
       start: '📜 Menu inicial'
       packs: '📁 Pacotes de stickers'
       new: '📥 Crie um novo pacote de stickers'
+      new_emoji: '📥 Create a new emoji pack'
       catalog: '📖 Catalog'
-      publish: '🌐 Publish sticker pack in catalog'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Encontre o sticker original'
       restore: '🔀 Restaure um pacote de sticker'
       copy: '📋 Copie um pacote de sticker'
@@ -53,7 +56,7 @@ cmd:
       catalog_app: '📱 Download Android app'
       catalog_app_mini: '📱 Android app'
   inline:
-    switch_pm: Selecione o pacote de sticker
+    switch_pm: '📁 Sticker pack'
   restore: |
     <b>🗃 Restauração do pacote de sticker</b>
 
@@ -74,10 +77,9 @@ cmd:
     info: |
       <b>🌟 Pacotes de sticker:</b>
     types:
-      static: '🌟 Estático'
-      animated: '✨ Vetor'
-      video: '📹 Vídeo'
-      inline: '💫 Inline'
+      regular: Regular
+      custom_emoji: Emoji
+      inline: Inline
     empty: |
       <b>Você ainda não tem pacotes de sticker.</b>
       Para criar, escreva um comando /new
@@ -98,13 +100,9 @@ cmd:
   #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
   #➖ Copying of other sticker packs by link
   emoji:
-    enabled: |
-      Agora a cada sticker será atribuído um emoji padrão.
-      Envie o comando novamente para alterar o modo.
-
-      Para alterar o emoji padrão para o pacote de sticker atual, digite <code>/emoji</code> seguido por um emoji separado por um espaço.
-      Por exemplo - <code>/emoji 🌟</code>
-    disabled: Agora você precisa inserir o emoji manualmente.
+    info: |
+      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      For example - <code>/emoji 🌟</code>
     done: Emoji alterado com sucesso.
     error: Houve um erro ao alterar o emoji!
   round_video:
@@ -147,23 +145,18 @@ callback:
       restored: Pacote de sticker restaurado com sucesso
     set_pack:
       static: |
-        Selecione o pacote de sticker estático <a href="${link}">${title}</a>
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-        Para adicionar um novo sticker, me envie uma foto ou outro sticker estático.
-
-        <i>Você também pode editar pelo bot oficial @Stickers</i>
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
       animated: |
-        Selecione o pacote de sticker animado (vetor) <a href="${link}">${title}</a>
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
 
-        Para adicionar um novo sticker, me envie um arquivo <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> ou outro sticker animado.
-
-        <i>Você também pode editar pelo bot oficial @Stickers</i>
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
       video: |
-        Selecione o pacote de sticker de vídeo <a href="${link}">${title}</a>
+        Selected video sticker pack <a href="${link}">${title}</a>
 
-        Para adicionar um novo sticker, me envie qualquer vídeo ou foto. O vídeo será cortado para 3 segundos, então aconselhado que você mesmo faça isso. Comprima o vídeo se possível.
-
-        <i>Você também pode editar pelo bot oficial @Stickers</i>
+        To add a new sticker send me any video or photo.
     set_inline_pack: |
       Pacote de sticker <u>${title}</u> selecionado
 
@@ -173,9 +166,11 @@ callback:
     restored: Pacote de sticker <a href="${link}">${title}</a> restaurado da sua lista.
     btn:
       hide: '❌ Ocultar pacote de sticker'
+      delete: '🗑 Delete sticker pack'
       restore: '✅ Restaurar'
-      use_pack: Usar pacote de sticker
-      search_gif: Procurar GIF
+      use_pack: '📦 Use sticker pack'
+      rename: '✏️ Rename'
+      search_gif: '🔎 Search GIF'
       coedit: '👥 Co-edit'
       catalog_add: '🗂 Adicionar ao catálogo'
       catalog_edit: '📝 Editar no catálogo'
@@ -204,10 +199,8 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Adesivo adicionado com sucesso ao pacote de adesivo:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-
-      <i>Você também pode editá-lo através do bot oficial @Stickers bot</i>
     ok_inline: |
       <b>Sticker adicionado ao pacote de sticker com sucesso:</b>
       <u>${title}</u>
@@ -225,29 +218,42 @@ sticker:
       Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
       <i>Isso não toma muito tempo</i>
     error:
+      no_selected_pack: |
+        <b>You have not selected a sticker pack</b>
+
+        Please, create (/new) or choose (/packs) sticker pack
       stickers_too_much: |
-        <b>Erro!</b>
+        This sticker pack has the maximum number of stickers.
 
-        Este pacote de sticker já possui o número máximo de stickers.
-        Você pode criar um novo pacote de sticker usando o comando /new.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        <b>Este sticker já está no pacote de sticker</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Se quiser alterar o emoji, o envie na mensagem seguinte.
-        <i>Você também pode editá-lo no bot oficial @Stickers</i>
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
-        <b>Erro!</b>
+        <b>Error!</b>
+        Bot cannot access your current chosen sticker pack.
 
-        O bot não pode acessar o seu pacote de sticker escolhido atual.
-        Por favor, crie (/new) ou escolha (/packs) outro pacote de sticker.
-      file_type: |
-        <b>Erro!</b>
+        Please, create (/new) or choose (/packs) another sticker pack.
+      file_type:
+        static: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the static pack
 
-        Este tipo de arquivo não é suportado.
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        video: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this video files to the video pack
 
-        <i>Você pode adicionar esse arquivo de vídeo ao pacote de vídeo.
-        Assim como todos os outros arquivos do pacote inline</i>
-        Crie (/new) ou escolha (/packs) outro pacote de sticker
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        animated: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this animated files to the vector pack
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>Aguarde!</b>
 
@@ -272,36 +278,34 @@ scenes:
     static: '🌟 Estático'
     animated: '✨ Vetor'
     video: '📹 Vídeo'
-    inline: '💫 Inline'
-    pack_type: |
-      <b><u>Escolha o tipo de pacote de sticker</u></b>
+    pack_format: |
+      <b><u>Choose stickerpack type</u></b>
 
-      <b>Comum</b> - estático (não se mexe), raster, formato de arquivo - antes de adicionar PNG (o bot está processando), após adicionar - WEBP.
-      Um exemplo de um pacote de sticker comum - t.me/addstickers/Animals
+      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
+      An example of a regular sticker pack - t.me/addstickers/Animals
 
-      <b>Animado</b> - animado, vetor (eles têm uma descrição exata dos objetos dentro do arquivo, visto que são exibidos claramente em qualquer escala), arquivo formato - TGS, uma variação do formato Lottie.
-      Um exemplo de pacote de adesivos animados - t.me/addstickers/IsabelleShizue
+      <b>Video</b> - animation video pack. You can add any video, gif and photo.
+      Sample video sticker pack - t.me/addstickers/TheMascot
 
-      <b>Vídeo</b> - formato de arquivo animado, rasterizado - WEBM.
-      Pacote de adesivos de vídeo de amostra - t.me/addstickers/TheMascot
+      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
+      An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
 
-      <b>Inline</b> - acesso a qualquer arquivo através do modo inline do bot.
+      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
     pack_title: |
       <b>Digite o nome do novo pacote de sticker:</b>
       <i>Você pode escolher um nome aleatório no botão.</i>
     pack_name: |
-      <b>Insira um link curto para o novo pacote de sticker:</b>
-      <i>Use apenas letras latinas, números e sublinhados.</i>
-      <i>Por exemplo, este pacote usa 'Animals' como link curto: https://t.me/addstickers/Animals</i>
-      <i>Você pode escolher um link curto aleatório no botão.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only English letters, digits and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
-      Pacote de sticker <a href="${link}">${title}</a> criado com sucesso!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Link do pacote:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Envie um arquivo, foto, vídeo ou sticker para que eu adicione ao seu conjunto.
-
-      <i>Você também pode editá-lo através do bot oficial @Stickers</i>
+      Send a file, photo, video or sticker so that I add it to your set
     error:
       title_long: O nome não pode ser maior que ${max} símbolos.
       name_long: O endereço não pode ser maior que ${max} símbolos.
@@ -330,6 +334,22 @@ scenes:
       not_found: |
         <b>Erro!</b>
         Não encontrei o sticker original.
+  delete:
+    enter: |
+      Send the sticker that was added through this bot and I will delete it from the sticker pack.
+    confirm: |
+      Are you sure you want to delete this sticker?
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the sticker.
+  rename:
+    enter_name: |
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+    success: |
+      <b>Title successfully changed!</b>
+
+      New title: <a href="${link}">${title}</a>
   search:
     enter: |
       Envie a pesquisa para procurar por pacote de sticker
@@ -400,7 +420,24 @@ scenes:
         Você pode editar as informações de pesquisa do pacote selecionando-o com o comando /packs.
 
         <i>Lembramos que as estatísticas do seu pacote de sticker podem ser visualizadas através do bot oficial @Stickers</i>
+  delete_pack:
+    enter: |
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
+
+      If you want to delete only one sticker, use the /delete command.
+
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
+    success: |
+      <b>Sticker pack successfully deleted!</b>
+    error:
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
+    no_video: |
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
       Frame is a transparent background around the sticker
@@ -412,10 +449,11 @@ scenes:
 
       <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
-      square: '1. Square'
-      lite: '2. Lite'
+      lite: '1. Lite'
+      medium: '2. Medium'
       rounded: '3. Rounded'
-      circle: '4. Circle'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
       <b>Selected frame type:</b> ${type}
   leave: |

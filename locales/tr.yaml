@@ -4,33 +4,42 @@ ratelimit: Pek sık değil!
 cmd:
   start:
     info: |
-      Merhaba, <b>${name}</b>!
-      Bana bir çıkartma veya fotoğraf gönder, ben de çıkartma paketine ekleyeceğim.
+      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
 
-      /packs - paketlerini getir
-      /new - yeni bir çıkartma paketi oluştur
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /original - orjinal çıkartmayı bul
-      /restore - çıkartma paketini sıfırla
-      /copy - çıkartma paketini kopyala
+      /packs - list of your sticker packs
 
-      /donate - yapımcıyı destekle
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
+
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Yapımcı Kanalı: @LyBlog
-      Çeviriyi Yapan: @By_Azade
     catalog: |
       <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
 
-      • Aşağıdaki düğmeyi tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
+      • Aşağıdaki butona tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
       • Anahtar kelimelere göre veya hazırlanmış sekmelerde arama yapın
       • Tanıtmak için puan vermeyi unutmayın veya çıkartma paketini sıralamada düşürün
     commands:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
+      new_emoji: '📥 Create a new emoji pack'
       catalog: '📖 Katalog'
-      publish: '🌐 Çıkartma paketini katalogda yayınla'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
@@ -47,7 +56,7 @@ cmd:
       catalog_app: '📱 Android uygulamasını indirin'
       catalog_app_mini: '📱 Android uygulaması'
   inline:
-    switch_pm: Çıkartma paketi seçin
+    switch_pm: '📁 Sticker pack'
   restore: |
     <b>🗃 Çıkartma Paketi Sıfırlama</b>
 
@@ -68,10 +77,9 @@ cmd:
     info: |
       <b>🌟 Çıkartma Paketleri:</b>
     types:
-      static: '🌟 Static'
-      animated: '✨ vektör'
-      video: '📹 Video'
-      inline: '💫 Inline'
+      regular: Regular
+      custom_emoji: Emoji
+      inline: Inline
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
@@ -79,11 +87,12 @@ cmd:
   club: |
     ☕️ Bir bot gelişimini desteklemek
 
-    Bana kahve için para gönderebilir ve karşılığında botta küçük ikramiyeler alabilirsiniz.
+    Bana bir kahve ısmarlayabilir ve karşılığında botta küçük ikramiyeler alabilirsiniz.
 
     ➖ Çıkartma paketlerinde <b>"${titleSuffix}</b> devre dışı bırakılması
     ➖ Diğer çıkartma paketlerinin bağlantı ile kopyalanması
     ➖ Video çıkartmalarını dönüştürürken öncelik
+    ➖ İşlem sırasına birden fazla çıkartma ekleme imkanı
   #club: |
   #<b>☕️ Bot developer club by Ly</b>
   #You can join the bot developer club, thereby supporting it.
@@ -91,13 +100,9 @@ cmd:
   #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
   #➖ Copying of other sticker packs by link
   emoji:
-    enabled: |
-      Artık her çıkartmaya varsayılan bir emoji atanacak.
-      Modu değiştirmek için komutu tekrar gönderin.
-
-      Geçerli çıkartma paketi türü <code>/emoji</code> için varsayılan emojiyi ve ardından boşlukla ayrılmış bir emojiyi değiştirmek için.
-      Örneğin - <code>/emoji 🌟</code>
-    disabled: Şimdi emojiyi manuel olarak girmeniz gerekiyor.
+    info: |
+      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      For example - <code>/emoji 🌟</code>
     done: Emoji başarıyla güncellendi.
     error: Emoji değiştirilirken bir hata oluştu!
   round_video:
@@ -144,21 +149,14 @@ callback:
 
         To add a new sticker send me a photo, another static sticker.
         For a sticker to have no background, it must be sent as a file.
-
-        <i>You can also edit it through the official @Stickers bot bot</i>
       animated: |
         Selected animated (vector) sticker pack <a href="${link}">${title}</a>
 
         To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
-
-        <i>You can also edit it through the official @Stickers bot bot</i>
       video: |
         Selected video sticker pack <a href="${link}">${title}</a>
 
         To add a new sticker send me any video or photo.
-        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
-
-        <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       Seçili <u>${title}</u> çıkartma paketi
 
@@ -168,9 +166,11 @@ callback:
     restored: <a href="${link}">${title}</a> çıkartma paketi listende sıfırlandı.
     btn:
       hide: '❌ Çıkartma Paketini Gizle'
+      delete: '🗑 Delete sticker pack'
       restore: '✅ Sıfırla'
-      use_pack: Çıkartma paketini kullan
-      search_gif: GIF ara
+      use_pack: '📦 Use sticker pack'
+      rename: '✏️ Rename'
+      search_gif: '🔎 Search GIF'
       coedit: '👥 Ortak düzenleme'
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Katalogda düzenle'
@@ -199,10 +199,8 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-
-      <i>Ayrıca resmi @Stickers bot botu</i>aracılığıyla düzenleyebilirsiniz
     ok_inline: |
       <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
       <u>${title}</u>
@@ -220,29 +218,42 @@ sticker:
       Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
       <i>It does not take a lot of time</i>
     error:
+      no_selected_pack: |
+        <b>You have not selected a sticker pack</b>
+
+        Please, create (/new) or choose (/packs) sticker pack
       stickers_too_much: |
-        <b>Hata!</b>
+        This sticker pack has the maximum number of stickers.
 
-        Bu çıkartma paketinde maksimum sayıda çıkartma bulunur.
-        /new komutunu kullanarak yeni bir çıkartma paketi oluşturabilirsiniz.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        <b>Bu çıkartma zaten çıkartma paketinde var</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Emojiyi değiştirmek istiyorsanız, aşağıdaki mesajla gönderin.
-        <i>Ayrıca resmi @Stickers bot</i>aracılığıyla da düzenleyebilirsiniz
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
-        <b>Hata!</b>
+        <b>Error!</b>
+        Bot cannot access your current chosen sticker pack.
 
-        Bot, mevcut seçili çıkartma paketinize erişemez.
-        Lütfen başka bir çıkartma paketi oluşturun (/new) veya seçin (/packs).
-      file_type: |
-        <b>Hata!</b>
+        Please, create (/new) or choose (/packs) another sticker pack.
+      file_type:
+        static: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the static pack
 
-        Bu dosya türü desteklenmiyor.
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        video: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this video files to the video pack
 
-        <i>Bu video dosyalarını video paketine ekleyebilirsiniz.
-        Satır içi paketteki diğer tüm dosyaların yanı sıra</i>
-        Başka bir çıkartma paketi oluşturun (/new) veya seçin (/packs)
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        animated: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this animated files to the vector pack
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>Bekle!</b>
 
@@ -267,33 +278,33 @@ scenes:
     static: '🌟 Static'
     animated: '✨ vektör'
     video: '📹 Video'
-    inline: '💫 Inline'
-    pack_type: |
+    pack_format: |
       <b><u>Choose stickerpack type</u></b>
 
       <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
       An example of a regular sticker pack - t.me/addstickers/Animals
 
+      <b>Video</b> - animation video pack. You can add any video, gif and photo.
+      Sample video sticker pack - t.me/addstickers/TheMascot
+
       <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
       An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
 
-      <b>Video</b> - animated, raster, file format - WEBM.
-      Sample video sticker pack - t.me/addstickers/TheMascot
-
-      <b>Inline</b> - access to any files through the inline mode of the bot.
+      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
-      <b>Çıkartma paketin için kısa bir link gir:</b>
-      <i>Yalnızca latin harfleri, rakamlar ve alt çizgiler kullanın.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only English letters, digits and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
-      Çıkartma paketi <a href="${link}">${title}</a> başarıyla oluşturuldu!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Çıkartma paketi bağlantısı:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Setinize eklemem için bir dosya, fotoğraf, video veya çıkartma gönderin
-
-      <i>Ayrıca resmi @Stickers bot botu aracılığıyla da düzenleyebilirsiniz</i>
+      Send a file, photo, video or sticker so that I add it to your set
     error:
       title_long: İsim ${max}  değerinden büyük olamaz.
       name_long: Kısa link ${max} değerinden büyük olamaz.
@@ -322,6 +333,22 @@ scenes:
       not_found: |
         <b>Hata!</b>
         Orijinal çıkartmayı bulamıyorum.
+  delete:
+    enter: |
+      Send the sticker that was added through this bot and I will delete it from the sticker pack.
+    confirm: |
+      Are you sure you want to delete this sticker?
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the sticker.
+  rename:
+    enter_name: |
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+    success: |
+      <b>Title successfully changed!</b>
+
+      New title: <a href="${link}">${title}</a>
   search:
     enter: |
       Send query to search sticker pack
@@ -393,7 +420,24 @@ scenes:
         You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
 
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
+  delete_pack:
+    enter: |
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
+
+      If you want to delete only one sticker, use the /delete command.
+
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
+    success: |
+      <b>Sticker pack successfully deleted!</b>
+    error:
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
+    no_video: |
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Çerçeve tipini seçin:</b>
       Çerçeve, çıkartmanın etrafında şeffaf bir arka plandır
@@ -405,10 +449,11 @@ scenes:
 
       <i>İleride /frame komutunu kullanarak çerçeve tipini belirleyebilirsiniz</i>
     types:
-      square: '1. Kare'
-      lite: '2. Basit'
+      lite: '1. Lite'
+      medium: '2. Medium'
       rounded: '3. Yuvarlak'
-      circle: '4. Çember'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
       <b>Seçilen çerçeve tipi:</b> ${type}
   leave: |

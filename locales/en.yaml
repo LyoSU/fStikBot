@@ -433,8 +433,8 @@ scenes:
     success: |
       <b>Sticker pack successfully deleted!</b>
     error:
-      <b>Error!</b>
-      Opps, something went wrong.
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
     no_video: |
       <b>Error!</b>

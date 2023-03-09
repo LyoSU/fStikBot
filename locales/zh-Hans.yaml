@@ -4,27 +4,28 @@ ratelimit: 不经常如此！
 cmd:
   start:
     info: |
-      您好， <b>${name}</b>！
+      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
 
-      给我发送贴纸，GIF，视频，文件或照片，我将把它添加到您的贴纸包。
-      想要从您的貼圖中移除它吗？再次發送它。
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /packs - 获取您的素材
-      /frame - 创建一个新的贴纸包
+      /packs - list of your sticker packs
 
-      /origin-找到原始贴纸
-      /return - 还原一个贴纸包
-      /copy - 复制一个贴纸包
-      /emoji - 更改当前贴纸包的表情符号后缀
-      /frame - 更改当前贴纸包的标准框架
-      /lang - 更改语言
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      /donate - 支持开发人员
+      /donate - support the developer
 
-      🧑 联系人：@ly_oBot
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
-      GitHub: https://github. om/LyoSU/fStikBot
-      👨🏻‍💻 开发者通道: @LyBlogs
+      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 您可以在我们的目录中找到新的贴纸包</b>
 
@@ -35,8 +36,10 @@ cmd:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
+      new_emoji: '📥 Create a new emoji pack'
       catalog: '📖 目录'
-      publish: '🌐 在目录中发布贴纸包'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a sticker pack'
       copy: '📋 Copy a sticker pack'
@@ -53,7 +56,7 @@ cmd:
       catalog_app: '📱 下载安卓应用'
       catalog_app_mini: '📱 安卓应用'
   inline:
-    switch_pm: 选择貼圖包
+    switch_pm: '📁 Sticker pack'
   restore: |
     <b>🗃 Sticker pack 恢复</b>
 
@@ -74,10 +77,9 @@ cmd:
     info: |
       <b>🌟 貼圖包:</b>
     types:
-      static: '🌟 Static'
-      animated: '✨ 矢量'
-      video: '📹 Video'
-      inline: '💫 Inline'
+      regular: Regular
+      custom_emoji: Emoji
+      inline: Inline
     empty: |
       <b>您还没有贴纸包。</b>
       若要创建，请写一个命令/新
@@ -97,13 +99,9 @@ cmd:
   #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
   #➖ Copying of other sticker packs by link
   emoji:
-    enabled: |
-      现在每个贴纸将被分配为默认的 emoji。
-      再次发送命令以更改模式。
-
-      更改当前贴纸包类型 <code>/emoji</code> 的默认表情符号，然后用空格隔开。
-      例如- <code>/emoji 🌟</code>
-    disabled: 现在您需要手动输入表情符号。
+    info: |
+      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      For example - <code>/emoji 🌟</code>
     done: 表情已成功更改。
     error: 更改表情时发生错误！
   round_video:
@@ -150,21 +148,14 @@ callback:
 
         To add a new sticker send me a photo, another static sticker.
         For a sticker to have no background, it must be sent as a file.
-
-        <i>You can also edit it through the official @Stickers bot bot</i>
       animated: |
         Selected animated (vector) sticker pack <a href="${link}">${title}</a>
 
         To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
-
-        <i>You can also edit it through the official @Stickers bot bot</i>
       video: |
         Selected video sticker pack <a href="${link}">${title}</a>
 
         To add a new sticker send me any video or photo.
-        The video will be trimmed to 3 seconds, so it is advisable to do it yourself. Compress the video if possible.
-
-        <i>You can also edit it through the official @Stickers bot bot</i>
     set_inline_pack: |
       选择 <u>${title}</u> 贴箱
 
@@ -174,9 +165,11 @@ callback:
     restored: 貼圖包 <a href="${link}">${title}</a> 已恢复到您的列表。
     btn:
       hide: '❌ 隐藏贴纸包'
+      delete: '🗑 Delete sticker pack'
       restore: '✅ 恢复'
-      use_pack: 使用贴纸包
-      search_gif: 搜索 GIF
+      use_pack: '📦 Use sticker pack'
+      rename: '✏️ Rename'
+      search_gif: '🔎 Search GIF'
       coedit: '👥 共同编辑'
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 在目录中编辑'
@@ -205,10 +198,8 @@ callback:
 sticker:
   add:
     ok: |
-      <b>貼圖成功添加到貼圖包：</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-
-      <i>您也可以透過官方@貼圖機器人編輯它</i>
     ok_inline: |
       <b>贴纸添加到贴纸包成功：</b>
       <u>${title}</u>
@@ -226,29 +217,42 @@ sticker:
       Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
       <i>It does not take a lot of time</i>
     error:
+      no_selected_pack: |
+        <b>You have not selected a sticker pack</b>
+
+        Please, create (/new) or choose (/packs) sticker pack
       stickers_too_much: |
-        <b>错误！</b>
+        This sticker pack has the maximum number of stickers.
 
-        这个贴纸包有最大数量的贴纸。
-        你可以使用 /new 命令创建一个新的贴纸包。
+        You can create a new sticker pack using the /new command.
       have_already: |
-        <b>这张贴已经在貼圖包</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        如果你想要更改表情符号， 在以下消息中发送。
-        <i>你也可以通过官方@Stickers bot 机器人进行编辑</i>
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
-        <b>错误！</b>
+        <b>Error!</b>
+        Bot cannot access your current chosen sticker pack.
 
-        Bot 无法访问您当前选择的贴纸包。
-        请创建(/new) 或选择 (/packs) 另一个贴纸包。
-      file_type: |
-        <b>错误！</b>
+        Please, create (/new) or choose (/packs) another sticker pack.
+      file_type:
+        static: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the static pack
 
-        不支持此文件类型。
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        video: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this video files to the video pack
 
-        <i>您可以将此视频文件添加到视频包。
-        内联包中的所有其他文件</i>
-        创建(/new) 或选择 (/packs) 另一个贴纸包
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        animated: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this animated files to the vector pack
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>等等！</b>
 
@@ -273,36 +277,34 @@ scenes:
     static: '🌟 Static'
     animated: '✨ 矢量'
     video: '📹 Video'
-    inline: '💫 Inline'
-    pack_type: |
+    pack_format: |
       <b><u>Choose stickerpack type</u></b>
 
       <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
       An example of a regular sticker pack - t.me/addstickers/Animals
 
+      <b>Video</b> - animation video pack. You can add any video, gif and photo.
+      Sample video sticker pack - t.me/addstickers/TheMascot
+
       <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
       An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
 
-      <b>Video</b> - animated, raster, file format - WEBM.
-      Sample video sticker pack - t.me/addstickers/TheMascot
-
-      <b>Inline</b> - access to any files through the inline mode of the bot.
+      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
     pack_title: |
       <b>Введи имя для нового стикерпака:</b>
       <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only English letters, digits and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
-      貼圖包 <a href="${link}">${title}</a> 已成功创建！
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>贴画包链接：</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      发送文件，照片， 视频或貼圖我將它添加到您的設定
-
-      <i>您也可以透過官方@Stickers 機器人編輯它</i>
+      Send a file, photo, video or sticker so that I add it to your set
     error:
       title_long: Имя должно быть не больше ${max} символов.
       name_long: Адрес должен быть не больше ${max} символов.
@@ -331,6 +333,22 @@ scenes:
       not_found: |
         <b>Ошибка!</b>
         У меня не получилось найти оригинал этого стикера.
+  delete:
+    enter: |
+      Send the sticker that was added through this bot and I will delete it from the sticker pack.
+    confirm: |
+      Are you sure you want to delete this sticker?
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the sticker.
+  rename:
+    enter_name: |
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+    success: |
+      <b>Title successfully changed!</b>
+
+      New title: <a href="${link}">${title}</a>
   search:
     enter: |
       Send query to search sticker pack
@@ -402,7 +420,24 @@ scenes:
         You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
 
         <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
+  delete_pack:
+    enter: |
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
+
+      If you want to delete only one sticker, use the /delete command.
+
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
+    success: |
+      <b>Sticker pack successfully deleted!</b>
+    error:
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
+    no_video: |
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>选择框架类型：</b>
       框架是贴纸周围的透明背景
@@ -414,10 +449,11 @@ scenes:
 
       <i>以后可以使用 /frame 命令来设置 frame 的类型</i>
     types:
-      square: '1. 广场'
-      lite: '2. 精简版'
+      lite: '1. Lite'
+      medium: '2. Medium'
       rounded: '3. 圆角'
-      circle: '4. 圆圈'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
       <b>所选帧类型：</b> ${type}
   leave: |
