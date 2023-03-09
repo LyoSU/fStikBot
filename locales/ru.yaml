@@ -4,26 +4,28 @@ ratelimit: Не так часто!
 cmd:
   start:
     info: |
-      Привет, <b>${name}</b>!
-      Отправь мне стикер или фото и я добавлю его в твой стикерпак.
-      Для удаления - отправь стикер снова.
+      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
 
-      /packs - список стикерпаков
-      /new - создать новый стикерпак
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /original - найти оригинал стикера
-      /restore - восстановить стикерпак
-      /copy - копировать стикерпак
-      /emoji - сменить эмодзи-суффикс для текущего стикерпака
-      /frame - изменить рамку для текущего стикерпака
+      /packs - list of your sticker packs
+
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
       /lang - change language
 
-      /donate - поддержать разработчика
+      /donate - support the developer
 
-      💬 Сообщество (помощь с ботом): @fStikCommunity
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал разработчика: @LyBlog
     catalog: |
       <b>😻 Новые стикерпаки вы можете найти в нашем каталоге</b>
 
@@ -34,8 +36,10 @@ cmd:
       start: '📜 Справка бота'
       packs: '📁 Стикерпаки'
       new: '📥 Создать стикерпак'
+      new_emoji: '📥 Create a new emoji pack'
       catalog: '📖 Каталог'
-      publish: '🌐 Опубликовать стикерпак в каталоге'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Найти оригинальный стикер'
       restore: '🔀 Восстановить стикерпак'
       copy: '📋 Скопировать стикерпак'
@@ -52,7 +56,7 @@ cmd:
       catalog_app: '📱 Скачать Android приложение'
       catalog_app_mini: '📱 Android приложение'
   inline:
-    switch_pm: Выбрать стикерпак
+    switch_pm: '📁 Sticker pack'
   restore: |
     <b>🗃 Восстановление стикерпака</b>
 
@@ -73,10 +77,9 @@ cmd:
     info: |
       <b>🌟 Стикерпаки:</b>
     types:
-      static: '🌟 Статический'
-      animated: '✨ Вектор'
-      video: '📹 Видео'
-      inline: '💫 Инлайн'
+      regular: Regular
+      custom_emoji: Emoji
+      inline: Inline
     empty: |
       <b>У тебя нет ещё ни одного стикерпака.</b>
       Для создания напиши /new
@@ -97,13 +100,9 @@ cmd:
   #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
   #➖ Copying of other sticker packs by link
   emoji:
-    enabled: |
-      Теперь каждому стикеру будут назначены эмодзи по умолчанию.
-      Отправьте команду снова, чтобы изменить режим.
-
-      Чтобы изменить эмодзи по умолчанию для текущего стикера, отправь <code>/emoji</code> , за которым следуют эмодзи, разделенные пробелом.
-      Например - <code>/emoji 🌟</code>
-    disabled: Теперь вам нужно вводить эмодзи вручную.
+    info: |
+      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      For example - <code>/emoji 🌟</code>
     done: Эмодзи успешно изменен.
     error: Произошла ошибка при изменении эмодзи!
   round_video:
@@ -146,25 +145,18 @@ callback:
       restored: Стикерпак успешно восстановлен
     set_pack:
       static: |
-        Выбранный статический стикерпак <a href="${link}">${title}</a>
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-        Чтобы добавить новый стикер, пришлите мне фото или другой статический стикер.
-        Для создания стикера без фона, фото необходимо отправить в виде файла.
-
-        <i>Вы также можете отредактировать его через официального бота @Stickers</i>
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
       animated: |
-        Выбран анимированный (векторный) стикерпак <a href="${link}">${title}</a>
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
 
-        Чтобы добавить новый стикер, пришлите мне файл <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> или другой анимированный стикер.
-
-        <i>Вы также можете отредактировать его через официального бота @Stickers</i>
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
       video: |
-        Выбран видео стикерпак <a href="${link}">${title}</a>
+        Selected video sticker pack <a href="${link}">${title}</a>
 
-        Чтобы добавить новый стикер пришлите мне любое видео или фото.
-        Видео будет обрезано до 3 секунд, поэтому желательно сделать это самостоятельно. Сожмите видео, если это возможно.
-
-        <i>Вы также можете отредактировать его через официального бота @Stickers</i>
+        To add a new sticker send me any video or photo.
     set_inline_pack: |
       Выбран <u>${title}</u> стикерпак
 
@@ -174,9 +166,11 @@ callback:
     restored: Стикерпак <a href="${link}">${title}</a> восстановлен в ваш список.
     btn:
       hide: '❌ Скрыть стикерпак'
+      delete: '🗑 Delete sticker pack'
       restore: '✅ Восстановить'
-      use_pack: Использовать стикерпак
-      search_gif: Поиск GIF
+      use_pack: '📦 Use sticker pack'
+      rename: '✏️ Rename'
+      search_gif: '🔎 Search GIF'
       coedit: '👥 Совместное редактирование'
       catalog_add: '🗂 Добавить в каталог'
       catalog_edit: '📝 Изменить в каталоге'
@@ -205,10 +199,8 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Стикер успешно добавлен в стикерпак:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-
-      <i>Вы также можете отредактировать его через официального бота @Stickers</i>
     ok_inline: |
       <b>Стикер успешно добавлен в стикерпак:</b>
       <u>${title}</u>
@@ -226,29 +218,42 @@ sticker:
       Хотите добавить <a href="${link}">${title}</a> в общедоступный каталог стикеров, чтобы его могли видеть и другие пользователи бота?
       <i>Это не займет много времени</i>
     error:
+      no_selected_pack: |
+        <b>You have not selected a sticker pack</b>
+
+        Please, create (/new) or choose (/packs) sticker pack
       stickers_too_much: |
-        <b>Ошибка!</b>
+        This sticker pack has the maximum number of stickers.
 
-        Набор стикеров имеет максимальное количество стикеров.
-        Вы можете создать новый стикер-пакет с помощью /new команды.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        <b>Этот стикер уже есть в стикерпаке</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Если вы хотите изменить эмодзи, отправьте его в следующем сообщении.
-        <i>Вы также можете отредактировать его через официальный бот @Stickers</i>
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
-        <b>Ошибка!</b>
+        <b>Error!</b>
+        Bot cannot access your current chosen sticker pack.
 
-        Бот не может получить доступ к текущему выбранному стикерпаку.
-        Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
-      file_type: |
-        <b>Ошибка!</b>
+        Please, create (/new) or choose (/packs) another sticker pack.
+      file_type:
+        static: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the static pack
 
-        Этот тип файла не поддерживается.
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        video: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this video files to the video pack
 
-        <i>Вы можете добавить это видео в видео пак.
-        Все остальные файлы вы можете добавлять в inline стикерпак</i>
-        Создать (/new) или выбрать (/packs) другой стикерпак
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        animated: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this animated files to the vector pack
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>Подождите!</b>
 
@@ -273,36 +278,34 @@ scenes:
     static: '🌟 Статический'
     animated: '✨ Вектор'
     video: '📹 Видео'
-    inline: '💫 Инлайн'
-    pack_type: |
-      <b><u>Выберите тип стикерпака</u></b>
+    pack_format: |
+      <b><u>Choose stickerpack type</u></b>
 
-      <b>Обычный</b> - статичные (не двигаются), растровые, формат файла - перед добавлением PNG (бот занимается обработкой), после добавления - WEBP.
-      Пример обычного стикерпака - t.me/addstickers/Animals
+      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
+      An example of a regular sticker pack - t.me/addstickers/Animals
 
-      <b>Анимированные</b> - анимированные, векторные (имеют точное описание объектов внутри файла, за счет чего отображаются четкими в любом масштабе), формат файла - TGS, разновидность формата Lottie.
-      Пример анимированного стикерпака - t.me/addstickers/IsabelleShizue
+      <b>Video</b> - animation video pack. You can add any video, gif and photo.
+      Sample video sticker pack - t.me/addstickers/TheMascot
 
-      <b>Видео</b> - анимированные, растровые, формат файла - WEBM.
-      Пример видео стикерпака - t.me/addstickers/TheMascot
+      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
+      An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
 
-      <b>Инлайн</b> - додоступ к любым файлам через inline режим бота.
+      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
     pack_title: |
       <b>Введи имя для нового стикерпака:</b>
       <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only English letters, digits and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
-      Набор стикеров <a href="${link}">${title}</a> успешно создан!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Ссылка на набор стикеров:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Отправьте файл, фото, видео или стикер, чтобы я добавил его в ваш набор
-
-      <i>Вы также можете отредактировать его через официальный бот @Stickers</i>
+      Send a file, photo, video or sticker so that I add it to your set
     error:
       title_long: Имя должно быть не больше ${max} символов.
       name_long: Адрес должен быть не больше ${max} символов.
@@ -331,6 +334,22 @@ scenes:
       not_found: |
         <b>Ошибка!</b>
         У меня не получилось найти оригинал этого стикера.
+  delete:
+    enter: |
+      Send the sticker that was added through this bot and I will delete it from the sticker pack.
+    confirm: |
+      Are you sure you want to delete this sticker?
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the sticker.
+  rename:
+    enter_name: |
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+    success: |
+      <b>Title successfully changed!</b>
+
+      New title: <a href="${link}">${title}</a>
   search:
     enter: |
       Отправить запрос на поиск стикерпака
@@ -402,7 +421,24 @@ scenes:
         Вы можете отредактировать информацию о поиске стикерпака, выбрав стикерпак с помощью команды /packs.
 
         <i>Напоминаем, что статистику вашего стикерпака можно посмотреть через официального бота @Stickers</i>
+  delete_pack:
+    enter: |
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
+
+      If you want to delete only one sticker, use the /delete command.
+
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
+    success: |
+      <b>Sticker pack successfully deleted!</b>
+    error:
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
+    no_video: |
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Выбери тип рамки:</b>
       Рамка - прозрачный фон вокруг стикера
@@ -414,10 +450,11 @@ scenes:
 
       <i>В будущем, можно использовать команду /frame для установки типа кадра</i>
     types:
-      square: '1. Square'
-      lite: '2. Lite'
+      lite: '1. Lite'
+      medium: '2. Medium'
       rounded: '3. Rounded'
-      circle: '4. Circle'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
       <b>Выбранный тип рамки:</b> ${type}
   leave: |
