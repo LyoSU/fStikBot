@@ -196,7 +196,14 @@ module.exports = async (ctx) => {
     query.inline = true
   } else {
     query.inline = { $ne: true }
-    query.packType = packType
+    // packType or null
+    if (packType === 'regular') {
+      query.packType = {
+        $in: [packType, null]
+      }
+    } else {
+      query.packType = packType
+    }
   }
 
   const stickerSets = await ctx.db.StickerSet.find(query).sort({
