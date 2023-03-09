@@ -39,12 +39,12 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
   }).catch(error => { return { error } })
 
   if (result.error) {
-    if (result.error.message === 'Bad Request: STICKERSET_INVALID') {
+    if (result.error.message.includes('STICKERSET_INVALID')) {
       await ctx.db.StickerSet.deleteOne({
         _id: ctx.session.scene.data.id
       })
 
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.success'), {
+      return ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.success'), {
         reply_markup: Markup.removeKeyboard()
       })
     } else {
