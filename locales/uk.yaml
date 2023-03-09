@@ -4,26 +4,28 @@ ratelimit: Занадто часто!
 cmd:
   start:
     info: |
-      Привіт, <b>${name}</b>!
-      Надішліть мені стікер, GIF, відео, файл або фотографію, і я додам її до вашого стікерпака.
-      Хочете видалити його зі свого стікерпаку? Надішліть ще раз.
+      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
 
-      /packs - отримати свої стікерпаки
-      /new - створити новий стікерпак
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /original - знайти оригінальну стікера
-      /restore - відновити стікерпак
-      /copy - скопіювати стікерпак
-      /emoji - змінити суфікс смайлів для поточного стікерпаку
-      /frame - змінити рамку для поточного стікерпаку
-      /lang - змінити мову
+      /packs - list of your sticker packs
 
-      /donate - підтримати розробника
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      🧑‍🔧 Зв'язок із розробником: @ly_oBot
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
-      👨🏻‍💻 Канал розробника: @LyBlog
     catalog: |
       <b>😻 Нові набори стікерів ви можете знайти у нашому каталозі</b>
 
@@ -34,8 +36,10 @@ cmd:
       start: '📜 Стартове меню'
       packs: '📁 Стікерпаки'
       new: '📥 Створити стікерпак'
+      new_emoji: '📥 Create a new emoji pack'
       catalog: '📖 Каталог'
-      publish: '🌐 Опублікувати стікерпак в каталозі'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Знайдіть оригінальний стікер'
       restore: '🔀 Відновити стікерпак'
       copy: '📋 Копіювати стікерпак'
@@ -52,7 +56,7 @@ cmd:
       catalog_app: '📱 Застосунок для Android'
       catalog_app_mini: '📱 Android застосунок'
   inline:
-    switch_pm: Вибрати стікерпак
+    switch_pm: '📁 Sticker pack'
   restore: |
     <b>🗃 Відновити стікерпак</b>
 
@@ -74,10 +78,9 @@ cmd:
     info: |
       <b>🌟 Стікерпаки:</b>
     types:
-      static: '🌟 Статичний'
-      animated: '✨ Вектор'
-      video: '📹 Відео'
-      inline: '💫 Інлайн'
+      regular: Regular
+      custom_emoji: Emoji
+      inline: Inline
     empty: |
       <b>У тебе ще немає жодного стікерпаку.</b>
       Щоб створити, напиши /new
@@ -98,13 +101,9 @@ cmd:
   #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
   #➖ Copying of other sticker packs by link
   emoji:
-    enabled: |
-      Тепер кожному стікеру буде призначено емодзі за замовчуванням.
-      Надішліть команду ще раз, щоб змінити режим.
-
-      Щоб змінити емодзі за замовчуванням для поточного стікерпаку, введіть <code>/emoji</code> , а потім смайлик, розділений пробілом.
-      Наприклад - <code>/emoji 🌟</code>
-    disabled: Тепер вам потрібно вводити emoji вручну.
+    info: |
+      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      For example - <code>/emoji 🌟</code>
     done: Смайли успішно змінено.
     error: Сталася помилка під час зміни емодзі!
   round_video:
@@ -147,25 +146,18 @@ callback:
       restored: Стікерпак успішно відновлено
     set_pack:
       static: |
-        Вибраний набір статичних наклейок <a href="${link}">${title}</a>
+        Selected static sticker pack <a href="${link}">${title}</a>
 
-        Щоб додати нову наклейку, надішліть мені фото, іншу статичну наклейку.
-        Щоб наклейка не мала фону, її потрібно надіслати як файл.
-
-        <i>Ви також можете редагувати його за допомогою офіційного бота @Stickers bot</i>
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
       animated: |
-        Вибраний набір анімованих (векторних) стікерів <a href="${link}">${title}</a>
+        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
 
-        Щоб додати новий стікер, надішліть мені файл <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> або інший анімований стікер.
-
-        <i>Ви також можете редагувати його за допомогою офіційного бота @Stickers bot</i>
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
       video: |
-        Набір вибраних відео стікерів <a href="${link}">${title}</a>
+        Selected video sticker pack <a href="${link}">${title}</a>
 
-        Щоб додати новий стікер, надішліть мені будь-яке відео або фото.
-        Відео буде обрізано до 3 секунд, тому бажано зробити це самостійно. Стисніть відео, якщо це можливо.
-
-        <i>Ви також можете редагувати його за допомогою офіційного бота @Stickers bot</i>
+        To add a new sticker send me any video or photo.
     set_inline_pack: |
       Вибрано <u>${title}</u> стікерпак
 
@@ -175,9 +167,11 @@ callback:
     restored: Стікерпак <a href="${link}">${title}</a> повернено до вашого списку.
     btn:
       hide: '❌ Приховати стікерпак'
+      delete: '🗑 Delete sticker pack'
       restore: '✅ Відновити'
-      use_pack: Використовувати стікерпак
-      search_gif: Пошук GIF
+      use_pack: '📦 Use sticker pack'
+      rename: '✏️ Rename'
+      search_gif: '🔎 Search GIF'
       coedit: '👥 Спільне редагування'
       catalog_add: '🗂 Додати до каталогу'
       catalog_edit: '📝 Редагувати в каталозі'
@@ -206,10 +200,8 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Стікер успішно доданий до стікерпака:</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
-
-      <i>Ви також можете редагувати його через офіційного бота @Stickers бота</i>
     ok_inline: |
       <b>Стікер успішно доданий у стікерпак:</b>
       <u>${title}</u>
@@ -227,29 +219,42 @@ sticker:
       Ви хотіли б додати <a href="${link}">${title}</a> до публічного каталогу з стікерами, щоб інші користувачі бота теж могли його побачити?
       <i>Це не займає багато часу</i>
     error:
+      no_selected_pack: |
+        <b>You have not selected a sticker pack</b>
+
+        Please, create (/new) or choose (/packs) sticker pack
       stickers_too_much: |
-        <b>Помилка!</b>
+        This sticker pack has the maximum number of stickers.
 
-        Цей пакет наклейок містить максимальну кількість наклейок.
-        Ви можете створити новий пакет наклейок за допомогою команди /new.
+        You can create a new sticker pack using the /new command.
       have_already: |
-        <b>Цей стікер вже знаходиться в стікерпаку</b>
+        <b>This sticker is already in the sticker pack</b>
 
-        Якщо ви хочете змінити емоджі, надішліть це у наступному повідомленні.
-        <i>Ви також можете редагувати його через офіційного бота @Stickers</i>
+        If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
-        <b>Помилка!</b>
+        <b>Error!</b>
+        Bot cannot access your current chosen sticker pack.
 
-        Бот не може отримати доступ до обраного вами пакета стікерів.
-        Будь ласка, створіть (/new) або оберіть (/packs) іншого стікерпака.
-      file_type: |
-        <b>Помилка!</b>
+        Please, create (/new) or choose (/packs) another sticker pack.
+      file_type:
+        static: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the static pack
 
-        Цей тип файлу не підтримується.
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        video: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this video files to the video pack
 
-        <i>Ви можете додати це відео файли до відеонабору.
-        Та і всі інші файли в вбудованому пакунку</i>
-        Створити (/new) або вибрати (/packs) інший стікерпак
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+        animated: |
+          <b>Error!</b>
+          This file type is not supported
+          You can add this animated files to the vector pack
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>Зачекайте!</b>
 
@@ -274,36 +279,34 @@ scenes:
     static: '🌟 Статичний'
     animated: '✨ Вектор'
     video: '📹 Відео'
-    inline: '💫 Інлайн'
-    pack_type: |
-      <b><u>Виберіть тип стікерпака</u></b>
+    pack_format: |
+      <b><u>Choose stickerpack type</u></b>
 
-      <b>Звичайний</b> - статичний (не переміщати), растровий, формат файлу - до додавання PNG (бот обробляє), після додавання - WEBP.
-      Приклад звичайного стікерпака - t.me/addstickers/Animals
+      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
+      An example of a regular sticker pack - t.me/addstickers/Animals
 
-      <b>Анімований</b> - анімовані, векторні (мають точний опис об'єктів всередині файлу, завдяки чому вони чітко відображаються в будь-якому масштабі), файл формат - TGS, різновид формату Lottie.
-      Приклад анімованого стікерпака - t.me/addstickers/IsabelleShizue
+      <b>Video</b> - animation video pack. You can add any video, gif and photo.
+      Sample video sticker pack - t.me/addstickers/TheMascot
 
-      <b>Відео</b> - анімований, растровий, формат файлу - WEBM.
-      Зразок відео стікерпака - t.me/addstickers/TheMascot
+      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
+      An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
 
-      <b>Inline</b> - доступ до будь-яких файлів через inline режим бота.
+      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
     pack_title: |
       <b>Введіть ім'я для нового стікерпаку:</b>
       <i>Також ви можете вибрати випадково згенероване ім'я нижче.</i>
     pack_name: |
-      <b>Введіть коротку адресу для нового стікерпаку:</b>
-      <i>Адреса може складатися тільки з букв англійського алфавіту, цифр та нижнього підкреслення.</i>
-      <i>Наприклад, цей набір має коротку адресу 'Animals': https://t.me/addstickers/Animals</i>
-      <i>Також ви можете вибрати випадково згенеровану адресу нижче.</i>
+      <b>Enter a short link for new stickers pack:</b>
+      <i>Use only English letters, digits and underscores.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
-      Стікерпак <a href="${link}">${title}</a> успішно створений!
+      Sticker pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Посилання на наклейку пакету:</b> <pre>${link}</pre>
+      <b>Sticker pack link:</b> <pre>${link}</pre>
 
-      Надіслати файл, фотографію, відео або стікер, так що я додаю його до вашого набору
-
-      <i>Ви також можете редагувати його через офіційного бота @Stickers</i>
+      Send a file, photo, video or sticker so that I add it to your set
     error:
       title_long: Ім'я не має бути довшим за ${max} символів.
       name_long: Адреса не має бути довшою за ${max} символів.
@@ -331,6 +334,22 @@ scenes:
     error:
       not_found: |
         Мені не вдалося знайти оригінал цього стікера.
+  delete:
+    enter: |
+      Send the sticker that was added through this bot and I will delete it from the sticker pack.
+    confirm: |
+      Are you sure you want to delete this sticker?
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the sticker.
+  rename:
+    enter_name: |
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+    success: |
+      <b>Title successfully changed!</b>
+
+      New title: <a href="${link}">${title}</a>
   search:
     enter: |
       Надіслати запит для пошуку набору наклейок
@@ -402,7 +421,24 @@ scenes:
         Ви можете редагувати інформацію про пошук наклейок, вибравши наклейку за допомогою команди /packs.
 
         <i>Нагадуємо, що статистику свого стікерпаку можна переглянути через офіційний бот @Stickers</i>
+  delete_pack:
+    enter: |
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
+
+      If you want to delete only one sticker, use the /delete command.
+
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
+    success: |
+      <b>Sticker pack successfully deleted!</b>
+    error:
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
+    no_video: |
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Виберіть тип рамки:</b>
       Рамка — це прозорий фон навколо наклейки
@@ -414,10 +450,11 @@ scenes:
 
       <i>У майбутньому ви можете використовувати команду /frame для встановлення типу рамки</i>
     types:
-      square: '1. Square'
-      lite: '2. Lite'
+      lite: '1. Lite'
+      medium: '2. Medium'
       rounded: '3. Rounded'
-      circle: '4. Circle'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
       <b>Вибраний тип рамки:</b> ${type}
   leave: |
