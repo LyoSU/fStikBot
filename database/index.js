@@ -88,7 +88,7 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
   return stickerSet
 }
 
-db.Sticker.addSticker = async (stickerSet, emojisText, info, file) => {
+db.Sticker.addSticker = async (stickerSet, emojisText = '', info, file) => {
   const sticker = new db.Sticker()
 
   sticker.stickerSet = stickerSet
