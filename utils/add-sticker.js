@@ -251,7 +251,15 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
   let emojis = []
 
   if (inputFile.emoji) {
-    emojis.push(...inputFile.emoji.match(emojiRegex()))
+    if (Array.isArray(inputFile.emoji)) {
+      emojis.push(...inputFile.emoji)
+    } else if (typeof inputFile.emoji === 'string') {
+      emojis.push(inputFile.emoji)
+    } else {
+      emojis.push(stickerSet.emojiSuffix || '🌟')
+    }
+  } else {
+    emojis.push(stickerSet.emojiSuffix || '🌟')
   }
 
 
