@@ -123,6 +123,8 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
+      ctx.session.previousSticker = null
+
       const stickerInfo = await addSticker(ctx, stickerFile)
 
       if (stickerInfo.wait) {

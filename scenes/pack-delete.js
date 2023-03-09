@@ -36,7 +36,21 @@ packDelete.enter(async (ctx) => {
 packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
   const result = await ctx.telegram.callApi('deleteStickerSet', {
     name: ctx.session.scene.data.name
-  })
+  }).catch(error => { return { error } })
+
+  if (result.error) {
+    if (result.error.message === 'Bad Request: STICKERSET_INVALID') {
+      await ctx.db.StickerSet.deleteOne({
+        _id: ctx.session.scene.data.id
+      })
+
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.success'), {
+        reply_markup: Markup.removeKeyboard()
+      })
+    } else {
+      throw result.error
+    }
+  }
 
   if (!result) {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.error'), {

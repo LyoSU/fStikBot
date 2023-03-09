@@ -6,8 +6,6 @@ module.exports = async (ctx, next) => {
     ctx.message.text.match(/[a-zA-Zа-яА-Я]/)
   ) return next()
 
-  ctx.replyWithChatAction('upload_document').catch(() => {})
-
   const sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id)
 
   const regex = emojiRegex()

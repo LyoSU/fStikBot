@@ -196,7 +196,6 @@ module.exports = async (ctx) => {
     query.inline = true
   } else {
     query.inline = { $ne: true }
-    // packType or null
     if (packType === 'regular') {
       query.packType = {
         $in: [packType, null]
