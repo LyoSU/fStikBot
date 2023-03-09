@@ -1,13 +1,4 @@
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
+const { escapeHTML } = require('../utils')
 
 module.exports = async (ctx) => {
   let messageText = ctx.i18n.t('callback.pack.error.restore')
@@ -45,20 +36,14 @@ module.exports = async (ctx) => {
           findStickerSet = await ctx.db.StickerSet.newSet({
             owner: ctx.session.userInfo.id,
             name: getStickerSet.name,
-            title: getStickerSet.title,
+            title: escapeHTML(getStickerSet.title),
             animated: getStickerSet.is_animated || false,
             video: getStickerSet.is_video || false,
             emojiSuffix: '🌟',
             create: true
           })
 
-          if (getStickerSet.is_animated) {
-            ctx.session.userInfo.animatedStickerSet = findStickerSet
-          } else if (getStickerSet.is_video) {
-            ctx.session.userInfo.videoStickerSet = findStickerSet
-          } else {
-            ctx.session.userInfo.stickerSet = findStickerSet
-          }
+          ctx.session.userInfo.stickerSet = findStickerSet
           restored = true
         }
 

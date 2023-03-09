@@ -2,9 +2,9 @@
   "mainAdminId": 66478514,
   "logChatId": -1001665705393,
   "stickerLinkPrefix": "t.me/addstickers/",
+  "emojiLinkPrefix": "t.me/addemoji/",
   "charTitleMax": 35,
   "premiumCharTitleMax": 64,
-  "charNameMax": 50,
   "messaging": {
     "limit": {
       "max": 20,

@@ -1,3 +1,4 @@
+const escapeHTML = require('./html-escape')
 const userName = require('./user-name')
 const addSticker = require('./add-sticker')
 const addStickerText = require('./add-sticker-text')
@@ -8,6 +9,7 @@ const tenor = require('./tenor')
 const telegramEmojiText = require('./telegram-emoji-text')
 
 module.exports = {
+  escapeHTML,
   userName,
   addSticker,
   addStickerText,

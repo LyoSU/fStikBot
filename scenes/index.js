@@ -9,19 +9,25 @@ const { match } = I18n
 const messaging = require('./messaging')
 const sceneNewPack = require('./pack-new')
 const originalSticker = require('./sricker-original')
+const deleteSticker = require('./sticker-delete')
 const packEdit = require('./admin-pack')
 const searchStickerSet = require('./pack-search')
 const packCatalog = require('./pack-catalog')
 const packFrame = require('./pack-frame')
+const packRename = require('./pack-rename')
+const packDelete = require('./pack-delete')
 
 const stage = new Stage([].concat(
   sceneNewPack,
   originalSticker,
+  deleteSticker,
   messaging,
   packEdit,
   searchStickerSet,
   packCatalog,
-  packFrame
+  packFrame,
+  packRename,
+  packDelete
 ))
 
 stage.use((ctx, next) => {

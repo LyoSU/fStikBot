@@ -19,15 +19,17 @@ module.exports = async (ctx) => {
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet')
 
-  if (sticker && sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
-    deleteSticker = sticker.info.file_id
-  } else if (packBotUsername && packBotUsername === ctx.options.username) {
+  if (ctx.callbackQuery.message.reply_to_message && packBotUsername && packBotUsername === ctx.options.username) {
     deleteSticker = ctx.callbackQuery.message.reply_to_message.sticker.file_id
+  } else if (sticker && sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
+    deleteSticker = sticker.info.file_id
+  } else {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 
   if (deleteSticker) {
     let deleteStickerFromSet
-    if (ctx.session.userInfo.stickerSet.passcode === 'public') {
+    if (ctx.session?.userInfo?.stickerSet?.passcode === 'public') {
       const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name)
 
       if (stickerSet.stickers[0].file_unique_id === sticker.fileUniqueId) {
@@ -56,7 +58,7 @@ module.exports = async (ctx) => {
 
       if (sticker) {
         sticker.deleted = true
-        sticker.save()
+        await sticker.save()
       }
     }
   } else ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)

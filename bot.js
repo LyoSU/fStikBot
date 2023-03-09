@@ -70,7 +70,7 @@ bot.use(rateLimit({
 }))
 
 const limitPublicPack = Composer.optional((ctx) => {
-  return ctx.session?.userInfo?.stickerSet?.passcode === 'public'
+  return ctx?.session?.userInfo?.stickerSet?.passcode === 'public'
 }, rateLimit({
   window: 1000 * 60,
   limit: 1,
@@ -157,6 +157,7 @@ bot.start((ctx, next) => {
   return next()
 })
 bot.command('packs', handlePacks)
+bot.action(/packs:(type):(.*)/, handlePacks)
 bot.action(/packs:(.*)/, handlePacks)
 
 bot.start((ctx, next) => {
@@ -164,12 +165,18 @@ bot.start((ctx, next) => {
   return next()
 })
 
-bot.hears(['/new', match('cmd.start.btn.new')], (ctx) => ctx.scene.enter('сhoosePackType'))
-bot.action(/new_pack/, (ctx) => ctx.scene.enter('сhoosePackType'))
+bot.hears([
+  '/new',
+  '/new_emoji',
+  '/new_inline',
+  match('cmd.start.btn.new')
+], (ctx) => ctx.scene.enter('newPack'))
+bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
 bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)
 bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.command('frame', (ctx) => ctx.scene.enter('packFrame'))
+bot.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
 bot.command('catalog', handleCatalog)
 bot.command('public', handleSelectPack)
 bot.command('emoji', handleEmoji)
@@ -181,15 +188,24 @@ bot.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
+bot.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
+
 bot.use(handleCoedit)
 bot.use(handleInlineQuery)
 
 // sticker detect
 bot.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
+bot.on('message', (ctx, next) => {
+  if (ctx.message && ctx.message.entities && ctx.message.entities[0] && ctx.message.entities[0].type === 'custom_emoji') {
+    return handleSticker(ctx)
+  }
+  return next()
+})
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)
 bot.action(/(hide_pack):(.*)/, handleHidePack)
+bot.action(/(rename_pack):(.*)/, (ctx) => ctx.scene.enter('packRename'))
 bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
 bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
 bot.action(/set_language:(.*)/, handleLanguage)
@@ -200,7 +216,7 @@ bot.on('text', (ctx, next) => {
   else return next()
 })
 
-bot.hears(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, handleStickerUpade)
+bot.on('text', handleStickerUpade)
 
 // club
 bot.action(/(club):(.*)/, handleClub)

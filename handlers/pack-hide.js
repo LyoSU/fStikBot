@@ -6,30 +6,42 @@ module.exports = async (ctx) => {
 
   let answerCbQuer = ''
 
-  if (stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
-    stickerSet.hide = stickerSet.hide !== true
-    stickerSet.save()
-
-    if (stickerSet.hide === true) {
-      answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.hidden')
-
-      const userSet = await ctx.db.StickerSet.findOne({
-        owner: ctx.session.userInfo.id,
-        create: true,
-        hide: false
-      })
-
-      if (userSet) {
-        if (userSet.animated) ctx.session.userInfo.animatedStickerSet = userSet.id
-        else ctx.session.userInfo.stickerSet = userSet.id
-      }
-    } else {
-      answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.restored')
-    }
-    await ctx.answerCbQuery(answerCbQuer)
-
-    ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
-      Markup.callbackButton(ctx.i18n.t(stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`)
-    ])).catch(() => {})
+  if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
+
+  stickerSet.hide = stickerSet.hide !== true
+  stickerSet.save()
+
+  if (stickerSet.hide === true) {
+    answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.hidden')
+
+    const userSet = await ctx.db.StickerSet.findOne({
+      owner: ctx.session.userInfo.id,
+      create: true,
+      hide: false
+    }).sort({ updatedAt: -1 })
+
+    if (userSet) {
+      ctx.session.userInfo.stickerSet = userSet
+      await ctx.session.userInfo.save()
+    }
+  } else {
+    answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.restored')
+  }
+  await ctx.answerCbQuery(answerCbQuer)
+
+  const inlineKeyboard = []
+
+  if (stickerSet.hide === true) {
+    inlineKeyboard.push([
+      Markup.callbackButton(ctx.i18n.t('callback.pack.btn.delete'), `delete_pack:${ctx.match[2]}`)
+    ])
+  }
+
+  inlineKeyboard.push([
+    Markup.callbackButton(ctx.i18n.t(stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`)
+  ])
+
+  ctx.editMessageReplyMarkup(Markup.inlineKeyboard(inlineKeyboard)).catch(() => {})
 }

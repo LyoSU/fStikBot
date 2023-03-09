@@ -19,6 +19,52 @@ module.exports = async (ctx) => {
 
   if (!userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
+  let packType = userInfo.stickerSet?.packType || 'regular'
+  if (userInfo.stickerSet?.inline || ctx.state.type) packType = 'inline'
+
+  if (ctx.callbackQuery && ctx.match && ctx.match[1] === 'type') {
+    if (ctx.match[2] === 'inline') {
+      const findStickerSet = await ctx.db.StickerSet.findOne({
+        owner: userInfo.id,
+        delete: { $ne: true },
+        inline: true
+      }).sort({
+        updatedAt: -1
+      })
+
+      if (findStickerSet) {
+        userInfo.stickerSet = findStickerSet
+        userInfo.inlineStickerSet = findStickerSet
+        userInfo.inlineType = 'packs'
+      } else {
+        userInfo.stickerSet = null
+        userInfo.inlineStickerSet = null
+        userInfo.inlineType = 'gif'
+      }
+
+      packType = 'inline'
+    } else {
+      const findStickerSet = await ctx.db.StickerSet.findOne({
+        owner: userInfo.id,
+        delete: { $ne: true },
+        packType: ctx.match[2]
+      }).sort({
+        updatedAt: -1
+      })
+
+      if (findStickerSet) {
+        userInfo.stickerSet = findStickerSet
+      } else {
+        userInfo.stickerSet = null
+      }
+
+      userInfo.inlineStickerSet = null
+      userInfo.inlineType = 'gif'
+
+      packType = ctx.match[2]
+    }
+  }
+
   const query = {
     owner: userInfo.id,
     create: true,
@@ -54,20 +100,9 @@ module.exports = async (ctx) => {
         if (stickerSet.inline) {
           ctx.session.userInfo.inlineType = 'packs'
           userInfo.inlineStickerSet = stickerSet
-          userInfo.animatedStickerSet = null
         }
 
-        if (stickerSet.video) {
-          userInfo.videoStickerSet = stickerSet
-          userInfo.stickerSet = stickerSet
-        } else if (stickerSet.animated) {
-          userInfo.animatedStickerSet = stickerSet
-          if (userInfo?.stickerSet?.inline) {
-            userInfo.stickerSet = null
-          }
-        } else {
-          userInfo.stickerSet = stickerSet
-        }
+        userInfo.stickerSet = stickerSet
 
         const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 
@@ -124,13 +159,18 @@ module.exports = async (ctx) => {
           if (stickerSet.animated) type = 'animated'
           if (stickerSet.video) type = 'video'
 
+          const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
+
           await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack.${type}`, {
             title: escapeHTML(stickerSet.title),
-            link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+            link: `${linkPrefix}${stickerSet.name}`
           }), {
             reply_markup: Markup.inlineKeyboard([
               [
-                Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
+                Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${linkPrefix}${stickerSet.name}`)
+              ],
+              [
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.rename'), `rename_pack:${stickerSet.id}`)
               ],
               searchGifButton,
               coeditButton,
@@ -152,20 +192,20 @@ module.exports = async (ctx) => {
     }
   }
 
-  if (ctx.state.type === 'inline') {
+  if (packType === 'inline') {
     query.inline = true
+  } else {
+    query.inline = { $ne: true }
+    query.packType = packType
   }
 
   const stickerSets = await ctx.db.StickerSet.find(query).sort({
     updatedAt: -1
   })
-  .sort({
-    updatedAt: -1
-  })
   .limit(limit)
   .skip(page * limit)
 
-  if (ctx.state.type === 'inline' && stickerSets.length <= 0) {
+  if (packType === 'inline' && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
       owner: userInfo.id,
       inline: true
@@ -200,9 +240,7 @@ module.exports = async (ctx) => {
       else title = `🌟 ${title}`
 
       if (
-        userInfo.stickerSet?.id.toString() === pack.id.toString() ||
-        userInfo.animatedStickerSet?.id.toString() === pack.id.toString() ||
-        userInfo.videoStickerSet?.id.toString() === pack.id.toString()
+        userInfo.stickerSet?.id.toString() === pack.id.toString()
       ) title += ` ✅`
 
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
@@ -211,7 +249,7 @@ module.exports = async (ctx) => {
     messageText = ctx.i18n.t('cmd.packs.empty')
   }
 
-  if (ctx.state.type === 'inline') {
+  if (packType === 'inline') {
     const title = ctx.session.userInfo.inlineType !== 'gif' ? 'GIF' : '✅ GIF'
     keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
   }
@@ -229,7 +267,25 @@ module.exports = async (ctx) => {
 
   keyboardMarkup.push(paginationKeyboard)
 
-  keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), 'new_pack')])
+  keyboardMarkup.push([
+    Markup.callbackButton(
+      (packType === 'regular' ? '✅ ' : '') +
+      ctx.i18n.t('cmd.packs.types.regular'),
+      'packs:type:regular'
+    ),
+    Markup.callbackButton(
+      (packType === 'custom_emoji' ? '✅ ' : '') +
+      ctx.i18n.t('cmd.packs.types.custom_emoji'),
+      'packs:type:custom_emoji'
+    ),
+    Markup.callbackButton(
+      (packType === 'inline' ? '✅ ' : '') +
+      ctx.i18n.t('cmd.packs.types.inline'),
+      'packs:type:inline'
+    )
+  ])
+
+  keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), `new_pack:${packType}`)])
 
   if (ctx.updateType === 'message') {
     await ctx.replyWithHTML(messageText, {

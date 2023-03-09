@@ -1,17 +1,6 @@
 const Markup = require('telegraf/markup')
 const { addSticker, addStickerText } = require('../utils')
 
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
-
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document').catch(() => {})
 
@@ -19,6 +8,13 @@ module.exports = async (ctx) => {
   let replyMarkup = {}
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
+
+  if (!ctx.session.userInfo.stickerSet) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
+      reply_to_message_id: ctx.message.message_id
+    })
+  }
+
   let stickerFile, stickerSet
   const stickerType = ctx.updateSubTypes[0]
 
@@ -65,10 +61,24 @@ module.exports = async (ctx) => {
       break
 
     default:
-      console.log(ctx.updateSubTypes)
+      break
   }
 
-  if (ctx.session.userInfo.stickerSet && ctx.session.userInfo.stickerSet.inline) {
+  if (stickerType === 'text') {
+    const customEmoji = ctx.message.entities.find((e) => e.type === 'custom_emoji')
+
+    if (!customEmoji) return
+
+    const emojiStickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
+      custom_emoji_ids: [customEmoji.custom_emoji_id]
+    })
+
+    if (!emojiStickers) return
+
+    stickerFile = emojiStickers[0]
+  }
+
+  if (ctx.session.userInfo.stickerSet.inline) {
     if (stickerType === 'photo') stickerFile = ctx.message[stickerType].pop()
     else stickerFile = ctx.message[stickerType]
     stickerFile.stickerType = stickerType
@@ -77,16 +87,11 @@ module.exports = async (ctx) => {
   }
 
   if (stickerFile) {
-    if (stickerFile.is_animated && (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline)) {
-      stickerSet = ctx.session.userInfo.animatedStickerSet
-    } else if (stickerFile.is_video || stickerFile.video_note && (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.inline)) {
-      stickerSet = ctx.session.userInfo.videoStickerSet
-    } else {
-      stickerSet = ctx.session.userInfo.stickerSet
-    }
+    stickerSet = ctx.session.userInfo.stickerSet
     if (ctx.message.caption?.includes('roundit')) stickerFile.video_note = true
     if (ctx.message.caption?.includes('cropit')) stickerFile.forceCrop = true
     if (ctx.message.photo && ctx.message.caption?.includes('rmbg')) stickerFile.removeBg = true
+
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
       fileUniqueId: stickerFile.file_unique_id,
@@ -118,40 +123,36 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      if (ctx.session.userInfo.autoEmoji || stickerFile.emoji || ctx.session.userInfo?.stickerSet?.inline) {
-        const stickerInfo = await addSticker(ctx, stickerFile)
+      const stickerInfo = await addSticker(ctx, stickerFile)
 
-        const result = await addStickerText(ctx, stickerInfo)
-
-        messageText = result.messageText
-        replyMarkup = result.replyMarkup
-
-        // if (typeof stickerSet?.publishDate === 'undefined' && !stickerSet?.animated && !stickerSet?.inline) {
-        //   const countStickers = await ctx.db.Sticker.count({
-        //     stickerSet,
-        //     deleted: false
-        //   })
-
-        //   if ([15, 50, 80, 120].includes(countStickers)) {
-        //     setTimeout(async () => {
-        //       await ctx.replyWithHTML(ctx.i18n.t('sticker.add.catalog_offer', {
-        //         title: escapeHTML(stickerSet.title),
-        //         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
-        //       }), {
-        //         reply_markup: Markup.inlineKeyboard([
-        //           Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)
-        //         ])
-        //       })
-        //     }, 1000 * 2)
-        //   }
-        // }
-      } else {
-        ctx.session.previousSticker = {
-          file: stickerFile
-        }
-
-        messageText = ctx.i18n.t('sticker.add.send_emoji')
+      if (stickerInfo.wait) {
+        return
       }
+
+      const result = addStickerText(stickerInfo, ctx.i18n.locale())
+
+      messageText = result.messageText
+      replyMarkup = result.replyMarkup
+
+      // if (typeof stickerSet?.publishDate === 'undefined' && !stickerSet?.animated && !stickerSet?.inline) {
+      //   const countStickers = await ctx.db.Sticker.count({
+      //     stickerSet,
+      //     deleted: false
+      //   })
+
+      //   if ([15, 50, 80, 120].includes(countStickers)) {
+      //     setTimeout(async () => {
+      //       await ctx.replyWithHTML(ctx.i18n.t('sticker.add.catalog_offer', {
+      //         title: escapeHTML(stickerSet.title),
+      //         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+      //       }), {
+      //         reply_markup: Markup.inlineKeyboard([
+      //           Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)
+      //         ])
+      //       })
+      //     }, 1000 * 2)
+      //   }
+      // }
     }
   } else {
     messageText = ctx.i18n.t('sticker.add.error.file_type')

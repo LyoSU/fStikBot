@@ -1,9 +1,7 @@
 module.exports = async (ctx) => {
   let user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
     .populate('stickerSet')
-    .populate('videoStickerSet')
     .populate('inlineStickerSet')
-    .populate('animatedStickerSet')
 
   const now = Math.floor(new Date().getTime() / 1000)
 

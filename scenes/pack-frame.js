@@ -7,16 +7,22 @@ const {
 const packFrame = new Scene('packFrame')
 
 packFrame.enter(async (ctx) => {
+  if (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.video) {
+    await ctx.scene.leave()
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.frame.no_video'))
+  }
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.frame.select_type', {
     example: 'https://telegra.ph/file/7cb167d5fe01bf29a8e2c.png'
   }), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.frame.types.square'),
-        ctx.i18n.t('scenes.frame.types.lite')
+        ctx.i18n.t('scenes.frame.types.lite'),
+        ctx.i18n.t('scenes.frame.types.medium'),
+        ctx.i18n.t('scenes.frame.types.rounded')
       ],
       [
-        ctx.i18n.t('scenes.frame.types.rounded'),
+        ctx.i18n.t('scenes.frame.types.square'),
         ctx.i18n.t('scenes.frame.types.circle')
       ],
       [
@@ -30,7 +36,8 @@ packFrame.hears([
   match('scenes.frame.types.rounded'),
   match('scenes.frame.types.circle'),
   match('scenes.frame.types.square'),
-  match('scenes.frame.types.lite')
+  match('scenes.frame.types.lite'),
+  match('scenes.frame.types.medium')
 ], async (ctx) => {
   let type
 
@@ -46,6 +53,9 @@ packFrame.hears([
       break
     case ctx.i18n.t('scenes.frame.types.lite'):
       type = 'lite'
+      break
+    case ctx.i18n.t('scenes.frame.types.medium'):
+      type = 'medium'
       break
   }
 

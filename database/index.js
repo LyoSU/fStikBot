@@ -70,6 +70,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.animated = stickerSetInfo.animated || false
   stickerSet.inline = stickerSetInfo.inline || false
   stickerSet.video = stickerSetInfo.video || false
+  stickerSet.packType = stickerSetInfo.packType || 'regular'
   stickerSet.emojiSuffix = stickerSetInfo.emojiSuffix
   stickerSet.create = stickerSetInfo.create || false
   await stickerSet.save()
@@ -90,13 +91,10 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
 db.Sticker.addSticker = async (stickerSet, emojisText, info, file) => {
   const sticker = new db.Sticker()
 
-  const emojiRegExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-  const emojiSymbols = emojisText.match(emojiRegExp)
-
   sticker.stickerSet = stickerSet
   sticker.fileId = info.file_id
   sticker.fileUniqueId = info.file_unique_id
-  if (emojiSymbols) sticker.emojis = emojiSymbols.join('')
+  sticker.emojis = typeof emojisText === 'string' ? emojisText.substr(0, 150) : emojisText.join(' ')
   sticker.info = fileInfoNormalize(info)
   if (typeof file === 'object') sticker.file = fileInfoNormalize(file)
   await sticker.save()

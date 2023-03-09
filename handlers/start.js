@@ -5,12 +5,8 @@ module.exports = async (ctx) => {
   const commands = [
     { command: 'start', description: ctx.i18n.t('cmd.start.commands.start') },
     { command: 'packs', description: ctx.i18n.t('cmd.start.commands.packs') },
-    { command: 'new', description: ctx.i18n.t('cmd.start.commands.new') },
+    { command: 'delete', description: ctx.i18n.t('cmd.start.commands.delete') },
     { command: 'catalog', description: ctx.i18n.t('cmd.start.commands.catalog') },
-    { command: 'publish', description: ctx.i18n.t('cmd.start.commands.publish') },
-    { command: 'original', description: ctx.i18n.t('cmd.start.commands.original') },
-    { command: 'restore', description: ctx.i18n.t('cmd.start.commands.restore') },
-    { command: 'copy', description: ctx.i18n.t('cmd.start.commands.copy') },
     { command: 'lang', description: ctx.i18n.t('cmd.start.commands.lang') },
     { command: 'donate', description: ctx.i18n.t('cmd.start.commands.donate') }
   ]

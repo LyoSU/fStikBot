@@ -30,20 +30,9 @@ module.exports = async (ctx) => {
   if (stickerSet.owner.toString() === userInfo.id.toString() || stickerSet.passcode === passcode) {
     if (stickerSet.inline) {
       userInfo.inlineStickerSet = stickerSet
-      userInfo.animatedStickerSet = null
     }
 
-    if (stickerSet.video) {
-      userInfo.videoStickerSet = stickerSet
-      userInfo.stickerSet = stickerSet
-    } else if (stickerSet.animated) {
-      userInfo.animatedStickerSet = stickerSet
-      if (userInfo?.stickerSet?.inline) {
-        userInfo.stickerSet = null
-      }
-    } else {
-      userInfo.stickerSet = stickerSet
-    }
+    userInfo.stickerSet = stickerSet
 
     const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
 

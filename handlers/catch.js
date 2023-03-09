@@ -1,16 +1,7 @@
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 const errorStackParser = require('error-stack-parser')
-
-const escapeHTML = (str) => str.replace(/[&<>'"]/g,
-  tag => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
+const { escapeHTML } = require('../utils')
 
 async function errorLog (error, ctx) {
   const errorInfo = errorStackParser.parse(error)

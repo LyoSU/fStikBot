@@ -6,7 +6,7 @@ const {
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 
-(async () => {
+;(async () => {
   const stickers = db.Sticker.find({
     // fileUniqueId: { $exists: false },
   }).cursor()

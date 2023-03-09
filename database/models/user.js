@@ -30,9 +30,6 @@ const userSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet'
   },
-  autoEmoji: {
-    type: Boolean
-  },
   inlineType: {
     type: String
   },

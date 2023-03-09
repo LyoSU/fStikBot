@@ -1,6 +1,6 @@
 {
   "name": "fstikbot",
-  "version": "0.35.4",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,15 +22,16 @@
     "@pm2/io": "^5.0.0",
     "bull": "^4.7.0",
     "dotenv": "^7.0.0",
+    "emoji-regex": "^10.2.1",
     "error-stack-parser": "^2.0.6",
     "got": "^10.7.0",
     "ioredis": "^4.19.4",
     "moment": "^2.29.2",
     "mongoose": "^5.13.15",
-    "rword": "3.1.2",
-    "sharp": "^0.30.5",
+    "random-word-slugs": "^0.1.6",
+    "sharp": "^0.31.3",
     "stegcloak": "^0.0.1",
-    "telegraf": "^3.37.0",
+    "telegraf": "^3.40.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-ratelimit": "^2.0.0",
     "telegram": "^2.10.10"

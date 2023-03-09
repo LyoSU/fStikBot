@@ -15,20 +15,55 @@ originalSticker.enter(async (ctx) => {
   })
 })
 
-originalSticker.on('sticker', async (ctx) => {
-  const sticker = await ctx.db.Sticker.findOne({
-    fileUniqueId: ctx.message.sticker.file_unique_id,
+originalSticker.on(['sticker', 'text'], async (ctx, next) => {
+  let sticker
+
+  if (ctx.message.text) {
+    if (!ctx.message.entities) return next()
+
+    const customEmoji = ctx.message.entities.find((e) => e.type === 'custom_emoji')
+
+    if (!customEmoji) return next()
+
+    const emojiStickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
+      custom_emoji_ids: [customEmoji.custom_emoji_id]
+    })
+
+    if (!emojiStickers) return next()
+
+    sticker = emojiStickers[0]
+  } else {
+    sticker = ctx.message.sticker
+  }
+
+  const stickerInfo = await ctx.db.Sticker.findOne({
+    fileUniqueId: sticker.file_unique_id,
     file: { $ne: null }
   })
 
-  if (sticker) {
-    await ctx.replyWithDocument(sticker.file.file_id, {
+  if (stickerInfo) {
+    await ctx.replyWithSticker(stickerInfo.file.file_id, {
       caption: sticker.emojis,
       reply_to_message_id: ctx.message.message_id
-    }).catch((documentError) => {
-      if (documentError.description === 'Bad Request: type of file mismatch') {
-        ctx.replyWithPhoto(sticker.file.file_id, {
-          caption: sticker.emojis,
+    }).catch(async (stickerError) => {
+      if (stickerError.description.match(/emoji/)) {
+        const fileLink = await ctx.telegram.getFileLink(stickerInfo.file.file_id)
+
+        await ctx.replyWithDocument({
+          url: fileLink,
+          filename: `${stickerInfo.file.file_unique_id}.webp`
+        }, {
+          reply_to_message_id: ctx.message.message_id
+        }).catch((error) => {
+          ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
+            error: error.description
+          }), {
+            reply_to_message_id: ctx.message.message_id
+          })
+        })
+      } else {
+        ctx.replyWithPhoto(stickerInfo.file.file_id, {
+          caption: stickerInfo.emojis,
           reply_to_message_id: ctx.message.message_id
         }).catch((pohotoError) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
@@ -37,16 +72,10 @@ originalSticker.on('sticker', async (ctx) => {
             reply_to_message_id: ctx.message.message_id
           })
         })
-      } else {
-        ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
-          error: documentError.description
-        }), {
-          reply_to_message_id: ctx.message.message_id
-        })
       }
     })
   } else {
-    const fileLink = await ctx.telegram.getFileLink(ctx.message.sticker.file_id)
+    const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
 
     if (fileLink.endsWith('.webp')) {
       const buffer = await got(fileLink).buffer()
@@ -54,7 +83,7 @@ originalSticker.on('sticker', async (ctx) => {
 
       await ctx.replyWithDocument({
         source: image,
-        filename: `${ctx.message.sticker.file_unique_id}.png`
+        filename: `${sticker.file_unique_id}.png`
       }, {
         reply_to_message_id: ctx.message.message_id
       }).catch((error) => {
@@ -67,7 +96,7 @@ originalSticker.on('sticker', async (ctx) => {
     } else if (fileLink.endsWith('.webm')) {
       await ctx.replyWithDocument({
         url: fileLink,
-        filename: `${ctx.message.sticker.file_unique_id}.webm`
+        filename: `${sticker.file_unique_id}.webm`
       }, {
         reply_to_message_id: ctx.message.message_id
       }).catch((error) => {
