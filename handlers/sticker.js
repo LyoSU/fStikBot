@@ -155,7 +155,7 @@ module.exports = async (ctx) => {
       // }
     }
   } else {
-    messageText = ctx.i18n.t('sticker.add.error.file_type')
+    messageText = ctx.i18n.t(`sticker.add.error.file_type.${stickerType}`)
   }
 
   if (messageText) {
