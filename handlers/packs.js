@@ -93,34 +93,32 @@ module.exports = async (ctx) => {
       packType = stickerSet.inline ? 'inline' : stickerSet.packType
 
       if (!stickerSet.inline) {
-        const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name)
+        const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => {})
 
-        if (!stickerSetInfo) {
-          return ctx.answerCbQuery('error', true)
-        }
+        if (stickerSetInfo) {
+          // if user not premium and title not have bot username
+          if (!userInfo.premium && !stickerSetInfo.title.includes(ctx.options.username)) {
+            const titleSuffix = ` :: @${ctx.options.username}`
+            const charTitleMax = ctx.config.charTitleMax
 
-        // if user not premium and title not have bot username
-        if (!userInfo.premium && !stickerSetInfo.title.includes(ctx.options.username)) {
-          const titleSuffix = ` :: @${ctx.options.username}`
-          const charTitleMax = ctx.config.charTitleMax
+            let newTitle = stickerSetInfo.title
 
-          let newTitle = stickerSetInfo.title
+            if (countUncodeChars(newTitle) > charTitleMax) {
+              newTitle = substrUnicode(newTitle, 0, charTitleMax)
+            }
 
-          if (countUncodeChars(newTitle) > charTitleMax) {
-            newTitle = substrUnicode(newTitle, 0, charTitleMax)
+            newTitle += titleSuffix
+
+            await ctx.telegram.callApi('setStickerSetTitle', {
+              name: stickerSet.name,
+              title: newTitle
+            }).catch((err) => {
+              console.log('setStickerSetTitle', err)
+            })
           }
 
-          newTitle += titleSuffix
-
-          await ctx.telegram.callApi('setStickerSetTitle', {
-            name: stickerSet.name,
-            title: newTitle
-          }).catch((err) => {
-            console.log('setStickerSetTitle', err)
-          })
+          stickerSet.title = stickerSetInfo.title
         }
-
-        stickerSet.title = stickerSetInfo.title
       }
 
 
