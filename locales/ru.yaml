@@ -255,6 +255,11 @@ sticker:
           Вы можете добавить этот анимированный файл в векторный стикерпак
 
           <i>Создать (/new) или выбрать (/packs) другой стикерпак</i>
+        unknown: |
+          <b>Error!</b>
+          This file type is not supported
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>Подождите!</b>
 
