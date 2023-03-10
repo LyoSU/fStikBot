@@ -159,7 +159,7 @@ module.exports = async (ctx) => {
       // }
     }
   } else {
-    messageText = ctx.i18n.t(`sticker.add.error.file_type.${stickerType}`)
+    messageText = ctx.i18n.t('sticker.add.error.file_type.unknown')
   }
 
   if (messageText) {
