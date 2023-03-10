@@ -255,6 +255,11 @@ sticker:
           您可以将此动画文件添加到矢量包
 
           <i>创建(/new) 或选择 (/packs) 另一个贴纸包</i>
+        unknown: |
+          <b>Error!</b>
+          This file type is not supported
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>等等！</b>
 
