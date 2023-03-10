@@ -79,7 +79,7 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
 
     if (fileLink.endsWith('.webp')) {
       const buffer = await got(fileLink).buffer()
-      const image = await sharp(buffer).png()
+      const image = sharp(buffer, { failOnError: false }).png()
 
       await ctx.replyWithDocument({
         source: image,

@@ -259,7 +259,7 @@ newPackConfirm.enter(async (ctx, next) => {
         }).then(result => {
           console.log('Sticker deleted from set: ', result)
         })
-      }, 1000 * 5)
+      }, 1000 * 10)
     }
 
     const userStickerSet = await ctx.db.StickerSet.newSet({
