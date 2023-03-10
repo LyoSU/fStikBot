@@ -256,6 +256,11 @@ sticker:
           Bu animasyonlu dosyaları vektör paketine ekleyebilirsiniz
 
           <i>Başka bir çıkartma paketi oluşturun (/new) veya seçin (/packs)</i>
+        unknown: |
+          <b>Error!</b>
+          This file type is not supported
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
       wait_load: |
         <b>Bekle!</b>
 
