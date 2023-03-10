@@ -42,8 +42,6 @@ module.exports = async (ctx) => {
         userInfo.inlineType = 'packs'
       } else {
         userInfo.stickerSet = null
-        userInfo.inlineStickerSet = null
-        userInfo.inlineType = 'gif'
       }
 
       packType = 'inline'
@@ -61,9 +59,6 @@ module.exports = async (ctx) => {
       } else {
         userInfo.stickerSet = null
       }
-
-      userInfo.inlineStickerSet = null
-      userInfo.inlineType = 'gif'
 
       packType = ctx.match[2]
     }
