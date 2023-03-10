@@ -203,8 +203,10 @@ sticker:
       <b>Стікер успішно додано до стікерпаку:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Стікер успішно доданий у стікерпак:</b>
+      <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     send_emoji: Чудово, тепер відправте емодзі який відповідає стікеру
     converting_process: |
       <b>Зачекайте...</b>
