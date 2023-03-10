@@ -450,7 +450,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
       }
 
-      const imageSharp = sharp(fileData)
+      const imageSharp = sharp(fileData, { failOnError: false })
       const imageMetadata = await imageSharp.metadata().catch(() => { })
 
       if (stickerSet.packType === 'custom_emoji') {

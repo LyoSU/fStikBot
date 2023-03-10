@@ -8,7 +8,7 @@ const { match } = I18n
 
 const messaging = require('./messaging')
 const sceneNewPack = require('./pack-new')
-const originalSticker = require('./sricker-original')
+const originalSticker = require('./sticker-original')
 const deleteSticker = require('./sticker-delete')
 const packEdit = require('./admin-pack')
 const searchStickerSet = require('./pack-search')
