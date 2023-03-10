@@ -37,8 +37,6 @@ packRename.on('text', async (ctx) => {
 
   let newTitle = ctx.message.text
 
-  console.log(countUncodeChars(newTitle))
-
   if (countUncodeChars(newTitle) > charTitleMax) {
     newTitle = substrUnicode(newTitle, 0, charTitleMax)
   }

@@ -56,7 +56,7 @@ async function updateConvertQueueMessages () {
       }).catch(() => {})
     }
 
-    if (job.failedReason) {
+    if (job?.failedReason) {
       job.remove()
     }
   }
