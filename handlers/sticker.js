@@ -26,8 +26,8 @@ module.exports = async (ctx) => {
 
     case 'document':
       if (
-        ['image/jpeg', 'image/png', 'image/gif'].includes(ctx.message.document.mime_type) ||
-        ctx.message.document.mime_type.match('video')
+        ['image/jpeg', 'image/png', 'image/gif'].includes(ctx.message?.document?.mime_type) ||
+        ctx.message.document?.mime_type?.match('video')
       ) {
         stickerFile = ctx.message.document
         if (ctx.message.caption) stickerFile.emoji = ctx.message.caption

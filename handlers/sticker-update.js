@@ -2,11 +2,34 @@ const emojiRegex = require('emoji-regex')
 
 module.exports = async (ctx, next) => {
   if (
-    !ctx.session.previousSticker ||
     ctx.message.text.match(/[a-zA-Zа-яА-Я]/)
   ) return next()
 
-  const sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id)
+  let sticker
+
+  if (ctx.session.previousSticker) {
+    sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id)
+  } else if (ctx.session.userInfo.stickerSet) {
+    const stickerSetInfo = await ctx.tg.getStickerSet(ctx.session.userInfo.stickerSet.name)
+
+    if (!stickerSetInfo || stickerSetInfo.stickers.length < 1) {
+      return next()
+    }
+
+    const stickerInfo = stickerSetInfo.stickers[stickerSetInfo.stickers.length - 1]
+
+    sticker = await ctx.db.Sticker.findOne({
+      stickerSet: ctx.session.userInfo.stickerSet,
+      fileUniqueId: stickerInfo.file_unique_id,
+      deleted: false
+    })
+
+    if (!sticker) {
+      return next()
+    }
+  } else {
+    return next()
+  }
 
   const regex = emojiRegex()
   const emojis = ctx.message.text.match(regex)

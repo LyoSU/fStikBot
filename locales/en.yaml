@@ -204,6 +204,8 @@ sticker:
     ok_inline: |
       <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
       <b>Wait...</b>
