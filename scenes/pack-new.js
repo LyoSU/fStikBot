@@ -121,7 +121,7 @@ newPackTitle.on('text', async (ctx) => {
   let title = ctx.message.text
 
   if (countUncodeChars(title) > charTitleMax) {
-    title = substrUnicode(title, charTitleMax)
+    title = substrUnicode(title, 0, charTitleMax)
   }
 
   ctx.session.scene.newPack.title = title
