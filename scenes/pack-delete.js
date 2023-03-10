@@ -10,6 +10,8 @@ packDelete.enter(async (ctx) => {
 
   if (!stickerSet) return ctx.answerCbQuery('Error')
 
+  await ctx.deleteMessage().catch(() => {})
+
   ctx.session.scene = {
     id: 'packDelete',
     data: {
