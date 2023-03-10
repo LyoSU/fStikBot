@@ -264,6 +264,8 @@ newPackConfirm.enter(async (ctx, next) => {
       setTimeout(async () => {
         const getStickerSet = await ctx.telegram.getStickerSet(name)
         const stickerInfo = getStickerSet.stickers[0]
+        if (!stickerInfo) return
+
         await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id).catch(error => {
           console.error('Error while deleting sticker from set: ', error)
         }).then(result => {
