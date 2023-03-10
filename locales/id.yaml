@@ -4,18 +4,18 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     info: |
-      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
+      Hai! Saya akan membuatkan set stiker atau emoji saya sendiri untuk Anda dari foto, video, gif, atau stiker lainnya.
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
+      /new - buat paket stiker baru
+      /new_emoji - buat paket emoji baru
+      /new_inline - buat paket inline baru
 
-      /packs - list of your sticker packs
+      /packs - daftar paket stiker Anda
 
-      /delete - delete sticker from sticker pack
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
+      /delete - hapus stiker dari paket stiker
+      /original - temukan stiker asli
+      /restore - pulihkan paket stiker
+      /copy - salin paket stiker
       /emoji - change emoji suffix for current sticker pack
       /frame - сhange frame for current sticker pack
       /lang - change language

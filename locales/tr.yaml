@@ -14,13 +14,13 @@ cmd:
 
       /delete - çıkartma paketinden çıkartmayı silin
       /original - bulun orijinal çıkartma
-      /geri yükle - bir çıkartma paketini geri yükleme
-      /kopyala - bir çıkartma paketini kopyala
+      /restore - bir çıkartma paketini geri yükleme
+      /copy - bir çıkartma paketini kopyala
       /emoji - mevcut çıkartma paketi
-      için emoji son ekini değiştir /çerçeve - mevcut çıkartma paketi
+      için emoji son ekini değiştir /frame - mevcut çıkartma paketi
       için çerçeveyi değiştir /lang - dili değiştir
 
-      /bağışla - destek geliştirici
+      /donate - destek geliştirici
 
       🧑‍🔧 Kişiler: @ly_oBot
       👨🏻‍💻 Geliştirici kanalı: @LyBlog
