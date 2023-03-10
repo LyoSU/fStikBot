@@ -1,6 +1,10 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const { escapeHTML } = require('../utils')
+const {
+  escapeHTML,
+  countUncodeChars,
+  substrUnicode
+} = require('../utils')
 
 const packRename = new Scene('packRename')
 
@@ -33,8 +37,10 @@ packRename.on('text', async (ctx) => {
 
   let newTitle = ctx.message.text
 
-  if (newTitle.length > charTitleMax) {
-    newTitle = newTitle.substr(0, charTitleMax)
+  console.log(countUncodeChars(newTitle))
+
+  if (countUncodeChars(newTitle) > charTitleMax) {
+    newTitle = substrUnicode(newTitle, 0, charTitleMax)
   }
 
   newTitle += titleSuffix

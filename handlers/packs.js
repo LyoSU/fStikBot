@@ -1,5 +1,9 @@
 const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
+const {
+  countUncodeChars,
+  substrUnicode
+} = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
 
@@ -104,8 +108,8 @@ module.exports = async (ctx) => {
 
         let newTitle = stickerSetInfo.title
 
-        if (newTitle.length > charTitleMax) {
-          newTitle = newTitle.substr(0, charTitleMax)
+        if (countUncodeChars(newTitle) > charTitleMax) {
+          newTitle = substrUnicode(newTitle, 0, charTitleMax)
         }
 
         newTitle += titleSuffix

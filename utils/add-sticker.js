@@ -1,6 +1,5 @@
 const path = require('path')
 const https = require('https')
-const emojiRegex = require('emoji-regex')
 const sharp = require('sharp')
 const Queue = require('bull')
 const EventEmitter = require('events')

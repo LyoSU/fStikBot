@@ -7,6 +7,8 @@ const updateUser = require('./user-update')
 const stats = require('./stats')
 const tenor = require('./tenor')
 const telegramEmojiText = require('./telegram-emoji-text')
+const countUncodeChars = require('./unicode-chars-count')
+const substrUnicode = require('./unicode-substr')
 
 module.exports = {
   escapeHTML,
@@ -17,5 +19,7 @@ module.exports = {
   updateUser,
   stats,
   tenor,
-  telegramEmojiText
+  telegramEmojiText,
+  countUncodeChars,
+  substrUnicode
 }

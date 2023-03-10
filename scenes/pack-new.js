@@ -2,7 +2,11 @@ const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const { generateSlug } = require("random-word-slugs");
-const { addSticker } = require('../utils')
+const {
+  addSticker,
+  countUncodeChars,
+  substrUnicode,
+} = require('../utils')
 
 
 const stegcloak = new StegCloak(false, false)
@@ -115,8 +119,9 @@ newPackTitle.on('text', async (ctx) => {
   let charTitleMax = ctx.session.userInfo.premium ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
 
   let title = ctx.message.text
-  if (title.length > charTitleMax) {
-    title = title.slice(0, charTitleMax)
+
+  if (countUncodeChars(title) > charTitleMax) {
+    title = substrUnicode(title, charTitleMax)
   }
 
   ctx.session.scene.newPack.title = title
