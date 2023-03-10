@@ -200,12 +200,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Стікер успішно додано до стікерпака:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Надішліть один або кілька емоджі, які відповідають стікеру, якщо ви хочете додати їх</i>
     ok_inline: |
-      <b>Sticker added to stickerpack successfully:</b>
+      <b>Стікер успішно додано до стікерпаку:</b>
       <u>${title}</u>
     send_emoji: Чудово, тепер відправте емодзі який відповідає стікеру
     converting_process: |
@@ -258,10 +258,10 @@ sticker:
 
           <i>Створіть (/new) або оберіть (/packs) інший стікерпак</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>Помилка!</b>
+          Цей тип файлу не підтримується
 
-          <i>Create (/new) or choose (/packs) another sticker pack</i>
+          <i>Створіть (/new) або виберіть (/packs) інший стікерпак</i>
       wait_load: |
         <b>Зачекайте!</b>
 
