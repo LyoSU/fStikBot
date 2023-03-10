@@ -95,34 +95,40 @@ module.exports = async (ctx) => {
         return ctx.answerCbQuery('error', true)
       }
 
-      const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name)
+      packType = stickerSet.inline ? 'inline' : stickerSet.packType
 
-      if (!stickerSetInfo) {
-        return ctx.answerCbQuery('error', true)
-      }
+      if (!stickerSet.inline) {
+        const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name)
 
-      // if user not premium and title not have bot username
-      if (!stickerSet.inline && !userInfo.premium && !stickerSetInfo.title.includes(ctx.options.username)) {
-        const titleSuffix = ` :: @${ctx.options.username}`
-        const charTitleMax = ctx.config.charTitleMax
-
-        let newTitle = stickerSetInfo.title
-
-        if (countUncodeChars(newTitle) > charTitleMax) {
-          newTitle = substrUnicode(newTitle, 0, charTitleMax)
+        if (!stickerSetInfo) {
+          return ctx.answerCbQuery('error', true)
         }
 
-        newTitle += titleSuffix
+        // if user not premium and title not have bot username
+        if (!userInfo.premium && !stickerSetInfo.title.includes(ctx.options.username)) {
+          const titleSuffix = ` :: @${ctx.options.username}`
+          const charTitleMax = ctx.config.charTitleMax
 
-        await ctx.telegram.callApi('setStickerSetTitle', {
-          name: stickerSet.name,
-          title: newTitle
-        }).catch((err) => {
-          console.log('setStickerSetTitle', err)
-        })
+          let newTitle = stickerSetInfo.title
+
+          if (countUncodeChars(newTitle) > charTitleMax) {
+            newTitle = substrUnicode(newTitle, 0, charTitleMax)
+          }
+
+          newTitle += titleSuffix
+
+          await ctx.telegram.callApi('setStickerSetTitle', {
+            name: stickerSet.name,
+            title: newTitle
+          }).catch((err) => {
+            console.log('setStickerSetTitle', err)
+          })
+        }
+
+        stickerSet.title = stickerSetInfo.title
       }
 
-      stickerSet.title = stickerSetInfo.title
+
       stickerSet.updatedAt = new Date()
       await stickerSet.save()
 
