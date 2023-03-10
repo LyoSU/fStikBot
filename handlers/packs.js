@@ -87,12 +87,40 @@ module.exports = async (ctx) => {
     } else {
       const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
-      stickerSet.updatedAt = new Date()
-      await stickerSet.save()
-
       if (!stickerSet) {
         return ctx.answerCbQuery('error', true)
       }
+
+      const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name)
+
+      if (!stickerSetInfo) {
+        return ctx.answerCbQuery('error', true)
+      }
+
+      // if user not premium and title not have bot username
+      if (!userInfo.premium && !stickerSetInfo.title.includes(ctx.options.username)) {
+        const titleSuffix = ` :: @${ctx.options.username}`
+        const charTitleMax = ctx.config.charTitleMax
+
+        let newTitle = stickerSetInfo.title
+
+        if (newTitle.length > charTitleMax) {
+          newTitle = newTitle.substr(0, charTitleMax)
+        }
+
+        newTitle += titleSuffix
+
+        await ctx.telegram.callApi('setStickerSetTitle', {
+          name: stickerSet.name,
+          title: newTitle
+        }).catch((err) => {
+          console.log('setStickerSetTitle', err)
+        })
+      }
+
+      stickerSet.title = stickerSetInfo.title
+      stickerSet.updatedAt = new Date()
+      await stickerSet.save()
 
       if (stickerSet?.owner.toString() === userInfo.id.toString()) {
         await ctx.answerCbQuery()
