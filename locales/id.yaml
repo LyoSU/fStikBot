@@ -202,8 +202,10 @@ sticker:
       <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Stiker berhasil ditambahkan ke paket stiker:</b>
+      <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     send_emoji: Bagus, sekarang kirim emoji yang cocok dengan stiker
     converting_process: |
       <b>Tunggu...</b>

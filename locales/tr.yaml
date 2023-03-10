@@ -202,8 +202,10 @@ sticker:
       <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
       <a href="${link}">${title}</a>
     ok_inline: |
-      <b>Çıkartma, çıkartma paketine başarıyla eklendi:</b>
+      <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     send_emoji: Harika, şimdi çıkartmayla eşleşen emojiyi gönder
     converting_process: |
       <b>Bekle...</b>
