@@ -50,9 +50,9 @@ module.exports = async (ctx) => {
     if (deleteStickerFromSet) {
       ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.delete'))
 
-      ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {
+      ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {  
         reply_markup: Markup.inlineKeyboard([
-          sticker.info ? Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.info.file_unique_id}`) : null,
+          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.info.file_unique_id}`, !sticker.info)
         ])
       }).catch(() => {})
 
