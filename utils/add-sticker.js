@@ -372,7 +372,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
       if (userQueue.video && !ctx.session.userInfo.premium) {
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
-          reply_to_message_id: ctx.message.message_id,
+          reply_to_message_id: ctx?.message?.message_id,
           allow_sending_without_reply: true
         })
       }
@@ -380,7 +380,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       if (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65) { // 15 mb or 65 sec
         userQueue.video = false
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
-          reply_to_message_id: ctx.message.message_id,
+          reply_to_message_id: ctx?.message?.message_id,
           allow_sending_without_reply: true
         })
       }
