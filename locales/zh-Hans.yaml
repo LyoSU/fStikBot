@@ -198,13 +198,13 @@ callback:
 sticker:
   add:
     ok: |
-      <b>貼圖成功添加到貼圖包：</b>
+      <b>Sticker successfully added to sticker pack:</b>
       <a href="${link}">${title}</a>
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b>Sticker added to stickerpack successfully:</b>
       <u>${title}</u>
-
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     send_emoji: 太好了，现在发送与之匹配的表情
     converting_process: |
       <b>等待...</b>
