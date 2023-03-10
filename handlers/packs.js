@@ -182,7 +182,7 @@ module.exports = async (ctx) => {
               Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:remove:${stickerSet.id}`),
               Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`)
             ]
-          } else if (!stickerSet.animated && !stickerSet.inline && stickersCount >= 10) {
+          } else if (!stickerSet.animated && !stickerSet.inline && stickerSet.packType !== 'custom_emoji' && stickersCount >= 10) {
             catalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]
           }
 

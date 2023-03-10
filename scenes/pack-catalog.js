@@ -200,6 +200,10 @@ catalogPublish.enter(async (ctx) => {
 
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
 
+  if (stickerSet.packType === 'custom_emoji') {
+    return ctx.scene.enter('scenes.catalog.publish.custom_emoji')
+  }
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.enter', {
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
     title: escapeHTML(stickerSet.title)
