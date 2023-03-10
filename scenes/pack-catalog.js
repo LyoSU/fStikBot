@@ -201,7 +201,7 @@ catalogPublish.enter(async (ctx) => {
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
 
   if (stickerSet.packType === 'custom_emoji') {
-    return ctx.scene.enter('scenes.catalog.publish.custom_emoji')
+    return ctx.replyWithHTML('Custom emoji not supported yet')
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.enter', {
