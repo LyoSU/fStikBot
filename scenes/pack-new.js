@@ -128,7 +128,8 @@ newPackTitle.on('text', async (ctx) => {
 const newPackName = new Scene('newPackName')
 
 newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
-  reply_to_message_id: ctx.message.message_id
+  reply_to_message_id: ctx.message.message_id,
+  allow_sending_without_reply: true
 }))
 
 newPackName.on('text', async (ctx) => {
@@ -192,7 +193,8 @@ newPackConfirm.enter(async (ctx, next) => {
 
     if (stickerSetByName) {
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
-        reply_to_message_id: ctx.message.message_id
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
       })
       return ctx.scene.enter('newPackName')
     }
@@ -230,19 +232,22 @@ newPackConfirm.enter(async (ctx, next) => {
 
       if (error.description === 'Bad Request: invalid sticker set name is specified') {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid'), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
         return ctx.scene.enter('newPackName')
       } else if (error.description === 'Bad Request: sticker set name is already occupied') {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
         return ctx.scene.enter('newPackName')
       } else {
         await ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
           error: error.description
         }), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
         return ctx.scene.enter('newPackName')
       }
@@ -283,6 +288,7 @@ newPackConfirm.enter(async (ctx, next) => {
         botUsername: ctx.options.username
       }), {
         reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true,
         reply_markup: Markup.inlineKeyboard([
           Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
         ])

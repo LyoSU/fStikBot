@@ -44,7 +44,8 @@ stage.hears(([
     reply_markup: {
       remove_keyboard: true
     },
-    reply_to_message_id: ctx.message.message_id
+    reply_to_message_id: ctx.message.message_id,
+    allow_sending_without_reply: true
   })
   ctx.scene.leave()
   handleStart(ctx)

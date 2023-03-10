@@ -324,6 +324,7 @@ module.exports = async (ctx) => {
   if (ctx.updateType === 'message') {
     await ctx.replyWithHTML(messageText, {
       reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true,
       reply_markup: Markup.inlineKeyboard(keyboardMarkup)
     })
   } else if (ctx.updateType === 'callback_query') {

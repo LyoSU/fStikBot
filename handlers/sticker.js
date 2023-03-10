@@ -11,7 +11,8 @@ module.exports = async (ctx) => {
 
   if (!ctx.session.userInfo.stickerSet) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
     })
   }
 
@@ -117,6 +118,7 @@ module.exports = async (ctx) => {
 
       await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
         reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_unique_id}`),
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.info.file_unique_id}`)
@@ -163,6 +165,7 @@ module.exports = async (ctx) => {
   if (messageText) {
     await ctx.replyWithHTML(messageText, {
       reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true,
       reply_markup: replyMarkup
     })
   }

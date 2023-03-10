@@ -44,7 +44,8 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
   if (stickerInfo) {
     await ctx.replyWithSticker(stickerInfo.file.file_id, {
       caption: sticker.emojis,
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
     }).catch(async (stickerError) => {
       if (stickerError.description.match(/emoji/)) {
         const fileLink = await ctx.telegram.getFileLink(stickerInfo.file.file_id)
@@ -53,23 +54,27 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
           url: fileLink,
           filename: `${stickerInfo.file.file_unique_id}.webp`
         }, {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         }).catch((error) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
             error: error.description
           }), {
-            reply_to_message_id: ctx.message.message_id
+            reply_to_message_id: ctx.message.message_id,
+            allow_sending_without_reply: true
           })
         })
       } else {
         ctx.replyWithPhoto(stickerInfo.file.file_id, {
           caption: stickerInfo.emojis,
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         }).catch((pohotoError) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
             error: pohotoError.description
           }), {
-            reply_to_message_id: ctx.message.message_id
+            reply_to_message_id: ctx.message.message_id,
+            allow_sending_without_reply: true
           })
         })
       }
@@ -85,12 +90,14 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
         source: image,
         filename: `${sticker.file_unique_id}.png`
       }, {
-        reply_to_message_id: ctx.message.message_id
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
       }).catch((error) => {
         ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
           error: error.description
         }), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
       })
     } else if (fileLink.endsWith('.webm')) {
@@ -98,17 +105,20 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
         url: fileLink,
         filename: `${sticker.file_unique_id}.webm`
       }, {
-        reply_to_message_id: ctx.message.message_id
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
       }).catch((error) => {
         ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
           error: error.description
         }), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
       })
     } else {
       await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), {
-        reply_to_message_id: ctx.message.message_id
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
       })
     }
   }

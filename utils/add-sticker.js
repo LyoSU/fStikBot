@@ -283,15 +283,18 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
   if (!stickerSet?.animated && stickerFile.is_animated) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.animated'), {
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
     })
   } else if (!stickerSet?.video && (isVideo || isVideoNote)) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.video'), {
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
     })
   } else if (!stickerFile.is_animated && stickerSet?.animated) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.static'), {
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
     })
   }
 
@@ -370,14 +373,16 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
       if (userQueue.video && !ctx.session.userInfo.premium) {
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
       }
       userQueue.video = true
       if (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65) { // 15 mb or 65 sec
         userQueue.video = false
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
-          reply_to_message_id: ctx.message.message_id
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
         })
       }
 
