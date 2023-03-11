@@ -1,7 +1,7 @@
 const emojiRegex = require('emoji-regex')
 
 module.exports = async (ctx, next) => {
-  if (ctx.session.previousSticker || ctx.session?.userInfo?.stickerSet.inline) {
+  if (ctx.session.previousSticker && ctx.session?.userInfo?.stickerSet.inline) {
     if (ctx.message.text.startsWith('/')) {
       ctx.session.previousSticker = null
       return next()
@@ -22,6 +22,8 @@ module.exports = async (ctx, next) => {
     } else {
       return next()
     }
+  } else if (ctx.session.userInfo.stickerSet.inline) {
+    return next()
   }
 
   if (
