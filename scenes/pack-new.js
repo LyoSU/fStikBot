@@ -27,9 +27,9 @@ const newPack = new Scene('newPack')
 newPack.enter(async (ctx, next) => {
   ctx.session.scene.newPack = {}
 
-  ctx.session.scene.newPack.fillColor = !!ctx?.message?.text.match('fill') || !!ctx?.callbackQuery?.data?.match('fill')
 
   if (ctx?.message?.text?.match('emoji') || ctx?.callbackQuery?.data?.match('emoji')) {
+    ctx.session.scene.newPack.fillColor = !!ctx?.message?.text.match('fill') || !!ctx?.callbackQuery?.data?.match('fill')
     ctx.session.scene.newPack.packType = 'custom_emoji'
     return ctx.scene.enter('сhoosePackFormat')
   } else if (ctx?.message?.text?.match('inline') || ctx?.callbackQuery?.data?.match('inline')) {
