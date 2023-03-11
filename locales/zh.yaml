@@ -1,0 +1,601 @@
+---
+language_name: '🇨🇳 简体中文'
+ratelimit: 不经常如此！
+cmd:
+  start:
+    info: |
+      嘿！我将从照片、视频、gif 或其他贴纸中为您创建我自己的一套贴纸或表情符号。
+
+      /new - 创建一个新的贴纸包
+      /new_emoji - 创建一个新的表情符号包
+      /new_inline - 创建一个新的内联包
+
+      /packs - 你的贴纸包列表
+
+      /delete - 从贴纸包中删除贴纸
+      /original - 找到原始贴纸
+      /restore - 恢复贴纸包
+      /copy - 复制贴纸包
+      /emoji - 更改当前贴纸包的表情符号后缀
+      /frame - сhange 当前贴纸包的框架
+      /lang - 更改语言
+
+      /donate - 支持开发者
+
+      🧑‍🔧 联系人：@ly_oBot
+      👨🏻‍💻 开发者频道：@LyBlog
+
+      GitHub：https://github.com/LyoSU/fStikBot
+    catalog: |
+      <b>😻 您可以在我们的目录中找到新的贴纸包</b>
+
+      • 单击下面的按钮并访问适合各种口味的大量贴纸包目录
+      • 按关键字或在准备好的标签中搜索
+      • 不要忘记评价以进行促销或降低贴纸包的排名
+    commands:
+      start: '📜 Start menu'
+      packs: '📁 Sticker packs'
+      new: '📥 Create a new sticker pack'
+      new_emoji: '📥 创建一个新的表情符号包'
+      catalog: '📖 目录'
+      publish: '📤 发布包'
+      delete: '❌删除贴纸'
+      original: '🔍 Find original sticker'
+      restore: '🔀 Restore a sticker pack'
+      copy: '📋 Copy a sticker pack'
+      emoji: '📝 Change emoji suffix'
+      round: '🎥 圆形视频'
+      lang: '🌐 Change language'
+      donate: '☕️ Support the developer'
+    btn:
+      new: '📥 Create new'
+      catalog: '💖 打开目录'
+      catalog_mini: '💖目录'
+      catalog_browser: '🌐 在浏览器中打开'
+      catalog_browser_mini: '🌐 在浏览器中'
+      catalog_app: '📱 下载安卓应用'
+      catalog_app_mini: '📱 安卓应用'
+  inline:
+    switch_pm: '📁贴纸包'
+  restore: |
+    <b>🗃 Sticker pack 恢复</b>
+
+    如果您先前通过此机器人创建了一个貼圖包，它无法在您的貼圖包列表中找到它， 然后你可以还原它。
+
+    <b>要做到这一点，您需要执行几个操作：</b>
+    1。 打开 @Stickers bot
+    2. 发送 <code>/packstats</code> 命令
+    3. 查找并选择所需的貼圖包
+    4。 将收到的消息转发到bot
+    5。如果恢复成功，则通知它
+  copy: |
+    <b>🗄 复制貼圖包</b>
+
+    如果您支持機器人， 从任何貼圖包复制所有貼圖包中的新名稱可用。
+    为了复制贴纸包，您只需要将链接发送到机器人。
+  packs:
+    info: |
+      <b>🌟 貼圖包:</b>
+    types:
+      regular: 定期的
+      custom_emoji: Emoji 表情
+      inline: 内嵌文件
+    empty: |
+      <b>您还没有贴纸包。</b>
+      若要创建，请写一个命令/新
+    inline_title: 内联貼圖包
+  club: |
+    ☕️ 支持机器人开发
+
+    你可以寄钱给我喝咖啡，并在机器人中获得小额奖金作为回报。
+
+    ➖ 禁用 <b>英寸${titleSuffix}</b> 贴纸包名称
+    ➖ 通过链接复制其他贴纸包
+    ➖ 转换视频贴纸时的优先级
+  #club: |
+  #<b>☕️ Bot developer club by Ly</b>
+  #You can join the bot developer club, thereby supporting it.
+  #Also, all club members get additional features in this bot:
+  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+  #➖ Copying of other sticker packs by link
+  emoji:
+    info: |
+      要更改当前贴纸包的默认表情符号，请键入 <code>/emoji</code> 后跟以空格分隔的表情符号。
+      例如 - <code>/emoji 🌟</code>
+    done: 表情已成功更改。
+    error: 更改表情时发生错误！
+  round_video:
+    enabled: |
+      视频现在将呈圆形
+    disabled: |
+      视频将不再具有圆形
+coedit:
+  info: |
+    <b>👥 共同编辑贴纸包</b>
+
+    共同编辑链接 <a href="${link}">${title}</a>:
+    <code>${colink}</code>
+
+    <b>如何使用：</b>
+    1. 将链接发送给您想要授予贴纸包访问权限的人
+    2. 单击链接后，他们需要按“开始”，他们将被添加到编辑器中
+    3. 编辑器可以在贴纸包中添加、删除和编辑贴纸
+
+    <b>编辑器：</b>
+    ${editors}
+
+    <i>要删除编辑器，你需要重置链接</i>
+  no_editors: |
+    还没有编辑
+  btn:
+    send: '📤 发送链接'
+    reset: '🔁 重置链接'
+  share: |
+    点击链接并按“开始”共同编辑贴纸包“${title}”
+  reset: |
+    <b>🔁 链接重置成功</b>
+
+    共同编辑的新链接 <a href="${link}">${title}</a>:
+    <code>${colink}</code>
+callback:
+  pack:
+    answerCbQuer:
+      hidden: Стикерпак успешно скрыт
+      restored: Стикерпак успешно восстановлен
+    set_pack:
+      static: |
+        选定的静态贴纸包 <a href="${link}">${title}</a>
+
+        要添加新贴纸，请给我发送照片，另一个静态贴纸。
+        对于没有背景的贴纸，必须作为文件发送。
+      animated: |
+        选定的动画 (vector) 貼圖包 <a href="${link}">${title}</a>
+
+        若要添加新貼圖，請向我發送一个 <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> 檔案或其他动作貼圖。
+      video: |
+        所选视频貼圖包 <a href="${link}">${title}</a>
+
+        要添加新貼圖，請發送任何視頻或照片。
+    set_inline_pack: |
+      选择 <u>${title}</u> 贴箱
+
+      以便使用 写入任何聊天 <code>@${botUsername} </code>和空格
+      您也可以按下下面的按钮使用它
+    hidden: 貼圖包 <a href="${link}">${title}</a> 已隐藏在您的列表中。
+    restored: 貼圖包 <a href="${link}">${title}</a> 已恢复到您的列表。
+    btn:
+      hide: '❌ 隐藏贴纸包'
+      delete: '🗑 删除贴纸包'
+      restore: '✅ 恢复'
+      use_pack: '📦 使用贴纸包'
+      rename: '✏️重命名'
+      search_gif: '🔎 搜索 GIF'
+      coedit: '👥 共同编辑'
+      catalog_add: '🗂 Add to catalog'
+      catalog_edit: '📝 在目录中编辑'
+      catalog_delete: '🗑 从目录中删除'
+    error:
+      restore: |
+        <b>错误！</b>
+        无法还原贴纸包。
+      copy: |
+        <b>错误!</b>
+        找不到贴纸包。
+  sticker:
+    answerCbQuery:
+      delete: 贴纸已成功从贴纸包中删除。
+      restored: 贴纸已成功保存到当前贴纸包。
+    delete: 贴纸已成功从贴纸包中删除。
+    restored: 贴纸已成功保存到当前贴纸包。
+    btn:
+      delete: '🗑 删除'
+      copy: '🌟 复制'
+      restore: '✅ 恢复'
+    error:
+      not_found: |
+        错误！
+        找不到标签。
+sticker:
+  add:
+    ok: |
+      <b>Sticker successfully added to sticker pack:</b>
+      <a href="${link}">${title}</a>
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+    ok_inline: |
+      <b>Sticker added to stickerpack successfully:</b>
+      <u>${title}</u>
+    send_emoji: 太好了，现在发送与之匹配的表情
+    converting_process: |
+      <b>等待...</b>
+      你的文件正在等待转换。等待完成。这可能需要一些时间。
+
+      进度: ${progress} / ${total}
+
+      <i>支持机器人的用户在队列中获得优先级 (更多: /donate)</i>
+    catalog_offer: |
+      <b>😲 Wow, you made a great sticker pack!</b>
+
+      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
+      <i>It does not take a lot of time</i>
+    error:
+      no_selected_pack: |
+        <b>您没有选择贴纸包</b>
+
+        请创建(/new) 或选择 (/packs) 貼圖包
+      stickers_too_much: |
+        此貼圖包有最大的貼圖。
+
+        您可以使用/新的命令创建新的貼圖包。
+      have_already: |
+        <b>这张贴已经在貼圖包</b>
+
+        如果您想要更改表情符号，请在下面的消息中發送。
+      stickerset_invalid: |
+        <b>错误！</b>
+        Bot 无法访问您当前选择的贴纸包。
+
+        请创建(/new) 或选择 (/packs) 另一个贴纸包。
+      file_type:
+        static: |
+          <b>错误！</b>
+          此文件类型不受支持
+          您可以将此照片或静态贴图添加到静态包
+
+          <i>创建(/new) 或选择 (/packs) 另一个贴图包</i>
+        video: |
+          <b>错误 ！</b>
+          此文件类型不受支持
+          您可以将此视频文件添加到视频包
+
+          <i>创建(/new) 或选择 (/packs) 另一个贴纸包</i>
+        animated: |
+          <b>错误</b>
+          此文件类型不被支持
+          您可以将此动画文件添加到矢量包
+
+          <i>创建(/new) 或选择 (/packs) 另一个贴纸包</i>
+        unknown: |
+          <b>Error!</b>
+          This file type is not supported
+
+          <i>Create (/new) or choose (/packs) another sticker pack</i>
+      wait_load: |
+        <b>等等！</b>
+
+        Bot 仍在处理之前的视频...
+        您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
+      timeout: |
+        <b>错误！</b>
+
+        稍后再试。
+      convert: |
+        <b>错误！</b>
+        不幸的是，机器人无法转换您的视频。
+
+        也许您的视频是以机器人无法理解的格式保存的。确保它是 mp4 格式。
+        也可能是bot内部错误，重新发送这个视频试试。
+      too_big: |
+        <b>错误！</b>.
+
+        文件太大，无法处理。请在发送前降低质量和持续时间。
+scenes:
+  new_pack:
+    static: '🌟 Static'
+    animated: '✨ 矢量'
+    video: '📹 Video'
+    pack_format: |
+      <b><u>选择贴纸包类型</u></b>
+
+      <b>常用</b> - 静态（不要移动），光栅，文件格式 - 添加 PNG 之前（机器人正在处理），添加之后 - WEBP。
+      常规贴纸包的示例 - t.me/addstickers/Animals
+
+      <b>视频</b> - 动画视频包。您可以添加任何视频、gif 和照片。
+      示例视频贴纸包 - t.me/addstickers/TheMascot
+
+      <b>动画</b> - 动画，矢量 它们具有文件内对象的准确描述，因此它们可以在任何比例下清晰显示），文件格式 - TGS ，Lottie 格式的一种变体。
+      动画贴纸包示例 - t.me/addstickers/IsabelleShizue
+
+      <i>动画和视频贴纸集最多可包含 50 张贴纸。静态贴纸集最多可包含 120 张贴纸。</i>
+    pack_title: |
+      <b>Введи имя для нового стикерпака:</b>
+      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+    pack_name: |
+      <b>为新的贴纸包输入一个短链接：</b>
+      <i>只使用英文字母、 数字和下划线。</i>
+      <i>例如，此包使用 '动物' 作为短链接: https://t。 e/addstickers/<u>动物</u></i>
+
+      <i>你可以在按钮上选择随机的短链接</i>
+    ok: |
+      貼圖包 <a href="${link}">${title}</a> 成功创建 ！
+
+      <b>贴纸包链接：</b> <pre>${link}</pre>
+
+      发送文件， 照片、视频或贴纸，我可以将它添加到您的設定
+    error:
+      title_long: Имя должно быть не больше ${max} символов.
+      name_long: Адрес должен быть не больше ${max} символов.
+      telegram:
+        name_invalid: Такой адрес использовать не получится.
+        name_occupied: Такой адрес уже занят.
+  copy:
+    enter: |
+      Я могу скопировать этот стикерпак, для этого необходимо создать новый стикерпак.
+    progress: |
+      Выполняется копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a>
+
+      Прогресс: ${current}/${total}
+    done: |
+      Копирование стикерпака <a href="${originalLink}">${originalTitle}</a> в <a href="${link}">${title}</a> успешно заверешно.
+    error:
+      premium: |
+        <b>错误！</b>
+        此功能仅用于捐赠成员。
+
+        您可以通过发送/捐赠命令来做到这一点。
+  original:
+    enter: |
+      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+    error:
+      not_found: |
+        <b>Ошибка!</b>
+        У меня не получилось найти оригинал этого стикера.
+  delete:
+    enter: |
+      发送通过该机器人添加的貼圖，我將从貼圖包中刪除。
+    confirm: |
+      您确定要删除此标签？
+    error:
+      not_found: |
+        <b>错误！</b>
+        我找不到贴纸。
+  rename:
+    enter_name: |
+      <b>为 <a href="${link}">${title}</a>输入新标题</b>
+    success: |
+      <b>标题更改成功！</b>
+
+      新标题： <a href="${link}">${title}</a>
+  search:
+    enter: |
+      Send query to search sticker pack
+    error:
+      not_found: |
+        <b>Error!</b>
+        I could not find the pack.
+  catalog:
+    publish:
+      publish_new: |
+        👌 <b>将您要发布的贴纸包中的贴纸发送给我</b>
+
+        <i>您可以发布属于您的任何贴纸包，即使它们是在别处创建的</i>
+      owner_proof: |
+        <b>要验证此贴纸包的所有权，您需要执行几个简单的步骤：</b>
+        1. 打开@Stickers bot
+        2. 发送 <code>/packstats</code> 命令
+        3. 找到并选择所需的贴纸包
+        4. 转发收到发送给机器人的消息
+      publish_new_access_denied: |
+        <b>错误！</b>
+        这个贴纸包不是你的。
+
+        您只能发布自己的贴纸包
+      bannded: |
+        <b>错误！</b>
+        您被禁止使用此功能。
+        请联系管理员。
+      enter: |
+        您即将在我们的 bot 的公共目录中发布“<a href="${link}">${title}</a>”贴纸包
+        该 bot 的任何用户都可以通过名称、标签或过滤器找到它
+        因此，更多人将安装您的贴纸包
+        尝试只发送大量人可能感兴趣的高质量贴纸包
+
+        <b>发布贴纸包的规则：</b>
+        • 不要发布您的个人贴纸包，供少数人使用。例如，例如您朋友的面孔或您消息中的引述
+        • 不要张贴违反欧盟法律或其他当地法律的贴纸压力
+
+        您需要提交其他信息才能在目录中发布
+      continue_button: 继续
+      enter_description: |
+        <b>简要描述你的贴纸包，以便其他人可以找到它</b>
+
+        <i>你也可以使用主题标签对 [#] 进行分类</i>
+        <i>例如：#anime #meme #animals #cute #kpop #funny #cat #game </i>
+      select_language: |
+        <b>Choose which languages your sticker pack is for:</b>
+        <i>You can select multiple languages</i>
+      button_all_languages: All languages
+      button_confirm_language: Confirm
+      set_safe: |
+        <b>Is your sticker pack safe for users?</b>
+        <i>That is, it does not contain erotica and other shocking content</i>
+      button_safe:
+        safe: Yes, it is safe
+        not_safe: No, it is not safe
+      no_tags: 不指定
+      confirm: |
+        <b>确认发布贴纸包“<a href="${link}">${title}</a>”</b>
+
+        <b>描述：</b> <i>${description}</i>
+
+        <b>标签：</b> ${tags}
+        <b>语言：</b> ${languages}
+      button_confirm: '✅ Confirm publication'
+      success: |
+        Congratulations, your sticker pack has been published in the general directory of our bot where other users can find it!
+
+        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+
+        <i>We remind you that the statistics of your sticker pack can be viewed through the official bot @Stickers</i>
+  delete_pack:
+    enter: |
+      您确定要删除包 <a href="${link}">${title}</a>吗？
+      它将被永久删除，无法恢复。
+
+      如果只想删除一张贴纸，请使用 /delete 命令。
+
+      发送 <code>${confirm}</code> 以确认您确实要删除此包。
+    confirm: 是的，我完全确定。
+    success: |
+      <b>贴纸包已成功删除！</b>
+    error:
+      - <b>错误！</b>
+      - 糟糕，出了点问题。
+  frame:
+    no_video: |
+      <b>错误！</b>
+      您只能将帧添加到视频包。
+    select_type: |
+      <a href="${example}">&#8203;</a><b>选择框架类型：</b>
+      框架是贴纸周围的透明背景
+
+      <code>正方形</code> — 框架的矩形形状，即不会以任何方式改变
+      <code>lite</code> — 角将是切一点
+      <code>rounded</code> — 角会变圆
+      <code>circle</code> — frame 会变成圆形
+
+      <i>以后可以使用 /frame 命令来设置 frame 的类型</i>
+    types:
+      lite: '1. 精简版'
+      medium: '2. 中等'
+      rounded: '3. 圆角'
+      square: '4. 广场'
+      circle: '5. 圆圈'
+    selected: |
+      <b>所选帧类型：</b> ${type}
+  leave: |
+    Действие отменено.
+  btn:
+    cancel: '❌ 取消'
+admin:
+  not_allowed: 这个部分不是你的! 😡
+  info: Админ-панель
+  menu:
+    messaging: '✉️ Рассылка'
+    pack: '📦 Стікерпаки'
+    admin: '😎 Админ-панель'
+  premium:
+    changed: |
+      <b>高级状态已改变：</b>
+      ${status}
+    user_not_found: |
+      <b>错误 ！</b>
+      未找到用户。
+  messaging:
+    info: |
+      ✉️ Рассылки
+    menu:
+      create: Создать
+      scheduled: Запланировано
+      archive: Архив
+    create:
+      name: Заголовок
+      send_message: Отправь текст или медиа
+      date: 'Укажи дату публикации <b>дд.мм чч:мм</b>'
+      date_format: |
+        Сообщение будет отправлено:
+          ${date}
+      date_invalid: |
+        Неправильный формат даты
+        Укажи дату в формате <b>дд.мм чч:мм</b>
+      add_url: Добавить ссылку
+      clear_url: Удалить ссылку
+      add_url_info: |
+        Отправь список кнопок
+        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
+        Текст кнопки 3 - http://www.example3.com/
+        </pre>
+        ${current ? '\nТекущие кнопки:\n' + current : ''}
+      group_select: Выбери группу пользователей
+      group_type:
+        all: Все
+        ru: 俄文
+      select_all: Все
+      found: |
+        Нашлось человек: ${userCount}
+
+        Начать рассылку?
+      back: '« 后退'
+      continue: 继续 »
+      publish: |
+        Рассылка  ${name} создана Для просмотра нажми кнопку
+        Для просмотра нажми кнопку
+      status: Состояние рассылки
+    edit:
+      started: |
+        Редактирование началось
+      wrong_type: |
+        Ошибка!
+        Тип сообщения [${type}] отличается от оригинала [${originalType}].
+        Редактирование невозможно
+    list:
+      info: Состояние рассылки
+    status:
+      info: |2
+        <b>Рассылка ${name}</b> (${createdAt})
+        Создал ${creatorName}
+
+        Дата отправки: ${date}
+
+        Прогресс отправки:
+          Всего: ${total}
+          Отправлено: ${completed}
+          Осталось: ${left}
+          Ошибки: ${error}
+        ${userErrors}
+
+        Статус: ${status}
+      status_type: |
+        Создано
+        В процессе
+        Архив
+      name_changed: Заголовок изменен
+      cancel: '❌ Отменить'
+      view: Посмотреть
+      edit: Редактировать
+      change_name: Изменить заголовок
+      update: Обновить
+    canceled: |
+      <b>Рассылка ${name}</b> отменена.
+    send_error: |
+      <b>Ошибка рассылки ${name}</b>
+      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
+
+      <code>${errorMessage}</code>
+  pack:
+    info: |
+      ✉️ Пакети
+    edit_button: Редагувати
+    edit:
+      find: |
+        Відправте стікер із стікерпаку для пошуку
+      found: |
+        Стікерпак: ${packName}
+
+        Створив: <a href="${packCreatorLink}">${creatorName}</a>
+      steal_button: Відібрати стікерпак
+      remove_button: Видалити стікерпак
+      steal: |
+        Ви дійсно бажаєте відібрати стікерпак ${packName}?
+      steal_success: |
+        Ви успішно відібрали стікерпак ${packName}
+      remove: |
+        Ви дійсно бажаєте видалити стікерпак ${packName}?
+      remove_success: |
+        Ви успішно видалили стікерпак ${packName}
+      yes: Так
+      no: Ні
+    not_found: Стікерпак не знайдено
+error:
+  telegram: |
+    <b>Telegram вернул ошибку!</b>
+    <code>${error}</code>
+  answerCbQuery:
+    telegram: |
+      Telegram вернул ошибку:
+      ${error}
+  unknown: |
+    <b>出现未知错误，请再试一次。</b>
+
+    如果问题仍然存在，请写到 @Ly_oBot。
+    请立即写出你谈论的机器人并在一个消息中详细描述问题。
