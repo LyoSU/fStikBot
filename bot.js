@@ -245,7 +245,7 @@ db.connection.once('open', async () => {
     const localeName = locale.split('.')[0]
 
     await bot.telegram.callApi('setMyDescription', {
-      description: i18n.t('localeName', 'description.long'),
+      description: i18n.t(localeName, 'description.long'),
       language_code: localeName
     }).then((res) => {
       console.log('setMyDescription', 'localeName', localeName, res)
