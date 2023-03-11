@@ -250,7 +250,7 @@ db.connection.once('open', async () => {
     }).then((res) => {
       console.log('setMyDescription', 'localeName', localeName, res)
     }).catch((err) => {
-      console.log('setMyDescription', 'localeName', localeName, err)
+      console.error('setMyDescription', 'localeName', localeName, err.description)
     })
 
     await bot.telegram.callApi('setMyShortDescription', {
@@ -259,7 +259,7 @@ db.connection.once('open', async () => {
     }).then((res) => {
       console.log('setMyShortDescription', 'localeName', localeName, res)
     }).catch((err) => {
-      console.log('setMyShortDescription', 'localeName', localeName, err)
+      console.error('setMyShortDescription', 'localeName', localeName, err.description)
     })
   }
 
