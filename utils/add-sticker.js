@@ -282,17 +282,17 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
   if (!stickerSet?.animated && stickerFile.is_animated) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.animated'), {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx?.message?.message_id,
       allow_sending_without_reply: true
     })
   } else if (!stickerSet?.video && (isVideo || isVideoNote)) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.video'), {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx?.message?.message_id,
       allow_sending_without_reply: true
     })
   } else if (!stickerFile.is_animated && stickerSet?.animated) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.static'), {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx?.message?.message_id,
       allow_sending_without_reply: true
     })
   }
