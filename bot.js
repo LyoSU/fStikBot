@@ -166,12 +166,7 @@ bot.start((ctx, next) => {
   return next()
 })
 
-bot.hears([
-  '/new',
-  '/new_emoji',
-  '/new_inline',
-  match('cmd.start.btn.new')
-], (ctx) => ctx.scene.enter('newPack'))
+bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
 bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
 bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/addstickers\/(.*)/, handleCopyPack)

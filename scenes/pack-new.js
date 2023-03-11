@@ -27,6 +27,8 @@ const newPack = new Scene('newPack')
 newPack.enter(async (ctx, next) => {
   ctx.session.scene.newPack = {}
 
+  ctx.session.scene.newPack.fillColor = !!ctx?.message?.text.match('fill') || !!ctx?.callbackQuery?.data?.match('fill')
+
   if (ctx?.message?.text?.match('emoji') || ctx?.callbackQuery?.data?.match('emoji')) {
     ctx.session.scene.newPack.packType = 'custom_emoji'
     return ctx.scene.enter('сhoosePackFormat')
@@ -226,7 +228,7 @@ newPackConfirm.enter(async (ctx, next) => {
       ],
       sticker_format: stickerFormat,
       sticker_type: packType,
-      // needs_repainting: true
+      needs_repainting: !!ctx.session.scene.newPack.fillColor
     }).catch((error) => {
       console.log(JSON.stringify(error.on.payload))
       return { error }
