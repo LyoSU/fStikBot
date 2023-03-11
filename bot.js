@@ -259,7 +259,7 @@ db.connection.once('open', async () => {
     })
 
     await bot.telegram.callApi('setMyShortDescription', {
-      description: i18n.t(localeName, 'description.short'),
+      short_description: i18n.t(localeName, 'description.short'),
       language_code: localeName
     }).then((res) => {
       console.log('setMyShortDescription', 'localeName', localeName, res)
