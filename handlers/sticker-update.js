@@ -22,7 +22,7 @@ module.exports = async (ctx, next) => {
     } else {
       return next()
     }
-  } else if (ctx.session.userInfo.stickerSet.inline) {
+  } else if (ctx.session?.userInfo?.stickerSet?.inline) {
     return next()
   }
 
