@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const Telegraf = require('telegraf')
 const Composer = require('telegraf/composer')
@@ -242,6 +243,32 @@ db.connection.once('open', async () => {
       console.log('bot start polling')
     })
   }
+
+  const locales = fs.readdirSync(path.resolve(__dirname, 'locales'))
+
+  for (const locale of locales) {
+    const localeName = locale.split('.')[0]
+
+    await bot.telegram.callApi('setMyDescription', {
+      description: i18n.t('localeName', 'description.long'),
+      language_code: localeName
+    }).then((res) => {
+      console.log('setMyDescription', 'localeName', localeName, res)
+    }).catch((err) => {
+      console.log('setMyDescription', 'localeName', localeName, err)
+    })
+
+    await bot.telegram.callApi('setMyShortDescription', {
+      description: i18n.t(localeName, 'description.short'),
+      language_code: localeName
+    }).then((res) => {
+      console.log('setMyShortDescription', 'localeName', localeName, res)
+    }).catch((err) => {
+      console.log('setMyShortDescription', 'localeName', localeName, err)
+    })
+  }
+
+
   require('./utils/messaging')
   // require('./utils/optimize-db')
 })
