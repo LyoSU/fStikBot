@@ -51,10 +51,10 @@ cmd:
       copy: '📋 Copy a sticker pack'
       emoji: '📝 Change emoji suffix'
       round: '🎥 Round shape video'
-      lang: '🌐 Change language'
+      lang: '🌐 Փոխել լեզուն'
       donate: '☕️ Support the developer'
     btn:
-      new: '📥 Create new'
+      new: '📥 Ստեղծել նոր'
       catalog: '💖 Open catalog'
       catalog_mini: '💖 Catalog'
       catalog_browser: '🌐 Open in browser'
