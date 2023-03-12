@@ -244,23 +244,41 @@ db.connection.once('open', async () => {
   for (const locale of locales) {
     const localeName = locale.split('.')[0]
 
-    await bot.telegram.callApi('setMyDescription', {
-      description: i18n.t(localeName, 'description.long'),
+    const myDescription = await bot.telegram.callApi('getMyDescription', {
       language_code: localeName
-    }).then((res) => {
-      console.log('setMyDescription', 'localeName', localeName, res)
-    }).catch((err) => {
-      console.error('setMyDescription', 'localeName', localeName, err.description)
     })
 
-    await bot.telegram.callApi('setMyShortDescription', {
-      short_description: i18n.t(localeName, 'description.short'),
+    const newDescription = i18n.t(localeName, 'description.long').replace(/[\r\n]/gm, '')
+    const currentDescription = myDescription.description.replace(/[\r\n]/gm, '')
+
+    if (newDescription != currentDescription) {
+      await bot.telegram.callApi('setMyDescription', {
+        description: i18n.t(localeName, 'description.long'),
+        language_code: localeName
+      }).then((res) => {
+        console.log('setMyDescription', localeName, res)
+      }).catch((err) => {
+        console.error('setMyDescription', localeName, err.description)
+      })
+    }
+
+    const myShortDescription = await bot.telegram.callApi('getMyShortDescription', {
       language_code: localeName
-    }).then((res) => {
-      console.log('setMyShortDescription', 'localeName', localeName, res)
-    }).catch((err) => {
-      console.error('setMyShortDescription', 'localeName', localeName, err.description)
     })
+
+    const currentShortDescription = myShortDescription.short_description.replace(/[\r\n]/gm, '')
+    const newShortDescription = i18n.t(localeName, 'description.short').replace(/[\r\n]/gm, '')
+
+    if (newShortDescription != currentShortDescription) {
+      await bot.telegram.callApi('setMyShortDescription', {
+        short_description: i18n.t(localeName, 'description.short'),
+        language_code: localeName
+      }).then((res) => {
+        console.log('setMyShortDescription', localeName, res)
+      }).catch((err) => {
+        console.error('setMyShortDescription', localeName, err.description)
+      })
+    }
   }
 
 

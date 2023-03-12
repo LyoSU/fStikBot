@@ -5,6 +5,7 @@ const Queue = require('bull')
 const EventEmitter = require('events')
 const Telegram = require('telegraf/telegram')
 const I18n = require('telegraf-i18n')
+const emojiRegex = require('emoji-regex')
 const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('../utils/add-sticker-text')
@@ -253,32 +254,22 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     if (Array.isArray(inputFile.emoji)) {
       emojis.push(...inputFile.emoji)
     } else if (typeof inputFile.emoji === 'string') {
-      emojis.push(inputFile.emoji)
-    } else {
-      emojis.push(stickerSet.emojiSuffix || '🌟')
+      const emojiList = inputFile.emoji.match(emojiRegex())
+
+      if (emojiList) {
+        emojis.push(...emojiList)
+      }
     }
-  } else {
-    emojis.push(stickerSet.emojiSuffix || '🌟')
   }
 
+  if (emojis.length === 0) {
+    emojis.push(stickerSet.emojiSuffix)
+  }
 
   const isVideo = stickerSet?.video || inputFile.is_video || !!(inputFile.mime_type && inputFile.mime_type.match('video')) || false
   const isVideoNote = (inputFile.video_note) || false
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
-
-  const nameSuffix = `_by_${ctx.options.username}`
-  const titleSuffix = ` :: @${ctx.options.username}`
-
-  const defaultStickerSet = {
-    owner: ctx.session.userInfo.id,
-    name: `f_${Math.random().toString(36).substring(5)}_${ctx.from.id}`,
-    title: 'Favorite stickers',
-    emojiSuffix: '🌟'
-  }
-
-  defaultStickerSet.name += nameSuffix
-  if (ctx.session.userInfo.premium !== true) defaultStickerSet.title += titleSuffix
 
   if (!stickerSet?.animated && stickerFile.is_animated) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.animated'), {
@@ -297,15 +288,15 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     })
   }
 
-  const getStickerSet_check = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
+  const getStickerSetCheck = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
     return {
       error: {
         telegram: error
       }
     }
   })
-  if (getStickerSet_check.error) {
-    return getStickerSet_check
+  if (getStickerSetCheck.error) {
+    return getStickerSetCheck
   }
 
   const stickerExtra = {
