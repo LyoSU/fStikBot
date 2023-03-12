@@ -1,68 +1,69 @@
 ---
-language_name: '🇺🇸 English'
+language_name: '🇧🇾 Беларуская'
 description:
   long: |
-    🧙‍♀️ I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙‍♀️ Я майстар эмодзі і набораў стыкераў, і я  знаходжусь тут, каб зрабіць вашу перапіску лепш і весялей! Мае магічныя здольнасці дазваляюць мяне ператварыць вашы спадабанныя і любімыя фатаграфіі, відэа і GIF'кі в цудоўны набор стыкераў і эмодзі без праблем з ператварэннем і кадраваннем.  🎉🎊 З мною вы можаце стварыць персаналізаванныя наборы на любы выпадак усяго ў пару клікаў. Такім чынам, што вы чакаеце? Давайце пачнем і дадзем ✨бляску✨ вашым чатам!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
-ratelimit: Not so often!
+    Шукаць стыкеры:
+    https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙‍♀️ Я майстар эмодзі і стыкераў! Імгненна ператварайце фатаграфіі, відэа і GIF-кі ў цудоўныя стыкеры.'
+ratelimit: Не так хутка!
 cmd:
   start:
     info: |
-      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
+      Хэй! Я ствару для вас мой уласны набор стыкераў або эмодзі з фатагафіі, відэа, GIF'кі або іншых стыкераў. 
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
+      /new - стварыць новы набор стыкераў
+      /new_emoji - стварыць новы набор эмодзі
+      /new_inline - стварыць новы ўбудаваны набор
 
-      /packs - list of your sticker packs
+      /packs - спіс вашых набораў стыкераў
 
-      /delete - delete sticker from sticker pack
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
+      /delete - выдаліць стыкер з набора стыкераў
+      /original - пошук арыгінальнага стыкера
+      /restore - аднавіць набор стыкераў
+      /copy - скапіяваць набор стыкераў 
+      /emoji - змяніць суфікс эмодзі для бягучага набора стыкераў
+      /frame - змяніць рамку для бягучага набора стыкераў
+      /lang - change language 
 
-      /donate - support the developer
+      /donate - падтрымаць распрацоўніка
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Кантакты: @ly_oBot
+      👨🏻‍💻 Канал распрацоўніка: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 Вы можаце знайсці новыя наборы стыкераў у нашым каталогу</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      • Націсніце кнопку ніжэй і атрымайце доступ да вялізнага каталога набораў стыкераў на любы выпадак
+      • Шукайце па ключавых словах або ў падрыхтаваных укладках
+      • Не забудзь даць адзнаку для прасоўвання або апусціць набор стыкераў у рэйтынгу
     commands:
-      start: '📜 Start menu'
-      packs: '📁 Sticker packs'
-      new: '📥 Create a new sticker pack'
-      new_emoji: '📥 Create a new emoji pack'
-      catalog: '📖 Catalog'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
-      original: '🔍 Find original sticker'
-      restore: '🔀 Restore a sticker pack'
-      copy: '📋 Copy a sticker pack'
-      emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
-      lang: '🌐 Change language'
-      donate: '☕️ Support the developer'
+      start: '📜 Стартавае меню'
+      packs: '📁 Наборы стыкераў'
+      new: '📥 Стварыць новы набор стыкераў'
+      new_emoji: '📥 Стварыць новы набор стыкераў'
+      catalog: '📖 Каталог'
+      publish: '📤 Апублікаваць пакет'
+      delete: '❌ Выдаліць стыкер'
+      original: '🔍 Знайсці арыгінальны стыкер'
+      restore: '🔀 Аднавіць набор стыкераў'
+      copy: '📋 Скапіяваць набор стыкераў'
+      emoji: '📝 Змяніць суфікс эмодзі'
+      round: '🎥 Відэа круглай формы'
+      lang: '🌐 Змяніць мову'
+      donate: '☕️ Падтрымаць распрацоўніка'
     btn:
-      new: '📥 Create new'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      new: '📥 Стварайць новае(-ы)'
+      catalog: '💖 Адчыніць каталог'
+      catalog_mini: '💖 Каталог'
+      catalog_browser: '🌐 Адчыніць ў браўзеры'
+      catalog_browser_mini: '🌐 У браўзеры'
+      catalog_app: '📱 Спампаваць праграму для Android '
+      catalog_app_mini: '📱 Прыкладанне для Android'
   inline:
-    switch_pm: '📁 Sticker pack'
+    switch_pm: '📁 Набор стыкераў'
   restore: |
     <b>🗃 Sticker pack restoration</b>
 
