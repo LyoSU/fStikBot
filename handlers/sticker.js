@@ -26,8 +26,9 @@ module.exports = async (ctx) => {
 
     case 'document':
       if (
-        ctx.message?.document?.mime_type.match('image') ||
-        ctx.message?.document?.mime_type?.match('video')
+        (ctx.message?.document?.mime_type.match('image') ||
+        ctx.message?.document?.mime_type?.match('video'))
+        && !ctx.message.document.mime_type.match(/heic|heif/)
       ) {
         stickerFile = ctx.message.document
         if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
