@@ -446,7 +446,11 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
 
       const imageSharp = sharp(fileData, { failOnError: false })
-      const imageMetadata = await imageSharp.metadata().catch(() => { })
+      const imageMetadata = await imageSharp.metadata().catch(() => {})
+
+      if (!imageMetadata) {
+        throw new Error('Invalid image')
+      }
 
       if (stickerSet.packType === 'custom_emoji') {
         if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {

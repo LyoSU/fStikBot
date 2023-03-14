@@ -40,6 +40,7 @@ stage.hears(([
   match('scenes.btn.cancel')
 ]), async (ctx) => {
   ctx.session.scene = null
+
   await ctx.reply(ctx.i18n.t('scenes.leave'), {
     reply_markup: {
       remove_keyboard: true
@@ -47,8 +48,9 @@ stage.hears(([
     reply_to_message_id: ctx.message.message_id,
     allow_sending_without_reply: true
   })
-  ctx.scene.leave()
-  handleStart(ctx)
+  await ctx.scene.leave()
+
+  return handleStart(ctx)
 })
 
 stage.hears(([
@@ -58,7 +60,11 @@ stage.hears(([
   '/emoji',
   '/lang',
   '/donate',
-  '/publish'
+  '/publish',
+  '/delete',
+  '/frame',
+  '/rename',
+  '/catalog'
 ]), async (ctx, next) => {
   await ctx.scene.leave()
   ctx.session.scene = null
