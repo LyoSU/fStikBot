@@ -148,6 +148,7 @@ coedit:
 callback:
   pack:
     answerCbQuer:
+      not_found: Sticker pack not found
       hidden: Стікерпак успішно приховано
       restored: Стікерпак успішно відновлено
     set_pack:
