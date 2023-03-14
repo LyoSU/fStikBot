@@ -4,6 +4,10 @@ module.exports = async (ctx) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
+  if (!stickerSet) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
+  }
+
   let answerCbQuer = ''
 
   if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
