@@ -239,45 +239,56 @@ db.connection.once('open', async () => {
     })
   }
 
-  const locales = fs.readdirSync(path.resolve(__dirname, 'locales'))
+  const locales = fs.readdirSync(path.resolve(__dirname, 'locales'));
+
+  const enDescriptionLong = i18n.t('en', 'description.long');
+  const enDescriptionShort = i18n.t('en', 'description.short');
 
   for (const locale of locales) {
-    const localeName = locale.split('.')[0]
+    const localeName = locale.split('.')[0];
 
     const myDescription = await bot.telegram.callApi('getMyDescription', {
-      language_code: localeName
-    })
+      language_code: localeName,
+    });
 
-    const newDescription = i18n.t(localeName, 'description.long').replace(/[\r\n]/gm, '')
-    const currentDescription = myDescription.description.replace(/[\r\n]/gm, '')
+    const descriptionLong = i18n.t(localeName, 'description.long');
+    const newDescriptionLong = localeName === 'en' || descriptionLong !== enDescriptionLong
+      ? descriptionLong.replace(/[\r\n]/gm, '')
+      : '';
 
-    if (newDescription != currentDescription) {
-      await bot.telegram.callApi('setMyDescription', {
-        description: i18n.t(localeName, 'description.long'),
-        language_code: localeName
-      }).then((res) => {
-        console.log('setMyDescription', localeName, res)
-      }).catch((err) => {
-        console.error('setMyDescription', localeName, err.description)
-      })
+    if (newDescriptionLong !== myDescription.description.replace(/[\r\n]/gm, '')) {
+      try {
+        const description = newDescriptionLong ? i18n.t(localeName, 'description.long') : '';
+        const response = await bot.telegram.callApi('setMyDescription', {
+          description,
+          language_code: localeName,
+        });
+        console.log('setMyDescription', localeName, response);
+      } catch (error) {
+        console.error('setMyDescription', localeName, error.description);
+      }
     }
 
     const myShortDescription = await bot.telegram.callApi('getMyShortDescription', {
-      language_code: localeName
-    })
+      language_code: localeName,
+    });
 
-    const currentShortDescription = myShortDescription.short_description.replace(/[\r\n]/gm, '')
-    const newShortDescription = i18n.t(localeName, 'description.short').replace(/[\r\n]/gm, '')
+    const descriptionShort = i18n.t(localeName, 'description.short');
+    const newDescriptionShort = localeName === 'en' || descriptionShort !== enDescriptionShort
+      ? descriptionShort.replace(/[\r\n]/gm, '')
+      : '';
 
-    if (newShortDescription != currentShortDescription) {
-      await bot.telegram.callApi('setMyShortDescription', {
-        short_description: i18n.t(localeName, 'description.short'),
-        language_code: localeName
-      }).then((res) => {
-        console.log('setMyShortDescription', localeName, res)
-      }).catch((err) => {
-        console.error('setMyShortDescription', localeName, err.description)
-      })
+    if (newDescriptionShort !== myShortDescription.short_description.replace(/[\r\n]/gm, '')) {
+      try {
+        const description = newDescriptionShort ? i18n.t(localeName, 'description.short') : '';
+        const response = await bot.telegram.callApi('setMyShortDescription', {
+          description,
+          language_code: localeName,
+        });
+        console.log('setMyShortDescription', localeName, response);
+      } catch (error) {
+        console.error('setMyShortDescription', localeName, error.description);
+      }
     }
   }
 

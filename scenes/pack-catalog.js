@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { Api, TelegramClient } = require('telegram')
-const { StringSession } = require("telegram/sessions")
+const { StoreSession } = require("telegram/sessions")
 const Telegram = require('telegraf/telegram')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
@@ -22,7 +22,7 @@ let telegramClinet = {}
 
 ;(async () => {
   telegramClinet = new TelegramClient(
-    new StringSession(""),
+    new StoreSession("./session"),
     parseInt(process.env.TELEGRAM_API_ID),
     process.env.TELEGRAM_API_HASH,
     { connectionRetries: 5 }
@@ -128,6 +128,21 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   if (!getStickerSetInfo) {
     return ctx.scene.reenter()
   }
+
+  // const stickersKeywords = getStickerSetInfo.keywords.map((keyword) => {
+  //   const stickerFind = getStickerSetInfo.documents.find((sticker) => {
+  //     return sticker.id.toString() === keyword.documentId.toString()
+  //   })
+
+  //   if (!stickerFind) {
+  //     return
+  //   }
+
+  //   return {
+  //     sticker: stickerFind,
+  //     keywords: keyword.keyword
+  //   }
+  // })
 
   const packOwner = stickerSetIdToOwnerId(getStickerSetInfo.set.id.value)
 

@@ -62,6 +62,7 @@ typings/
 
 tmp
 tgsnake
+session
 
 .DS_Store
 config.json
