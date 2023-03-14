@@ -10,6 +10,11 @@ packDelete.enter(async (ctx) => {
 
   if (!stickerSet) return ctx.answerCbQuery('Error')
 
+  if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
+    await ctx.answerCbQuery(ctx.i18n.t('Access denied'), true)
+    return ctx.scene.leave()
+  }
+
   await ctx.deleteMessage().catch(() => {})
 
   ctx.session.scene = {
