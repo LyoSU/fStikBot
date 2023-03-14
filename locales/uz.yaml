@@ -145,6 +145,7 @@ coedit:
 callback:
   pack:
     answerCbQuer:
+      not_found: Sticker pack not found
       hidden: Stikerlar to'plami muvaffaqiyatli ravishda yashirildi
       restored: Stikerlar to'plami muvaffaqiyatli ravishda qayta tiklandi
     set_pack:
