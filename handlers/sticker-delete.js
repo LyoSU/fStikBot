@@ -57,7 +57,10 @@ module.exports = async (ctx) => {
     }
 
   } else {
-    if (sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString()) {
+    if (
+      sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString() || // if sticker owner is the same as the user
+      sticker.stickerSet.id === ctx.session.userInfo?.stickerSet.id // if selected sticker pack by user is the same as the sticker pack
+    ) {
       deleteSticker = sticker.info.file_id
     } else {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
