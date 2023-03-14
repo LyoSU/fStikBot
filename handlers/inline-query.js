@@ -72,6 +72,11 @@ composer.on('inline_query', async (ctx) => {
         else sticker.info.stickerType = 'sticker'
         await sticker.save()
       }
+
+      if (sticker.info.stickerType === 'video_note') {
+        sticker.info.stickerType = 'document'
+      }
+
       if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
       let fieldFileIdName = sticker.info.stickerType + '_file_id'
       if (sticker.info.stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
@@ -79,7 +84,8 @@ composer.on('inline_query', async (ctx) => {
       const data = {
         type: sticker.info.stickerType,
         id: sticker._id,
-        title: sticker.info.caption || sticker.info.stickerType
+        title: sticker.info.caption || sticker.info.stickerType,
+        // thumb_url: sticker.info.thumb.file_path
       }
       data[fieldFileIdName] = sticker.info.file_id
 

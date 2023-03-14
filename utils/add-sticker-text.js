@@ -48,7 +48,9 @@ module.exports = (addStickerResult, lang) => {
     }
   } else if (addStickerResult.error) {
     if (addStickerResult.error.telegram) {
-      if (addStickerResult.error.telegram.description.includes('TOO_MUCH')) {
+      if (!addStickerResult.error.telegram.description) {
+        throw new Error(addStickerResult.error)
+      } else if (addStickerResult.error.telegram.description.includes('TOO_MUCH')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickers_too_much')
       } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')

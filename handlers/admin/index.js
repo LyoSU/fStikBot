@@ -64,7 +64,7 @@ const setPremium = async (ctx, next) => {
 
 adminType.forEach((type) => {
   composer.use(Composer.optional((ctx) => {
-    return ctx.config.mainAdminId === ctx.from.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.includes(type))
+    return ctx.config.mainAdminId === ctx?.from?.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.includes(type))
   }, require(`./${type}`)))
 })
 

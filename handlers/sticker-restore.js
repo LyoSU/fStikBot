@@ -34,15 +34,15 @@ module.exports = async (ctx) => {
         }
       }
 
-      newFileUniqueId = result.ok.stickerInfo.file_unique_id
+      newFileUniqueId = result.ok?.stickerInfo?.file_unique_id
     }
 
     ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.restored'))
 
     ctx.editMessageText(ctx.i18n.t('callback.sticker.restored'), {
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${newFileUniqueId}`),
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${newFileUniqueId}`)
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${newFileUniqueId}`, !!newFileUniqueId),
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${newFileUniqueId}`, !!newFileUniqueId)
       ])
     }).catch(() => {})
   } else {
