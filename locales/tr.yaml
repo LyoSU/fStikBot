@@ -147,6 +147,7 @@ coedit:
 callback:
   pack:
     answerCbQuer:
+      not_found: Sticker pack not found
       hidden: Çıkartma paketi başarılı bir şekilde gizlendi
       restored: Çıkartma başarılı bir şekilde sıfırlandı
     set_pack:

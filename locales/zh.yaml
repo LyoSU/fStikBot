@@ -42,7 +42,7 @@ cmd:
       start: '📜 Start menu'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
-      new_emoji: '📥 创建一个新的表情符号包'
+      new_emoji: '📥 Create a new sticker pack'
       catalog: '📖 目录'
       publish: '📤 发布包'
       delete: '❌删除贴纸'
@@ -146,6 +146,7 @@ coedit:
 callback:
   pack:
     answerCbQuer:
+      not_found: Sticker pack not found
       hidden: Стикерпак успешно скрыт
       restored: Стикерпак успешно восстановлен
     set_pack:
@@ -209,7 +210,7 @@ sticker:
 
       <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
-      <b>Sticker added to stickerpack successfully:</b>
+      <b>贴纸添加到贴纸包成功：</b>
       <u>${title}</u>
     send_emoji: 太好了，现在发送与之匹配的表情
     converting_process: |
