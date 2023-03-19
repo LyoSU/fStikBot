@@ -1,13 +1,12 @@
 const fs = require('fs')
 const path = require('path')
-const { Api, TelegramClient } = require('telegram')
-const { StoreSession } = require("telegram/sessions")
 const Telegram = require('telegraf/telegram')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const mongoose = require('mongoose')
 const { db } = require('../database')
+const { telegramApi } = require('../utils')
 
 function stickerSetIdToOwnerId (u64) {
   let u32 = u64 >> 32n
@@ -17,22 +16,6 @@ function stickerSetIdToOwnerId (u64) {
   }
   return parseInt(u32)
 }
-
-let telegramClinet = {}
-
-;(async () => {
-  telegramClinet = new TelegramClient(
-    new StoreSession("./session"),
-    parseInt(process.env.TELEGRAM_API_ID),
-    process.env.TELEGRAM_API_HASH,
-    { connectionRetries: 5 }
-  );
-  await telegramClinet.start({
-    botAuthToken: process.env.BOT_TOKEN,
-  })
-
-  telegramClinet.setLogLevel("error") // only errors
-})()
 
 const telegram = new Telegram(process.env.BOT_TOKEN);
 
@@ -118,8 +101,8 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
     return ctx.scene.reenter()
   }
 
-  const getStickerSetInfo = await telegramClinet.invoke(new Api.messages.GetStickerSet({
-    stickerset: new Api.InputStickerSetShortName({
+  const getStickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
+    stickerset: new telegramApi.Api.InputStickerSetShortName({
       shortName: packName
     }),
     hash: 0

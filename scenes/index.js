@@ -16,6 +16,7 @@ const packCatalog = require('./pack-catalog')
 const packFrame = require('./pack-frame')
 const packRename = require('./pack-rename')
 const packDelete = require('./pack-delete')
+const packAbout = require('./pack-about')
 
 const stage = new Stage([].concat(
   sceneNewPack,
@@ -27,7 +28,8 @@ const stage = new Stage([].concat(
   packCatalog,
   packFrame,
   packRename,
-  packDelete
+  packDelete,
+  packAbout
 ))
 
 stage.use((ctx, next) => {
