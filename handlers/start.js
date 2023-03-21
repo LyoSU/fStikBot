@@ -12,13 +12,36 @@ module.exports = async (ctx) => {
     { command: 'donate', description: ctx.i18n.t('cmd.start.commands.donate') }
   ]
 
-  await ctx.telegram.callApi('setMyCommands', {
-    commands: JSON.stringify(commands),
+  const myCommands = await ctx.telegram.callApi('getMyCommands', {
     scope: JSON.stringify({
       type: 'chat',
       chat_id: ctx.chat.id
     })
   })
+
+  // compare
+  let needUpdate = false
+  if (myCommands.length !== commands.length) {
+    needUpdate = true
+  } else {
+    for (let i = 0; i < commands.length; i++) {
+      const myCommand = myCommands.find(c => c.command === commands[i].command)
+      if (!myCommand || myCommand.description !== commands[i].description) {
+        needUpdate = true
+        break
+      }
+    }
+  }
+
+  if (needUpdate) {
+    await ctx.telegram.callApi('setMyCommands', {
+      commands: JSON.stringify(commands),
+      scope: JSON.stringify({
+        type: 'chat',
+        chat_id: ctx.chat.id
+      })
+    })
+  }
 
   await ctx.replyWithHTML(ctx.i18n.t('cmd.start.info', {
     name: userName(ctx.from)
