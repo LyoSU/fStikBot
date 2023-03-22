@@ -1,13 +1,34 @@
 const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const { generateSlug } = require("random-word-slugs");
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
+
 const {
   addSticker,
   countUncodeChars,
   substrUnicode,
 } = require('../utils')
 
+const animalEmojis = {
+  Dog: "🐶",
+  Cat: "🐱",
+  Fox: "🦊",
+  Bear: "🐻",
+  Koala: "🐨",
+  Tiger: "🐯",
+  Lion: "🦁",
+  Cow: "🐮",
+  Pig: "🐷",
+  Frog: "🐸",
+  Octopus: "🐙",
+  Turtle: "🐢",
+  Squid: "🦑",
+  Dolphin: "🐬",
+  Whale: "🐳",
+  Bunny: "🐰",
+  PolarBear: "🐻‍❄️",
+  Unicorn: "🦄"
+};
 
 const stegcloak = new StegCloak(false, false)
 
@@ -86,29 +107,29 @@ newPackTitle.enter(async (ctx) => {
 
   const names = []
 
-  names.push(generateSlug(
-    3,
-    {
-      format: 'title',
-      partsOfSpeech: ["adjective", "noun", "adjective"],
-      categories: {
-        noun: ['animals'],
-        adjective: ['appearance', 'color', 'size', 'personality']
-      }
-    }
-  ))
+  const namesWithEmoji = uniqueNamesGenerator({
+    dictionaries: [adjectives, Object.keys(animalEmojis)],
+    separator: ' ',
+    length: 2,
+    style: 'capital'
+  })
 
-  names.push(generateSlug(
-    3,
-    {
-      format: 'title',
-      partsOfSpeech: ["adjective", "adjective", "noun"],
-      categories: {
-        noun: ['food'],
-        adjective: ['taste', 'quantity', 'color', 'shapes', 'size']
-      }
-    }
-  ))
+  // add emoji based on animal name in beginning of the line
+  names.push(namesWithEmoji.replace(/(\w+)\s(\w+)/, (match, p1, p2) => `${animalEmojis[p2]} ${p1} ${p2}`))
+
+  names.push(uniqueNamesGenerator({
+    dictionaries: [adjectives, animals],
+    separator: ' ',
+    length: 2,
+    style: 'capital'
+  }))
+
+  names.push(uniqueNamesGenerator({
+    dictionaries: [adjectives, colors, animals],
+    separator: ' ',
+    length: 3,
+    style: 'capital'
+  }))
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
     reply_markup: Markup.keyboard([
