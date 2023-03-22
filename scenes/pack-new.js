@@ -87,9 +87,10 @@ newPackTitle.enter(async (ctx) => {
   const names = []
 
   names.push(generateSlug(
-    2,
+    3,
     {
       format: 'title',
+      partsOfSpeech: ["adjective", "noun", "adjective"],
       categories: {
         noun: ['animals'],
         adjective: ['appearance', 'color', 'size', 'personality']
@@ -98,9 +99,10 @@ newPackTitle.enter(async (ctx) => {
   ))
 
   names.push(generateSlug(
-    2,
+    3,
     {
       format: 'title',
+      partsOfSpeech: ["adjective", "noun", "adjective"],
       categories: {
         noun: ['food'],
         adjective: ['taste', 'quantity', 'color', 'size']
