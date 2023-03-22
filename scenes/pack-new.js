@@ -102,10 +102,10 @@ newPackTitle.enter(async (ctx) => {
     3,
     {
       format: 'title',
-      partsOfSpeech: ["adjective", "noun", "adjective"],
+      partsOfSpeech: ["adjective", "adjective", "noun"],
       categories: {
         noun: ['food'],
-        adjective: ['taste', 'quantity', 'color', 'size']
+        adjective: ['taste', 'quantity', 'color', 'shapes', 'size']
       }
     }
   ))
