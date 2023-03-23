@@ -392,7 +392,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           frameType = stickerSet.frameType || "square"
         }
 
-        const maxDuration = ctx.session.userInfo.premium ? 35 : 5
+        const maxDuration = ctx.session.userInfo.premium ? 35 : 6
 
         const total = await convertQueue.getJobCounts()
 
