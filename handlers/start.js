@@ -6,6 +6,14 @@ module.exports = async (ctx) => {
     return ctx.deleteMessage()
   }
 
+  ctx.telegram.callApi('deleteMyCommands', {
+    scope: {
+      type: 'chat',
+      chat_id: ctx.chat.id
+    },
+    language_code: ctx.i18n.locale()
+  }).catch(() => {})
+
   const chat = await ctx.getChat()
 
   if (!chat?.pinned_message && ctx.config.catalogAppUrl) {
