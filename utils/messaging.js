@@ -64,12 +64,15 @@ const messaging = async (messagingData) => {
             message_id: messagingData.message.data.message_id
           }
         }
+
         telegram.callApi(method, opts).then((result) => {
           redis.set(key + ':messages:' + chatId, result.message_id)
         }).catch((error) => {
           redis.incr(key + ':error')
           console.log(`messaging error ${messagingData.name}`, chatId, error.description)
-          if (['blocked by the user', 'user is deactivated', 'chat not found'].some(e => new RegExp(e).test(error.description))) {
+          if (error?.parameters?.retry_after) {
+            return new Error(error)
+          } else if (['blocked by the user', 'user is deactivated', 'chat not found'].some(e => new RegExp(e).test(error.description))) {
             db.User.findOne({ telegram_id: chatId }).then((blockedUser) => {
               blockedUser.blocked = true
               blockedUser.save()
@@ -89,6 +92,8 @@ const messaging = async (messagingData) => {
               telegram_id: chatId,
               errorMessage: error.message
             })
+
+            return new Error(error)
           }
         })
       }
@@ -111,6 +116,7 @@ const messaging = async (messagingData) => {
 
   while (true) {
     const messagingData = await messagingSend()
+
     if (messagingData.status >= 2 || messagingData.result.total === 0 || messagingData.result.state === 0) return messagingData
     await delay(config.messaging.limit.duration || 1000)
   }
