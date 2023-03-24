@@ -10,8 +10,7 @@ module.exports = async (ctx) => {
     scope: {
       type: 'chat',
       chat_id: ctx.chat.id
-    },
-    language_code: ctx.i18n.locale()
+    }
   }).catch(() => {})
 
   const chat = await ctx.getChat()
