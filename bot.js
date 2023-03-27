@@ -40,7 +40,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
     webhookReply: false
   },
-  handlerTimeout: 1
+  // handlerTimeout: 1
 })
 
 bot.use((ctx, next) => {
