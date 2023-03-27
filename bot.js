@@ -44,12 +44,26 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
 })
 
 bot.use((ctx, next) => {
-  next().catch((error) => {
-    handleError(error, ctx)
-    return true
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('timeout'))
+    }, 1000 * 5)
   })
-  return true
+
+  const nextPromise = next()
+
+  return Promise.race([timeoutPromise, nextPromise])
+    .catch((error) => {
+      if (error.message === 'timeout') {
+        console.log('timeout', ctx.update)
+        return false
+      }
+
+      handleError(error, ctx)
+      return true
+    })
 })
+
 
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
