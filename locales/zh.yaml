@@ -2,10 +2,10 @@
 language_name: '🇨🇳 简体中文'
 description:
   long: |
-    🧙‍♀️ I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙‍♀️ 我是表情包和贴纸大师，来让你的聊天更有趣！我的魔法可以将你最喜欢的照片，视频和 GIF 转换成酷炫的表情包和贴纸，无需麻烦的转换和裁剪。🎉🎊 通过我，你只需要几个点击就可以为任何场合创建个性化的贴纸包。那么，你还在等什么呢？让我们开始，给你的聊天添加一些✨闪光✨！
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+    搜索贴纸: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙‍♀️ 我是表情符号和贴纸巫师！转换照片、视频和 GIF 成为酷炫的贴纸轻而易举。'
 ratelimit: 不经常如此！
 cmd:
   start:
