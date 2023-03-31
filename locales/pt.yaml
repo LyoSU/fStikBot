@@ -2,10 +2,10 @@
 language_name: '🇧🇷 Português'
 description:
   long: |
-    🧙‍♀️ I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙‍♀️ Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+    Pesquise adesivos: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙‍♀️ Sou a feiticeira dos adesivos! Transforme fotos, vídeos e GIFs em adesivos incríveis em um instante.'
 ratelimit: Não tão frequente!
 cmd:
   start:
