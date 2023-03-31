@@ -2,34 +2,34 @@
 language_name: '🇸🇦 عربي'
 description:
   long: |
-    🧙‍♀️ I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙‍♀️ أنا معالج حزمة الرموز التعبيرية والملصقات، وأنا هنا لجعل تجربتك في الرسائل أكثر متعة! تسمح لي طاقاتي السحرية بتحويل صورك المفضلة، ومقاطع الفيديو، وصور GIFs إلى إيموجيس وملصقات رائعة بدون مجموعة من المحولات والمحاصيل. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة مع بضع نقرات فقط. إذاً، ماذا تنتظر؟ دعونا نبدأ ونضيف بعض ✨sparkle✨ إلى محادثاتك!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+    ملصقات البحث: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙‍♀️ أنا معالج الرموز التعبيرية والملصقات! حوّل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.'
 ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
     info: |
-      Hey! I will create for you my own set of stickers or emojis from photos, videos, gifs or other stickers.
+      يا! سأقوم بإنشاء مجموعتي الخاصة من الملصقات أو الرموز التعبيرية من الصور أو مقاطع الفيديو أو الصور المتحركة أو الملصقات الأخرى.
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
+      / جديد - إنشاء حزمة ملصقات جديدة
+      / new_emoji - إنشاء حزمة رموز تعبيرية جديدة
+      / new_inline - إنشاء حزمة مضمنة جديدة
 
-      /packs - list of your sticker packs
+      / حزم - قائمة حزم الملصقات
 
-      /delete - delete sticker from sticker pack
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
-      /lang - change language
+      / حذف - حذف الملصق من حزمة الملصقات
+      / أصلي - اعثر الملصق الأصلي
+      / استعادة - استعادة حزمة الملصقات
+      / نسخ - نسخ حزمة ملصقات
+      / رمز تعبيري - تغيير لاحقة الرموز التعبيرية لحزمة الملصقات الحالية
+      / إطار - تغيير الإطار لحزمة الملصقات الحالية
+      / lang - تغيير اللغة
 
-      /donate - support the developer
+      / تبرع - الدعم المطور
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 جهات الاتصال:ly_oBot
+      👨🏻‍💻 قناة Dev:LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -39,11 +39,11 @@ cmd:
       • Search by keywords or in prepared tabs
       • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
-      start: '📜 Start menu'
-      packs: '📁 Sticker packs'
-      new: '📥 Create a new sticker pack'
-      new_emoji: '📥 Create a new emoji pack'
-      catalog: '📖 Catalog'
+      start: '📜 قائمة البدء'
+      packs: '📁 حزم الملصقات'
+      new: '📥 قم بإنشاء حزمة ملصقات جديدة'
+      new_emoji: '📥 قم بإنشاء حزمة ملصقات جديدة'
+      catalog: '📖 كاتالوج'
       publish: '📤 Publish pack'
       delete: '❌ Delete sticker'
       original: '🔍 Find original sticker'
