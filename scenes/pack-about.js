@@ -1,6 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const { telegramApi } = require('../utils')
+const {
+  db
+} = require('../database')
 
 function decodeStickerSetId (u64) {
   let u32 = u64 >> 32n
@@ -13,12 +16,6 @@ function decodeStickerSetId (u64) {
     ownerId: parseInt(u32),
     id: parseInt(u32l)
   }
-}
-
-function encodeStickerSetId (ownerId, id) {
-  let u64 = BigInt(ownerId) << 32n
-  u64 += BigInt(id)
-  return u64
 }
 
 const packAbout = new Scene('packAbout')
@@ -67,9 +64,22 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
 
   if (!stickerSetInfo) return next()
 
-  const { ownerId } = decodeStickerSetId(stickerSetInfo.set.id)
+  const { ownerId, id } = decodeStickerSetId(stickerSetInfo.set.id.value)
 
-  return ctx.replyWithHTML(`owner_id: <code>${ownerId}</code> (<a href="tg://user?id=${onwerId}">mention</a>)\noffical: <code>${stickerSetInfo.set.official}</code>`)
+  // get all stickerset owners from database
+  const owners = await db.StickerSet.find({
+    ownerTelegramId: ownerId
+  })
+
+  let stickerSetsOwner = ''
+
+  if (owners.length > 1) {
+    stickerSetsOwner = owners.map((owner) => {
+      return `<a href="https://t.me/addstickers/${owner.name}">${owner.name}</a>`
+    }).join(', ')
+  }
+
+  return ctx.replyWithHTML(`owner_id: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)\ncounter: ${id}\noffical: <code>${stickerSetInfo.set.official}</code>\n\n${stickerSetsOwner}`)
 })
 
 module.exports = packAbout
