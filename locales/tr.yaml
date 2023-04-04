@@ -9,27 +9,35 @@ description:
 ratelimit: Pek sık değil!
 cmd:
   start:
-    info: |
-      Hey! Sizin için fotoğraflardan, videolardan, giflerden veya diğer çıkartmalardan kendi çıkartmalarımı veya emojilerimi oluşturacağım.
+    enter: |
+      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      /new - yeni bir çıkartma paketi oluşturun
-      /new_emoji - yeni bir emoji paketi oluşturun
-      /new_inline - yeni bir satır içi paket oluşturun
+      Send the /help command for more information
+    help: |
+      <b>List of bot commands:</b>
 
-      /packs - çıkartma paketlerinizin listesi
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /delete - çıkartma paketinden çıkartmayı silin
-      /original - bulun orijinal çıkartma
-      /restore - bir çıkartma paketini geri yükleme
-      /copy - bir çıkartma paketini kopyala
-      /emoji - mevcut çıkartma paketi
-      için emoji son ekini değiştir /frame - mevcut çıkartma paketi
-      için çerçeveyi değiştir /lang - dili değiştir
+      /packs - list of your sticker packs
 
-      /donate - destek geliştirici
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      🧑‍🔧 Kişiler: @ly_oBot
-      👨🏻‍💻 Geliştirici kanalı: @LyBlog
+      /catalog - open catalog
+      /publish - publish pack
+
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
