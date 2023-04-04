@@ -9,22 +9,30 @@ description:
 ratelimit: Tidak terlalu sering!
 cmd:
   start:
-    info: |
-      Hai! Saya akan membuatkan set stiker atau emoji saya sendiri untuk Anda dari foto, video, gif, atau stiker lainnya.
+    enter: |
+      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      /new - buat paket stiker baru
-      /new_emoji - buat paket emoji baru
-      /new_inline - buat paket inline baru
+      Send the /help command for more information
+    help: |
+      <b>List of bot commands:</b>
 
-      /packs - daftar paket stiker Anda
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /delete - hapus stiker dari paket stiker
-      /original - temukan stiker asli
-      /restore - pulihkan paket stiker
-      /copy - salin paket stiker
+      /packs - list of your sticker packs
+
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
       /frame - сhange frame for current sticker pack
       /lang - change language
+
+      /catalog - open catalog
+      /publish - publish pack
 
       /donate - support the developer
 
