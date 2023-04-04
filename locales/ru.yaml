@@ -9,28 +9,35 @@ description:
 ratelimit: Не так часто!
 cmd:
   start:
-    info: |
-      Привет! Я создам для вас свой собственный набор стикеров или эмодзи из фото, видео, гифок или других стикеров.
+    enter: |
+      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      /new - создать новый набор стикеров
-      /new_emoji - создать новый набор эмодзи
-      /new_inline - создать новый встроенный набор стикеров
+      Send the /help command for more information
+    help: |
+      <b>List of bot commands:</b>
 
-      /packs - список ваших наборов стикеров
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /delete - удалить стикер из набора стикеров
-      /original - найти оригинал стикера
-      /restore - восстановить набор стикеров
-      /copy - скопировать набор стикеров
-      /emoji - изменить суффикс эмодзи для текущего набора стикеров
-      /frame - изменить кадр для текущего набора стикеров
-      /lang - изменить язык
+      /packs - list of your sticker packs
 
-      /donate - поддержка разработчик
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      💬 Сообщество (помощь с ботом): @fStikCommunity
+      /catalog - open catalog
+      /publish - publish pack
 
-      👨🏻‍💻 Канал разработчика: @LyBlog
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
