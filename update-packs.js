@@ -60,7 +60,7 @@ async function processStickerSets(stickerSets) {
 }
 
 (async () => {
-  const batchSize = 100;
+  const batchSize = 25;
   const cursor = db.StickerSet.find({
     ownerTelegramId: { $exists: false },
     createdAt: { $lt: new Date(Date.now() - 1000 * 60 * 60 * 24) },
