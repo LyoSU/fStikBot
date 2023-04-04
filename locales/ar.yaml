@@ -9,27 +9,35 @@ description:
 ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
-    info: |
-      يا! سأقوم بإنشاء مجموعتي الخاصة من الملصقات أو الرموز التعبيرية من الصور أو مقاطع الفيديو أو الصور المتحركة أو الملصقات الأخرى.
+    enter: |
+      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      / جديد - إنشاء حزمة ملصقات جديدة
-      / new_emoji - إنشاء حزمة رموز تعبيرية جديدة
-      / new_inline - إنشاء حزمة مضمنة جديدة
+      Send the /help command for more information
+    help: |
+      <b>List of bot commands:</b>
 
-      / حزم - قائمة حزم الملصقات
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      / حذف - حذف الملصق من حزمة الملصقات
-      / أصلي - اعثر الملصق الأصلي
-      / استعادة - استعادة حزمة الملصقات
-      / نسخ - نسخ حزمة ملصقات
-      / رمز تعبيري - تغيير لاحقة الرموز التعبيرية لحزمة الملصقات الحالية
-      / إطار - تغيير الإطار لحزمة الملصقات الحالية
-      / lang - تغيير اللغة
+      /packs - list of your sticker packs
 
-      / تبرع - الدعم المطور
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      🧑‍🔧 جهات الاتصال:ly_oBot
-      👨🏻‍💻 قناة Dev:LyBlog
+      /catalog - open catalog
+      /publish - publish pack
+
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
