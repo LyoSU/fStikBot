@@ -9,29 +9,37 @@ description:
 ratelimit: 不经常如此！
 cmd:
   start:
-    info: |
-      嘿！我将从照片、视频、gif 或其他贴纸中为您创建我自己的一套贴纸或表情符号。
+    enter: |
+      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      /new - 创建一个新的贴纸包
-      /new_emoji - 创建一个新的表情符号包
-      /new_inline - 创建一个新的内联包
+      Send the /help command for more information
+    help: |
+      <b>List of bot commands:</b>
 
-      /packs - 你的贴纸包列表
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
+      /new_inline - create a new inline pack
 
-      /delete - 从贴纸包中删除贴纸
-      /original - 找到原始贴纸
-      /restore - 恢复贴纸包
-      /copy - 复制贴纸包
-      /emoji - 更改当前贴纸包的表情符号后缀
-      /frame - сhange 当前贴纸包的框架
-      /lang - 更改语言
+      /packs - list of your sticker packs
 
-      /donate - 支持开发者
+      /delete - delete sticker from sticker pack
+      /original - find original sticker
+      /restore - restore a sticker pack
+      /copy - copy a sticker pack
+      /emoji - change emoji suffix for current sticker pack
+      /frame - сhange frame for current sticker pack
+      /lang - change language
 
-      🧑‍🔧 联系人：@ly_oBot
-      👨🏻‍💻 开发者频道：@LyBlog
+      /catalog - open catalog
+      /publish - publish pack
 
-      GitHub：https://github.com/LyoSU/fStikBot
+      /donate - support the developer
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
+
+      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 您可以在我们的目录中找到新的贴纸包</b>
 
