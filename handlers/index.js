@@ -1,6 +1,7 @@
 module.exports = {
   handleError: require('./catch'),
   handleStart: require('./start'),
+  handleHelp: require('./help'),
   handleClub: require('./club'),
   handleSticker: require('./sticker'),
   handleDeleteSticker: require('./sticker-delete'),

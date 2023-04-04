@@ -51,7 +51,7 @@ module.exports = async (ctx) => {
     })
   }
 
-  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.info', {
+  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
     name: userName(ctx.from)
   }), Markup.removeKeyboard().extra({ disable_web_page_preview: true }))
 

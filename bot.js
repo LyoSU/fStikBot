@@ -11,6 +11,7 @@ const {
 const {
   handleError,
   handleStart,
+  handleHelp,
   handleClub,
   handleSticker,
   handleDeleteSticker,
@@ -171,6 +172,7 @@ bot.start((ctx, next) => {
   }
   return next()
 })
+bot.command('help', handleHelp)
 bot.command('packs', handlePacks)
 bot.action(/packs:(type):(.*)/, handlePacks)
 bot.action(/packs:(.*)/, handlePacks)
