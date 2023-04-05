@@ -74,12 +74,12 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   const { ownerId, setId } = decodeStickerSetId(stickerSetInfo.set.id.value)
 
   // find sticker set in database
-  const stickerSet = await db.StickerSet.findOne({
+  let stickerSet = await db.StickerSet.findOne({
     name: sticker.set_name
   })
 
   if (!stickerSet && sticker.type === 'regular') {
-    await db.StickerSet.create({
+    stickerSet = await db.StickerSet.create({
       ownerTelegramId: ownerId,
       name: sticker.set_name,
       title: stickerSetInfo.set.title,
@@ -101,7 +101,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   const owners = await db.StickerSet.find({
     ownerTelegramId: ownerId,
     _id: {
-      $ne: stickerSet._id
+      $ne: stickerSet?._id || null
     }
   }).limit(100).lean()
 
