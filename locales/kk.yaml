@@ -48,6 +48,7 @@ cmd:
       • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
       start: '📜 Бастапқы мәзір'
+      help: '📖 Help'
       packs: '📁 Стикерпактарым'
       new: '📥 Жаңа стикерпак құру'
       new_emoji: '📥 Create a new emoji pack'
