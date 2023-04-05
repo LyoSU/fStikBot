@@ -12,7 +12,7 @@ function decodeStickerSetId (u64) {
   if ((u64 >> 24n & 0xffn) === 0xffn) {
     return {
       ownerId: parseInt((u64 >> 32n) + 0x100000000n),
-      id: parseInt(u32l)
+      id: 0
     }
   }
   return {

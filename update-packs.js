@@ -60,12 +60,16 @@ async function processStickerSets(stickerSets) {
 }
 
 (async () => {
-  const batchSize = 25;
+  const batchSize = 100;
+
   const cursor = db.StickerSet.find({
     ownerTelegramId: { $exists: false },
+    thirdParty: true,
     createdAt: { $lt: new Date(Date.now() - 1000 * 60 * 60 * 24) },
     inline: { $ne: true }
-  }).sort({ _id: -1 }).batchSize(batchSize).cursor();
+  }).sort({
+    _id: -1
+  }).batchSize(batchSize).cursor();
 
   let batch = [];
   for await (const stickerSet of cursor) {
