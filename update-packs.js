@@ -65,9 +65,13 @@ async function processStickerSets(stickerSets) {
   const cursor = db.StickerSet.find({
     ownerTelegramId: { $exists: false }, // not processed yet
     createdAt: { $lt: new Date(Date.now() - 1000 * 60 * 60 * 24) }, // 24 hours ago
-    inline: { $ne: true } // not inline
+    inline: { $ne: true }, // not inline
+    // or just use `thirdParty: true` if you don't want to process all sticker sets
+    $or: [
+      { thirdParty: true },
+      { thirdParty: { $exists: false } }
+    ]
   }).sort({
-    thirdParty: -1, // third-party first
     _id: -1
   }).batchSize(batchSize).cursor();
 
