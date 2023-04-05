@@ -60,14 +60,14 @@ async function processStickerSets(stickerSets) {
 }
 
 (async () => {
-  const batchSize = 50;
+  const batchSize = 250;
 
   const cursor = db.StickerSet.find({
-    ownerTelegramId: { $exists: false },
-    createdAt: { $lt: new Date(Date.now() - 1000 * 60 * 60 * 24) },
-    inline: { $ne: true }
+    ownerTelegramId: { $exists: false }, // not processed yet
+    createdAt: { $lt: new Date(Date.now() - 1000 * 60 * 60 * 24) }, // 24 hours ago
+    inline: { $ne: true } // not inline
   }).sort({
-    _id: -1
+    _id: -1 // newest first
   }).batchSize(batchSize).cursor();
 
   let batch = [];

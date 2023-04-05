@@ -82,7 +82,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     }).join(', ')
   }
 
-  return ctx.replyWithHTML(`owner_id: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)\ncounter: ${id}\noffical: <code>${stickerSetInfo.set.official}</code>\n\n${stickerSetsOwner}`)
+  return ctx.replyWithHTML(`owner_id: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)\ncounter: ${id}\n\n${stickerSetsOwner}`)
 })
 
 module.exports = packAbout
