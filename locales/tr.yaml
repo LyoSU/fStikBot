@@ -48,6 +48,7 @@ cmd:
       • Tanıtmak için puan vermeyi unutmayın veya çıkartma paketini sıralamada düşürün
     commands:
       start: '📜 Start menu'
+      help: '📖 Help'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
       new_emoji: '📥 Yeni bir emoji paketi oluşturun'
@@ -371,13 +372,22 @@ scenes:
       <b>Başlık başarıyla değiştirildi!</b>
 
       Yeni unvan: <a href="${link}">${title}</a>
-  search:
+  packAbout:
     enter: |
-      Send query to search sticker pack
-    error:
-      not_found: |
-        <b>Error!</b>
-        I could not find the pack.
+      <b>Send me a sticker or custom emoji to look up information about it:</b>
+    not_found: |
+      <b>Hata!</b>
+      Çıkartmayı bulamadım.
+    result: |
+      <b>Sticker pack:</b> <a href="${link}">${name}</a>
+
+      Owner ID: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)
+      Set ID: <code>${setId}</code> <i>(incrementing number for each sticker pack created by the same user)</i>
+
+      Other sticker packs from this owner:
+      ${otherPacks}
+    no_other_packs: |
+      <i>Not found other sticker packs from this owner</i>
   catalog:
     publish:
       publish_new: |
