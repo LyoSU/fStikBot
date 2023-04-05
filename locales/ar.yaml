@@ -48,6 +48,7 @@ cmd:
       • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
       start: '📜 قائمة البدء'
+      help: '📖 Help'
       packs: '📁 حزم الملصقات'
       new: '📥 قم بإنشاء حزمة ملصقات جديدة'
       new_emoji: '📥 قم بإنشاء حزمة ملصقات جديدة'
