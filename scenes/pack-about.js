@@ -72,7 +72,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   // get all stickerset owners from database
   const owners = await db.StickerSet.find({
     ownerTelegramId: ownerId
-  })
+  }).limit(100).lean()
 
   let stickerSetsOwner = ''
 
