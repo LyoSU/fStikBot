@@ -48,6 +48,7 @@ cmd:
       • Não se esqueça de dar nota para promover ou rebaixar um pacote de stickes no ranking
     commands:
       start: '📜 Menu inicial'
+      help: '📖 Help'
       packs: '📁 Pacotes de stickers'
       new: '📥 Crie um novo pacote de stickers'
       new_emoji: '📥 Create a new emoji pack'
