@@ -48,6 +48,7 @@ cmd:
       ・おすすめしたいまたはしたかないステッカーをレートして下さい
     commands:
       start: '📜 Start menu'
+      help: '📖 Help'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
       new_emoji: '📥 新しい絵文字パックを作成する'
