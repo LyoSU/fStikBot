@@ -372,13 +372,22 @@ scenes:
       <b>Назву успішно змінено!</b>
 
       Нова назва: <a href="${link}">${title}</a>
-  search:
+  packAbout:
     enter: |
-      Надіслати запит для пошуку набору наклейок
-    error:
-      not_found: |
-        <b>Помилка!</b>
-        Мені не вдалося знайти оригінал цього стікера.
+      <b>Send me a sticker or custom emoji to look up information about it:</b>
+    not_found: |
+      <b>Помилка!</b>
+      Я не зміг знайти стікер.
+    result: |
+      <b>Sticker pack:</b> <a href="${link}">${name}</a>
+
+      Owner ID: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)
+      Set ID: <code>${setId}</code> <i>(incrementing number for each sticker pack created by the same user)</i>
+
+      Other sticker packs from this owner:
+      ${otherPacks}
+    no_other_packs: |
+      <i>Not found other sticker packs from this owner</i>
   catalog:
     publish:
       publish_new: |
