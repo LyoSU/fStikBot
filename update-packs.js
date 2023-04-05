@@ -60,7 +60,7 @@ async function processStickerSets(stickerSets) {
 }
 
 (async () => {
-  const batchSize = 25;
+  const batchSize = 100;
 
   const cursor = db.StickerSet.find({
     ownerTelegramId: { $exists: false }, // not processed yet
