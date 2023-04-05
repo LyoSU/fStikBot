@@ -387,7 +387,7 @@ scenes:
       <b>Other sticker packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>Not found other sticker packs from this owner</i>
+      <i>We have no information about other stickers of this owner</i>
   catalog:
     publish:
       publish_new: |
