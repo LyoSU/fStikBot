@@ -48,6 +48,7 @@ cmd:
       • 不要忘记评价以进行促销或降低贴纸包的排名
     commands:
       start: '📜 Start menu'
+      help: '📖 Help'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
       new_emoji: '📥 Create a new sticker pack'
