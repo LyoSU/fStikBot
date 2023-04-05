@@ -48,6 +48,7 @@ cmd:
       • Jangan lupa untuk menilai untuk mempromosikan atau turunkan paket stiker di peringkat
     commands:
       start: '📜 Start menu'
+      help: '📖 Help'
       packs: '📁 Sticker packs'
       new: '📥 Create a new sticker pack'
       new_emoji: '📥 Create a new emoji pack'
