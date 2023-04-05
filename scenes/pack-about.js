@@ -12,12 +12,12 @@ function decodeStickerSetId (u64) {
   if ((u64 >> 24n & 0xffn) === 0xffn) {
     return {
       ownerId: parseInt((u64 >> 32n) + 0x100000000n),
-      id: 0
+      setId: null
     }
   }
   return {
     ownerId: parseInt(u32),
-    id: parseInt(u32l)
+    setId: parseInt(u32l)
   }
 }
 
@@ -56,7 +56,9 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     return next()
   }
 
-  if (!sticker) return
+  if (!sticker) {
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.not_found'))
+  }
 
   const stickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
     stickerset: new telegramApi.Api.InputStickerSetShortName({
@@ -65,24 +67,61 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     hash: 0
   }))
 
-  if (!stickerSetInfo) return next()
+  if (!stickerSetInfo) {
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.not_found'))
+  }
 
-  const { ownerId, id } = decodeStickerSetId(stickerSetInfo.set.id.value)
+  const { ownerId, setId } = decodeStickerSetId(stickerSetInfo.set.id.value)
+
+  // find sticker set in database
+  const stickerSet = await db.StickerSet.findOne({
+    name: sticker.set_name
+  })
+
+  if (!stickerSet && sticker.type === 'regular') {
+    await db.StickerSet.create({
+      ownerTelegramId: ownerId,
+      name: sticker.set_name,
+      title: stickerSetInfo.set.title,
+      animated: sticker.is_animated,
+      video: sticker.is_video,
+      thirdParty: true,
+    })
+  } else if (stickerSet && ownerId && ownerId !== stickerSet.ownerTelegramId) {
+    await db.StickerSet.updateOne({
+      name: sticker.set_name
+    }, {
+      $set: {
+        ownerTelegramId: ownerId
+      }
+    })
+  }
 
   // get all stickerset owners from database
   const owners = await db.StickerSet.find({
-    ownerTelegramId: ownerId
+    ownerTelegramId: ownerId,
+    _id: {
+      $ne: stickerSet._id
+    }
   }).limit(100).lean()
 
-  let stickerSetsOwner = ''
+  let otherPacks = ''
 
-  if (owners.length > 1) {
-    stickerSetsOwner = owners.map((owner) => {
+  if (owners.length > 0) {
+    otherPacks = owners.map((owner) => {
       return `<a href="https://t.me/addstickers/${owner.name}">${owner.name}</a>`
     }).join(', ')
+  } else {
+    otherPacks = ctx.i18n.t('scenes.packAbout.no_other_packs')
   }
 
-  return ctx.replyWithHTML(`owner_id: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)\ncounter: ${id}\n\n${stickerSetsOwner}`)
+  return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
+    link: `https://t.me/addstickers/${sticker.set_name}`,
+    name: sticker.set_name,
+    ownerId,
+    setId,
+    otherPacks
+  }))
 })
 
 module.exports = packAbout
