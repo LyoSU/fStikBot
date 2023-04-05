@@ -67,8 +67,8 @@ async function processStickerSets(stickerSets) {
     createdAt: { $lt: new Date(Date.now() - 1000 * 60 * 60 * 24) }, // 24 hours ago
     inline: { $ne: true } // not inline
   }).sort({
-    ownerTelegramId: -1, // sort by ownerTelegramId to process all sticker sets of the same owner in one batch
-    _id: -1 // sort by _id to process the most recent sticker sets first
+    thirdParty: -1, // third-party first
+    _id: -1
   }).batchSize(batchSize).cursor();
 
   let batch = [];
