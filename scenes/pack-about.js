@@ -9,12 +9,11 @@ function decodeStickerSetId (u64) {
   let u32 = u64 >> 32n
   let u32l = u64 & 0xffffffffn
 
-  if ((u64 >> 24n & 0xffn) === 0xffn) {
-    return {
-      ownerId: parseInt((u64 >> 32n) + 0x100000000n),
-      setId: null
-    }
+  if ((u64 >> 24n & 0xffn) === 0xffn) { // for 64-bit ids
+    u32 = (u64 >> 32n) + 0x100000000n
+    u32l = (u64 & 0xfn)
   }
+
   return {
     ownerId: parseInt(u32),
     setId: parseInt(u32l)
