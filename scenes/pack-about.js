@@ -128,12 +128,10 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   }
 
   const onwerIdText = ctx.session.userInfo.premium ? ownerId : '<i>[premium only]</i>'
-  let otherPacks = ''
+  let otherPacks
 
   if (chunkedPacks.length > 0) {
     otherPacks = chunkedPacks.shift()
-  } else {
-    otherPacks = ctx.i18n.t('scenes.packAbout.no_other_packs')
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
@@ -141,10 +139,10 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     name: sticker.set_name,
     ownerId: onwerIdText,
     setId,
-    otherPacks: otherPacks.join(', '),
+    otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
   }))
 
-  if (otherPacks.length > 1) {
+  if (otherPacks && otherPacks.length > 1) {
     for (let i = 1; i < chunkedPacks.length; i++) {
       await ctx.replyWithHTML(chunkedPacks[i].join(', '))
     }
