@@ -1,9 +1,10 @@
-const Scene = require('telegraf/scenes/base')
-const Markup = require('telegraf/markup')
 const { telegramApi } = require('./utils')
+const Telegram = require('telegraf/telegram')
 const {
   db
 } = require('./database')
+
+const telegram = new Telegram(process.env.BOT_TOKEN)
 
 function decodeStickerSetId (u64) {
   const u32 = u64 >> 32n
@@ -26,6 +27,20 @@ async function processStickerSets(stickerSets) {
 
   await Promise.all(stickerSets.map(async (stickerSet) => {
     try {
+      if (stickerSet.owner) {
+        await telegram.getStickerSet(stickerSet.name);
+
+        const owner = await db.User.findById(stickerSet.owner).catch(() => null);
+
+        if (owner) {
+          stickerSet.ownerTelegramId = owner.telegram_id;
+          await stickerSet.save();
+
+          processedStickerSets.push(stickerSet);
+          return;
+        }
+      }
+
       const stickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
         stickerset: new telegramApi.Api.InputStickerSetShortName({
           shortName: stickerSet.name
@@ -60,7 +75,7 @@ async function processStickerSets(stickerSets) {
 }
 
 (async () => {
-  const batchSize = 100;
+  const batchSize = 1000;
 
   const cursor = db.StickerSet.find({
     ownerTelegramId: { $exists: false }, // not processed yet

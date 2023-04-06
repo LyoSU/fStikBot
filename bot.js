@@ -297,9 +297,9 @@ db.connection.once('open', async () => {
 
     if (newDescriptionShort !== myShortDescription.short_description.replace(/[\r\n]/gm, '')) {
       try {
-        const description = newDescriptionShort ? i18n.t(localeName, 'description.short') : '';
+        const shortDescription = newDescriptionShort ? i18n.t(localeName, 'description.short') : '';
         const response = await bot.telegram.callApi('setMyShortDescription', {
-          description,
+          short_description: shortDescription,
           language_code: localeName,
         });
         console.log('setMyShortDescription', localeName, response);
