@@ -383,7 +383,7 @@ scenes:
       <b>Sticker pack:</b> <a href="${link}">${name}</a>
 
       Owner ID: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)
-      Set ID for this owner: <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
+      Set ID: <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
 
       <b>Other sticker packs from this owner:</b>
       ${otherPacks}
