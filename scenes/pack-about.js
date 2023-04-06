@@ -97,30 +97,58 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   }
 
   // get all stickerset owners from database
-  const owners = await db.StickerSet.find({
+  const packs = await db.StickerSet.find({
     ownerTelegramId: ownerId,
     _id: {
       $ne: stickerSet?._id || null
     }
-  }).limit(100).lean()
+  })
 
+  let chunkedPacks = []
+  const chunkSize = 70
+
+  if (packs.length > 0) {
+    chunkedPacks = (packs.map((pack) => {
+      console.log(pack.name, pack.public)
+      if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
+        return `<i>[hidden]</i>`
+      }
+      return `<a href="https://t.me/addstickers/${pack.name}">${pack.name}</a>`
+    })).reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / chunkSize)
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = []
+      }
+
+      resultArray[chunkIndex].push(item)
+
+      return resultArray
+    }, [])
+  }
+
+  const onwerIdText = ctx.session.userInfo.premium ? ownerId : '<i>[premium only]</i>'
   let otherPacks = ''
 
-  if (owners.length > 0) {
-    otherPacks = owners.map((owner) => {
-      return `<a href="https://t.me/addstickers/${owner.name}">${owner.name}</a>`
-    }).join(', ')
+  if (chunkedPacks.length > 0) {
+    otherPacks = chunkedPacks.shift()
   } else {
     otherPacks = ctx.i18n.t('scenes.packAbout.no_other_packs')
   }
 
-  return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: sticker.set_name,
-    ownerId,
+    ownerId: onwerIdText,
     setId,
-    otherPacks
+    otherPacks: otherPacks.join(', '),
   }))
+
+  if (otherPacks.length > 1) {
+    for (let i = 1; i < chunkedPacks.length; i++) {
+      await ctx.replyWithHTML(chunkedPacks[i].join(', '))
+    }
+  }
 })
 
 module.exports = packAbout
