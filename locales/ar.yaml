@@ -2,10 +2,10 @@
 language_name: '🇸🇦 عربي'
 description:
   long: |
-    🧙 أنا معالج حزمة الرموز التعبيرية والملصقات، وأنا هنا لجعل تجربتك في الرسائل أكثر متعة! تسمح لي طاقاتي السحرية بتحويل صورك المفضلة، ومقاطع الفيديو، وصور GIFs إلى إيموجيس وملصقات رائعة بدون مجموعة من المحولات والمحاصيل. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة مع بضع نقرات فقط. إذاً، ماذا تنتظر؟ دعونا نبدأ ونضيف بعض ✨sparkle✨ إلى محادثاتك!
+    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
 
-    ملصقات البحث: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 أنا معالج الرموز التعبيرية والملصقات! حوّل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.'
+    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
