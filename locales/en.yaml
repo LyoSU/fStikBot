@@ -384,6 +384,7 @@ scenes:
 
       Owner ID: ${ownerId}
       ${mention}
+
       Set ID: <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
 
       <b>Other sticker packs from this owner:</b>

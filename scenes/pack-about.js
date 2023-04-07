@@ -139,7 +139,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
 
   let mention
   mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${ownerId}">${ownerChat?.first_name || 'unknown'}</a>`
-  if (!mention) mention = `<a href="tg://openmessage?user_id=${ownerId}">[🤖]</a>, <a href="https://t.me/@id${ownerId}">[🍏]</a>\n`
+  if (!mention) mention = `<a href="tg://openmessage?user_id=${ownerId}">[🤖]</a>, <a href="https://t.me/@id${ownerId}">[🍏]</a>`
 
   let otherPacks
 
