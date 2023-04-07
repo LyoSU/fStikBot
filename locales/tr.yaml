@@ -376,15 +376,15 @@ scenes:
     enter: |
       <b>Send me a sticker or custom emoji to look up information about it:</b>
     not_found: |
-      <b>Hata!</b>
-      Çıkartmayı bulamadım.
+      I could not find the sticker
     result: |
-      <b>Sticker pack:</b> <a href="${link}">${name}</a>
+      <b>📦 Sticker pack:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
 
-      Owner ID: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)
-      Set ID: <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
+      🧑‍🎨 Owner ID: ${ownerId}
+      ${mention}
 
-      <b>Other sticker packs from this owner:</b>
+      <b>🎨 Other sticker packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
       <i>We have no information about other stickers of this owner</i>
