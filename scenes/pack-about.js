@@ -131,9 +131,12 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     }, [])
   }
 
-  const onwerIdText = ctx.session.userInfo.premium ?
-    `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a> <a href="tg://openmessage?user_id=${ownerId}">android</a> <a href="https://t.me/@id${ownerId}">ios</a>]\n` :
-    `<code>[hidden]</code>`
+  // const onwerIdText = ctx.session.userInfo.premium ?
+  //   `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a> <a href="tg://openmessage?user_id=${ownerId}">android</a> <a href="https://t.me/@id${ownerId}">ios</a>]\n` :
+  //   `<code>[hidden]</code>`
+
+  const onwerIdText = `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a>, <a href="tg://openmessage?user_id=${ownerId}">android</a>, <a href="https://t.me/@id${ownerId}">ios</a>]\n`
+
   let otherPacks
 
   if (chunkedPacks.length > 0) {
