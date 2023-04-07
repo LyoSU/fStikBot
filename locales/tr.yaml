@@ -10,10 +10,10 @@ ratelimit: Pek sık değil!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Merhaba, ${name}! Ben emoji ve çıkartma paketi sihirbazıyım.
+      Fotoğrafları, videoları ve GIF'leri anında harika çıkartmalara dönüştürüyorum.
 
-      Send the /help command for more information
+      Daha fazla bilgi için /help komutunu gönderin
     help: |
       <b>List of bot commands:</b>
 
