@@ -112,7 +112,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
       console.log(pack.name, pack.public)
       if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
         if (ctx.from.id === ownerId || ctx.from.id === ctx.config.mainAdminId) {
-          return `<a href="https://t.me/addstickers/${pack.name}">${pack.name}</a> [hidden]`
+          return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
         } else {
           return `<i>[hidden]</i>`
         }
@@ -132,7 +132,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   }
 
   const onwerIdText = ctx.session.userInfo.premium ?
-    `[<code>${ownerId}</code>\n<a href="tg://user?id=${ownerId}">mention</a> <a href="tg://openmessage?user_id=${ownerId}">android</a> <a href="https://t.me/@id${ownerId}">ios</a>]\n` :
+    `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a> <a href="tg://openmessage?user_id=${ownerId}">android</a> <a href="https://t.me/@id${ownerId}">ios</a>]\n` :
     `<code>[hidden]</code>`
   let otherPacks
 
