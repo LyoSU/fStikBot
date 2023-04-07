@@ -2,15 +2,15 @@
 language_name: '🇪🇸 Español'
 description:
   long: |
-    🧙‍♀️ I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     enter: |
-      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
       I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
       Send the /help command for more information

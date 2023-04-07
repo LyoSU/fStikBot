@@ -2,15 +2,15 @@
 language_name: '🇮🇩 Indonesia'
 description:
   long: |
-    🧙‍♀️ Saya adalah penyihir emoji dan stiker, siap membuat pengalaman chatting Anda lebih menyenangkan! Dengan kekuatan ajaib saya, Anda dapat mengubah foto, video, dan GIF favorit Anda menjadi emoji dan stiker keren tanpa repot. 🎉🎊 Dengan hanya beberapa klik, Anda dapat membuat paket pribadi untuk setiap kesempatan. Jadi, tunggu apa lagi? Ayo tambahkan ✨kilauan✨ pada obrolan Anda!
+    🧙 Saya adalah penyihir emoji dan stiker, siap membuat pengalaman chatting Anda lebih menyenangkan! Dengan kekuatan ajaib saya, Anda dapat mengubah foto, video, dan GIF favorit Anda menjadi emoji dan stiker keren tanpa repot. 🎉🎊 Dengan hanya beberapa klik, Anda dapat membuat paket pribadi untuk setiap kesempatan. Jadi, tunggu apa lagi? Ayo tambahkan ✨kilauan✨ pada obrolan Anda!
 
     Cari stiker: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ Saya adalah penyihir emoji dan stiker! Ubah foto, video, dan GIF menjadi stiker keren dalam sekejap.'
+  short: '🧙 Saya adalah penyihir emoji dan stiker! Ubah foto, video, dan GIF menjadi stiker keren dalam sekejap.'
 ratelimit: Tidak terlalu sering!
 cmd:
   start:
     enter: |
-      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
       I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
       Send the /help command for more information

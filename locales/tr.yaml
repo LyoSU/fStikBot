@@ -2,15 +2,15 @@
 language_name: '🇹🇷 Türkçe'
 description:
   long: |
-    🧙‍♀️ Ben emoji ve çıkartma paketi büyücüsüyüm, mesajlaşma deneyiminizi daha eğlenceli hale getirmek için buradayım! Favori fotoğraf, video ve GIF'lerinizi dönüştürmeden ve kırpma işlemi yapmadan harika emoji ve çıkartmalara dönüştürmek için sihirli güçlerim var. 🎉🎊 Benimle, birkaç tıklama ile herhangi bir durum için kişiselleştirilmiş paketler oluşturabilirsiniz. Hadi başlayalım ve sohbetlerinize ✨parıltı✨ ekleyelim!
+    🧙 Ben emoji ve çıkartma paketi büyücüsüyüm, mesajlaşma deneyiminizi daha eğlenceli hale getirmek için buradayım! Favori fotoğraf, video ve GIF'lerinizi dönüştürmeden ve kırpma işlemi yapmadan harika emoji ve çıkartmalara dönüştürmek için sihirli güçlerim var. 🎉🎊 Benimle, birkaç tıklama ile herhangi bir durum için kişiselleştirilmiş paketler oluşturabilirsiniz. Hadi başlayalım ve sohbetlerinize ✨parıltı✨ ekleyelim!
 
     Çıkartmaları aramak için: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ Ben emoji ve çıkartma büyücüsüyüm! Fotoğraf, video ve GIF''leri hızlıca harika çıkartmalara dönüştürebilirim.'
+  short: '🧙 Ben emoji ve çıkartma büyücüsüyüm! Fotoğraf, video ve GIF''leri hızlıca harika çıkartmalara dönüştürebilirim.'
 ratelimit: Pek sık değil!
 cmd:
   start:
     enter: |
-      🧙‍♀️ Hello, ${name}! I'm the emoji and sticker pack wizard.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
       I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
       Send the /help command for more information
