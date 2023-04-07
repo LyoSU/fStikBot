@@ -381,7 +381,7 @@ scenes:
     result: |
       <b>Sticker pack:</b> <a href="${link}">${name}</a>
 
-      Owner ID: <code>${ownerId}</code> (<a href="tg://user?id=${ownerId}">mention</a>)
+      Owner ID: ${ownerId}
       Set ID: <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
 
       <b>Other sticker packs from this owner:</b>
