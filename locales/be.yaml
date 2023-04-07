@@ -2,10 +2,10 @@
 language_name: '🇧🇾 Беларуская'
 description:
   long: |
-    🧙 Я чараўнік пакетаў эмодзі і стікераў, і я тут, каб зрабіць вашу абмен паведамленнямі болей вясёлай! Мае магічныя сілы дазваляюць мне ператварыць вашы любімыя фотаздымкі, відэа і GIF-карцінкі ў класныя эмодзі і стікеры без праблем з канвертацыяй і абрэзкай. 🎉🎊 За дапамогай мяне вы можаце ствараць персаналізаваныя пакеты для любой нагоды за лічэнія клацоў. Таму што ж вы чакаеце? Давайце пачнем і дадаем ✨бліск✨ у вашыя чаты!
+    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
 
-    Пошук стікераў: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 Я майстар эмодзі і стыкераў! Імгненна ператварайце фатаграфіі, відэа і GIF-кі ў цудоўныя стыкеры.'
+    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: Не так хутка!
 cmd:
   start:
