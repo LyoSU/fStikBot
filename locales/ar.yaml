@@ -2,18 +2,18 @@
 language_name: '🇸🇦 عربي'
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 أنا معالج حزمة الرموز التعبيرية والملصقات، وأنا هنا لجعل تجربتك في الرسائل أكثر متعة! تسمح لي طاقاتي السحرية بتحويل صورك المفضلة، ومقاطع الفيديو، وصور GIFs إلى إيموجيس وملصقات رائعة بدون مجموعة من المحولات والمحاصيل. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة مع بضع نقرات فقط. إذاً، ماذا تنتظر؟ دعونا نبدأ ونضيف بعض ✨sparkle✨ إلى محادثاتك!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+    ملصقات البحث: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙 أنا معالج الرموز التعبيرية والملصقات! حوّل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.'
 ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 مرحبًا ${name}! أنا معالج حزمة الرموز التعبيرية والملصقات.
+      أقوم بتحويل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.
 
-      Send the /help command for more information
+      أرسل الأمر / help للحصول على مزيد من المعلومات
     help: |
       <b>List of bot commands:</b>
 
@@ -41,33 +41,33 @@ cmd:
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 يمكنك العثور على حزم ملصقات جديدة في الكتالوج الخاص بنا</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      • انقر فوق الزر أدناه للوصول إلى كتالوج ضخم من حزم الملصقات لكل ذوق
+      • ابحث عن طريق الكلمات الرئيسية أو في علامات التبويب المعدة
+      • لا تنسى التقييم للترويج أو خفض حزمة الملصقات في الترتيب
     commands:
       start: '📜 قائمة البدء'
-      help: '📖 Help'
+      help: '📖 مساعدة'
       packs: '📁 حزم الملصقات'
       new: '📥 قم بإنشاء حزمة ملصقات جديدة'
       new_emoji: '📥 قم بإنشاء حزمة ملصقات جديدة'
       catalog: '📖 كاتالوج'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
-      original: '🔍 Find original sticker'
-      restore: '🔀 Restore a sticker pack'
-      copy: '📋 Copy a sticker pack'
-      emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
-      lang: '🌐 Change language'
-      donate: '☕️ Support the developer'
+      publish: '📤 نشر حزمة'
+      delete: '❌ حذف ملصق'
+      original: '🔍 ابحث عن الملصق الأصلي'
+      restore: '🔀 استعادة حزمة ملصقات'
+      copy: '📋 انسخ حزمة ملصقات'
+      emoji: '📝 تغيير لاحقة الرموز التعبيرية'
+      round: '🎥 فيديو شكل الجولة'
+      lang: '🌐 تغيير اللغة'
+      donate: '☕ أدعم المبرمج'
     btn:
-      new: '📥 Create new'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
+      new: '📥 إنشاء جديد'
+      catalog: '💖 فتح الكتالوج'
+      catalog_mini: '💖 كتالوج'
+      catalog_browser: '🌐 افتحها في متصفح'
+      catalog_browser_mini: '🌐 في المتصفح'
       catalog_app: '📱 Download Android app'
       catalog_app_mini: '📱 Android app'
   inline:
