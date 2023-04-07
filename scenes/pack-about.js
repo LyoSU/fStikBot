@@ -135,7 +135,11 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   //   `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a> <a href="tg://openmessage?user_id=${ownerId}">android</a> <a href="https://t.me/@id${ownerId}">ios</a>]\n` :
   //   `<code>[hidden]</code>`
 
-  const onwerIdText = `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a>, <a href="tg://openmessage?user_id=${ownerId}">android</a>, <a href="https://t.me/@id${ownerId}">ios</a>]\n`
+  const ownerChat = await ctx.telegram.getChat(ownerId).catch(() => null)
+
+  let mention
+  mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${ownerId}">${ownerChat?.first_name || 'unknown'}</a>`
+  if (!mention) mention = `<a href="tg://openmessage?user_id=${ownerId}">[🤖]</a>, <a href="https://t.me/@id${ownerId}">[🍏]</a>\n`
 
   let otherPacks
 
@@ -146,7 +150,8 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: sticker.set_name,
-    ownerId: onwerIdText,
+    ownerId,
+    mention,
     setId,
     otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
   }))
