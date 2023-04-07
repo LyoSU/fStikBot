@@ -10,10 +10,10 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Halo, ${name}! Saya adalah wizard paket emoji dan stiker.
+      Saya mengubah foto, video, dan GIF menjadi stiker keren dalam sekejap.
 
-      Send the /help command for more information
+      Kirim perintah /help untuk informasi lebih lanjut
     help: |
       <b>List of bot commands:</b>
 
