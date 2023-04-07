@@ -2,18 +2,18 @@
 language_name: '🇪🇸 Español'
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Soy el mago del paquete de emojis y pegatinas, ¡y estoy aquí para hacer que tu experiencia de mensajería sea más divertida! Mis poderes mágicos me permiten transformar tus fotos, videos y GIF favoritos en divertidos emojis y calcomanías sin la molestia de convertirlos y recortarlos. 🎉🎊 Conmigo puedes crear packs personalizados para cualquier ocasión con tan solo unos clics. ¿Entonces, Qué esperas? ¡Comencemos y agreguemos un poco de ✨chispa✨ a sus chats!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+    Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik
+  short: '🧙 ¡Soy el mago de emojis y stickers! Transforme fotos, videos y GIF en calcomanías geniales en un instante.'
 ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 ¡Hola, ${name}! Soy el mago del paquete de pegatinas y emojis.
+      Transformo fotos, videos y GIF en calcomanías geniales en un instante.
 
-      Send the /help command for more information
+      Envíe el comando /help para obtener más información
     help: |
       <b>List of bot commands:</b>
 
