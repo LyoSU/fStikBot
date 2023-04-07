@@ -5,15 +5,15 @@ description:
     🧙 私は絵文字とステッカーパックの魔法使いです。あなたのメッセージング体験をより楽しくするためにここにいます！私の魔法の力で、お気に入りの写真、ビデオ、GIFを変換やトリミングの手間なしに、クールな絵文字やステッカーに変えることができます。🎉🎊 私と一緒に、たった数回のクリックで、どんな場面にも合わせた個人用パックを作成することができます。さあ、いっしょに始めて、あなたのチャットに✨スパークル✨を加えましょう！
 
     ステッカーを検索：https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 絵文字とスタンプの魔法使いです！ 写真、動画、GIFをクールなスタンプに変換します。'
+  short: '🧙‍♀️ 絵文字とスタンプの魔法使いです！ 写真、動画、GIFをクールなスタンプに変換します。'
 ratelimit: Не так часто!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙こんにちは、 ${name}! 私は絵文字とステッカー パックのウィザードです。
+      写真、ビデオ、GIF を簡単にクールなステッカーに変換できます。
 
-      Send the /help command for more information
+      詳細については、/help コマンドを送信してください
     help: |
       <b>List of bot commands:</b>
 

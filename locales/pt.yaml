@@ -10,10 +10,10 @@ ratelimit: Não tão frequente!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Olá, ${name}! Eu sou o assistente do pacote de emojis e adesivos.
+      Estou transformando fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
 
-      Send the /help command for more information
+      Envie o comando /help para obter mais informações
     help: |
       <b>List of bot commands:</b>
 
@@ -80,7 +80,7 @@ cmd:
     <b>Para fazer isso, você precisa executar várias ações:</b>
     1. Abra o bot @Stickers
     2. Envie o comando <code>/packstats</code>
-    3. Encontre e escolha o pacote de sticker necessário
+    3. Encontre e escolha o pacote de sticker necessário 
     4. Encaminhe a mensagem recebida para o bot
     5. Se a restauração for bem sucedida - o bot informará sobre isso
   copy: |
@@ -102,7 +102,7 @@ cmd:
   club: |
     ☕️ Apoiando desenvolvimento do bot
 
-    Você pode enviar dinheiro para mim pra pagar um cafezinho e em troca ganha uns pequenos bônus no bot.
+    Você pode enviar dinheiro para mim pra pagar um cafezinho e em troca ganha uns pequenos bônus no bot. 
 
     ➖ Desabilite <b>"${titleSuffix}</b> no nome dos pacotes de sticker
     ➖ Copie outros pacotes de sticker pelo link
