@@ -15,29 +15,30 @@ cmd:
 
       Отправьте команду /help для получения дополнительной информации
     help: |
-      <b>List of bot commands:</b>
+      <b>Список команд бота:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
+      /new - создать новый набор стикеров
+      /new_emoji - создать новый набор эмодзи
+      /new_inline - создать новый встроенный набор стикеров
 
-      /packs - list of your sticker packs
+      /packs - список ваших наборов стикеров
 
-      /delete - delete sticker from sticker pack
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
+      /delete - удалить стикер из набора стикеров
+      /original - найти оригинал стикера
+      /restore - восстановить набор стикеров
+      /copy - скопировать набор стикеров
+      /emoji - изменить суффикс эмодзи для текущего набора стикеров
+      /frame - изменить кадр для текущего набора стикеров
+      /lang - изменить язык
 
       /catalog - open catalog
       /publish - publish pack
 
-      /lang - change language
-      /donate - support the developer
+      /donate - поддержка разработчик
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      💬 Сообщество (помощь с ботом): @fStikCommunity
+
+      👨🏻‍💻 Канал разработчика: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -71,7 +72,7 @@ cmd:
       catalog_app: '📱 Скачать Android приложение'
       catalog_app_mini: '📱 Android приложение'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 Выбрать набор'
   restore: |
     <b>🗃 Восстановление стикерпака</b>
 
@@ -90,25 +91,25 @@ cmd:
     Для того чтобы скопировать стикерпак необходимо просто отправить ссылку на него боту.
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Наборы</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
+      regular: Стикеры
+      custom_emoji: Эмодзи
       inline: Inline
     empty: |
       <b>У тебя нет ещё ни одного стикерпака.</b>
       Для создания напиши /new
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕️Поддержка разработки бота
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Вы можете отправить мне деньги на кофе и получить взамен небольшие бонусы в боте.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue.
-    ➖ Video stickers up to 30 seconds
+    ➖ Отключение <b>"${titleSuffix}</b> в названии стикерпаков
+    ➖ Копирование других стикерпаков по ссылке
+    ➖ Приоритет при конвертации видеостикеров
+    ➖ Возможность добавления в очередь обработки более одного стикера.
+    ➖ Видеостикеры до 30 секунд
   emoji:
     info: |
       Чтобы изменить эмодзи по умолчанию для текущего набора стикеров, введите <code>/emoji</code>, а затем эмодзи, разделенный пробелом.
