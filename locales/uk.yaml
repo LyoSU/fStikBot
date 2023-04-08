@@ -15,29 +15,29 @@ cmd:
 
       Щоб отримати додаткову інформацію, надішліть команду /help
     help: |
-      <b>List of bot commands:</b>
+      <b>Список команд бота:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
+      /new - створити новий стікерпак
+      /new_emoji - створити новий набір emoji
+      /new_inline - створити новий inline-пак
 
-      /packs - list of your sticker packs
+      /packs - список ваших стікерпаків
 
-      /delete - delete sticker from sticker pack
-      /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
+      /delete - видалити стікер із стікерпаку
+      /original - знайти оригінальний стікер
+      /restore - відновити сткікерпак
+      /copy - скопіювати сткікерпак
+      /emoji - змінити суфікс emoji для поточного стікерпаку
+      /frame - змінити рамку для поточного стікерпаку
+      /lang - змінити мову
 
       /catalog - open catalog
       /publish - publish pack
 
-      /lang - change language
-      /donate - support the developer
+      /donate - підтримати розробника
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Контакти: @ly_oBot
+      👨🏻‍💻 Канал розробника: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -71,7 +71,7 @@ cmd:
       catalog_app: '📱 Застосунок для Android'
       catalog_app_mini: '📱 Android застосунок'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 Вибрати пакунок'
   restore: |
     <b>🗃 Відновити стікерпак</b>
 
@@ -91,25 +91,25 @@ cmd:
     Щоб скопіювати стікерпак - просто відправте посилання на нього боту.
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Пакунки</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
+      regular: Стікери
+      custom_emoji: Емодзі
       inline: Inline
     empty: |
       <b>У тебе ще немає жодного стікерпаку.</b>
       Щоб створити, напиши /new
     inline_title: Інлайн стікерпак
   club: |
-    ☕️ Supporting a bot development
+    ☕ Підтримує розробку бота
 
-    You can send money to me for coffee and get small bonuses in the bot in return.
+    Ви можете послати гроші мені за каву та отримати невеликі бонуси у бота взамін.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue.
-    ➖ Video stickers up to 30 seconds
+    ➖ Вимкнення <b>"${titleSuffix}</b> в наклейці назви
+    ➖ Копіювання інших стікерівних пакетів за посиланням
+    ➖ Пріоритет при переході відеонаклейок
+    ➖ Здатність додавати більше одного стікера в чергу обробки.
+    ➖ Відеостікери до 30 секунд
   emoji:
     info: |
       Щоб змінити емодзі за замовчуванням для поточного стікерпаку, введіть <code>/emoji</code>, а потім смайлик, розділений пробілом.
