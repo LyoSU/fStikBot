@@ -29,11 +29,11 @@ cmd:
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
       /frame - сhange frame for current sticker pack
-      /lang - change language
 
       /catalog - open catalog
       /publish - publish pack
 
+      /lang - change language
       /donate - support the developer
 
       🧑‍🔧 Contacts: @ly_oBot
@@ -71,7 +71,7 @@ cmd:
       catalog_app: '📱 下载安卓应用'
       catalog_app_mini: '📱 安卓应用'
   inline:
-    switch_pm: '📁贴纸包'
+    switch_pm: '📁 Select pack'
   restore: |
     <b>🗃 Sticker pack 恢复</b>
 
@@ -90,29 +90,25 @@ cmd:
     为了复制贴纸包，您只需要将链接发送到机器人。
   packs:
     info: |
-      <b>🌟 貼圖包:</b>
+      <b>📁 Packs</b>
     types:
-      regular: 定期的
-      custom_emoji: Emoji 表情
+      regular: Stickers
+      custom_emoji: Emojis
       inline: 内嵌文件
     empty: |
       <b>您还没有贴纸包。</b>
       若要创建，请写一个命令/新
     inline_title: 内联貼圖包
   club: |
-    ☕️ 支持机器人开发
+    ☕️ Supporting a bot development
 
-    你可以寄钱给我喝咖啡，并在机器人中获得小额奖金作为回报。
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ 禁用 <b>英寸${titleSuffix}</b> 贴纸包名称
-    ➖ 通过链接复制其他贴纸包
-    ➖ 转换视频贴纸时的优先级
-  #club: |
-  #<b>☕️ Bot developer club by Ly</b>
-  #You can join the bot developer club, thereby supporting it.
-  #Also, all club members get additional features in this bot:
-  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-  #➖ Copying of other sticker packs by link
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue.
+    ➖ Video stickers up to 30 seconds
   emoji:
     info: |
       要更改当前贴纸包的默认表情符号，请键入 <code>/emoji</code> 后跟以空格分隔的表情符号。

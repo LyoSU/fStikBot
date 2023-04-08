@@ -29,11 +29,11 @@ cmd:
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
       /frame - сhange frame for current sticker pack
-      /lang - change language
 
       /catalog - open catalog
       /publish - publish pack
 
+      /lang - change language
       /donate - support the developer
 
       🧑‍🔧 Contacts: @ly_oBot
@@ -71,7 +71,7 @@ cmd:
       catalog_app: '📱 Unduh aplikasi Android'
       catalog_app_mini: '📱 Aplikasi Android'
   inline:
-    switch_pm: '📁 Sticker pack'
+    switch_pm: '📁 Select pack'
   restore: |
     <b>🗃 Pemulihan paket stiker</b>
 
@@ -90,30 +90,25 @@ cmd:
     Untuk menyalin paket stiker, anda hanya perlu mengirim tautan ke bot.
   packs:
     info: |
-      <b>🌟 Paket stiker:</b>
+      <b>📁 Packs</b>
     types:
-      regular: Regular
-      custom_emoji: Emoji
+      regular: Stickers
+      custom_emoji: Emojis
       inline: Inline
     empty: |
       <b>Anda belum memiliki paket stiker.</b>
       Untuk membuat, tulis perintah /new
     inline_title: Paket stiker sebaris
   club: |
-    ️ Mendukung pengembangan bot
+    ☕️ Supporting a bot development
 
-    Anda dapat mengirim uang kepada saya untuk minum kopi dan mendapatkan bonus kecil sebagai imbalannya.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    Menonaktifkan <b>"${titleSuffix}</b> dalam nama paket stiker
-    Menyalin paket stiker lain melalui tautan
-    Prioritas saat mengonversi stiker video
-    Kemampuan untuk menambahkan lebih dari satu stiker ke antrian pemrosesan
-  #club: |
-  #<b>☕️ Bot developer club by Ly</b>
-  #You can join the bot developer club, thereby supporting it.
-  #Also, all club members get additional features in this bot:
-  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-  #➖ Copying of other sticker packs by link
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue.
+    ➖ Video stickers up to 30 seconds
   emoji:
     info: |
       To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
