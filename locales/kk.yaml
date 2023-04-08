@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
-
-      /packs - list of your packs
 
       /delete - delete sticker from pack
       /original - find original sticker
+
+      /packs - list of your packs
       /restore - restore a pack
       /copy - copy a pack
       /emoji - change emoji suffix for current pack
-      /frame - сhange frame for current video pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -108,10 +107,11 @@ cmd:
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
-    ➖ Video stickers up to 30 seconds
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
@@ -122,10 +122,9 @@ cmd:
       Videos will no longer have a rounded shape
 coedit:
   info: |
-    <b>👥 Co-editing pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the pack
@@ -488,125 +487,6 @@ scenes:
     Action canceled.
   btn:
     cancel: '❌ Cancel'
-admin:
-  not_allowed: This section is not for you! 😡
-  info: Admin panel
-  menu:
-    messaging: '✉️ Newsletter'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Admin panel'
-  premium:
-    changed: |
-      <b>Premium status changed:</b>
-      ${status}
-    user_not_found: |
-      <b>Error!</b>
-      User not found.
-  messaging:
-    info: |
-      ✉️ Newsletter
-    menu:
-      create: Create
-      scheduled: Planned
-      archive: Archived
-    create:
-      name: Title
-      send_message: Send text or media
-      date: 'Indicate publication date <b>dd.mm hh: mm</b>'
-      date_format: |
-        Message will be sent:
-          ${date}
-      date_invalid: |
-        Invalid date format
-        Specify the date in <b>dd.mm hh: mm</b>
-      add_url: Add link
-      clear_url: Remove link
-      add_url_info: |
-        Submit Button List
-        <pre>Button Text 1 - http://www.example.com/ | Button 2 text - http://www.example2.com/
-        Button 3 text - http://www.example3.com/
-        </pre>
-        $ {current? '\nCurrent buttons:\n' + current: ''}
-      group_select: Choose a user group
-      group_type:
-        all: Everything
-        ru: Russian
-      select_all: Everything
-      found: |
-        People found: ${userCount}
-
-        Start mailing?
-      back: '« Back'
-      continue: Continue »
-      publish: |
-        Newsletter  ${name} created To view, press the button
-        To view, press the button
-      status: Mailing status
-    edit:
-      started: |
-        Editing started
-      wrong_type: |
-        Error!
-        Message type [${type}] differs from original [${originalType}].
-        Editing is not possible
-    list:
-      info: Mailing status
-    status:
-      info: |2
-        <b>Newsletter ${name}</b> (${createdAt})
-        Created ${creatorName}
-
-        Submission date: ${date}
-
-        Submission progress:
-          Total: ${total}
-          Submitted: ${completed}
-          Remaining: ${left}
-          Errors: ${error}
-        ${userErrors}
-
-        Status: ${status}
-      status_type: |
-        Created
-        Processing
-        Archived
-      name_changed: The title has been changed
-      cancel: '❌ Cancel'
-      view: View
-      edit: Edit
-      change_name: Change title
-      update: Refresh
-    canceled: |
-      <b>Broadcast ${name}</b> canceled.
-    send_error: |
-      <b>Broadcast error ${name}</b>
-      Failed to send message to <a href="tg://user?id=${telegramId}">${telegramId}</a>
-
-      <code>${errorMessage}</code>
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram returned an error!</b>
