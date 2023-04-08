@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
-
-      /packs - list of your packs
 
       /delete - delete sticker from pack
       /original - find original sticker
+
+      /packs - list of your packs
       /restore - restore a pack
       /copy - copy a pack
       /emoji - change emoji suffix for current pack
-      /frame - сhange frame for current video pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -108,10 +107,11 @@ cmd:
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
-    ➖ Video stickers up to 30 seconds
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
@@ -122,10 +122,9 @@ cmd:
       Videos will no longer have a rounded shape
 coedit:
   info: |
-    <b>👥 Co-editing pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the pack
@@ -488,126 +487,6 @@ scenes:
     Acción cancelada.
   btn:
     cancel: '❌ Cancelar'
-admin:
-  not_allowed: '¡Esta sección no es para ti! 😡'
-  info: Panel de administrador
-  menu:
-    messaging: '✉️ Boletín'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Panel de administrador'
-  premium:
-    changed: |
-      <b>Premium status changed:</b>
-      ${status}
-    user_not_found: |
-      <b>Error!</b>
-      User not found.
-  messaging:
-    info: |
-      ✉️ Boletín
-    menu:
-      create: Crear
-      scheduled: Planificado
-      archive: Archivo
-    create:
-      name: Tema
-      send_message: Envía mensajes de texto o multimedia
-      date: 'Indicar fecha de publicación <b>dd.mm hh: mm</b>'
-      date_format: |
-        Se enviará el mensaje:
-          ${date}
-      date_invalid: |
-        Formato de fecha no válido
-        Introduzca la fecha en formato <b>dd.mm hh: mm</b>
-      add_url: Agregar Enlace
-      clear_url: Eliminar enlace
-      add_url_info: |
-        Enviar lista de botones
-        <pre>Texto de botón 1 - http://www.example.com/ | Texto del botón 2: http://www.example2.com/
-        Texto del botón 3: http://www.example3.com/
-        </pre>
-        $ {¿actual? '\nBotones actuales:\n' + actual: ''}
-      group_select: Seleccionar grupo de usuarios
-      group_type:
-        all: Todos
-        ru: Russian
-      select_all: Todo
-      found: |
-        Personas encontradas: ${userCount}
-
-        Empezar a enviar correos?
-      back: '« Atrás'
-      continue: Continuar »
-      publish: |
-        Publicación ${name} creada
-        Presione el botón para ver
-        Presione el botón para ver
-      status: Estado de envío
-    edit:
-      started: |
-        Se inició la edición
-      wrong_type: |
-        ¡Error!
-        El tipo de mensaje [${type}] difiere del original [${originalType}].
-        No es posible editar
-    list:
-      info: Estado de envío
-    status:
-      info: |2
-        <b>Mensaje ${name}</b> (${createdAt})
-        Creado ${creatorName}
-
-        Fecha de envío: ${date}
-
-        Progreso de envío:
-          Total: ${total}
-          Enviado: ${completed}
-          Restante: ${left}
-          Errores: ${error}
-        ${userErrors}
-
-        Estado: ${status}
-      status_type: |
-        Creado
-        En curso
-        Archivado
-      name_changed: Título cambiado
-      cancel: '❌ Cancelar'
-      view: Ver
-      edit: Editar
-      change_name: Cambiar el título
-      update: Actualizar
-    canceled: |
-      <b>Transmisión ${name}</b> cancelada.
-    send_error: |
-      <b>Error de envío ${name}</b>
-      No se pudo enviar el mensaje a <a href="tg://user?id=${telegramId}">${telegramId}</a>
-
-      <code>${errorMessage}</code>
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram dió un error!</b>
