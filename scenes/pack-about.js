@@ -109,7 +109,6 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
 
   if (packs.length > 0) {
     chunkedPacks = (packs.map((pack) => {
-      console.log(pack.name, pack.public)
       if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
         if (ctx.from.id === ownerId || ctx.from.id === ctx.config.mainAdminId) {
           return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
