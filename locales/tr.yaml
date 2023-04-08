@@ -375,7 +375,7 @@ scenes:
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
       🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
 
-      🧑‍🎨 Owner ID: ${ownerId}
+      🧑‍🎨 Owner ID: <code>${ownerId}</code>
       ${mention}
 
       <b>🎨 Other packs from this owner:</b>
