@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
 
-      /packs - list of your sticker packs
-
-      /delete - delete sticker from sticker pack
+      /delete - delete sticker from pack
       /original - find original sticker
-      /restore - restore a sticker pack
-      /copy - copy a sticker pack
-      /emoji - change emoji suffix for current sticker pack
-      /frame - сhange frame for current sticker pack
+
+      /packs - list of your packs
+      /restore - restore a pack
+      /copy - copy a pack
+      /emoji - change emoji suffix for current pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -49,15 +48,15 @@ cmd:
     commands:
       start: '📜 Menu inicial'
       help: '📖 Help'
-      packs: '📁 Pacotes de stickers'
+      packs: '📁 Packs'
       new: '📥 Crie um novo pacote de stickers'
       new_emoji: '📥 Create a new emoji pack'
       catalog: '📖 Catalog'
       publish: '📤 Publish pack'
       delete: '❌ Delete sticker'
       original: '🔍 Encontre o sticker original'
-      restore: '🔀 Restaure um pacote de sticker'
-      copy: '📋 Copie um pacote de sticker'
+      restore: '🔀 Restore a pack'
+      copy: '📋 Copy a pack'
       emoji: '📝 Altere o emoji vinculado'
       round: '🎥 Deixe o vídeo redondo'
       lang: '🌐 Mude o idioma'
@@ -73,21 +72,21 @@ cmd:
   inline:
     switch_pm: '📁 Select pack'
   restore: |
-    <b>🗃 Restauração do pacote de sticker</b>
+    <b>🗃 Pack restoration</b>
 
-    Se você criou um pacote de sticker anteriormente através deste bot e não o conseguiu encontrar na lista dos seus pacotes de sticker, então você pode recuperá-lo.
+    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
 
-    <b>Para fazer isso, você precisa executar várias ações:</b>
-    1. Abra o bot @Stickers
-    2. Envie o comando <code>/packstats</code>
-    3. Encontre e escolha o pacote de sticker necessário 
-    4. Encaminhe a mensagem recebida para o bot
-    5. Se a restauração for bem sucedida - o bot informará sobre isso
+    <b>To do this, you need to perform several actions:</b>
+    1. Open @Stickers bot
+    2. Send <code>/packstats</code> command
+    3. Find and choose the required pack
+    4. Forward the received message to the bot
+    5. If restoration is successful - bot informs about it
   copy: |
-    <b>🗄 Copiar pacote de sticker</b>
+    <b>🗄 Copy pack</b>
 
-    Se você apoiou o bot, copiar todos os stickers de qualquer pacote de sticker com um novo nome estará disponível.
-    Para copiar o pacote, você só precisa enviar um link para o bot.
+    If you supported the bot, copying all the stickers from any pack with a new name will be available.
+    In order to copy the pack you just need to send a link to it to the bot.
   packs:
     info: |
       <b>📁 Packs</b>
@@ -96,22 +95,23 @@ cmd:
       custom_emoji: Emojis
       inline: Inline
     empty: |
-      <b>Você ainda não tem pacotes de sticker.</b>
-      Para criar, escreva um comando /new
-    inline_title: Pacote de sticker inline
+      <b>You have no packs yet.</b>
+      To create, write a command /new
+    inline_title: Inline pack
   club: |
     ☕️ Supporting a bot development
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-    ➖ Copying of other sticker packs by link
+    ➖ Disabling <b>"${titleSuffix}"</b> in packs name <i>(not in link)</i>
+    ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue.
-    ➖ Video stickers up to 30 seconds
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji alterado com sucesso.
     error: Houve um erro ao alterar o emoji!
@@ -122,15 +122,14 @@ cmd:
       Os vídeos não terão mais formato arrendondado
 coedit:
   info: |
-    <b>👥 Co-editing sticker pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
-    1. Send the link to the person you want to give access to the sticker pack
+    1. Send the link to the person you want to give access to the pack
     2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the sticker pack
+    3. The editor can add, delete and edit stickers in the pack
 
     <b>Editors:</b>
     ${editors}
@@ -142,7 +141,7 @@ coedit:
     send: '📤 Send link'
     reset: '🔁 Reset link'
   share: |
-    Follows the link and press "start" to co-edit the sticker pack "${title}"
+    Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
     <b>🔁 Link reset successful</b>
 
@@ -151,21 +150,21 @@ coedit:
 callback:
   pack:
     answerCbQuer:
-      not_found: Sticker pack not found
-      hidden: Pacote de sticker ocultado com sucesso
-      restored: Pacote de sticker restaurado com sucesso
+      not_found: Pack not found
+      hidden: Pack successfully hidden
+      restored: Pack successfully restored
     set_pack:
       static: |
-        Selected static sticker pack <a href="${link}">${title}</a>
+        Selected static pack <a href="${link}">${title}</a>
 
         To add a new sticker send me a photo, another static sticker.
         For a sticker to have no background, it must be sent as a file.
       animated: |
-        Selected animated (vector) sticker pack <a href="${link}">${title}</a>
+        Selected animated (vector) pack <a href="${link}">${title}</a>
 
         To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
       video: |
-        Selected video sticker pack <a href="${link}">${title}</a>
+        Selected video pack <a href="${link}">${title}</a>
 
         To add a new sticker send me any video or photo.
     set_inline_pack: |
@@ -173,13 +172,13 @@ callback:
 
       Para usá-lo, digite em qualquer chat <code>@${botUsername} </code>e espaço.
       Você também pode usá-lo selecionando o botão abaixo
-    hidden: Pacote de sticker <a href="${link}">${title}</a> oculto da sua lista.
-    restored: Pacote de sticker <a href="${link}">${title}</a> restaurado da sua lista.
+    hidden: Pack <a href="${link}">${title}</a> hidden from your list.
+    restored: Pack <a href="${link}">${title}</a> restored to your list.
     btn:
-      hide: '❌ Ocultar pacote de sticker'
-      delete: '🗑 Delete sticker pack'
+      hide: '❌ Hide pack'
+      delete: '🗑 Delete pack'
       restore: '✅ Restaurar'
-      use_pack: '📦 Use sticker pack'
+      use_pack: '📦 Use pack'
       rename: '✏️ Rename'
       search_gif: '🔎 Search GIF'
       coedit: '👥 Co-edit'
@@ -188,17 +187,17 @@ callback:
       catalog_delete: '🗑 Excluir do catálogo'
     error:
       restore: |
-        <b>Erro!</b>
-        Não foi possível restaurar pacote de sticker.
+        <b>Error!</b>
+        Cannot restore pack.
       copy: |
-        <b>Erro!</b>
-        Não foi possível encontrar pacote de sticker.
+        <b>Error!</b>
+        Cannot find pack.
   sticker:
     answerCbQuery:
-      delete: O sticker foi removido do seu pacote de sticker com sucesso.
-      restored: O sticker foi salvo no seu pacote de sticker atual com sucesso.
-    delete: O sticker foi removido do seu pacote de sticker com sucesso.
-    restored: O sticker foi salvo ao pacote de sticker atual com sucesso.
+      delete: The sticker was successfully removed from the pack.
+      restored: The sticker was successfully saved to the current pack.
+    delete: The sticker was successfully removed from the pack.
+    restored: The sticker was successfully saved to the current pack.
     btn:
       delete: '🗑 Excluir'
       copy: '🌟 Copiar'
@@ -210,7 +209,7 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to sticker pack:</b>
+      <b>Sticker successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
       <i>Send one or more emoji that match the sticker, if you want to add them</i>
@@ -226,52 +225,52 @@ sticker:
 
       <i>Os usuários que apoiam o bot têm prioridade na fila (para saber mais: /donate)</i>
     catalog_offer: |
-      <b>😲 Nossa, você fez um pacote de sticker demais!</b>
+      <b>😲 Wow, you made a great pack!</b>
 
-      Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
-      <i>Isso não toma muito tempo</i>
+      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
+      <i>It does not take a lot of time</i>
     error:
       no_selected_pack: |
-        <b>You have not selected a sticker pack</b>
+        <b>You have not selected a pack</b>
 
-        Please, create (/new) or choose (/packs) sticker pack
+        Please, create (/new) or choose (/packs) pack
       stickers_too_much: |
-        This sticker pack has the maximum number of stickers.
+        This pack has the maximum number of stickers.
 
-        You can create a new sticker pack using the /new command.
+        You can create a new pack using the /new command.
       have_already: |
-        <b>This sticker is already in the sticker pack</b>
+        <b>This sticker is already in the pack</b>
 
         If you want to change the emoji, send it in the following message.
       stickerset_invalid: |
         <b>Error!</b>
-        Bot cannot access your current chosen sticker pack.
+        Bot cannot access your current chosen pack.
 
-        Please, create (/new) or choose (/packs) another sticker pack.
+        Please, create (/new) or choose (/packs) another pack.
       file_type:
         static: |
           <b>Error!</b>
           This file type is not supported
           You can add this photo or static sticker to the static pack
 
-          <i>Create (/new) or choose (/packs) another sticker pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Error!</b>
           This file type is not supported
           You can add this video files to the video pack
 
-          <i>Create (/new) or choose (/packs) another sticker pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         animated: |
           <b>Error!</b>
           This file type is not supported
           You can add this animated files to the vector pack
 
-          <i>Create (/new) or choose (/packs) another sticker pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Error!</b>
           This file type is not supported
 
-          <i>Create (/new) or choose (/packs) another sticker pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
       wait_load: |
         <b>Aguarde!</b>
 
@@ -300,13 +299,13 @@ scenes:
       <b><u>Choose stickerpack type</u></b>
 
       <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular sticker pack - t.me/addstickers/Animals
+      An example of a regular pack - t.me/addstickers/Animals
 
       <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video sticker pack - t.me/addstickers/TheMascot
+      Sample video pack - t.me/addstickers/TheMascot
 
       <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated sticker pack - t.me/addstickers/IsabelleShizue
+      An example of an animated pack - t.me/addstickers/IsabelleShizue
 
       <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
     pack_title: |
@@ -319,9 +318,9 @@ scenes:
 
       <i>You can choose random short link on button.</i>
     ok: |
-      Sticker pack <a href="${link}">${title}</a> successfully created!
+      Pack <a href="${link}">${title}</a> successfully created!
 
-      <b>Sticker pack link:</b> <pre>${link}</pre>
+      <b>Pack link:</b> <pre>${link}</pre>
 
       Send a file, photo, video or sticker so that I add it to your set
     error:
@@ -332,13 +331,13 @@ scenes:
         name_occupied: Este endereço já foi pego.
   copy:
     enter: |
-      Eu posso copiar este pacote de sticker. Para isso, você precisa criar um novo pacote de sticker.
+      I can copy this pack, for this you need to create a new pack.
     progress: |
-      Copiando pacote de sticker de <a href="${originalLink}">${originalTitle}</a> para <a href="${link}">${title}</a>
+      Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
-      Progresso: ${current}/${total}
+      Progress: ${current}/${total}
     done: |
-      Cópia de pacote de sticker de <a href="${originalLink}">${originalTitle}</a> para <a href="${link}">${title}</a> concluída com sucesso.
+      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
     error:
       premium: |
         <b>Erro!</b>
@@ -354,7 +353,7 @@ scenes:
         Não encontrei o sticker original.
   delete:
     enter: |
-      Send the sticker that was added through this bot and I will delete it from the sticker pack.
+      Send the sticker that was added through this bot and I will delete it from the pack.
     confirm: |
       Are you sure you want to delete this sticker?
     error:
@@ -374,79 +373,80 @@ scenes:
     not_found: |
       I could not find the sticker
     result: |
-      <b>📦 Sticker pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's sticker packs, incremented per pack)</i>
+      <b>📦 Pack:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
 
       🧑‍🎨 Owner ID: ${ownerId}
       ${mention}
 
-      <b>🎨 Other sticker packs from this owner:</b>
+      <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
       <i>We have no information about other stickers of this owner</i>
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the sticker pack you want to publish</b>
+        👌 <b>Send me the sticker from the pack you want to publish</b>
 
-        <i>You can publish any sticker pack that belong to you, even if they are created elsewhere</i>
+        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>To verify ownership of this sticker pack, you need to follow a few simple steps:</b>
+        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
         1. Open @Stickers bot
         2. Send <code>/packstats</code> command
-        3. Find and choose the required sticker pack
+        3. Find and choose the required pack
         4. Forward the received message to the bot
       publish_new_access_denied: |
-        <b>Erro!</b>
-        O pacote de sticker não é seu.
+        <b>Error!</b>
+        This pack is not yours.
 
-        Você pode publicar somente os seus próprios pacotes de sticker
+        You can only publish your own packs
       bannded: |
         <b>Erro!</b>
         Você está banido de usar essa funcionalidade.
         Por favor, contate o administrador.
       enter: |
-        Você está prestes a publicar o pacote de sticker "<a href="${link}">${title}</a>" no nosso diretório público de bots. Ele poderá ser encontrado por qualquer usuário desse bot por nome, tags ou filtro.
-        Por esse motivo, Mais pessoas vão instalar o seu pacote de sticker.
-        Tente enviar somente pacotes de sticker de alta qualidade que possam ser de interesse de um grande número de pessoas.
+        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
+        It can be found by any user of the bot by name, tags or filter
+        Because of this, more people will install your pack
+        Try to send only high-quality packs that may be of interest to a large number of people
 
-        <b>Regras para a publicação de pacotes de sticker:</b>
-        • Não publique seus pacotes de stickers pessoais destinados a um círculo restrito de pessoas. Por exemplo, com rostos de amigos seus ou com suas citações de mensagens.
-        • Não publique stickers que violem leis da UE ou outras leis locais.
+        <b>Rules for publishing packs:</b>
+        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
+        • Do not post sticker pressures that violate EU laws or other local laws
 
-        Você precisará incluir informações adicionais para que ele seja publicado no catálogo
+        You will need to submit additional information for it to be published in the catalog
       continue_button: Continuar
       enter_description: |
-        <b>Descreva brevemente o seu pacote de stickers para que outras pessoas possam encontrá-lo</b>
+        <b>Briefly describe your pack so that others can find it</b>
 
-        <i>Você também pode usar hashtag para categorizar [#]</i>
-        <i>Por exemplo: #anime #meme #animais #fofo #kpop #divertido #gato #jogo </i>
+        <i>You can also use hashtags to categorize [#]</i>
+        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
-        <b>Escolha para quais idiomas seu pacote de adesivos é:</b>
-        <i>Você pode selecionar vários idiomas</i>
+        <b>Choose which languages your pack is for:</b>
+        <i>You can select multiple languages</i>
       button_all_languages: Todas os idiomas
       button_confirm_language: Confirmar
       set_safe: |
-        <b>O seu pacote é seguro para os usuários?</b>
-        <i>Ou seja, não contém conteúdo erótico ou outros conteúdos chocantes</i>
+        <b>Is your pack safe for users?</b>
+        <i>That is, it does not contain erotica and other shocking content</i>
       button_safe:
         safe: Sim, é seguro
         not_safe: Não, não é seguro
       no_tags: não foi especificado
       confirm: |
-        <b>Confirme a publicação do pacote de sticker "<a href="${link}">${title}</a>"</b>
+        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
-        <b>Descrição:</b> <i>${description}</i>
+        <b>Description:</b> <i>${description}</i>
 
         <b>Tags:</b> ${tags}
-        <b>Idiomas:</b> ${languages}
+        <b>Languages:</b> ${languages}
       button_confirm: '✅ Confirmar publicação'
       success: |
-        Parabéns, seu pacote de sticker foi publicado no diretório geral do nosso bot, onde outros usuários podem encontrá-lo!
+        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
 
-        Você pode editar as informações de pesquisa do pacote selecionando-o com o comando /packs.
+        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
 
-        <i>Lembramos que as estatísticas do seu pacote de sticker podem ser visualizadas através do bot oficial @Stickers</i>
+        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
   delete_pack:
     enter: |
       Are you sure you want to delete the pack <a href="${link}">${title}</a>?
@@ -457,7 +457,7 @@ scenes:
       Send <code>${confirm}</code> to confirm you really want to delete this pack.
     confirm: Yes, I am totally sure.
     success: |
-      <b>Sticker pack successfully deleted!</b>
+      <b>Pack successfully deleted!</b>
     error:
       - <b>Error!</b>
       - Opps, something went wrong.
@@ -487,125 +487,6 @@ scenes:
     Ação cancelada.
   btn:
     cancel: '❌ Cancelar'
-admin:
-  not_allowed: This section is not for you! 😡
-  info: Admin panel
-  menu:
-    messaging: '✉️ Newsletter'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Admin panel'
-  premium:
-    changed: |
-      <b>Premium status changed:</b>
-      ${status}
-    user_not_found: |
-      <b>Error!</b>
-      User not found.
-  messaging:
-    info: |
-      ✉️ Рассылки
-    menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
-    create:
-      name: Заголовок
-      send_message: Отправь текст или медиа
-      date: 'Укажи дату публикации <b>дд.мм чч:мм</b>'
-      date_format: |
-        Сообщение будет отправлено:
-          ${date}
-      date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
-      add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
-        </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
-      group_type:
-        all: Все
-        ru: Russian
-      select_all: Все
-      found: |
-        Нашлось человек: ${userCount}
-
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
-      publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
-    edit:
-      started: |
-        Редактирование началось
-      wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
-    list:
-      info: Состояние рассылки
-    status:
-      info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
-
-        Дата отправки: ${date}
-
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
-        ${userErrors}
-
-        Статус: ${status}
-      status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Cancelar'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
-    canceled: |
-      <b>Рассылка ${name}</b> отменена.
-    send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
-
-      <code>${errorMessage}</code>
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>O Telegram retornou um erro!</b>
