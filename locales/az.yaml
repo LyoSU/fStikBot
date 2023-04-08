@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
-
-      /packs - list of your packs
 
       /delete - delete sticker from pack
       /original - find original sticker
+
+      /packs - list of your packs
       /restore - restore a pack
       /copy - copy a pack
       /emoji - change emoji suffix for current pack
-      /frame - сhange frame for current video pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -108,10 +107,11 @@ cmd:
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
-    ➖ Video stickers up to 30 seconds
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
@@ -122,10 +122,9 @@ cmd:
       Videos will no longer have a rounded shape
 coedit:
   info: |
-    <b>👥 Co-editing pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the pack
@@ -488,125 +487,6 @@ scenes:
     Fəaliyyət uğurla ləğv edildi.
   btn:
     cancel: '❌ Ləğv et'
-admin:
-  not_allowed: Bu bölmə sizin üçün deyil! 😡
-  info: Admin Paneli
-  menu:
-    messaging: '✉️ Bülleten'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Admin Paneli'
-  premium:
-    changed: |
-      <b>Premium status changed:</b>
-      ${status}
-    user_not_found: |
-      <b>Error!</b>
-      User not found.
-  messaging:
-    info: |
-      ✉️ Bülleten
-    menu:
-      create: Yarat
-      scheduled: Planlanmışdır
-      archive: Arxiv
-    create:
-      name: Etiket
-      send_message: Mətn və ya media göndərin
-      date: 'Nəşr tarixini göstərin <b>dd.mm hh: mm</b>'
-      date_format: |
-        Mesaj göndəriləcək:
-          ${date}
-      date_invalid: |
-        Yanlış tarix formatı
-        Tarixi <b>dd.mm hh: mm</b>formatında göstərilməlidir
-      add_url: Bağlantı yarat
-      clear_url: Linki silin
-      add_url_info: |
-        Düymə Siyahısını Göndər
-        <pre>Düymə Mətn 1 - http://www.example.com/ | Düymə 2 mətni - http://www.example2.com/
-        Düymə 3 mətn - http://www.example3.com/
-        </pre>
-        $ {cari? '\ncari düymələr:\n' + cari: ''}
-      group_select: İstifadəçi qrupunu seçin
-      group_type:
-        all: Hamısı
-        ru: Russian
-      select_all: Все
-      found: |
-        Нашлось человек: ${userCount}
-
-        Начать рассылку?
-      back: '«Geri'
-      continue: Продолжить »
-      publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Poçt statusu
-    edit:
-      started: |
-        Redaktə başladı
-      wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
-    list:
-      info: Poçt statusu
-    status:
-      info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
-
-        Дата отправки: ${date}
-
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
-        ${userErrors}
-
-        Статус: ${status}
-      status_type: |
-        Yarandı
-        Davam edir
-        Arxiv
-      name_changed: Başlıq dəyişdirildi
-      cancel: '❌ Ləğv et'
-      view: Göstər
-      edit: Redaktə et
-      change_name: Başlığı dəyişdirin
-      update: Yenilə
-    canceled: |
-      <b>Yayım ${name}</b> ləğv edildi.
-    send_error: |
-      <b>Yayım xətası ${name}</b>
-       <a href="tg://user?id=${telegramId}">${telegramId}</a>
-
-      <code>${errorMessage}</code>nömrəsinə mesaj göndərilmədi!
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram xəta!</b>
