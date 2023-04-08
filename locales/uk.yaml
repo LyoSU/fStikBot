@@ -15,28 +15,29 @@ cmd:
 
       Щоб отримати додаткову інформацію, надішліть команду /help
     help: |
-      <b>List of bot commands:</b>
+      <b>Список команд бота:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new - створити новий стікерпак
+      /new_emoji - створити новий набір emoji
+      /new_inline - створити новий inline-пак
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /packs - список ваших стікерпаків
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /delete - видалити стікер із стікерпаку
+      /original - знайти оригінальний стікер
+      /restore - відновити сткікерпак
+      /copy - скопіювати сткікерпак
+      /emoji - змінити суфікс emoji для поточного стікерпаку
+      /frame - змінити рамку для поточного стікерпаку
+      /lang - змінити мову
 
       /catalog - open catalog
+      /publish - publish pack
 
-      /lang - change language
-      /donate - support the developer
+      /donate - підтримати розробника
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Контакти: @ly_oBot
+      👨🏻‍💻 Канал розробника: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -48,15 +49,15 @@ cmd:
     commands:
       start: '📜 Стартове меню'
       help: '📖 Допомога'
-      packs: '📁 Packs'
+      packs: '📁 Пакунки'
       new: '📥 Створити стікерпак'
       new_emoji: '📥 Створіть новий набір емодзі'
       catalog: '📖 Каталог'
       publish: '📤 Опублікувати стікерпак'
       delete: '❌ Видалити стікер'
       original: '🔍 Знайдіть оригінальний стікер'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
+      restore: '🔀 Відновити пакунок'
+      copy: '📋 Копіювати пакунок'
       emoji: '📝 Змінити суфікс emoji'
       round: '🎥 Відео круглої форми'
       lang: '🌐 Змінити мову'
@@ -72,21 +73,22 @@ cmd:
   inline:
     switch_pm: '📁 Вибрати пакунок'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 Відновити пакунок</b>
 
-    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
+    Якщо ви не можете знайти свій пакунок у списку - то його можна відновити.
 
-    <b>To do this, you need to perform several actions:</b>
-    1. Open @Stickers bot
-    2. Send <code>/packstats</code> command
-    3. Find and choose the required pack
-    4. Forward the received message to the bot
-    5. If restoration is successful - bot informs about it
+    <b>Для цього:</b>
+    1. Відкрийте @Stickers бота
+    2. Надішліть йому команду <code>/packstats</code>
+    3. Виберіть необхідний пакунок
+    4. Перешліть отримане повідомлення мені
+
+    🪄✨
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄 Скопіювати стікерпак</b>
 
-    If you supported the bot, copying all the stickers from any pack with a new name will be available.
-    In order to copy the pack you just need to send a link to it to the bot.
+    Якщо ви підтримали бота, то можете скопіювати всі стікери з будь-якого іншого стікерпаку під новим ім'ям.
+    Щоб скопіювати стікерпак - просто відправте посилання на нього боту.
   packs:
     info: |
       <b>📁 Пакунки</b>
@@ -95,9 +97,9 @@ cmd:
       custom_emoji: Емодзі
       inline: Inline
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline pack
+      <b>У тебе ще немає жодного стікерпаку.</b>
+      Щоб створити, напиши /new
+    inline_title: Вбудований пакунок
   club: |
     ☕️ Supporting a bot development
 
