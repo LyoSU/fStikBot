@@ -7,18 +7,17 @@ const {
 const telegram = new Telegram(process.env.BOT_TOKEN)
 
 function decodeStickerSetId (u64) {
-  const u32 = u64 >> 32n
-  const u32l = u64 & 0xffffffffn
+  let u32 = u64 >> 32n
+  let u32l = u64 & 0xffffffffn
 
-  if ((u64 >> 24n & 0xffn) === 0xffn) {
-    return {
-      ownerId: parseInt((u64 >> 32n) + 0x100000000n),
-      id: parseInt(u32l)
-    }
+  if ((u64 >> 24n & 0xffn) === 0xffn) { // for 64-bit ids
+    u32 = (u64 >> 32n) + 0x100000000n
+    u32l = (u64 & 0xfn)
   }
+
   return {
     ownerId: parseInt(u32),
-    id: parseInt(u32l)
+    setId: parseInt(u32l)
   }
 }
 

@@ -77,13 +77,14 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     name: sticker.set_name
   })
 
-  if (!stickerSet && sticker.type === 'regular') {
+  if (!stickerSet) {
     stickerSet = await db.StickerSet.create({
       ownerTelegramId: ownerId,
       name: sticker.set_name,
       title: stickerSetInfo.set.title,
       animated: sticker.is_animated,
       video: sticker.is_video,
+      packType: sticker.type,
       thirdParty: true,
     })
   } else if (stickerSet && ownerId && ownerId !== stickerSet.ownerTelegramId) {
