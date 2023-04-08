@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
-
-      /packs - list of your packs
 
       /delete - delete sticker from pack
       /original - find original sticker
+
+      /packs - list of your packs
       /restore - restore a pack
       /copy - copy a pack
       /emoji - change emoji suffix for current pack
-      /frame - сhange frame for current video pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -108,10 +107,11 @@ cmd:
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
-    ➖ Video stickers up to 30 seconds
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
@@ -122,10 +122,9 @@ cmd:
       Videos will no longer have a rounded shape
 coedit:
   info: |
-    <b>👥 Co-editing pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the pack
@@ -488,125 +487,6 @@ scenes:
     Действие отменено.
   btn:
     cancel: '❌ Отменить'
-admin:
-  not_allowed: Этот раздел не для тебя! 😡
-  info: Админ-панель
-  menu:
-    messaging: '✉️ Рассылка'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Админ-панель'
-  premium:
-    changed: |
-      <b>Premium status changed:</b>
-      ${status}
-    user_not_found: |
-      <b>Error!</b>
-      User not found.
-  messaging:
-    info: |
-      ✉️ Рассылки
-    menu:
-      create: Создать
-      scheduled: Запланировано
-      archive: Архив
-    create:
-      name: Заголовок
-      send_message: Отправь текст или медиа
-      date: 'Укажи дату публикации <b>дд.мм чч:мм</b>'
-      date_format: |
-        Сообщение будет отправлено:
-          ${date}
-      date_invalid: |
-        Неправильный формат даты
-        Укажи дату в формате <b>дд.мм чч:мм</b>
-      add_url: Добавить ссылку
-      clear_url: Удалить ссылку
-      add_url_info: |
-        Отправь список кнопок
-        <pre>Текст кнопки 1 - http://www.example.com/ | Текст кнопки 2 - http://www.example2.com/
-        Текст кнопки 3 - http://www.example3.com/
-        </pre>
-        ${current ? '\nТекущие кнопки:\n' + current : ''}
-      group_select: Выбери группу пользователей
-      group_type:
-        all: Все
-        ru: Russian
-      select_all: Все
-      found: |
-        Нашлось человек: ${userCount}
-
-        Начать рассылку?
-      back: '« Назад'
-      continue: Продолжить »
-      publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Состояние рассылки
-    edit:
-      started: |
-        Редактирование началось
-      wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
-    list:
-      info: Состояние рассылки
-    status:
-      info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
-
-        Дата отправки: ${date}
-
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
-        ${userErrors}
-
-        Статус: ${status}
-      status_type: |
-        Создано
-        В процессе
-        Архив
-      name_changed: Заголовок изменен
-      cancel: '❌ Отменить'
-      view: Посмотреть
-      edit: Редактировать
-      change_name: Изменить заголовок
-      update: Обновить
-    canceled: |
-      <b>Рассылка ${name}</b> отменена.
-    send_error: |
-      <b>Ошибка рассылки ${name}</b>
-      Не удалось отправить сообщение для <a href="tg://user?id=${telegramId}">${telegramId}</a>
-
-      <code>${errorMessage}</code>
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram вернул ошибку!</b>
