@@ -29,11 +29,11 @@ cmd:
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
       /frame - сhange frame for current sticker pack
-      /lang - change language
 
       /catalog - open catalog
       /publish - publish pack
 
+      /lang - change language
       /donate - support the developer
 
       🧑‍🔧 Contacts: @ly_oBot
@@ -71,7 +71,7 @@ cmd:
       catalog_app: '📱 Спампаваць праграму для Android '
       catalog_app_mini: '📱 Прыкладанне для Android'
   inline:
-    switch_pm: '📁 Набор стыкераў'
+    switch_pm: '📁 Select pack'
   restore: |
     <b>🗃 Sticker pack restoration</b>
 
@@ -90,10 +90,10 @@ cmd:
     In order to copy the sticker pack you just need to send a link to it to the bot.
   packs:
     info: |
-      <b>🌟 Sticker packs:</b>
+      <b>📁 Packs</b>
     types:
-      regular: Regular
-      custom_emoji: Emoji
+      regular: Stickers
+      custom_emoji: Emojis
       inline: Inline
     empty: |
       <b>You have no sticker packs yet.</b>
@@ -107,13 +107,8 @@ cmd:
     ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
     ➖ Copying of other sticker packs by link
     ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-  #club: |
-  #<b>☕️ Bot developer club by Ly</b>
-  #You can join the bot developer club, thereby supporting it.
-  #Also, all club members get additional features in this bot:
-  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-  #➖ Copying of other sticker packs by link
+    ➖ Ability to add more than one sticker to the processing queue.
+    ➖ Video stickers up to 30 seconds
   emoji:
     info: |
       To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
