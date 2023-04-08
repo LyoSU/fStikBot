@@ -376,13 +376,13 @@ scenes:
     not_found: |
       Я не смог найти стикер
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Пакет:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(уникальный номер для пака владельца, увеличился с каждым паком)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 ID владельца: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Другие наборы от этого владельца:</b>
       ${otherPacks}
     no_other_packs: |
       <i>У нас нет информации о других стикерпаках этого владельца</i>
