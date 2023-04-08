@@ -103,7 +103,7 @@ cmd:
 
     You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Disabling <b>"${titleSuffix}</b> in packs name
+    ➖ Disabling <b>"${titleSuffix}"</b> in packs name <i>(not in link)</i>
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
