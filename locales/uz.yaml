@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
-
-      /packs - list of your packs
 
       /delete - delete sticker from pack
       /original - find original sticker
+
+      /packs - list of your packs
       /restore - restore a pack
       /copy - copy a pack
       /emoji - change emoji suffix for current pack
-      /frame - сhange frame for current video pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -108,10 +107,11 @@ cmd:
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
-    ➖ Video stickers up to 30 seconds
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
@@ -122,10 +122,9 @@ cmd:
       Videolar endi yumaloq shaklga ega bo‘lmaydi
 coedit:
   info: |
-    <b>👥 Co-editing pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the pack
@@ -488,125 +487,6 @@ scenes:
     Harakat bekor qilindi.
   btn:
     cancel: '❌ Bekor qilish'
-admin:
-  not_allowed: Ushbu bo'lim siz uchun emas! 😡
-  info: Admin paneli
-  menu:
-    messaging: '✉️ Shaxsiy xabar'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Admin paneli'
-  premium:
-    changed: |
-      <b>Premium status changed:</b>
-      ${status}
-    user_not_found: |
-      <b>Error!</b>
-      User not found.
-  messaging:
-    info: |
-      ✉️ Shaxsiy xabarlar
-    menu:
-      create: Yaratish
-      scheduled: Rejalashtirilgan
-      archive: Arxiv
-    create:
-      name: Mavzu
-      send_message: Matn yoki ommaviy axborot vositalarini yuboring
-      date: 'Nashr qilingan sanani kiriting <b>kk.oo ss:mm</b>'
-      date_format: |
-        Xabar yuboriladi:
-          ${date}
-      date_invalid: |
-        Sana formati xato
-        Sanani <b>kk.oo ss:mm</b> formatida ko'rsating
-      add_url: Havola qo'shish
-      clear_url: Havolani o'chirish
-      add_url_info: |
-        Tugmalar ro'yxatini yuboring
-        <pre>Tugma matni 1 - http://www.example.com/ | Tugma matni 2 - http://www.example2.com/
-        Tugma matni 3 - http://www.example3.com/
-        </pre>
-        ${current ? '\nJoriy turgmalar:\n' + current : ''}
-      group_select: Foydalanuvchilar guruhini tanlang
-      group_type:
-        all: Barchasi
-        ru: Russian
-      select_all: Все
-      found: |
-        Нашлось человек: ${userCount}
-
-        Начать рассылку?
-      back: 'Ortga'
-      continue: Продолжить »
-      publish: |
-        Рассылка  ${name} создана Для просмотра нажми кнопку
-        Для просмотра нажми кнопку
-      status: Shaxsiy xabar yuborish holati
-    edit:
-      started: |
-        Tahrirlash boshlandi
-      wrong_type: |
-        Ошибка!
-        Тип сообщения [${type}] отличается от оригинала [${originalType}].
-        Редактирование невозможно
-    list:
-      info: Shaxsiy xabar yuborish holati
-    status:
-      info: |2
-        <b>Рассылка ${name}</b> (${createdAt})
-        Создал ${creatorName}
-
-        Дата отправки: ${date}
-
-        Прогресс отправки:
-          Всего: ${total}
-          Отправлено: ${completed}
-          Осталось: ${left}
-          Ошибки: ${error}
-        ${userErrors}
-
-        Статус: ${status}
-      status_type: |
-        Yaratildi
-        Jarayonda
-        Arxiv
-      name_changed: Sarlavha o'zgartirildi
-      cancel: '❌ Bekor qilish'
-      view: Ko'rish
-      edit: Tahrirlash
-      change_name: Sarlavhani o'zgartirish
-      update: Yangilash
-    canceled: |
-      <b>Shaxsiy xabar ${name}</b> bekor qilindi.
-    send_error: |
-      <b>Shaxsiy xabar yuborishda xatolik ${name}</b>
-       <a href="tg://user?id=${telegramId}">${telegramId}</a> ga xabar yuborib bo'lmadi.
-
-      <code>${errorMessage}</code>
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram xatolikni qaytardi!</b>
