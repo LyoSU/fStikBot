@@ -29,11 +29,11 @@ cmd:
       /copy - copy a sticker pack
       /emoji - change emoji suffix for current sticker pack
       /frame - сhange frame for current sticker pack
-      /lang - change language
 
       /catalog - open catalog
       /publish - publish pack
 
+      /lang - change language
       /donate - support the developer
 
       🧑‍🔧 Contacts: @ly_oBot
@@ -71,7 +71,7 @@ cmd:
       catalog_app: '📱 Download Android app'
       catalog_app_mini: '📱 Android app'
   inline:
-    switch_pm: '📁 Sticker pack'
+    switch_pm: '📁 Select pack'
   restore: |
     <b>🗃 Stikerlar to'plamini qayta tiklash</b>
 
@@ -89,29 +89,24 @@ cmd:
     Agar siz botni qo'llab-quvatlagan bo'lsangiz, barcha stikerlarni, har qanday stikerlar to'plamidan yangi nom bilan nusxalash imkoniyati paydo bo'ladi. Stikerlar to'plamini nusxalash uchun, siz botga stikerning havolasini yuborishingiz kifoya.
   packs:
     info: |
-      <b>🌟 Stikerlar to'plami</b>
+      <b>📁 Packs</b>
     types:
-      regular: Regular
-      custom_emoji: Emoji
+      regular: Stickers
+      custom_emoji: Emojis
       inline: Inline
     empty: |
       <b>Sizda hali birorta stikerlar to'plami mavjud emas. Yaratish uchun /new deb yozing. </b>
     inline_title: Инлайн стикерпак
   club: |
-    ☕️ Bot rivojlanishini qo'llab-quvvatlash
+    ☕️ Supporting a bot development
 
-    Siz menga kofe uchun pul yuborishingiz va buning evaziga botda kichik bonuslar olishingiz mumkin.
+    You can send money to me for coffee and get small bonuses in the bot in return.
 
-    ➖ Stikerlar toʻplami nomidagi <b>"${titleSuffix}</b> ni oʻchirib qoʻyish
-    ➖ Boshqa stiker paketlarini havola orqali nusxalash
-    ➖ Video stikerlarni konvertatsiya qilishda ustuvorlik
-    ➖ Qayta ishlash navbatiga bir nechta stiker qoʻshish imkoniyati
-  #club: |
-  #<b>☕️ Bot developer club by Ly</b>
-  #You can join the bot developer club, thereby supporting it.
-  #Also, all club members get additional features in this bot:
-  #➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
-  #➖ Copying of other sticker packs by link
+    ➖ Disabling <b>"${titleSuffix}</b> in sticker packs name
+    ➖ Copying of other sticker packs by link
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue.
+    ➖ Video stickers up to 30 seconds
   emoji:
     info: |
       To change the default emoji for the current sticker pack type <code>/emoji</code> followed by an emoji separated by a space.
