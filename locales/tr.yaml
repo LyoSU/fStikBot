@@ -19,19 +19,18 @@ cmd:
 
       /new - create a new sticker pack
       /new_emoji - create a new emoji pack
-      /new_inline - create a new inline pack
-
-      /packs - list of your packs
 
       /delete - delete sticker from pack
       /original - find original sticker
+
+      /packs - list of your packs
       /restore - restore a pack
       /copy - copy a pack
       /emoji - change emoji suffix for current pack
-      /frame - сhange frame for current video pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
       /catalog - open catalog
-      /publish - publish pack
 
       /lang - change language
       /donate - support the developer
@@ -108,10 +107,11 @@ cmd:
     ➖ Copying of other packs by link
     ➖ Priority when converting video stickers
     ➖ Ability to add more than one sticker to the processing queue
-    ➖ Video stickers up to 30 seconds
+    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
-      To change the default emoji for the current pack type <code>/emoji</code> followed by an emoji separated by a space.
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+
       For example - <code>/emoji 🌟</code>
     done: Emoji başarıyla güncellendi.
     error: Emoji değiştirilirken bir hata oluştu!
@@ -122,10 +122,9 @@ cmd:
       Videolar artık yuvarlak bir şekle sahip olmayacak
 coedit:
   info: |
-    <b>👥 Co-editing pack</b>
+    <b>👥 Co-editing</b>
 
-    Link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
     <b>How to use:</b>
     1. Send the link to the person you want to give access to the pack
@@ -487,124 +486,6 @@ scenes:
     Eylem iptal edildi!
   btn:
     cancel: '❌ İptal'
-admin:
-  not_allowed: Bu bölüm size göre değil! 😡
-  info: Admin Paneli
-  menu:
-    messaging: '✉️ Bülten'
-    pack: '📦 Стікерпаки'
-    admin: '😎 Admin Paneli'
-  premium:
-    changed: |
-      <b>Premium durumu değişti:</b>
-      ${status}
-    user_not_found: |
-      <b>Hata!</b>
-      Kullanıcı bulunamadı.
-  messaging:
-    info: |
-      ✉️ Bülten
-    menu:
-      create: Oluştur
-      scheduled: Planlı
-      archive: Arşiv
-    create:
-      name: Başlık
-      send_message: Metin veya medya gönderin
-      date: 'Yayın tarihini <b>gg.aa ss: dd</b>'
-      date_format: |
-        Mesaj gönderilecek:
-          ${date}
-      date_invalid: |
-        Geçersiz tarih biçimi
-        Tarihi <b>gg.aa sa: dd</b>
-      add_url: Link ekle
-      clear_url: Bağlantıyı kaldır
-      add_url_info: |
-        Düğme Listesi Gönder
-        <pre>Düğme Metni 1 - http://www.example.com/ | Düğme 2 metni - http://www.example2.com/
-        Düğme 3 metni - http://www.example3.com/
-        </pre>
-        $ {current ? '\nGeçerli düğmeler:\n' + current: ''}
-      group_select: Bir kullanıcı grubu seçin
-      group_type:
-        all: Tümünü göster
-        ru: Turkish
-      select_all: Tümünü göster
-      found: |
-        Bulunan kişiler: ${userCount}
-
-        Postaya başlasın mı?
-      back: '« Geri'
-      continue: Devam et
-      publish: |
-        Haber bülteni  ${name} oluşturuldu. Görüntüle
-      status: Posta durumu
-    edit:
-      started: |
-        Düzenleme başladı
-      wrong_type: |
-        Hata!
-        Mesaj türü [${type}], orijinalden [${originalType}] farklı.
-        Düzenleme mümkün değil
-    list:
-      info: Posta durumu
-    status:
-      info: |2
-        <b>Haber Bülteni ${name}</b> (${createdAt})
-        Oluşturuldu ${creatorName}
-
-        Gönderim tarihi: ${date}
-
-        Gönderim ilerlemesi:
-          Toplam: ${total}
-          Gönderildi: ${completed}
-          Kalan: ${left}
-          Hata: ${error}
-        ${userErrors}
-
-        Durum: ${status}
-      status_type: |
-        Oluşturuldu
-        Devam ediyor
-        Arşiv
-      name_changed: Başlık değişti
-      cancel: '❌ İptal'
-      view: Git ve gör
-      edit: Düzenle
-      change_name: Başlığı değiştir
-      update: Yenile
-    canceled: |
-      <b>Yayın ${name}</b> iptal edildi.
-    send_error: |
-      <b>Yayın hatası ${name}</b>
-       <a href="tg://user?id=${telegramId}">${telegramId}</a>
-
-      <code>${errorMessage}</code> mesaj gönderilemedi
-  pack:
-    info: |
-      ✉️ Пакети
-    edit_button: Редагувати
-    edit:
-      find: |
-        Відправте стікер із стікерпаку для пошуку
-      found: |
-        Стікерпак: ${packName}
-
-        Створив: <a href="${packCreatorLink}">${creatorName}</a>
-      steal_button: Відібрати стікерпак
-      remove_button: Видалити стікерпак
-      steal: |
-        Ви дійсно бажаєте відібрати стікерпак ${packName}?
-      steal_success: |
-        Ви успішно відібрали стікерпак ${packName}
-      remove: |
-        Ви дійсно бажаєте видалити стікерпак ${packName}?
-      remove_success: |
-        Ви успішно видалили стікерпак ${packName}
-      yes: Так
-      no: Ні
-    not_found: Стікерпак не знайдено
 error:
   telegram: |
     <b>Telegram hatası!</b>
