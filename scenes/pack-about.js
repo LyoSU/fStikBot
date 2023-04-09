@@ -5,6 +5,17 @@ const {
   db
 } = require('../database')
 
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 function decodeStickerSetId (u64) {
   let u32 = u64 >> 32n
   let u32l = u64 & 0xffffffffn
@@ -138,7 +149,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   const ownerChat = await ctx.telegram.getChat(ownerId).catch(() => null)
 
   let mention
-  mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${ownerId}">${ownerChat?.first_name || 'unknown'}</a>`
+  mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${ownerId}">${escapeHTML(ownerChat?.first_name) || 'unknown'}</a>`
   if (!mention) mention = `<a href="tg://openmessage?user_id=${ownerId}">[🤖]</a>, <a href="https://t.me/@id${ownerId}">[🍏]</a>`
 
   let otherPacks
@@ -149,7 +160,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
-    name: sticker.set_name,
+    name: escapeHTML(sticker.set_name),
     ownerId,
     mention,
     setId,
