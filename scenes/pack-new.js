@@ -275,6 +275,12 @@ newPackConfirm.enter(async (ctx, next) => {
     }
 
     if (ctx.session.scene.copyPack) {
+      const waitMessage = await ctx.replyWithHTML(ctx.i18n.t('⏳'), {
+        reply_markup: {
+          remove_keyboard: true
+        }
+      })
+
       const stickerFormat = ctx.session.scene.copyPack.is_animated ? 'animated' : ctx.session.scene.copyPack.is_video ? 'video' : 'static'
 
       const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
@@ -325,6 +331,8 @@ newPackConfirm.enter(async (ctx, next) => {
       }).catch((error) => {
         return { error }
       })
+
+      await waitMessage.delete()
 
       if (createNewStickerSet.error) {
         if (createNewStickerSet.error.description === 'STICKERSET_INVALID') {
@@ -498,23 +506,25 @@ newPackConfirm.enter(async (ctx, next) => {
       for (let index = 50; index < 200; index++) {
         await addSticker(ctx, originalPack.stickers[index], userStickerSet)
 
-        await ctx.telegram.editMessageText(
-          message.chat.id, message.message_id, null,
-          ctx.i18n.t('scenes.copy.progress', {
-            originalTitle: originalPack.title,
-            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title: escapeHTML(title),
-            link: `${ctx.config.stickerLinkPrefix}${name}`,
-            current: index,
-            total: originalPack.stickers.length
-          }),
-          { parse_mode: 'HTML' }
-        ).catch(() => { })
+        if (index % 10 === 0) {
+          await ctx.telegram.editMessageText(
+            message.chat.id, message.message_id, null,
+            ctx.i18n.t('scenes.copy.progress', {
+              originalTitle: originalPack.title,
+              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+              title: escapeHTML(title),
+              link: `${ctx.config.stickerLinkPrefix}${name}`,
+              current: index,
+              total: originalPack.stickers.length
+            }),
+            { parse_mode: 'HTML' }
+          ).catch(() => {})
+        }
       }
 
-      await ctx.telegram.editMessageText(
-        message.chat.id, message.message_id, null,
-        ctx.i18n.t('scenes.copy.done', {
+      await ctx.telegram.deleteMessage(message.chat.id, message.message_id)
+
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done', {
           originalTitle: originalPack.title,
           originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
           title: escapeHTML(title),
@@ -523,12 +533,6 @@ newPackConfirm.enter(async (ctx, next) => {
         { parse_mode: 'HTML' }
       )
     }
-
-    await ctx.replyWithHTML('👌', {
-      reply_markup: {
-        remove_keyboard: true
-      }
-    })
 
     await ctx.scene.leave()
   }
