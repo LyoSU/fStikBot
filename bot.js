@@ -51,7 +51,9 @@ bot.use((ctx, next) => {
     }, 1000 * 5)
   })
 
-  const nextPromise = next()
+  const nextPromise = next().catch((error) => {
+    handleError(error, ctx)
+  })
 
   return Promise.race([timeoutPromise, nextPromise])
     .catch((error) => {
@@ -60,7 +62,6 @@ bot.use((ctx, next) => {
         return false
       }
 
-      handleError(error, ctx)
       return true
     })
 })
