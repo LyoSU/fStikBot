@@ -502,8 +502,7 @@ newPackConfirm.enter(async (ctx, next) => {
         total: originalPack.stickers.length
       }))
 
-      // from 50 to 200
-      for (let index = 50; index < 200; index++) {
+      for (let index = 50; index < originalPack.stickers.length; index++) {
         await addSticker(ctx, originalPack.stickers[index], userStickerSet)
 
         if (index % 10 === 0) {
