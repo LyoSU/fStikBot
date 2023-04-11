@@ -332,7 +332,7 @@ newPackConfirm.enter(async (ctx, next) => {
         return { error }
       })
 
-      await waitMessage.delete()
+      await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
 
       if (createNewStickerSet.error) {
         if (createNewStickerSet.error.description === 'STICKERSET_INVALID') {
