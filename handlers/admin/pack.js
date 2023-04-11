@@ -6,11 +6,11 @@ const composer = new Composer()
 composer.action(/admin:pack:edit/, (ctx) => ctx.scene.enter('adminPackFind'))
 
 composer.action(/admin:pack/, async (ctx, next) => {
-  const resultText = ctx.i18n.t('admin.pack.info')
+  const resultText = 'Admin pack'
 
   const replyMarkup = Markup.inlineKeyboard([
-    [Markup.callbackButton(ctx.i18n.t('admin.pack.edit_button'), 'admin:pack:edit')],
-    [Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')]
+    [Markup.callbackButton('Edit pack', 'admin:pack:edit')],
+    [Markup.callbackButton('Back', 'admin:back')]
   ])
 
   await ctx.editMessageText(resultText, {

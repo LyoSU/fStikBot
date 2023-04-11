@@ -40,17 +40,15 @@ composer.action(/admin:messaging:cancel:(.*)/, async (ctx, next) => {
   }
   messaging.save()
 
-  const resultText = ctx.i18n.t('admin.messaging.canceled', {
-    name: messaging.name
-  })
+  const resultText = `Message ${messaging.name} canceled`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.messaging.status.update'), `admin:messaging:status:${ctx.match[1]}`)
+      Markup.callbackButton('Show message status', `admin:messaging:status:${ctx.match[1]}`)
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Back', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 

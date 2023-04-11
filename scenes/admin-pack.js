@@ -4,11 +4,11 @@ const Scene = require('telegraf/scenes/base')
 const adminPackFind = new Scene('adminPackFind')
 
 adminPackFind.enter(async (ctx) => {
-  const resultText = ctx.i18n.t('admin.pack.edit.find')
+  const resultText = 'Send me a sticker or a custom emoji'
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Back', 'admin:back')
     ]
   ])
 
@@ -37,7 +37,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
 
 
   if (packName.split('_').pop(-1) !== ctx.options.username) {
-    return ctx.replyWithHTML(ctx.i18n.t('admin.pack.not_found'))
+    return 'This sticker pack is not from this bot'
   }
 
   const stickerSet = await ctx.tg.getStickerSet(packName)
@@ -48,7 +48,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
 
 
   if (!stickerSet) {
-    return ctx.replyWithHTML(ctx.i18n.t('admin.pack.not_found'))
+    return 'Sticker pack not found'
   }
 
   ctx.session.admin = {
@@ -70,11 +70,7 @@ adminPackEdit.enter(async (ctx) => {
 
   const packOwner = await ctx.db.User.findById(info?.owner)
 
-  const resultText = ctx.i18n.t('admin.pack.edit.found', {
-    packName: editPack.name,
-    creatorName: packOwner?.first_name,
-    packCreatorLink: `tg://user?id=${packOwner?.telegram_id}`
-  })
+  const resultText = `Pack name: ${editPack.name}\nOwner: <a href="tg://user?id=${packOwner?.telegram_id}">${packOwner?.first_name}</a>`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
@@ -99,9 +95,7 @@ adminPackEdit.action(/^admin:pack:edit:steal$/, async (ctx) => {
     return ctx.scene.enter('adminPackFind')
   }
 
-  const resultText = ctx.i18n.t('admin.pack.edit.steal', {
-    packName: editPack.name
-  })
+  const resultText = `Are you sure you want to steal pack <b>${editPack.name}</b> from <a href="tg://user?id=${info.owner}">${info.owner}</a>`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
@@ -138,9 +132,7 @@ adminPackEdit.action(/admin:pack:edit:steal:(.*)/, async (ctx) => {
   await ctx.deleteMessage()
 
   ctx.state.answerCbQuery = [
-    ctx.i18n.t('admin.pack.edit.steal_success', {
-      packName: info.name
-    }),
+    `You have successfully stolen pack ${info.name}`,
     true
   ]
 
@@ -154,9 +146,7 @@ adminPackEdit.action(/admin:pack:edit:remove$/, async (ctx) => {
     return ctx.scene.enter('adminPackFind')
   }
 
-  const resultText = ctx.i18n.t('admin.pack.edit.remove', {
-    packName: editPack.name
-  })
+  const resultText = `Are you sure you want to remove pack <b>${editPack.name}</b>`
 
   const replyMarkup = Markup.inlineKeyboard([
     [

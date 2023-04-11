@@ -6,7 +6,7 @@ const composer = new Composer()
 
 const checkAdminRight = (ctx, next) => {
   if (ctx.config.mainAdminId === ctx.from.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.length > 0)) return next()
-  else return ctx.replyWithHTML(ctx.i18n.t('admin.not_allowed'))
+  else return ctx.replyWithHTML('You are not admin')
 }
 
 const adminType = [
@@ -15,11 +15,11 @@ const adminType = [
 ]
 
 const main = async (ctx, next) => {
-  const resultText = ctx.i18n.t('admin.info')
+  const resultText = 'Admin panel'
 
   const inlineKeyboard = []
   adminType.forEach((type) => {
-    if (ctx.config.mainAdminId === ctx.from.id || ctx.session.userInfo.adminRights.includes(type)) inlineKeyboard.push([Markup.callbackButton(ctx.i18n.t(`admin.menu.${type}`), `admin:${type}`)])
+    if (ctx.config.mainAdminId === ctx.from.id || ctx.session.userInfo.adminRights.includes(type)) inlineKeyboard.push([Markup.callbackButton(`Admin ${type}`, `admin:${type}`)])
   })
 
   const replyMarkup = Markup.inlineKeyboard(inlineKeyboard)
@@ -51,15 +51,13 @@ const setPremium = async (ctx, next) => {
     })
   }
 
-  if (!findUser) return ctx.replyWithHTML(ctx.i18n.t('admin.premium.user_not_found'))
+  if (!findUser) return ctx.replyWithHTML('User not found')
 
   findUser.premium = !findUser.premium
 
   await findUser.save()
 
-  return ctx.replyWithHTML(ctx.i18n.t('admin.premium.changed', {
-    status: findUser.premium
-  }))
+  return ctx.replyWithHTML(`User ${findUser.username} premium status: ${findUser.premium ? 'enabled' : 'disabled'}`)
 }
 
 adminType.forEach((type) => {

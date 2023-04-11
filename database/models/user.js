@@ -37,7 +37,10 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
-  payments: Array,
+  balance: {
+    type: Number,
+    default: 0
+  },
   locale: String,
   blocked: {
     type: Boolean,
