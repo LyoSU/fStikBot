@@ -186,7 +186,7 @@ bot.start((ctx, next) => {
 bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
 bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
 bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
-bot.hears(/addstickers\/(.*)/, handleCopyPack)
+bot.hears(/(addsticker|addemoji)\/(.*)/, handleCopyPack)
 bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.command('frame', (ctx) => ctx.scene.enter('packFrame'))
 bot.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
