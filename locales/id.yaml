@@ -331,7 +331,7 @@ scenes:
         name_occupied: Alamat ini sudah dipakai.
   copy:
     enter: |
-      I can copy this pack, for this you need to create a new pack.
+      I can copy it, but before that, let's create a new pack
     progress: |
       Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
