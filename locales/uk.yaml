@@ -332,7 +332,7 @@ scenes:
         name_occupied: Спробуйте, будь ласка, іншу адресу - ця вже зайнята.
   copy:
     enter: |
-      Створіть новий стікерпак через /new, щоб я міг скопіювати цей.
+      I can copy it, but before that, let's create a new pack
     progress: |
       Копіюю стікери з <a href="${originalLink}">${originalTitle}</a> до <a href="${link}">${title}</a>
 
