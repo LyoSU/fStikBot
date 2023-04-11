@@ -283,7 +283,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
       const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
 
-      const uploadedStickers = await Promise.all(stickers.map(async (sticker) => {
+      const uploadedStickers = (await Promise.all(stickers.map(async (sticker) => {
         const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
 
         const buffer = await got(fileLink, {
@@ -316,13 +316,18 @@ newPackConfirm.enter(async (ctx, next) => {
           sticker: uploadedSticker.file_id,
           emoji_list: [sticker.emoji]
         }
-      }))
+      }))).filter((sticker) => !sticker.error).sort((a, b) => {
+        const aIndex = stickers.findIndex((sticker) => sticker.file_id === a.sticker)
+        const bIndex = stickers.findIndex((sticker) => sticker.file_id === b.sticker)
+
+        return aIndex - bIndex
+      })
 
       createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
         name,
         title,
-        stickers: uploadedStickers.filter((sticker) => !sticker.error),
+        stickers: uploadedStickers,
         sticker_format: stickerFormat,
         sticker_type: packType,
         needs_repainting: !!ctx.session.scene.newPack.fillColor
@@ -401,7 +406,7 @@ newPackConfirm.enter(async (ctx, next) => {
   }
 
   if (createNewStickerSet) {
-    if (!inline) {
+    if (!inline && !ctx.session.scene.copyPack) {
       setTimeout(async () => {
         const getStickerSet = await ctx.telegram.getStickerSet(name)
         const stickerInfo = getStickerSet.stickers[0]
@@ -500,7 +505,7 @@ newPackConfirm.enter(async (ctx, next) => {
         total: originalPack.stickers.length
       }))
 
-      for (let index = 49; index < originalPack.stickers.length; index++) {
+      for (let index = 50; index < originalPack.stickers.length; index++) {
         await addSticker(ctx, originalPack.stickers[index], userStickerSet)
 
         if (index % 10 === 0) {
