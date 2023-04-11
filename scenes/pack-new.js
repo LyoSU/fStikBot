@@ -281,8 +281,6 @@ newPackConfirm.enter(async (ctx, next) => {
         }
       })
 
-      const stickerFormat = ctx.session.scene.copyPack.is_animated ? 'animated' : ctx.session.scene.copyPack.is_video ? 'video' : 'static'
-
       const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
 
       const uploadedStickers = await Promise.all(stickers.map(async (sticker) => {

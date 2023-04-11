@@ -3,7 +3,7 @@ const Markup = require('telegraf/markup')
 module.exports = async (ctx) => {
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  const getStickerSet = await ctx.getStickerSet(ctx.match[1]).catch(() => {})
+  const getStickerSet = await ctx.getStickerSet(ctx.match[2]).catch(() => {})
 
   if (getStickerSet && getStickerSet.stickers.length > 0) {
     ctx.session.scene.copyPack = getStickerSet
