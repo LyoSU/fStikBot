@@ -1,9 +1,16 @@
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
+const rateLimit = require('telegraf-ratelimit')
 
 const composer = new Composer()
 
-composer.action(/boost:(yes|no):(.*)/, async (ctx) => {
+composer.action(/boost:(yes|no):(.*)/, rateLimit({
+  window: 3000,
+  limit: 1,
+  onLimitExceeded: async (ctx) => {
+    await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.too_fast'), true)
+  }
+}), async (ctx) => {
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
   if (!stickerSet) return ctx.answerCbQuery(ctx.i18n.t('scenes.error.notFound'))
@@ -25,7 +32,7 @@ composer.action(/boost:(yes|no):(.*)/, async (ctx) => {
   }
 
   if (ctx.match[1] === 'no') {
-    await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.cancel'), true)
+    await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.canceled'), true)
   }
 
   await ctx.deleteMessage().catch(() => {})
