@@ -96,8 +96,8 @@ module.exports = async (ctx) => {
         const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => {})
 
         if (stickerSetInfo) {
-          // if user not premium and title not have bot username
-          if (!userInfo.premium && !stickerSetInfo.title.includes(ctx.options.username)) {
+          // if user not premium and not boosed pack and title not have bot username
+          if (!userInfo.premium && !stickerSet.boost && !stickerSetInfo.title.includes(ctx.options.username)) {
             const titleSuffix = ` :: @${ctx.options.username}`
             const charTitleMax = ctx.config.charTitleMax
 
@@ -192,13 +192,21 @@ module.exports = async (ctx) => {
 
           const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
+          const boostText = ctx.i18n.t('callback.pack.boost.info', {
+            botUsername: ctx.options.username,
+            boostStatus: stickerSet.boost ? ctx.i18n.t('callback.pack.boost.status.on') : ctx.i18n.t('callback.pack.boost.status.off'),
+          })
+
           await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack.${type}`, {
             title: escapeHTML(stickerSet.title),
             link: `${linkPrefix}${stickerSet.name}`
-          }), {
+          }) + boostText, {
             reply_markup: Markup.inlineKeyboard([
               [
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${linkPrefix}${stickerSet.name}`)
+              ],
+              [
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.boost'), `boost:${stickerSet.id}`, stickerSet.boost)
               ],
               [
                 Markup.callbackButton(ctx.i18n.t('callback.pack.btn.rename'), `rename_pack:${stickerSet.id}`)

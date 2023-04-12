@@ -361,7 +361,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
-      if (userQueue.video && !ctx.session.userInfo.premium) {
+      if (userQueue.video && !ctx.session.userInfo.premium && !stickerSet?.boost) {
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
           reply_to_message_id: ctx?.message?.message_id,
           allow_sending_without_reply: true
@@ -382,8 +382,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         }
       } else {
         let priority = 10
-        if (ctx.session.userInfo.premium) priority = 5
-        if (ctx.i18n.locale() === 'ru') priority = 15
+        if (ctx.session.userInfo.premium || stickerSet?.boost) priority = 5
+        else if (ctx.i18n.locale() === 'ru') priority = 15
 
         let frameType = (isVideoNote) ? "circle" : "rounded"
         forceCrop = (inputFile.forceCrop || stickerSet.packType === 'custom_emoji') ? true : false
@@ -392,13 +392,13 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           frameType = stickerSet.frameType || "square"
         }
 
-        const maxDuration = ctx.session.userInfo.premium ? 35 : 6
+        const maxDuration = (ctx.session.userInfo.premium || stickerSet?.boost) ? 35 : 6
 
         const total = await convertQueue.getJobCounts()
 
         let convertingMessage
 
-        if (!ctx.session.userInfo.premium && total.waiting > 3) {
+        if (!ctx.session.userInfo.premium && !stickerSet?.boost && total.waiting > 3) {
           convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
             progress: total.waiting + 1,
             total: total.waiting + 1

@@ -1,6 +1,15 @@
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
-const { match } = require('telegraf-i18n')
+const I18n = require('telegraf-i18n')
+
+const i18n = new I18n({
+  directory: `${__dirname}/../../locales`,
+  defaultLanguage: 'en',
+  sessionName: 'session',
+  useSession: true,
+  allowMissing: false,
+  skipPluralize: true
+})
 
 const composer = new Composer()
 
@@ -38,6 +47,7 @@ const main = async (ctx, next) => {
 
 const setPremium = async (ctx, next) => {
   const userId = ctx.match[1]
+  const credit = parseInt(ctx.match[2])
 
   let findUser
 
@@ -53,11 +63,20 @@ const setPremium = async (ctx, next) => {
 
   if (!findUser) return ctx.replyWithHTML('User not found')
 
-  findUser.premium = !findUser.premium
+  findUser.balance += credit
 
   await findUser.save()
 
-  return ctx.replyWithHTML(`User ${findUser.username} premium status: ${findUser.premium ? 'enabled' : 'disabled'}`)
+  await ctx.replyWithHTML(`User ${findUser.telegram_id} (${findUser.username}) balance updated to ${findUser.balance} credit (added ${credit} credit)`)
+
+  if (credit !== 0) {
+    await ctx.telegram.sendMessage(findUser.telegram_id, i18n.t(findUser.locale, 'donate.update', {
+      amount: credit,
+      balance: findUser.balance
+    }), {
+      parse_mode: 'HTML'
+    })
+  }
 }
 
 adminType.forEach((type) => {
@@ -67,8 +86,8 @@ adminType.forEach((type) => {
 })
 
 composer.command('admin', checkAdminRight, main)
-composer.hears(/\/premium (.*)/, checkAdminRight, setPremium)
-composer.hears([match('start.menu.admin')], checkAdminRight, main)
+composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
+composer.hears([I18n.match('start.menu.admin')], checkAdminRight, main)
 composer.action(/admin:(.*)/, checkAdminRight, main)
 
 module.exports = composer

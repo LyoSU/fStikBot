@@ -33,8 +33,10 @@ packRename.enter(async (ctx) => {
 })
 
 packRename.on('text', async (ctx) => {
-  const titleSuffix = ctx.session.userInfo.premium ? '' : ` :: @${ctx.options.username}`
-  const charTitleMax = ctx.session.userInfo.premium ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
+  const { stickerSet } = ctx.session.userInfo
+
+  const titleSuffix = (stickerSet.boost || ctx.session.userInfo.premium) ? '' : ` :: @${ctx.options.username}`
+  const charTitleMax = (stickerSet.boost || ctx.session.userInfo.premium) ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
 
   let newTitle = ctx.message.text
 
@@ -43,8 +45,6 @@ packRename.on('text', async (ctx) => {
   }
 
   newTitle += titleSuffix
-
-  const { stickerSet } = ctx.session.userInfo
 
   const result = await ctx.telegram.callApi('setStickerSetTitle', {
     name: stickerSet.name,

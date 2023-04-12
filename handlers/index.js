@@ -2,7 +2,7 @@ module.exports = {
   handleError: require('./catch'),
   handleStart: require('./start'),
   handleHelp: require('./help'),
-  handleClub: require('./club'),
+  handleDonate: require('./donate'),
   handleSticker: require('./sticker'),
   handleDeleteSticker: require('./sticker-delete'),
   handleRestoreSticker: require('./sticker-restore'),
@@ -16,5 +16,6 @@ module.exports = {
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
   handleStickerUpade: require('./sticker-update'),
-  handleInlineQuery: require('./inline-query')
+  handleInlineQuery: require('./inline-query'),
+  handleBoostPack: require('./pack-boost')
 }
