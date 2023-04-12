@@ -14,12 +14,22 @@ donateScene.enter(async (ctx) => {
   await ctx.answerCbQuery()
 
   await ctx.editMessageText(ctx.i18n.t('donate.topup'), {
-    parse_mode: 'HTML'
+    parse_mode: 'HTML',
+    reply_markup: Markup.inlineKeyboard([
+      [
+        Markup.callbackButton('10 Credits', 'donate:10'),
+        Markup.callbackButton('20 Credits', 'donate:20')
+      ],
+      [
+        Markup.callbackButton('50 Credits', 'donate:50'),
+        Markup.callbackButton('100 Credits', 'donate:100')
+      ]
+    ])
   })
 })
 
-donateScene.on('text', async (ctx) => {
-  const amount = parseInt(ctx.message.text)
+const donate = async (ctx) => {
+  const amount = parseInt(ctx?.message?.text) || parseInt(ctx.match[1])
 
   if (isNaN(amount)) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
@@ -30,8 +40,8 @@ donateScene.on('text', async (ctx) => {
   }
 
   const price = amount / 5
-  const priceUAH = price * exchangeRate.UAH
-  const priceRUB = price * exchangeRate.RUB
+  const priceUAH = (price * exchangeRate.UAH).toFixed(2)
+  const priceRUB = (price * exchangeRate.RUB).toFixed(2)
 
   const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} credit`
 
@@ -64,6 +74,9 @@ donateScene.on('text', async (ctx) => {
       [Markup.urlButton(`Freekassa - ${priceRUB}₽`, ruLink, !ruLink)]
     ])
   })
-})
+}
+
+donateScene.on('text', donate)
+donateScene.action(/donate:(\d+)/, donate)
 
 module.exports = donateScene
