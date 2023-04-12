@@ -10,7 +10,8 @@ module.exports = async (ctx) => {
     ctx.session.scene.newPack = {
       packType: getStickerSet.sticker_type,
       video: getStickerSet.is_video,
-      animated: getStickerSet.is_animated
+      animated: getStickerSet.is_animated,
+      fillColor: getStickerSet.stickers[0].needs_repainting
     }
 
     await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.enter'), {
