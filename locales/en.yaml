@@ -329,6 +329,11 @@ scenes:
       telegram:
         name_invalid: That address cannot be used.
         name_occupied: This address is already taken.
+        upload_failed: |
+          <b>Error!</b>
+          Bot cannot upload stickers to Telegram.
+
+          Please, try again later.
   copy:
     enter: |
       I can copy it, but before that, let's create a new pack

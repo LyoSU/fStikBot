@@ -316,12 +316,23 @@ newPackConfirm.enter(async (ctx, next) => {
           sticker: uploadedSticker.file_id,
           emoji_list: [sticker.emoji]
         }
-      }))).filter((sticker) => !sticker.error).sort((a, b) => {
+      }))).sort((a, b) => {
         const aIndex = stickers.findIndex((sticker) => sticker.file_id === a.sticker)
         const bIndex = stickers.findIndex((sticker) => sticker.file_id === b.sticker)
 
         return aIndex - bIndex
       })
+
+      if (uploadedStickers.some((sticker) => sticker.error)) {
+        await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
+
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), {
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
+        })
+
+        return ctx.scene.leave()
+      }
 
       createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
@@ -345,7 +356,9 @@ newPackConfirm.enter(async (ctx, next) => {
           })
           return ctx.scene.enter('newPackName')
         } else {
-          return ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.unknown'), {
+          return ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
+            error: createNewStickerSet.error.description
+          }), {
             reply_to_message_id: ctx.message.message_id,
             allow_sending_without_reply: true
           })
