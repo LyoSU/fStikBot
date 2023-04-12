@@ -98,16 +98,6 @@ cmd:
       <b>You have no packs yet.</b>
       To create, write a command /new
     inline_title: Inline pack
-  club: |
-    ☕️ Supporting a bot development
-
-    You can send money to me for coffee and get small bonuses in the bot in return.
-
-    ➖ Disabling <b>"${titleSuffix}"</b> in packs name <i>(not in link)</i>
-    ➖ Copying of other packs by link
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
@@ -120,6 +110,42 @@ cmd:
       Videolar artık yuvarlak bir şekle sahip olacak
     disabled: |
       Videolar artık yuvarlak bir şekle sahip olmayacak
+donate:
+  menu: |
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive credits.
+    For every 1 dollar, you will receive 5 credits.
+
+    <b>Balance:</b> <code>${balance}</code> credits
+    With 1 credit, you have the opportunity to boost one sticker pack.
+
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+  btn:
+    donate: '☕️ Donate'
+  topup: |
+    <b>Enter the amount of credits you want to buy:</b>
+
+    <b>5 credit = 1$</b>
+    <i>Minimum amount - 5 credits</i>
+  invalid_amount: |
+    <b>Invalid amount</b>
+
+    The minimum amount is 5 credits
+  paymenu: |
+    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+
+    ⚠️ Credits are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 12 hours.
+
+    <u>Select payment method:</u>
+  update: |
+    <b>🔄 Balance update</b>
+
+    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
 coedit:
   info: |
     <b>👥 Co-editing</b>
@@ -172,6 +198,12 @@ callback:
 
       Kullanmak için herhangi bir sohbette <code>@${botUsername} </code>ve boşluk
       yazınız. Aşağıdaki butona basarak da kullanabilirsiniz
+    boost:
+      info: |
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+      status:
+        on: Enabled
+        off: Disabled
     hidden: Pack <a href="${link}">${title}</a> hidden from your list.
     restored: Pack <a href="${link}">${title}</a> restored to your list.
     btn:
@@ -179,6 +211,7 @@ callback:
       delete: '🗑 Delete pack'
       restore: '✅ Sıfırla'
       use_pack: '📦 Use pack'
+      boost: '⚡ Boost'
       rename: '✏️ Yeniden adlandır'
       search_gif: '🔎 Arama GIF''i'
       coedit: '👥 Ortak düzenleme'
@@ -328,6 +361,11 @@ scenes:
       telegram:
         name_invalid: Bu adres kullanılamaz.
         name_occupied: Bu adres zaten alınmış.
+        upload_failed: |
+          <b>Error!</b>
+          Bot cannot upload stickers to Telegram.
+
+          Please, try again later.
   copy:
     enter: |
       I can copy it, but before that, let's create a new pack
@@ -382,6 +420,31 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>We have no information about other stickers of this owner</i>
+  boost:
+    sure: |
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
+
+      <b>Price:</b> 1 credit
+      <b>Current balance:</b> ${balance} credits
+    btn:
+      yes: Yes, boost!
+      no: No, cancel
+    canceled: |
+      Boosting canceled
+    success: |
+      Boosting successfully completed!
+
+      ${title} is now boosted
+    error:
+      not_enough_credits: |
+        You do not have enough credits to boost this pack.
+
+        You can top up your balance by sending the /donate command.
+      already_boosted: |
+        This pack is already boosted.
   catalog:
     publish:
       publish_new: |
