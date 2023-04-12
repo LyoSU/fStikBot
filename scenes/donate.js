@@ -48,6 +48,7 @@ donateScene.on('text', async (ctx) => {
     freekassaPayment.amount = priceRUB
     freekassaPayment.currency = 'RUB'
     freekassaPayment.description = comment
+    freekassaPayment.email = process.env.FREEKASSA_EMAIL
 
     freekassaPayment.sign()
 
