@@ -142,10 +142,6 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     }, [])
   }
 
-  // const onwerIdText = ctx.session.userInfo.premium ?
-  //   `<code>${ownerId}</code>\n[<a href="tg://user?id=${ownerId}">mention</a> <a href="tg://openmessage?user_id=${ownerId}">android</a> <a href="https://t.me/@id${ownerId}">ios</a>]\n` :
-  //   `<code>[hidden]</code>`
-
   const ownerChat = await ctx.telegram.getChat(ownerId).catch(() => null)
 
   let mention

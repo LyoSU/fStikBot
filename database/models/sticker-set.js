@@ -50,6 +50,10 @@ const stickerSetsSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  boost: {
+    type: Boolean,
+    default: false
+  },
   thirdParty: {
     type: Boolean,
     default: false,

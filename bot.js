@@ -12,7 +12,7 @@ const {
   handleError,
   handleStart,
   handleHelp,
-  handleClub,
+  handleDonate,
   handleSticker,
   handleDeleteSticker,
   handleRestoreSticker,
@@ -20,6 +20,7 @@ const {
   handleSelectPack,
   handleHidePack,
   handleRestorePack,
+  handleBoostPack,
   handleCatalog,
   handleCopyPack,
   handleCoedit,
@@ -185,7 +186,6 @@ bot.start((ctx, next) => {
 
 bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
 bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
-bot.hears(['/donate', '/club', '/start club', match('cmd.start.btn.club')], handleClub)
 bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
 bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.command('frame', (ctx) => ctx.scene.enter('packFrame'))
@@ -203,6 +203,9 @@ bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
 bot.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
+
+bot.use(handleDonate)
+bot.use(handleBoostPack)
 
 bot.use(handleCoedit)
 bot.use(handleInlineQuery)
@@ -231,9 +234,6 @@ bot.on('text', (ctx, next) => {
 })
 
 bot.on('text', handleStickerUpade)
-
-// club
-bot.action(/(club):(.*)/, handleClub)
 
 // any message
 bot.on('message', handleStart)
