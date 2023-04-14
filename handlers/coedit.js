@@ -3,7 +3,7 @@ const Composer = require('telegraf/composer')
 const crypto = require('crypto')
 
 const generatePasscode = () => {
-  return crypto.randomBytes(4).toString('hex')
+  return crypto.randomBytes(6).toString('hex')
 }
 
 const escapeHTML = (str) => str.replace(
