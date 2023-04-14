@@ -29,7 +29,7 @@ donateScene.enter(async (ctx) => {
 })
 
 const donate = async (ctx) => {
-  const amount = parseInt(ctx?.message?.text) || parseInt(ctx.match[1])
+  const amount = parseInt(ctx?.message?.text) || ( ctx?.match && parseInt(ctx?.match[1]))
 
   if (isNaN(amount)) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
