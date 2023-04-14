@@ -65,7 +65,7 @@ const donate = async (ctx) => {
     ruLink = await freekassaPayment.create()
   }
 
-  const message = ctx.i18n.t('donate.payment', {
+  const message = ctx.i18n.t('donate.paymenu', {
     amount,
     price
   })
