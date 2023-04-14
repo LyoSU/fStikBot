@@ -48,7 +48,7 @@ const donate = async (ctx) => {
   let ruLink
 
   // if locale is ru
-  if (ctx.session.userInfo.locale === 'ru') {
+  if (ctx.session.userInfo.locale === 'ru' || ctx.from.language_code === 'ru') {
     const freekassaPayment = freekassa.init()
 
     freekassaPayment.secret1 = process.env.FREEKASSA_SECRET1
