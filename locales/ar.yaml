@@ -139,7 +139,7 @@ donate:
     You want to buy <b>${amount} credits</b> for <b>${price}$</b>
 
     ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 12 hours.
+    The waiting time ranges from 5 minutes to 1 hour
 
     <u>Select payment method:</u>
   update: |
