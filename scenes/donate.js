@@ -71,7 +71,7 @@ const donate = async (ctx) => {
   })
 
   const repltMarkup =  Markup.inlineKeyboard([
-    [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink)],
+    [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
     [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
   ])
 
