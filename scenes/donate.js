@@ -65,15 +65,27 @@ const donate = async (ctx) => {
     ruLink = await freekassaPayment.create()
   }
 
-  await ctx.replyWithHTML(ctx.i18n.t('donate.paymenu', {
+  const message = ctx.i18n.t('donate.payment', {
     amount,
     price
-  }), {
-    reply_markup: Markup.inlineKeyboard([
-      [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
-      [Markup.urlButton(`Freekassa (карта, электронные деньги) — ${priceRUB}₽`, ruLink)],
-    ])
   })
+
+  const repltMarkup =  Markup.inlineKeyboard([
+    [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
+    [Markup.urlButton(`Оплата — ${priceRUB}₽ (карта, электронные деньги)`, ruLink)],
+  ])
+
+  if (ctx.updateType === 'callback_query') {
+    await ctx.answerCbQuery()
+    await ctx.editMessageText(message, {
+      parse_mode: 'HTML',
+      reply_markup: repltMarkup
+    })
+  } else {
+    await ctx.replyWithHTML(message, {
+      reply_markup: repltMarkup
+    })
+  }
 
   return ctx.scene.leave()
 }
