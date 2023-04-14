@@ -65,7 +65,7 @@ const donate = async (ctx) => {
     ruLink = await freekassaPayment.create()
   }
 
-  return ctx.replyWithHTML(ctx.i18n.t('donate.paymenu', {
+  await ctx.replyWithHTML(ctx.i18n.t('donate.paymenu', {
     amount,
     price
   }), {
@@ -74,6 +74,8 @@ const donate = async (ctx) => {
       [Markup.urlButton(`Freekassa - ${priceRUB}₽`, ruLink, !ruLink)]
     ])
   })
+
+  return ctx.scene.leave()
 }
 
 donateScene.on('text', donate)
