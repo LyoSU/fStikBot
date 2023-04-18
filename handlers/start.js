@@ -46,6 +46,8 @@ module.exports = async (ctx) => {
       })
     })
 
+    await ctx.unpinAllChatMessages()
+
     await ctx.pinChatMessage(pinMessage.message_id, {
       disable_notification: true
     })
