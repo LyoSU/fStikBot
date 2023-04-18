@@ -33,6 +33,9 @@ const userSchema = mongoose.Schema({
   inlineType: {
     type: String
   },
+  newsSubscribedDate: {
+    type: Date
+  },
   premium: {
     type: Boolean,
     default: false

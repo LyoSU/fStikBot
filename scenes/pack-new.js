@@ -482,6 +482,7 @@ newPackConfirm.enter(async (ctx, next) => {
         title: escapeHTML(userStickerSet.title),
         link: `${linkPrefix}${name}`
       }), {
+        disable_web_page_preview: true,
         reply_markup: Markup.inlineKeyboard([
           [
             Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${linkPrefix}${userStickerSet.name}`)

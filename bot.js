@@ -165,6 +165,7 @@ bot.command('json', ({ replyWithHTML, message }) =>
 bot.use(scenes)
 
 bot.use(require('./handlers/admin'))
+bot.use(require('./handlers/news-channel'))
 
 // main commands
 bot.start((ctx, next) => {

@@ -60,6 +60,7 @@ module.exports = async (ctx) => {
         title: escapeHTML(stickerSet.title),
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
       }), {
+        disable_web_page_preview: true,
         reply_markup: Markup.inlineKeyboard([
           [
             Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
