@@ -1,11 +1,11 @@
 const { Api, TelegramClient } = require('telegram')
-const { StoreSession } = require('telegram/sessions')
+const { StringSession, StoreSession } = require('telegram/sessions')
 
 let telegramClinet = {}
 
 ;(async () => {
   telegramClinet = new TelegramClient(
-    process.env.NODE_ENV === 'production' ? new StoreSession() : new StoreSession('./session'),
+    process.env.NODE_ENV === 'production' ? new StringSession('') : new StoreSession('./session'),
     parseInt(process.env.TELEGRAM_API_ID),
     process.env.TELEGRAM_API_HASH,
     { connectionRetries: 5 }
