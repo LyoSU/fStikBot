@@ -5,7 +5,7 @@ let telegramClinet = {}
 
 ;(async () => {
   telegramClinet = new TelegramClient(
-    new StoreSession('./session'),
+    process.env.NODE_ENV === 'production' ? new StoreSession() : new StoreSession('./session'),
     parseInt(process.env.TELEGRAM_API_ID),
     process.env.TELEGRAM_API_HASH,
     { connectionRetries: 5 }
