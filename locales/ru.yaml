@@ -326,6 +326,14 @@ sticker:
         <b>Ошибка!</b>.
 
         Файл слишком большой для обработки. Пожалуйста, уменьшите качество и продолжительность перед отправкой.
+news:
+  join: |
+    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+
+    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
+  join_btn: '📢 Join channel'
+  not_joined: '🙅 You are not subscribed to the channel'
+  continue: '✅ Continue'
 scenes:
   new_pack:
     static: '🌟 Статический'
