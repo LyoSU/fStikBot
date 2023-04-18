@@ -323,6 +323,14 @@ sticker:
         <b>错误！</b>.
 
         文件太大，无法处理。请在发送前降低质量和持续时间。
+news:
+  join: |
+    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+
+    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
+  join_btn: '📢 Join channel'
+  not_joined: '🙅 You are not subscribed to the channel'
+  continue: '✅ Continue'
 scenes:
   new_pack:
     static: '🌟 Static'
