@@ -87,7 +87,8 @@ const donate = async (ctx) => {
       const priceCurrency = exchangeRate.find((rate) => rate.source === currency && rate.target === 'USD').rate
 
       const invoice = await cryptoPay.createInvoice(currency, price / priceCurrency, {
-        description: comment
+        description: comment,
+        expires_in: 3600
       })
 
       switch (currency) {
