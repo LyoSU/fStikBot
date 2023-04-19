@@ -67,7 +67,7 @@ composer.action('start', async (ctx, next) => {
     return ctx.answerCbQuery(ctx.i18n.t('news.not_joined'), true)
   } else {
     ctx.session.userInfo.newsSubscribedDate = new Date()
-    await ctx.deleteMessage()
+    await ctx.deleteMessage().catch(() => {})
     return handleStart(ctx)
   }
 })
