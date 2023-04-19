@@ -1,6 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const freekassa = require('@alex-kondakov/freekassa')
+const CryptoPay = require('@foile/crypto-pay-api')
+
+const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
 
 const exchangeRate = {
   RUB: 90,
@@ -70,9 +73,55 @@ const donate = async (ctx) => {
     price
   })
 
+  const cryptoPayMe = await cryptoPay.getMe().catch(() => {})
+
+  let tonLink, usdtLink, btcLink, ethLink
+  let tonPrice, usdtPrice, btcPrice, ethPrice
+
+  if (cryptoPayMe) {
+    const exchangeRate = await cryptoPay.getExchangeRates()
+
+    const availableCurrencies = ['TON', 'USDT', 'BTC', 'ETH']
+
+    for (const currency of availableCurrencies) {
+      const priceCurrency = exchangeRate.find((rate) => rate.source === currency && rate.target === 'USD').rate
+
+      const invoice = await cryptoPay.createInvoice(currency, price / priceCurrency, {
+        description: comment
+      })
+
+      switch (currency) {
+        case 'TON':
+          tonLink = invoice.pay_url
+          tonPrice = (price / priceCurrency).toFixed(5)
+          break
+        case 'USDT':
+          usdtLink = invoice.pay_url
+          usdtPrice = (price / priceCurrency).toFixed(2)
+          break
+        case 'BTC':
+          btcLink = invoice.pay_url
+          btcPrice = (price / priceCurrency).toFixed(8)
+          break
+        case 'ETH':
+          ethLink = invoice.pay_url
+          ethPrice = (price / priceCurrency).toFixed(8)
+          break
+      }
+    }
+  }
+
   const repltMarkup =  Markup.inlineKeyboard([
     [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
     [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
+    [
+      Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
+      Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
+    ],
+    [
+      Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
+      Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
+    ]
   ])
 
   if (ctx.updateType === 'callback_query') {
