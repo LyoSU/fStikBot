@@ -171,7 +171,7 @@ bot.use((ctx, next) => {
   ) {
     ctx.session.userInfo.locale = 'uk'
     ctx.session.userInfo.save()
-    сtx.i18n.locale('uk')
+    ctx.i18n.locale('uk')
   }
   return next()
 })
