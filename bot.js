@@ -163,15 +163,15 @@ bot.command('json', ({ replyWithHTML, message }) =>
 // scene
 bot.use(scenes)
 
-
-// лагідна українізація
 bot.use((ctx, next) => {
+  // лагідна українізація
   if (
     ctx.session.userInfo.locale === 'ru' &&
     ctx.from.language_code === 'uk'
   ) {
     ctx.session.userInfo.locale = 'uk'
     ctx.session.userInfo.save()
+    сtx.i18n.locale('uk')
   }
   return next()
 })
