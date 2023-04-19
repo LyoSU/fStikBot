@@ -67,7 +67,6 @@ bot.use((ctx, next) => {
     })
 })
 
-
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
 // I18n
@@ -163,6 +162,19 @@ bot.command('json', ({ replyWithHTML, message }) =>
 
 // scene
 bot.use(scenes)
+
+
+// лагідна українізація
+bot.use((ctx, next) => {
+  if (
+    ctx.session.userInfo.locale === 'ru' &&
+    ctx.from.language_code === 'uk'
+  ) {
+    ctx.session.userInfo.locale = 'uk'
+    ctx.session.userInfo.save()
+  }
+  return next()
+})
 
 bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
