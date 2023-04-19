@@ -21,4 +21,10 @@ composer.action('donate:topup', async (ctx) => {
   return ctx.scene.enter('donate')
 })
 
+composer.action(/donate:(\d+)/, async (ctx) => {
+  return ctx.scene.enter('donate', {
+    amount: ctx.match[1]
+  })
+})
+
 module.exports = composer

@@ -11,26 +11,6 @@ const exchangeRate = {
   UAH: 35
 }
 
-const donateScene = new Scene('donate')
-
-donateScene.enter(async (ctx) => {
-  await ctx.answerCbQuery()
-
-  await ctx.editMessageText(ctx.i18n.t('donate.topup'), {
-    parse_mode: 'HTML',
-    reply_markup: Markup.inlineKeyboard([
-      [
-        Markup.callbackButton('10 Credits', 'donate:10'),
-        Markup.callbackButton('20 Credits', 'donate:20')
-      ],
-      [
-        Markup.callbackButton('50 Credits', 'donate:50'),
-        Markup.callbackButton('100 Credits', 'donate:100')
-      ]
-    ])
-  })
-})
-
 const donate = async (ctx) => {
   const amount = parseInt(ctx?.message?.text) || ( ctx?.match && parseInt(ctx?.match[1]))
 
@@ -125,22 +105,35 @@ const donate = async (ctx) => {
     ]
   ])
 
-  if (ctx.updateType === 'callback_query') {
-    await ctx.answerCbQuery()
-    await ctx.editMessageText(message, {
-      parse_mode: 'HTML',
-      reply_markup: repltMarkup
-    })
-  } else {
-    await ctx.replyWithHTML(message, {
-      reply_markup: repltMarkup
-    })
-  }
+  await ctx.replyWithHTML(message, {
+    reply_markup: repltMarkup
+  })
 
   return ctx.scene.leave()
 }
 
+const donateScene = new Scene('donate')
+
+donateScene.enter(async (ctx) => {
+  if (ctx.scene.state.amount) {
+    return donate(ctx)
+  }
+
+  await ctx.editMessageText(ctx.i18n.t('donate.topup'), {
+    parse_mode: 'HTML',
+    reply_markup: Markup.inlineKeyboard([
+      [
+        Markup.callbackButton('10 Credits', 'donate:10'),
+        Markup.callbackButton('20 Credits', 'donate:20')
+      ],
+      [
+        Markup.callbackButton('50 Credits', 'donate:50'),
+        Markup.callbackButton('100 Credits', 'donate:100')
+      ]
+    ])
+  })
+})
+
 donateScene.on('text', donate)
-donateScene.action(/donate:(\d+)/, donate)
 
 module.exports = donateScene
