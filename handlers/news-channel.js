@@ -9,12 +9,12 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
   if (ctx.session.userInfo.locale === 'ru' || ctx.from.language_code === 'ru') {
     if (!ctx.config.ruNewsChannel.id) return next()
 
-    // if createdAt < 1 day
-    if (ctx.session.userInfo.createdAt > new Date().getTime() - 1000 * 60 * 60 * 24) { // 1 day
+    // if createdAt < 14 days
+    if (ctx.session.userInfo.createdAt > new Date().getTime() - 1000 * 60 * 60 * 24 * 14) {
       return next()
     }
 
-    if (ctx.session.userInfo.newsSubscribedDate > new Date().getTime() - 1000 * 60 * 60 * 24) {
+    if (ctx.session.userInfo.newsSubscribedDate > new Date().getTime() - 1000 * 60 * 60 * 24 * 7) {
       return next()
     }
 
