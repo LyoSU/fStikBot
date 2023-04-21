@@ -278,6 +278,24 @@ db.connection.once('open', async () => {
   for (const locale of locales) {
     const localeName = locale.split('.')[0];
 
+    const myName = await bot.telegram.callApi('getMyName', {
+      language_code: localeName,
+    });
+
+    const name = i18n.t(localeName, 'name');
+
+    if (myName.name !== name) {
+      try {
+        const response = await bot.telegram.callApi('setMyName', {
+          name,
+          language_code: localeName,
+        });
+        console.log('setMyName', localeName, response);
+      } catch (error) {
+        console.error('setMyName', localeName, error.description);
+      }
+    }
+
     const myDescription = await bot.telegram.callApi('getMyDescription', {
       language_code: localeName,
     });
