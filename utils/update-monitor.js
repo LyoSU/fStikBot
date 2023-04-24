@@ -14,7 +14,7 @@ const updateMonitor = async () => {
 
   const { pending_update_count } = webhookInfo
 
-  if (pending_update_count > 100 && pending_update_count % 10 === 0) {
+  if (pending_update_count > 100) {
     console.error(`The number of pending updates is ${pending_update_count}. The bot is hanging.`)
 
     // send a message to the developer
