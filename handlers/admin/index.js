@@ -1,6 +1,10 @@
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
+const Freekassa = require('@alex-kondakov/freekassa')
+const CryptoPay = require('@foile/crypto-pay-api')
+
+const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
 
 const i18n = new I18n({
   directory: `${__dirname}/../../locales`,
@@ -79,6 +83,39 @@ const setPremium = async (ctx, next) => {
   }
 }
 
+const getLastCryptoTransactions = async (ctx, next) => {
+  const result = await cryptoPay.getInvoices({
+    status: 'paid',
+    count: 10
+  })
+
+  const resultText = result.items.map((item) => {
+    return `~~~~~~~~~~~~~~~~~~~~~~\n<b>${item.description}</b>\n${item.amount} ${item.asset} (${new Date(item.paid_at).toLocaleString()})`
+  })
+
+  await ctx.replyWithHTML(`<b>Last crypto transactions</b>\n\n${resultText.join('\n')}\n~~~~~~~~~~~~~~~~~~~~~~`, {
+    disable_web_page_preview: true
+  })
+}
+
+const getFreeKassaTransactions = async (ctx, next) => {
+  const freekassa = Freekassa.init()
+  freekassa.shopId = process.env.FREEKASSA_SHOP_ID
+  freekassa.key = process.env.FREEKASSA_API_KEY
+  freekassa.orderCount = 10
+  freekassa.orderStatus = 1
+
+  const result = await freekassa.orders()
+
+  const resultText = result.orders.map((item) => {
+    return `~~~~~~~~~~~~~~~~~~~~~~\n<b>${item.merchant_order_id}</b>\n${item.amount} ${item.currency} (${new Date(item.date).toLocaleString()})`
+  })
+
+  await ctx.replyWithHTML(`<b>Last FreeKassa transactions</b>\n\n${resultText.join('\n')}\n~~~~~~~~~~~~~~~~~~~~~~`, {
+    disable_web_page_preview: true
+  })
+}
+
 adminType.forEach((type) => {
   composer.use(Composer.optional((ctx) => {
     return ctx.config.mainAdminId === ctx?.from?.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.includes(type))
@@ -86,7 +123,11 @@ adminType.forEach((type) => {
 })
 
 composer.command('admin', checkAdminRight, main)
+
 composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
+composer.hears(/\/crypto/, checkAdminRight, getLastCryptoTransactions)
+composer.hears(/\/fk/, checkAdminRight, getFreeKassaTransactions)
+
 composer.hears([I18n.match('start.menu.admin')], checkAdminRight, main)
 composer.action(/admin:(.*)/, checkAdminRight, main)
 
