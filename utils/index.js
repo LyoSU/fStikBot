@@ -10,6 +10,7 @@ const telegramEmojiText = require('./telegram-emoji-text')
 const countUncodeChars = require('./unicode-chars-count')
 const substrUnicode = require('./unicode-substr')
 const telegramApi = require('./telegram-api')
+const updateMonitor = require('./update-monitor')
 
 module.exports = {
   escapeHTML,
@@ -23,5 +24,6 @@ module.exports = {
   telegramEmojiText,
   countUncodeChars,
   substrUnicode,
-  telegramApi
+  telegramApi,
+  updateMonitor
 }

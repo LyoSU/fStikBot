@@ -32,7 +32,8 @@ const {
 const scenes = require('./scenes')
 const {
   updateUser,
-  stats
+  stats,
+  updateMonitor
 } = require('./utils')
 
 global.startDate = new Date()
@@ -381,7 +382,10 @@ db.connection.once('open', async () => {
     }
   }
 
-
   require('./utils/messaging')
   // require('./utils/optimize-db')
+
+  setInterval(() => {
+    updateMonitor()
+  }, 1000)
 })
