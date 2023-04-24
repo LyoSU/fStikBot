@@ -387,5 +387,5 @@ db.connection.once('open', async () => {
 
   setInterval(() => {
     updateMonitor()
-  }, 1000)
+  }, 1000 * 60) // every minute
 })
