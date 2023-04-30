@@ -179,11 +179,17 @@ module.exports = async (ctx) => {
 
           if (stickerSet.public) {
             catalogButton = [
-              Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:remove:${stickerSet.id}`),
-              Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`)
+              [
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:unpublish:${stickerSet.id}`),
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`)
+              ],
+              [
+                Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_share'), `https://t.me/share/url?url=https://t.me/${ctx.options.username}/catalog?startapp=set=${stickerSet.name}`),
+                Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_open'), `https://t.me/${ctx.options.username}/catalog?startapp=set=${stickerSet.name}`)
+              ]
             ]
           } else if (!stickerSet.animated && !stickerSet.inline && stickerSet.packType !== 'custom_emoji' && stickersCount >= 10) {
-            catalogButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]
+            catalogButton = [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]]
           }
 
           let type = 'static'
@@ -214,7 +220,7 @@ module.exports = async (ctx) => {
               ],
               searchGifButton,
               coeditButton,
-              catalogButton,
+              ...catalogButton,
               [
                 Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
               ]

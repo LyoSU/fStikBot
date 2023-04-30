@@ -453,6 +453,27 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
   })
 })
 
+const catalogUnpublish = new Scene('catalogUnpublish')
+
+catalogUnpublish.action(/^catalog:unpublish:(.*)$/, async (ctx) => {
+  const stickerSetId = ctx.match[1]
+
+  const stickerSet = await ctx.db.StickerSet.findOne({
+    _id: stickerSetId,
+    owner: ctx.session.userInfo._id
+  })
+
+  if (!stickerSet) {
+    return ctx.answerCbQuery(`Sticker set ${stickerSetId} not found`)
+  }
+
+  stickerSet.public = false
+
+  await stickerSet.save()
+
+  await ctx.answerCbQuery(ctx.i18n.t('scenes.catalog.unpublish.success'))
+})
+
 module.exports = [
   catalogPublishNew,
   catalogPublishOwnerProof,
@@ -460,5 +481,6 @@ module.exports = [
   catalogEnterDescription,
   catalogSelectLanguage,
   catalogSetSafe,
-  catalogPublishConfirm
+  catalogPublishConfirm,
+  catalogUnpublish
 ]

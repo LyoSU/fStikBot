@@ -213,6 +213,7 @@ bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('about', (ctx) => ctx.scene.enter('packAbout'))
 bot.command('search', (ctx) => ctx.scene.enter('searchStickerSet'))
 bot.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
+bot.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'))
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
