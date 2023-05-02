@@ -219,6 +219,8 @@ callback:
       catalog_add: '🗂 Adicionar ao catálogo'
       catalog_edit: '📝 Editar no catálogo'
       catalog_delete: '🗑 Excluir do catálogo'
+      catalog_share: '🔗️️ Share'
+      catalog_open: '📂 Open in catalog'
     error:
       restore: |
         <b>Erro!</b>
@@ -519,6 +521,9 @@ scenes:
         You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
 
         <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+    unpublish:
+      success: |
+        The pack has been successfully unpublished from bot catalog.
   delete_pack:
     enter: |
       Are you sure you want to delete the pack <a href="${link}">${title}</a>?

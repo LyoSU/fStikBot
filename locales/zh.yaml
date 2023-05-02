@@ -219,6 +219,8 @@ callback:
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 在目录中编辑'
       catalog_delete: '🗑 从目录中删除'
+      catalog_share: '🔗️️ Share'
+      catalog_open: '📂 Open in catalog'
     error:
       restore: |
         <b>Error!</b>
@@ -519,6 +521,9 @@ scenes:
         You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
 
         <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+    unpublish:
+      success: |
+        The pack has been successfully unpublished from bot catalog.
   delete_pack:
     enter: |
       您确定要删除包 <a href="${link}">${title}</a>吗？
