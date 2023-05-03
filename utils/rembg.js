@@ -3,7 +3,7 @@ const got = require('got')
 function rembg (url) {
   const params = new URLSearchParams({
     url,
-    model: 'isnet-general-use'
+    model: 'silueta'
   })
 
   return got(`${process.env.REMBG_URL}/?${params.toString()}`, {
