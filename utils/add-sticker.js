@@ -355,7 +355,11 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
       const { body } = await rembg(fileUrl)
 
-      fileData = body
+      const trimBuffer = await sharp(body)
+        .trim(0)
+        .toBuffer()
+
+      fileData = trimBuffer
     }
 
     if (isVideo || isVideoNote) {
