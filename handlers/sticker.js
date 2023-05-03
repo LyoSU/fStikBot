@@ -92,7 +92,7 @@ module.exports = async (ctx) => {
     stickerSet = ctx.session.userInfo.stickerSet
     if (ctx.message.caption?.includes('roundit')) stickerFile.video_note = true
     if (ctx.message.caption?.includes('cropit')) stickerFile.forceCrop = true
-    if (ctx.message.photo && ctx.message.caption?.includes('rmbg')) stickerFile.removeBg = true
+    if (ctx.message.photo && ctx.message.caption?.includes('!')) stickerFile.removeBg = true
 
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
