@@ -357,7 +357,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       const { body } = await rembg(fileUrl)
 
       const trimBuffer = await sharp(body)
-        .trim(0)
+        .trim()
         .toBuffer()
 
       const metadata = await sharp(trimBuffer).metadata()
