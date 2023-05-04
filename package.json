@@ -23,7 +23,6 @@
     "@foile/crypto-pay-api": "^1.0.4",
     "@pm2/io": "^5.0.0",
     "bull": "^4.7.0",
-    "canvas": "^2.11.2",
     "dotenv": "^7.0.0",
     "emoji-regex": "^10.2.1",
     "error-stack-parser": "^2.0.6",

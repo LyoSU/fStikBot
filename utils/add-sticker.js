@@ -360,45 +360,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         .trim()
         .toBuffer()
 
-      const metadata = await sharp(trimBuffer).metadata()
-
-      const canvas = createCanvas(metadata.width + 15, metadata.height + 15)
-
-      const ctx = canvas.getContext('2d')
-
-      const image = await loadImage(trimBuffer)
-
-      // from https://stackoverflow.com/questions/28207232/
-      const offset = 4
-      const dArr = [
-        -offset, -offset,
-        0, -offset,
-        offset, -offset,
-        -offset, 0,
-        offset, 0,
-        -offset, offset,
-        0, offset,
-        offset, offset
-      ]
-      s = 2,  // thickness scale
-      i = 0,  // iterator
-      x = 5,  // final position
-      y = 5;
-
-      // draw images at offsets from the array scaled by s
-      for(; i < dArr.length; i += 2)
-        ctx.drawImage(image, x + dArr[i]*s, y + dArr[i+1]*s)
-
-      // fill with color
-      ctx.globalCompositeOperation = "source-atop"
-      ctx.fillStyle = "rgba(255,255,255,1)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // draw original image in normal mode
-      ctx.globalCompositeOperation = "source-over"
-      ctx.drawImage(image, x, y)
-
-      fileData = canvas.toBuffer('image/png')
+      fileData = trimBuffer
     }
 
     if (isVideo || isVideoNote) {
