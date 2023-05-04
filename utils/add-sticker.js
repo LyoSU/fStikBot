@@ -368,8 +368,6 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
       const image = await loadImage(trimBuffer)
 
-      ctx.drawImage(image, 0, 0)
-
       // from https://stackoverflow.com/questions/28207232/
       const offset = 4
       const dArr = [
@@ -389,16 +387,16 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
       // draw images at offsets from the array scaled by s
       for(; i < dArr.length; i += 2)
-        ctx.drawImage(image, x + dArr[i]*s, y + dArr[i+1]*s);
+        ctx.drawImage(image, x + dArr[i]*s, y + dArr[i+1]*s)
 
       // fill with color
-      ctx.globalCompositeOperation = "source-in";
-      ctx.fillStyle = "white"
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = "source-atop"
+      ctx.fillStyle = "rgba(255,255,255,1)"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       // draw original image in normal mode
-      ctx.globalCompositeOperation = "source-over";
-      ctx.drawImage(image, x, y);
+      ctx.globalCompositeOperation = "source-over"
+      ctx.drawImage(image, x, y)
 
       fileData = canvas.toBuffer('image/png')
     }
