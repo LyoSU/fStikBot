@@ -10,6 +10,7 @@ const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('../utils/add-sticker-text')
 const rembg = require('../utils/rembg')
+const { createCanvas, loadImage } = require('canvas')
 
 EventEmitter.defaultMaxListeners = 100
 
@@ -359,7 +360,47 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         .trim(0)
         .toBuffer()
 
-      fileData = trimBuffer
+      const metadata = await sharp(trimBuffer).metadata()
+
+      const canvas = createCanvas(metadata.width + 10, metadata.height + 10)
+
+      const ctx = canvas.getContext('2d')
+
+      const image = await loadImage(trimBuffer)
+
+      ctx.drawImage(image, 0, 0)
+
+      // from https://stackoverflow.com/questions/28207232/
+      const offset = 4
+      const dArr = [
+        -offset, -offset,
+        0, -offset,
+        offset, -offset,
+        -offset, 0,
+        offset, 0,
+        -offset, offset,
+        0, offset,
+        offset, offset
+      ]
+      s = 2,  // thickness scale
+      i = 0,  // iterator
+      x = 5,  // final position
+      y = 5;
+
+      // draw images at offsets from the array scaled by s
+      for(; i < dArr.length; i += 2)
+        ctx.drawImage(image, x + dArr[i]*s, y + dArr[i+1]*s);
+
+      // fill with color
+      ctx.globalCompositeOperation = "source-in";
+      ctx.fillStyle = "white"
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // draw original image in normal mode
+      ctx.globalCompositeOperation = "source-over";
+      ctx.drawImage(image, x, y);
+
+      fileData = canvas.toBuffer('image/png')
     }
 
     if (isVideo || isVideoNote) {
