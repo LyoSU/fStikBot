@@ -362,7 +362,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
       const metadata = await sharp(trimBuffer).metadata()
 
-      const canvas = createCanvas(metadata.width + 10, metadata.height + 10)
+      const canvas = createCanvas(metadata.width + 15, metadata.height + 15)
 
       const ctx = canvas.getContext('2d')
 
