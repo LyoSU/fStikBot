@@ -24,7 +24,7 @@ photoClear.on('photo', async (ctx) => {
 
   const avaibleModels = [
     'silueta',
-    'isnet-general-use'
+    // 'isnet-general-use'
   ]
 
   for (const model of avaibleModels) {
