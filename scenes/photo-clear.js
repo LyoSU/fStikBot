@@ -33,11 +33,12 @@ photoClear.on('photo', async (ctx) => {
     if (body) {
       const trimBuffer = await sharp(body)
         .trim()
+        .webp()
         .toBuffer()
 
       ctx.replyWithDocument({
         source: trimBuffer,
-        filename: `${model}_${photo.file_unique_id}.png`
+        filename: `${model}_${photo.file_unique_id}.webp`
       }, {
         reply_to_message_id: ctx.message.message_id
       })
