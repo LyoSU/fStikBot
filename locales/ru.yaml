@@ -62,6 +62,7 @@ cmd:
       copy: '📋 Копировать пакет'
       emoji: '📝 Изменить суффикс эмодзи'
       round: '🎥 Видео круглой формы'
+      clear: '🖼️ Remove background from photo'
       lang: '🌐 Изменить язык'
       donate: '☕ Поддержать разработчика'
     btn:
@@ -563,6 +564,11 @@ scenes:
       circle: '5. Circle'
     selected: |
       <b>Выбранный тип рамки:</b> ${type}
+  photoClear:
+    enter: |
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+
+      <i>Works best with photos. Works worse with drawings, illustrations and anime</i>
   leave: |
     Действие отменено.
   btn:
