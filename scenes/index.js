@@ -12,6 +12,7 @@ const originalSticker = require('./sticker-original')
 const deleteSticker = require('./sticker-delete')
 const packEdit = require('./admin-pack')
 const searchStickerSet = require('./pack-search')
+const photoClear = require('./photo-clear')
 const packCatalog = require('./pack-catalog')
 const packFrame = require('./pack-frame')
 const packRename = require('./pack-rename')
@@ -26,6 +27,7 @@ const stage = new Stage([].concat(
   messaging,
   packEdit,
   searchStickerSet,
+  photoClear,
   packCatalog,
   packFrame,
   packRename,

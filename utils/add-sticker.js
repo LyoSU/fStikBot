@@ -10,7 +10,6 @@ const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('../utils/add-sticker-text')
 const rembg = require('../utils/rembg')
-const { createCanvas, loadImage } = require('canvas')
 
 EventEmitter.defaultMaxListeners = 100
 

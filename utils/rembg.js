@@ -1,9 +1,9 @@
 const got = require('got')
 
-function rembg (url) {
+function rembg (url, model = 'silueta') {
   const params = new URLSearchParams({
     url,
-    model: 'silueta'
+    model
   })
 
   return got(`${process.env.REMBG_URL}/?${params.toString()}`, {
