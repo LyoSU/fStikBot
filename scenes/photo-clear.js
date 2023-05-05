@@ -11,7 +11,8 @@ photoClear.enter(async (ctx) => {
         [
           ctx.i18n.t('scenes.btn.cancel')
         ]
-      ]
+      ],
+      resize_keyboard: true
     }
   })
 })
