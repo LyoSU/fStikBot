@@ -32,7 +32,7 @@ photoClear.on('photo', async (ctx) => {
 
   const avaibleModels = [
     'silueta',
-    'isnet-general-use'
+    // 'isnet-general-use'
   ]
 
   for (const model of avaibleModels) {
@@ -49,6 +49,7 @@ photoClear.on('photo', async (ctx) => {
     if (content) {
       const trimBuffer = await sharp(Buffer.from(content, 'base64'))
         .trim()
+        .webp()
         .toBuffer()
 
       ctx.replyWithDocument({
