@@ -9,7 +9,6 @@ const emojiRegex = require('emoji-regex')
 const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('../utils/add-sticker-text')
-const rembg = require('../utils/rembg')
 
 EventEmitter.defaultMaxListeners = 100
 
@@ -344,18 +343,16 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     }
 
     if (inputFile.removeBg) {
-      // const job = await removebgQueue.add({
-      //   fileUrl,
-      // }, {
-      //   attempts: 1,
-      //   removeOnComplete: true
-      // })
+      const job = await removebgQueue.add({
+        fileUrl,
+      }, {
+        attempts: 1,
+        removeOnComplete: true
+      })
 
-      // const { content } = await job.finished()
+      const { content } = await job.finished()
 
-      const { body } = await rembg(fileUrl)
-
-      const trimBuffer = await sharp(body)
+      const trimBuffer = await sharp(Buffer.from(content, 'base64'))
         .trim()
         .toBuffer()
 

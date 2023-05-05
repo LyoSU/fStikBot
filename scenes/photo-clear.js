@@ -1,6 +1,14 @@
 const Scene = require('telegraf/scenes/base')
-const rembg = require('../utils/rembg')
 const sharp = require('sharp')
+const Queue = require('bull')
+
+const removebgQueue = new Queue('removebg', {
+  redis: {
+    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST,
+    password: process.env.REDIS_PASSWORD
+  }
+})
 
 const photoClear = new Scene('photoClear')
 
@@ -20,7 +28,7 @@ photoClear.enter(async (ctx) => {
 photoClear.on('photo', async (ctx) => {
   const photo = ctx.message.photo[ctx.message.photo.length - 1]
 
-  const fileLink = await ctx.telegram.getFileLink(photo.file_id)
+  const fileUrl = await ctx.telegram.getFileLink(photo.file_id)
 
   const avaibleModels = [
     'silueta',
@@ -28,12 +36,19 @@ photoClear.on('photo', async (ctx) => {
   ]
 
   for (const model of avaibleModels) {
-    const { body } = await rembg(fileLink, model)
+    const job = await removebgQueue.add({
+      fileUrl,
+      model
+    }, {
+      attempts: 1,
+      removeOnComplete: true
+    })
 
-    if (body) {
-      const trimBuffer = await sharp(body)
+    const { content } = await job.finished()
+
+    if (content) {
+      const trimBuffer = await sharp(Buffer.from(content, 'base64'))
         .trim()
-        .webp()
         .toBuffer()
 
       ctx.replyWithDocument({
