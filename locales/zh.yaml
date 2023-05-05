@@ -60,6 +60,7 @@ cmd:
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
       round: '🎥 圆形视频'
+      clear: '🖼️ Remove background from photo'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
@@ -560,6 +561,11 @@ scenes:
       circle: '5. 圆圈'
     selected: |
       <b>所选帧类型：</b> ${type}
+  photoClear:
+    enter: |
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+
+      <i>Works best with photos. Works worse with drawings, illustrations and anime</i>
   leave: |
     Действие отменено.
   btn:
