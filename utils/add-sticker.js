@@ -343,9 +343,14 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     }
 
     if (inputFile.removeBg) {
+      let priority = 10
+      if (ctx.session.userInfo.premium || stickerSet?.boost) priority = 5
+      else if (ctx.i18n.locale() === 'ru') priority = 15
+
       const job = await removebgQueue.add({
         fileUrl,
       }, {
+        priority,
         attempts: 1,
         removeOnComplete: true
       })

@@ -35,11 +35,16 @@ photoClear.on('photo', async (ctx) => {
     // 'isnet-general-use'
   ]
 
+  let priority = 10
+  if (ctx.session.userInfo.premium) priority = 5
+  else if (ctx.i18n.locale() === 'ru') priority = 15
+
   for (const model of avaibleModels) {
     const job = await removebgQueue.add({
       fileUrl,
       model
     }, {
+      priority,
       attempts: 1,
       removeOnComplete: true
     })
