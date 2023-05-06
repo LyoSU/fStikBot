@@ -568,7 +568,15 @@ scenes:
     enter: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>Works best with photos. Works worse with drawings, illustrations and anime</i>
+      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+
+      For anime pictures use <code>/clear anime</code> command
+    enter_anime: |
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+
+      <i>It works best with anime pictures</i>
+
+      For other pictures use <code>/clear</code> command
   leave: |
     Действие отменено.
   btn:
