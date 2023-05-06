@@ -62,7 +62,7 @@ cmd:
       copy: '📋 Копировать пакет'
       emoji: '📝 Изменить суффикс эмодзи'
       round: '🎥 Видео круглой формы'
-      clear: '🖼️ Remove background from photo'
+      clear: '🖼️ Удалить фон с фото'
       lang: '🌐 Изменить язык'
       donate: '☕ Поддержать разработчика'
     btn:
@@ -566,17 +566,17 @@ scenes:
       <b>Выбранный тип рамки:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Пришлите <u>фото</u> с которого хотите убрать фон и я пришлю файл без фона
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Лучше всего работает с фото. Хуже работает с рисунками, иллюстрациями и т.д.</i>
 
-      For anime pictures use <code>/clear anime</code> command
+      Для аниме картинок используйте команду <code>/clear anime</code>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Пришлите <u>фото</u> с которого хотите убрать фон и я пришлю файл без фона
 
-      <i>It works best with anime pictures</i>
+      <i>Лучше всего работает с фото. Хуже работает с рисунками, иллюстрациями и т.д.</i>
 
-      For other pictures use <code>/clear</code> command
+      Для аниме картинок используйте команду <code>/clear anime</code>
   leave: |
     Действие отменено.
   btn:
