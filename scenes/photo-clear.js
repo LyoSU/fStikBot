@@ -13,6 +13,14 @@ const removebgQueue = new Queue('removebg', {
 const photoClear = new Scene('photoClear')
 
 photoClear.enter(async (ctx) => {
+  const args = ctx.message.text.split(' ')
+
+  if (args[1]) {
+    ctx.session.clerType = args[1]
+  } else {
+    ctx.session.clerType = 'silueta'
+  }
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.enter'), {
     reply_markup: {
       keyboard: [
@@ -30,40 +38,40 @@ photoClear.on('photo', async (ctx) => {
 
   const fileUrl = await ctx.telegram.getFileLink(photo.file_id)
 
-  const avaibleModels = [
-    'silueta',
-    // 'isnet-general-use'
-  ]
+  let model = 'silueta'
+  if (ctx.session.clerType === 'anime') {
+    model = 'anime-seg'
+  } else if (ctx.session.clerType === 'general') {
+    model = 'isnet-general-use'
+  }
 
   let priority = 10
   if (ctx.session.userInfo.premium) priority = 5
   else if (ctx.i18n.locale() === 'ru') priority = 15
 
-  for (const model of avaibleModels) {
-    const job = await removebgQueue.add({
-      fileUrl,
-      model
+  const job = await removebgQueue.add({
+    fileUrl,
+    model
+  }, {
+    priority,
+    attempts: 1,
+    removeOnComplete: true
+  })
+
+  const { content } = await job.finished()
+
+  if (content) {
+    const trimBuffer = await sharp(Buffer.from(content, 'base64'))
+      .trim()
+      .webp()
+      .toBuffer()
+
+    ctx.replyWithDocument({
+      source: trimBuffer,
+      filename: `${model}_${photo.file_unique_id}.webp`
     }, {
-      priority,
-      attempts: 1,
-      removeOnComplete: true
+      reply_to_message_id: ctx.message.message_id
     })
-
-    const { content } = await job.finished()
-
-    if (content) {
-      const trimBuffer = await sharp(Buffer.from(content, 'base64'))
-        .trim()
-        .webp()
-        .toBuffer()
-
-      ctx.replyWithDocument({
-        source: trimBuffer,
-        filename: `${model}_${photo.file_unique_id}.webp`
-      }, {
-        reply_to_message_id: ctx.message.message_id
-      })
-    }
   }
 })
 
