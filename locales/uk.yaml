@@ -563,17 +563,17 @@ scenes:
       <b>Вибраний тип рамки:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Надішліть <u>фотографію</u> , з якої ви хочете видалити фон, і я надішлю файл без фону
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Найкраще працює з фотографіями. Гірше працює з малюнками, ілюстраціями тощо.</i>
 
-      For anime pictures use <code>/clear anime</code> command
+      Для аніме картинок використовуйте команду <code>/clear anime</code>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Надішліть <u>фотографію</u> , з якої ви хочете видалити фон, і я надішлю файл без фону
 
-      <i>It works best with anime pictures</i>
+      <i>Найкраще підходить для аніме зображень</i>
 
-      For other pictures use <code>/clear</code> command
+      Для інших зображень використовуйте команду <code>/clear</code>
   leave: |
     Дію скасовано.
   btn:
