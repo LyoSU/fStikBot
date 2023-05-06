@@ -21,7 +21,7 @@ photoClear.enter(async (ctx) => {
     ctx.session.clerType = 'silueta'
   }
 
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.enter'), {
+  await ctx.replyWithHTML(ctx.i18n.t(`scenes.photoClear.${ctx.session.clerType === 'anime' ? 'enter_anime' : 'enter'}`), {
     reply_markup: {
       keyboard: [
         [
