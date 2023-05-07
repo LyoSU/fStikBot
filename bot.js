@@ -234,6 +234,7 @@ bot.on('message', (ctx, next) => {
   }
   return next()
 })
+bot.action(/add_sticker/, handleSticker)
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)

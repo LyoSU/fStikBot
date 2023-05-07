@@ -1,5 +1,7 @@
 const Markup = require('telegraf/markup')
-const { addSticker } = require('../utils')
+const {
+  addSticker
+} = require('../utils')
 
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({

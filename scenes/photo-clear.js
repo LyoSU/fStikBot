@@ -70,7 +70,17 @@ photoClear.on('photo', async (ctx) => {
       source: trimBuffer,
       filename: `${model}_${photo.file_unique_id}.webp`
     }, {
-      reply_to_message_id: ctx.message.message_id
+      reply_to_message_id: ctx.message.message_id,
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: ctx.i18n.t('scenes.photoClear.add_to_set_btn'),
+              callback_data: 'add_sticker'
+            }
+          ]
+        ]
+      }
     })
   }
 })

@@ -17,7 +17,7 @@ module.exports = async (ctx) => {
   }
 
   let stickerFile, stickerSet
-  const stickerType = ctx.updateSubTypes[0]
+  let stickerType = ctx.updateSubTypes[0]
 
   switch (stickerType) {
     case 'sticker':
@@ -88,11 +88,15 @@ module.exports = async (ctx) => {
     stickerFile.file_unique_id = ctx.session.userInfo.stickerSet.id + '_' + stickerFile.file_unique_id
   }
 
+  if (ctx.callbackQuery) {
+    stickerFile = ctx.callbackQuery.message.sticker
+  }
+
   if (stickerFile) {
     stickerSet = ctx.session.userInfo.stickerSet
-    if (ctx.message.caption?.includes('roundit')) stickerFile.video_note = true
-    if (ctx.message.caption?.includes('cropit')) stickerFile.forceCrop = true
-    if (ctx.message.photo && ctx.message.caption?.includes('!')) stickerFile.removeBg = true
+    if (ctx?.message?.caption?.includes('roundit')) stickerFile.video_note = true
+    if (ctx?.message?.caption?.includes('cropit')) stickerFile.forceCrop = true
+    if (ctx?.message?.photo && ctx.message.caption?.includes('!')) stickerFile.removeBg = true
 
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
@@ -118,7 +122,7 @@ module.exports = async (ctx) => {
       }
 
       await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
-        reply_to_message_id: ctx.message.message_id,
+        reply_to_message_id: ctx?.message?.message_id,
         allow_sending_without_reply: true,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_unique_id}`),
@@ -165,7 +169,7 @@ module.exports = async (ctx) => {
 
   if (messageText) {
     await ctx.replyWithHTML(messageText, {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: ctx?.message?.message_id,
       allow_sending_without_reply: true,
       reply_markup: replyMarkup
     })
