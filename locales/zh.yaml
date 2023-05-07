@@ -544,15 +544,16 @@ scenes:
       <b>错误！</b>
       您只能将帧添加到视频包。
     select_type: |
-      <a href="${example}">&#8203;</a><b>选择框架类型：</b>
-      框架是贴纸周围的透明背景
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>正方形</code> — 框架的矩形形状，即不会以任何方式改变
-      <code>lite</code> — 角将是切一点
-      <code>rounded</code> — 角会变圆
-      <code>circle</code> — frame 会变成圆形
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>以后可以使用 /frame 命令来设置 frame 的类型</i>
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. 精简版'
       medium: '2. 中等'
