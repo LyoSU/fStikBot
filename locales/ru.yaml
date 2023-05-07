@@ -52,8 +52,8 @@ cmd:
       start: '📜 Справка бота'
       help: '📖 Помощь'
       packs: '📁 Пакеты'
-      new: '📥 Создать стикерпак'
-      new_emoji: '📥 Создать новый набор эмодзи'
+      new: '🌝 Create sticker pack'
+      new_emoji: '😊 Create emoji pack'
       catalog: '📖 Каталог'
       publish: '📤 Опубликовать набор'
       delete: '❌ Удалить стикер'
@@ -566,17 +566,19 @@ scenes:
       <b>Выбранный тип рамки:</b> ${type}
   photoClear:
     enter: |
-      Пришлите <u>фото</u>, с которого хотите убрать фон и я пришлю файл без фона
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>Лучше всего работает с фото. Хуже работает с рисунками, иллюстрациями и т.д.</i>
-
-      Для аниме картинок используйте команду <code>/clear anime</code>
+      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
     enter_anime: |
-      Отправьте <u>фото</u>, с которого вы хотите удалить фон, и я отправлю файл без фона
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>Лучше всего работает с аниме картинками</i>
-
-      Для других изображений используйте команду <code>/clear</code>
+      <i>It works best with anime pictures</i>
+    choose_model: |
+      <b>Choose model:</b>
+    model:
+      ordinary: Common — for photos with people
+      general: General — for any photos
+      anime: Anime — for anime pictures
     add_to_set_btn: '🌟 Добавить в набор'
   leave: |
     Действие отменено.
