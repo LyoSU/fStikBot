@@ -55,14 +55,6 @@ photoClearSelect.action(/model:(ordinary|general|anime)/, async (ctx) => {
 const photoClear = new Scene('photoClear')
 
 photoClear.enter(async (ctx) => {
-  if (ctx?.message?.text) {
-    const args = ctx.message.text.split(' ')
-
-    if (args && args[1]) {
-      ctx.session.clerType = args[1]
-    }
-  }
-
   if (ctx.callbackQuery) {
     await ctx.answerCbQuery()
     await ctx.deleteMessage()
