@@ -9,9 +9,11 @@ module.exports = async (ctx) => {
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
+  const message = ctx.message || ctx.callbackQuery.message
+
   if (!ctx.session.userInfo.stickerSet) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
-      reply_to_message_id: ctx.message.message_id,
+      reply_to_message_id: message.message_id,
       allow_sending_without_reply: true
     })
   }
@@ -21,45 +23,45 @@ module.exports = async (ctx) => {
 
   switch (stickerType) {
     case 'sticker':
-      stickerFile = ctx.message.sticker
+      stickerFile = message.sticker
       break
 
     case 'document':
       if (
-        (ctx.message?.document?.mime_type.match('image') ||
-        ctx.message?.document?.mime_type?.match('video'))
-        && !ctx.message.document.mime_type.match(/heic|heif/)
+        (message?.document?.mime_type.match('image') ||
+        message?.document?.mime_type?.match('video'))
+        && !message.document.mime_type.match(/heic|heif/)
       ) {
-        stickerFile = ctx.message.document
-        if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
+        stickerFile = message.document
+        if (message.caption) stickerFile.emoji = message.caption
       }
       break
 
     case 'animation':
       // if caption tenor gif
-      if (ctx.message.caption && ctx.message.caption.match('tenor.com')) {
-        stickerFile = ctx.message.animation
-        stickerFile.fileUrl = ctx.message.caption
+      if (message.caption && message.caption.match('tenor.com')) {
+        stickerFile = message.animation
+        stickerFile.fileUrl = message.caption
       } else {
-        stickerFile = ctx.message.animation
-        if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
+        stickerFile = message.animation
+        if (message.caption) stickerFile.emoji = message.caption
       }
       break
 
     case 'video':
-      stickerFile = ctx.message.video
-      if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
+      stickerFile = message.video
+      if (message.caption) stickerFile.emoji = message.caption
       break
 
     case 'video_note':
-        stickerFile = ctx.message.video_note
+        stickerFile = message.video_note
         stickerFile.video_note = true
     break
 
     case 'photo':
       // eslint-disable-next-line prefer-destructuring
-      stickerFile = ctx.message.photo.slice(-1)[0]
-      if (ctx.message.caption) stickerFile.emoji = ctx.message.caption
+      stickerFile = message.photo.slice(-1)[0]
+      if (message.caption) stickerFile.emoji = message.caption
       break
 
     default:
@@ -67,7 +69,7 @@ module.exports = async (ctx) => {
   }
 
   if (stickerType === 'text') {
-    const customEmoji = ctx.message.entities.find((e) => e.type === 'custom_emoji')
+    const customEmoji = message.entities.find((e) => e.type === 'custom_emoji')
 
     if (!customEmoji) return
 
@@ -81,10 +83,12 @@ module.exports = async (ctx) => {
   }
 
   if (ctx.session.userInfo.stickerSet.inline) {
-    if (stickerType === 'photo') stickerFile = ctx.message[stickerType].pop()
-    else stickerFile = ctx.message[stickerType]
+    if (stickerType === 'photo') stickerFile = message[stickerType].pop()
+    else stickerFile = message[stickerType]
+
     stickerFile.stickerType = stickerType
-    if (ctx.message.caption) stickerFile.caption = ctx.message.caption
+
+    if (message.caption) stickerFile.caption = message.caption
     stickerFile.file_unique_id = ctx.session.userInfo.stickerSet.id + '_' + stickerFile.file_unique_id
   }
 
@@ -94,9 +98,9 @@ module.exports = async (ctx) => {
 
   if (stickerFile) {
     stickerSet = ctx.session.userInfo.stickerSet
-    if (ctx?.message?.caption?.includes('roundit')) stickerFile.video_note = true
-    if (ctx?.message?.caption?.includes('cropit')) stickerFile.forceCrop = true
-    if (ctx?.message?.photo && ctx.message.caption?.includes('!')) stickerFile.removeBg = true
+    if (message.caption?.includes('roundit')) stickerFile.video_note = true
+    if (message.caption?.includes('cropit')) stickerFile.forceCrop = true
+    if (message.photo && message.caption?.includes('!')) stickerFile.removeBg = true
 
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
@@ -122,7 +126,7 @@ module.exports = async (ctx) => {
       }
 
       await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.have_already'), {
-        reply_to_message_id: ctx?.message?.message_id,
+        reply_to_message_id: message.message_id,
         allow_sending_without_reply: true,
         reply_markup: Markup.inlineKeyboard([
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.info.file_unique_id}`),
@@ -169,7 +173,7 @@ module.exports = async (ctx) => {
 
   if (messageText) {
     await ctx.replyWithHTML(messageText, {
-      reply_to_message_id: ctx?.message?.message_id,
+      reply_to_message_id: message.message_id,
       allow_sending_without_reply: true,
       reply_markup: replyMarkup
     })
