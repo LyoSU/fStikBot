@@ -13,7 +13,7 @@ packFrame.enter(async (ctx) => {
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.frame.select_type', {
-    example: 'https://telegra.ph/file/7cb167d5fe01bf29a8e2c.png'
+    example: 'https://telegra.ph/file/5267f02e571399ba02b84.png'
   }), {
     reply_markup: Markup.keyboard([
       [
