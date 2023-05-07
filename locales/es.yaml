@@ -574,6 +574,7 @@ scenes:
       <i>It works best with anime pictures</i>
 
       For other pictures use <code>/clear</code> command
+    add_to_set_btn: '🌟 Add to set'
   leave: |
     Acción cancelada.
   btn:
