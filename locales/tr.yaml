@@ -543,15 +543,16 @@ scenes:
       <b>Hata!</b>
       Video paketlerine yalnızca çerçeve ekleyebilirsiniz.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Çerçeve tipini seçin:</b>
-      Çerçeve, çıkartmanın etrafında şeffaf bir arka plandır
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>kare</code> — çerçevenin dikdörtgen şekli, yani hiçbir şekilde değiştirilmeyecek
-      <code>lite</code> — köşeler olacak biraz kes
-      <code>yuvarlatılmış</code> — köşeler yuvarlatılacak
-      <code>daire</code> — çerçeve daire şeklinde olacak
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>İleride /frame komutunu kullanarak çerçeve tipini belirleyebilirsiniz</i>
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Basit'
       medium: '2 - Orta'
