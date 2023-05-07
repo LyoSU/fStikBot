@@ -575,7 +575,6 @@ scenes:
 
       For other pictures use <code>/clear</code> command
     add_to_set_btn: 🌟 Add to set
-    sticker_added_soon: Sticker added to the queue for processing
   leave: |
     Action canceled.
   btn:
