@@ -547,9 +547,10 @@ scenes:
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
       Frame is a transparent background around the sticker
 
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
       <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
       <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
       <code>circle</code> — the frame will be in the form of a circle
 
       <i>In the future, you may use the /frame command to set the type of frame</i>
