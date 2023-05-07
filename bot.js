@@ -349,7 +349,7 @@ db.connection.once('open', async () => {
     }
 
     const commands = [
-      { command: 'help', description: i18n.t(localeName, 'cmd.start.commands.help') },
+      { command: 'start', description: i18n.t(localeName, 'cmd.start.commands.start') },
       { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
