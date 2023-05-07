@@ -24,7 +24,7 @@ module.exports = async (ctx) => {
     }
   })
 
-  if (ctx.updateType === 'callback_query') {
+  if (ctx.updateType === 'callback_query' && ctx.match[1] !== 'null') {
     if (locales[ctx.match[1]]) {
       ctx.answerCbQuery(locales[ctx.match[1]].flag)
 

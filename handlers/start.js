@@ -55,7 +55,26 @@ module.exports = async (ctx) => {
 
   await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
     name: userName(ctx.from)
-  }), Markup.removeKeyboard().extra({ disable_web_page_preview: true }))
+  }),
+  Markup.inlineKeyboard([
+    [
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null'),
+    ],
+    [
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new_emoji'), 'new_pack:custom_emoji'),
+    ],
+    [
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.catalog'), 'catalog'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.publish'), 'publish'),
+    ],
+    [
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear'),
+    ],
+    [
+      Markup.callbackButton('🌐 Change language', 'set_language:null'),
+    ]
+  ]).extra())
 
   if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {

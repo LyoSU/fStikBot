@@ -10,15 +10,62 @@ const removebgQueue = new Queue('removebg', {
   }
 })
 
+const photoClearSelect = new Scene('photoClearSelect')
+
+photoClearSelect.enter(async (ctx) => {
+  if (ctx.callbackQuery) {
+    await ctx.answerCbQuery()
+    await ctx.deleteMessage()
+  }
+
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.choose_model'), {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: ctx.i18n.t('scenes.photoClear.model.ordinary'),
+            callback_data: 'model:ordinary'
+          },
+        ],
+        [
+          {
+            text: ctx.i18n.t('scenes.photoClear.model.general'),
+            callback_data: 'model:general'
+          },
+        ],
+        [
+          {
+            text: ctx.i18n.t('scenes.photoClear.model.anime'),
+            callback_data: 'model:anime'
+          }
+        ]
+      ]
+    }
+  })
+})
+
+photoClearSelect.action(/model:(ordinary|general|anime)/, async (ctx) => {
+  const [, model] = ctx.match
+
+  ctx.session.clerType = model
+
+  await ctx.scene.enter('photoClear')
+})
+
 const photoClear = new Scene('photoClear')
 
 photoClear.enter(async (ctx) => {
-  const args = ctx.message.text.split(' ')
+  if (ctx?.message?.text) {
+    const args = ctx.message.text.split(' ')
 
-  if (args[1]) {
-    ctx.session.clerType = args[1]
-  } else {
-    ctx.session.clerType = 'silueta'
+    if (args && args[1]) {
+      ctx.session.clerType = args[1]
+    }
+  }
+
+  if (ctx.callbackQuery) {
+    await ctx.answerCbQuery()
+    await ctx.deleteMessage()
   }
 
   await ctx.replyWithHTML(ctx.i18n.t(`scenes.photoClear.${ctx.session.clerType === 'anime' ? 'enter_anime' : 'enter'}`), {
@@ -85,4 +132,7 @@ photoClear.on('photo', async (ctx) => {
   }
 })
 
-module.exports = photoClear
+module.exports = [
+  photoClearSelect,
+  photoClear
+]
