@@ -50,8 +50,8 @@ cmd:
       start: '📜 Start menu'
       help: '📖 Help'
       packs: '📁 Packs'
-      new: '📥 Create a new sticker pack'
-      new_emoji: '📥 Create a new sticker pack'
+      new: '🌝 Create sticker pack'
+      new_emoji: '😊 Create emoji pack'
       catalog: '📖 目录'
       publish: '📤 发布包'
       delete: '❌删除贴纸'
@@ -566,14 +566,16 @@ scenes:
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
       <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
-
-      For anime pictures use <code>/clear anime</code> command
     enter_anime: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
       <i>It works best with anime pictures</i>
-
-      For other pictures use <code>/clear</code> command
+    choose_model: |
+      <b>Choose model:</b>
+    model:
+      ordinary: Common — for photos with people
+      general: General — for any photos
+      anime: Anime — for anime pictures
     add_to_set_btn: '🌟 Add to set'
   leave: |
     Действие отменено.
