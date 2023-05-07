@@ -51,8 +51,8 @@ cmd:
       start: '📜 Стартове меню'
       help: '📖 Допомога'
       packs: '📁 Пакунки'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      new: '🌝 Створити стікерпак'
+      new_emoji: '😊 Створіть пакет емодзі'
       catalog: '📖 Каталог'
       publish: '📤 Опублікувати стікерпак'
       delete: '❌ Видалити стікер'
@@ -563,19 +563,19 @@ scenes:
       <b>Вибраний тип рамки:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Надішліть <u>фото</u>, з якого ви хочете видалити фон, і я надішлю файл без фону
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Працює найкраще з фотографіями. Працює гірше з малюнками, ілюстраціями та аніме</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Надішліть <u>фото</u>, з якого ви хочете видалити фон, і я надішлю файл без фону
 
-      <i>It works best with anime pictures</i>
+      <i>Працює найкраще з фотографіями. Працює гірше з малюнками, ілюстраціями та аніме</i>
     choose_model: |
-      <b>Choose model:</b>
+      <b>Виберіть модель:</b>
     model:
-      ordinary: Common — for photos with people
-      general: General — for any photos
-      anime: Anime — for anime pictures
+      ordinary: Звичайна — для фото з людьми
+      general: Загальна - для будь-яких фотографій
+      anime: Аніме - для аніме зображення
     add_to_set_btn: '🌟 Додати до набору'
   leave: |
     Дію скасовано.
