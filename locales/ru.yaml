@@ -547,15 +547,16 @@ scenes:
       <b>Ошибка!</b>
       Вы можете устаналивать фрейм только в видеопаках.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Выбери тип рамки:</b>
-      Рамка - прозрачный фон вокруг стикера
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>square</code> - прямоугольная фигура рамки, то есть он никаким образом не изменится
-      <code>lite</code> — углы будут немного обрезаны
-      <code>rounded</code> — углы будут округлены
-      <code>circle</code> — рамка будет в виде круга
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>В будущем, можно использовать команду /frame для установки типа кадра</i>
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'

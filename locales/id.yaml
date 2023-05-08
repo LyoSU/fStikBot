@@ -544,15 +544,16 @@ scenes:
       <b>Error!</b>
       You can only add frames to video packs.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Pilih jenis bingkai:</b>
-      Bingkai adalah latar belakang transparan di sekitar stiker
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>persegi</code> — bingkai berbentuk persegi panjang, yaitu tidak akan diubah dengan cara apa pun
-      <code>lite</code> — sudutnya akan potong sedikit
-      <code>dibulatkan</code> — sudut akan dibulatkan
-      <code>lingkaran</code> — bingkai akan berbentuk lingkaran
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>Di masa mendatang, Anda dapat menggunakan perintah /frame untuk mengatur jenis bingkai</i>
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'

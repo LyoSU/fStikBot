@@ -544,15 +544,16 @@ scenes:
       <b>Помилка!</b>
       Ви можете додати фрейм лише до відеопаків.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Виберіть тип рамки:</b>
-      Рамка — це прозорий фон навколо наклейки
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>square</code> — прямокутна форма рамки, тобто вона не буде змінена жодним чином
-      <code>lite</code> — кути будуть трохи обрізані
-      <code>rounded</code> — кути будуть заокруглені
-      <code>circle</code> — рамка матиме форму кола
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>У майбутньому ви можете використовувати команду /frame для встановлення типу рамки</i>
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'
