@@ -20,6 +20,7 @@ module.exports = async (ctx) => {
 
   let stickerFile, stickerSet
   let stickerType = ctx.updateSubTypes[0]
+  if (ctx.callbackQuery) stickerType = message.sticker ? 'sticker' : undefined
 
   switch (stickerType) {
     case 'sticker':
