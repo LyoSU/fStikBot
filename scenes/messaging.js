@@ -252,7 +252,8 @@ adminMessagingСonfirmation.enter(async (ctx) => {
 
   if (ctx.session.scene.type === 'all') {
     findUsers = await ctx.db.User.count({
-      blocked: { $ne: true }
+      blocked: { $ne: true },
+      locale: { $ne: 'ru' }
     })
   } else if (ctx.session.scene.type === 'ru') {
     findUsers = await ctx.db.User.count({
@@ -271,9 +272,10 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     })
   }
 
-  const resultText = ctx.i18n.t('admin.messaging.create.found', {
-    userCount: findUsers
-  })
+  // const resultText = ctx.i18n.t('admin.messaging.create.found', {
+  //   userCount: findUsers
+  // })
+  const resultText = `Good! Found ${findUsers} users`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
@@ -348,7 +350,8 @@ adminMessagingPublish.enter(async (ctx) => {
   let usersCursor
   if (ctx.session.scene.type === 'all') {
     usersCursor = await ctx.db.User.find({
-      blocked: { $ne: true }
+      blocked: { $ne: true },
+      locale: { $ne: 'ru' }
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'ru') {
     usersCursor = await ctx.db.User.find({
@@ -373,10 +376,17 @@ adminMessagingPublish.enter(async (ctx) => {
 
   let usersCount = 0
 
+  let promises = []
   for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
-    await redis.rpush(key + ':users', [user.telegram_id])
+    promises.push(redis.rpush(key + ':users', [user.telegram_id]))
     usersCount++
+    if (usersCount % 5000 === 0) {
+      await Promise.all(promises)
+      promises = []
+    }
   }
+  // Wait for any remaining promises to resolve
+  await Promise.all(promises)
 
   const messaging = new ctx.db.Messaging()
 

@@ -134,18 +134,16 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
       userErrors += `<a href="tg://user?id=${error.telegram_id}">${userError.first_name}</a>\n`
     }
 
-    resultText = ctx.i18n.t('admin.messaging.status.info', {
-      name: messaging.name,
-      creatorName,
-      date: moment(messaging.date).format('DD.MM HH:mm'),
-      createdAt: moment(messaging.createdAt).format('DD.MM HH:mm'),
-      total: messaging.result.total,
-      completed: messaging.result.state,
-      left: messaging.result.total - messaging.result.state,
-      error: messaging.result.error,
-      userErrors,
-      status: statusTypes[messaging.status]
-    })
+    resultText = `Message ${messaging.name} status:\n`
+    resultText += `Creator: ${creatorName}\n`
+    resultText += `Date: ${moment(messaging.date).format('DD.MM HH:mm')}\n`
+    resultText += `Created at: ${moment(messaging.createdAt).format('DD.MM HH:mm')}\n`
+    resultText += `Total: ${messaging.result.total}\n`
+    resultText += `Completed: ${messaging.result.state}\n`
+    resultText += `Left: ${messaging.result.total - messaging.result.state}\n`
+    resultText += `Error: ${messaging.result.error}\n`
+    resultText += `Status: ${statusTypes[messaging.status]}\n`
+    resultText += `Errors: \n${userErrors}`
 
     let cancelButton = []
     if (messaging.status < 2) cancelButton = [Markup.callbackButton(ctx.i18n.t('admin.messaging.status.cancel'), `admin:messaging:cancel:${ctx.match[1]}`)]

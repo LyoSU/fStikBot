@@ -15,7 +15,7 @@ const photoClearSelect = new Scene('photoClearSelect')
 photoClearSelect.enter(async (ctx) => {
   if (ctx.callbackQuery) {
     await ctx.answerCbQuery()
-    await ctx.deleteMessage()
+    await ctx.deleteMessage().catch(() => {})
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.choose_model'), {
@@ -57,7 +57,7 @@ const photoClear = new Scene('photoClear')
 photoClear.enter(async (ctx) => {
   if (ctx.callbackQuery) {
     await ctx.answerCbQuery()
-    await ctx.deleteMessage()
+    await ctx.deleteMessage().catch(() => {})
   }
 
   await ctx.replyWithHTML(ctx.i18n.t(`scenes.photoClear.${ctx.session.clerType === 'anime' ? 'enter_anime' : 'enter'}`), {
