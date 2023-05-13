@@ -50,7 +50,7 @@ cmd:
     commands:
       start: '📜 Стартове меню'
       help: '📖 Допомога'
-      packs: '📁 Manage packs'
+      packs: '📁 Управління пакетами'
       new: '🌝 Створити стікерпак'
       new_emoji: '😊 Створити емодзі-пакунок'
       catalog: '📖 Каталог'
@@ -216,7 +216,7 @@ callback:
       restore: '✅ Відновити'
       use_pack: '📦 Використати пакунок'
       boost: '⚡ Буст'
-      frame: '🖼 Frame'
+      frame: '🖼 Рамка'
       rename: '✏️ Перейменувати'
       search_gif: '🔎 Пошук GIF'
       coedit: '👥 Спільне редагування'
@@ -545,16 +545,15 @@ scenes:
       <b>Помилка!</b>
       Ви можете додати фрейм лише до відеопаків.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Виберіть тип рамки:</b>
+      Рамка — це прозорий фон навколо наклейки
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>square</code> — прямокутна форма рамки, тобто вона не буде змінена жодним чином
+      <code>lite</code> — кути будуть трохи обрізані
+      <code>rounded</code> — кути будуть заокруглені
+      <code>circle</code> — рамка матиме форму кола
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>У майбутньому ви можете використовувати команду /frame для встановлення типу рамки</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'
