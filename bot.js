@@ -205,7 +205,9 @@ bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
 bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.action(/publish/, (ctx) => ctx.scene.enter('catalogPublishNew'))
 bot.command('frame', (ctx) => ctx.scene.enter('packFrame'))
+bot.action(/frame/, (ctx) => ctx.scene.enter('packFrame'))
 bot.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
+bot.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticker'))
 bot.command('catalog', handleCatalog)
 bot.action(/catalog/, handleCatalog)
 bot.command('public', handleSelectPack)
@@ -352,6 +354,7 @@ db.connection.once('open', async () => {
       { command: 'start', description: i18n.t(localeName, 'cmd.start.commands.start') },
       { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
+      { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },

@@ -218,6 +218,9 @@ module.exports = async (ctx) => {
               [
                 Markup.callbackButton(ctx.i18n.t('callback.pack.btn.rename'), `rename_pack:${stickerSet.id}`)
               ],
+              [
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame', type !== 'video')
+              ],
               searchGifButton,
               coeditButton,
               ...catalogButton,
