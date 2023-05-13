@@ -49,7 +49,7 @@ cmd:
     commands:
       start: '📜 Menu inicial'
       help: '📖 Ajuda'
-      packs: '📁 Pacotes'
+      packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
       catalog: '📖 Catálogo'
@@ -214,6 +214,7 @@ callback:
       restore: '✅ Restaurar'
       use_pack: '📦 Pacote de uso'
       boost: '⚡ Boost'
+      frame: '🖼 Frame'
       rename: '✏️ Renomear'
       search_gif: '🔎 Pesquise GIF'
       coedit: '👥 Coedição'
