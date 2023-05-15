@@ -140,9 +140,9 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
     resultText += `Created at: ${moment(messaging.createdAt).format('DD.MM HH:mm')}\n`
     resultText += `Total: ${messaging.result.total}\n`
     resultText += `Completed: ${messaging.result.state}\n`
+    resultText += `Delivered: ${messaging.result.state - messaging.result.error}\n`
     resultText += `Left: ${messaging.result.total - messaging.result.state}\n`
     resultText += `Error: ${messaging.result.error}\n`
-    resultText += `Status: ${statusTypes[messaging.status]}\n`
     resultText += `Errors: \n${userErrors}`
 
     let cancelButton = []

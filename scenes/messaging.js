@@ -257,10 +257,10 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     })
   } else if (ctx.session.scene.type === 'ru') {
     findUsers = await ctx.db.User.count({
-      blocked: { $ne: true },
+      // blocked: { $ne: true },
       premium: { $ne: true },
       locale: 'ru',
-      updatedAt: { $gte: moment().subtract(1, 'months') }
+      // updatedAt: { $gte: moment().subtract(1, 'months') }
     })
   } else if (ctx.session.scene.type === 'uk') {
     findUsers = await ctx.db.User.count({
@@ -355,10 +355,10 @@ adminMessagingPublish.enter(async (ctx) => {
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'ru') {
     usersCursor = await ctx.db.User.find({
-      blocked: { $ne: true },
+      // blocked: { $ne: true },
       premium: { $ne: true },
       locale: 'ru',
-      updatedAt: { $gte: moment().subtract(1, 'months') }
+      // updatedAt: { $gte: moment().subtract(1, 'months') }
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'uk') {
     usersCursor = await ctx.db.User.find({
@@ -380,7 +380,7 @@ adminMessagingPublish.enter(async (ctx) => {
   for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
     promises.push(redis.rpush(key + ':users', [user.telegram_id]))
     usersCount++
-    if (usersCount % 5000 === 0) {
+    if (usersCount % 10000 === 0) {
       await Promise.all(promises)
       promises = []
     }
