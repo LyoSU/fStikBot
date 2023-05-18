@@ -87,8 +87,7 @@ cmd:
   copy: |
     <b>🗄 Copy pack</b>
 
-    If you supported the bot, copying all the stickers from any pack with a new name will be available.
-    In order to copy the pack you just need to send a link to it to the bot.
+    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   packs:
     info: |
       <b>📁 Packs</b>

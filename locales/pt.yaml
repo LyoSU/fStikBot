@@ -85,10 +85,9 @@ cmd:
     4. Encaminhe a mensagem recebida para o bot
     5. Se a restauração for bem-sucedida - o bot informa sobre isso
   copy: |
-    <b>🗄 Pacote de cópias</b>
+    <b>🗄 Copy pack</b>
 
-    Se você apoiou o bot, a cópia de todos os adesivos de qualquer pacote com um novo nome estará disponível.
-    Para copiar o pacote, basta enviar um link para o bot.
+    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   packs:
     info: |
       <b>📁 Pacotes</b>
