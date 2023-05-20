@@ -73,7 +73,7 @@ photoClear.enter(async (ctx) => {
 })
 
 photoClear.on('photo', async (ctx) => {
-  ctx.sendChatAction('upload_document')
+  ctx.replyWithChatAction('upload_document')
 
   const photo = ctx.message.photo[ctx.message.photo.length - 1]
 
