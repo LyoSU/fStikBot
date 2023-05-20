@@ -96,7 +96,7 @@ photoClear.on('photo', async (ctx) => {
     }, 1000 * 10)
   })
 
-  const jobPromise = removebgQueue.add({
+  const job = await removebgQueue.add({
     fileUrl,
     model
   }, {
@@ -105,10 +105,14 @@ photoClear.on('photo', async (ctx) => {
     removeOnComplete: true
   })
 
-  const { content } = await Promise.race([jobPromise, timeoutPromise]).catch(() => {})
+  const finish = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
+    return {
+      error: err.message
+    }
+  })
 
-  if (content) {
-    const trimBuffer = await sharp(Buffer.from(content, 'base64'))
+  if (finish.content) {
+    const trimBuffer = await sharp(Buffer.from(finish.content, 'base64'))
       .trim()
       .webp()
       .toBuffer()
