@@ -1,6 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const sharp = require('sharp')
 const Queue = require('bull')
+const {
+  showGramAds
+} = require('../utils')
 
 const removebgQueue = new Queue('removebg', {
   redis: {
@@ -25,13 +28,13 @@ photoClearSelect.enter(async (ctx) => {
           {
             text: ctx.i18n.t('scenes.photoClear.model.ordinary'),
             callback_data: 'model:ordinary'
-          },
+          }
         ],
         [
           {
             text: ctx.i18n.t('scenes.photoClear.model.general'),
             callback_data: 'model:general'
-          },
+          }
         ],
         [
           {
@@ -73,6 +76,12 @@ photoClear.enter(async (ctx) => {
 })
 
 photoClear.on('photo', async (ctx) => {
+  ctx.replyWithChatAction('upload_document')
+
+  if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo.premium && !ctx.session.userInfo?.stickerSet?.boost) {
+    showGramAds(ctx.chat.id)
+  }
+
   const photo = ctx.message.photo[ctx.message.photo.length - 1]
 
   const fileUrl = await ctx.telegram.getFileLink(photo.file_id)
@@ -88,6 +97,12 @@ photoClear.on('photo', async (ctx) => {
   if (ctx.session.userInfo.premium) priority = 5
   else if (ctx.i18n.locale() === 'ru') priority = 15
 
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('Timeout'))
+    }, 1000 * 10)
+  })
+
   const job = await removebgQueue.add({
     fileUrl,
     model
@@ -97,10 +112,14 @@ photoClear.on('photo', async (ctx) => {
     removeOnComplete: true
   })
 
-  const { content } = await job.finished()
+  const finish = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
+    return {
+      error: err.message
+    }
+  })
 
-  if (content) {
-    const trimBuffer = await sharp(Buffer.from(content, 'base64'))
+  if (finish.content) {
+    const trimBuffer = await sharp(Buffer.from(finish.content, 'base64'))
       .trim()
       .webp()
       .toBuffer()
@@ -121,6 +140,8 @@ photoClear.on('photo', async (ctx) => {
         ]
       }
     })
+  } else {
+    ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.error'))
   }
 })
 

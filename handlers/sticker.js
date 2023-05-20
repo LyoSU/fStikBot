@@ -1,5 +1,9 @@
 const Markup = require('telegraf/markup')
-const { addSticker, addStickerText } = require('../utils')
+const {
+  showGramAds,
+  addSticker,
+  addStickerText
+} = require('../utils')
 
 module.exports = async (ctx) => {
   ctx.replyWithChatAction('upload_document').catch(() => {})
@@ -135,6 +139,10 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
+      if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo.premium && !stickerSet?.boost) {
+        showGramAds(ctx.chat.id)
+      }
+
       ctx.session.previousSticker = null
 
       const stickerInfo = await addSticker(ctx, stickerFile)
