@@ -11,6 +11,7 @@ const countUncodeChars = require('./unicode-chars-count')
 const substrUnicode = require('./unicode-substr')
 const telegramApi = require('./telegram-api')
 const updateMonitor = require('./update-monitor')
+const showGramAds = require('./gramads')
 
 module.exports = {
   escapeHTML,
@@ -25,5 +26,6 @@ module.exports = {
   countUncodeChars,
   substrUnicode,
   telegramApi,
-  updateMonitor
+  updateMonitor,
+  showGramAds
 }

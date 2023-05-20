@@ -1,6 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const sharp = require('sharp')
 const Queue = require('bull')
+const {
+  showGramAds
+} = require('../utils')
 
 const removebgQueue = new Queue('removebg', {
   redis: {
@@ -74,6 +77,10 @@ photoClear.enter(async (ctx) => {
 
 photoClear.on('photo', async (ctx) => {
   ctx.replyWithChatAction('upload_document')
+
+  if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo.premium && !ctx.session.userInfo?.stickerSet?.boost) {
+    showGramAds(ctx.chat.id)
+  }
 
   const photo = ctx.message.photo[ctx.message.photo.length - 1]
 
