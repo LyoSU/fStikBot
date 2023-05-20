@@ -162,7 +162,7 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      if (!ctx.session.userInfo.premium && !stickerSet?.boost) {
+      if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo.premium && !stickerSet?.boost) {
         sendPostToChat(ctx.chat.id)
       }
 
