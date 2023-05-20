@@ -577,6 +577,9 @@ scenes:
       general: General — for any photos
       anime: Anime — for anime pictures
     add_to_set_btn: '🌟 Add to set'
+    error:
+      - <b>Hata!</b>
+      - Hay aksi, bir şeyler ters gitti.
   leave: |
     Eylem iptal edildi!
   btn:
