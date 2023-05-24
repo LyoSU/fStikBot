@@ -37,7 +37,9 @@ async function errorLog (error, ctx) {
     console.error('send log error:', error)
   })
 
-  await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
+  if (ctx?.chat?.type === 'private') {
+    await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
+  }
 }
 
 module.exports = async (error, ctx) => {

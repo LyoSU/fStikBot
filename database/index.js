@@ -1,5 +1,8 @@
 const collections = require('./models')
-const connection = require('./connection')
+const {
+  connection,
+  atlasConnection
+} = require('./connection')
 
 const db = {
   connection
@@ -7,6 +10,14 @@ const db = {
 
 Object.keys(collections).forEach((collectionName) => {
   db[collectionName] = connection.model(collectionName, collections[collectionName])
+})
+
+const atlasDb = {
+  connection: atlasConnection
+}
+
+Object.keys(collections).forEach((collectionName) => {
+  atlasDb[collectionName] = atlasConnection.model(collectionName, collections[collectionName])
 })
 
 const fileInfoNormalize = (fileInfo) => {
@@ -103,5 +114,6 @@ db.Sticker.addSticker = async (stickerSet, emojisText = '', info, file) => {
 }
 
 module.exports = {
-  db
+  db,
+  atlasDb
 }

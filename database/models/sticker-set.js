@@ -12,9 +12,7 @@ const stickerSetsSchema = mongoose.Schema({
   },
   passcode: {
     type: String,
-    index: true,
-    unique: true,
-    sparse: true
+    index: true
   },
   name: {
     type: String,
@@ -36,8 +34,7 @@ const stickerSetsSchema = mongoose.Schema({
   },
   inline: {
     type: Boolean,
-    default: false,
-    index: true
+    default: false
   },
   packType: {
     type: String,
@@ -47,10 +44,6 @@ const stickerSetsSchema = mongoose.Schema({
   frameType: String,
   emojiSuffix: String,
   create: {
-    type: Boolean,
-    default: false
-  },
-  boost: {
     type: Boolean,
     default: false
   },
@@ -86,17 +79,65 @@ const stickerSetsSchema = mongoose.Schema({
       index: true
     }
   },
+  reaction: {
+    like: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+    dislike: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+    total: {
+      type: Number,
+      default: 0,
+      index: true
+    }
+  },
+  installations: {
+    day: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+    week: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+    month: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+    total: {
+      type: Number,
+      default: 0,
+      index: true
+    }
+  },
   moderated: {
     type: Boolean,
     default: false
+  },
+  stickerChannel: {
+    messageId: Number
   }
 }, {
   timestamps: true
 })
 
 stickerSetsSchema.index({
+  public: 1,
   'about.description': 'text',
   title: 'text'
+}, {
+  weights: {
+    'about.description': 5,
+    title: 1
+  }
 })
 
 module.exports = stickerSetsSchema

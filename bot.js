@@ -46,6 +46,9 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   handlerTimeout: 500
 })
 
+// if channel post
+bot.on(['channel_post', 'edited_channel_post'], () => {})
+
 bot.use((ctx, next) => {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -151,11 +154,11 @@ bot.use(async (ctx, next) => {
   })
 })
 
-bot.use(Composer.privateChat(async (ctx, next) => {
+bot.use(async (ctx, next) => {
   await updateUser(ctx)
   await next(ctx)
   await ctx.session.userInfo.save().catch(() => {})
-}))
+})
 
 bot.command('json', ({ replyWithHTML, message }) =>
   replyWithHTML('<code>' + JSON.stringify(message, null, 2) + '</code>')

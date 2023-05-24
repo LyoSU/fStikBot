@@ -185,7 +185,7 @@ module.exports = async (ctx) => {
               ],
               [
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_share'), `https://t.me/share/url?url=https://t.me/${ctx.options.username}/catalog?startapp=set=${stickerSet.name}`),
-                Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_open'), `https://t.me/${ctx.options.username}/catalog?startapp=set=${stickerSet.name}`)
+                Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_open'), `https://t.me/${ctx.options.username}/catalog?startApp=set=${stickerSet.name}&startapp=set=${stickerSet.name}`)
               ]
             ]
           } else if (!stickerSet.animated && !stickerSet.inline && stickerSet.packType !== 'custom_emoji' && stickersCount >= 10) {
