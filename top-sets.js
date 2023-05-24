@@ -77,30 +77,32 @@ async function postPopularStickerPacksToChannel () {
   }
 }
 
-cron.schedule('*/25 * * * *', () => postPopularStickerPacksToChannel()) // every 25 minutes
+if (config.stickerChannelId) {
+  cron.schedule('*/25 * * * *', () => postPopularStickerPacksToChannel()) // every 25 minutes
 
-const updateMessage = async () => {
-  const stickerPacks = await atlasDb.StickerSet.find({ 'stickerChannel.messageId': { $gt: 0 } })
+  const updateMessage = async () => {
+    const stickerPacks = await atlasDb.StickerSet.find({ 'stickerChannel.messageId': { $gt: 0 } })
 
-  for (const stickerPack of stickerPacks) {
-    const stickerSet = await telegram.getStickerSet(stickerPack.name)
-    const bot = await telegram.getMe()
+    for (const stickerPack of stickerPacks) {
+      const stickerSet = await telegram.getStickerSet(stickerPack.name)
+      const bot = await telegram.getMe()
 
-    const inlineKeyboard = [
-      {
-        text: `👍 ${stickerPack.reaction.total}`,
-        url: `https://t.me/${bot.username}/catalog?startApp=set=${stickerSet.name}&startapp=set=${stickerSet.name}`
-      }
-    ]
+      const inlineKeyboard = [
+        {
+          text: `👍 ${stickerPack.reaction.total}`,
+          url: `https://t.me/${bot.username}/catalog?startApp=set=${stickerSet.name}&startapp=set=${stickerSet.name}`
+        }
+      ]
 
-    await telegram.editMessageReplyMarkup(config.stickerChannelId, stickerPack.stickerChannel.messageId, null, {
-      inline_keyboard: [inlineKeyboard]
-    }).catch(() => {})
+      await telegram.editMessageReplyMarkup(config.stickerChannelId, stickerPack.stickerChannel.messageId, null, {
+        inline_keyboard: [inlineKeyboard]
+      }).catch(() => {})
 
-    await new Promise(resolve => setTimeout(resolve, 3000))
+      await new Promise(resolve => setTimeout(resolve, 3000))
+    }
+
+    updateMessage()
   }
 
   updateMessage()
 }
-
-updateMessage()

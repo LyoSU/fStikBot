@@ -41,6 +41,10 @@ const stickerSetsSchema = mongoose.Schema({
     default: 'regular',
     index: true
   },
+  boost: {
+    type: Boolean,
+    default: false
+  },
   frameType: String,
   emojiSuffix: String,
   create: {
