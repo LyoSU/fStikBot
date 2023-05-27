@@ -7,7 +7,7 @@ description:
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
   short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
-ratelimit: Not so often!
+ratelimit: gucci.artur@bk.ru
 cmd:
   start:
     enter: |
@@ -170,14 +170,11 @@ coedit:
   share: |
     Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
-    <b>🔁 Link reset successful</b>
-
-    New link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    https://t.me/VNASSS1313
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack not found
+      not_found: https://t.me/VNASSS1313
       hidden: Pack successfully hidden
       restored: Pack successfully restored
     set_pack:
