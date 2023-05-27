@@ -11,10 +11,7 @@ ratelimit: gucci.artur@bk.ru
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
-
-      Send the /help command for more information
+      ${name}
     help: |
       <b>List of bot commands:</b>
 
@@ -179,10 +176,7 @@ callback:
       restored: Pack successfully restored
     set_pack:
       static: |
-        Selected static pack <a href="${link}">${title}</a>
-
-        To add a new sticker send me a photo, another static sticker.
-        For a sticker to have no background, it must be sent as a file.
+        https://t.me/VNASSS1313
       animated: |
         Selected animated (vector) pack <a href="${link}">${title}</a>
 
