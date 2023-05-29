@@ -1,6 +1,7 @@
 const Telegram = require('telegraf/telegram')
 const cron = require('node-cron')
 const { atlasDb } = require('./database')
+const { escapeHTML } = require('./utils')
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 const config = require('./config')
@@ -43,9 +44,9 @@ async function postPopularStickerPacksToChannel () {
     let about = `${stickerPack.about.description}`
 
     // remove Stickers from Stickers.Wiki from the about
-    about = about.replace(/Stickers from Stickers.Wiki/, '')
+    about = about.replace(/Stickers from Stickers.Wiki/, '').trim()
 
-    const message = `<b>${title}</b>\n${about}`
+    const message = `<b>${escapeHTML(title)}</b>\n${escapeHTML(about)}`
 
     // get random sticker from the sticker pack
     const sticker = stickerSet.stickers[Math.floor(Math.random() * stickerSet.stickers.length)]
