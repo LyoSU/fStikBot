@@ -1,43 +1,43 @@
 ---
 language_name: '🇺🇸 English'
-name: Favorite Stickers Bot 🇺🇦
+name: Bester Sticker Bot
 description:
   long: |
     🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: '.🧙 Ich bin der Emoji- und Sticker-Zauberer! Verwandeln Sie Fotos, Videos und GIFs im Handumdrehen in coole Sticker.'
 ratelimit: Not so often!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Hallo, ${name}! Ich bin der Emoji- und Sticker-Pack-Assistent.
+      Ich verwandle Fotos, Videos und GIFs im Handumdrehen in coole Sticker.
 
-      Send the /help command for more information
+      Für weitere Informationen senden Sie den Befehl /help
     help: |
-      <b>List of bot commands:</b>
+      Liste der Bot-Befehle:
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new – ein neues Stickerpaket erstellen
+      /new_emoji – ein neues Emoji-Paket erstellen
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /delete – Aufkleber aus dem Paket löschen
+      /original – Originalaufkleber finden
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /packs – Liste Ihrer Pakete
+      /restore – ein Paket wiederherstellen
+      /copy – ein Paket kopieren
+      /emoji – Emoji-Suffix für aktuelles Paket ändern
+      /frame – Frame für aktuelles Videopaket ändern
+      /publish – Veröffentlichen Sie das Paket im Katalog
 
-      /catalog - open catalog
+      /catalog – Katalog öffnen
 
-      /lang - change language
-      /donate - support the developer
+      /lang – Sprache ändern
+      /donate – Unterstütze den Entwickler
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      Kontakte: @ly_oBot
+      Entwicklerkanal: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -48,7 +48,7 @@ cmd:
       • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
       start: '📜 Start menu'
-      help: '📖 Help'
+      help: '📖 Hilfe'
       packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
