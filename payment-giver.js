@@ -58,7 +58,7 @@ const giveCredit = async () => {
     })
   }
 
-  setTimeout(giveCredit, 1000 * 5)
+  setTimeout(giveCredit, 1000 * 30)
 }
 
 giveCredit()
