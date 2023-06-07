@@ -42,7 +42,7 @@ const giveCredit = async () => {
 
     if (!user) continue
 
-    const credit = parseInt(payment.amount) * 5
+    const credit = parseInt(payment.amount)
 
     user.balance += credit
     payment.status = 'paid'
