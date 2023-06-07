@@ -2,6 +2,7 @@ const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const freekassa = require('@alex-kondakov/freekassa')
 const CryptoPay = require('@foile/crypto-pay-api')
+const mongoose = require('mongoose')
 
 const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
 
@@ -32,12 +33,25 @@ const donate = async (ctx) => {
 
   // if locale is ru
   if (ctx.session.userInfo.locale === 'ru' || ctx.from.language_code === 'ru') {
+    const payment = new ctx.db.Payment({
+      _id: mongoose.Types.ObjectId(),
+      user: ctx.session.userInfo._id,
+      amount,
+      price: priceRUB,
+      currency: 'RUB',
+      paymentSystem: 'freekassa',
+      comment,
+      status: 'pending'
+    })
+
+    await payment.save()
+
     const freekassaPayment = freekassa.init()
 
     freekassaPayment.secret1 = process.env.FREEKASSA_SECRET1
     freekassaPayment.secret2 = process.env.FREEKASSA_SECRET2
     freekassaPayment.shopId = process.env.FREEKASSA_SHOP_ID
-    freekassaPayment.paymentId = comment + ' (' + new Date().getTime() + ')'
+    freekassaPayment.paymentId = payment._id
     freekassaPayment.amount = priceRUB
     freekassaPayment.currency = 'RUB'
     freekassaPayment.description = comment

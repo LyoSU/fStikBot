@@ -79,7 +79,7 @@ async function postPopularStickerPacksToChannel () {
 }
 
 if (config.stickerChannelId) {
-  cron.schedule('*/25 * * * *', () => postPopularStickerPacksToChannel()) // every 25 minutes
+  cron.schedule('0 */2 * * *', () => postPopularStickerPacksToChannel()) // every 2 hours
 
   const updateMessage = async () => {
     const stickerPacks = await atlasDb.StickerSet.find({ 'stickerChannel.messageId': { $gt: 0 } })
