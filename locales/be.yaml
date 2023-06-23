@@ -3,10 +3,10 @@ language_name: '🇧🇾 Беларуская'
 name: Favorite Stickers Bot 🇺🇦
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Я чарадзейны бот для стварэння стыкераў і эмодзі, і я дапамагу зрабіць вашыя размовы з сябрамі яшчэ больш вясёлымі! Дзякуючы сваім чарадзейным сілам я магу ператварыць вашыя любімыя фотаздымкі, відэа і гіфкі ў гарныя эмодзі і стыкеры без пакутаў з канвертацыяй і абразаннем. 🎉🎊 Са мной вы зможаце стварыць свае пакі ўсяго за некалькі націсканняў. Дык чаго ж вы чакаеце? Пачнем жа — дададзім ✨бляску✨ ў вашыя перапіскі!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+    Пошук стыкераў: https://play.google.com/store/apps/details?id=app.fstik
+  short: 'Я чараўнік эмодзі і стыкераў! Ператварайце фота, відэа і гіфкі ў гарныя стыкеры ў вокамгненне.'
 ratelimit: Не так хутка!
 cmd:
   start:
