@@ -217,149 +217,150 @@ callback:
       coedit: '👥 Сумеснае рэдагаванне'
       catalog_add: '🗂️ Дадаць у каталог'
       catalog_edit: '📝 Рэдагаваць у каталозе'
-      catalog_delete: '🗑 Delete from catalog'
-      catalog_share: '🔗️️ Share'
-      catalog_open: '📂 Open in catalog'
+      catalog_delete: '🗑 Выдаліць з каталога'
+      catalog_share: '🔗️️Абагуліць'
+      catalog_open: '📂 Адкрыць у каталозе'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore pack.
+        <b>Памылка!</b>
+        Не атрымалася аднавіць пак.
       copy: |
-        <b>Error!</b>
-        Cannot find pack.
+        <b>Памылка!</b>
+        Не атрымалася знайсці пак.
   sticker:
     answerCbQuery:
-      delete: The sticker was successfully removed from the pack.
-      restored: The sticker was successfully saved to the current pack.
-    delete: The sticker was successfully removed from the pack.
-    restored: The sticker was successfully saved to the current pack.
+      delete: Стыкер паспяхова выдалены з пака.
+      restored: Стыкер паспяхова захаваны ў бягучым паку.
+    delete: Стыкер паспяхова выдалены з пака.
+    restored: Стыкер паспяхова захаваны ў бягучым паку.
     btn:
-      delete: '🗑 Delete'
-      copy: '🌟 Copy'
+      delete: '🗑 Выдаліць'
+      copy: '🌟 Скапіяваць'
       restore: '✅ Аднавіць'
     error:
       not_found: |
-        ERROR!
-        Cannot find a sticker.
+        ПАМЫЛКА!
+        Не атрымалася знайсці стыкер.
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>Стыкер паспяхова дададзены ў пак:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Калі вы хочаце замацаваць за стыкерам адзін або некалькі эмодзі, адпраўце іх сюды</i>
     ok_inline: |
-      <b>Sticker added to stickerpack successfully:</b>
+      <b>Стыкер паспяхова дададзены ў пак:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Выдатна, цяпер адпраўце эмодзі, які адпавядае стыкеру
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Пачакайце…</b>
+      Ваш файл знаходзіцца ў чарзе на канвертацыю. Пачакайце заканчэння канвертацыі. Гэта можа заняць некаторы час.
 
-      Progress: ${progress} / ${total}
+      Ход выканання: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Карыстальнікі, якія падтрымалі распрацоўку бота, атрымліваюць большы прыярытэт у чарзе (падрабязней: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 Ого, выдатны пак атрымаўся!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Хочаце дадаць <a href="${link}">${title}</a> у публічны каталог стыкераў, каб іншыя карыстальнікі бота таксама маглі яго ўбачыць?
+      <i>Гэта не зойме шмат часу</i>
     error:
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>Вы не выбралі пак</b>
 
-        Please, create (/new) or choose (/packs) pack
+        Калі ласка, стварыце (/new) або выберыце (/packs) пак
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        У гэтым паку максімальная колькасць стыкераў.
 
-        You can create a new pack using the /new command.
+        Вы можаце стварыць новы пак, выкарыстаўшы каманду /new.
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>Гэты стыкер ужо ёсць у паку</b>
 
-        If you want to change the emoji, send it in the following message.
+        Калі вы хочаце змяніць эмодзі, адпраўце яго ў наступным паведамленні.
       stickerset_invalid: |
-        <b>Error!</b>
-        Bot cannot access your current chosen pack.
+        <b>Памылка!</b>
+        Бот не можа атрымаць доступ да выбранага пака.
 
-        Please, create (/new) or choose (/packs) another pack.
+        Калі ласка, стварыце новы (/new) або выберыце існуючы (/packs) пак.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>Памылка!</b>
+          Такі тып файлаў не падтрымліваецца
+          Вы можаце дадаць гэтае фота або статычны стыкер у статычны пак
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Стварыце новы (/new) або выберыце існуючы (/packs) пак</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>Памылка!</b>
+          Такі тып файлаў не падтрымліваецца
+          Вы можаце дадаць гэты відэафайл у відэапак
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Стварыце новы (/new) або выберыце існуючы (/packs) пак</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>Памылка!</b>
+          Такі тып файлаў не падтрымліваецца
+          Вы можаце дадаць гэты анімаваны файл у вектарны пак
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Стварыце новы (/new) або выберыце існуючы (/packs) пак</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>Памылка!</b>
+          Такі тып файлаў не падтрымліваецца
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Стварыце новы (/new) або выберыце існуючы (/packs) пак</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Пачакайце!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Бот усё яшчэ апрацоўвае папярэдняе відэа…
+        Вы можаце падтрымаць распрацоўку бота (/donate), каб павысіць прыярытэт апрацоўкі вашых відэа і атрымаць магчымасць дадаваць у чаргу больш за адзін стыкер.
       timeout: |
-        <b>Error!</b>
+        <b>Памылка!</b>
 
-        Try again later.
+        Паўтарыце спробу пазней.
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>Памылка!</b>
+        На жаль, у бота не атрымалася канвертаваць вашае відэа.
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        Верагодна, вашае відэа было захавана ў фармаце, які наш бот не падтрымлівае. Упэўніцеся, што яго фармат — MP4.
+        Таксама магчыма, што гэта ўнутраная памылка бота, паспрабуйце адправіць гэтае відэа яшчэ раз.
       too_big: |
-        <b>Error!</b>.
+        <b>Памылка!</b>
 
-        The file is too big to process. Please reduce the quality and duration before sending.
+        Файл надта вялікі для апрацоўкі. Калі ласка, паменшыце яго якасць або працягласць перад адпраўкай.
 news:
   join: |
-    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+    ℹ️ <a href="${link}">Падпішыцеся на наш канал,</a> каб атрымліваць апошнія навіны пра нашага бота.
 
-    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
-  join_btn: '📢 Join channel'
-  not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+    <i>Падпісаўшыся на канал, вы будзеце атрымліваць апошнія навіны пра нашага бота, а таксама абнаўленні і новыя функцыі.</i>
+  join_btn: '📢 Падпісацца на канал'
+  not_joined: '🙅 Вы не падпісаны на канал'
+  continue: '✅ Працягнуць'
 scenes:
   new_pack:
-    static: '🌟 Static'
-    animated: '✨ Vector'
-    video: '📹 Video'
+    static: '🌟 Статычны'
+    animated: '✨ Вектарны'
+    video: '📹 Відэа'
     pack_format: |
-      <b><u>Choose stickerpack type</u></b>
+      <b><u>Выберыце тып пака стыкераў</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>Звычайны</b> — статычны (стыкеры не рухаюцца), растравы, фармат файлаў: да дадавання — PNG (бот апрацоўвае), пасля дадавання — WEBP.
+      Узор звычайнага пака: t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>Відэа</b> — анімаваны відэапак. Вы можаце дадаваць любыя відэа, анімацыі і відарысы.
+      Узор відэапака: t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>Анімаваны</b> — анімаваны, вектарны (у файлах стыкераў прапісаны менавіта фігуры, а не пікселі, з-за чаго стыкеры адлюстроўваюцца правільна ў любым маштабе), фармат файлаў: TGS — разнастайнасць фармата Lottie.
+      Узор анімаванага пака: t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>Максімальная колькасць стыкераў у анімаваных і відэапаках — 50; у статычных наборах — 120.</i>
     pack_title: |
-      <b>Enter new stickers pack name:</b>
-      <i>You can choose random name on button.</i>
+      <b>Увядзіце назву новага пака стыкераў:</b>
+      <i>Таксама вы можаце выбраць выпадкова згенераваную назву ніжэй.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <b>Увядзіце кароткую спасылку на новы пак стыкераў:</b>
+      <i>Выкарыстайце толькі англійскія літары, лічбы і сімвалы падкрэслівання.</i>
+      <i>Напрыклад, гэты пак у якасці кароткай спасылкі выкарыстоўвае «Animals»:
+      https://t.me/addstickers/<u>Animals</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>Вы таксама можаце выбраць выпадковую спасылку ніжэй.</i>
     ok: |
       Пак <a href="${link}">${title}</a> паспяхова створаны!
 
@@ -433,35 +434,35 @@ scenes:
       <i>Інфармацыя пра іншыя пакі гэтага ўладальніка адсутнічае</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Вы ўпэўненыя, што хочаце забусціць пак <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Буст павялічыць прыярытэт пака пры апрацоўцы і дасць магчымасць дадаваць у чаргу больш за адзін стыкер
+      Больш падрабязную інфармацыю пра бусты можна знайсці па камандзе /donate
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>Кошт:</b> 1 кр.
+      <b>Бягучы Баланс:</b> ${balance} кр.
     btn:
-      yes: Yes, boost!
-      no: No, cancel
+      yes: Так, забусціць!
+      no: Не, скасаваць
     canceled: |
-      Boosting canceled
+      Буст скасаваны
     success: |
-      Boosting successfully completed!
+      Буст паспяхова завершаны!
 
-      ${title} is now boosted
+      Пак ${title} цяпер забушчаны
     error:
       not_enough_credits: |
-        You do not have enough credits to boost this pack.
+        У вас недастатковая колькасць крэдытаў для бусту.
 
-        You can top up your balance by sending the /donate command.
+        Вы можаце папоўніць баланс, адправіўшы каманду /donate.
       already_boosted: |
-        This pack is already boosted.
+        Гэты пак ужо забушчаны.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Адпраўце сюды стыкер з пака, які вы хочаце апублікаваць</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Вы можаце апублікаваць любы пак, які належыць вам, нават калі пак быў створаны не праз гэтага бота</i>
       owner_proof: |
         <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
         1. Open @Stickers bot
