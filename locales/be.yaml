@@ -207,16 +207,16 @@ callback:
     restored: Пак <a href="${link}">${title}</a> адноўлены ў вашым спісе.
     btn:
       hide: '❌ Схаваць пак'
-      delete: '🗑 Delete pack'
-      restore: '✅ Restore'
-      use_pack: '📦 Use pack'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
-      coedit: '👥 Co-edit'
-      catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
+      delete: '🗑️ Выдаліць пак'
+      restore: '✅ Аднавіць'
+      use_pack: '📦 Выкарыстаць пак'
+      boost: '⚡ Буст'
+      frame: '🖼️ Рамка'
+      rename: '✏️ Перайменаваць'
+      search_gif: '🔎 Пошук GIF'
+      coedit: '👥 Сумеснае рэдагаванне'
+      catalog_add: '🗂️ Дадаць у каталог'
+      catalog_edit: '📝 Рэдагаваць у каталозе'
       catalog_delete: '🗑 Delete from catalog'
       catalog_share: '🔗️️ Share'
       catalog_open: '📂 Open in catalog'
@@ -236,7 +236,7 @@ callback:
     btn:
       delete: '🗑 Delete'
       copy: '🌟 Copy'
-      restore: '✅ Restore'
+      restore: '✅ Аднавіць'
     error:
       not_found: |
         ERROR!
