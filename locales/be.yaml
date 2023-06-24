@@ -189,24 +189,24 @@ callback:
 
         Каб дадаць новы стыкер, адпраўце сюды файл <a href="https://core.telegram.org/stickers#animated-stickers">TGS</a> або іншы анімаваны стыкер.
       video: |
-        Selected video pack <a href="${link}">${title}</a>
+        Выбраны відэапак <a href="${link}">${title}</a>
 
-        To add a new sticker send me any video or photo.
+        Каб дадаць новы стыкер, адпраўце сюды любое відэа або фота.
     set_inline_pack: |
-      Selected <u>${title}</u> stickerpack
+      Выбраны пак ствараў <u>${title}</u>
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      Каб яго выкарыстаць, напішыце ў любым чаце <code>@${botUsername}</code> і дадайце прабел.
+      Вы таксама можаце выкарыстаць яго, націснуўшы кнопку ніжэй
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Буст</a></b>: ${boostStatus}
       status:
-        on: Enabled
-        off: Disabled
-    hidden: Pack <a href="${link}">${title}</a> hidden from your list.
-    restored: Pack <a href="${link}">${title}</a> restored to your list.
+        on: Укл.
+        off: Выкл.
+    hidden: Пак <a href="${link}">${title}</a> схаваны з вашага спісу.
+    restored: Пак <a href="${link}">${title}</a> адноўлены ў вашым спісе.
     btn:
-      hide: '❌ Hide pack'
+      hide: '❌ Схаваць пак'
       delete: '🗑 Delete pack'
       restore: '✅ Restore'
       use_pack: '📦 Use pack'
@@ -361,76 +361,76 @@ scenes:
 
       <i>You can choose random short link on button.</i>
     ok: |
-      Pack <a href="${link}">${title}</a> successfully created!
+      Пак <a href="${link}">${title}</a> паспяхова створаны!
 
-      <b>Pack link:</b> <pre>${link}</pre>
+      <b>Спасылка на пак:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Адпраўце файл, фота відэа або стыкер, каб я дадаў яго да вашага набору
     error:
-      title_long: Name cannot be greater than ${max} symbols.
-      name_long: Address cannot be greater than ${max} symbols.
+      title_long: 'Максімальная колькасць сімвалаў у назве: ${max}.'
+      name_long: 'Максімальная колькасць сімвалаў у адрасе: ${max}.'
       telegram:
-        name_invalid: That address cannot be used.
-        name_occupied: This address is already taken.
+        name_invalid: Такі адрас выкарыстаць не атрымаецца.
+        name_occupied: Такі адрас ужо заняты.
         upload_failed: |
-          <b>Error!</b>
-          Bot cannot upload stickers to Telegram.
+          <b>Памылка!</b>
+          Бот не можа запампаваць стыкеры ў Telegram.
 
-          Please, try again later.
+          Паўтарыце спробу пазней.
   copy:
     enter: |
-      I can copy it, but before that, let's create a new pack
+      Я магу яго скапіяваць, але давайце спачатку створым новы пак
     progress: |
-      Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      Капіяванне пака з <a href="${originalLink}">${originalTitle}</a> у <a href="${link}">${title}</a>
 
-      Progress: ${current}/${total}
+      Ход выканання: ${current}/${total}
     done: |
-      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      Капіяванне пака з <a href="${originalLink}">${originalTitle}</a> у <a href="${link}">${title}</a> паспяхова завершана.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>Памылка!</b>
+        Гэтая функцыя даступная толькі для данатараў.
 
-        You can do this by sending the /donate command.
+        Каб стаць данатарам, адпраўце каманду /donate.
   original:
     enter: |
-      Send the sticker that was added through this bot and I will show you its original sticker.
+      Адпраўце стыкер, які быў дададзены праз гэтага бота, і я пакажу арыгінальны стыкер.
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the original sticker.
+        <b>Памылка!</b>
+        Не атрымалася знайсці арыгінальны стыкер.
   delete:
     enter: |
-      Send the sticker that was added through this bot and I will delete it from the pack.
+      Адпраўце стыкер, які быў дададзены праз гэтага бота, і я яго выдалю з пака.
     confirm: |
-      Are you sure you want to delete this sticker?
+      Вы ўпэўненыя, што хочаце выдаліць гэты стыкер?
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the sticker.
+        <b>Памылка!</b>
+        Не атрымалася знайсці стыкер.
   rename:
     enter_name: |
-      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+      <b>Увядзіце новую назву для пака <a href="${link}">${title}</a>:</b>
     success: |
-      <b>Title successfully changed!</b>
+      <b>Назва паспяхова зменена!</b>
 
-      New title: <a href="${link}">${title}</a>
+      Новая назва: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>Адпраўце мне стыкер або эмодзі, каб прагледзець інфармацыю пра яго:</b>
     not_found: |
-      I could not find the sticker
+      Не атрымалася знайсці стыкер
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Пак:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(унікальны нумар пакаў уладальніка, павялічваецца з кожным пакам)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 ID уладальніка: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Іншыя пакі ад гэтага ўладальніка:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>Інфармацыя пра іншыя пакі гэтага ўладальніка адсутнічае</i>
   boost:
     sure: |
       <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
