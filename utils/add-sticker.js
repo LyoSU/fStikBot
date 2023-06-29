@@ -108,6 +108,10 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
       parse_mode: 'HTML'
     })
   } else {
+    await ctx.telegram.sendMessage(ctx.config.logChatId, `<b>Convert error</b>\n\n<code>${JSON.stringify(errorData)}</code>`, {
+      parse_mode: 'HTML'
+    })
+
     await telegram.sendMessage(input.userId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
       parse_mode: 'HTML'
     })
