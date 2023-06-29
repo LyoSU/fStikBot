@@ -103,7 +103,7 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.userId, input.convertingMessageId).catch(() => {})
 
-  if (errorData.errorData === 'timeout') {
+  if (errorData === 'timeout') {
     await telegram.sendMessage(input.userId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), {
       parse_mode: 'HTML'
     })
