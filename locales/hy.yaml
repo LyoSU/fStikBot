@@ -6,7 +6,7 @@ description:
     🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: '🧙 Ես եմ էմոջին եւ սթիկերի վարպետը։ Փոխակերպեք լուսանկարները, տեսանյութերը եւ GIF-երը սահման սթիկերների:'
 ratelimit: Not so often!
 cmd:
   start:
@@ -48,13 +48,13 @@ cmd:
       • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
       start: '📜 Start menu'
-      help: '📖 Help'
+      help: '📖 Օգնություն'
       packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
       catalog: '📖 Catalog'
       publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      delete: '❌ Ջնջել սթիկերը'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
