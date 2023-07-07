@@ -63,13 +63,13 @@ cmd:
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Dumaloq shakldagi video'
+      round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Katalogni ochish'
+      catalog: '💖 Open catalog'
       catalog_mini: '💖 Catalog'
       catalog_browser: '🌐 Open in browser'
       catalog_browser_mini: '🌐 In browser'
@@ -112,9 +112,9 @@ cmd:
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videolar endi yumaloq shaklga ega bo'ladi
+      Videos will now have a rounded shape
     disabled: |
-      Videolar endi yumaloq shaklga ega bo‘lmaydi
+      Videos will no longer have a rounded shape
 donate:
   menu: |
     <b>☕️ Bot development support</b>
@@ -480,9 +480,9 @@ scenes:
 
         You can only publish your own packs
       bannded: |
-        <b>Xato!</b>
-        Sizga ushbu xususiyatdan foydalanish taqiqlangan.
-        Iltimos, administratorga murojaat qiling.
+        <b>Error!</b>
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -494,7 +494,7 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
-      continue_button: Davom eting
+      continue_button: Continue
       enter_description: |
         <b>Briefly describe your pack so that others can find it</b>
 
@@ -511,7 +511,7 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: belgilanmagan
+      no_tags: were not specified
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 

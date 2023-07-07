@@ -6,7 +6,7 @@ description:
     🧙 Ben emoji ve çıkartma paketi büyücüsüyüm, mesajlaşma deneyiminizi daha eğlenceli hale getirmek için buradayım! Favori fotoğraf, video ve GIF'lerinizi dönüştürmeden ve kırpma işlemi yapmadan harika emoji ve çıkartmalara dönüştürmek için sihirli güçlerim var. 🎉🎊 Benimle, birkaç tıklama ile herhangi bir durum için kişiselleştirilmiş paketler oluşturabilirsiniz. Hadi başlayalım ve sohbetlerinize ✨parıltı✨ ekleyelim!
 
     Çıkartmaları aramak için: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 Ben emoji ve çıkartma büyücüsüyüm! Fotoğraf, video ve GIF''leri hızlıca harika çıkartmalara dönüştürebilirim.'
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: Pek sık değil!
 cmd:
   start:
@@ -57,24 +57,24 @@ cmd:
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
       catalog: '📖 Katalog'
-      publish: '📤 Paketi yayınla'
-      delete: '❌ Çıkartmayı sil'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Yuvarlak şekil videosu'
+      round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Kataloğu aç'
-      catalog_mini: '💖 Katalog'
-      catalog_browser: '🌐 Tarayıcıda aç'
-      catalog_browser_mini: '🌐 Tarayıcıda'
-      catalog_app: '📱 Android uygulamasını indirin'
-      catalog_app_mini: '📱 Android uygulaması'
+      catalog: '💖 Open catalog'
+      catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
+      catalog_app: '📱 Download Android app'
+      catalog_app_mini: '📱 Android app'
   inline:
     switch_pm: '📁 Select pack'
   restore: |
@@ -112,9 +112,9 @@ cmd:
     error: Emoji değiştirilirken bir hata oluştu!
   round_video:
     enabled: |
-      Videolar artık yuvarlak bir şekle sahip olacak
+      Videos will now have a rounded shape
     disabled: |
-      Videolar artık yuvarlak bir şekle sahip olmayacak
+      Videos will no longer have a rounded shape
 donate:
   menu: |
     <b>☕️ Bot development support</b>
@@ -167,16 +167,16 @@ coedit:
 
     <i>To remove editors, you need to reset the link</i>
   no_editors: |
-    Henüz düzenleyici yok
+    No editors yet
   btn:
-    send: '📤 Bağlantı gönder'
-    reset: '🔁 Bağlantıyı sıfırla'
+    send: '📤 Send link'
+    reset: '🔁 Reset link'
   share: |
     Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
-    <b>🔁 Bağlantı sıfırlama başarılı</b>
+    <b>🔁 Link reset successful</b>
 
-    Ortak düzenleme için yeni bağlantı <a href="${link}">${title}</a>:
+    New link for co-editing <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -408,18 +408,18 @@ scenes:
     enter: |
       Send the sticker that was added through this bot and I will delete it from the pack.
     confirm: |
-      Bu çıkartmayı silmek istediğinizden emin misiniz?
+      Are you sure you want to delete this sticker?
     error:
       not_found: |
-        <b>Hata!</b>
-        Çıkartmayı bulamadım.
+        <b>Error!</b>
+        I could not find the sticker.
   rename:
     enter_name: |
-      <b> <a href="${link}">${title}</a>:</b>için yeni başlık girin
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
     success: |
-      <b>Başlık başarıyla değiştirildi!</b>
+      <b>Title successfully changed!</b>
 
-      Yeni unvan: <a href="${link}">${title}</a>
+      New title: <a href="${link}">${title}</a>
   packAbout:
     enter: |
       <b>Send me a sticker or custom emoji to look up information about it:</b>
@@ -479,9 +479,9 @@ scenes:
 
         You can only publish your own packs
       bannded: |
-        <b>Hata!</b>
-        Bu özelliği kullanmanız yasaklandı.
-        Lütfen yönetici ile iletişime geçin.
+        <b>Error!</b>
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -493,7 +493,7 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
-      continue_button: Devam
+      continue_button: Continue
       enter_description: |
         <b>Briefly describe your pack so that others can find it</b>
 
@@ -510,7 +510,7 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: belirtilmemiş
+      no_tags: were not specified
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
@@ -530,22 +530,22 @@ scenes:
         The pack has been successfully unpublished from bot catalog.
   delete_pack:
     enter: |
-      <a href="${link}">${title}</a>paketini silmek istediğinizden emin misiniz?
-      Kalıcı olarak silinecek ve kurtarılamaz.
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
 
-      Yalnızca bir çıkartmayı silmek istiyorsanız, /delete komutunu kullanın.
+      If you want to delete only one sticker, use the /delete command.
 
-      Bu paketi gerçekten silmek istediğinizi onaylamak için <code>${confirm}</code> gönderin.
-    confirm: Evet, kesinlikle eminim.
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
     success: |
       <b>Pack successfully deleted!</b>
     error:
-      - <b>Hata!</b>
-      - Hay aksi, bir şeyler ters gitti.
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
     no_video: |
-      <b>Hata!</b>
-      Video paketlerine yalnızca çerçeve ekleyebilirsiniz.
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
       Frame is a transparent background around the sticker
@@ -560,11 +560,11 @@ scenes:
     types:
       lite: '1. Basit'
       medium: '2 - Orta'
-      rounded: '3. Yuvarlak'
-      square: '4. Kare'
-      circle: '5. Çember'
+      rounded: '3. Rounded'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
-      <b>Seçilen çerçeve tipi:</b> ${type}
+      <b>Selected frame type:</b> ${type}
   photoClear:
     enter: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background

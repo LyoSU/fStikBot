@@ -6,7 +6,7 @@ description:
     🧙 我是表情包和贴纸大师，来让你的聊天更有趣！我的魔法可以将你最喜欢的照片，视频和 GIF 转换成酷炫的表情包和贴纸，无需麻烦的转换和裁剪。🎉🎊 通过我，你只需要几个点击就可以为任何场合创建个性化的贴纸包。那么，你还在等什么呢？让我们开始，给你的聊天添加一些✨闪光✨！
 
     搜索贴纸: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙‍♀️ 我是表情符号和贴纸巫师！转换照片、视频和 GIF 成为酷炫的贴纸轻而易举。'
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: 不经常如此！
 cmd:
   start:
@@ -57,24 +57,24 @@ cmd:
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
       catalog: '📖 目录'
-      publish: '📤 发布包'
-      delete: '❌删除贴纸'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 圆形视频'
+      round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
       new: '📥 Create new'
-      catalog: '💖 打开目录'
-      catalog_mini: '💖目录'
-      catalog_browser: '🌐 在浏览器中打开'
-      catalog_browser_mini: '🌐 在浏览器中'
-      catalog_app: '📱 下载安卓应用'
-      catalog_app_mini: '📱 安卓应用'
+      catalog: '💖 Open catalog'
+      catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
+      catalog_app: '📱 Download Android app'
+      catalog_app_mini: '📱 Android app'
   inline:
     switch_pm: '📁 Select pack'
   restore: |
@@ -98,7 +98,7 @@ cmd:
     types:
       regular: Stickers
       custom_emoji: Emojis
-      inline: 内嵌文件
+      inline: Inline
     empty: |
       <b>You have no packs yet.</b>
       To create, write a command /new
@@ -112,9 +112,9 @@ cmd:
     error: 更改表情时发生错误！
   round_video:
     enabled: |
-      视频现在将呈圆形
+      Videos will now have a rounded shape
     disabled: |
-      视频将不再具有圆形
+      Videos will no longer have a rounded shape
 donate:
   menu: |
     <b>☕️ Bot development support</b>
@@ -167,16 +167,16 @@ coedit:
 
     <i>To remove editors, you need to reset the link</i>
   no_editors: |
-    还没有编辑
+    No editors yet
   btn:
-    send: '📤 发送链接'
-    reset: '🔁 重置链接'
+    send: '📤 Send link'
+    reset: '🔁 Reset link'
   share: |
     Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
-    <b>🔁 链接重置成功</b>
+    <b>🔁 Link reset successful</b>
 
-    共同编辑的新链接 <a href="${link}">${title}</a>:
+    New link for co-editing <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -409,18 +409,18 @@ scenes:
     enter: |
       Send the sticker that was added through this bot and I will delete it from the pack.
     confirm: |
-      您确定要删除此标签？
+      Are you sure you want to delete this sticker?
     error:
       not_found: |
-        <b>错误！</b>
-        我找不到贴纸。
+        <b>Error!</b>
+        I could not find the sticker.
   rename:
     enter_name: |
-      <b>为 <a href="${link}">${title}</a>输入新标题</b>
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
     success: |
-      <b>标题更改成功！</b>
+      <b>Title successfully changed!</b>
 
-      新标题： <a href="${link}">${title}</a>
+      New title: <a href="${link}">${title}</a>
   packAbout:
     enter: |
       <b>Send me a sticker or custom emoji to look up information about it:</b>
@@ -480,9 +480,9 @@ scenes:
 
         You can only publish your own packs
       bannded: |
-        <b>错误！</b>
-        您被禁止使用此功能。
-        请联系管理员。
+        <b>Error!</b>
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -494,7 +494,7 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
-      continue_button: 继续
+      continue_button: Continue
       enter_description: |
         <b>Briefly describe your pack so that others can find it</b>
 
@@ -511,7 +511,7 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: 不指定
+      no_tags: were not specified
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
@@ -531,22 +531,22 @@ scenes:
         The pack has been successfully unpublished from bot catalog.
   delete_pack:
     enter: |
-      您确定要删除包 <a href="${link}">${title}</a>吗？
-      它将被永久删除，无法恢复。
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
 
-      如果只想删除一张贴纸，请使用 /delete 命令。
+      If you want to delete only one sticker, use the /delete command.
 
-      发送 <code>${confirm}</code> 以确认您确实要删除此包。
-    confirm: 是的，我完全确定。
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
     success: |
       <b>Pack successfully deleted!</b>
     error:
-      - <b>错误！</b>
-      - 糟糕，出了点问题。
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
     no_video: |
-      <b>错误！</b>
-      您只能将帧添加到视频包。
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
       Frame is a transparent background around the sticker
@@ -561,11 +561,11 @@ scenes:
     types:
       lite: '1. 精简版'
       medium: '2. 中等'
-      rounded: '3. 圆角'
-      square: '4. 广场'
-      circle: '5. 圆圈'
+      rounded: '3. Rounded'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
-      <b>所选帧类型：</b> ${type}
+      <b>Selected frame type:</b> ${type}
   photoClear:
     enter: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background

@@ -6,7 +6,7 @@ description:
     🧙 Soy el mago del paquete de emojis y pegatinas, ¡y estoy aquí para hacer que tu experiencia de mensajería sea más divertida! Mis poderes mágicos me permiten transformar tus fotos, videos y GIF favoritos en divertidos emojis y calcomanías sin la molestia de convertirlos y recortarlos. 🎉🎊 Conmigo puedes crear packs personalizados para cualquier ocasión con tan solo unos clics. ¿Entonces, Qué esperas? ¡Comencemos y agreguemos un poco de ✨chispa✨ a sus chats!
 
     Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 ¡Soy el mago de emojis y stickers! Transforme fotos, videos y GIF en calcomanías geniales en un instante.'
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: '¡No tan amenudo!'
 cmd:
   start:

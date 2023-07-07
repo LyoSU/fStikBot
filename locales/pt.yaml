@@ -1,12 +1,12 @@
 ---
 language_name: '🇧🇷 Português'
-name: Bot de figurinhas favoritas 🇺🇦
+name: Favorite Stickers Bot 🇺🇦
 description:
   long: |
     🧙 Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
 
     Pesquise adesivos: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 Eu sou o mago dos emojis e figurinhas! Transforme fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.'
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: Não tão frequente!
 cmd:
   start:
@@ -52,148 +52,148 @@ cmd:
       • Não se esqueça de dar nota para promover ou rebaixar um pacote de stickes no ranking
     commands:
       start: '📜 Menu inicial'
-      help: '📖 Ajuda'
-      packs: '📁 Gerenciar pacotes'
-      new: '🌝 Criar pacote de stickers'
-      new_emoji: '😊 Criar pacote de emoji'
+      help: '📖 Help'
+      packs: '📁 Manage packs'
+      new: '🌝 Create sticker pack'
+      new_emoji: '😊 Create emoji pack'
       catalog: '📖 Catálogo'
-      publish: '📤 Pacote de publicação'
-      delete: '❌ Excluir adesivo'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 Encontre o sticker original'
-      restore: '🔀 Restaurar um pacote'
-      copy: '📋 Copie um pacote'
+      restore: '🔀 Restore a pack'
+      copy: '📋 Copy a pack'
       emoji: '📝 Altere o emoji vinculado'
-      round: '🎥 Deixe o vídeo redondo'
-      clear: '🖼️ Remova o fundo da foto'
+      round: '🎥 Round shape video'
+      clear: '🖼️ Remove background from photo'
       lang: '🌐 Mude o idioma'
       donate: '☕️ Apoie o desenvolvedor'
     btn:
       new: '📥 Crie novo'
-      catalog: '💖 Abrir catálogo'
-      catalog_mini: '💖 Catálogo'
-      catalog_browser: '🌐 Abrir no navegador'
-      catalog_browser_mini: '🌐 No navegador'
-      catalog_app: '📱 Baixe o aplicativo Android'
-      catalog_app_mini: '📱 Aplicativo Android'
+      catalog: '💖 Open catalog'
+      catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
+      catalog_app: '📱 Download Android app'
+      catalog_app_mini: '📱 Android app'
   inline:
-    switch_pm: '📁 Selecione o pacote'
+    switch_pm: '📁 Select pack'
   restore: |
-    <b>🗃 Restauração de pacotes</b>
+    <b>🗃 Pack restoration</b>
 
-    Se você criou anteriormente um pacote por meio deste bot e não consegue encontrá-lo na lista de seus pacotes, pode restaurá-lo.
+    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
 
-    <b>Para fazer isso, você precisa realizar várias ações:</b>
-    1. Abra o bot @Stickers
-    2. Envie o comando <code>/packstats</code>
-    3. Encontre e escolha o pacote necessário
-    4. Encaminhe a mensagem recebida para o bot
-    5. Se a restauração for bem-sucedida - o bot informa sobre isso
+    <b>To do this, you need to perform several actions:</b>
+    1. Open @Stickers bot
+    2. Send <code>/packstats</code> command
+    3. Find and choose the required pack
+    4. Forward the received message to the bot
+    5. If restoration is successful - bot informs about it
   copy: |
-    <b>🗄️ Copiar pacote</b>
+    <b>🗄 Copy pack</b>
 
-    Para copiar outro pacote para um novo, você só precisa me enviar um link para um pacote de sticker ou emoji
+    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   packs:
     info: |
-      <b>📁 Pacotes</b>
+      <b>📁 Packs</b>
     types:
       regular: Figurinhas
       custom_emoji: Emojis
-      inline: Em linha
+      inline: Inline
     empty: |
-      <b>Você ainda não tem pacotes.</b>
-      Para criar, escreva um comando /new
-    inline_title: Pacote em linha
+      <b>You have no packs yet.</b>
+      To create, write a command /new
+    inline_title: Inline pack
   emoji:
     info: |
-      Para alterar o emoji padrão do pacote atual, envie <code>/emoji</code> seguido do emoji separado por um espaço
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
 
-      Por exemplo - <code>/emoji 🌟</code>
+      For example - <code>/emoji 🌟</code>
     done: Emoji alterado com sucesso.
     error: Houve um erro ao alterar o emoji!
   round_video:
     enabled: |
-      Os vídeos agora terão formato arrendondado
+      Videos will now have a rounded shape
     disabled: |
-      Os vídeos não terão mais formato arrendondado
+      Videos will no longer have a rounded shape
 donate:
   menu: |
-    <b>☕️ Suporte ao desenvolvimento do bot</b>
-    Ao apoiar o desenvolvimento do bot, você receberá créditos.
-    Para cada 1 dólar, você receberá 5 créditos.
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive credits.
+    For every 1 dollar, you will receive 5 credits.
 
-    <b>Saldo:</b> <code>${balance}</code> créditos
-    Com 1 crédito, você tem a oportunidade de dar um bosta num pacote de figurinhas.
+    <b>Balance:</b> <code>${balance}</code> credits
+    With 1 credit, you have the opportunity to boost one sticker pack.
 
-    <b>O boost oferece os seguintes benefícios:</b>
-    ➖ Desativação de <code>"${titleSuffix}"</code> no nome dos pacotes <i>(não no link)</i>
-    ➖ Prioridade ao converter adesivos de vídeo
-    ➖ Possibilidade de adicionar mais de um adesivo à fila de processamento
-    ➖ Duração dos adesivos de vídeo até 30 segundos
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
-    donate: '☕ Doar'
+    donate: '☕️ Donate'
   topup: |
-    <b>Digite a quantidade de créditos que deseja comprar:</b>
+    <b>Enter the amount of credits you want to buy:</b>
 
-    <b>5 créditos = 1$</b>
-    <i>Valor mínimo — 5 créditos</i>
+    <b>5 credit = 1$</b>
+    <i>Minimum amount - 5 credits</i>
   invalid_amount: |
-    <b>Valor inválido</b>
+    <b>Invalid amount</b>
 
-    O valor mínimo é de 5 créditos
+    The minimum amount is 5 credits
   paymenu: |
-    Você quer comprar <b>${amount} créditos</b> por <b>${price}$</b>
+    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
 
-    ⚠️ Os créditos são emitidos manualmente pelo administrador.
-    O tempo de espera varia de 5 minutos até 1 hora.
+    ⚠️ Credits are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>Selecione o método de pagamento:</u>
+    <u>Select payment method:</u>
   update: |
-    <b>🔄 Atualização do saldo</b>
+    <b>🔄 Balance update</b>
 
-    Saldo: <code>${balance}</code> créditos (adicionado <code>${amount}</code> créditos)
+    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
 coedit:
   info: |
-    <b>👥 Coedição</b>
+    <b>👥 Co-editing</b>
 
-    Link para coedição <a href="${link}">${title}</a>: <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>Como usar:</b>
-    1. Envie o link para a pessoa que deseja dar acesso ao pack
-    2. Após clicar no link, eles precisam clicar em "iniciar" e serão adicionados aos editores
-    3. O editor pode adicionar, excluir e editar adesivos no pacote
+    <b>How to use:</b>
+    1. Send the link to the person you want to give access to the pack
+    2. After clicking on the link, they need to press "start" and they will be added to the editors
+    3. The editor can add, delete and edit stickers in the pack
 
-    <b>Editores:</b>
+    <b>Editors:</b>
     ${editors}
 
-    <i>Para remover editores, você precisa redefinir o link</i>${editors}
+    <i>To remove editors, you need to reset the link</i>
   no_editors: |
-    Nenhum editor ainda
+    No editors yet
   btn:
-    send: '📤 Enviar link'
-    reset: '🔁 Redefinir link'
+    send: '📤 Send link'
+    reset: '🔁 Reset link'
   share: |
-    Siga o link e pressione "iniciar" para co-editar o pacote "${title}"
+    Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
-    <b>🔁 Reinicialização do link com sucesso</b>
+    <b>🔁 Link reset successful</b>
 
-    Novo link para coedição <a href="${link}">${title}</a>:
+    New link for co-editing <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pacote não encontrado
-      hidden: Pacote oculto com sucesso
-      restored: Pacote restaurado com sucesso
+      not_found: Pack not found
+      hidden: Pack successfully hidden
+      restored: Pack successfully restored
     set_pack:
       static: |
-        Pacote estático selecionado <a href="${link}">${title}</a>
+        Selected static pack <a href="${link}">${title}</a>
 
-        Para adicionar um novo adesivo, envie-me uma foto, outro adesivo estático.
-        Para que um adesivo não tenha fundo, ele deve ser enviado em arquivo.
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
       animated: |
-        Pacote animado (vetorial) selecionado <a href="${link}">${title}</a>
+        Selected animated (vector) pack <a href="${link}">${title}</a>
 
-        Para adicionar um novo adesivo, envie-me um arquivo <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> ou outro adesivo animado.
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
       video: |
         Pacote de vídeo selecionado <a href="${link}">${title}</a>
 
@@ -480,9 +480,9 @@ scenes:
 
         You can only publish your own packs
       bannded: |
-        <b>Erro!</b>
-        Você está banido de usar essa funcionalidade.
-        Por favor, contate o administrador.
+        <b>Error!</b>
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -494,7 +494,7 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
-      continue_button: Continuar
+      continue_button: Continue
       enter_description: |
         <b>Briefly describe your pack so that others can find it</b>
 
@@ -511,7 +511,7 @@ scenes:
       button_safe:
         safe: Sim, é seguro
         not_safe: Não, não é seguro
-      no_tags: não foi especificado
+      no_tags: were not specified
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
