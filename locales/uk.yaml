@@ -11,37 +11,38 @@ ratelimit: Занадто часто!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Привіт, ${name}! Я майстер емодзі та наборів наклейок.
+      Я миттєво перетворюю фотографії, відео та GIF-файли на класні наклейки.
 
-      Send the /help command for more information
+      Надішліть команду /help для отримання додаткової інформації
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Чат підтримки: @fStikCommunity (тільки EN)
     help: |
-      <b>List of bot commands:</b>
+      <b>Список команд бота:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new - створити новий стікерпак
+      /new_emoji - створити новий набір emoji
+      /new_inline - створити новий inline-пак
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /packs - список ваших стікерпаків
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /delete - видалити стікер із стікерпаку
+      /original - знайти оригінальний стікер
+      /restore - відновити сткікерпак
+      /copy - скопіювати сткікерпак
+      /emoji - змінити суфікс emoji для поточного стікерпаку
+      /frame - змінити рамку для поточного стікерпаку
+      /lang - змінити мову
 
       /catalog - open catalog
+      /publish - publish pack
 
-      /lang - change language
-      /donate - support the developer
+      /donate - підтримати розробника
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Чат підтримки: @fStikCommunity (тільки EN)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Контакти: @ly_oBot
+      👨🏻‍💻 Канал розробника: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -581,8 +582,8 @@ scenes:
       anime: Аніме - для аніме зображення
     add_to_set_btn: '🌟 Додати до набору'
     error: |
-      <b>Error!</b>
-      Opps, something went wrong.
+      <b>Помилка!</b>
+      Ой, щось пішло не так.
   leave: |
     Дію скасовано.
   btn:
