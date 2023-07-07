@@ -11,33 +11,37 @@ ratelimit: Não tão frequente!
 cmd:
   start:
     enter: |
-      🧙 Olá, ${name}! Eu sou o assistente do pacote de emojis e adesivos.
-      Estou transformando fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Envie o comando /help para obter mais informações
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
-      <b>Lista de comandos de bot:</b>
+      <b>List of bot commands:</b>
 
-      /new - cria um novo pacote de adesivos
-      /new_emoji - cria um novo pacote de emojis
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
 
-      /delete - exclui o adesivo do pacote
-      /original - encontre o adesivo original
+      /delete - delete sticker from pack
+      /original - find original sticker
 
-      /packs - lista de seus pacotes
-      /restore - restaura um pacote
-      /copy - copia um pacote
-      /emoji - altera o sufixo do emoji para o pacote atual
-      /frame - altera o quadro do pacote de vídeo atual
-      /publish - publicar o pacote no catálogo
+      /packs - list of your packs
+      /restore - restore a pack
+      /copy - copy a pack
+      /emoji - change emoji suffix for current pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
-      /catalog - abre o catálogo
+      /catalog - open catalog
 
-      /lang - mudar idioma
-      /donate - apoie o desenvolvedor
+      /lang - change language
+      /donate - support the developer
 
-      🧑‍🔧 Contatos: @ly_oBot
-      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
+      💬 Support chat: @fStikCommunity (only EN)
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
