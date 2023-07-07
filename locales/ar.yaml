@@ -11,10 +11,12 @@ ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
     enter: |
-      🧙 مرحبًا ${name}! أنا معالج حزمة الرموز التعبيرية والملصقات.
-      أقوم بتحويل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      أرسل الأمر / help للحصول على مزيد من المعلومات
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog
