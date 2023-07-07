@@ -1,12 +1,12 @@
 ---
 language_name: '🇸🇦 عربي'
-name: Bester Sticker Bot
+name: Favorite Stickers Bot 🇺🇦
 description:
   long: |
     🧙 أنا معالج حزمة الرموز التعبيرية والملصقات، وأنا هنا لجعل تجربتك في الرسائل أكثر متعة! تسمح لي طاقاتي السحرية بتحويل صورك المفضلة، ومقاطع الفيديو، وصور GIFs إلى إيموجيس وملصقات رائعة بدون مجموعة من المحولات والمحاصيل. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة مع بضع نقرات فقط. إذاً، ماذا تنتظر؟ دعونا نبدأ ونضيف بعض ✨sparkle✨ إلى محادثاتك!
 
     ملصقات البحث: https://play.google.com/store/apps/details?id=app.fstik
-  short: '.🧙 Ich bin der Emoji- und Sticker-Zauberer! Verwandeln Sie Fotos, Videos und GIFs im Handumdrehen in coole Sticker.'
+  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
 ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
@@ -52,148 +52,148 @@ cmd:
       • لا تنسى التقييم للترويج أو خفض حزمة الملصقات في الترتيب
     commands:
       start: '📜 قائمة البدء'
-      help: '📖 Hilfe'
-      packs: '📁 Pakete verwalten'
-      new: '🌝 Stickerpaket erstellen'
-      new_emoji: '😊 Emoji-Paket erstellen'
+      help: '📖 Help'
+      packs: '📁 Manage packs'
+      new: '🌝 Create sticker pack'
+      new_emoji: '😊 Create emoji pack'
       catalog: '📖 كاتالوج'
-      publish: '📤 Paket veröffentlichen'
-      delete: '❌ Aufkleber löschen'
+      publish: '📤 Publish pack'
+      delete: '❌ Delete sticker'
       original: '🔍 ابحث عن الملصق الأصلي'
-      restore: '🔀 Stellen Sie ein Paket wieder her'
-      copy: '📋 Kopieren Sie ein Paket'
+      restore: '🔀 Restore a pack'
+      copy: '📋 Copy a pack'
       emoji: '📝 تغيير لاحقة الرموز التعبيرية'
-      round: '🎥 Video mit runder Form'
-      clear: '🖼️ Hintergrund vom Foto entfernen'
+      round: '🎥 Round shape video'
+      clear: '🖼️ Remove background from photo'
       lang: '🌐 تغيير اللغة'
       donate: '☕ أدعم المبرمج'
     btn:
       new: '📥 إنشاء جديد'
-      catalog: '💖 Katalog öffnen'
-      catalog_mini: '💖 Katalog'
-      catalog_browser: '🌐 Im Browser öffnen'
-      catalog_browser_mini: '🌐 Im Browser'
-      catalog_app: '📱 Android app herunterladen'
-      catalog_app_mini: '📱 Android App'
+      catalog: '💖 Open catalog'
+      catalog_mini: '💖 Catalog'
+      catalog_browser: '🌐 Open in browser'
+      catalog_browser_mini: '🌐 In browser'
+      catalog_app: '📱 Download Android app'
+      catalog_app_mini: '📱 Android app'
   inline:
-    switch_pm: '📁 Paket auswählen'
+    switch_pm: '📁 Select pack'
   restore: |
-    🗃 Packwiederherstellung
+    <b>🗃 Pack restoration</b>
 
-    Wenn Sie zuvor über diesen Bot ein Paket erstellt haben und es nicht in der Liste Ihrer Pakete finden, können Sie es wiederherstellen.
+    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
 
-    Dazu müssen Sie mehrere Aktionen ausführen:
-    1. Öffnen Sie den @Stickers-Bot
-    2. Senden Sie den Befehl <code>/packstats</code>
-    3. Suchen Sie das gewünschte Paket und wählen Sie es aus
-    4. Leiten Sie die empfangene Nachricht an den Bot weiter
-    5. Wenn die Wiederherstellung erfolgreich war, informiert der Bot darüber
+    <b>To do this, you need to perform several actions:</b>
+    1. Open @Stickers bot
+    2. Send <code>/packstats</code> command
+    3. Find and choose the required pack
+    4. Forward the received message to the bot
+    5. If restoration is successful - bot informs about it
   copy: |
-    <b>🗄 Paket kopieren</b>
+    <b>🗄 Copy pack</b>
 
-    Um ein anderes Paket in ein neues zu kopieren, müssen Sie mir lediglich einen Link zu einem Aufkleber- oder Emoji-Paket senden
+    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   packs:
     info: |
-      <b>📁 Pakete</b>
+      <b>📁 Packs</b>
     types:
       regular: Stickers
       custom_emoji: Emojis
-      inline: Im Einklang
+      inline: Inline
     empty: |
-      <b>Sie haben noch keine Pakete.</b>
-      Schreiben Sie zum Erstellen den Befehl /new
-    inline_title: Inline-Paket
+      <b>You have no packs yet.</b>
+      To create, write a command /new
+    inline_title: Inline pack
   emoji:
     info: |
-      Um das Standard-Emoji für das aktuelle Paket zu ändern, senden Sie <code>/emoji</code> gefolgt vom Emoji, getrennt durch ein Leerzeichen
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
 
-      Zum Beispiel – <code>/emoji 🌟</code>
+      For example - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videos haben jetzt eine abgerundete Form
+      Videos will now have a rounded shape
     disabled: |
-      Videos haben keine abgerundete Form mehr
+      Videos will no longer have a rounded shape
 donate:
   menu: |
-    <b>☕️ Bot-Entwicklungsunterstützung</b>
-    Wenn Sie die Entwicklung des Bots unterstützen, erhalten Sie Credits.
-    Für jeden Dollar erhalten Sie 5 Credits.
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive credits.
+    For every 1 dollar, you will receive 5 credits.
 
-    <b>Guthaben:</b> <code>${guthaben</code> Credits
-    Mit 1 Credit haben Sie die Möglichkeit, ein Stickerpaket aufzustocken.
+    <b>Balance:</b> <code>${balance}</code> credits
+    With 1 credit, you have the opportunity to boost one sticker pack.
 
-    <b>Der Boost bietet die folgenden Vorteile:</b>
-    ➖ Deaktivieren von <code>"${titleSuffix}"</code> im Paketnamen <i>(nicht im Link)</i>
-    ➖ Priorität beim Konvertieren von Videoaufklebern
-    ➖ Möglichkeit, der Verarbeitungswarteschlange mehr als einen Aufkleber hinzuzufügen
-    ➖ Dauer der Videoaufkleber bis zu 30 Sekunden
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
-    donate: '☕️ Spenden'
+    donate: '☕️ Donate'
   topup: |
-    <b>Geben Sie die Menge an Credits ein, die Sie kaufen möchten:</b>
+    <b>Enter the amount of credits you want to buy:</b>
 
-    <b>5 Guthaben = 1 $</b>
-    <i>Mindestbetrag: 5 Credits</i>
+    <b>5 credit = 1$</b>
+    <i>Minimum amount - 5 credits</i>
   invalid_amount: |
-    <b>Ungültiger Betrag</b>
+    <b>Invalid amount</b>
 
-    Der Mindestbetrag beträgt 5 Credits
+    The minimum amount is 5 credits
   paymenu: |
-    Sie möchten <b>${amount} Credits</b> für <b>${price}$</b> kaufen
+    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
 
-    ⚠️ Credits werden manuell vom Administrator vergeben.
-    Die Wartezeit beträgt zwischen 5 Minuten und 1 Stunde
+    ⚠️ Credits are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>Zahlungsmethode auswählen:</u>
+    <u>Select payment method:</u>
   update: |
-    <b>🔄 Balance-Update</b>
+    <b>🔄 Balance update</b>
 
-    Guthaben: <code>${balance}</code> Credits (hinzugefügte <code>${amount}</code> Credits)
+    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
 coedit:
   info: |
-    <b>👥 Mitherausgeber</b>
+    <b>👥 Co-editing</b>
 
-    Link zur Mitbearbeitung von <a href="${link}">${title}</a>: <code>${colink}</code>
+    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>Verwendung:</b>
-    1. Senden Sie den Link an die Person, der Sie Zugriff auf das Paket gewähren möchten
-    2. Nachdem Sie auf den Link geklickt haben, müssen Sie auf „Start“ klicken und werden zu den Editoren hinzugefügt
-    3. Der Herausgeber kann dem Paket Aufkleber hinzufügen, löschen und bearbeiten
+    <b>How to use:</b>
+    1. Send the link to the person you want to give access to the pack
+    2. After clicking on the link, they need to press "start" and they will be added to the editors
+    3. The editor can add, delete and edit stickers in the pack
 
-    <b>Herausgeber:</b>
+    <b>Editors:</b>
     ${editors}
 
-    <i>Um Editoren zu entfernen, müssen Sie den Link zurücksetzen</i>
+    <i>To remove editors, you need to reset the link</i>
   no_editors: |
-    Noch keine Redakteure
+    No editors yet
   btn:
-    send: '📤 Link senden'
-    reset: '🔁 Link zurücksetzen'
+    send: '📤 Send link'
+    reset: '🔁 Reset link'
   share: |
-    Folgen Sie dem Link und drücken Sie „Start“, um das Paket „${title}“ mitzubearbeiten
+    Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
-    <b>🔁 Link-Reset erfolgreich</b>
+    <b>🔁 Link reset successful</b>
 
-    Neuer Link für Mitherausgeber von <a href="${link}">${title}</a>:
+    New link for co-editing <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Paket nicht gefunden
-      hidden: Paket erfolgreich ausgeblendet
-      restored: Paket erfolgreich wiederhergestellt
+      not_found: Pack not found
+      hidden: Pack successfully hidden
+      restored: Pack successfully restored
     set_pack:
       static: |
-        Ausgewähltes statisches Paket <a href="${link}">${title}</a>
+        Selected static pack <a href="${link}">${title}</a>
 
-        Um einen neuen Aufkleber hinzuzufügen, senden Sie mir ein Foto, einen weiteren statischen Aufkleber.
-        Damit ein Aufkleber keinen Hintergrund hat, muss er als Datei gesendet werden.
+        To add a new sticker send me a photo, another static sticker.
+        For a sticker to have no background, it must be sent as a file.
       animated: |
-        Ausgewähltes animiertes (Vektor-)Paket <a href="${link}">${title}</a>
+        Selected animated (vector) pack <a href="${link}">${title}</a>
 
-        Um einen neuen Aufkleber hinzuzufügen, senden Sie mir eine <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a>-Datei oder einen anderen animierten Aufkleber.
+        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
       video: |
         Selected video pack <a href="${link}">${title}</a>
 
@@ -391,7 +391,7 @@ scenes:
 
       Progress: ${current}/${total}
     done: |
-      Das Kopieren des Pakets von <a href="${originalLink}">${originalTitle}</a> nach <a href="${link}">${title}</a> wurde erfolgreich abgeschlossen.${originalTitle}.
+      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
     error:
       premium: |
         <b>Error!</b>
@@ -407,167 +407,181 @@ scenes:
         У меня не получилось найти оригинал этого стикера.
   delete:
     enter: |
-      Senden Sie den Aufkleber, der über diesen Bot hinzugefügt wurde, und ich werde ihn aus dem Paket löschen.
+      Send the sticker that was added through this bot and I will delete it from the pack.
     confirm: |
-      Möchten Sie diesen Aufkleber wirklich löschen?
+      Are you sure you want to delete this sticker?
     error:
       not_found: |
-        <b>Fehler!</b>
-        Ich konnte den Aufkleber nicht finden.
+        <b>Error!</b>
+        I could not find the sticker.
   rename:
     enter_name: |
-      <b>Geben Sie einen neuen Titel für <a href="${link}">${title}</a>:</b> ein
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
     success: |
-      <b>Titel erfolgreich geändert!</b>
+      <b>Title successfully changed!</b>
 
-      Neuer Titel: <a href="${link}">${title}</a>
+      New title: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Senden Sie mir einen Aufkleber oder ein benutzerdefiniertes Emoji, um nach Informationen darüber zu suchen:</b
+      <b>Send me a sticker or custom emoji to look up information about it:</b>
     not_found: |
-      Ich konnte den Aufkleber nicht finden
+      I could not find the sticker
     result: |
-      <b>📦 Paket:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Eindeutige Nummer für Besitzerpakete, erhöht sich pro Paket)</i>
+      <b>📦 Pack:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
 
-      🧑‍🎨 Besitzer-ID: <code>${ownerId}</code>
+      🧑‍🎨 Owner ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Andere Pakete von diesem Besitzer:</b>
+      <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>Wir haben keine Informationen über andere Aufkleber dieses Besitzers</i>
+      <i>We have no information about other stickers of this owner</i>
   boost:
     sure: |
-      <b>Sind Sie sicher, dass Sie <a href="${link}">${title}</a> erhöhen möchten?</b> Durch die Erhöhung wird die Verarbeitungspriorität erhöht und es besteht die Möglichkeit, mehr als einen Aufkleber hinzuzufügen zur Warteschlange Ausführlichere Informationen zu Boosts finden Sie im Menü unter: /donate <b>Preis:</b> 1 Credit <b>Aktuelles Guthaben:</b> ${balance} Credits
-    btn:
-      yes: Ja, Boost!
-      no: Nein, abbrechen
-    canceled: |
-      Boosting abgebrochen
-    success: |
-      Boosting erfolgreich abgeschlossen!
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      ${title} ist jetzt geboostet
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
+
+      <b>Price:</b> 1 credit
+      <b>Current balance:</b> ${balance} credits
+    btn:
+      yes: Yes, boost!
+      no: No, cancel
+    canceled: |
+      Boosting canceled
+    success: |
+      Boosting successfully completed!
+
+      ${title} is now boosted
     error:
       not_enough_credits: |
-        Sie haben nicht genügend Credits, um dieses Paket zu verstärken.
+        You do not have enough credits to boost this pack.
 
-        Sie können Ihr Guthaben aufladen, indem Sie den Befehl /donate senden.
+        You can top up your balance by sending the /donate command.
       already_boosted: |
-        Dieses Paket ist bereits geboostet.
+        This pack is already boosted.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Senden Sie mir den Aufkleber aus dem Paket, das Sie veröffentlichen möchten</b>
+        👌 <b>Send me the sticker from the pack you want to publish</b>
 
-        <i>Sie können jedes Paket veröffentlichen, das Ihnen gehört, auch wenn es woanders erstellt wurde</i>
+        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>Um den Besitz dieses Pakets zu bestätigen, müssen Sie ein paar einfache Schritte ausführen:</b> 1. Öffnen Sie den @Stickers-Bot. 2. Senden Sie den Befehl <code>/packstats</code>. 3. Suchen Sie das erforderliche Paket und wählen Sie es aus 4. Leiten Sie die empfangene Nachricht an den Bot weiter
+        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
+        1. Open @Stickers bot
+        2. Send <code>/packstats</code> command
+        3. Find and choose the required pack
+        4. Forward the received message to the bot
       publish_new_access_denied: |
-        <b>Fehler!</b>
-        Dieses Paket gehört nicht dir.
+        <b>Error!</b>
+        This pack is not yours.
 
-        Sie können nur Ihre eigenen Pakete veröffentlichen
+        You can only publish your own packs
       bannded: |
-        <b>Fehler!</b>
-        Die Nutzung dieser Funktion ist Ihnen untersagt.
-        Bitte wenden Sie sich an den Administrator.
+        <b>Error!</b>
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
-        Sie sind dabei, das Paket „<a href="${link}">${title}</a>“ im öffentlichen Verzeichnis unseres Bots zu veröffentlichen
-        Es kann von jedem Benutzer des Bots anhand des Namens, der Tags oder des Filters gefunden werden
-        Aus diesem Grund werden mehr Leute Ihr Paket installieren
-        Versuchen Sie, nur qualitativ hochwertige Pakete zu versenden, die für viele Menschen von Interesse sein könnten
+        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
+        It can be found by any user of the bot by name, tags or filter
+        Because of this, more people will install your pack
+        Try to send only high-quality packs that may be of interest to a large number of people
 
-        <b>Regeln für die Veröffentlichung von Paketen:</b>
-        • Veröffentlichen Sie Ihre persönlichen Pakete nicht, die für einen engen Personenkreis bestimmt sind. Zum Beispiel die Gesichter Ihrer Freunde oder Zitate aus Ihren Nachrichten
-        • Bringen Sie keine Aufkleber mit Aufdruck an, die gegen EU-Gesetze oder andere lokale Gesetze verstoßen
+        <b>Rules for publishing packs:</b>
+        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
+        • Do not post sticker pressures that violate EU laws or other local laws
 
-        Für die Veröffentlichung im Katalog müssen Sie zusätzliche Informationen einreichen
-      continue_button: Weiter
+        You will need to submit additional information for it to be published in the catalog
+      continue_button: Continue
       enter_description: |
-        <b>Beschreiben Sie Ihr Paket kurz, damit andere es finden können</b>
+        <b>Briefly describe your pack so that others can find it</b>
 
-        <i>Sie können auch Hashtags verwenden, um [#] zu kategorisieren</i>
-        <i>Zum Beispiel: #Anime #Meme #Tiere #niedlich #kpop #lustig #Katze #Spiel </i>
+        <i>You can also use hashtags to categorize [#]</i>
+        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
-        <b>Wählen Sie aus, für welche Sprachen Ihr Paket gilt:</b>
-        <i>Sie können mehrere Sprachen auswählen</i
+        <b>Choose which languages your pack is for:</b>
+        <i>You can select multiple languages</i>
       button_all_languages: All languages
       button_confirm_language: Confirm
       set_safe: |
-        <b>Ist Ihr Rucksack für Benutzer sicher?</b>
-        <i>Das heißt, es enthält keine Erotik und andere schockierende Inhalte</i>
+        <b>Is your pack safe for users?</b>
+        <i>That is, it does not contain erotica and other shocking content</i>
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: wurden nicht angegeben
+      no_tags: were not specified
       confirm: |
-        <b>Bestätigen Sie die Veröffentlichung des Pakets „<a href="${link}">${title}</a>"</b>
+        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
-        <b>Beschreibung:</b> <i>${description}</i>
+        <b>Description:</b> <i>${description}</i>
 
         <b>Tags:</b> ${tags}
-        <b>Sprachen:</b> ${Sprachen}
+        <b>Languages:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
-        Herzlichen Glückwunsch, Ihr Paket wurde im allgemeinen Verzeichnis unseres Bots veröffentlicht, wo andere Benutzer es finden können! Sie können die Stickerpack-Suchinformationen bearbeiten, indem Sie das Stickerpack mit dem Befehl /packs auswählen. <i>Wir erinnern Sie daran, dass die Statistiken Ihres Pakets über den offiziellen Bot @Stickers eingesehen werden können</i>
+        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+
+        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+
+        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
     unpublish:
       success: |
-        Die Veröffentlichung des Pakets aus dem Bot-Katalog wurde erfolgreich aufgehoben.
+        The pack has been successfully unpublished from bot catalog.
   delete_pack:
     enter: |
-      Sind Sie sicher, dass Sie das Paket <a href="${link}">${title}</a> löschen möchten?
-      Es wird dauerhaft gelöscht und kann nicht wiederhergestellt werden.
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
 
-      Wenn Sie nur einen Aufkleber löschen möchten, verwenden Sie den Befehl /delete.
+      If you want to delete only one sticker, use the /delete command.
 
-      Senden Sie <code>${confirm}</code>, um zu bestätigen, dass Sie dieses Paket wirklich löschen möchten.
-    confirm: Ja, ich bin mir völlig sicher.
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
     success: |
-      <b>Paket erfolgreich gelöscht!</b>
+      <b>Pack successfully deleted!</b>
     error:
-      - <b>Fehler!</b>
-      - Ups, es ist etwas schiefgegangen.
+      - <b>Error!</b>
+      - Opps, something went wrong.
   frame:
     no_video: |
-      <b>Fehler!</b>
-      Sie können Videopaketen nur Frames hinzufügen.
+      <b>Error!</b>
+      You can only add frames to video packs.
     select_type: |
-      <a href="${example}">​</a><b>Rahmentyp auswählen:</b>
-      Der Rahmen ist ein transparenter Hintergrund um den Aufkleber herum
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>lite</code> – die Ecken werden ein wenig abgeschnitten
-      <code>mittel</code> – die Ecken werden stärker abgeschnitten
-      <code>rounded</code> – die Ecken werden abgerundet
-      <code>quadratisch</code> – die rechteckige Form des Rahmens, d. h. sie wird in keiner Weise verändert
-      <code>circle</code> – der Rahmen hat die Form eines Kreises
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>In Zukunft können Sie den Befehl /frame verwenden, um den Rahmentyp festzulegen</i>
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'
-      rounded: '3. abgerundet'
-      square: '4. eckig'
-      circle: '5. kreis'
+      rounded: '3. Rounded'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
-      <b>Rahmen Typ auswählen</b> ${type}
+      <b>Selected frame type:</b> ${type}
   photoClear:
     enter: |
-      Senden Sie ein <u>Foto</u>, von dem Sie den Hintergrund entfernen möchten, und ich sende die Datei ohne Hintergrund
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>Funktioniert am besten mit Fotos. Funktioniert schlechter mit Zeichnungen, Illustrationen usw.</i>
+      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
     enter_anime: |
-      Senden Sie ein <u>Foto</u>, von dem Sie den Hintergrund entfernen möchten, und ich sende die Datei ohne Hintergrund
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>Am besten funktioniert es mit Anime-Bildern</i>
+      <i>It works best with anime pictures</i>
     choose_model: |
-      <b>Modell auswählen:</b>
+      <b>Choose model:</b>
     model:
-      ordinary: Häufig – für Fotos mit Menschen
-      general: Allgemein – für alle Fotos
-      anime: Anime – für Anime-Bilder
-    add_to_set_btn: '🌟 Zum Set hinzufügen'
+      ordinary: Common — for photos with people
+      general: General — for any photos
+      anime: Anime — for anime pictures
+    add_to_set_btn: '🌟 Add to set'
     error: |
       <b>Error!</b>
       Opps, something went wrong.
