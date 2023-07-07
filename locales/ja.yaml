@@ -11,10 +11,12 @@ ratelimit: Не так часто!
 cmd:
   start:
     enter: |
-      🧙こんにちは、 ${name}! 私は絵文字とステッカー パックのウィザードです。
-      写真、ビデオ、GIF を簡単にクールなステッカーに変換できます。
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      詳細については、/help コマンドを送信してください
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog

@@ -1,6 +1,6 @@
 ---
 language_name: '🇦🇿 Azərbaycanca'
-name: Favorite Stickers Bot 🇺🇦
+name: Sevimli Etiketlər Botu 🇺🇦
 description:
   long: |
     🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
@@ -15,6 +15,8 @@ cmd:
       I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
       Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog

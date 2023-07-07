@@ -11,10 +11,12 @@ ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     enter: |
-      🧙 ¡Hola, ${name}! Soy el mago del paquete de pegatinas y emojis.
-      Transformo fotos, videos y GIF en calcomanías geniales en un instante.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Envíe el comando /help para obtener más información
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog

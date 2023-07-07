@@ -1,6 +1,6 @@
 ---
 language_name: '🇧🇷 Português'
-name: Favorite Stickers Bot 🇺🇦
+name: Bot de figurinhas favoritas 🇺🇦
 description:
   long: |
     🧙 Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
@@ -11,33 +11,37 @@ ratelimit: Não tão frequente!
 cmd:
   start:
     enter: |
-      🧙 Olá, ${name}! Eu sou o assistente do pacote de emojis e adesivos.
-      Estou transformando fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Envie o comando /help para obter mais informações
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
-      <b>Lista de comandos de bot:</b>
+      <b>List of bot commands:</b>
 
-      /new - cria um novo pacote de adesivos
-      /new_emoji - cria um novo pacote de emojis
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
 
-      /delete - exclui o adesivo do pacote
-      /original - encontre o adesivo original
+      /delete - delete sticker from pack
+      /original - find original sticker
 
-      /packs - lista de seus pacotes
-      /restore - restaura um pacote
-      /copy - copia um pacote
-      /emoji - altera o sufixo do emoji para o pacote atual
-      /frame - altera o quadro do pacote de vídeo atual
-      /publish - publicar o pacote no catálogo
+      /packs - list of your packs
+      /restore - restore a pack
+      /copy - copy a pack
+      /emoji - change emoji suffix for current pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
-      /catalog - abre o catálogo
+      /catalog - open catalog
 
-      /lang - mudar idioma
-      /donate - apoie o desenvolvedor
+      /lang - change language
+      /donate - support the developer
 
-      🧑‍🔧 Contatos: @ly_oBot
-      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
+      💬 Support chat: @fStikCommunity (only EN)
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -49,9 +53,9 @@ cmd:
     commands:
       start: '📜 Menu inicial'
       help: '📖 Ajuda'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      packs: '📁 Gerenciar pacotes'
+      new: '🌝 Criar pacote de stickers'
+      new_emoji: '😊 Criar pacote de emoji'
       catalog: '📖 Catálogo'
       publish: '📤 Pacote de publicação'
       delete: '❌ Excluir adesivo'
@@ -60,7 +64,7 @@ cmd:
       copy: '📋 Copie um pacote'
       emoji: '📝 Altere o emoji vinculado'
       round: '🎥 Deixe o vídeo redondo'
-      clear: '🖼️ Remove background from photo'
+      clear: '🖼️ Remova o fundo da foto'
       lang: '🌐 Mude o idioma'
       donate: '☕️ Apoie o desenvolvedor'
     btn:
@@ -85,9 +89,9 @@ cmd:
     4. Encaminhe a mensagem recebida para o bot
     5. Se a restauração for bem-sucedida - o bot informa sobre isso
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄️ Copiar pacote</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    Para copiar outro pacote para um novo, você só precisa me enviar um link para um pacote de sticker ou emoji
   packs:
     info: |
       <b>📁 Pacotes</b>
@@ -113,40 +117,40 @@ cmd:
       Os vídeos não terão mais formato arrendondado
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Suporte ao desenvolvimento do bot</b>
+    Ao apoiar o desenvolvimento do bot, você receberá créditos.
+    Para cada 1 dólar, você receberá 5 créditos.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one sticker pack.
+    <b>Saldo:</b> <code>${balance}</code> créditos
+    Com 1 crédito, você tem a oportunidade de dar um bosta num pacote de figurinhas.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>O boost oferece os seguintes benefícios:</b>
+    ➖ Desativação de <code>"${titleSuffix}"</code> no nome dos pacotes <i>(não no link)</i>
+    ➖ Prioridade ao converter adesivos de vídeo
+    ➖ Possibilidade de adicionar mais de um adesivo à fila de processamento
+    ➖ Duração dos adesivos de vídeo até 30 segundos
   btn:
-    donate: '☕️ Donate'
+    donate: '☕ Doar'
   topup: |
-    <b>Enter the amount of credits you want to buy:</b>
+    <b>Digite a quantidade de créditos que deseja comprar:</b>
 
-    <b>5 credit = 1$</b>
-    <i>Minimum amount - 5 credits</i>
+    <b>5 créditos = 1$</b>
+    <i>Valor mínimo — 5 créditos</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Valor inválido</b>
 
-    The minimum amount is 5 credits
+    O valor mínimo é de 5 créditos
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    Você quer comprar <b>${amount} créditos</b> por <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Os créditos são emitidos manualmente pelo administrador.
+    O tempo de espera varia de 5 minutos até 1 hora.
 
-    <u>Select payment method:</u>
+    <u>Selecione o método de pagamento:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Atualização do saldo</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Saldo: <code>${balance}</code> créditos (adicionado <code>${amount}</code> créditos)
 coedit:
   info: |
     <b>👥 Coedição</b>
@@ -203,8 +207,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Enabled
-        off: Disabled
+        on: Ativado
+        off: Desativado
     hidden: Pacote <a href="${link}">${title}</a> oculto da sua lista.
     restored: Pacote <a href="${link}">${title}</a> restaurado em sua lista.
     btn:
@@ -212,16 +216,16 @@ callback:
       delete: '🗑 Excluir pacote'
       restore: '✅ Restaurar'
       use_pack: '📦 Pacote de uso'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
+      boost: '⚡ Impulsionar'
+      frame: '🖼 Moldura'
       rename: '✏️ Renomear'
       search_gif: '🔎 Pesquise GIF'
       coedit: '👥 Coedição'
       catalog_add: '🗂 Adicionar ao catálogo'
       catalog_edit: '📝 Editar no catálogo'
       catalog_delete: '🗑 Excluir do catálogo'
-      catalog_share: '🔗️️ Share'
-      catalog_open: '📂 Open in catalog'
+      catalog_share: '🔗 Compartilhar'
+      catalog_open: '📂 Abrir no catálogo'
     error:
       restore: |
         <b>Erro!</b>
@@ -246,12 +250,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>Sticker adicionado com sucesso ao pacote:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Envie um ou mais emojis que correspondam ao sticker, se você quiser adicioná-los</i>
     ok_inline: |
-      <b>Sticker added to stickerpack successfully:</b>
+      <b>Sticker adicionado ao pacote de sticker com sucesso:</b>
       <u>${title}</u>
     send_emoji: Ótimo, agora envie os emojis que correspondam aos
     converting_process: |
@@ -262,15 +266,15 @@ sticker:
 
       <i>Os usuários que apoiam o bot têm prioridade na fila (para saber mais: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 Nossa, você fez um ótimo pacote de sticker!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
+      <i>Não leva muito tempo</i>
     error:
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>Você não selecionou um pacote</b>
 
-        Please, create (/new) or choose (/packs) pack
+        Por favor, crie (/new) ou escolha (/packs) pacote
       stickers_too_much: |
         This pack has the maximum number of stickers.
 
