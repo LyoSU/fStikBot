@@ -11,33 +11,37 @@ ratelimit: Not so often!
 cmd:
   start:
     enter: |
-      🧙 Hallo, ${name}! Ich bin der Emoji- und Sticker-Pack-Assistent.
-      Ich verwandle Fotos, Videos und GIFs im Handumdrehen in coole Sticker.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Für weitere Informationen senden Sie den Befehl /help
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
-      Liste der Bot-Befehle:
+      <b>List of bot commands:</b>
 
-      /new – ein neues Stickerpaket erstellen
-      /new_emoji – ein neues Emoji-Paket erstellen
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
 
-      /delete – Aufkleber aus dem Paket löschen
-      /original – Originalaufkleber finden
+      /delete - delete sticker from pack
+      /original - find original sticker
 
-      /packs – Liste Ihrer Pakete
-      /restore – ein Paket wiederherstellen
-      /copy – ein Paket kopieren
-      /emoji – Emoji-Suffix für aktuelles Paket ändern
-      /frame – Frame für aktuelles Videopaket ändern
-      /publish – Veröffentlichen Sie das Paket im Katalog
+      /packs - list of your packs
+      /restore - restore a pack
+      /copy - copy a pack
+      /emoji - change emoji suffix for current pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
-      /catalog – Katalog öffnen
+      /catalog - open catalog
 
-      /lang – Sprache ändern
-      /donate – Unterstütze den Entwickler
+      /lang - change language
+      /donate - support the developer
 
-      Kontakte: @ly_oBot
-      Entwicklerkanal: @LyBlog
+      💬 Support chat: @fStikCommunity (only EN)
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
