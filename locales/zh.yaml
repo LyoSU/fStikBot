@@ -11,10 +11,12 @@ ratelimit: 不经常如此！
 cmd:
   start:
     enter: |
-      🧙 你好， ${name}！我是表情符号和贴纸包向导。
-      我可以快速将照片、视频和 GIF 转换为炫酷的贴纸。
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      发送 /help 命令获取更多信息
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog
