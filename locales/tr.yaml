@@ -11,10 +11,12 @@ ratelimit: Pek sık değil!
 cmd:
   start:
     enter: |
-      🧙 Merhaba, ${name}! Ben emoji ve çıkartma paketi sihirbazıyım.
-      Fotoğrafları, videoları ve GIF'leri anında harika çıkartmalara dönüştürüyorum.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Daha fazla bilgi için /help komutunu gönderin
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog
