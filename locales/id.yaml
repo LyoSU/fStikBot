@@ -11,10 +11,12 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     enter: |
-      🧙 Halo, ${name}! Saya adalah wizard paket emoji dan stiker.
-      Saya mengubah foto, video, dan GIF menjadi stiker keren dalam sekejap.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Kirim perintah /help untuk informasi lebih lanjut
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -35,6 +37,8 @@ cmd:
 
       /lang - change language
       /donate - support the developer
+
+      💬 Support chat: @fStikCommunity (only EN)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog
