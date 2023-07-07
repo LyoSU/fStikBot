@@ -495,70 +495,70 @@ scenes:
         • Не публикуйте стикеры, которые нарушают законы ЕС или другие местные законы
 
         Вам нужно будет предоставить дополнительную информацию, чтобы она была опубликована в каталоге
-      continue_button: Continue
+      continue_button: Продолжить
       enter_description: |
-        <b>Briefly describe your pack so that others can find it</b>
+        <b>Кратко опишите свой набор наклеек, чтобы другие могли его найти</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>Вы также можете использовать хэштеги для категоризации [#]</i>
+        <i>Например: #аниме #мемы #животные #cute #kpop #funny #кошки #game</i>
       select_language: |
-        <b>Choose which languages your pack is for:</b>
-        <i>You can select multiple languages</i>
+        <b>Выберите, для каких языков предназначен ваш cтикерпак:</b>
+        <i>Вы можете выбрать несколько языков</i>
       button_all_languages: Любой язык
       button_confirm_language: Подтвердить
       set_safe: |
-        <b>Is your pack safe for users?</b>
-        <i>That is, it does not contain erotica and other shocking content</i>
+        <b>Ваш стикерный пакет безопасен для пользователей?</b>
+        <i>То есть, он не содержит эротики и другого шокирующего содержимого</i>
       button_safe:
         safe: Да, он безопасен
         not_safe: Нет, он небезопасен
-      no_tags: were not specified
+      no_tags: не были указаны
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>Подтвердите публикацию стикерпака "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Описание:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Метки:</b> ${tags}
+        <b>Языки:</b> ${languages}
       button_confirm: '✅ Подтвердите публикацию'
       success: |
-        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+        Поздравляем, ваш стикерпак опубликован в общем каталоге нашего бота, где его могут найти другие пользователи!
 
-        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+        Вы можете отредактировать информацию о поиске стикерпака, выбрав стикерпак с помощью команды /packs.
 
-        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+        <i>Напоминаем, что статистику вашего стикерпака можно посмотреть через официального бота @Stickers</i>
     unpublish:
       success: |
-        The pack has been successfully unpublished from bot catalog.
+        Пакет был успешно удален из каталога ботов.
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      Вы уверены, что хотите удалить пакет <a href="${link}">${title}</a>?
+      Он будет безвозвратно удален и не может быть восстановлен.
 
-      If you want to delete only one sticker, use the /delete command.
+      Если вы хотите удалить только одну наклейку, используйте команду /delete.
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
-    confirm: Yes, I am totally sure.
+      Отправьте <code>${confirm}</code>, чтобы подтвердить, что вы действительно хотите удалить этот пакет.
+    confirm: Да, я полностью уверен.
     success: |
-      <b>Pack successfully deleted!</b>
+      <b>Стикерпак успешно удален!</b>
     error:
-      - <b>Error!</b>
-      - Opps, something went wrong.
+      - <b>Ошибка!</b>
+      - Что-то пошло не так.
   frame:
     no_video: |
-      <b>Error!</b>
-      You can only add frames to video packs.
+      <b>Ошибка!</b>
+      Вы можете устаналивать фрейм только в видеопаках.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Выберите тип рамки:</b>
+      Рамка — прозрачный фон вокруг наклейки
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>облегченная</code> — углы будут немного срезаны
+      <code>средняя</code> — углы будут срезаны больше
+      <code>закруглены</code> — углы будут срезаны закругленная
+      <code>квадратная</code> — прямоугольная форма рамки, то есть она никак не изменится
+      <code>круговая</code> — рамка будет в форме круга
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>В дальнейшем можно использовать / команда кадра для установки типа кадра</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'
@@ -566,23 +566,23 @@ scenes:
       square: '4. Square'
       circle: '5. Circle'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Выбранный тип рамки:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Пришлите <u>фото</u>, с которого хотите убрать фон и я пришлю файл без фона
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Лучше всего работает с фото. Хуже работает с рисунками, иллюстрациями и т. д.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Пришлите <u>фото</u> с которого хотите убрать фон и я пришлю файл без фона
 
-      <i>It works best with anime pictures</i>
+      <i>Лучше всего работает с аниме картинками</i>
     choose_model: |
-      <b>Choose model:</b>
+      <b>Выберите модель:</b>
     model:
-      ordinary: Common — for photos with people
-      general: General — for any photos
-      anime: Anime — for anime pictures
-    add_to_set_btn: '🌟 Add to set'
+      ordinary: Обычная — для фото с людьми
+      general: Общая — для любых фотографий
+      anime: Аниме — для аниме картинок
+    add_to_set_btn: '🌟 Добавить в набор'
     error: |
       <b>Ошибка!</b>
       Опции, что-то пошло не так.
