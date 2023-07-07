@@ -11,33 +11,37 @@ ratelimit: Не так часта!
 cmd:
   start:
     enter: |
-      🧙 Вітаю цябе, ${name}! Я чарадзейны бот для стварэння пакаў эмодзі і стыкераў.
-      Я ў вокамгненне магу ператварыць фота, відэа і гіфкі ў гарныя стыкеры.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Каб даведацца больш, напішыце /help
+      Send the /help command for more information
+
+      💬 Support chat: @fStikCommunity (only EN)
     help: |
-      <b>Спіс каманд:</b>
+      <b>List of bot commands:</b>
 
-      /new — стварыць новы пак стыкераў
-      /new_emoji — стварыць новы пак эмодзі
+      /new - create a new sticker pack
+      /new_emoji - create a new emoji pack
 
-      /delete — выдаліць стыкер з пака
-      /original — знайсці арыгінальны стыкер
+      /delete - delete sticker from pack
+      /original - find original sticker
 
-      /packs — спіс пакаў
-      /restore — аднавіць пак
-      /copy — скапіяваць пак
-      /emoji — змяніць суфікс эмодзі для бягучага пака
-      /frame — змяніць рамку для бягучага пака
-      /publish — апублікаваць пак у каталозе
+      /packs - list of your packs
+      /restore - restore a pack
+      /copy - copy a pack
+      /emoji - change emoji suffix for current pack
+      /frame - change frame for current video pack
+      /publish - publish the pack in the catalog
 
-      /catalog — адкрыць каталог
+      /catalog - open catalog
 
-      /lang — змяніць мову
-      /donate — падтрымаць распрацоўшчыка
+      /lang - change language
+      /donate - support the developer
 
-      👨‍🔧 Звязацца: @ly_oBot
-      👨‍💻 Канал распрацоўшчыка: @LyBlog
+      💬 Support chat: @fStikCommunity (only EN)
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
