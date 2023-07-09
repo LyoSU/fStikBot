@@ -143,36 +143,36 @@ donate:
 
     Мінімальна сума - 5 кредитів
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    Ви хочете купити <b>${amount} кредит</b> за <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Кредити надаються адміністратором вручну.
+    Час очікування коливається від 5 хвилин до 1 години.
 
-    <u>Select payment method:</u>
+    <u>Виберіть спосіб оплати:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Оновлення балансу</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Баланс: <code>${balance}</code> кредитів (додано <code>${amount}</code> кредитів)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Спільне редагування</b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    Посилання для спільного редагування <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>Як використовувати:</b>
+    1. Надішліть посилання людині, якій ви хочете надати доступ до пакету
+    2. Після натискання на посилання, їм потрібно натиснути «старт», і вони будуть додані до редакторів
+    3. Редактор може додавати, видаляти та редагувати наклейки в пакеті
 
-    <b>Editors:</b>
+    <b>Редактори:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Щоб видалити редактори, потрібно скинути налаштування посилання</i>
   no_editors: |
-    No editors yet
+    Поки що немає редакторів
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 Надіслати посилання'
+    reset: '🔁 Скинути посилання'
   share: |
     Follows the link and press "start" to co-edit the pack "${title}"
   reset: |
