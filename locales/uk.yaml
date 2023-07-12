@@ -174,18 +174,18 @@ coedit:
     send: '📤 Надіслати посилання'
     reset: '🔁 Скинути посилання'
   share: |
-    Follows the link and press "start" to co-edit the pack "${title}"
+    Перейдіть за посиланням і натисніть «старт», для спільного редагування пакунку «${title}»
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Посилання успішно змінено</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    Нове посилання для спільного редагування <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack not found
-      hidden: Pack successfully hidden
-      restored: Pack successfully restored
+      not_found: Пакунок не знайдено
+      hidden: Пакунок успішно приховано
+      restored: Пакунок успішно відновлено
     set_pack:
       static: |
         Selected static pack <a href="${link}">${title}</a>
