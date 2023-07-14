@@ -27,4 +27,11 @@ composer.action(/donate:(\d+)/, async (ctx) => {
   })
 })
 
+composer.start((ctx, next) => {
+  if (ctx.startPayload === 'donate') {
+    return donateMenu(ctx)
+  }
+  return next()
+})
+
 module.exports = composer

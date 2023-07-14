@@ -200,7 +200,6 @@ bot.action(/packs:(.*)/, handlePacks)
 bot.start((ctx, next) => {
   if (ctx.startPayload.match(/s_(.*)/)) return handleSelectPack(ctx)
   if (ctx.startPayload === 'packs') return handlePacks(ctx)
-  if (ctx.startPayload === 'donate') return handleDonate(ctx)
   return next()
 })
 
