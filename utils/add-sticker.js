@@ -409,6 +409,13 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         const total = await convertQueue.getJobCounts()
 
+        if (total.waiting > 100 && priority > 10) {
+          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
+            reply_to_message_id: ctx?.message?.message_id,
+            allow_sending_without_reply: true
+          })
+        }
+
         let convertingMessage
 
         if (!ctx.session.userInfo.premium && !stickerSet?.boost && total.waiting > 3) {
