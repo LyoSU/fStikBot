@@ -318,9 +318,10 @@ sticker:
         O bot ainda está processando o vídeo anterior...
         Você pode apoiar o desenvolvimento do bot (/donate) para aumentar a prioridade de processamento e permitir adicionar mais de um sticker à fila.
       timeout: |
-        <b>Error!</b>
+        <b>At the moment, the bot is experiencing a huge load</b>
+        Therefore, video conversion is available only for sticker packs with active boost
 
-        Try again later.
+        For more details, follow the /donate
       convert: |
         <b>Erro!</b>
         Infelizmente, o bot não conseguiu converter o seu vídeo.

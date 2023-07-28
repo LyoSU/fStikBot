@@ -1,47 +1,47 @@
 ---
 language_name: '🇧🇾 Беларуская'
-name: Favorite Stickers Bot 🇺🇦
+name: Любімы стыкер-бот 🇺🇦
 description:
   long: |
     🧙 Я чарадзейны бот для стварэння стыкераў і эмодзі, і я дапамагу зрабіць вашыя размовы з сябрамі яшчэ больш вясёлымі! Дзякуючы сваім чарадзейным сілам я магу ператварыць вашыя любімыя фотаздымкі, відэа і гіфкі ў гарныя эмодзі і стыкеры без пакутаў з канвертацыяй і абразаннем. 🎉🎊 Са мной вы зможаце стварыць свае пакі ўсяго за некалькі націсканняў. Дык чаго ж вы чакаеце? Пачнем жа — дададзім ✨бляску✨ ў вашыя перапіскі!
 
     Пошук стыкераў: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: '🧙 Я чараўнік эмодзі і стыкераў! Ператварайце фота, відэа і гіфкі ў гарныя стыкеры ў вокамгненне.'
 ratelimit: Не так часта!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Вітаю цябе, ${name}! Я чарадзейны бот для стварэння пакаў эмодзі і стыкераў.
+      Я ў вокамгненне магу ператварыць фота, відэа і гіфкі ў гарныя стыкеры.
 
-      Send the /help command for more information
+      Каб даведацца больш, напішыце /help.
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Чат падтрымкі: @fStikCommunity (дазволена толькі англійская мова)
     help: |
-      <b>List of bot commands:</b>
+      <b>Спіс каманд:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new — стварыць новы пак стыкераў
+      /new_emoji — стварыць новы пак эмодзі
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /delete — выдаліць стыкер з пака
+      /original — знайсці арыгінальны стыкер
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /packs — спіс пакаў
+      /restore — аднавіць пак
+      /copy — скапіяваць пак
+      /emoji — змяніць суфікс эмодзі для бягучага пака
+      /frame — змяніць рамку для бягучага пака
+      /publish — апублікаваць пак у каталозе
 
-      /catalog - open catalog
+      /catalog — адкрыць каталог
 
-      /lang - change language
-      /donate - support the developer
+      /lang — змяніць мову
+      /donate — падтрымаць распрацоўшчыка
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Чат падтрымкі: @fStikCommunity (дазволена толькі англійская мова)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      👨‍🔧 Звязацца: @ly_oBot
+      👨‍💻 Канал распрацоўшчыка: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -52,148 +52,146 @@ cmd:
       • Не забывайце ацэньваць пакі, каб прасунуць або апусціць рэйтынг пака стыкераў
     commands:
       start: '📜 Стартавае меню'
-      help: '📖 Help'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      help: '📖 Даведка'
+      packs: '📁 Кіраванне пакамі'
+      new: '🌝 Стварыць пак стыкераў'
+      new_emoji: '😊 Стварыць пак эмодзі'
       catalog: '📖 Каталог'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      publish: '📤 Апублікаваць пак'
+      delete: '❌ Выдаліць стыкер'
       original: '🔍 Знайсці арыгінальны стыкер'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
+      restore: '🔀 Аднавіць пак'
+      copy: '📋 Скапіяваць пак'
       emoji: '📝 Змяніць суфікс эмодзі'
-      round: '🎥 Round shape video'
-      clear: '🖼️ Remove background from photo'
+      round: '🎥 Відэа круглай формы'
+      clear: '🖼️ Выдаліць фон з фотаздымку'
       lang: '🌐 Змяніць мову'
       donate: '☕️ Падтрымаць распрацоўшчыка'
     btn:
       new: '📥 Стварыць новы'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog: '💖 Адкрыць каталог'
+      catalog_mini: '💖 Каталог'
+      catalog_browser: '🌐 Адкрыць у браўзеры'
+      catalog_browser_mini: '🌐 У браўзеры'
+      catalog_app: '📱 Спампаваць праграму для Android'
+      catalog_app_mini: '📱 Праграма для Android'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 Выбраць пак'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃️ Аднаўленне пака</b>
 
-    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
+    Калі вы раней стварылі пак праз гэтага бота і зараз не можаце знайсці яго ў спісе пакаў, вы можаце гэты пак аднавіць.
 
-    <b>To do this, you need to perform several actions:</b>
-    1. Open @Stickers bot
-    2. Send <code>/packstats</code> command
-    3. Find and choose the required pack
-    4. Forward the received message to the bot
-    5. If restoration is successful - bot informs about it
+    <b>Для гэтага выканайце наступныя крокі:</b>
+    1. Запусціце бота @Stickers
+    2. Адпраўце яму каманду <code>/packstats</code>
+    3. Знайдзіце і выберыце патрэбны пак
+    4. Перашліце атрыманае паведамленне нашаму боту
+    5. Калі аднаўленне пройдзе паспяхова, наш бот апавясціць вас аб гэтым
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄️ Капіяваць пак</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    Каб скапіяваць пак у новы, проста адпраўце сюды спасылку на патрэбны пак стыкераў ці эмодзі
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Пакі</b>
     types:
       regular: Стыкеры
       custom_emoji: Эмодзі
       inline: Inline
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline pack
+      <b>Вы яшчэ не стварылі ніводнага пака.</b>
+      Каб стварыць пак, адпраўце каманду /new
+    inline_title: Убудаваны пак
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      Каб змяніць стандартнае эмодзі для бягучага пака, адпраўце каманду <code>/emoji</code>, дадаўшы праз прабел патрэбнае эмодзі
 
-      For example - <code>/emoji 🌟</code>
+      Напрыклад: <code>/emoji 🌟</code>
     done: Эмодзі паспяхова зменена.
     error: Пры змяненні эмодзі ўзнікла памылка!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Цяпер відэа будуць мець круглую форму
     disabled: |
-      Videos will no longer have a rounded shape
+      Цяпер відэа не будуць мець круглую форму
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕ Падтрымка распрацоўкі бота</b>
+    Падтрымаўшы распрацоўку бота, вы атрымаеце крэдыты.
+    За кожны долар вы атрымаеце па 5 крэдытаў.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one sticker pack.
+    <b>Баланс:</b> <code>${balance}</code> кр.
+    За 1 крэдыт можна забусціць адзін пак стыкераў.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Буст дае наступныя прывілеі:</b>
+    ➖ Адключэнне <code>"${titleSuffix}"</code> у назве пака <i>(не ў спасылцы на яго)</i>
+    ➖ Прыярытэт пры канвертацыі відэастыкераў
+    ➖ Магчымасць дадаць больш за адзін стыкер у чаргу апрацоўкі
+    ➖ Павышэнне максімальнай працягласці відэастыкераў да 30 секунд
   btn:
-    donate: '☕️ Donate'
+    donate: '☕ Падтрымка'
   topup: |
-    <b>Enter the amount of credits you want to buy:</b>
+    <b>Колькі крэдытаў вы хочаце купіць?</b>
 
-    <b>5 credit = 1$</b>
-    <i>Minimum amount - 5 credits</i>
+    <b>5 кр. = 1$</b>
+    <i>Мінімальная колькасць — 5 кр.</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Памылковая колькасць</b>
 
-    The minimum amount is 5 credits
+    Мінімальная колькасць крэдытаў — 5
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    Вы хочаце купіць <b>${amount} кр.</b> за <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Крэдыты выдаюцца адміністратарам уручную.
+    Час чакання: ад 5 хвілін да 1 гадзіны
 
-    <u>Select payment method:</u>
+    <u>Выберыце спосаб аплаты:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Абнаўленне балансу</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Баланс: <code>${balance}</code> кр. (дададзена <code>${amount}</code> кр.)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Сумеснае рэдагаванне</b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    Спасылка для сумеснага рэдагавання пака <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>Як выкарыстоўваць:</b>
+    1. Адпраўце спасылку чалавеку, якому вы хочаце даць доступ да пака
+    2. Перайшоўшы па спасылцы, чалавек павінен націснуць "Запусціць", пасля чаго ён стане рэдактарам
 
-    <b>Editors:</b>
+    <b>Рэдактары:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Каб выдаліць рэдактараў, скіньце спасылку</i>
   no_editors: |
-    No editors yet
+    Пакуль няма рэдактараў
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 Адправіць спасылку'
+    reset: '🔁 Скінуць спасылку'
   share: |
-    Follows the link and press "start" to co-edit the pack "${title}"
+    Перайдзіце па спасылцы і націсніце «Запусціць», каб стаць рэдактарам пака «${title}»
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Спасылка паспяхова скінута</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    Новая спасылка для сумеснага рэдагавання пака <a href="${link}">${title}</a>: <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack not found
-      hidden: Pack successfully hidden
-      restored: Pack successfully restored
+      not_found: Пак не знойдзены
+      hidden: Пак паспяхова схаваны
+      restored: Пак паспяхова адноўлены
     set_pack:
       static: |
-        Selected static pack <a href="${link}">${title}</a>
+        Выбраны статычны пак <a href="${link}">${title}</a>
 
-        To add a new sticker send me a photo, another static sticker.
-        For a sticker to have no background, it must be sent as a file.
+        Каб дадаць новы стыкер, адпраўце сюды фота або іншы статычны стыкер.
+        Калі вы хочаце, каб у стыкера не было фону, адпраўце відарыс як файл.
       animated: |
-        Selected animated (vector) pack <a href="${link}">${title}</a>
+        Выбраны анімаваны (вектарны) пак <a href="${link}">${title}</a>
 
-        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+        Каб дадаць новы стыкер, адпраўце сюды файл <a href="https://core.telegram.org/stickers#animated-stickers">TGS</a> або іншы анімаваны стыкер.
       video: |
         Выбраны відэапак <a href="${link}">${title}</a>
 
@@ -318,9 +316,10 @@ sticker:
         Бот усё яшчэ апрацоўвае папярэдняе відэа…
         Вы можаце падтрымаць распрацоўку бота (/donate), каб павысіць прыярытэт апрацоўкі вашых відэа і атрымаць магчымасць дадаваць у чаргу больш за адзін стыкер.
       timeout: |
-        <b>Памылка!</b>
+        <b>At the moment, the bot is experiencing a huge load</b>
+        Therefore, video conversion is available only for sticker packs with active boost
 
-        Паўтарыце спробу пазней.
+        For more details, follow the /donate
       convert: |
         <b>Памылка!</b>
         На жаль, у бота не атрымалася канвертаваць вашае відэа.
@@ -392,7 +391,7 @@ scenes:
 
       Ход выканання: ${current}/${total}
     done: |
-      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      Капіяванне пака з <a href="${originalLink}">${originalTitle}</a> у <a href="${link}">${title}</a> паспяхова завершана.
     error:
       premium: |
         <b>Памылка!</b>
@@ -408,181 +407,180 @@ scenes:
         Не атрымалася знайсці арыгінальны стыкер.
   delete:
     enter: |
-      Send the sticker that was added through this bot and I will delete it from the pack.
+      Адпраўце стыкер, які быў дададзены праз гэтага бота, і я яго выдалю з пака.
     confirm: |
-      Are you sure you want to delete this sticker?
+      Вы ўпэўненыя, што хочаце выдаліць гэты стыкер?
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the sticker.
+        <b>Памылка!</b>
+        Не атрымалася знайсці стыкер.
   rename:
     enter_name: |
-      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+      <b>Увядзіце новую назву для пака <a href="${link}">${title}</a>:</b>
     success: |
-      <b>Title successfully changed!</b>
+      <b>Назва паспяхова зменена!</b>
 
-      New title: <a href="${link}">${title}</a>
+      Новая назва: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>Адпраўце мне стыкер або эмодзі, каб прагледзець інфармацыю пра яго:</b>
     not_found: |
-      I could not find the sticker
+      Не атрымалася знайсці стыкер
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Пак:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(унікальны нумар пакаў уладальніка, павялічваецца з кожным пакам)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 ID уладальніка: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Іншыя пакі ад гэтага ўладальніка:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>Інфармацыя пра іншыя пакі гэтага ўладальніка адсутнічае</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Вы ўпэўненыя, што хочаце забусціць пак <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Буст павялічыць прыярытэт пака пры апрацоўцы і дасць магчымасць дадаваць у чаргу больш за адзін стыкер
+      Больш падрабязную інфармацыю пра бусты можна знайсці па камандзе /donate
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>Кошт:</b> 1 кр.
+      <b>Бягучы баланс:</b> ${balance} кр.
     btn:
-      yes: Yes, boost!
-      no: No, cancel
+      yes: Так, забусціць!
+      no: Не, скасаваць
     canceled: |
-      Boosting canceled
+      Буст скасаваны
     success: |
-      Boosting successfully completed!
+      Буст паспяхова завершаны!
 
-      ${title} is now boosted
+      Пак ${title} цяпер забушчаны
     error:
       not_enough_credits: |
-        You do not have enough credits to boost this pack.
+        У вас недастатковая колькасць крэдытаў для бусту.
 
-        You can top up your balance by sending the /donate command.
+        Вы можаце папоўніць баланс, адправіўшы каманду /donate.
       already_boosted: |
-        This pack is already boosted.
+        Гэты пак ужо забушчаны.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Адпраўце сюды стыкер з пака, які вы хочаце апублікаваць</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Вы можаце апублікаваць любы пак, які належыць вам, нават калі пак быў створаны не праз гэтага бота</i>
       owner_proof: |
-        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required pack
-        4. Forward the received message to the bot
+        <b>Каб пацвердзіць тое, што вы валодаеце гэтым пакам, выканайце некалькі простых крокаў:</b>
+        1. Запусціце бота @Stickers
+        2. Адпраўце туды каманду <code>/packstats</code>
+        3. Знайдзіце і выберыце патрэбны пак
+        4. Перашліце атрыманае паведамленне нашаму боту
       publish_new_access_denied: |
-        <b>Error!</b>
-        This pack is not yours.
+        <b>Памылка!</b>
+        Гэты пак вам не належыць.
 
-        You can only publish your own packs
+        Вы можаце апублікаваць толькі свае пакі
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Памылка!</b>
+        Вам забаронена выкарыстоўваць гэтую функцыю.
+        Калі ласка, звярніцеся да адміністратара.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your pack
-        Try to send only high-quality packs that may be of interest to a large number of people
+        Вы хочаце апублікаваць пак «<a href="${link}">${title}</a>» у публічным каталозе нашага бота
+        Яго зможа знайсці любы карыстальнік па назве, па тэгам або праз фільтр
+        Дзякуючы гэтаму больш людзей усталююць ваш пак
+        Старайцеся публікаваць толькі высакаякасныя пакі, якія могуць зацікавіць шматлікіх людзей
 
-        <b>Rules for publishing packs:</b>
-        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Правілы публікацыі пакаў:</b>
+        • Не публікуйце пакі, прызначаныя для вузкага круга людзей — напрыклад, твары сваіх сяброў або цытаты з вашых паведамленняў
+        • Не публікуйце стыкеры, якія парушаюць законы ЕС і/або іншыя мясцовыя законы
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        Вам будзе патрэбна даць дадатковую інфармацыю, каб яна была апублікавана ў каталозе
+      continue_button: Працягнуць
       enter_description: |
-        <b>Briefly describe your pack so that others can find it</b>
+        <b>Коратка апішыце свой пак, каб іншыя маглі яго знайсці</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>Вы таксама можаце выкарыстаць хэшэтэгі [#]</i>
+        <i>Напрыклад: #анімэ #мемы #жывёлы #любасць #kpop #смешна #кот #гульня </i>
       select_language: |
-        <b>Choose which languages your pack is for:</b>
-        <i>You can select multiple languages</i>
+        <b>Выберыце мову вашага пака:</b>
+        <i>Вы можаце выбраць некалькі моў</i>
       button_all_languages: Усе мовы
       button_confirm_language: Пацвердзіць
       set_safe: |
-        <b>Is your pack safe for users?</b>
-        <i>That is, it does not contain erotica and other shocking content</i>
+        <b>Ці бяспечны ваш пак для карыстальнікаў?</b>
+        <i>То-бок не змяшчае эратычнага ці іншага кантэнту, які можа шакіраваць</i>
       button_safe:
         safe: Так, пак бяспечны
         not_safe: Не, пак не бяспечны
-      no_tags: were not specified
+      no_tags: не былі вызначаны
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>Пацвердзіце публікацыю пака «<a href="${link}">${title}</a>»</b>
 
-        <b>Description:</b> <i>${description}</i>
-
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Апісанне:</b> <i>${description}</i>
+        <b>Тэгі:</b> ${tags}
+        <b>Мовы:</b> ${languages}
       button_confirm: '✅ Пацвердзіце публікацыю'
       success: |
-        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+        Віншуем з публікацыяй пака ў публічным каталозе нашага бота, дзе яго могуць знайсці іншыя карыстальнікі!
 
-        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+        Вы можаце адрэдагаваць пошукавую інфармацыю, выбраўшы пак стыкераў з дапамогай каманды /packs.
 
-        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+        <i>Нагадваем, што статыстыку вашага пака можна прагледзець у афіцыйным боце @Stickers</i>
     unpublish:
       success: |
-        The pack has been successfully unpublished from bot catalog.
+        Пак паспяхова выдалены з каталога бота.
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      Вы ўпэўненыя, што хочаце выдаліць пак <a href="${link}">${title}</a>?
+      Ён будзе выдалены назаўжды, і яго будзе нельга аднавіць.
 
-      If you want to delete only one sticker, use the /delete command.
+      Калі вы хочаце выдаліць толькі адзін стыкер, выкарыстайце каманду /delete.
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
-    confirm: Yes, I am totally sure.
+      Адпраўце каманду <code>${confirm}</code>, каб пацвердзіць выдаленне ўсяго пака.
+    confirm: Так, я абсалютна ўпэўнены.
     success: |
-      <b>Pack successfully deleted!</b>
+      <b>Пак паспяхова выдалены!</b>
     error:
-      - <b>Error!</b>
-      - Opps, something went wrong.
+      - <b>Памылка!</b>
+      - Ой, нешта пайшло не так.
   frame:
     no_video: |
-      <b>Error!</b>
-      You can only add frames to video packs.
+      <b>Памылка!</b>
+      Дадаць рамкі можна толькі да відэапакаў.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Выберыце тып рамкі:</b>
+      Рамка — гэта празрысты фон вакол стыкера
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>Лёгкая</code> — вуглы будуць трохі абрэзаны
+      <code>Сярэдняя</code> — вуглы будуць абрэзаны дужэй
+      <code>Акругленая</code> — вуглы будуць акруглены
+      <code>Квадратная</code> — ніякія змяненні не будуць прыменены
+      <code>Круглая</code> — рамка прыме форму круга
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>Вы таксама можаце выкарыстоўваць камнаду /frame для наладжвання тыпу рамкі</i>
     types:
       lite: '1. Лёгкая'
       medium: '2. Сярэдняя'
-      rounded: '3. Rounded'
-      square: '4. Square'
-      circle: '5. Circle'
+      rounded: '3. Акругленая'
+      square: '4. Квадратная'
+      circle: '5. Круглая'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Выбраная рамка:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Адпраўце <u>фотаздымак</u>, з якога вы хочаце выдаліць фон, і я прышлю файл без фону
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Найлепш працуе з фотаздымкамі; горш працуе з малюнкамі, ілюстрацыямі і г. д.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Адпраўце <u>фотаздымак</u>, з якога вы хочаце выдаліць фон, і я прышлю файл без фону
 
-      <i>It works best with anime pictures</i>
+      <i>Найлепш працуе з анімэ-відарысамі</i>
     choose_model: |
-      <b>Choose model:</b>
+      <b>Выберыце мадэль:</b>
     model:
-      ordinary: Common — for photos with people
-      general: General — for any photos
-      anime: Anime — for anime pictures
-    add_to_set_btn: '🌟 Add to set'
+      ordinary: Агульная — для фотаздымкаў з людзьмі
+      general: Асноўная — для любых фота
+      anime: Анімэ — для анімэ-відарысаў
+    add_to_set_btn: '🌟 Дадаць у набор'
     error: |
       <b>Памылка!</b>
       Ой, нешта пайшло не так.

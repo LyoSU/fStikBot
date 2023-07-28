@@ -318,9 +318,10 @@ sticker:
         Bot hali ham avvalgi videoni qayta ishlamoqda...
         Qayta ishlash ustuvorligini oshirish va navbatga bir nechta stiker qo‘shish imkoniyatini oshirish uchun siz botni ishlab chiqishni (/dona) qo‘llab-quvvatlashingiz mumkin.
       timeout: |
-        <b>Error!</b>
+        <b>At the moment, the bot is experiencing a huge load</b>
+        Therefore, video conversion is available only for sticker packs with active boost
 
-        Try again later.
+        For more details, follow the /donate
       convert: |
         <b>Xato!</b>
         Afsuski, bot videongizni aylantira olmadi.
