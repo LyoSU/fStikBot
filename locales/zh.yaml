@@ -318,9 +318,10 @@ sticker:
         Bot 仍在处理之前的视频...
         您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
       timeout: |
-        <b>错误！</b>
+        <b>At the moment, the bot is experiencing a huge load</b>
+        Therefore, video conversion is available only for sticker packs with active boost
 
-        稍后再试。
+        More on the /donate command
       convert: |
         <b>错误！</b>
         不幸的是，机器人无法转换您的视频。
