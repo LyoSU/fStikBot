@@ -125,7 +125,7 @@ const getLastMonoTransactions = async (ctx, next) => {
   }).json()
 
   const resultText = result.map((item) => {
-    return `~~~~~~~~~~~~~~~~~~~~~~\n<b>${item.description}</b>\n<code>${item.comment}</code>\n${item.amount / 100} ${item.currencyCode} (${new Date(item.time).toLocaleString()})`
+    return `~~~~~~~~~~~~~~~~~~~~~~\n<b>${item.description}</b>\n<code>${item.comment}</code>\n${item.amount / 100} ${item.currencyCode} (${new Date(item.time * 1000).toLocaleString()})`
   })
 
   await ctx.replyWithHTML(`<b>Last MonoBank transactions</b>\n\n${resultText.join('\n')}\n~~~~~~~~~~~~~~~~~~~~~~`, {
