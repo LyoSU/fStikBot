@@ -1,3 +1,4 @@
+const got = require('got')
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
@@ -116,6 +117,22 @@ const getFreeKassaTransactions = async (ctx, next) => {
   })
 }
 
+const getLastMonoTransactions = async (ctx, next) => {
+  const result = await got(`https://api.monobank.ua/personal/statement/${process.env.MONO_ACCOUNT}/${Math.floor(Date.now() / 1000) - 86400 * 3}`, {
+    headers: {
+      'X-Token': process.env.MONO_TOKEN
+    }
+  }).json()
+
+  const resultText = result.map((item) => {
+    return `~~~~~~~~~~~~~~~~~~~~~~\n<b>${item.description}</b>\n<code>${item.comment}</code>\n${item.amount / 100} ${item.currencyCode} (${new Date(item.time).toLocaleString()})`
+  })
+
+  await ctx.replyWithHTML(`<b>Last MonoBank transactions</b>\n\n${resultText.join('\n')}\n~~~~~~~~~~~~~~~~~~~~~~`, {
+    disable_web_page_preview: true
+  })
+}
+
 adminType.forEach((type) => {
   composer.use(Composer.optional((ctx) => {
     return ctx.config.mainAdminId === ctx?.from?.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.includes(type))
@@ -125,8 +142,9 @@ adminType.forEach((type) => {
 composer.command('admin', checkAdminRight, main)
 
 composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
-composer.hears(/\/crypto/, checkAdminRight, getLastCryptoTransactions)
-composer.hears(/\/fk/, checkAdminRight, getFreeKassaTransactions)
+composer.command('crypto', checkAdminRight, getLastCryptoTransactions)
+composer.command('fk', checkAdminRight, getFreeKassaTransactions)
+composer.command('mono', checkAdminRight, getLastMonoTransactions)
 
 composer.hears([I18n.match('start.menu.admin')], checkAdminRight, main)
 composer.action(/admin:(.*)/, checkAdminRight, main)
