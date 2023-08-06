@@ -1,47 +1,47 @@
 ---
 language_name: '🇧🇷 Português'
-name: Favorite Stickers Bot 🇺🇦
+name: Bot de Figurinhas Favoritas 🇺🇦
 description:
   long: |
     🧙 Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
 
     Pesquise adesivos: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: '🧙 Eu sou o mago dos emojis e figurinhas! Transforme fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.'
 ratelimit: Não tão frequente!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      🧙 Olá, ${name}! Eu sou o assistente do pacote de emojis e adesivos.
+      Estou transformando fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
 
-      Send the /help command for more information
+      Envie o comando /help para obter mais informações
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Chat de suporte: @fStikCommunity (apenas em inglês)
     help: |
-      <b>List of bot commands:</b>
+      <b>Lista de comandos de bot:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new - cria um novo pacote de adesivos
+      /new_emoji - cria um novo pacote de emojis
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /delete - exclui o adesivo do pacote
+      /original - encontre o adesivo original
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /packs - lista seus pacotes
+      /restore - restaura um pacote
+      /copy - copia um pacote
+      /emoji - altera o sufixo do emoji para o pacote atual
+      /frame - altera o quadro do pacote de vídeo atual
+      /publish - publicar o pacote no catálogo
 
-      /catalog - open catalog
+      /catalog - abre o catálogo
 
-      /lang - change language
-      /donate - support the developer
+      /lang - mudar idioma
+      /donate - apoie o desenvolvedor
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Chat de suporte: @fStikCommunity (apenas em inglês)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Contatos: @ly_oBot
+      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -52,31 +52,31 @@ cmd:
       • Não se esqueça de dar nota para promover ou rebaixar um pacote de stickes no ranking
     commands:
       start: '📜 Menu inicial'
-      help: '📖 Help'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      help: '📖 Ajuda'
+      packs: '📁 Gerenciar pacotes'
+      new: '🌝 Criar pacote de stickers'
+      new_emoji: '😊 Criar pacote de emoji'
       catalog: '📖 Catálogo'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      publish: '📤 Publicar pacote'
+      delete: '❌ Excluir figurinha'
       original: '🔍 Encontre o sticker original'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
+      restore: '🔀 Restaurar um pacote'
+      copy: '📋 Copiar um pacote'
       emoji: '📝 Altere o emoji vinculado'
-      round: '🎥 Round shape video'
-      clear: '🖼️ Remove background from photo'
+      round: '🎥 Video em formato redondo'
+      clear: '🖼️ Remova o fundo da foto'
       lang: '🌐 Mude o idioma'
       donate: '☕️ Apoie o desenvolvedor'
     btn:
       new: '📥 Crie novo'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog: '💖 Abrir catálogo'
+      catalog_mini: '💖 Catálogo'
+      catalog_browser: '🌐 Abrir no navegador'
+      catalog_browser_mini: '🌐 No navegador'
+      catalog_app: '📱 Baixe o aplicativo Android'
+      catalog_app_mini: '📱 Aplicativo Android'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 Selecione o pacote'
   restore: |
     <b>🗃 Pack restoration</b>
 
@@ -94,7 +94,7 @@ cmd:
     To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Pacotes</b>
     types:
       regular: Figurinhas
       custom_emoji: Emojis
