@@ -316,10 +316,10 @@ sticker:
         Бот усё яшчэ апрацоўвае папярэдняе відэа…
         Вы можаце падтрымаць распрацоўку бота (/donate), каб павысіць прыярытэт апрацоўкі вашых відэа і атрымаць магчымасць дадаваць у чаргу больш за адзін стыкер.
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for sticker packs with active boost
+        <b>У гэты момант серверы бота перагружаныя</b>
+        Па гэтай прычыне канвертацыя відэа даступная толькі для забушчаных пакаў стыкераў
 
-        For more details, follow the /donate
+        Каб даведацца больш, напішыце /donate
       convert: |
         <b>Памылка!</b>
         На жаль, у бота не атрымалася канвертаваць вашае відэа.
