@@ -94,7 +94,7 @@ const donate = async (ctx) => {
   const walletPayOrder = await walletPay.createOrder({
     amount: {
       currencyCode: "USD",
-      amount: 0.01
+      amount: price
     },
     description: "Test order",
     returnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
