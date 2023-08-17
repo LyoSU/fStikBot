@@ -96,7 +96,7 @@ const donate = async (ctx) => {
       currencyCode: "USD",
       amount: price
     },
-    description: "Test order",
+    description: `Payment for ${amount} credits`,
     returnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
     failReturnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
     customData: JSON.stringify({
