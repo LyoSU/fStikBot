@@ -22,6 +22,10 @@ const paymentsSchema = mongoose.Schema({
     type: String,
     index: true
   },
+  paymentId: {
+    type: String,
+    index: true
+  },
   status: {
     type: String,
     index: true

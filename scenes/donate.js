@@ -2,9 +2,15 @@ const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const freekassa = require('@alex-kondakov/freekassa')
 const CryptoPay = require('@foile/crypto-pay-api')
+const { WalletPaySDK } = require('wallet-pay-sdk')
 const mongoose = require('mongoose')
 
 const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
+
+const walletPay = new WalletPaySDK({
+  apiKey: process.env.WALLETPAY_API_KEY,
+  timeoutSeconds: 10800
+})
 
 const exchangeRate = {
   RUB: 90,
@@ -69,8 +75,44 @@ const donate = async (ctx) => {
 
   const cryptoPayMe = await cryptoPay.getMe().catch(() => {})
 
+  let walletPayLink
   let tonLink, usdtLink, btcLink, ethLink
   let tonPrice, usdtPrice, btcPrice, ethPrice
+
+
+  const payment = new ctx.db.Payment({
+    _id: mongoose.Types.ObjectId(),
+    user: ctx.session.userInfo._id,
+    amount,
+    price: price,
+    currency: 'USD',
+    paymentSystem: 'walletpay',
+    comment,
+    status: 'pending'
+  })
+
+  const walletPayOrder = await walletPay.createOrder({
+    amount: {
+      currencyCode: "USD",
+      amount: 0.01
+    },
+    description: "Test order",
+    returnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
+    failReturnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
+    customData: JSON.stringify({
+      paymentId: payment._id.toString(),
+    }),
+    externalId: payment._id.toString(),
+    customerTelegramUserId: ctx.from.id,
+  }).catch(() => {})
+
+  if (walletPayOrder?.status === 'SUCCESS') {
+    walletPayLink = walletPayOrder.data.payLink
+
+    payment.paymentId = walletPayOrder.data.id
+
+    await payment.save()
+  }
 
   if (cryptoPayMe) {
     const exchangeRate = await cryptoPay.getExchangeRates()
@@ -107,6 +149,7 @@ const donate = async (ctx) => {
   }
 
   const repltMarkup =  Markup.inlineKeyboard([
+    [Markup.urlButton('👛 Pay via Wallet', walletPayLink, !walletPayLink)],
     [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
     [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
     [
