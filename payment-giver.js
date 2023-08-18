@@ -1,10 +1,16 @@
 const mongoose = require('mongoose')
 const Freekassa = require('@alex-kondakov/freekassa')
+const { WalletPaySDK } = require('wallet-pay-sdk')
 const {
   db
 } = require('./database/')
 const I18n = require('telegraf-i18n')
 const Telegram = require('telegraf/telegram')
+
+const walletPay = new WalletPaySDK({
+  apiKey: process.env.WALLETPAY_API_KEY,
+  timeoutSeconds: 10800
+})
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 
@@ -25,14 +31,28 @@ const getFreeKassaOrders = async () => {
   return result.orders
 }
 
-const giveCredit = async () => {
-  const orders = await getFreeKassaOrders()
+const getWalletPayOrders = async () => {
+  const result = await walletPay.getOrderList({
+    offset: 0,
+    count: 100
+  })
 
-  for (const order of orders) {
-    if (!mongoose.Types.ObjectId.isValid(order.merchant_order_id)) continue
+  return result.data.items.filter((item) => item.status === 'PAID')
+}
+
+const giveCredit = async () => {
+  const fkOrders = await getFreeKassaOrders()
+  const wpOrders = await getWalletPayOrders()
+
+  const orders = [...fkOrders, ...wpOrders].map((order) => (
+    order.merchant_order_id || order.externalId
+  ))
+
+  for (const orderId of orders) {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) continue
 
     const payment = await db.Payment.findOne({
-      _id: mongoose.Types.ObjectId(order.merchant_order_id),
+      _id: mongoose.Types.ObjectId(orderId),
       status: 'pending'
     })
 
