@@ -32,8 +32,11 @@ const getFreeKassaOrders = async () => {
 }
 
 const getWalletPayOrders = async () => {
+  const total = await walletPay.getOrderAmount()
+  const offset = total.data.totalAmount - 100
+
   const result = await walletPay.getOrderList({
-    offset: 0,
+    offset: offset > 0 ? offset : 0,
     count: 100
   })
 
