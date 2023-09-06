@@ -75,12 +75,10 @@ const donate = async (ctx) => {
 
   const cryptoPayMe = await cryptoPay.getMe().catch(() => {})
 
-  let walletPayLink
   let tonLink, usdtLink, btcLink, ethLink
   let tonPrice, usdtPrice, btcPrice, ethPrice
 
-
-  const payment = new ctx.db.Payment({
+  const walletPayment = new ctx.db.Payment({
     _id: mongoose.Types.ObjectId(),
     user: ctx.session.userInfo._id,
     amount,
@@ -91,28 +89,7 @@ const donate = async (ctx) => {
     status: 'pending'
   })
 
-  const walletPayOrder = await walletPay.createOrder({
-    amount: {
-      currencyCode: "USD",
-      amount: price
-    },
-    description: `Payment for ${amount} credits`,
-    returnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
-    failReturnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
-    customData: JSON.stringify({
-      paymentId: payment._id.toString(),
-    }),
-    externalId: payment._id.toString(),
-    customerTelegramUserId: ctx.from.id,
-  }).catch(() => {})
-
-  if (walletPayOrder?.status === 'SUCCESS') {
-    walletPayLink = walletPayOrder.data.payLink
-
-    payment.paymentId = walletPayOrder.data.id
-
-    await payment.save()
-  }
+  await walletPayment.save()
 
   if (cryptoPayMe) {
     const exchangeRate = await cryptoPay.getExchangeRates()
@@ -149,7 +126,7 @@ const donate = async (ctx) => {
   }
 
   const repltMarkup =  Markup.inlineKeyboard([
-    [Markup.urlButton('👛 Pay via Wallet', walletPayLink, !walletPayLink)],
+    [Markup.callbackButton('Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
     [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
     [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
     [

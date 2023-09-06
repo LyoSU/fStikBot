@@ -27,6 +27,53 @@ composer.action('donate:topup', async (ctx) => {
   return ctx.scene.enter('donate')
 })
 
+composer.action(/donate:walletpay:(.*)/, async (ctx) => {
+  const payment = await ctx.db.Payment.findOne({
+    _id: ctx.match[1]
+  })
+
+  if (!payment) {
+    return ctx.replyWithHTML('Payment not found')
+  }
+
+  let walletPayLink
+
+  const { amount, price } = payment
+
+  const walletPayOrder = await walletPay.createOrder({
+    amount: {
+      currencyCode: "USD",
+      amount: price
+    },
+    description: `Payment for ${amount} credits`,
+    returnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
+    failReturnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
+    customData: JSON.stringify({
+      paymentId: payment._id.toString(),
+    }),
+    externalId: payment._id.toString(),
+    customerTelegramUserId: ctx.from.id,
+  }).catch(() => {})
+
+  if (walletPayOrder?.status === 'SUCCESS') {
+    walletPayLink = walletPayOrder.data.payLink
+
+    payment.paymentId = walletPayOrder.data.id
+
+    await payment.save()
+  }
+
+  if (!walletPayLink) {
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error'))
+  }
+
+  return ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
+    [Markup.urlButton('👛 Pay via Wallet', walletPayLink, !walletPayLink)],
+    [Markup.callbackButton('🔙 Back', 'donate:topup')]
+  ]))
+})
+
+
 composer.action(/donate:(\d+)/, async (ctx) => {
   return ctx.scene.enter('donate', {
     amount: ctx.match[1]
