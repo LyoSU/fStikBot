@@ -78,20 +78,20 @@ cmd:
   inline:
     switch_pm: '📁 Selecione o pacote'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 Restauração de packs</b>
 
-    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
+    Se você criou um pacote de sticker anteriormente através deste bot e não consegue encontrá-lo na sua lista de pacotes, então você pode recuperá-lo.
 
-    <b>To do this, you need to perform several actions:</b>
-    1. Open @Stickers bot
-    2. Send <code>/packstats</code> command
-    3. Find and choose the required pack
-    4. Forward the received message to the bot
-    5. If restoration is successful - bot informs about it
+    <b>Para fazer isso, você precisa executar as seguintes ações:</b>
+    1. Abra o bot @Stickers
+    2. Envie o comando <code>/packstats</code>
+    3. Encontre e escolha o pacote de sticker 
+    4. Encaminhe a mensagem recebida para o bot
+    5. Se a restauração for bem sucedida - o bot informará sobre isso
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄️ Copiar pacote</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    Para copiar outro pacote para um novo, você só precisa me enviar um link para um pacote de sticker ou emoji
   packs:
     info: |
       <b>📁 Pacotes</b>
@@ -100,21 +100,21 @@ cmd:
       custom_emoji: Emojis
       inline: Inline
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
+      <b>Você ainda não tem nenhum pacote.</b>
+      Para criar um, escreva o comando /new
     inline_title: Inline pack
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      Para alterar o emoji padrão do pacote atual, envie <code>/emoji</code> seguido do emoji separado por um espaço
 
-      For example - <code>/emoji 🌟</code>
+      Por exemplo: <code>/emoji 🌟</code>
     done: Emoji alterado com sucesso.
     error: Houve um erro ao alterar o emoji!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Vídeos agora terão formato arredondado
     disabled: |
-      Videos will no longer have a rounded shape
+      Vídeos não terão mais formato arredondado
 donate:
   menu: |
     <b>☕️ Bot development support</b>
