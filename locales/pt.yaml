@@ -122,7 +122,7 @@ donate:
     For every 1 dollar, you will receive 5 credits.
 
     <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one sticker pack.
+    With 1 credit, you have the opportunity to boost one pack.
 
     <b>The boost provides the following benefits:</b>
     ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
@@ -199,10 +199,10 @@ callback:
 
         Para adicionar um novo adesivo, envie-me qualquer vídeo ou foto.
     set_inline_pack: |
-      Pacote de sticker <u>${title}</u> selecionado
+      Selected <u>${title}</u> pack
 
-      Para usá-lo, digite em qualquer chat <code>@${botUsername} </code>e espaço.
-      Você também pode usá-lo selecionando o botão abaixo
+      To use it, write in any chat <code>@${botUsername} </code>and space
+      You can also use it by pressing the button below
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
@@ -255,7 +255,7 @@ sticker:
 
       <i>Envie um ou mais emojis que correspondam ao sticker, se você quiser adicioná-los</i>
     ok_inline: |
-      <b>Sticker adicionado ao pacote de sticker com sucesso:</b>
+      <b>Added to pack successfully:</b>
       <u>${title}</u>
     send_emoji: Ótimo, agora envie os emojis que correspondam aos
     converting_process: |
@@ -319,7 +319,7 @@ sticker:
         Você pode apoiar o desenvolvimento do bot (/donate) para aumentar a prioridade de processamento e permitir adicionar mais de um sticker à fila.
       timeout: |
         <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for sticker packs with active boost
+        Therefore, video conversion is available only for packs with active boost
 
         For more details, follow the /donate
       convert: |
@@ -346,7 +346,7 @@ scenes:
     animated: '✨ Vetor'
     video: '📹 Vídeo'
     pack_format: |
-      <b><u>Choose stickerpack type</u></b>
+      <b><u>Choose pack type</u></b>
 
       <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
       An example of a regular pack - t.me/addstickers/Animals
@@ -524,7 +524,7 @@ scenes:
       success: |
         Congratulations, your pack has been published in the general directory of our bot where other users can find it!
 
-        You can edit the stickerpack search information by selecting the stickerpack with the /packs command.
+        You can edit the pack search information by selecting the pack with the /packs command.
 
         <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
     unpublish:
