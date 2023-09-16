@@ -122,7 +122,7 @@ donate:
     For every 1 dollar, you will receive 5 credits.
 
     <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one sticker pack.
+    With 1 credit, you have the opportunity to boost one pack.
 
     <b>The boost provides the following benefits:</b>
     ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
@@ -319,7 +319,7 @@ sticker:
         You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for sticker packs with active boost
+        Therefore, video conversion is available only for packs with active boost
 
         For more details, follow the /donate
       convert: |
