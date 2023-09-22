@@ -394,9 +394,16 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           source: await downloadFileByUrl(fileUrl)
         }
       } else {
-        let priority = 10
+        const stickerSetCount = await ctx.db.StickerSet.countDocuments({
+          owner: ctx.session.userInfo._id,
+          video: true
+        })
+
+        let priority = Math.round(stickerSetCount / 3)
+
+        if (ctx.i18n.locale() === 'ru') priority += 20
+
         if (ctx.session.userInfo.premium || stickerSet?.boost) priority = 5
-        else if (ctx.i18n.locale() === 'ru') priority = 15
 
         let frameType = (isVideoNote) ? "circle" : "rounded"
         forceCrop = (inputFile.forceCrop || stickerSet.packType === 'custom_emoji') ? true : false
@@ -409,7 +416,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         const total = await convertQueue.getJobCounts()
 
-        if (total.waiting > 100 && priority > 10) {
+        if (total.waiting > 200 && priority > 20) {
           return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
             reply_to_message_id: ctx?.message?.message_id,
             allow_sending_without_reply: true
