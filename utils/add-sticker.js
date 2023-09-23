@@ -394,29 +394,22 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           source: await downloadFileByUrl(fileUrl)
         }
       } else {
-        const stickerSetCount = await ctx.db.StickerSet.countDocuments({
+        const stickerSetsCount = await ctx.db.StickerSet.countDocuments({
           owner: ctx.session.userInfo._id,
           video: true
         })
 
-        let priority = Math.round(stickerSetCount / 3)
+        let priority = Math.round(stickerSetsCount / 3)
 
-        if (ctx.i18n.locale() === 'ru') priority += 20
+        if (ctx.i18n.locale() === 'ru') priority += 40
 
         if (ctx.session.userInfo.premium || stickerSet?.boost) priority = 5
 
-        let frameType = (isVideoNote) ? "circle" : "rounded"
-        forceCrop = (inputFile.forceCrop || stickerSet.packType === 'custom_emoji') ? true : false
-
-        if (frameType === "rounded") {
-          frameType = stickerSet.frameType || "square"
-        }
-
-        const maxDuration = (ctx.session.userInfo.premium || stickerSet?.boost) ? 35 : 6
+        const maxDuration = (ctx.session.userInfo.premium || stickerSet?.boost) ? 35 : 4
 
         const total = await convertQueue.getJobCounts()
 
-        if (total.waiting > 200 && priority > 20) {
+        if (total.waiting > 200 && priority > 50) {
           return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
             reply_to_message_id: ctx?.message?.message_id,
             allow_sending_without_reply: true
@@ -425,11 +418,18 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         let convertingMessage
 
-        if (!ctx.session.userInfo.premium && !stickerSet?.boost && total.waiting > 3) {
+        if (!ctx.session.userInfo.premium && !stickerSet?.boost && total.waiting > 5) {
           convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
             progress: total.waiting + 1,
             total: total.waiting + 1
           }))
+        }
+
+        let frameType = (isVideoNote) ? "circle" : "rounded"
+        forceCrop = (inputFile.forceCrop || stickerSet.packType === 'custom_emoji') ? true : false
+
+        if (frameType === "rounded") {
+          frameType = stickerSet.frameType || "square"
         }
 
         await convertQueue.add({
