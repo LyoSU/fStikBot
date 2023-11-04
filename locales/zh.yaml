@@ -53,7 +53,7 @@ cmd:
     commands:
       start: '📜 Start menu'
       help: '📖 Help'
-      packs: '📁 Manage packs'
+      packs: '📁 管理包'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
       catalog: '📖 目录'
