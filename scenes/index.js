@@ -18,6 +18,7 @@ const packFrame = require('./pack-frame')
 const packRename = require('./pack-rename')
 const packDelete = require('./pack-delete')
 const packAbout = require('./pack-about')
+const aiSticker = require('./ai-sticker')
 const donate = require('./donate')
 
 const stage = new Stage([].concat(
@@ -33,6 +34,7 @@ const stage = new Stage([].concat(
   packRename,
   packDelete,
   packAbout,
+  aiSticker,
   donate
 ))
 
@@ -70,6 +72,7 @@ stage.hears(([
   '/delete',
   '/frame',
   '/rename',
+  '/ai',
   '/catalog'
 ]), async (ctx, next) => {
   await ctx.scene.leave()

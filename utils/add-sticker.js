@@ -422,7 +422,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
             progress: total.waiting + 1,
             total: total.waiting + 1
-          }))
+          })).catch(() => {})
         }
 
         let frameType = (isVideoNote) ? "circle" : "rounded"
