@@ -7,7 +7,7 @@ services:
     restart: always
 
   fstikbot:
-    image: fstikbot
+    build: .
     depends_on:
       - "mongo"
     restart: always
