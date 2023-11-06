@@ -76,13 +76,13 @@ module.exports = async (ctx) => {
   if (stickerType === 'text') {
     const customEmoji = message.entities.find((e) => e.type === 'custom_emoji')
 
-    if (!customEmoji) return
+    if (!customEmoji) return next()
 
     const emojiStickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
       custom_emoji_ids: [customEmoji.custom_emoji_id]
     })
 
-    if (!emojiStickers) return
+    if (!emojiStickers) return next()
 
     stickerFile = emojiStickers[0]
   }
