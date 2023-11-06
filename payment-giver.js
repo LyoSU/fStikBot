@@ -44,8 +44,16 @@ const getWalletPayOrders = async () => {
 }
 
 const giveCredit = async () => {
-  const fkOrders = await getFreeKassaOrders()
-  const wpOrders = await getWalletPayOrders()
+  let fkOrders = []
+  let wpOrders = []
+
+  if (process.env.FREEKASSA_SHOP_ID && process.env.FREEKASSA_API_KEY) {
+    fkOrders = await getFreeKassaOrders()
+  }
+
+  if (process.env.WALLETPAY_API_KEY) {
+    wpOrders = await getWalletPayOrders()
+  }
 
   const orders = [...fkOrders, ...wpOrders].map((order) => (
     order.merchant_order_id || order.externalId
