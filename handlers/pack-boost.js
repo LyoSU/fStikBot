@@ -1,6 +1,7 @@
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const rateLimit = require('telegraf-ratelimit')
+const { escapeHTML } = require('../utils')
 
 const composer = new Composer()
 
@@ -44,7 +45,7 @@ composer.action(/boost:(.*)/, async (ctx) => {
   if (!stickerSet) return ctx.answerCbQuery(ctx.i18n.t('scenes.error.notFound'))
 
   const resultText = ctx.i18n.t('scenes.boost.sure', {
-    title: stickerSet.title,
+    title: escapeHTML(stickerSet.title),
     link: `https://t.me/addstickers/${stickerSet.name}`,
     balance: ctx.session.userInfo.balance
   })
