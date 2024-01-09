@@ -65,6 +65,7 @@ cmd:
       emoji: '📝 تغيير لاحقة الرموز التعبيرية'
       round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
+      about: '📦 Pack info'
       lang: '🌐 تغيير اللغة'
       donate: '☕ أدعم المبرمج'
     btn:
