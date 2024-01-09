@@ -26,7 +26,8 @@ module.exports = async (ctx) => {
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.publish'), 'publish')
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.about'), 'about')
     ]
   ]).extra())
 

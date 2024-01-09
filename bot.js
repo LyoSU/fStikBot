@@ -221,6 +221,7 @@ bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 bot.action(/original/, (ctx) => ctx.scene.enter('originalSticker'))
 bot.command('about', (ctx) => ctx.scene.enter('packAbout'))
+bot.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
 bot.command('search', (ctx) => ctx.scene.enter('searchStickerSet'))
 bot.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
 bot.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
@@ -361,6 +362,7 @@ db.connection.once('open', async () => {
       { command: 'copy', description: i18n.t(localeName, 'cmd.start.commands.copy') },
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
       { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
+      { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.about') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },

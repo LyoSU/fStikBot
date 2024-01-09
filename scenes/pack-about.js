@@ -34,7 +34,7 @@ function decodeStickerSetId (u64) {
 const packAbout = new Scene('packAbout')
 
 packAbout.enter(async (ctx) => {
-  await ctx.replyWithHTML('Send me a sticker or a custom emoji', {
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.enter'), {
     reply_markup: Markup.keyboard([
       [
         ctx.i18n.t('scenes.btn.cancel')
