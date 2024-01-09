@@ -98,3 +98,44 @@ async function processStickerSets(stickerSets) {
     await processStickerSets(batch);
   }
 })();
+
+(async () => {
+  while (true) {
+    const stickersWithoutParentSet = await db.Sticker.aggregate([
+      {
+        $lookup: {
+          from: "stickersets",
+          localField: "stickerSet",
+          foreignField: "_id",
+          as: "parentSet",
+        },
+      },
+      {
+        $match: {
+          parentSet: {
+            $size: 0,
+          },
+        },
+      },
+      {
+        $limit: 50000,
+      },
+      {
+        $project: {
+          _id: 1,
+          stickerSet: 1,
+        },
+      }
+    ])
+
+    // delete many
+    await db.Sticker.deleteMany({
+      _id: {
+        $in: stickersWithoutParentSet.map(sticker => sticker._id)
+      }
+    })
+      .catch(err => console.error(err))
+      .then(() => console.log(`Deleted ${stickersWithoutParentSet.length} stickers without parent set`));
+  }
+
+})();
