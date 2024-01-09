@@ -65,6 +65,7 @@ cmd:
       emoji: '📝 Эмодзи-суффискін өзгерту'
       round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
+      about: '📦 Pack info'
       lang: '🌐 Тіл ауыстыру'
       donate: '☕️ Құрастырушыны қолдау'
     btn:
