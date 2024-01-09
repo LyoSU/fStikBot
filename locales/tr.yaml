@@ -65,6 +65,7 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
+      about: '📦 Pack info'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
