@@ -198,7 +198,7 @@ bot.action(/packs:(type):(.*)/, handlePacks)
 bot.action(/packs:(.*)/, handlePacks)
 
 bot.start((ctx, next) => {
-  if (ctx.startPayload.match(/s_(.*)/)) return handleSelectPack(ctx)
+  if (ctx.startPayload.match(/^s_(.*)/)) return handleSelectPack(ctx)
   if (ctx.startPayload === 'packs') return handlePacks(ctx)
   return next()
 })
