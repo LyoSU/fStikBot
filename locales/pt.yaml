@@ -65,6 +65,7 @@ cmd:
       emoji: '📝 Altere o emoji vinculado'
       round: '🎥 Video em formato redondo'
       clear: '🖼️ Remova o fundo da foto'
+      about: '📦 Pack info'
       lang: '🌐 Mude o idioma'
       donate: '☕️ Apoie o desenvolvedor'
     btn:
