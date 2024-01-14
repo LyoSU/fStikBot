@@ -99,7 +99,7 @@ async function processStickerSets(stickerSets) {
   }
 })();
 
-(async () => {
+const updateStickerSet = async (stickerSet) => {
   while (true) {
     const stickersWithoutParentSet = await db.Sticker.aggregate([
       {
@@ -137,5 +137,4 @@ async function processStickerSets(stickerSets) {
       .catch(err => console.error(err))
       .then(() => console.log(`Deleted ${stickersWithoutParentSet.length} stickers without parent set`));
   }
-
-})();
+}
