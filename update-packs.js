@@ -139,5 +139,4 @@ const updateStickerSet = async (stickerSet) => {
   }
 }
 
-updateStickerSet()
-  
+// updateStickerSet()
