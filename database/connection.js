@@ -1,13 +1,19 @@
 const mongoose = require('mongoose')
 
-const connection = mongoose.createConnection(process.env.MONGODB_URI)
+const connection = mongoose.createConnection(process.env.MONGODB_URI, {
+  poolSize: 10,
+  maxTimeMS: 3
+})
 
 connection.on('error', error => {
   console.error(error)
   process.exit(1)
 })
 
-const atlasConnection = mongoose.createConnection(process.env.ATLAS_MONGODB_URI || process.env.MONGODB_URI)
+const atlasConnection = mongoose.createConnection(process.env.ATLAS_MONGODB_URI || process.env.MONGODB_URI, {
+  poolSize: 10,
+  maxTimeMS: 3
+})
 
 atlasConnection.on('error', error => {
   console.error(error)
