@@ -138,3 +138,6 @@ const updateStickerSet = async (stickerSet) => {
       .then(() => console.log(`Deleted ${stickersWithoutParentSet.length} stickers without parent set`));
   }
 }
+
+updateStickerSet()
+  
