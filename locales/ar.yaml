@@ -63,7 +63,7 @@ cmd:
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 تغيير لاحقة الرموز التعبيرية'
-      round: '🎥 Round shape video'
+      round: ''
       clear: '🖼️ Remove background from photo'
       about: '📦 Pack info'
       lang: '🌐 تغيير اللغة'
