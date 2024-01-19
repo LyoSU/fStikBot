@@ -99,7 +99,7 @@ async function processStickerSets(stickerSets) {
   }
 })();
 
-const updateStickerSet = async (stickerSet) => {
+const updateStickerSets = async () => {
   while (true) {
     const stickersWithoutParentSet = await db.Sticker.aggregate([
       {
@@ -139,4 +139,4 @@ const updateStickerSet = async (stickerSet) => {
   }
 }
 
-// updateStickerSet()
+updateStickerSets();
