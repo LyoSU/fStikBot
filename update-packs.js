@@ -118,7 +118,7 @@ const updateStickerSets = async () => {
         },
       },
       {
-        $limit: 50000,
+        $limit: 1000,
       },
       {
         $project: {
