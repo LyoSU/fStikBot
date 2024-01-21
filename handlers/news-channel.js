@@ -24,7 +24,7 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
     return next()
   }
 
-  if (Math.random() > 0.01) {
+  if (Math.random() > 0.9) {
     return next()
   }
 
@@ -56,7 +56,7 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
       }
     })
 
-    return next()
+    // return next()
   } else {
     ctx.session.userInfo.newsSubscribedDate = new Date()
     return next()
