@@ -24,10 +24,6 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
     return next()
   }
 
-  if (Math.random() > 0.9) {
-    return next()
-  }
-
   // check subscribe to channel
   const getChatMember = await ctx.telegram.getChatMember(ctx.config.ruNewsChannel.id, ctx.from.id).catch((error) => {
     console.error('getChatMember error', error)
