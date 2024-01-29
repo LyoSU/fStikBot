@@ -49,6 +49,10 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  adminRights: {
+    type: Array,
+    default: []
+  },
   webapp: {
     country: String,
     platform: String,

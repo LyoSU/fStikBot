@@ -16,17 +16,18 @@ const i18n = new I18n({
   skipPluralize: true
 })
 
+
+const adminType = [
+  'messaging',
+  'pack'
+]
+
 const composer = new Composer()
 
 const checkAdminRight = (ctx, next) => {
   if (ctx.config.mainAdminId === ctx.from.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.length > 0)) return next()
   else return ctx.replyWithHTML('You are not admin')
 }
-
-const adminType = [
-  'messaging',
-  'pack'
-]
 
 const main = async (ctx, next) => {
   const resultText = 'Admin panel'
