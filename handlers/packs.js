@@ -97,7 +97,7 @@ module.exports = async (ctx) => {
 
         if (stickerSetInfo) {
           // if user not premium and not boosed pack and title not have bot username
-          if (!userInfo.premium && !stickerSet.boost && !stickerSetInfo.title.includes(ctx.options.username)) {
+          if (!stickerSet.boost && !stickerSetInfo.title.includes(ctx.options.username)) {
             const titleSuffix = ` :: @${ctx.options.username}`
             const charTitleMax = ctx.config.charTitleMax
 

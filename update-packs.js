@@ -6,6 +6,12 @@ const {
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 
+let botInfo = null
+
+telegram.getMe().then((info) => {
+  botInfo = info
+})
+
 function decodeStickerSetId (u64) {
   let u32 = u64 >> 32n
   let u32l = u64 & 0xffffffffn
@@ -99,7 +105,7 @@ async function processStickerSets(stickerSets) {
   }
 })();
 
-const updateStickerSets = async () => {
+(async () => {
   while (true) {
     const stickersWithoutParentSet = await db.Sticker.aggregate([
       {
@@ -137,6 +143,4 @@ const updateStickerSets = async () => {
       .catch(err => console.error(err))
       .then(() => console.log(`Deleted ${stickersWithoutParentSet.length} stickers without parent set`));
   }
-}
-
-updateStickerSets();
+})();

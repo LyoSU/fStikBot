@@ -35,8 +35,8 @@ packRename.enter(async (ctx) => {
 packRename.on('text', async (ctx) => {
   const { stickerSet } = ctx.session.userInfo
 
-  const titleSuffix = (stickerSet.boost || ctx.session.userInfo.premium) ? '' : ` :: @${ctx.options.username}`
-  const charTitleMax = (stickerSet.boost || ctx.session.userInfo.premium) ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
+  const titleSuffix = stickerSet.boost ? '' : ` :: @${ctx.options.username}`
+  const charTitleMax = stickerSet.boost ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
 
   let newTitle = ctx.message.text
 

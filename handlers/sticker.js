@@ -139,7 +139,7 @@ module.exports = async (ctx) => {
         ])
       })
     } else {
-      if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo.premium && !stickerSet?.boost) {
+      if (ctx.session.userInfo.locale === 'ru' && !stickerSet?.boost) {
         showGramAds(ctx.chat.id)
       }
 

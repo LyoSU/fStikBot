@@ -348,7 +348,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
     if (inputFile.removeBg) {
       let priority = 10
-      if (ctx.session.userInfo.premium || stickerSet?.boost) priority = 5
+      if (stickerSet?.boost) priority = 5
       else if (ctx.i18n.locale() === 'ru') priority = 15
 
       const job = await removebgQueue.add({
@@ -374,7 +374,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
-      if (userQueue.video && !ctx.session.userInfo.premium && !stickerSet?.boost) {
+      if (userQueue.video && !stickerSet?.boost) {
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
           reply_to_message_id: ctx?.message?.message_id,
           allow_sending_without_reply: true
@@ -403,9 +403,9 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         if (ctx.i18n.locale() === 'ru') priority += 40
 
-        if (ctx.session.userInfo.premium || stickerSet?.boost) priority = 5
+        if (stickerSet?.boost) priority = 5
 
-        const maxDuration = (ctx.session.userInfo.premium || stickerSet?.boost) ? 35 : 4
+        const maxDuration = (stickerSet?.boost) ? 35 : 4
 
         const total = await convertQueue.getJobCounts()
 
@@ -418,7 +418,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         let convertingMessage
 
-        if (!ctx.session.userInfo.premium && !stickerSet?.boost && total.waiting > 5) {
+        if (!stickerSet?.boost && total.waiting > 5) {
           convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
             progress: total.waiting + 1,
             total: total.waiting + 1

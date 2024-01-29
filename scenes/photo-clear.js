@@ -78,7 +78,7 @@ photoClear.enter(async (ctx) => {
 photoClear.on('photo', async (ctx) => {
   ctx.replyWithChatAction('upload_document')
 
-  if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo.premium && !ctx.session.userInfo?.stickerSet?.boost) {
+  if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
     showGramAds(ctx.chat.id)
   }
 
@@ -94,8 +94,7 @@ photoClear.on('photo', async (ctx) => {
   }
 
   let priority = 10
-  if (ctx.session.userInfo.premium) priority = 5
-  else if (ctx.i18n.locale() === 'ru') priority = 15
+  if (ctx.i18n.locale() === 'ru') priority = 15
 
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {

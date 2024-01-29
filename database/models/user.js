@@ -36,10 +36,6 @@ const userSchema = mongoose.Schema({
   newsSubscribedDate: {
     type: Date
   },
-  premium: {
-    type: Boolean,
-    default: false
-  },
   balance: {
     type: Number,
     default: 0

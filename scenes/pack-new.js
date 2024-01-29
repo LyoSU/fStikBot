@@ -184,7 +184,7 @@ newPackTitle.enter(async (ctx) => {
   })
 })
 newPackTitle.on('text', async (ctx) => {
-  let charTitleMax = ctx.session.userInfo.premium ? ctx.config.premiumCharTitleMax : ctx.config.charTitleMax
+  let charTitleMax = ctx.config.charTitleMax
 
   let title = ctx.message.text
 
@@ -240,7 +240,7 @@ newPackConfirm.enter(async (ctx, next) => {
   }
 
   if (!inline) name += nameSuffix
-  if (ctx.session.userInfo.premium !== true && !inline) title += titleSuffix
+  if (!inline) title += titleSuffix
 
   const placeholder = {
     regular: {
