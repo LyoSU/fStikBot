@@ -74,8 +74,8 @@ adminPackEdit.enter(async (ctx) => {
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.pack.edit.steal_button'), 'admin:pack:edit:steal'),
-      Markup.callbackButton(ctx.i18n.t('admin.pack.edit.remove_button'), 'admin:pack:edit:remove')
+      Markup.callbackButton('Steal', 'admin:pack:edit:steal'),
+      Markup.callbackButton('Remove', 'admin:pack:edit:remove')
     ],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
@@ -99,8 +99,8 @@ adminPackEdit.action(/^admin:pack:edit:steal$/, async (ctx) => {
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.pack.edit.yes'), 'admin:pack:edit:steal:yes'),
-      Markup.callbackButton(ctx.i18n.t('admin.pack.edit.no'), 'admin:pack:edit:steal:no')
+      Markup.callbackButton('Yes', 'admin:pack:edit:steal:yes'),
+      Markup.callbackButton('No', 'admin:pack:edit:steal:no')
     ],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
@@ -150,8 +150,8 @@ adminPackEdit.action(/admin:pack:edit:remove$/, async (ctx) => {
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.pack.edit.yes'), 'admin:pack:edit:remove:yes'),
-      Markup.callbackButton(ctx.i18n.t('admin.pack.edit.no'), 'admin:pack:edit:remove:no')
+      Markup.callbackButton('Yes', 'admin:pack:edit:remove:yes'),
+      Markup.callbackButton('No', 'admin:pack:edit:remove:no')
     ],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
@@ -190,9 +190,7 @@ adminPackEdit.action(/admin:pack:edit:remove:(.*)/, async (ctx) => {
   await ctx.deleteMessage()
 
   ctx.state.answerCbQuery = [
-    ctx.i18n.t('admin.pack.edit.remove_success', {
-      packName: editPack.name
-    }),
+    `You have successfully removed pack ${editPack.name}`,
     true
   ]
 
