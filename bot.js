@@ -46,35 +46,12 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   handlerTimeout: 500
 })
 
+bot.catch(handleError)
+
 // if channel post
-bot.on(['channel_post', 'edited_channel_post'], () => {})
-
-bot.use((ctx, next) => {
-  const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('timeout'))
-    }, 1000 * 5)
-  })
-
-  const nextPromise = next().catch((error) => {
-    handleError(error, ctx)
-  })
-
-  return Promise.race([timeoutPromise, nextPromise])
-    .catch((error) => {
-      if (error.message === 'timeout') {
-        console.error('timeout', ctx.update)
-        return false
-      }
-
-      return true
-    })
-})
-
 bot.on(['channel_post', 'edited_channel_post', 'poll'], () => {})
 
 // I18n
-const { match } = I18n
 const i18n = new I18n({
   directory: path.resolve(__dirname, 'locales'),
   defaultLanguage: 'en',
