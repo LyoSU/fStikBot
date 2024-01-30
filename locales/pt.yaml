@@ -51,6 +51,7 @@ cmd:
       • Procure por palavras-chave ou nas abas predefinidas
       • Não se esqueça de dar nota para promover ou rebaixar um pacote de stickes no ranking
     commands:
+      ss: '🌟 Save sticker'
       start: '📜 Menu inicial'
       help: '📖 Ajuda'
       packs: '📁 Gerenciar pacotes'
@@ -272,6 +273,9 @@ sticker:
       Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
       <i>Não leva muito tempo</i>
     error:
+      reply: |
+        <b>Error!</b>
+        Please, reply to the sticker.
       no_selected_pack: |
         <b>Você não selecionou um pacote</b>
 
