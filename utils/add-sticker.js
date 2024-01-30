@@ -49,7 +49,7 @@ async function updateConvertQueueMessages () {
 
       const progress = waiting.findIndex((id) => id === job.id)
 
-      await telegram.editMessageText(input.userId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
+      await telegram.editMessageText(input.chatId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
         progress: progress + 1,
         total: jobs.length
       }), {
@@ -70,7 +70,7 @@ updateConvertQueueMessages()
 convertQueue.on('global:completed', async (jobId, result) => {
   const { input, metadata, content } = JSON.parse(result)
 
-  delete queue[input.userId]
+  delete queue[input.chatId]
 
   const stickerExtra = input.stickerExtra
 
@@ -80,14 +80,14 @@ convertQueue.on('global:completed', async (jobId, result) => {
     }
   }
 
-  const uploadResult = await uploadSticker(input.userId, input.stickerSet, input.stickerFile, stickerExtra)
+  const uploadResult = await uploadSticker(input.chatId, input.stickerSet, input.stickerFile, stickerExtra)
 
-  if (input.convertingMessageId) await telegram.deleteMessage(input.userId, input.convertingMessageId).catch(() => {})
+  if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
   const textResult = addStickerText(uploadResult, input.locale || 'en')
 
   if (textResult.messageText) {
-    await telegram.sendMessage(input.userId, textResult.messageText, {
+    await telegram.sendMessage(input.chatId, textResult.messageText, {
       parse_mode: 'HTML',
       reply_markup: textResult.replyMarkup
     })
@@ -99,12 +99,12 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
 
   const { input, metadata, content } = job.data
 
-  if (input.convertingMessageId) await telegram.deleteMessage(input.userId, input.convertingMessageId).catch(() => {})
+  if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
-  if (input.convertingMessageId) await telegram.deleteMessage(input.userId, input.convertingMessageId).catch(() => {})
+  if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
   if (errorData === 'timeout') {
-    await telegram.sendMessage(input.userId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), {
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), {
       parse_mode: 'HTML'
     })
   } else {
@@ -112,7 +112,7 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
       parse_mode: 'HTML'
     })
 
-    await telegram.sendMessage(input.userId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
       parse_mode: 'HTML'
     })
   }
@@ -434,7 +434,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         await convertQueue.add({
           input: {
-            userId: ctx.from.id,
+            userId: ctx.chat.id,
             locale: ctx.i18n.locale(),
             convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
             stickerExtra,
