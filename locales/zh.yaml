@@ -51,6 +51,7 @@ cmd:
       • 按关键字或在准备好的标签中搜索
       • 不要忘记评价以进行促销或降低贴纸包的排名
     commands:
+      ss: '🌟 Save sticker'
       start: '📜 Start menu'
       help: '📖 Help'
       packs: '📁 管理包'
@@ -272,6 +273,9 @@ sticker:
       Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
       <i>It does not take a lot of time</i>
     error:
+      reply: |
+        <b>Error!</b>
+        Please, reply to the sticker.
       no_selected_pack: |
         <b>You have not selected a pack</b>
 
