@@ -32,6 +32,7 @@ const {
 const scenes = require('./scenes')
 const {
   updateUser,
+  updateGroup,
   stats,
   updateMonitor
 } = require('./utils')
@@ -136,6 +137,8 @@ bot.use(async (ctx, next) => {
   await next(ctx)
   await ctx.session.userInfo.save().catch(() => {})
 })
+
+bot.use(Composer.groupChat(Composer.command(updateGroup)))
 
 bot.command('json', ({ replyWithHTML, message }) =>
   replyWithHTML('<code>' + JSON.stringify(message, null, 2) + '</code>')

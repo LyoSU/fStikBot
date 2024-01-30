@@ -4,6 +4,7 @@ const addSticker = require('./add-sticker')
 const addStickerText = require('./add-sticker-text')
 const messaging = require('./messaging')
 const updateUser = require('./user-update')
+const updateGroup = require('./group-update')
 const stats = require('./stats')
 const tenor = require('./tenor')
 const telegramEmojiText = require('./telegram-emoji-text')
@@ -20,6 +21,7 @@ module.exports = {
   addStickerText,
   messaging,
   updateUser,
+  updateGroup,
   stats,
   tenor,
   telegramEmojiText,
