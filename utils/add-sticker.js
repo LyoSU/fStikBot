@@ -80,7 +80,7 @@ convertQueue.on('global:completed', async (jobId, result) => {
     }
   }
 
-  const uploadResult = await uploadSticker(input.chatId, input.stickerSet, input.stickerFile, stickerExtra)
+  const uploadResult = await uploadSticker(input.userId, input.stickerSet, input.stickerFile, stickerExtra)
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
@@ -434,7 +434,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         await convertQueue.add({
           input: {
-            userId: ctx.chat.id,
+            userId: ctx.from.id,
+            chatId: ctx.chat.id,
             locale: ctx.i18n.locale(),
             convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
             stickerExtra,
