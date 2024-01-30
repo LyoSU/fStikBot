@@ -207,6 +207,8 @@ bot.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
+bot.start(handleStart)
+
 bot.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
 
 bot.use(handleDonate)
@@ -214,6 +216,22 @@ bot.use(handleBoostPack)
 
 bot.use(handleCoedit)
 bot.use(handleInlineQuery)
+
+// callback
+bot.action(/(set_pack):(.*)/, handlePacks)
+bot.action(/(hide_pack):(.*)/, handleHidePack)
+bot.action(/(rename_pack):(.*)/, (ctx) => ctx.scene.enter('packRename'))
+bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
+bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
+bot.action(/set_language:(.*)/, handleLanguage)
+
+bot.command('ss', handleSticker)
+/
+// only private chat middleware
+bot.use((ctx, next) => {
+  if (ctx.chat && ctx.chat.type !== 'private') return false
+  else return next()
+})
 
 // sticker detect
 bot.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
@@ -225,13 +243,6 @@ bot.on('message', (ctx, next) => {
 })
 bot.action(/add_sticker/, handleSticker)
 
-// callback
-bot.action(/(set_pack):(.*)/, handlePacks)
-bot.action(/(hide_pack):(.*)/, handleHidePack)
-bot.action(/(rename_pack):(.*)/, (ctx) => ctx.scene.enter('packRename'))
-bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
-bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
-bot.action(/set_language:(.*)/, handleLanguage)
 
 // forward from sticker bot
 bot.on('text', (ctx, next) => {
@@ -333,7 +344,7 @@ db.connection.once('open', async () => {
       }
     }
 
-    const commands = [
+    const privateCommands = [
       { command: 'start', description: i18n.t(localeName, 'cmd.start.commands.start') },
       { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
       { command: 'copy', description: i18n.t(localeName, 'cmd.start.commands.copy') },
@@ -347,32 +358,66 @@ db.connection.once('open', async () => {
       { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') }
     ]
 
-    const myCommands = await bot.telegram.callApi('getMyCommands', {
+    const myCommandsInPrivate = await bot.telegram.callApi('getMyCommands', {
       language_code: localeName,
       scope: JSON.stringify({
         type: 'all_private_chats'
       })
     })
 
-    let needUpdate = false
-    if (myCommands.length !== commands.length) {
-      needUpdate = true
+    let needUpdatePrivate = false
+    if (myCommandsInPrivate.length !== privateCommands.length) {
+      needUpdatePrivate = true
     } else {
-      for (let i = 0; i < commands.length; i++) {
-        const myCommand = myCommands.find(c => c.command === commands[i].command)
-        if (!myCommand || myCommand.description !== commands[i].description) {
-          needUpdate = true
+      for (let i = 0; i < privateCommands.length; i++) {
+        const myCommand = myCommandsInPrivate.find(c => c.command === privateCommands[i].command)
+        if (!myCommand || myCommand.description !== privateCommands[i].description) {
+          needUpdatePrivate = true
           break
         }
       }
     }
 
-    if (needUpdate) {
+    if (needUpdatePrivate) {
       await bot.telegram.callApi('setMyCommands', {
-        commands,
+        commands: privateCommands,
         language_code: localeName,
         scope: JSON.stringify({
           type: 'all_private_chats'
+        })
+      })
+    }
+
+    const groupCommands = [
+      { command: 'ss', description: i18n.t(localeName, 'cmd.start.commands.ss') },
+    ]
+
+    const myCommandsInGroup = await bot.telegram.callApi('getMyCommands', {
+      language_code: localeName,
+      scope: JSON.stringify({
+        type: 'all_group_chats'
+      })
+    })
+
+    let needUpdateGroup = false
+    if (myCommandsInGroup.length !== groupCommands.length) {
+      needUpdateGroup = true
+    } else {
+      for (let i = 0; i < groupCommands.length; i++) {
+        const myCommand = myCommandsInGroup.find(c => c.command === groupCommands[i].command)
+        if (!myCommand || myCommand.description !== groupCommands[i].description) {
+          needUpdateGroup = true
+          break
+        }
+      }
+    }
+
+    if (needUpdateGroup) {
+      await bot.telegram.callApi('setMyCommands', {
+        commands: groupCommands,
+        language_code: localeName,
+        scope: JSON.stringify({
+          type: 'all_group_chats'
         })
       })
     }

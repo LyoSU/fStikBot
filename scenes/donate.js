@@ -38,7 +38,7 @@ const donate = async (ctx) => {
   let ruLink
 
   // if locale is ru
-  if (ctx.session.userInfo.locale === 'ru' || ctx.from.language_code === 'ru') {
+  if (ctx.session.userInfo.locale !== 'ru' || ctx.from.language_code === 'ru') {
     const payment = new ctx.db.Payment({
       _id: mongoose.Types.ObjectId(),
       user: ctx.session.userInfo._id,

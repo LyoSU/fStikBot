@@ -5,7 +5,14 @@ const {
   addStickerText
 } = require('../utils')
 
-module.exports = async (ctx) => {
+module.exports = async (ctx, next) => {
+  if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.reply'), {
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
   ctx.replyWithChatAction('upload_document').catch(() => {})
 
   let messageText = ''
@@ -25,6 +32,16 @@ module.exports = async (ctx) => {
   let stickerFile, stickerSet
   let stickerType = ctx.updateSubTypes[0]
   if (ctx.callbackQuery) stickerType = message.sticker ? 'sticker' : undefined
+
+  if (ctx.message?.text?.startsWith('/ss') && ctx.message?.reply_to_message) {
+    if (ctx.message.reply_to_message.sticker) stickerType = 'sticker'
+    else if (ctx.message.reply_to_message.document) stickerType = 'document'
+    else if (ctx.message.reply_to_message.animation) stickerType = 'animation'
+    else if (ctx.message.reply_to_message.video) stickerType = 'video'
+    else if (ctx.message.reply_to_message.video_note) stickerType = 'video_note'
+    else if (ctx.message.reply_to_message.photo) stickerType = 'photo'
+    else stickerType = undefined
+  }
 
   switch (stickerType) {
     case 'sticker':
@@ -71,6 +88,10 @@ module.exports = async (ctx) => {
 
     default:
       break
+  }
+
+  if (ctx.message?.text?.startsWith('/ss') && ctx.message?.reply_to_message && stickerType && !stickerFile) {
+    stickerFile = ctx.message.reply_to_message[stickerType]
   }
 
   if (stickerType === 'text') {
