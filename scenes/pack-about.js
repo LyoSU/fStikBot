@@ -163,7 +163,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
   }))
 
-  if (otherPacks && otherPacks.length > 1) {
+  if (chunkedPacks && chunkedPacks.length > 1) {
     for (let i = 1; i < chunkedPacks.length; i++) {
       await ctx.replyWithHTML(chunkedPacks[i].join(', '))
     }

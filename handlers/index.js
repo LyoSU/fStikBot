@@ -15,6 +15,7 @@ module.exports = {
   handleCatalog: require('./catalog'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
+  handleAboutUser: require('./user-about'),
   handleStickerUpade: require('./sticker-update'),
   handleInlineQuery: require('./inline-query'),
   handleBoostPack: require('./pack-boost')

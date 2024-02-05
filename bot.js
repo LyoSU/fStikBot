@@ -26,6 +26,7 @@ const {
   handleCoedit,
   handleLanguage,
   handleEmoji,
+  handleAboutUser,
   handleStickerUpade,
   handleInlineQuery
 } = require('./handlers')
@@ -183,6 +184,27 @@ bot.start((ctx, next) => {
   return next()
 })
 
+const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
+  reply_markup: {
+    keyboard: [
+      [{
+        text: ctx.i18n.t('userAbout.select_user'),
+        request_users: {
+          request_id: 1,
+          user_is_bot: false,
+          max_quantity: 1,
+        }
+      }],
+      [
+        ctx.i18n.t('scenes.btn.cancel')
+      ]
+    ],
+    resize_keyboard: true
+  }
+})
+bot.action(/user_about/, userAboutHelp)
+bot.command('user_about', userAboutHelp)
+
 bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
 bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
 bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
@@ -252,6 +274,14 @@ bot.on('text', (ctx, next) => {
   if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) return handleRestorePack(ctx)
   else return next()
 })
+
+bot.use((ctx, next) => {
+  if (ctx?.message?.users_shared) {
+    return handleAboutUser(ctx)
+  }
+  return next()
+})
+bot.on('forward', handleAboutUser)
 
 bot.on('text', handleStickerUpade)
 
@@ -354,6 +384,7 @@ db.connection.once('open', async () => {
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
       { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
       { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.about') },
+      { command: 'user_about', description: i18n.t(localeName, 'cmd.start.commands.user_about') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
