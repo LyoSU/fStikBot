@@ -6,17 +6,13 @@ description:
     🧙 Soy el mago del paquete de emojis y pegatinas, ¡y estoy aquí para hacer que tu experiencia de mensajería sea más divertida! Mis poderes mágicos me permiten transformar tus fotos, videos y GIF favoritos en divertidos emojis y calcomanías sin la molestia de convertirlos y recortarlos. 🎉🎊 Conmigo puedes crear packs personalizados para cualquier ocasión con tan solo unos clics. ¿Entonces, Qué esperas? ¡Comencemos y agreguemos un poco de ✨chispa✨ a sus chats!
 
     Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: |
+    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
 ratelimit: '¡No tan amenudo!'
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
 
-      Send the /help command for more information
-
-      💬 Support chat: @fStikCommunity (only EN)
     help: |
       <b>List of bot commands:</b>
 
@@ -51,6 +47,7 @@ cmd:
       • Search by keywords or in prepared tabs
       • Don't forget to rate to promote or lower the sticker pack in the rankings
     commands:
+      ss: '🌟 Save sticker'
       start: '📜 Start menu'
       help: '📖 Help'
       packs: '📁 Manage packs'
@@ -65,6 +62,8 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
+      about: '📦 Pack info'
+      user_about: '🧑‍🎨 Creator info'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
@@ -271,6 +270,9 @@ sticker:
       Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
       <i>It does not take a lot of time</i>
     error:
+      reply: |
+        <b>Error!</b>
+        Please, reply to the sticker.
       no_selected_pack: |
         <b>You have not selected a pack</b>
 
@@ -340,6 +342,23 @@ news:
   join_btn: '📢 Join channel'
   not_joined: '🙅 You are not subscribed to the channel'
   continue: '✅ Continue'
+userAbout:
+  help: |
+    <b>🧑‍🎨 User about</b>
+
+    Using this menu you can find out information about the user and his sticker packs
+
+    To get information about the user, use the button below or forward his message
+  result: |
+    <b>🧑‍🎨 User info</b>
+    <b>🆔 User ID:</b> <code>${userId}</code>
+    <b>🎨 Packs from this user:</b>
+    ${packs}
+  no_packs: |
+    <i>We have no information about stickers of this owner</i>
+  forward_hidden: |
+    The user has hidden the ability to forward messages. Use the button below to view his sticker packs.
+  select_user: '🧑‍🎨 Select user'
 scenes:
   new_pack:
     static: '🌟 Static'

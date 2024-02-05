@@ -6,7 +6,8 @@ description:
     🧙 私は絵文字とステッカーパックの魔法使いです。あなたのメッセージング体験をより楽しくするためにここにいます！私の魔法の力で、お気に入りの写真、ビデオ、GIFを変換やトリミングの手間なしに、クールな絵文字やステッカーに変えることができます。🎉🎊 私と一緒に、たった数回のクリックで、どんな場面にも合わせた個人用パックを作成することができます。さあ、いっしょに始めて、あなたのチャットに✨スパークル✨を加えましょう！
 
     ステッカーを検索：https://play.google.com/store/apps/details?id=app.fstik
-  short: '🧙 I''m the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.'
+  short: |
+    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
 ratelimit: Не так часто!
 cmd:
   start:
@@ -51,6 +52,7 @@ cmd:
       ・キーボードまたはスペシャルターブで検索しよう
       ・おすすめしたいまたはしたかないステッカーをレートして下さい
     commands:
+      ss: '🌟 Save sticker'
       start: '📜 Start menu'
       help: '📖 Help'
       packs: '📁 Manage packs'
@@ -65,6 +67,8 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
+      about: '📦 Pack info'
+      user_about: '🧑‍🎨 Creator info'
       lang: '🌐 Change language'
       donate: '☕️ Support the developer'
     btn:
@@ -271,6 +275,9 @@ sticker:
       Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
       <i>It does not take a lot of time</i>
     error:
+      reply: |
+        <b>Error!</b>
+        Please, reply to the sticker.
       no_selected_pack: |
         <b>You have not selected a pack</b>
 
@@ -340,6 +347,23 @@ news:
   join_btn: '📢 Join channel'
   not_joined: '🙅 You are not subscribed to the channel'
   continue: '✅ Continue'
+userAbout:
+  help: |
+    <b>🧑‍🎨 User about</b>
+
+    Using this menu you can find out information about the user and his sticker packs
+
+    To get information about the user, use the button below or forward his message
+  result: |
+    <b>🧑‍🎨 User info</b>
+    <b>🆔 User ID:</b> <code>${userId}</code>
+    <b>🎨 Packs from this user:</b>
+    ${packs}
+  no_packs: |
+    <i>We have no information about stickers of this owner</i>
+  forward_hidden: |
+    The user has hidden the ability to forward messages. Use the button below to view his sticker packs.
+  select_user: '🧑‍🎨 Select user'
 scenes:
   new_pack:
     static: '🌟 Static'
