@@ -71,6 +71,7 @@ cmd:
       user_about: '🧑‍🎨 Creator info'
       lang: '🌐 Змяніць мову'
       donate: '☕️ Падтрымаць распрацоўшчыка'
+      add_to_group: '👥 Add to group'
     btn:
       new: '📥 Стварыць новы'
       catalog: '💖 Адкрыць каталог'
