@@ -71,6 +71,7 @@ cmd:
       user_about: '🧑‍🎨 Creator info'
       lang: '🌐 Փոխել լեզուն'
       donate: '☕️ Support the developer'
+      add_to_group: '👥 Add to group'
     btn:
       new: '📥 Ստեղծել նոր'
       catalog: '💖 Open catalog'
