@@ -161,6 +161,13 @@ bot.use((ctx, next) => {
   return next()
 })
 
+bot.use((ctx, next) => {
+  if (ctx.session.userInfo.banned) {
+    return ctx.replyWithHTML(ctx.i18n.t('error.banned'))
+  }
+  return next()
+})
+
 bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
 

@@ -6,10 +6,6 @@ const {
 } = require('../utils')
 
 module.exports = async (ctx, next) => {
-  if (ctx.session.userInfo.banned) {
-    return ctx.replyWithHTML(ctx.i18n.t('error.banned'))
-  }
-
   if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.reply'), {
       reply_to_message_id: ctx.message.message_id,
