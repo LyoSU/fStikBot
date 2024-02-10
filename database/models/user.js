@@ -60,6 +60,10 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  banned: {
+    type: Boolean,
+    default: false
+  },
   publicBan: {
     type: Boolean,
     default: false

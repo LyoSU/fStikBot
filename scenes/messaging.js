@@ -380,7 +380,7 @@ adminMessagingPublish.enter(async (ctx) => {
   for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
     promises.push(redis.rpush(key + ':users', [user.telegram_id]))
     usersCount++
-    if (usersCount % 10000 === 0) {
+    if (usersCount % 100000 === 0) {
       await Promise.all(promises)
       promises = []
     }

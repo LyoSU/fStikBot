@@ -51,6 +51,32 @@ const main = async (ctx, next) => {
   }
 }
 
+async function banUser(ctx) {
+  const userId = ctx.message.text.split(' ')[1]
+
+  if (!userId) return ctx.replyWithHTML('User not found')
+
+  let findUser
+
+  findUser = await ctx.db.User.findOne({
+    telegram_id: parseInt(userId) || 0
+  })
+
+  if (!findUser) {
+    findUser = await ctx.db.User.findOne({
+      username: userId
+    })
+  }
+
+  if (!findUser) return ctx.replyWithHTML('User not found')
+
+  findUser.banned = !findUser.banned
+
+  await findUser.save()
+
+  await ctx.replyWithHTML(`User ${findUser.telegram_id} (${findUser.username}) banned: ${findUser.banned ? 'yes' : 'no'}`)
+}
+
 const setPremium = async (ctx, next) => {
   const userId = ctx.match[1]
   const credit = parseInt(ctx.match[2])
@@ -142,6 +168,7 @@ adminType.forEach((type) => {
 
 composer.command('admin', checkAdminRight, main)
 
+composer.command('ban', checkAdminRight, banUser)
 composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
 composer.command('crypto', checkAdminRight, getLastCryptoTransactions)
 composer.command('fk', checkAdminRight, getFreeKassaTransactions)
