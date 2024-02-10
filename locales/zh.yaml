@@ -623,6 +623,10 @@ error:
     telegram: |
       Telegram вернул ошибку:
       ${error}
+  banned: |
+    <b>Error!</b>
+    You are banned from using this feature.
+    Please, contact the administrator.
   unknown: |
     <b>出现未知错误，请再试一次。</b>
 
