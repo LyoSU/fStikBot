@@ -606,6 +606,7 @@ scenes:
       <i>Лучше всего работает с аниме картинками</i>
     choose_model: |
       <b>Выберите модель:</b>
+    web_app: WebApp - for photos with people
     model:
       ordinary: Обычная — для фото с людьми
       general: Общая — для любых фотографий
