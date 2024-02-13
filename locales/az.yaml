@@ -623,6 +623,10 @@ error:
     telegram: |
       Telegram xəta qaytardı:
       ${error}
+  banned: |
+    <b>Error!</b>
+    You are banned from using this feature.
+    Please, contact the administrator.
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 
