@@ -601,6 +601,7 @@ scenes:
       <i>Найлепш працуе з анімэ-відарысамі</i>
     choose_model: |
       <b>Выберыце мадэль:</b>
+    web_app: WebApp - for photos with people
     model:
       ordinary: Агульная — для фотаздымкаў з людзьмі
       general: Асноўная — для любых фота
