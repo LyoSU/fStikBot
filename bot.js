@@ -1,4 +1,5 @@
 const fs = require('fs')
+const sharp = require('sharp')
 const path = require('path')
 const Telegraf = require('telegraf')
 const Composer = require('telegraf/composer')
@@ -35,7 +36,8 @@ const {
   updateUser,
   updateGroup,
   stats,
-  updateMonitor
+  updateMonitor,
+  downloadFileByURL
 } = require('./utils')
 
 global.startDate = new Date()
@@ -172,10 +174,33 @@ bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
 
 // main commands
-bot.start((ctx, next) => {
+bot.start(async (ctx, next) => {
   if (ctx.startPayload === 'inline_pack') {
     ctx.state.type = 'inline'
     return handlePacks(ctx)
+  }
+  if (ctx.startPayload.startsWith('removebg_')) {
+    const fileUrl = 'https://telegra.ph' + Buffer.from(ctx?.startPayload?.replace('removebg_', ''), 'base64').toString('utf-8')
+
+    const file = await downloadFileByURL(fileUrl)
+
+    const webp = await sharp(file).webp().toBuffer()
+
+    return ctx.replyWithDocument({
+      source: webp,
+      filename: 'removebg.webp'
+    }, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: ctx.i18n.t('scenes.photoClear.add_to_set_btn'),
+              callback_data: 'add_sticker'
+            }
+          ]
+        ]
+      }
+    })
   }
   return next()
 })

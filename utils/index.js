@@ -13,6 +13,7 @@ const substrUnicode = require('./unicode-substr')
 const telegramApi = require('./telegram-api')
 const updateMonitor = require('./update-monitor')
 const showGramAds = require('./gramads')
+const downloadFileByURL = require('./download-file-by-url')
 
 module.exports = {
   escapeHTML,
@@ -29,5 +30,6 @@ module.exports = {
   substrUnicode,
   telegramApi,
   updateMonitor,
-  showGramAds
+  showGramAds,
+  downloadFileByURL
 }
