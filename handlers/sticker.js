@@ -31,7 +31,13 @@ module.exports = async (ctx, next) => {
 
   let stickerFile, stickerSet
   let stickerType = ctx.updateSubTypes[0]
-  if (ctx.callbackQuery) stickerType = message.sticker ? 'sticker' : undefined
+  if (ctx.callbackQuery) {
+    if (message.document) {
+      stickerType = 'document'
+    } else if (message.sticker) {
+      stickerType = 'sticker'
+    }
+  }
 
   if (ctx.message?.text?.startsWith('/ss') && ctx.message?.reply_to_message) {
     if (ctx.message.reply_to_message.sticker) stickerType = 'sticker'
@@ -119,7 +125,11 @@ module.exports = async (ctx, next) => {
   }
 
   if (ctx.callbackQuery) {
-    stickerFile = ctx.callbackQuery.message.sticker
+    if (ctx.callbackQuery.message.document) {
+      stickerFile = ctx.callbackQuery.message.document
+    } else if (ctx.callbackQuery.message.sticker) {
+      stickerFile = ctx.callbackQuery.message.sticker
+    }
   }
 
   if (stickerFile) {
