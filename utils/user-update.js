@@ -1,4 +1,6 @@
 module.exports = async (ctx) => {
+  if (!ctx.from) return false
+
   let user = await ctx.db.User.findOne({ telegram_id: ctx.from.id })
     .populate('stickerSet')
     .populate('inlineStickerSet')
