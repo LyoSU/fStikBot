@@ -257,17 +257,19 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     })
   } else if (ctx.session.scene.type === 'ru') {
     findUsers = await ctx.db.User.count({
-      // blocked: { $ne: true },
+      blocked: { $ne: true },
       premium: { $ne: true },
       locale: 'ru',
       // updatedAt: { $gte: moment().subtract(1, 'months') }
     })
   } else if (ctx.session.scene.type === 'uk') {
     findUsers = await ctx.db.User.count({
+      blocked: { $ne: true },
       locale: 'uk'
     })
   } else if (ctx.session.scene.type === 'en') {
     findUsers = await ctx.db.User.count({
+      blocked: { $ne: true },
       locale: 'en'
     })
   }
@@ -355,17 +357,19 @@ adminMessagingPublish.enter(async (ctx) => {
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'ru') {
     usersCursor = await ctx.db.User.find({
-      // blocked: { $ne: true },
+      blocked: { $ne: true },
       premium: { $ne: true },
       locale: 'ru',
       // updatedAt: { $gte: moment().subtract(1, 'months') }
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'uk') {
     usersCursor = await ctx.db.User.find({
+      blocked: { $ne: true },
       locale: 'uk'
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'en') {
     usersCursor = await ctx.db.User.find({
+      blocked: { $ne: true },
       locale: 'en'
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   }
