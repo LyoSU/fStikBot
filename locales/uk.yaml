@@ -603,6 +603,7 @@ scenes:
       <i>Він найкраще працює з аніме зображенням</i>
     choose_model: |
       <b>Виберіть модель:</b>
+    web_app: WebApp - for photos with people
     model:
       ordinary: Звичайна — для фото з людьми
       general: Загальна - для будь-яких фотографій

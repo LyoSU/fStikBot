@@ -602,6 +602,7 @@ scenes:
       <i>It works best with anime pictures</i>
     choose_model: |
       <b>Choose model:</b>
+    web_app: WebApp - for photos with people
     model:
       ordinary: Common — for photos with people
       general: General — for any photos
