@@ -153,7 +153,7 @@ bot.use(scenes)
 bot.use((ctx, next) => {
   // лагідна українізація
   if (
-    ctx.session.userInfo.locale === 'ru' &&
+    ctx?.session?.userInfo?.locale === 'ru' &&
     ctx.from.language_code === 'uk'
   ) {
     ctx.session.userInfo.locale = 'uk'
