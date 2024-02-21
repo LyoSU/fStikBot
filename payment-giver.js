@@ -88,8 +88,6 @@ const giveCredit = async () => {
       parse_mode: 'HTML'
     })
   }
-
-  setTimeout(giveCredit, 1000 * 30)
 }
 
-giveCredit()
+setInterval(giveCredit, 1000 * 60 * 5)
