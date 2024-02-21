@@ -264,8 +264,6 @@ bot.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'
 bot.command('lang', handleLanguage)
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
-bot.start(handleStart)
-
 bot.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
 
 bot.use(handleDonate)
@@ -273,6 +271,8 @@ bot.use(handleBoostPack)
 
 bot.use(handleCoedit)
 bot.use(handleInlineQuery)
+
+bot.start(handleStart)
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)
