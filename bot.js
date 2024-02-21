@@ -138,7 +138,7 @@ bot.use(async (ctx, next) => {
 bot.use(async (ctx, next) => {
   await updateUser(ctx)
   await next(ctx)
-  await ctx.session.userInfo.save().catch(() => {})
+  if (ctx.session.userInfo) await ctx.session.userInfo.save().catch(() => {})
 })
 
 bot.use(Composer.groupChat(Composer.command(updateGroup)))
