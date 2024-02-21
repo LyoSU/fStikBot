@@ -164,7 +164,7 @@ bot.use((ctx, next) => {
 })
 
 bot.use((ctx, next) => {
-  if (ctx.session.userInfo.banned) {
+  if (ctx?.session?.userInfo?.banned) {
     return ctx.replyWithHTML(ctx.i18n.t('error.banned'))
   }
   return next()
