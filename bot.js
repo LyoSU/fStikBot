@@ -11,6 +11,7 @@ const {
 } = require('./database')
 const {
   handleError,
+  handlePing,
   handleStart,
   handleHelp,
   handleDonate,
@@ -172,6 +173,8 @@ bot.use((ctx, next) => {
 
 bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
+
+bot.use(handlePing)
 
 // main commands
 bot.start(async (ctx, next) => {

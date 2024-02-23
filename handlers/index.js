@@ -1,5 +1,6 @@
 module.exports = {
   handleError: require('./catch'),
+  handlePing: require('./ping'),
   handleStart: require('./start'),
   handleHelp: require('./help'),
   handleDonate: require('./donate'),
