@@ -70,6 +70,7 @@ cmd:
       about: '📦 Информация о наборе'
       user_about: '🧑‍🎨 Информация об авторе'
       lang: '🌐 Изменить язык'
+      report: '🚨 Report pack'
       donate: '☕ Поддержать разработчика'
       add_to_group: '👥 Add to group'
     btn:
@@ -97,6 +98,12 @@ cmd:
     <b>🗄 Копировать пак</b>
 
     Чтобы скопировать другой пак в новый, нужно просто прислать мне ссылку на стикер или эмоджи пак
+  report: |
+    <b>🚨 Report</b>
+
+    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+
+    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
   packs:
     info: |
       <b>📁 Наборы</b>
