@@ -240,6 +240,7 @@ const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
 bot.action(/user_about/, userAboutHelp)
 bot.command('user_about', userAboutHelp)
 
+bot.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
 bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
 bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
 bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
