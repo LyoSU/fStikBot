@@ -71,8 +71,9 @@ cmd:
       about: '📦 Інформація про пакунок'
       user_about: '🧑‍🎨 Інформація про творця'
       lang: '🌐 Змінити мову'
+      report: '🚨 Report pack'
       donate: '☕ Підтримати розробника'
-      add_to_group: '👥 Add to group'
+      add_to_group: '👥 Додати до групи'
     btn:
       new: '📥 Створити новий'
       catalog: '💖 Відкрити каталог'
@@ -99,6 +100,12 @@ cmd:
     <b>🗄 Копіювати пак</b>
 
     Щоб скопіювати інший пак у новий, вам просто потрібно надіслати мені посилання на наклейку чи пак емодзі
+  report: |
+    <b>🚨 Report</b>
+
+    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+
+    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
   packs:
     info: |
       <b>📁 Пакунки</b>
@@ -603,7 +610,7 @@ scenes:
       <i>Він найкраще працює з аніме зображенням</i>
     choose_model: |
       <b>Виберіть модель:</b>
-    web_app: WebApp - for photos with people
+    web_app: WebApp - для фото з людьми
     model:
       ordinary: Звичайна — для фото з людьми
       general: Загальна - для будь-яких фотографій
