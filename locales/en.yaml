@@ -70,6 +70,7 @@ cmd:
       about: '📦 Pack info'
       user_about: '🧑‍🎨 Creator info'
       lang: '🌐 Change language'
+      report: '🚨 Report pack'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Add to group'
     btn:

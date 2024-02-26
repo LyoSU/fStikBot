@@ -425,6 +425,7 @@ db.connection.once('open', async () => {
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
       { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') },
+      { command: 'report', description: i18n.t(localeName, 'cmd.start.commands.report') },
       { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') }
     ]
 
