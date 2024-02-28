@@ -427,8 +427,6 @@ newPackConfirm.enter(async (ctx, next) => {
 
         await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id).catch(error => {
           console.error('Error while deleting sticker from set: ', error)
-        }).then(result => {
-          console.log('Sticker deleted from set: ', result)
         })
       }, 1000 * 10)
     }
