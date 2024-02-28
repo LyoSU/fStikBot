@@ -82,11 +82,6 @@ const limitPublicPack = Composer.optional((ctx) => {
 
 bot.use(stats)
 
-bot.use((ctx, next) => {
-  if (ctx.update.my_chat_member) return false
-  else return next()
-})
-
 // bot config
 bot.context.config = require('./config.json')
 
@@ -136,12 +131,6 @@ bot.use(async (ctx, next) => {
   })
 })
 
-bot.use(async (ctx, next) => {
-  await updateUser(ctx)
-  await next(ctx)
-  if (ctx.session.userInfo) await ctx.session.userInfo.save().catch(() => {})
-})
-
 bot.use(Composer.groupChat(Composer.command(updateGroup)))
 
 bot.command('json', ({ replyWithHTML, message }) =>
@@ -170,6 +159,21 @@ bot.use((ctx, next) => {
   }
   return next()
 })
+
+
+bot.use(async (ctx, next) => {
+  await updateUser(ctx)
+  await next(ctx)
+  if (ctx.session.userInfo) await ctx.session.userInfo.save().catch(() => {})
+})
+
+bot.use((ctx, next) => {
+
+
+  if (ctx.update.my_chat_member) return false
+  else return next()
+})
+
 
 bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
