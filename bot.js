@@ -48,7 +48,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
     webhookReply: false
   },
-  handlerTimeout: 500
+  handlerTimeout: 1000
 })
 
 bot.catch(handleError)
