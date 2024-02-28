@@ -137,9 +137,6 @@ bot.command('json', ({ replyWithHTML, message }) =>
   replyWithHTML('<code>' + JSON.stringify(message, null, 2) + '</code>')
 )
 
-// scene
-bot.use(scenes)
-
 bot.use((ctx, next) => {
   // лагідна українізація
   if (
@@ -168,12 +165,12 @@ bot.use(async (ctx, next) => {
 })
 
 bot.use((ctx, next) => {
-
-
   if (ctx.update.my_chat_member) return false
   else return next()
 })
 
+// scene
+bot.use(scenes)
 
 bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
