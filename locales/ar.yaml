@@ -19,30 +19,30 @@ cmd:
 
       💬 مجموعة الدعم: @fStikCommunity (باللغة الإنجليزية فقط)
     help: |
-      <b>List of bot commands:</b>
+      <b>قائمة أوامر البوت:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new - إنشاء حزمة ملصقات جديدة
+      /new_emoji - إنشاء حزمة رموز تعبيرية جديدة
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /delete - حذف الملصق من الحزمة
+      /original - ابحث عن الملصق الأصلي
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /packs - قائمة الحزم الخاصة بك
+      /restore - استعادة الحزمة
+      /copy - نسخ الحزمة
+      /emoji - تغيير لاحقة الرموز التعبيرية للحزمة الحالية
+      /frame - تغيير الإطار لحزمة الفيديو الحالية
+      /publish - نشر الحزمة في الكتالوج
 
-      /catalog - open catalog
+      /catalog - فتح الكتالوج
 
-      /lang - change language
-      /donate - support the developer
+      /lang - تغيير اللغة
+      /donate - دعم المطور
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 مجموعة الدعم: @fStikCommunity (باللغة الإنجليزية فقط)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 الدردشة الخاصة: @ly_oBot
+      👨🏻‍💻 قناة التطوير: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -52,18 +52,18 @@ cmd:
       • ابحث عن طريق الكلمات الرئيسية أو في علامات التبويب المعدة
       • لا تنسى التقييم للترويج أو خفض حزمة الملصقات في الترتيب
     commands:
-      ss: '🌟 Save sticker'
+      ss: '🌟 حفظ الملصق'
       start: '📜 قائمة البدء'
-      help: '📖 Help'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      help: '📖 مساعدة'
+      packs: '📁 إدارة الحزم'
+      new: '🌝 إنشاء حزمة ملصقات'
+      new_emoji: '😊 إنشاء حزمة رموز تعبيرية'
       catalog: '📖 كاتالوج'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      publish: '📤 نشر الحزمة'
+      delete: '❌ حذف الملصق'
       original: '🔍 ابحث عن الملصق الأصلي'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
+      restore: '🔀 استعادة الحزمة'
+      copy: '📋 نسخ حزمة'
       emoji: '📝 تغيير لاحقة الرموز التعبيرية'
       round: ''
       clear: '🖼️ Remove background from photo'
