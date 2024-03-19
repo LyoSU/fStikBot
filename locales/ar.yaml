@@ -99,22 +99,22 @@ cmd:
 
     لنسخ حزمة أخرى جديدة تحتاج فقط لإرسال رابط ملصق أو حزمة إيموجي
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 أبلغ</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    إذا صادفت حزمة ملصقات تعتقد أنها قد تنتهك القانون أو تتعارض مع شروط خدمة Telegram، فيرجى إبلاغنا بها عن طريق إرسال الرابط الخاص بها إلى @SticksReportBot
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>تذكر أن البوت غير مسؤول عن محتوى الحزم وليس لديه القدرة على التحكم فيه</i>
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 الحزم</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
-      inline: Inline
+      regular: الملصقات
+      custom_emoji: ايموجي
+      inline: مضمنة
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline pack
+      <b>ليس لديك حزم بعد.</b>
+      للإنشاء، اكتب الأمر /new
+    inline_title: حزمة مضمنة
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
