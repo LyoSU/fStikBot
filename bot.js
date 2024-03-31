@@ -241,6 +241,8 @@ const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
 bot.action(/user_about/, userAboutHelp)
 bot.command('user_about', userAboutHelp)
 
+bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
+
 bot.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
 bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
 bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
@@ -304,13 +306,6 @@ bot.on('message', (ctx, next) => {
   return next()
 })
 bot.action(/add_sticker/, handleSticker)
-
-
-// forward from sticker bot
-bot.on('text', (ctx, next) => {
-  if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) return handleRestorePack(ctx)
-  else return next()
-})
 
 bot.use((ctx, next) => {
   if (ctx?.message?.users_shared) {

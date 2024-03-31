@@ -92,18 +92,34 @@ const newPack = new Scene('newPack')
 newPack.enter(async (ctx, next) => {
   ctx.session.scene.newPack = {}
 
-  if (ctx?.message?.text?.match('emoji') || ctx?.callbackQuery?.data?.match('emoji')) {
-    ctx.session.scene.newPack.fillColor = !!ctx?.message?.text.match('fill') || !!ctx?.callbackQuery?.data?.match('fill')
-    ctx.session.scene.newPack.packType = 'custom_emoji'
-    return ctx.scene.enter('сhoosePackFormat')
-  } else if (ctx?.message?.text?.match('inline') || ctx?.callbackQuery?.data?.match('inline')) {
-    ctx.session.scene.newPack.inline = true
-    return ctx.scene.enter('newPackTitle')
-  } else {
-    ctx.session.scene.newPack.packType = 'regular'
-    return ctx.scene.enter('сhoosePackFormat')
-  }
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
+    reply_markup: Markup.keyboard([
+      [
+        ctx.i18n.t('scenes.new_pack.regular')
+      ],
+      [
+        ctx.i18n.t('scenes.new_pack.custom_emoji')
+      ],
+      [
+        ctx.i18n.t('scenes.btn.cancel')
+      ]
+    ]).resize()
+  })
 })
+
+newPack.on('message', async (ctx) => {
+  const { text } = ctx.message;
+  const { newPack } = ctx.session.scene;
+  if (text === ctx.i18n.t('scenes.new_pack.custom_emoji')) {
+    newPack.packType = 'custom_emoji';
+  } else if (text === ctx.i18n.t('scenes.new_pack.regular')) {
+    newPack.packType = 'regular';
+  } else {
+    return ctx.scene.reenter();
+  }
+  return ctx.scene.enter('newPackTitle');
+});
+
 const сhoosePackFormat = new Scene('сhoosePackFormat')
 
 сhoosePackFormat.enter(async (ctx, next) => {
@@ -367,9 +383,9 @@ newPackConfirm.enter(async (ctx, next) => {
     } else {
       const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
         user_id: ctx.from.id,
-        sticker_format: stickerFormat,
+        sticker_format: 'animated',
         sticker: {
-          source: placeholder[packType][stickerFormat]
+          source: placeholder[packType]['animated']
         }
       })
 
@@ -380,10 +396,10 @@ newPackConfirm.enter(async (ctx, next) => {
         stickers: [
           {
             sticker: uploadedSticker.file_id,
+            format: 'animated',
             emoji_list: ['🌟'],
           }
         ],
-        sticker_format: stickerFormat,
         sticker_type: packType,
         needs_repainting: !!ctx.session.scene.newPack.fillColor
       }).catch((error) => {
@@ -469,14 +485,9 @@ newPackConfirm.enter(async (ctx, next) => {
         searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
       }
 
-
-      let format = 'static'
-      if (userStickerSet.animated) format = 'animated'
-      if (userStickerSet.video) format = 'video'
-
       const linkPrefix = userStickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
-      await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack.${format}`, {
+      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack.video', {
         title: escapeHTML(userStickerSet.title),
         link: `${linkPrefix}${name}`
       }), {
@@ -492,17 +503,13 @@ newPackConfirm.enter(async (ctx, next) => {
     }
 
     if (!ctx.session.scene.copyPack) {
-      if (video) {
-        return ctx.scene.enter('packFrame')
-      } else {
-        await ctx.replyWithHTML('👌', {
-          reply_markup: {
-            remove_keyboard: true
-          }
-        })
+      await ctx.replyWithHTML('👌', {
+        reply_markup: {
+          remove_keyboard: true
+        }
+      })
 
-        return ctx.scene.leave()
-      }
+      return ctx.scene.leave()
     }
 
     const originalPack = ctx.session.scene.copyPack

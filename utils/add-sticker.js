@@ -181,9 +181,10 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
       user_id: userId,
       name: stickerSet.name,
       sticker: {
+        format: stickerExtra.sticker_format,
         sticker: stickerExtra.sticker,
         emoji_list: stickerExtra.emojis,
-      },
+      }
     }).catch((error) => {
       return {
         error: {
@@ -270,27 +271,27 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     emojis.push(stickerSet.emojiSuffix)
   }
 
-  const isVideo = stickerSet?.video || inputFile.is_video || !!(inputFile.mime_type && inputFile.mime_type.match('video')) || false
+  const isVideo = inputFile.is_video || !!(inputFile.mime_type && inputFile.mime_type.match('video')) || false
   const isVideoNote = (inputFile.video_note) || false
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  if (!stickerSet?.animated && stickerFile.is_animated) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.animated'), {
-      reply_to_message_id: ctx?.message?.message_id,
-      allow_sending_without_reply: true
-    })
-  } else if (!stickerSet?.video && (isVideo || isVideoNote)) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.video'), {
-      reply_to_message_id: ctx?.message?.message_id,
-      allow_sending_without_reply: true
-    })
-  } else if (!stickerFile.is_animated && stickerSet?.animated) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.static'), {
-      reply_to_message_id: ctx?.message?.message_id,
-      allow_sending_without_reply: true
-    })
-  }
+  // if (!stickerSet?.animated && stickerFile.is_animated) {
+  //   return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.animated'), {
+  //     reply_to_message_id: ctx?.message?.message_id,
+  //     allow_sending_without_reply: true
+  //   })
+  // } else if (!stickerSet?.video && (isVideo || isVideoNote)) {
+  //   return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.video'), {
+  //     reply_to_message_id: ctx?.message?.message_id,
+  //     allow_sending_without_reply: true
+  //   })
+  // } else if (!stickerFile.is_animated && stickerSet?.animated) {
+  //   return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.static'), {
+  //     reply_to_message_id: ctx?.message?.message_id,
+  //     allow_sending_without_reply: true
+  //   })
+  // }
 
   const getStickerSetCheck = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
     return {
@@ -307,10 +308,18 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     emojis
   }
 
+  if (stickerFile.is_animated) {
+    stickerExtra.sticker_format = 'animated'
+  } else if (stickerFile.is_video || isVideo || isVideoNote) {
+    stickerExtra.sticker_format = 'video'
+  } else {
+    stickerExtra.sticker_format = 'static'
+  }
+
   emojis.push(stickerSet.emojiSuffix || '')
 
-  if (stickerSet?.animated) {
-    stickerExtra.sticker_format = 'animated'
+  if (stickerFile.is_animated) {
+    // stickerExtra.sticker_format = 'animated'
 
     const fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
       return {
@@ -323,7 +332,8 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
     fileData = await downloadFileByUrl(fileUrl)
     stickerExtra.sticker = {
-      source: fileData
+      source: fileData,
+      sticker_format: 'animated'
     }
   } else {
     let fileUrl
@@ -369,7 +379,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     }
 
     if (isVideo || isVideoNote) {
-      stickerExtra.sticker_format = 'video'
+      // stickerExtra.sticker_format = 'video'
 
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
@@ -461,7 +471,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
       userQueue.video = false
     } else {
-      stickerExtra.sticker_format = 'static'
+      // stickerExtra.sticker_format = 'static'
 
       if (!fileData) {
         fileData = await downloadFileByUrl(fileUrl)

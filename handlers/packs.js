@@ -203,7 +203,7 @@ module.exports = async (ctx) => {
             boostStatus: stickerSet.boost ? ctx.i18n.t('callback.pack.boost.status.on') : ctx.i18n.t('callback.pack.boost.status.off'),
           })
 
-          await ctx.replyWithHTML(ctx.i18n.t(`callback.pack.set_pack.${type}`, {
+          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack.video', {
             title: escapeHTML(stickerSet.title),
             link: `${linkPrefix}${stickerSet.name}`
           }) + boostText, {
@@ -289,10 +289,10 @@ module.exports = async (ctx) => {
     stickerSets.forEach((pack) => {
       let { title } = pack
 
-      if (pack.video === true) title = `📹 ${title}`
-      else if (pack.animated === true) title = `✨ ${title}`
-      else if (pack.inline === true) title = `💫 ${title}`
-      else title = `🌟 ${title}`
+      // if (pack.video === true) title = `📹 ${title}`
+      // else if (pack.animated === true) title = `✨ ${title}`
+      // else if (pack.inline === true) title = `💫 ${title}`
+      // else title = `🌟 ${title}`
 
       if (
         userInfo.stickerSet?.id.toString() === pack.id.toString()
