@@ -13,33 +13,33 @@ cmd:
   start:
     enter: |
       🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
 
-      Send the /help command for more information
+      Send the /help command to learn more about what I can do
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Need help? Join our support chat at @fStikCommunity (English only)
     help: |
       <b>List of bot commands:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new - Create a new sticker pack
+      /new_emoji - Create a new emoji pack
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /delete - Delete a sticker from a pack
+      /original - Find the original sticker
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /packs - List all your packs
+      /restore - Restore a deleted pack
+      /copy - Copy a pack
+      /emoji - Change the emoji suffix for the current pack
+      /frame - Change the frame for the current video pack
+      /publish - Publish the pack in the catalog
 
-      /catalog - open catalog
+      /catalog - Open the sticker pack catalog
 
-      /lang - change language
-      /donate - support the developer
+      /lang - Change the language
+      /donate - Support the developer
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Support chat: @fStikCommunity (English only)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog
@@ -86,14 +86,7 @@ cmd:
   restore: |
     <b>🗃 Pack restoration</b>
 
-    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
-
-    <b>To do this, you need to perform several actions:</b>
-    1. Open @Stickers bot
-    2. Send <code>/packstats</code> command
-    3. Find and choose the required pack
-    4. Forward the received message to the bot
-    5. If restoration is successful - bot informs about it
+    To restore a pack, you need to send me a link to the pack that you want to restore
   copy: |
     <b>🗄 Copy pack</b>
 
@@ -374,6 +367,10 @@ userAbout:
   select_user: '🧑‍🎨 Select user'
 scenes:
   new_pack:
+    pack_type: |
+      <b><u>Choose pack type</u></b>
+    regular: '😊 Sticker'
+    custom_emoji: '🌟 Emoji (premium)'
     static: '🌟 Static'
     animated: '✨ 矢量'
     video: '📹 Video'
