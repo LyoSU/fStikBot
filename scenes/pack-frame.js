@@ -7,9 +7,13 @@ const {
 const packFrame = new Scene('packFrame')
 
 packFrame.enter(async (ctx) => {
-  if (!ctx.session.userInfo.stickerSet || !ctx.session.userInfo.stickerSet.video) {
+  if (!ctx.session.userInfo.stickerSet) {
     await ctx.scene.leave()
-    return ctx.replyWithHTML(ctx.i18n.t('scenes.frame.no_video'))
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.frame.no_sticker_set'), {
+      reply_markup: {
+        remove_keyboard: true
+      }
+    })
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.frame.select_type', {
