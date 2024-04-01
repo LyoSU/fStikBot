@@ -378,9 +378,9 @@ userAbout:
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Choose pack type</u></b>
-    regular: '😊 Sticker'
-    custom_emoji: '🌟 Emoji (premium)'
+      <b><u>选择包装类型</u></b>
+    regular: '😊 贴纸'
+    custom_emoji: '🌟 表情符号（高级）'
     static: '🌟 静态'
     animated: '✨ 矢量'
     video: '📹 视频'
