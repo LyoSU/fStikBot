@@ -41,7 +41,7 @@ cmd:
 
       💬 支持聊天：@fStikCommunity（仅限英语）
 
-      🧑‍🔧 联系方式：@ly_oBot@ly_oBot
+      🧑‍🔧 联系方式：@ly_oBot
       👨🏻‍💻 开发频道：@LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
@@ -98,9 +98,9 @@ cmd:
 
     要将另一个软件包复制到新的软件包中，您只需向我发送一个贴纸或表情包的链接即可
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄 复制包</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    要将另一个软件包复制到新的包中，您只需向我发送一个贴纸或表情包的链接即可
   report: |
     <b>🚨 报告</b>
 
@@ -163,9 +163,9 @@ donate:
 
     <u>选择付款方式：</u
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 余额更新</b>
 
-    余额： <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    余额： <code>${balance}</code> 点数 （增加 <code>${amount}</code> 点数)
 coedit:
   info: |
     <b>👥 联合编辑 </b>
@@ -378,28 +378,28 @@ userAbout:
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Choose pack type</u></b>
-    regular: '😊 Sticker'
-    custom_emoji: '🌟 Emoji (premium)'
+      <b><u>选择包装类型</u></b>
+    regular: '😊 贴纸'
+    custom_emoji: '🌟 表情符号（高级）'
     static: '🌟 静态'
     animated: '✨ 矢量'
     video: '📹 视频'
     pack_format: |
       <b><u>选择包类型</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>常见问题</b> - 静态（不移动），光栅，文件格式 - 添加前为 PNG（机器人正在处理），添加后为 WEBP。
+      常规包示例 - t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>视频</b> - 动画视频包。您可以添加任何视频、gif 和照片。
+      视频示例包 - t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>Animated</b> - 动画，矢量（它们对文件中的对象有精确的描述，因此在任何比例下都能清晰显示），文件格式 - TGS，Lottie 格式的一种变体。
+      动画包示例 - t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>动画和视频贴纸套装最多可有 50 个贴纸。静态贴纸套装最多可有 120 个贴纸。
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>为新贴纸输入名称：</b
+      <i>您也可以在下面选择一个随机生成的名称。
     pack_name: |
       <b>为新的贴纸包输入一个短链接：</b>
       <i>只使用英文字母、 数字和下划线。</i>
@@ -588,7 +588,7 @@ scenes:
       <b>错误！</b>
       您只能为视频包添加帧。
     select_type: |
-      <a href="${example}">&#8203;</a><b>选择边框类型：</b
+      <a href="${example}">&#8203;</a><b>选择边框类型：</b>
       边框是贴纸周围的透明背景
 
       <code>lite</code> -边角将被剪切一下
