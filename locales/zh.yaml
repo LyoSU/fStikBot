@@ -97,6 +97,10 @@ cmd:
     <b>🗄 复制包</b>
 
     要将另一个软件包复制到新的软件包中，您只需向我发送一个贴纸或表情包的链接即可
+  copy: |
+    <b>🗄 Copy pack</b>
+
+    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   report: |
     <b>🚨 报告</b>
 
@@ -334,7 +338,7 @@ sticker:
       timeout: |
         <b>目前，机器人正在经历巨大的负载</b>
         因此，视频转换只适用于激活了提升功能的包
-        
+
         如需了解更多详情，请访问 /donate
       convert: |
         <b>错误！</b>
@@ -373,6 +377,10 @@ userAbout:
   select_user: '🧑‍🎨 选择用户'
 scenes:
   new_pack:
+    pack_type: |
+      <b><u>Choose pack type</u></b>
+    regular: '😊 Sticker'
+    custom_emoji: '🌟 Emoji (premium)'
     static: '🌟 静态'
     animated: '✨ 矢量'
     video: '📹 视频'
