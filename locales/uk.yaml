@@ -12,37 +12,38 @@ ratelimit: Занадто часто!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      🧙 Привіт, ${name}! Я майстер емодзі та наборів наклейок.
+      Я миттєво перетворюю фотографії, відео та GIF-файли на класні наклейки.
 
-      Send the /help command to learn more about what I can do
+      Надішліть команду /help для отримання додаткової інформації
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 Чат підтримки: @fStikCommunity (тільки EN)
     help: |
-      <b>List of bot commands:</b>
+      <b>Список команд бота:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - створити новий стікерпак
+      /new_emoji - створити новий набір emoji
+      /new_inline - створити новий inline-пак
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /packs - список ваших стікерпаків
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /delete - видалити стікер із стікерпаку
+      /original - знайти оригінальний стікер
+      /restore - відновити сткікерпак
+      /copy - скопіювати сткікерпак
+      /emoji - змінити суфікс emoji для поточного стікерпаку
+      /frame - змінити рамку для поточного стікерпаку
+      /lang - змінити мову
 
-      /catalog - Open the sticker pack catalog
+      /catalog - open catalog
+      /publish - publish pack
 
-      /lang - Change the language
-      /donate - Support the developer
+      /donate - підтримати розробника
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Чат підтримки: @fStikCommunity (тільки En)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Контакти: @ly_oBot
+      👨🏻‍💻 Канал розробника: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -84,9 +85,9 @@ cmd:
   inline:
     switch_pm: '📁 Виберіть пак'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 Відновлення набору</b>
 
-    To restore a pack, you need to send me a link to the pack that you want to restore
+    Щоб відновити набір, потрібно надіслати мені посилання на набір, який ви хочете відновити
   copy: |
     <b>🗄 Копіювати пак</b>
 
@@ -368,9 +369,9 @@ userAbout:
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Choose pack type</u></b>
-    regular: '😊 Sticker'
-    custom_emoji: '🌟 Emoji (premium)'
+      <b><u>Виберіть тип пакунка</u></b>
+    regular: '😊 Стікери'
+    custom_emoji: '🌟 Emoji (преміум)'
     static: '🌟 Статичний'
     animated: '✨ Вектор'
     video: '📹 Відео'
