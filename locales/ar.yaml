@@ -1,45 +1,45 @@
 ---
 language_name: '🇸🇦 عربي'
-name: Favorite Stickers Bot 🇺🇦
+name: بوت الملصقات المفضلة
 description:
   long: |
-    🧙 أنا معالج حزمة الرموز التعبيرية والملصقات، وأنا هنا لجعل تجربتك في الرسائل أكثر متعة! تسمح لي طاقاتي السحرية بتحويل صورك المفضلة، ومقاطع الفيديو، وصور GIFs إلى إيموجيس وملصقات رائعة بدون مجموعة من المحولات والمحاصيل. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة مع بضع نقرات فقط. إذاً، ماذا تنتظر؟ دعونا نبدأ ونضيف بعض ✨sparkle✨ إلى محادثاتك!
+    🧙 أنا معالج الإيموجي والملصقات، وأنا هنا لأجعل تجربة المراسلة الخاصة بك أكثر متعة! تتيح لي قوتي السحرية تحويل الصور ومقاطع الفيديو وملفات GIF المفضلة لديك إلى إيموجيات وملصقات رائعة دون متاعب التحويل والاقتصاص. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة ببضع نقرات فقط. فما تنتظرون؟ لنبدأ ونضيف بعض ✨التألق✨ إلى دردشاتك!
 
     ملصقات البحث: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 أنا معالج الإيموجي والملصقات! حوّل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.
 ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
     enter: |
       🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I'm transform photos, videos, and GIFs into cool stickers in a snap.
+      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
 
-      Send the /help command for more information
+      Send the /help command to learn more about what I can do
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Need help? Join our support chat at @fStikCommunity (English only)
     help: |
       <b>List of bot commands:</b>
 
-      /new - create a new sticker pack
-      /new_emoji - create a new emoji pack
+      /new - Create a new sticker pack
+      /new_emoji - Create a new emoji pack
 
-      /delete - delete sticker from pack
-      /original - find original sticker
+      /delete - Delete a sticker from a pack
+      /original - Find the original sticker
 
-      /packs - list of your packs
-      /restore - restore a pack
-      /copy - copy a pack
-      /emoji - change emoji suffix for current pack
-      /frame - change frame for current video pack
-      /publish - publish the pack in the catalog
+      /packs - List all your packs
+      /restore - Restore a deleted pack
+      /copy - Copy a pack
+      /emoji - Change the emoji suffix for the current pack
+      /frame - Change the frame for the current video pack
+      /publish - Publish the pack in the catalog
 
-      /catalog - open catalog
+      /catalog - Open the sticker pack catalog
 
-      /lang - change language
-      /donate - support the developer
+      /lang - Change the language
+      /donate - Support the developer
 
-      💬 Support chat: @fStikCommunity (only EN)
+      💬 Support chat: @fStikCommunity (English only)
 
       🧑‍🔧 Contacts: @ly_oBot
       👨🏻‍💻 Dev channel: @LyBlog
@@ -52,69 +52,62 @@ cmd:
       • ابحث عن طريق الكلمات الرئيسية أو في علامات التبويب المعدة
       • لا تنسى التقييم للترويج أو خفض حزمة الملصقات في الترتيب
     commands:
-      ss: '🌟 Save sticker'
+      ss: '🌟 حفظ الملصق'
       start: '📜 قائمة البدء'
-      help: '📖 Help'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      help: '📖 مساعدة'
+      packs: '📁 إدارة الحزم'
+      new: '🌝 إنشاء حزمة ملصقات'
+      new_emoji: '😊 إنشاء حزمة إيموجي'
       catalog: '📖 كاتالوج'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      publish: '📤 نشر الحزمة'
+      delete: '❌ حذف الملصق'
       original: '🔍 ابحث عن الملصق الأصلي'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
-      emoji: '📝 تغيير لاحقة الرموز التعبيرية'
+      restore: '🔀 استعادة الحزمة'
+      copy: '📋 نسخ حزمة'
+      emoji: '📝 تغيير لاحقة الأيموجي'
       round: ''
-      clear: '🖼️ Remove background from photo'
-      about: '📦 Pack info'
-      user_about: '🧑‍🎨 Creator info'
+      clear: '🖼️ إزالة الخلفية من الصورة'
+      about: '📦 معلومات الحزمة'
+      user_about: '🧑‍🎨 معلومات المنشئ'
       lang: '🌐 تغيير اللغة'
-      report: '🚨 Report pack'
+      report: '🚨 التبليغ عن الحزمة'
       donate: '☕ أدعم المبرمج'
-      add_to_group: '👥 Add to group'
+      add_to_group: '👥 إضافة إلى المجموعة'
     btn:
       new: '📥 إنشاء جديد'
-      catalog: '💖 Open catalog'
+      catalog: '💖 فتح الكتالوج'
       catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog_browser: '🌐 فتح في المتصفح'
+      catalog_browser_mini: '🌐 في المتصفح'
+      catalog_app: '📱 تحميل تطبيق الاندرويد'
+      catalog_app_mini: '📱 تطبيق الأندرويد'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 اختر حزمة'
   restore: |
     <b>🗃 Pack restoration</b>
 
-    If you previously created a pack through this bot and cannot find it in the list of your packs, then you can restore it back.
-
-    <b>To do this, you need to perform several actions:</b>
-    1. Open @Stickers bot
-    2. Send <code>/packstats</code> command
-    3. Find and choose the required pack
-    4. Forward the received message to the bot
-    5. If restoration is successful - bot informs about it
+    To restore a pack, you need to send me a link to the pack that you want to restore
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄️ نسخ الحزمة</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    لنسخ حزمة أخرى جديدة تحتاج فقط لإرسال رابط ملصق أو حزمة إيموجي
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 أبلغ</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    إذا صادفت حزمة ملصقات تعتقد أنها قد تنتهك القانون أو تتعارض مع شروط خدمة Telegram، فيرجى إبلاغنا بها عن طريق إرسال الرابط الخاص بها إلى @SticksReportBot
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>تذكر أن البوت غير مسؤول عن محتوى الحزم وليس لديه القدرة على التحكم فيه</i>
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 الحزم</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
-      inline: Inline
+      regular: الملصقات
+      custom_emoji: ايموجي
+      inline: مضمنة
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline pack
+      <b>ليس لديك حزم بعد.</b>
+      للإنشاء، اكتب الأمر /new
+    inline_title: حزمة مضمنة
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
@@ -374,6 +367,10 @@ userAbout:
   select_user: '🧑‍🎨 Select user'
 scenes:
   new_pack:
+    pack_type: |
+      <b><u>Choose pack type</u></b>
+    regular: '😊 Sticker'
+    custom_emoji: '🌟 Emoji (premium)'
     static: '🌟 Static'
     animated: '✨ Vector'
     video: '📹 Video'

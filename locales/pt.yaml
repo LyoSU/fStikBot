@@ -12,37 +12,37 @@ ratelimit: Não tão frequente!
 cmd:
   start:
     enter: |
-      🧙 Olá, ${name}! Eu sou o assistente do pacote de emojis e adesivos.
-      Estou transformando fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
+      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
+      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
 
-      Envie o comando /help para obter mais informações
+      Send the /help command to learn more about what I can do
 
-      💬 Chat de suporte: @fStikCommunity (apenas em inglês)
+      💬 Need help? Join our support chat at @fStikCommunity (English only)
     help: |
-      <b>Lista de comandos de bot:</b>
+      <b>List of bot commands:</b>
 
-      /new - cria um novo pacote de adesivos
-      /new_emoji - cria um novo pacote de emojis
+      /new - Create a new sticker pack
+      /new_emoji - Create a new emoji pack
 
-      /delete - exclui o adesivo do pacote
-      /original - encontre o adesivo original
+      /delete - Delete a sticker from a pack
+      /original - Find the original sticker
 
-      /packs - lista seus pacotes
-      /restore - restaura um pacote
-      /copy - copia um pacote
-      /emoji - altera o sufixo do emoji para o pacote atual
-      /frame - altera o quadro do pacote de vídeo atual
-      /publish - publicar o pacote no catálogo
+      /packs - List all your packs
+      /restore - Restore a deleted pack
+      /copy - Copy a pack
+      /emoji - Change the emoji suffix for the current pack
+      /frame - Change the frame for the current video pack
+      /publish - Publish the pack in the catalog
 
-      /catalog - abre o catálogo
+      /catalog - Open the sticker pack catalog
 
-      /lang - mudar idioma
-      /donate - apoie o desenvolvedor
+      /lang - Change the language
+      /donate - Support the developer
 
-      💬 Chat de suporte: @fStikCommunity (apenas em inglês)
+      💬 Support chat: @fStikCommunity (English only)
 
-      🧑‍🔧 Contatos: @ly_oBot
-      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -84,16 +84,9 @@ cmd:
   inline:
     switch_pm: '📁 Selecione o pacote'
   restore: |
-    <b>🗃 Restauração de packs</b>
+    <b>🗃 Pack restoration</b>
 
-    Se você criou um pacote de sticker anteriormente através deste bot e não consegue encontrá-lo na sua lista de pacotes, então você pode recuperá-lo.
-
-    <b>Para fazer isso, você precisa executar as seguintes ações:</b>
-    1. Abra o bot @Stickers
-    2. Envie o comando <code>/packstats</code>
-    3. Encontre e escolha o pacote de sticker 
-    4. Encaminhe a mensagem recebida para o bot
-    5. Se a restauração for bem sucedida - o bot informará sobre isso
+    To restore a pack, you need to send me a link to the pack that you want to restore
   copy: |
     <b>🗄️ Copiar pacote</b>
 
@@ -374,6 +367,10 @@ userAbout:
   select_user: '🧑‍🎨 Select user'
 scenes:
   new_pack:
+    pack_type: |
+      <b><u>Choose pack type</u></b>
+    regular: '😊 Sticker'
+    custom_emoji: '🌟 Emoji (premium)'
     static: '🌟 Estático'
     animated: '✨ Vetor'
     video: '📹 Vídeo'
