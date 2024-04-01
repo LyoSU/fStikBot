@@ -387,19 +387,19 @@ scenes:
     pack_format: |
       <b><u>选择包类型</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>常见问题</b> - 静态（不移动），光栅，文件格式 - 添加前为 PNG（机器人正在处理），添加后为 WEBP。
+      常规包示例 - t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>视频</b> - 动画视频包。您可以添加任何视频、gif 和照片。
+      视频示例包 - t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>Animated</b> - 动画，矢量（它们对文件中的对象有精确的描述，因此在任何比例下都能清晰显示），文件格式 - TGS，Lottie 格式的一种变体。
+      动画包示例 - t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>动画和视频贴纸套装最多可有 50 个贴纸。静态贴纸套装最多可有 120 个贴纸。
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>为新贴纸输入名称：</b
+      <i>您也可以在下面选择一个随机生成的名称。
     pack_name: |
       <b>为新的贴纸包输入一个短链接：</b>
       <i>只使用英文字母、 数字和下划线。</i>
