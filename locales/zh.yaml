@@ -12,37 +12,37 @@ ratelimit: 不经常如此！
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      🧙 你好，${name}！我是表情符号和贴纸包向导。
+      我可以将照片、视频和 GIF 快速转换成炫酷的贴纸。
 
-      Send the /help command to learn more about what I can do
+      发送 /help 命令获取更多信息
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 支持聊天：@fStikCommunity （仅限英语）
     help: |
-      <b>List of bot commands:</b>
+      <b>机器人命令列表：</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - 创建一个新的贴纸包
+      /new_emoji - 创建新的表情符号包
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /new_emoji - 创建新的表情包
+      /original - 查找原始贴纸
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - 包列表
+      /restore - 还原包
+      /copy - 复制包
+      /emoji - 更改当前包的表情后缀
+      /frame - 更改当前视频包的边框
+      /publish - 在目录中发布视频包
 
-      /catalog - Open the sticker pack catalog
+      /catalog - 打开目录
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - 更改语言
+      /donate - 支持开发者
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 支持聊天：@fStikCommunity（仅限英语）
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 联系方式：@ly_oBot@ly_oBot
+      👨🏻‍💻 开发频道：@LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -52,198 +52,208 @@ cmd:
       • 按关键字或在准备好的标签中搜索
       • 不要忘记评价以进行促销或降低贴纸包的排名
     commands:
-      ss: '🌟 Save sticker'
-      start: '📜 Start menu'
-      help: '📖 Help'
+      ss: '🌟 保存贴纸'
+      start: '📜 开始菜单'
+      help: '📖 帮助'
       packs: '📁 管理包'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
+      new: '🌝 创建贴纸包'
+      new_emoji: '😊 创建表情包'
       catalog: '📖 目录'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
-      original: '🔍 Find original sticker'
+      publish: '📤 出版包'
+      delete: '❌ 删除贴纸'
+      original: '🔍 查找原始贴纸'
       restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
-      emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
-      clear: '🖼️ Remove background from photo'
-      about: '📦 Pack info'
-      user_about: '🧑‍🎨 Creator info'
-      lang: '🌐 Change language'
-      report: '🚨 Report pack'
-      donate: '☕️ Support the developer'
-      add_to_group: '👥 Add to group'
+      copy: '📋 恢复一个包'
+      emoji: '📝 更改表情符号后缀'
+      round: '🎥 圆形视频'
+      clear: '🖼️ 删除照片背景'
+      about: '📦 包装信息'
+      user_about: '🧑‍🎨 创作者信息'
+      lang: '🌐 更改语言'
+      report: '🚨 报告包'
+      donate: '☕️ 支持开发人员'
+      add_to_group: '👥 添加到小组'
     btn:
-      new: '📥 Create new'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      new: '📥 创建新的'
+      catalog: '💖 打开目录'
+      catalog_mini: '💖 目录'
+      catalog_browser: '🌐 在浏览器中打开'
+      catalog_browser_mini: '🌐 浏览器中'
+      catalog_app: '📱 下载安卓应用程序'
+      catalog_app_mini: '📱 安卓应用程序'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 选择包'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 包装修复</b>
 
-    To restore a pack, you need to send me a link to the pack that you want to restore
+    如果您之前通过该机器人创建了一个软件包，但在软件包列表中找不到它，那么您可以将它恢复回来。
+
+    <b>为此，您需要执行几项操作：</b>
+    1.打开 @Stickers 机器人
+    2.发送 <code>/packstats</code> 命令
+    3.查找并选择所需的软件包
+    4.将收到的信息转发给机器人
+    5.如果恢复成功，机器人会通知相关信息
+    <b>🗄 复制包</b>
+
+    要将另一个软件包复制到新的软件包中，您只需向我发送一个贴纸或表情包的链接即可
   copy: |
     <b>🗄 Copy pack</b>
 
     To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 报告</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    如果您发现您认为可能违法或违反 Telegram 服务条款的贴纸包，请将其链接发送至 @StickersReportBot 报告给我们。
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>请记住，机器人不对包的内容负责，也无法控制包的内容</i>
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 包</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
+      regular: 贴纸
+      custom_emoji: 表情符号
       inline: Inline
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
+      <b>您还没有包.</b>
+      要创建，请编写命令 /new
     inline_title: Inline pack
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      要更改当前包的默认表情符号，请发送 <code>/emoji</code> 并用空格分隔表情符号。
 
-      For example - <code>/emoji 🌟</code>
+      例如 - <code>/emoji 🌟</code>
     done: 表情已成功更改。
     error: 更改表情时发生错误！
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      视频现在将呈现圆形
     disabled: |
-      Videos will no longer have a rounded shape
+      视频将不再是圆形
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ 机器人开发支持</b
+    通过支持机器人的开发，您将获得信用点数。
+    每 1 美元，您将获得 5 个信用点。
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>余额：</b> <code>${balance}</code> 信用点数
+    使用 1 个信用点，您有机会提升一个包。
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>升级可带来以下好处：</b
+    ➖ 禁用包名称中的 <code>"${titleSuffix}"</code> <i>（不在链接中）</i>。
+    转换视频贴纸时的优先级
+    在处理队列中添加多个贴纸的功能
+    视频贴纸的持续时间最长可达 30 秒
   btn:
-    donate: '☕️ Donate'
+    donate: '☕️ 捐赠'
   topup: |
-    <b>Enter the amount of credits you want to buy:</b>
+    <b>输入您要购买的信用点数：</b
 
-    <b>5 credit = 1$</b>
-    <i>Minimum amount - 5 credits</i>
+    <b>5 点数 = 1 美元</b
+    <i>最低金额 - 5 信用点数</i
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>无效金额</b
 
-    The minimum amount is 5 credits
+    最低金额为 5 个信用点
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    您想以 <b>${price}$</b> 的价格购买 <b>${amount} 信用点数</b>。
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ 信用点数由管理员手动发放。
+    等待时间从 5 分钟到 1 小时不等。
 
-    <u>Select payment method:</u>
+    <u>选择付款方式：</u
   update: |
     <b>🔄 Balance update</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    余额： <code>${balance}</code> credits (added <code>${amount}</code> credits)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 联合编辑 </b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    共同编辑链接 <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>如何使用</b>
+    1.将链接发送给您想让其访问软件包的人
+    2.点击链接后，他们需要按 "开始"，然后就会被添加到编辑器中
+    3.编辑器可以添加、删除和编辑软件包中的贴纸
 
     <b>Editors:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>要删除编辑器，您需要重新设置链接</i>
   no_editors: |
-    No editors yet
+    尚无编辑
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 发送链接'
+    reset: '🔁 重置链接'
   share: |
-    Follows the link and press "start" to co-edit the pack "${title}"
+    点击链接并按下 "开始"，共同编辑"${title}"软件包
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 链路重置成功</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    共同编辑的新链接 <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack not found
-      hidden: Pack successfully hidden
-      restored: Pack successfully restored
+      not_found: 未找到包
+      hidden: 包成功隐藏
+      restored: 成功恢复包
     set_pack:
       static: |
-        Selected static pack <a href="${link}">${title}</a>
+        选定的静态包 <a href="${link}">${title}</a>
 
-        To add a new sticker send me a photo, another static sticker.
-        For a sticker to have no background, it must be sent as a file.
+        要添加新贴纸，请给我发送一张照片和另一张静态贴纸。
+        如果贴纸没有背景，则必须以文件形式发送。
       animated: |
-        Selected animated (vector) pack <a href="${link}">${title}</a>
+        精选动画（矢量）包 <a href="${link}">${title} </a>
 
-        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
+        要添加新贴纸，请向我发送 <a href="https://core.telegram.org/stickers#animated-stickers">.tgs </a> 文件或其他动画贴纸。
       video: |
-        Selected video pack <a href="${link}">${title}</a>
+        选定的视频包 <a href="${link}">${title } </a>
 
-        To add a new sticker send me any video or photo.
+        要添加新贴纸，请发送任何视频或照片给我。
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      选择了<u>${title}</u>包
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      要使用它，请在任何聊天内容中写入 <code> @${botUsername} </code> 和空格。
+      您也可以按下面的按钮使用它
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Enabled
-        off: Disabled
-    hidden: Pack <a href="${link}">${title}</a> hidden from your list.
-    restored: Pack <a href="${link}">${title}</a> restored to your list.
+        on: 已启用
+        off: 未启用
+    hidden: 将 <a href="${link}">${title} </a> 从列表中隐藏。
+    restored: 将 <a href="${link}">${title}</a> 还原到您的列表。
     btn:
-      hide: '❌ Hide pack'
-      delete: '🗑 Delete pack'
+      hide: '❌ 隐藏包'
+      delete: '🗑删除包'
       restore: '✅ 恢复'
-      use_pack: '📦 Use pack'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
+      use_pack: '📦 使用包'
+      boost: '⚡ 提升'
+      frame: '🖼 边框'
       rename: '✏️重命名'
       search_gif: '🔎 搜索 GIF'
       coedit: '👥 共同编辑'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 添加到目录'
       catalog_edit: '📝 在目录中编辑'
       catalog_delete: '🗑 从目录中删除'
-      catalog_share: '🔗️️ Share'
-      catalog_open: '📂 Open in catalog'
+      catalog_share: '🔗️️ 分享'
+      catalog_open: '📂 在目录中打开'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore pack.
+        <b>错误！</b>
+        无法还原包。
       copy: |
-        <b>Error!</b>
-        Cannot find pack.
+        <b>错误！</b>
+        找不到包。
   sticker:
     answerCbQuery:
-      delete: The sticker was successfully removed from the pack.
-      restored: The sticker was successfully saved to the current pack.
-    delete: The sticker was successfully removed from the pack.
-    restored: The sticker was successfully saved to the current pack.
+      delete: 贴纸已成功从包中取出。
+      restored: 贴纸已成功保存到当前包。
+    delete: 贴纸已成功从包中取出。
+    restored: 贴纸已成功保存到当前包。
     btn:
       delete: '🗑 删除'
       copy: '🌟 复制'
@@ -255,12 +265,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>贴纸已成功添加到包中：</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>如果您想添加表情符号，请发送一个或多个与贴纸匹配的表情符号</i>
     ok_inline: |
-      <b>Added to pack successfully:</b>
+      <b>成功添加到包装中：</b>
       <u>${title}</u>
     send_emoji: 太好了，现在发送与之匹配的表情
     converting_process: |
@@ -271,65 +281,65 @@ sticker:
 
       <i>支持机器人的用户在队列中获得优先级 (更多: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 哇，你做了一个很棒的包！</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      您是否希望将 <a href="${link}">${title}</a> 添加到公共贴纸目录中，以便机器人的其他用户也能看到？
+      <i>无需花费大量时间</i>
     error:
       reply: |
-        <b>Error!</b>
-        Please, reply to the sticker.
+        <b>错误！</b>
+        请回复贴纸。
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>您没有选择包</b>
 
-        Please, create (/new) or choose (/packs) pack
+        请创建 (/new) 或选择 (/packs) 包
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        该包中的贴纸数量最多。
 
-        You can create a new pack using the /new command.
+        您可以使用 /new 命令创建新包
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>该贴纸已在包中</b>
 
-        If you want to change the emoji, send it in the following message.
+        如果您想更改表情符号，请在以下信息中发送。
       stickerset_invalid: |
-        <b>Error!</b>
-        Bot cannot access your current chosen pack.
+        <b>错误！</b>
+        Bot 无法访问您当前选择的包。
 
-        Please, create (/new) or choose (/packs) another pack.
+        请创建 (/new) 或选择 (/packs) 另一个包。
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>错误！</b>
+          不支持该文件类型
+          您可以将这张照片或静态贴纸添加到静态包中
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>错误！</b>
+          不支持该文件类型
+          您可以将这些视频文件添加到视频包中
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>错误！</b>
+          不支持该文件类型
+          您可以将该动画文件添加到矢量包中
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>错误！</b>
+          不支持该文件类型
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
       wait_load: |
         <b>等等！</b>
 
         Bot 仍在处理之前的视频...
         您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>目前，机器人正在经历巨大的负载</b>
+        因此，视频转换只适用于激活了提升功能的包
 
-        For more details, follow the /donate
+        如需了解更多详情，请访问 /donate
       convert: |
         <b>错误！</b>
         不幸的是，机器人无法转换您的视频。
@@ -342,40 +352,40 @@ sticker:
         文件太大，无法处理。请在发送前降低质量和持续时间。
 news:
   join: |
-    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+    ℹ️ <a href="${link}">加入我们的频道</a> 获取有关机器人的最新消息。
 
-    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
-  join_btn: '📢 Join channel'
-  not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+    <i>订阅频道，获取有关机器人的最新消息以及更新和新功能。</i>
+  join_btn: '📢 加入频道'
+  not_joined: '🙅 您尚未订阅该频道'
+  continue: '✅ 继续'
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨 关于用户</b>
 
-    Using this menu you can find out information about the user and his sticker packs
+    通过该菜单，您可以找到有关用户及其贴纸包的信息
 
-    To get information about the user, use the button below or forward his message
+    要获取用户信息，请使用下面的按钮或转发他的信息
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 用户信息</b>
+    <b>🆔 用户 ID:</b> <code>${userId}</code>
+    <b>🎨 该用户提供的包：</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>我们没有关于该业主贴纸的信息</i>
   forward_hidden: |
-    The user has hidden the ability to forward messages. Use the button below to view his sticker packs.
-  select_user: '🧑‍🎨 Select user'
+    该用户隐藏了转发消息的功能。使用下面的按钮查看他的贴纸包。
+  select_user: '🧑‍🎨 选择用户'
 scenes:
   new_pack:
     pack_type: |
       <b><u>Choose pack type</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
+    static: '🌟 静态'
     animated: '✨ 矢量'
-    video: '📹 Video'
+    video: '📹 视频'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>选择包类型</u></b>
 
       <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
       An example of a regular pack - t.me/addstickers/Animals
@@ -409,7 +419,7 @@ scenes:
         name_invalid: Такой адрес использовать не получится.
         name_occupied: Такой адрес уже занят.
         upload_failed: |
-          <b>Error!</b>
+          <b>错误！</b>
           Bot cannot upload stickers to Telegram.
 
           Please, try again later.
@@ -442,7 +452,7 @@ scenes:
       Are you sure you want to delete this sticker?
     error:
       not_found: |
-        <b>Error!</b>
+        <b>错误！</b>
         I could not find the sticker.
   rename:
     enter_name: |
@@ -505,12 +515,12 @@ scenes:
         3. Find and choose the required pack
         4. Forward the received message to the bot
       publish_new_access_denied: |
-        <b>Error!</b>
+        <b>错误！</b>
         This pack is not yours.
 
         You can only publish your own packs
       bannded: |
-        <b>Error!</b>
+        <b>错误！</b>
         You are banned from using this feature.
         Please, contact the administrator.
       enter: |
@@ -571,11 +581,11 @@ scenes:
     success: |
       <b>Pack successfully deleted!</b>
     error:
-      - <b>Error!</b>
+      - <b>错误！</b>
       - Opps, something went wrong.
   frame:
     no_video: |
-      <b>Error!</b>
+      <b>错误！</b>
       You can only add frames to video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
@@ -614,7 +624,7 @@ scenes:
       anime: Anime — for anime pictures
     add_to_set_btn: '🌟 Add to set'
     error: |
-      <b>Error!</b>
+      <b>错误！</b>
       Opps, something went wrong.
   leave: |
     Действие отменено.
@@ -629,7 +639,7 @@ error:
       Telegram вернул ошибку:
       ${error}
   banned: |
-    <b>Error!</b>
+    <b>错误！</b>
     You are banned from using this feature.
     Please, contact the administrator.
   unknown: |
