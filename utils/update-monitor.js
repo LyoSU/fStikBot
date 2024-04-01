@@ -21,7 +21,7 @@ const updateMonitor = async () => {
     await telegram.sendMessage(config.logChatId, `❌ The number of pending updates is ${pending_update_count}. The bot is hanging ❌`).catch(console.error).then(() => {
       process.exit(1) // exit the process
     })
-  } else if (pending_update_count > 20 && pending_update_count % 10 === 0) {
+  } else if (pending_update_count > 40 && pending_update_count % 10 === 0) {
     console.warn(`The number of pending updates is ${pending_update_count}. The bot may be hanging.`)
 
     // send a message to the developer

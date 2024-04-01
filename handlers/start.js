@@ -14,8 +14,7 @@ module.exports = async (ctx) => {
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null')
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null'),
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new_emoji'), 'new_pack:custom_emoji')
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
     ],
     [
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.delete'), 'delete_sticker'),

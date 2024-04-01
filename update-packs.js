@@ -142,5 +142,6 @@ async function processStickerSets(stickerSets) {
     })
       .catch(err => console.error(err))
       .then(() => console.log(`Deleted ${stickersWithoutParentSet.length} stickers without parent set`));
+    await new Promise(resolve => setTimeout(resolve, 60 * 1000));
   }
 })();
