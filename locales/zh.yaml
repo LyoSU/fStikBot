@@ -27,11 +27,11 @@ cmd:
       /new_emoji - 创建新的表情包
       /original - 查找原始贴纸
 
-      /packs - 背包列表
-      /restore - 还原数据包
-      /copy - 复制数据包
-      /emoji - 更改当前数据包的表情后缀
-      /frame - 更改当前视频包的框架
+      /packs - 包列表
+      /restore - 还原包
+      /copy - 复制包
+      /emoji - 更改当前包的表情后缀
+      /frame - 更改当前视频包的边框
       /publish - 在目录中发布视频包
 
       /catalog - 打开目录
@@ -102,7 +102,7 @@ cmd:
 
     如果您发现您认为可能违法或违反 Telegram 服务条款的贴纸包，请将其链接发送至 @StickersReportBot 报告给我们。
 
-    <i>请记住，机器人不对数据包的内容负责，也无法控制数据包的内容</i>
+    <i>请记住，机器人不对包的内容负责，也无法控制包的内容</i>
   packs:
     info: |
       <b>📁 包</b>
@@ -116,7 +116,7 @@ cmd:
     inline_title: Inline pack
   emoji:
     info: |
-      要更改当前数据包的默认表情符号，请发送 <code>/emoji</code> 并用空格分隔表情符号。
+      要更改当前包的默认表情符号，请发送 <code>/emoji</code> 并用空格分隔表情符号。
 
       例如 - <code>/emoji 🌟</code>
     done: 表情已成功更改。
@@ -133,10 +133,10 @@ donate:
     每 1 美元，您将获得 5 个信用点。
 
     <b>余额：</b> <code>${balance}</code> 信用点数
-    使用 1 个信用点，您有机会提升一个数据包。
+    使用 1 个信用点，您有机会提升一个包。
 
     <b>升级可带来以下好处：</b
-    ➖ 禁用数据包名称中的 <code>"${titleSuffix}"</code> <i>（不在链接中）</i>。
+    ➖ 禁用包名称中的 <code>"${titleSuffix}"</code> <i>（不在链接中）</i>。
     转换视频贴纸时的优先级
     在处理队列中添加多个贴纸的功能
     视频贴纸的持续时间最长可达 30 秒
@@ -210,7 +210,7 @@ callback:
 
         要添加新贴纸，请发送任何视频或照片给我。
     set_inline_pack: |
-      选择了<u>${title}</u>数据包
+      选择了<u>${title}</u>包
 
       要使用它，请在任何聊天内容中写入 <code> @${botUsername} </code> 和空格。
       您也可以按下面的按钮使用它
@@ -228,7 +228,7 @@ callback:
       restore: '✅ 恢复'
       use_pack: '📦 使用包'
       boost: '⚡ 提升'
-      frame: '🖼 框架'
+      frame: '🖼 边框'
       rename: '✏️重命名'
       search_gif: '🔎 搜索 GIF'
       coedit: '👥 共同编辑'
@@ -301,31 +301,31 @@ sticker:
         <b>错误！</b>
         Bot 无法访问您当前选择的包。
 
-        请创建 (/new) 或选择 (/packs) 另一个数据包。
+        请创建 (/new) 或选择 (/packs) 另一个包。
       file_type:
         static: |
           <b>错误！</b>
           不支持该文件类型
           您可以将这张照片或静态贴纸添加到静态包中
 
-          <i>创建 (/new) 或选择 (/packs) 另一个数据包</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         video: |
           <b>错误！</b>
           不支持该文件类型
           您可以将这些视频文件添加到视频包中
 
-          <i>创建 (/new) 或选择 (/packs) 另一个数据包</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         animated: |
           <b>错误！</b>
           不支持该文件类型
           您可以将该动画文件添加到矢量包中
 
-          <i>创建 (/new) 或选择 (/packs) 另一个数据包</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         unknown: |
           <b>错误！</b>
           不支持该文件类型
 
-          <i>创建 (/new) 或选择 (/packs) 另一个数据包</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
       wait_load: |
         <b>等等！</b>
 
@@ -377,7 +377,7 @@ scenes:
     animated: '✨ 矢量'
     video: '📹 视频'
     pack_format: |
-      <b><u>选择包装类型</u></b>
+      <b><u>选择包类型</u></b>
 
       <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
       An example of a regular pack - t.me/addstickers/Animals
