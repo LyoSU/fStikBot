@@ -12,37 +12,37 @@ ratelimit: ليس في الكثير من الاحيان!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      🧙 مرحبًا ${name}! أنا معالج حزمة الإيموجي والملصقات.
+      أقوم بتحويل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.
 
-      Send the /help command to learn more about what I can do
+      أرسل الأمر /help لمزيد من المعلومات
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 مجموعة الدعم: @fStikCommunity (باللغة الإنجليزية فقط)
     help: |
-      <b>List of bot commands:</b>
+      <b>قائمة أوامر البوت:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - إنشاء حزمة ملصقات جديدة
+      /new_emoji - إنشاء حزمة أيموجي جديدة
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - حذف الملصق من الحزمة
+      /original - ابحث عن الملصق الأصلي
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - قائمة الحزم الخاصة بك
+      /restore - استعادة الحزمة
+      /copy - نسخ الحزمة
+      /emoji - تغيير لاحقة الأيموجي للحزمة الحالية
+      /frame - تغيير الإطار لحزمة الفيديو الحالية
+      /publish - نشر الحزمة في الكتالوج
 
-      /catalog - Open the sticker pack catalog
+      /catalog - فتح الكتالوج
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - تغيير اللغة
+      /donate - دعم المطور
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 مجموعة الدعم: @fStikCommunity (باللغة الإنجليزية فقط)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 الدردشة الخاصة: @ly_oBot
+      👨🏻‍💻 قناة التطوير: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -84,9 +84,9 @@ cmd:
   inline:
     switch_pm: '📁 اختر حزمة'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 استعادة الحزمة</b>
 
-    To restore a pack, you need to send me a link to the pack that you want to restore
+    لاستعادة الحزمة، يجب أن ترسل لي رابطًا للحزمة التي تريد استعادتها
   copy: |
     <b>🗄️ نسخ الحزمة</b>
 
@@ -110,16 +110,16 @@ cmd:
     inline_title: حزمة مضمنة
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      لتغيير الرموز التعبيرية الافتراضية للحزمة الحالية، إرسال <code>/emoji</code> تليها الرموز التعبيرية مفصولة بمساحة
 
-      For example - <code>/emoji 🌟</code>
+      على سبيل المثال - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      سيكون لمقاطع الفيديو الآن شكل مستدير
     disabled: |
-      Videos will no longer have a rounded shape
+      سيكون لمقاطع الفيديو الآن شكل مستدير
 donate:
   menu: |
     <b>☕️ Bot development support</b>
