@@ -41,7 +41,7 @@ cmd:
 
       💬 支持聊天：@fStikCommunity（仅限英语）
 
-      🧑‍🔧 联系方式：@ly_oBot@ly_oBot
+      🧑‍🔧 联系方式：@ly_oBot
       👨🏻‍💻 开发频道：@LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
@@ -98,9 +98,9 @@ cmd:
 
     要将另一个软件包复制到新的软件包中，您只需向我发送一个贴纸或表情包的链接即可
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄 复制包</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    要将另一个软件包复制到新的包中，您只需向我发送一个贴纸或表情包的链接即可
   report: |
     <b>🚨 报告</b>
 
@@ -163,9 +163,9 @@ donate:
 
     <u>选择付款方式：</u
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 余额更新</b>
 
-    余额： <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    余额： <code>${balance}</code> 点数 （增加 <code>${amount}</code> 点数)
 coedit:
   info: |
     <b>👥 联合编辑 </b>
@@ -588,7 +588,7 @@ scenes:
       <b>错误！</b>
       您只能为视频包添加帧。
     select_type: |
-      <a href="${example}">&#8203;</a><b>选择边框类型：</b
+      <a href="${example}">&#8203;</a><b>选择边框类型：</b>
       边框是贴纸周围的透明背景
 
       <code>lite</code> -边角将被剪切一下
