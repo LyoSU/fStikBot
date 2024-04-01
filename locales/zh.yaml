@@ -334,7 +334,7 @@ sticker:
         <b>等等！</b>
 
         Bot 仍在处理之前的视频...
-        您可以支持 bot 开发 (/donate) 以提升处理的优先级和向队列添加多个贴纸的能力。
+        您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
       timeout: |
         <b>目前，机器人正在经历巨大的负载</b>
         因此，视频转换只适用于激活了提升功能的包
@@ -403,35 +403,35 @@ scenes:
     pack_name: |
       <b>为新的贴纸包输入一个短链接：</b>
       <i>只使用英文字母、 数字和下划线。</i>
-      <i>例如，此包使用 '动物' 作为短链接: https://te/addstickers/<u>动物</u></i>
+      <i>例如，此包使用 '动物' 作为短链接: https://t。 e/addstickers/<u>动物</u></i>
 
       <i>你可以在按钮上选择随机的短链接</i>
     ok: |
-      包 <a href="${link}">${title}</a> 创建成功！
+      Pack <a href="${link}">${title}</a> successfully created!
 
-      <b>包链接:</b> <pre>${link}</pre>
+      <b>Pack link:</b> <pre>${link}</pre>
 
-      发送文件、照片、视频或贴纸，以便我将其添加到您的套装中
+      Send a file, photo, video or sticker so that I add it to your set
     error:
-      title_long: 名称不得超过 ${max} 个字符。
-      name_long: 地址不得超过 ${max} 个字符。
+      title_long: Имя должно быть не больше ${max} символов.
+      name_long: Адрес должен быть не больше ${max} символов.
       telegram:
-        name_invalid: 您不能使用这样的地址。
-        name_occupied: 该地址已被占用。
+        name_invalid: Такой адрес использовать не получится.
+        name_occupied: Такой адрес уже занят.
         upload_failed: |
           <b>错误！</b>
-          机器人无法将贴纸上传到 Telegram。
+          Bot cannot upload stickers to Telegram.
 
-          请稍后再试。
+          Please, try again later.
   copy:
     enter: |
-      我可以复制它，但在此之前，让我们创建一个新的包
+      I can copy it, but before that, let's create a new pack
     progress: |
-      复制包来自 <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
-      取得进展： ${current}/${total}
+      Progress: ${current}/${total}
     done: |
-      打包复制自 <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
     error:
       premium: |
         <b>错误！</b>
@@ -440,208 +440,208 @@ scenes:
         您可以通过发送/捐赠命令来做到这一点。
   original:
     enter: |
-      发送一个通过该机器人添加的贴纸，我会给你看原件。
+      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
     error:
       not_found: |
-        <b>错误!</b>
-        我没有找到这张贴纸的原件。
+        <b>Ошибка!</b>
+        У меня не получилось найти оригинал этого стикера.
   delete:
     enter: |
-      发送通过此机器人添加的贴纸，我将把它从包中删除。
+      Send the sticker that was added through this bot and I will delete it from the pack.
     confirm: |
-      您确定要删除这个贴纸吗？
+      Are you sure you want to delete this sticker?
     error:
       not_found: |
         <b>错误！</b>
-        我找不到贴纸。
+        I could not find the sticker.
   rename:
     enter_name: |
-      <b>输入新标题 <a href="${link}">${title}</a>:</b>
+      <b>Enter new title for <a href="${link}">${title}</a>:</b>
     success: |
-      <b>标题已成功更改！</b>
+      <b>Title successfully changed!</b>
 
-      新标题: <a href="${link}">${title}</a>
+      New title: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>
+      <b>Send me a sticker or custom emoji to look up information about it:</b>
     not_found: |
-      我找不到贴纸
+      I could not find the sticker
     result: |
-      <b>📦 包:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(拥有者包的唯一编号，每包递增)</i>
+      <b>📦 Pack:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
 
-      🧑‍🎨 用户 ID: <code>${ownerId}</code>
+      🧑‍🎨 Owner ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 该用户的其他包</b>
+      <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>我们没有该用户其他贴纸的信息</i>
+      <i>We have no information about other stickers of this owner</i>
   boost:
     sure: |
-      <b>你确定要提升 <a href="${link}">${title}</a>?</b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      提升将提升处理的优先级，并能将多个贴纸添加到队列中。
-      您可以访问菜单，查看有关提升的更多详细信息：/donate
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>价格:</b> 1 credit
-      <b>当前余额:</b> ${balance} credits
+      <b>Price:</b> 1 credit
+      <b>Current balance:</b> ${balance} credits
     btn:
-      yes: 是，提升！
-      no: 否，取消
+      yes: Yes, boost!
+      no: No, cancel
     canceled: |
-      提升已取消
+      Boosting canceled
     success: |
-      提升成功完成！
+      Boosting successfully completed!
 
-      ${title} 现在得到提升
+      ${title} is now boosted
     error:
       not_enough_credits: |
-        您没有足够的信用点数来提升此包。
+        You do not have enough credits to boost this pack.
 
-        您可以发送 /donate 命令来充值。
+        You can top up your balance by sending the /donate command.
       already_boosted: |
-        这个包已经提升。
+        This pack is already boosted.
   catalog:
     publish:
       publish_new: |
-        👌 <b>将您要发布的包中的贴纸发给我</b>
+        👌 <b>Send me the sticker from the pack you want to publish</b>
 
-        <i>您可以发布任何属于您的包，即使它们是在其他地方创建的</i>
+        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>要验证此数据包的所有权，您需要遵循几个简单的步骤：</b
-        1.打开 @Stickers 机器人
-        2.发送 <code>/packstats</code> 命令
-        3.查找并选择所需的软件包
-        4.将收到的信息转发给机器人
+        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
+        1. Open @Stickers bot
+        2. Send <code>/packstats</code> command
+        3. Find and choose the required pack
+        4. Forward the received message to the bot
       publish_new_access_denied: |
         <b>错误！</b>
-        这个包不是你的。
+        This pack is not yours.
 
-        您只能发布自己的包
+        You can only publish your own packs
       bannded: |
         <b>错误！</b>
-        您已被禁止使用此功能。
-        请联系管理员。
+        You are banned from using this feature.
+        Please, contact the administrator.
       enter: |
-        您即将在我们机器人的公共目录中发布"<a href="${link}">${title}</a>"包
-        机器人的任何用户都可以通过名称、标签或过滤器找到它
-        因此，会有更多人安装您的软件包
-        尽量只发送高质量的软件包，这样会有更多人感兴趣
+        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
+        It can be found by any user of the bot by name, tags or filter
+        Because of this, more people will install your pack
+        Try to send only high-quality packs that may be of interest to a large number of people
 
-        <b>发布软件包的规则：</b
-        - 不要发布面向小范围人群的个人软件包。例如，您朋友的面孔或您信息中的引语。
-        - 不要发布违反欧盟法律或其他地方法律的贴纸压力。
+        <b>Rules for publishing packs:</b>
+        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
+        • Do not post sticker pressures that violate EU laws or other local laws
 
-        您需要提交其他信息才能在目录中发布
-      continue_button: 继续
+        You will need to submit additional information for it to be published in the catalog
+      continue_button: Continue
       enter_description: |
-        继续<b>简要描述您的背包，以便他人找到它</b
+        <b>Briefly describe your pack so that others can find it</b>
 
-        <i>您还可以使用标签对 [#]</i> 进行分类。
-        <i>例如#anime #meme #animals #cute #kop #funny #cat #game </i
+        <i>You can also use hashtags to categorize [#]</i>
+        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
       select_language: |
-        <b>选择您的软件包适用的语言：</b
-        <i>您可以选择多种语言</i
-      button_all_languages: 所有语言
-      button_confirm_language: 确认
+        <b>Choose which languages your pack is for:</b>
+        <i>You can select multiple languages</i>
+      button_all_languages: All languages
+      button_confirm_language: Confirm
       set_safe: |
-        <b>您的软件包对用户安全吗？
-        <i>即不包含色情和其他令人震惊的内容</i
+        <b>Is your pack safe for users?</b>
+        <i>That is, it does not contain erotica and other shocking content</i>
       button_safe:
-        safe: 是的，不包含
-        not_safe: 不，包含
-      no_tags: 不知道，不确定
+        safe: Yes, it is safe
+        not_safe: No, it is not safe
+      no_tags: were not specified
       confirm: |
-        <b>确认出版"<a href="${link}">${title}</a>"</b> 包
+        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
-        <b>描述：</b> <i>${description}</i
+        <b>Description:</b> <i>${description}</i>
 
-        <b>标签：</b> ${tags}
-        <b>语言：</b> ${languages}
-      button_confirm: '✅ 确认出版'
+        <b>Tags:</b> ${tags}
+        <b>Languages:</b> ${languages}
+      button_confirm: '✅ Confirm publication'
       success: |
-        恭喜您，您的软件包已发布在我们机器人的总目录中，其他用户可以在其中找到！
+        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
 
-        您可以使用 /packs 命令选择数据包来编辑数据包搜索信息。
+        You can edit the pack search information by selecting the pack with the /packs command.
 
-        <i>我们提醒您，您可以通过官方机器人 @Stickers</i> 查看您的游戏包的统计信息。
+        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
     unpublish:
       success: |
-        该包已成功从机器人目录中取消发布。
+        The pack has been successfully unpublished from bot catalog.
   delete_pack:
     enter: |
-      您确定要删除数据包 <a href="${link}">${title}</a> 吗？
-      它将被永久删除，无法恢复。
+      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
+      It will be permanently deleted and cannot be recovered.
 
-      如果只想删除一个贴纸，请使用 /delete 命令。
+      If you want to delete only one sticker, use the /delete command.
 
-      发送 <code>${confirm}</code> 以确认您真的要删除此贴包。
-    confirm: 是的，我完全肯定。
+      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+    confirm: Yes, I am totally sure.
     success: |
-      <b>成功删除包！</b>
+      <b>Pack successfully deleted!</b>
     error:
       - <b>错误！</b>
-      - 哎呀，出错了。
+      - Opps, something went wrong.
   frame:
     no_video: |
       <b>错误！</b>
-      您只能为视频包添加帧。
+      You can only add frames to video packs.
     select_type: |
-      <a href="${example}">&#8203;</a><b>选择边框类型：</b
-      边框是贴纸周围的透明背景
+      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
+      Frame is a transparent background around the sticker
 
-      <code>lite</code> -边角将被剪切一下
-      <代码>中等</代码>--边角将被削减更多
-      <code>rounded</code> - 边角将被磨圆
-      <code>square</code> - 边框的矩形形状，即不会以任何方式改变。
-      <code>circle</code> - 边框将呈圆形
+      <code>lite</code> — the corners will be cut a little
+      <code>medium</code> — the corners will be cut more
+      <code>rounded</code> — the corners will be rounded
+      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
+      <code>circle</code> — the frame will be in the form of a circle
 
-      <i>将来，您可以使用 /frame 命令来设置边框类型</i>。
+      <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. 精简版'
       medium: '2. 中等'
-      rounded: '3. 圆形'
-      square: '4. 方形'
-      circle: '5. 圆圈'
+      rounded: '3. Rounded'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
-      <b>S选出边框类型：</b> ${type}
+      <b>Selected frame type:</b> ${type}
   photoClear:
     enter: |
-      发送一张您想去掉背景的照片<u></u>，我将发送没有背景的文件。
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>对照片效果最佳。对图画、插图等效果较差</i>。
+      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
     enter_anime: |
-      发送一张您想去掉背景的照片<u></u>，我将发送没有背景的文件。
+      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
-      <i>它对动漫图片最有效</i
+      <i>It works best with anime pictures</i>
     choose_model: |
-      <b>选择型号：</b
-    web_app: WebApp - 用于与人合影
+      <b>Choose model:</b>
+    web_app: WebApp - for photos with people
     model:
-      ordinary: Common — 与人合影
-      general: General — 任何照片
-      anime: Anime — 动漫图片
-    add_to_set_btn: '🌟 添加到设置'
+      ordinary: Common — for photos with people
+      general: General — for any photos
+      anime: Anime — for anime pictures
+    add_to_set_btn: '🌟 Add to set'
     error: |
       <b>错误！</b>
-      哎呀，出错了。
+      Opps, something went wrong.
   leave: |
-    行动取消。
+    Действие отменено.
   btn:
     cancel: '❌ 取消'
 error:
   telegram: |
-    <b>Telegram 返回了错误信息！</b>
+    <b>Telegram вернул ошибку!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram 返回错误信息：
+      Telegram вернул ошибку:
       ${error}
   banned: |
     <b>错误！</b>
-    您已被禁止使用此功能。
-    请联系管理员。
+    You are banned from using this feature.
+    Please, contact the administrator.
   unknown: |
     <b>出现未知错误，请再试一次。</b>
 
