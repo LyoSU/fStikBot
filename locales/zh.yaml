@@ -200,10 +200,10 @@ callback:
       hidden: 包成功隐藏
       restored: 成功恢复包
     set_pack: |
-      🌟 Selected <a href="${link}">${title}</a> pack
+      🌟 已选 <a href="${link}">${title}</a> 打包
 
-      <b>❔ How add?</b>
-      Send photo, video or sticker to add to the pack
+      <b>❔ 如何添加？</b>
+      发送照片、视频或贴纸以添加到包中
     set_inline_pack: |
       选择了<u>${title}</u>包
 
