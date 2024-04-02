@@ -474,20 +474,14 @@ newPackConfirm.enter(async (ctx, next) => {
         ])
       })
     } else {
-      let searchGifBtn = []
-
-      if(userStickerSet.video) {
-        let inlineData = ''
-        if (ctx.session.userInfo.inlineType === 'packs') {
-          inlineData = stegcloak.hide('{gif}', '', ' : ')
-        }
-
-        searchGifBtn = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
+      let inlineData = ''
+      if (ctx.session.userInfo.inlineType === 'packs') {
+        inlineData = stegcloak.hide('{gif}', '', ' : ')
       }
 
       const linkPrefix = userStickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack.video', {
+      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
         title: escapeHTML(userStickerSet.title),
         link: `${linkPrefix}${name}`
       }), {
@@ -496,7 +490,18 @@ newPackConfirm.enter(async (ctx, next) => {
           [
             Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${linkPrefix}${userStickerSet.name}`)
           ],
-          searchGifBtn
+          [
+            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.boost'), `boost:${userStickerSet.id}`, userStickerSet.boost)
+          ],
+          [
+            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
+          ],
+          [
+            Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)
+          ],
+          [
+            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.coedit'), `coedit:${userStickerSet.id}`)
+          ],
         ]),
         parse_mode: 'HTML'
       })

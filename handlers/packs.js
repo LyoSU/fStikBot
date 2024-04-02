@@ -203,7 +203,7 @@ module.exports = async (ctx) => {
             boostStatus: stickerSet.boost ? ctx.i18n.t('callback.pack.boost.status.on') : ctx.i18n.t('callback.pack.boost.status.off'),
           })
 
-          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack.video', {
+          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
             title: escapeHTML(stickerSet.title),
             link: `${linkPrefix}${stickerSet.name}`
           }) + boostText, {
