@@ -19,30 +19,30 @@ cmd:
 
       💬 ヘルプが必要ですか? @fStikCommunity のサポート チャットに参加してください (英語のみ)
     help: |
-      <b>List of bot commands:</b>
+      <b>ボットコマンド一覧:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - 新しいステッカーパックを作成
+      /new_emoji - 新しい絵文字パックを作成
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - パックからステッカーを削除
+      /original - オリジナルのステッカーを探す
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - あなたのすべてのパックをリストする
+      /restore - 削除されたパックを復元
+      /copy - パックをコピー
+      /emoji - 現在のパックの絵文字サフィックスを変更
+      /frame - 現在のビデオパックのフレームを変更
+      /publish - カタログにパックを公開
 
-      /catalog - Open the sticker pack catalog
+      /catalog - ステッカーパックカタログを開く
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - 言語を変更
+      /donate - 開発者を支援
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 サポートチャット: @fStikCommunity (英語のみ)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 連絡先: @ly_oBot
+      👨🏻‍💻 開発者チャンネル: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -110,9 +110,9 @@ cmd:
     inline_title: インラインパック
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> の後にスペースを空けて絵文字を送信してください。
 
-      For example - <code>/emoji 🌟</code>
+      例 - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
   round_video:
@@ -158,19 +158,19 @@ donate:
     Balance: <code>${balance}</code> credit (add <code>${amount}</code> credits)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 共同編集</b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    共同編集のリンク <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>使い方:</b>
+    1. パックへのアクセスを許可したい人にリンクを送信します
+    2. リンクをクリックした後、"start"を押して編集者に追加されます
+    3. 編集者は、パック内のステッカーを追加、削除、編集できます
 
-    <b>Editors:</b>
+    <b>編集者:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>編集者を削除するには、リンクをリセットする必要があります</i>
   no_editors: |
     編集者はまだいません。
   btn:
@@ -195,10 +195,10 @@ callback:
       <b>❔ How add?</b>
       パックに追加する写真、ビデオ、ステッカーを送信する
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      選択された<u>${title}</u>パック
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      これを使用するには、任意のチャットで<code>@${botUsername} </code>とスペースを入力してください
+      下のボタンを押しても使用できます
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">ブースト</a></b>: ${boostStatus}
@@ -347,9 +347,9 @@ userAbout:
 
     ユーザーに関する情報を取得するには、 ボタンを使用してください彼のメッセージを以下または転送してください
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 ユーザー情報</b>
+    <b>🆔 ユーザーID:</b> <code>${userId}</code>
+    <b>🎨 このユーザーのパック:</b>
     ${packs}
   no_packs: |
     <i>このオーナーのステッカーに関する情報はありません</i>
@@ -448,13 +448,13 @@ scenes:
     not_found: |
       ステッカーが見つかりませんでした
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 パック:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(所有者のパックごとにインクリメントされる一意の番号)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 オーナーID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 このオーナーからの他のパック:</b>
       ${otherPacks}
     no_other_packs: |
       <i>この所有者の他のステッカーに関する情報はありません</i>
@@ -486,9 +486,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>公開したいパックからステッカーを送ってください</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>あなたが所有するどのパックでも公開できます、他の場所で作成されたものであっても</i>
       owner_proof: |
         <b>このパックの所有権を確認するには、いくつかの簡単な手順に従う必要があります:</b>
         1. @Stickers ボットを開きます
@@ -571,16 +571,16 @@ scenes:
       <b>エラー!</b>
       ビデオパックにのみフレームを追加できます。
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>フレームタイプを選択:</b>
+      フレームはステッカー周りの透明な背景です
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>lite</code> — 角が少し切り取られます
+      <code>medium</code> — 角がもっと切り取られます
+      <code>rounded</code> — 角が丸くなります
+      <code>square</code> — フレームの矩形の形状が変わらず、そのままです
+      <code>circle</code> — フレームが円形になります
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>将来的には、/frame コマンドを使用してフレームタイプを設定できます</i>
     types:
       lite: '1. Lite'
       medium: '2. 中'
@@ -595,9 +595,9 @@ scenes:
 
       <i>写真に最適です。絵やイラストなどではさらにうまくいきません</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      背景を削除したい<u>写真</u>を送り、背景なしのファイルを返送します
 
-      <i>It works best with anime pictures</i>
+      <i>アニメ画像に最適です</i>
     choose_model: |
       <b>モデルを選択:</b>
     web_app: WebApp - 人と写真用

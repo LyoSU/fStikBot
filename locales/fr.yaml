@@ -19,32 +19,32 @@ cmd:
 
       💬 Besoin d'aide ? Rejoignez notre chat d'assistance à @fStikCommunity (en anglais uniquement)
     help: |
-      <b>List of bot commands:</b>
+      <b>Liste des commandes du bot :</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Créer un nouveau pack d'autocollants
+      /new_emoji - Créer un nouveau pack d'émojis
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Supprimer un autocollant d'un pack
+      /original - Trouver l'autocollant original
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Lister tous vos packs
+      /restore - Restaurer un pack supprimé
+      /copy - Copier un pack
+      /emoji - Changer le suffixe d'émoji pour le pack actuel
+      /frame - Changer le cadre pour le pack vidéo actuel
+      /publish - Publier le pack dans le catalogue
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Ouvrir le catalogue de pack d'autocollants
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Changer la langue
+      /donate - Soutenir le développeur
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Chat de soutien : @fStikCommunity (Anglais uniquement)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Contacts : @ly_oBot
+      👨🏻‍💻 Canal de dev : @LyBlog
 
-      GitHub: https://github.com/LyoSU/fStikBot
+      GitHub : https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Vous pouvez trouver de nouveaux packs d'autocollants dans notre catalogue</b>
 
@@ -122,18 +122,18 @@ cmd:
       Les vidéos n'auront plus de forme arrondie
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Soutien au développement du bot</b>
+    En soutenant le développement du bot, vous recevrez des crédits.
+    Pour chaque dollar, vous recevrez 5 crédits.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>Solde :</b> <code>${balance}</code> crédits
+    Avec 1 crédit, vous avez la possibilité de booster un pack.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Les avantages du boost sont les suivants :</b>
+    ➖ Désactivation de <code>"${titleSuffix}"</code> dans le nom des packs <i>(pas dans le lien)</i>
+    ➖ Priorité lors de la conversion des autocollants vidéo
+    ➖ Possibilité d'ajouter plus d'un autocollant à la file d'attente de traitement
+    ➖ Durée des autocollants vidéo jusqu'à 30 secondes
   btn:
     donate: '☕ Faire un don'
   topup: |
@@ -534,12 +534,12 @@ scenes:
         not_safe: No, it is not safe
       no_tags: n'ont pas été spécifiés
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>Confirmez la publication du pack "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Description :</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Tags :</b> ${tags}
+        <b>Langues :</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Félicitations, votre pack a été publié dans l'annuaire général de notre bot où les autres utilisateurs peuvent le trouver !
