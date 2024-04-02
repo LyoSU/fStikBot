@@ -32,7 +32,7 @@
     "mongoose": "^5.13.20",
     "node-cron": "^3.0.2",
     "random-word-slugs": "^0.1.6",
-    "sharp": "^0.31.3",
+    "sharp": "^0.32.6",
     "stegcloak": "^0.0.1",
     "telegraf": "^3.40.0",
     "telegraf-i18n": "^6.5.0",
