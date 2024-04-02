@@ -378,8 +378,13 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       fileData = trimBuffer
     }
 
-    if (isVideo || isVideoNote) {
-      // stickerExtra.sticker_format = 'video'
+    if (
+      isVideo || isVideoNote
+      || (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
+    ) {
+      if (stickerExtra.sticker_format === 'static') {
+        stickerExtra.sticker_format = 'video'
+      }
 
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
