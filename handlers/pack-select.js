@@ -52,10 +52,6 @@ module.exports = async (ctx) => {
         parse_mode: 'HTML'
       })
     } else {
-      let type = 'static'
-      if (stickerSet.animated) type = 'animated'
-      if (stickerSet.video) type = 'video'
-
       await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack.video', {
         title: escapeHTML(stickerSet.title),
         link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
