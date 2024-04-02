@@ -84,19 +84,19 @@ cmd:
   inline:
     switch_pm: '📁 Seleccione pack'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 Restauración de paquete</b>
 
-    To restore a pack, you need to send me a link to the pack that you want to restore
+    Para restaurar un paquete, debes enviarme un enlace al paquete que deseas restaurar
   copy: |
     <b>🗄️ Copie el paquete</b>
 
     Para copiar otro paquete a uno nuevo, solo tienes que enviarme un enlace a una etiqueta o paquete de emojis
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 Informe</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    Si encuentra un paquete de pegatinas que cree que podría infringir la ley o ir en contra de los Términos de servicio de Telegram, infórmenos enviando su enlace a @ StickersReportBot
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>Recuerda que el bot no es responsable del contenido de los packs y no tiene la capacidad de controlarlo</i>
   packs:
     info: |
       <b>📁 Paquetes</b>
@@ -105,8 +105,8 @@ cmd:
       custom_emoji: Emojis
       inline: Inline
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
+      <b>Aún no tienes paquetes.</b>
+      Para crear, escribe un comando /nuevo
     inline_title: Paquete en línea
   emoji:
     info: |
@@ -146,12 +146,12 @@ donate:
 
     La cantidad mínima es de 5 créditos
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    Quieres comprar <b>${amount} créditos</b> por <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Los créditos los emite manualmente el administrador.
+    El tiempo de espera oscila entre 5 minutos y 1 hora
 
-    <u>Select payment method:</u>
+    <u>Seleccione método de pago:</u>
   update: |
     <b>🔄 Actualización de saldo</b>
 
@@ -179,9 +179,9 @@ coedit:
   share: |
     Sigue el enlace y pulsa "Iniciar" para coeditar el pack "${title}"
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Restablecimiento de enlace exitoso</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    Nuevo enlace para coedición <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -262,26 +262,26 @@ sticker:
 
       <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 ¡Guau, hiciste un gran paquete!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      ¿Te gustaría agregar <a href="${link}">${title}</a> al catálogo público de stickers para que otros usuarios del bot también puedan verlo?
+      <i>No lleva mucho tiempo</i>
     error:
       reply: |
         <b>Error!</b>
         Por favor, responde al sticker.
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>No has seleccionado un pack</b>
 
-        Please, create (/new) or choose (/packs) pack
+        Por favor, crea (/new) o elige (/packs) pack
       stickers_too_much: |
         Este paquete tiene el número máximo de pegatinas.
 
         Puedes crear un nuevo paquete usando el comando /new.
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>Esta pegatina ya está en el paquete</b>
 
-        If you want to change the emoji, send it in the following message.
+        Si quieres cambiar el emoji, envíalo en el siguiente mensaje.
       stickerset_invalid: |
         <b>Error!</b>
         Bot no puede acceder al paquete seleccionado actualmente.
@@ -289,33 +289,33 @@ sticker:
         Por favor, cree (/new) o elija (/packs) otro paquete.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>¡Error!</b>
+          Este tipo de archivo no es compatible
+          Puedes agregar esta foto o pegatina estática al paquete estático
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Crear (/nuevo) o elegir (/paquetes) otro paquete</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>¡Error!</b>
+          Este tipo de archivo no es compatible
+          Puede agregar estos archivos de video al paquete de videos
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Crear (/nuevo) o elegir (/ paquetes) otro paquete</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>¡Error!</b>
+          Este tipo de archivo no es compatible
+          Puedes agregar estos archivos animados al paquete de vectores
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Crear (/nuevo) o elegir (/ paquetes) otro paquete</i>
         unknown: |
           <b>Error!</b>
           Este tipo de archivo no es compatible con
 
           <i>Crear (/new) o elegir (/packs) otro paquete</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>¡Espera!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        El bot todavía está procesando el video anterior...
+        Puedes apoyar el desarrollo del bot (/donar) para aumentar la prioridad de procesamiento y la capacidad de agregar más de una pegatina a la cola.
       timeout: |
         <b>Por el momento, el bot está experimentando una enorme carga</b>
         Por lo tanto, la conversión de vídeo solo está disponible para paquetes con potenciador activo
@@ -341,18 +341,18 @@ news:
   continue: '✅ Continuar'
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨 Usuario sobre</b>
 
-    Using this menu you can find out information about the user and his sticker packs
+    Usando este menú puedes encontrar información sobre el usuario y sus paquetes de stickers
 
-    To get information about the user, use the button below or forward his message
+    Para obtener información sobre el usuario, usa el botón abajo o reenviar su mensaje
   result: |
     <b>🧑‍🎨 Información del usuario</b>
     <b>🆔 ID del usuario:</b> <code>${userId}</code>
     <b>🎨 Packs de este usuario:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>No tenemos información sobre stickers de este propietario</i>
   forward_hidden: |
     El usuario ha ocultado la capacidad de reenviar mensajes. Utilice el botón de abajo para ver sus paquetes de etiquetas.
   select_user: '🧑‍🎨 Seleccionar usuario'
@@ -382,11 +382,11 @@ scenes:
       <b>Introduzca un nombre para el nuevo pack de stickers:</b>
       <i>También puede elegir un nombre generado aleatoriamente a continuación.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <b>Ingrese un enlace corto para un nuevo paquete de pegatinas:</b>
+      <i>Utilice solo letras, dígitos y guiones bajos en inglés.</i>
+      <i>Por ejemplo, este paquete usa 'Animales' como enlace corto: https://t.me/addstickers/<u>Animales</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>Puede elegir un enlace corto aleatorio en el botón.</i>
     ok: |
       Pack <a href="${link}">${title}</a> creado con éxito!
 
@@ -412,7 +412,7 @@ scenes:
 
       Progreso: ${current}/${total}
     done: |
-      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      La copia del paquete de <a href="${originalLink}">${originalTitle}</a> a <a href="${link}">${title}</a> se completó con éxito.
     error:
       premium: |
         <b>Error!</b>
@@ -444,7 +444,7 @@ scenes:
       Nuevo título: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>Envíame una pegatina o un emoji personalizado para buscar información al respecto:</b>
     not_found: |
       No pude encontrar la etiqueta
     result: |
@@ -457,16 +457,16 @@ scenes:
       <b>🎨 Otros paquetes de este propietario:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>No tenemos información sobre otros stickers de este propietario</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>¿Estás seguro de que quieres aumentar <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Los impulsos aumentarán la prioridad de procesamiento y la capacidad de agregar más de una pegatina a la cola
+      Puede encontrar información más detallada sobre los impulsos en el menú visitando: /donate
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>Precio:</b> 1 crédito
+      <b>Saldo actual:</b> ${balance} créditos
     btn:
       yes: Sí, ¡optimizar!
       no: No, cancelar
@@ -490,11 +490,11 @@ scenes:
 
         <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required pack
-        4. Forward the received message to the bot
+        <b>Para verificar la propiedad de este paquete, debe seguir unos sencillos pasos:</b>
+        1. Abra el bot @Stickers
+        2. Envíe <code>/packstats</code> comando
+        3. Busque y elija el paquete requerido
+        4. Reenvíe el mensaje recibido al bot
       publish_new_access_denied: |
         <b>Error!</b>
         Este paquete no es tuyo.
@@ -505,16 +505,16 @@ scenes:
         Está prohibido utilizar esta función.
         Por favor, póngase en contacto con el administrador.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your pack
-        Try to send only high-quality packs that may be of interest to a large number of people
+        Estás a punto de publicar el paquete "<a href="${link}">${title}</a>" en el directorio público de nuestro bot
+        Puede ser encontrado por cualquier usuario del bot por nombre, etiquetas o filtro.
+        Debido a esto, más personas instalarán tu paquete
+        Intenta enviar solo paquetes de alta calidad que puedan ser de interés para un gran número de personas
 
-        <b>Rules for publishing packs:</b>
-        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Reglas para publicar paquetes:</b>
+        • No publique sus paquetes personales destinados a un círculo reducido de personas. Por ejemplo, como las caras de tus amigos o citas de tus mensajes
+        • No publiques etiquetas adhesivas que violen las leyes de la UE u otras leyes locales
 
-        You will need to submit additional information for it to be published in the catalog
+        Deberás enviar información adicional para que sea publicado en el catalogo
       continue_button: Continuar
       enter_description: |
         <b>describe brevemente tu paquete para que otros puedan encontrarlo</b>
@@ -542,25 +542,25 @@ scenes:
         <b>Idiomas:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
-        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+        ¡Enhorabuena, tu pack ha sido publicado en el directorio general de nuestro bot donde otros usuarios pueden encontrarlo!
 
-        You can edit the pack search information by selecting the pack with the /packs command.
+        Puede editar la información de búsqueda del paquete seleccionando el paquete con el comando /packs.
 
-        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+        <i>Te recordamos que las estadísticas de tu pack las puedes ver a través del bot oficial @Stickers</i>
     unpublish:
       success: |
         El paquete se ha despublicado correctamente del catálogo de bots.
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      ¿Estás seguro de que deseas eliminar el paquete <a href="${link}">${title}</a>?
+      Se eliminará permanentemente y no se podrá recuperar.
 
-      If you want to delete only one sticker, use the /delete command.
+      Si desea eliminar solo una etiqueta, use el comando /delete.
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+      Envía <code>${confirm}</code> para confirmar que realmente deseas eliminar este paquete.
     confirm: Sí, estoy totalmente seguro.
     success: |
-      <b>Pack successfully deleted!</b>
+      <b>¡Paquete eliminado exitosamente!</b>
     error:
       - <b>Error!</b>
       - Ups, algo salió mal.
