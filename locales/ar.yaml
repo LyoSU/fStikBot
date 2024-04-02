@@ -190,10 +190,10 @@ callback:
       hidden: تم إخفاء الباقة بنجاح
       restored: تم إستعادة الباقة بنجاح
     set_pack: |
-      🌟 Selected <a href="${link}">${title}</a> pack
+      🌟 مختارة <a href="${link}">${title}</a> حزمة
 
-      <b>❔ How add?</b>
-      Send photo, video or sticker to add to the pack
+      <b>❔ كيف تضيف؟</b>
+      أرسل صورة أو فيديو أو ملصقًا لإضافته إلى الحزمة
     set_inline_pack: |
       تم اختيار <u>${title}</u> باقة
 
@@ -224,11 +224,11 @@ callback:
       catalog_open: '📂 فتح في الكتالوج'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore pack.
+        <b>خطأ!</b>
+        لا يمكن استعادة الحزمة.
       copy: |
-        <b>Error!</b>
-        Cannot find pack.
+        <b>خطأ!</b>
+        لا يمكن العثور على الحزمة.
   sticker:
     answerCbQuery:
       delete: تمت إزالة الملصق من الباقة بنجاح.
@@ -251,7 +251,7 @@ sticker:
 
       <i>أرسل رمز تعبيري واحد أو أكثر يطابق الملصق، إذا كنت ترغب في إضافتها</i>
     ok_inline: |
-      <b>Added to pack successfully:</b>
+      <b>تمت الإضافة إلى الحزمة بنجاح:</b>
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
@@ -262,71 +262,71 @@ sticker:
 
       <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 واو، لقد قمت بتكوين مجموعة رائعة!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      هل ترغب في إضافة <a href="${link}">${title}</a> إلى كتالوج الملصقات العام حتى يتمكن مستخدمو الروبوت الآخرون من رؤيته أيضًا؟
+      <i>لا يستغرق الأمر الكثير من الوقت</i>
     error:
       reply: |
-        <b>Error!</b>
-        Please, reply to the sticker.
+        <b>خطأ!</b>
+        من فضلك قم بالرد على الملصق.
       no_selected_pack: |
         <b>لم تقم باختيار حزمة</b>
 
         من فضلك، قم بإنشاء (/new) أو اختر (/packs)
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        تحتوي هذه الحزمة على الحد الأقصى لعدد الملصقات.
 
-        You can create a new pack using the /new command.
+        يمكنك إنشاء حزمة جديدة باستخدام الأمر /new.
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>هذا الملصق موجود بالفعل في الحزمة</b>
 
-        If you want to change the emoji, send it in the following message.
+        إذا كنت تريد تغيير الرموز التعبيرية، فأرسلها في الرسالة التالية.
       stickerset_invalid: |
-        <b>Error!</b>
-        Bot cannot access your current chosen pack.
+        <b>خطأ!</b>
+        لا يستطيع الروبوت الوصول إلى الحزمة الحالية التي اخترتها.
 
-        Please, create (/new) or choose (/packs) another pack.
+        من فضلك قم بإنشاء (/جديد) أو اختيار (/حزم) حزمة أخرى.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>خطأ!</b>
+          نوع الملف هذا غير مدعوم
+          يمكنك إضافة هذه الصورة أو الملصق الثابت إلى الحزمة الثابتة
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>إنشاء (/ جديد) أو اختيار (/ حزم) حزمة أخرى</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>خطأ!</b>
+          هذا النوع من الملفات غير مدعوم
+          يمكنك إضافة ملفات الفيديو هذه إلى حزمة الفيديو
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>إنشاء (/ جديد) أو اختيار (/ حزم) حزمة أخرى</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>خطأ!</b>
+          هذا النوع من الملفات غير مدعوم
+          يمكنك إضافة هذه الملفات المتحركة إلى حزمة المتجهات
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>إنشاء (/ جديد) أو اختيار (/ حزم) حزمة أخرى</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>خطأ!</b>
+          نوع الملف هذا غير مدعوم
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>قم بإنشاء (/ جديد) أو اختر (/ حزم) حزمة أخرى</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>انتظر!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        البوت ما زال يعالج الفيديو السابق...
+        يمكنكم دعم تطوير البوت (/ التبرع) لزيادة أولوية المعالجة وإمكانية إضافة أكثر من ملصق إلى قائمة الانتظار.
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>في الوقت الحالي، يواجه الروبوت حملًا كبيرًا</b>
+        لذلك، تحويل الفيديو متاح فقط للحزم ذات التعزيز النشط
 
-        For more details, follow the /donate
+        لمزيد من التفاصيل، اتبع / يتبرع
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>خطأ!</b>
+        لسوء الحظ، لم يتمكن الروبوت من تحويل الفيديو الخاص بك.
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        ربما تم حفظ الفيديو الخاص بك بتنسيق غير مفهوم للروبوت. تأكد من أنه بتنسيق mp4.
+        قد يكون أيضًا خطأ داخلي في البوت، حاول إرسال هذا الفيديو مرة أخرى.
       too_big: |
         <b>خطأ!</b>.
 
@@ -352,7 +352,7 @@ userAbout:
     <b>:artist_palett: حزم من هذا المستخدم:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>ليس لدينا معلومات حول ملصقات هذا المالك</i>
   forward_hidden: |
     قام المستخدم بإخفاء القدرة على إرسال الرسائل. استخدم الزر أدناه لعرض حزم الملصقات.
   select_user: '🧑‍🎨 اختر المستخدم'
@@ -382,11 +382,11 @@ scenes:
       <b>Введи имя для нового стикерпака:</b>
       <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <b>أدخل رابطًا قصيرًا لحزمة الملصقات الجديدة:</b>
+      <i>استخدم الحروف الإنجليزية والأرقام والشرطات السفلية فقط.</i>
+      <i>على سبيل المثال، تستخدم هذه الحزمة "الحيوانات" كرابط قصير: https://t.me/addstickers/<u>الحيوانات</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>يمكنك اختيار رابط قصير عشوائي على الزر.</i>
     ok: |
       حزمة <a href="${link}">${title}</a> تم إنشاؤها بنجاح!
 
@@ -400,10 +400,10 @@ scenes:
         name_invalid: Такой адрес использовать не получится.
         name_occupied: Такой адрес уже занят.
         upload_failed: |
-          <b>Error!</b>
-          Bot cannot upload stickers to Telegram.
+          <b>خطأ!</b>
+          لا يستطيع الروبوت تحميل الملصقات على Telegram.
 
-          Please, try again later.
+          من فضلك حاول مرة أخرى لاحقا.
   copy:
     enter: |
       يمكنني نسخها، ولكن قبل ذلك، دعونا ننشئ حزمة جديدة
@@ -433,8 +433,8 @@ scenes:
       هل أنت متأكد من أنك تريد حذف هذا الملصق؟
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the sticker.
+        <b>خطأ!</b>
+        لم أتمكن من العثور على الملصق.
   rename:
     enter_name: |
       <b>أدخل عنوان جديد ل <a href="${link}">${title}</a>:</b>
@@ -444,7 +444,7 @@ scenes:
       جديد: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>أرسل لي ملصقًا أو رمزًا تعبيريًا مخصصًا للبحث عن معلومات عنه:</b>
     not_found: |
       لم أستطع العثور على الملصق
     result: |
@@ -457,7 +457,7 @@ scenes:
       <b>🎨 باقات أخرى من هذا المالك:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>ليس لدينا معلومات عن الملصقات الأخرى لهذا المالك</i>
   boost:
     sure: |
       <b>هل أنت متأكد من أنك تريد تعزيز <a href="${link}">${title}</a>؟</b>
@@ -478,17 +478,17 @@ scenes:
       ${title} تم تعزيزه الآن
     error:
       not_enough_credits: |
-        You do not have enough credits to boost this pack.
+        ليس لديك أرصدة كافية لتعزيز هذه الحزمة.
 
-        You can top up your balance by sending the /donate command.
+        يمكنك تعبئة رصيدك عن طريق إرسال الأمر /donate.
       already_boosted: |
         تم تعزيز هذه الحزمة بالفعل.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>أرسل لي الملصق من الحزمة التي ترغب في نشرها</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>يمكنك نشر أي حزمة تخصك، حتى لو تم إنشاؤها من مصدر آخر</i>
       owner_proof: |
         <b>للتحقق من ملكية هذه الحزمة، تحتاج إلى اتباع بعض الخطوات البسيطة:</b>
         1. فتح @Stickers bot
@@ -496,14 +496,14 @@ scenes:
         3. ابحث واختيار الحزمة
         4. إعادة توجيه الرسالة المتلقاة إلى البوت
       publish_new_access_denied: |
-        <b>Error!</b>
-        This pack is not yours.
+        <b>خطأ!</b>
+        هذه الحزمة ليست لك.
 
-        You can only publish your own packs
+        يمكنك فقط نشر الحزم الخاصة بك
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>خطأ!</b>
+        أنت ممنوع من استخدام هذه الميزة.
+        من فضلك اتصل بالمسؤول.
       enter: |
         أنت على وشك نشر حزمة "<a href="${link}">${title}</a>في الدليل العام للبوت
         يمكن العثور عليها من قبل أي مستخدم للبوت عن طريق الاسم، بسبب ذلك العلامة أو الفلتر
@@ -534,12 +534,12 @@ scenes:
         not_safe: No, it is not safe
       no_tags: لم يتم تحديد
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>قم بتأكيد نشر الحزمة "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>الوصف:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>العلامات:</b> ${tags}
+        <b>اللغات:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         تهانينا، تم نشر حزمتك في الدليل العام للبوت الخاص بنا حيث يمكن للمستخدمين الآخرين العثور عليه!
@@ -562,23 +562,23 @@ scenes:
     success: |
       <b>تم حذف الحزمة بنجاح!</b>
     error:
-      - <b>Error!</b>
+      - <b>خطأ!</b>
       - عفواً، حدث خطأ ما.
   frame:
     no_video: |
-      <b>Error!</b>
-      You can only add frames to video packs.
+      <b>خطأ!</b>
+      يمكنك فقط إضافة إطارات إلى حزم الفيديو.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>اختر نوع الإطار:</b>
+      الإطار هو خلفية شفافة حول الملصق
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>lite</code> — سيتم قص الزوايا قليلاً
+      <code>medium</code> — سيتم قص الزوايا بشكل أكبر
+      <code>rounded</code> — ستكون الزوايا مستديرة
+      <code>square</code> — شكل مستطيلي للإطار، وهذا يعني أنه لن يتغير بأي شكل
+      <code>circle</code> — سيكون الإطار على شكل دائرة
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>في المستقبل، يمكنك استخدام أمر /frame لتعيين نوع الإطار</i>
     types:
       lite: '1. Lite'
       medium: '2. متوسط'
@@ -597,7 +597,7 @@ scenes:
 
       <i>يعمل بشكل أفضل مع صور أنمي</i>
     choose_model: |
-      <b>Choose model:</b>
+      <b>اختر الموديل:</b>
     web_app: WebApp - للصور مع الناس
     model:
       ordinary: شائع - للصور مع الناس
@@ -605,8 +605,8 @@ scenes:
       anime: أنمي - لصور أنمي
     add_to_set_btn: '🌟 إضافة إلى المجموعة'
     error: |
-      <b>Error!</b>
-      Opps, something went wrong.
+      <b>خطأ!</b>
+      عفوًا، حدث خطأ ما.
   leave: |
     Действие отменено.
   btn:
@@ -620,9 +620,9 @@ error:
       Telegram вернул ошибку:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
-    Please, contact the administrator.
+    <b>خطأ!</b>
+    أنت ممنوع من استخدام هذه الميزة.
+    من فضلك اتصل بالمسؤول.
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 
