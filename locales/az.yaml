@@ -19,30 +19,30 @@ cmd:
 
       💬 Yardım lazımdır? @fStikCommunity ünvanında dəstək söhbətimizə qoşulun (yalnız ingiliscə)
     help: |
-      <b>List of bot commands:</b>
+      <b>Bot əmrlərinin siyahısı:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Yeni stiker paketi yarat
+      /new_emoji - Yeni emoji paketi yarat
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Paketdən stikeri sil
+      /original - Orijinal stikeri tap
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Bütün paketlərinizi göstər
+      /restore - Silinmiş paketi bərpa et
+      /copy - Paketi kopyala
+      /emoji - Cari paket üçün emoji ləqəbini dəyişdir
+      /frame - Cari video paketi üçün çərçivəni dəyişdir
+      /publish - Paketi kataloqda dərc et
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Stiker paketi kataloğunu aç
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Dili dəyişdir
+      /donate - İnkişafçını dəstəklə
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Dəstək çatı: @fStikCommunity (Yalnız İngiliscə)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Əlaqə: @ly_oBot
+      👨🏻‍💻 İnkişaf kanalı: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -110,9 +110,9 @@ cmd:
     inline_title: Daxili paket
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      Cari paket üçün default emojini dəyişdirmək üçün, <code>/emoji</code> yazın və sonra emojiyi bir boşluqla ayıraraq göndərin
 
-      For example - <code>/emoji 🌟</code>
+      Məsələn - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
   round_video:
@@ -122,18 +122,18 @@ cmd:
       Videoların daha yuvarlaq forması olmayacaq
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Botun inkişafına dəstək</b>
+    Botun inkişafını dəstəkləməklə, kreditlər alacaqsınız.
+    Hər bir dollar üçün, 5 kredit alacaqsınız.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>Balans:</b> <code>${balance}</code> kredit
+    Bir kredit ilə, bir paketi gücləndirmək imkanınız var.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Gücləndirilmə aşağıdakı üstünlüklər təmin edir:</b>
+    ➖ Paket adında <code>"${titleSuffix}"</code> ləqəbinin söndürülməsi <i>(linkdə deyil)</i>
+    ➖ Video stikerlərinin çevrilməsində prioritet
+    ➖ Emal növbəsinə birdən çox stiker əlavə etmək imkanı
+    ➖ Video stikerlərinin müddəti 30 saniyəyə qədər
   btn:
     donate: '☕️ Bağışlayın'
   topup: |
@@ -153,24 +153,24 @@ donate:
 
     <u>Ödəniş üsulunu seçin:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Balans yeniləməsi</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Balans: <code>${balance}</code> kredit (əlavə edilmiş <code>${amount}</code> kredit)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Birgə-redaktə</b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    Birgə-redaktə üçün link <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>Necə istifadə etmək olar:</b>
+    1. Paketə giriş hüququ vermek istədiyiniz şəxsə linki göndərin
+    2. Linkə kliklədikdən sonra, onlar "start" düyməsini basmalı və redaktorlar siyahısına əlavə ediləcəklər
+    3. Redaktor paketdə stikerləri əlavə edə, silə və redaktə edə bilər
 
-    <b>Editors:</b>
+    <b>Redaktorlar:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Redaktorları silmək üçün, linki sıfırlamalısınız</i>
   no_editors: |
     Hələ redaktor yoxdur
   btn:
@@ -195,10 +195,10 @@ callback:
       <b>❔ Necə əlavə etmək olar?</b>
       Paketə əlavə etmək üçün foto, video və ya stiker göndərin
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      Seçilmiş <u>${title}</u> paketi
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      İstifadə etmək üçün, hər hansı bir söhbətdə yazın <code>@${botUsername} </code>və boşluq
+      Aşağıdakı düyməni basaraq da istifadə edə bilərsiniz
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Artırın</a></b>: ${boostStatus}
@@ -347,9 +347,9 @@ userAbout:
 
     İstifadəçi haqqında məlumat əldə etmək üçün düymədən istifadə edin aşağıda və ya mesajını yönləndirin
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 İstifadəçi məlumatı</b>
+    <b>🆔 İstifadəçi ID-si:</b> <code>${userId}</code>
+    <b>🎨 Bu istifadəçidən paketlər:</b>
     ${packs}
   no_packs: |
     <i>Bu sahibin stikerləri haqqında məlumatımız yoxdur</i>
@@ -408,9 +408,9 @@ scenes:
     enter: |
       Mən onu kopyalaya bilərəm, amma bundan əvvəl yeni paket yaradaq
     progress: |
-      Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      <a href="${originalLink}">${originalTitle}</a>-dan <a href="${link}">${title}</a>-a paketi kopyalamaq
 
-      Progress: ${current}/${total}
+      Proqres: ${current}/${total}
     done: |
       Paketin <a href="${originalLink}">${originalTitle}</a> -dən <a href="${link}">${title}</a> -ə kopyalanması uğurla tamamlandı.
     error:
@@ -448,13 +448,13 @@ scenes:
     not_found: |
       Stikeri tapa bilmədim
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Paket:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Sahibin paketləri üçün unikal nömrə, hər paket üçün artır)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Sahibin ID-i: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Sahibin digər paketləri:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Bu sahibin digər stikerləri haqqında məlumatımız yoxdur</i>
@@ -486,9 +486,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Mənə dərc etmək istədiyiniz paketdən stiker göndərin</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Sizə məxsus istənilən paketi dərc edə bilərsiniz, hətta başqa yerlərdə yaradılsalar belə</i>
       owner_proof: |
         <b>Bu paketin sahibliyini yoxlamaq üçün bir neçə sadə addımı yerinə yetirməlisiniz:</b>
         1. @Stickers botunu açın
@@ -534,12 +534,12 @@ scenes:
         not_safe: No, it is not safe
       no_tags: müəyyən edilməmişdir
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>"<a href="${link}">${title}</a>" paketinin dərc olunmasını təsdiqləyin</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Təsvir:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Teqlər:</b> ${tags}
+        <b>Dillər:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Təbrik edirik, paketiniz digər istifadəçilərin tapa biləcəyi botumuzun ümumi kataloqunda dərc olundu!
@@ -569,16 +569,16 @@ scenes:
       <b>Xəta!</b>
       Siz yalnız video paketlərə çərçivələr əlavə edə bilərsiniz.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Çərçivə tipini seçin:</b>
+      Çərçivə stikerin ətrafında şəffaf fon deməkdir
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>lite</code> — künclər bir az kəsiləcək
+      <code>medium</code> — künclər daha çox kəsiləcək
+      <code>rounded</code> — künclər yuvarlaq ediləcək
+      <code>square</code> — çərçivənin düzbucaqlı forması, yəni, heç bir dəyişiklik olmayacaq
+      <code>circle</code> — çərçivə dairəvi formada olacaq
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>Gələcəkdə, /frame əmrindən çərçivə tipini təyin etmək üçün istifadə edə bilərsiniz</i>
     types:
       lite: '1. Lite'
       medium: '2. Orta'
@@ -593,9 +593,9 @@ scenes:
 
       <i>Fotolarla ən yaxşı işləyir. Rəsmlər, illüstrasiyalar və s. ilə daha pis işləyir.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Arxa fonunu silmək istədiyiniz <u>şəkil</u> göndərin və mən sizə arxa fonu olmayan faylı göndərəcəyəm
 
-      <i>It works best with anime pictures</i>
+      <i>Anime şəkilləri ilə daha yaxşı işləyir</i>
     choose_model: |
       <b>Model seçin:</b>
     web_app: WebApp - insanlarla fotoşəkillər üçün
