@@ -481,7 +481,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
       const linkPrefix = userStickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack.video', {
+      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
         title: escapeHTML(userStickerSet.title),
         link: `${linkPrefix}${name}`
       }), {
