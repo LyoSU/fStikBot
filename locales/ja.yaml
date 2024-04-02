@@ -1,5 +1,5 @@
 ---
-language_name: 日本語
+language_name: '🇷🇺 Русский'
 name: 'お気に入りのステッカー :ウクライナ:'
 description:
   long: |
@@ -12,12 +12,12 @@ ratelimit: Не так часто!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      🧙 こんにちは、 ${name}！私は絵文字とステッカー パックのウィザードです。
+      写真、ビデオ、GIF を数回クリックするだけでクールなステッカーに変換できます
 
-      Send the /help command to learn more about what I can do
+      私の機能について詳しく知るには、/help コマンドを送信してください
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 ヘルプが必要ですか? @fStikCommunity のサポート チャットに参加してください (英語のみ)
     help: |
       <b>List of bot commands:</b>
 
@@ -88,15 +88,15 @@ cmd:
 
     パックを復元するには、復元したいパックへのリンクを送信する必要があります
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄 パックをコピー</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    別のパックを新しいパックにコピーするには、ステッカーまたは絵文字パックへのリンクを送信するだけです
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 報告</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    法律に違反する可能性がある、または Telegram の利用規約に違反する可能性があると思われるステッカー パックを見つけた場合は、そのリンクを @ に送信して報告してください。 StickersReportBot
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>ボットはパックの内容に対して責任がなく、それを制御する機能もないことに注意してください</i>
   packs:
     info: |
       <b>📁 Packs</b>
@@ -146,12 +146,12 @@ donate:
 
     最小金額は5クレジットです
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    <b>${amount} クレジット</b> を <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    で購入したいと考えています。 ⚠️ クレジットは管理者によって手動で発行されます。
+    待ち時間は 5 分から 1 時間の範囲です
 
-    <u>Select payment method:</u>
+    <u>支払い方法を選択してください:</u>
   update: |
     <b>🔄 Balance update</b>
 
@@ -179,9 +179,9 @@ coedit:
   share: |
     リンクをフォローし、"start"を押してパック "${title}" を共同編集します
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 リンクのリセットが成功しました</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    共同編集用の新しいリンク <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
@@ -246,10 +246,10 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>ステッカーがパックに追加されました:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>1 つ以上を送るステッカーに一致する絵文字を追加したい場合は</i>
     ok_inline: |
       <b></b>
       <u>${title}</u> を追加しました
@@ -262,10 +262,10 @@ sticker:
 
       <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 すごい、素晴らしいパックができました！</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      ボットの他のユーザーも見られるように、 <a href="${link}">${title}</a> を公開ステッカーカタログに追加しますか？
+      <i>時間はかかりませんよ</i>
     error:
       reply: |
         <b>エラー!</b>
@@ -279,9 +279,9 @@ sticker:
 
         /new コマンドを使用して新しいパックを作成できます。
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>このステッカーはすでにパックに入っています</b>
 
-        If you want to change the emoji, send it in the following message.
+        絵文字を変更したい場合は、次のメッセージで送信してください。
       stickerset_invalid: |
         <b>エラー！</b>
         Botは現在選択されているパックにアクセスできません。
@@ -289,70 +289,70 @@ sticker:
         (/new) を作成するか、別のパックを選択してください。
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>エラー!</b>
+          このファイルタイプはサポートされていません
+          この写真または静的ステッカーを静的パックに追加できます
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>作成 (/新規) または選択してください(/パック) 別のパック</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>エラー!</b>
+          このファイルの種類はサポートされていません
+          このビデオ ファイルをビデオ パックに追加できます
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>作成 (/新規) または (/パック) 別のパック</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>エラー!</b>
+          このファイルタイプはサポートされていません
+          このアニメーションファイルをベクターパックに追加できます
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>別のパックを作成 (/new) するか、選択 (/packs) します</i>
         unknown: |
           <b>エラー！</b>
           このファイルタイプはサポートされていません。
 
           <i>作成（/new）するか、別のパック</i> を選択してください。
       wait_load: |
-        <b>Wait!</b>
+        <b>待ってください！</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        ボットはまだ前のビデオを処理中です...
+        ボットの開発をサポート (/寄付) して、処理の優先順位を高め、複数のステッカーを追加する機能を追加できます。待ち行列。
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>現在、ボットに大きな負荷がかかっています</b>
+        そのため、ビデオ変換はブーストが有効になっているパックでのみ利用可能です
 
-        For more details, follow the /donate
+        詳細については、/donateをフォローしてください
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>エラー!</b>
+        残念ながら、ボットはビデオを変換できませんでした。
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        おそらくあなたのビデオはボットが理解できない形式で保存されています。 mp4形式であることを確認してください。
+        ボットの内部エラーである可能性もあります。このビデオをもう一度送信してみてください。
       too_big: |
         <b>エラー！</b>.
 
         ファイルが大きすぎて処理できません。送信する前に品質と期間を減らしてください。
 news:
   join: |
-    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+    ℹ️ <a href="${link}">チャンネル</a> に参加して、ボットに関する最新ニュースを入手してください。
 
-    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
+    <i>チャンネルに登録して、ボットに関する最新ニュース、アップデートや新機能を入手してください。</i>
   join_btn: '📢 チャンネルに参加'
   not_joined: '🙅 チャンネルを購読していません'
   continue: '✅ Продолжить'
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨</b>
 
-    Using this menu you can find out information about the user and his sticker packs
+    このメニューを使用すると、ユーザーとそのステッカー パックに関する情報を見つけることができます
 
-    To get information about the user, use the button below or forward his message
+    ユーザーに関する情報を取得するには、 ボタンを使用してください彼のメッセージを以下または転送してください
   result: |
     <b>🧑‍🎨 User info</b>
     <b>🆔 User ID:</b> <code>${userId}</code>
     <b>🎨 Packs from this user:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>このオーナーのステッカーに関する情報はありません</i>
   forward_hidden: |
     ユーザーはメッセージを転送する機能を隠しました。ステッカーパックを表示するには、下のボタンを使用してください。
   select_user: '🧑‍🎨 ユーザーを選択'
@@ -366,33 +366,33 @@ scenes:
     animated: '✨ ベクター'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>パックの種類を選択</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>共通</b> - 静的 (移動しない)、ラスター、ファイル形式 - PNG 追加前 (ボットが処理中)、追加後 - WEBP。
+      通常パックの例 - t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>ビデオ</b> - アニメーションビデオパック。ビデオ、gif、写真を追加できます。
+      サンプル ビデオ パック - t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>アニメーション</b> - アニメーション、ベクター (ファイル内のオブジェクトの正確な説明が含まれているため、ファイル形式 - TGS、Lottie 形式のバリエーション。
+      アニメーション パックの例 - t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>アニメーションおよびビデオ ステッカー セットには、最大 50 個のステッカーを含めることができます。静的ステッカー セットには、最大 120 枚のステッカーを含めることができます。</i>
     pack_title: |
       <b>Введи имя для нового стикерпака:</b>
       <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <b>新しいステッカーパックの短縮リンクを入力してください:</b>
+      <i>英語の文字、数字、アンダースコアのみを使用してください。</i>
+      <i>たとえば、このパックは「動物」を短縮リンクとして使用しています: https://t.me/addstickers/<u>動物</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>ボタンでランダムに短縮リンクを選択できます。</i>
     ok: |
-      Pack <a href="${link}">${title}</a> successfully created!
+      パック <a href="${link}">${title}</a> 正常に作成されました!
 
-      <b>Pack link:</b> <pre>${link}</pre>
+      <b>パックのリンク:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      ファイル、写真、ビデオ、またはステッカーを送信して、セットに追加します
     error:
       title_long: Имя должно быть не больше ${max} символов.
       name_long: Адрес должен быть не больше ${max} символов.
@@ -457,16 +457,16 @@ scenes:
       <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>この所有者の他のステッカーに関する情報はありません</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b> <a href="${link}">${title}</a>ブーストしてもよろしいですか?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      ブーストすると処理の優先順位が上がり、キューに複数のステッカーを追加できるようになります
+      ブーストに関する詳細情報は、/donate にアクセスするとメニューで確認できます。
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>価格:</b> 1 クレジット
+      <b>現在の残高:</b> ${balance} クレジット
     btn:
       yes: はい、ブースト！
       no: いいえ、キャンセル
@@ -490,37 +490,37 @@ scenes:
 
         <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required pack
-        4. Forward the received message to the bot
+        <b>このパックの所有権を確認するには、いくつかの簡単な手順に従う必要があります:</b>
+        1. @Stickers ボットを開きます
+        2. <code>を送信します/packstats</code> コマンド
+        3. 必要なパックを見つけて選択します
+        4. 受信したメッセージをボットに転送します
       publish_new_access_denied: |
-        <b>Error!</b>
-        This pack is not yours.
+        <b>エラー!</b>
+        このパックはあなたのものではありません。
 
-        You can only publish your own packs
+        自分のパックのみを公開できます
       bannded: |
         <b>エラー！</b>
         この機能の使用は禁止されています。
         管理者に問い合わせてください。
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your pack
-        Try to send only high-quality packs that may be of interest to a large number of people
+        「<a href="${link}">${title}</a>」パックをボットのパブリック ディレクトリ
+        に公開しようとしています。このパックは、名前、タグ、またはフィルタによってボットのユーザーであれば誰でも見つけることができます。
+        これにより、より多くの人があなたのパックをインストールするようになります
+        多くの人が興味を持ちそうな高品質のパックのみを送るようにしてください
 
-        <b>Rules for publishing packs:</b>
-        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>ルールパックの公開について:</b>
+        • 狭い範囲の人々を対象とした個人パックを公開しないでください。たとえば、友達の顔やメッセージの引用など
+        • EU 法やその他の現地法に違反するステッカーの圧力を投稿しないでください
 
-        You will need to submit additional information for it to be published in the catalog
+        追加情報を送信する必要があります。カタログに掲載されました
       continue_button: 続ける
       enter_description: |
-        <b>Briefly describe your pack so that others can find it</b>
+        <b>他の人が見つけられるようにパックを簡単に説明します</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>ハッシュタグを使用して [#] を分類することもできます</i>
+        <i>例: #アニメ #ミーム #動物 #かわいい #kpop #面白い #猫 #ゲーム </i>
       select_language: |
         <b>パックの言語を選択:</b>
         <i>複数の言語</i>
@@ -534,17 +534,17 @@ scenes:
         not_safe: No, it is not safe
       no_tags: 指定されていません
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>パックの公開を確認します "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>説明:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>タグ:</b> ${tags}
+        <b>言語:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         おめでとうございます。あなたのパックは他のユーザーが見つけられるボットの一般的なディレクトリに公開されました！
 
-        /packsコマンドでパックを選択することで、パック検索情報を編集できます。
+        /packsコマンドでパックを選択することで、パック検索情報を編集できます。 
 
 
 
@@ -554,12 +554,12 @@ scenes:
         パックはボットカタログから正常に非公開になりました。
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      <a href="${link}">${title}</a>パックを削除してもよろしいですか?
+      完全に削除され、復元することはできません。
 
-      If you want to delete only one sticker, use the /delete command.
+      ステッカーを 1 つだけ削除したい場合は、/delete コマンドを使用します。
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+       <code>${confirm}</code> を送信して、このパックを本当に削除することを確認してください。
     confirm: はい、私は完全に確かです。
     success: |
       <b>パックを削除しました！</b>
@@ -591,9 +591,9 @@ scenes:
       <b>選択したフレームタイプ:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      背景を削除したい <u>写真</u> を送信してください。背景なしのファイル
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>写真に最適です。絵やイラストなどではさらにうまくいきません</i>
     enter_anime: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
