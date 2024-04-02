@@ -7,17 +7,17 @@ description:
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
-ratelimit: Not so often!
+    🧙 Мен эмодзилер мен стикерлер шеберімін! Фотосуреттерді, бейнелерді және GIF файлдарын бір сәтте керемет стикерлерге айналдырыңыз.
+ratelimit: Жиі емес!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      🧙 Сәлем, ${name}! Мен эмодзилер мен стикерлер жинағының шеберімін.
+      Мен бірнеше рет басу арқылы фотосуреттеріңізді, бейнелеріңізді және GIF файлдарыңызды керемет стикерлерге айналдыра аламын
 
-      Send the /help command to learn more about what I can do
+      Не істей алатыным туралы көбірек білу үшін /help пәрменін жіберіңіз
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 Көмек керек пе? @fStikCommunity мекенжайындағы қолдау чатымызға қосылыңыз (тек ағылшын тілінде)
     help: |
       <b>List of bot commands:</b>
 
@@ -46,80 +46,80 @@ cmd:
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
-      <b>😻 You can find new sticker packs in our catalog</b>
+      <b>😻 Жаңа стикерлер топтамаларын біздің каталогтан таба аласыз</b>
 
-      • Click the button below and get access to a huge catalog of sticker packs for every taste
-      • Search by keywords or in prepared tabs
-      • Don't forget to rate to promote or lower the sticker pack in the rankings
+      • Төмендегі түймені басыңыз және кез келген талғамға арналған стикерлер пакеттерінің үлкен каталогына қол жеткізіңіз
+      • Іздеу кілт сөздер немесе дайындалған қойындылар бойынша
+      • Рейтингтегі стикерлер жинағын жылжыту немесе төмендету үшін бағалауды ұмытпаңыз
     commands:
-      ss: '🌟 Save sticker'
+      ss: '🌟 Стикерді сақтаңыз'
       start: '📜 Бастапқы мәзір'
-      help: '📖 Help'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
-      catalog: '📖 Catalog'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      help: '📖 Көмек'
+      packs: '📁 Бумаларды басқарыңыз'
+      new: '🌝 Жапсырмалар бумасын жасаңыз'
+      new_emoji: '😊 Эмодзилер бумасын жасаңыз'
+      catalog: '📖 Каталог'
+      publish: '📤 Пакетті жариялау'
+      delete: '❌ Стикерді жою'
       original: '🔍 Стикердің түпнұсқасын табу'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
+      restore: '🔀 Пакетті қалпына келтіріңіз'
+      copy: '📋 Пакетті көшіріңіз'
       emoji: '📝 Эмодзи-суффискін өзгерту'
-      round: '🎥 Round shape video'
-      clear: '🖼️ Remove background from photo'
-      about: '📦 Pack info'
-      user_about: '🧑‍🎨 Creator info'
+      round: '🎥 Дөңгелек пішінді бейне'
+      clear: '🖼️ Фотосуреттен фонды алып тастаңыз'
+      about: '📦 Пакет туралы ақпарат'
+      user_about: '🧑‍🎨 Автор туралы ақпарат'
       lang: '🌐 Тіл ауыстыру'
-      report: '🚨 Report pack'
+      report: '🚨 Есептер жинағы'
       donate: '☕️ Құрастырушыны қолдау'
-      add_to_group: '👥 Add to group'
+      add_to_group: '👥 Топқа қосу'
     btn:
       new: '📥 Жаңасын құру'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog: '💖 Каталогты ашыңыз'
+      catalog_mini: '💖 Каталог'
+      catalog_browser: '🌐 Браузерде ашыңыз'
+      catalog_browser_mini: '🌐 Браузерде'
+      catalog_app: '📱 Android қолданбасын жүктеп алыңыз'
+      catalog_app_mini: '📱 Android қолданбасы'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 Пакетті таңдаңыз'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 Буманы қалпына келтіру</b>
 
-    To restore a pack, you need to send me a link to the pack that you want to restore
+    Буманы қалпына келтіру үшін қалпына келтіргіңіз келетін буманың сілтемесін жіберуіңіз керек.
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄 Көшіру пакеті</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    Басқа буманы жаңасына көшіру үшін маған стикер немесе эмодзилер бумасының сілтемесін жіберуіңіз керек.
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 Хабарлама</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    Заңды бұзуы немесе Telegram қызмет көрсету шарттарына қайшы келетін стикерлер жинағын кездестірсеңіз, оның сілтемесін @ мекенжайына жіберу арқылы бізге хабарлаңыз. StickersReportBot
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>Есіңізде болсын, бот бумалардың мазмұнына жауап бермейді және оны басқару мүмкіндігі жоқ</i>
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Пакеттер</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
+      regular: Стикерлер
+      custom_emoji: Эмодзилер
       inline: Инлайн
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline pack
+      <b>Сізде әлі пакеттер жоқ.</b>
+      Жасау үшін /new пәрменін жазыңыз
+    inline_title: Кірістірілген бума
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
 
       For example - <code>/emoji 🌟</code>
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: Эмодзи сәтті өзгертілді.
+    error: Эмодзиді өзгерту кезінде қате пайда болды!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Бейнелер енді дөңгелек пішінге ие болады
     disabled: |
-      Videos will no longer have a rounded shape
+      Бейнелердің енді дөңгелек пішіні болмайды
 donate:
   menu: |
     <b>☕️ Bot development support</b>
@@ -135,23 +135,23 @@ donate:
     ➖ Ability to add more than one sticker to the processing queue
     ➖ Duration of video stickers up to 30 seconds
   btn:
-    donate: '☕️ Donate'
+    donate: '☕️ Садақа беріңіз'
   topup: |
-    <b>Enter the amount of credits you want to buy:</b>
+    <b>Сатып алғыңыз келетін несие сомасын енгізіңіз:</b>
 
-    <b>5 credit = 1$</b>
-    <i>Minimum amount - 5 credits</i>
+    <b>5 несие = 1$</b>
+    <i>Ең аз сома - 5 кредит</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Жарамсыз сома</b>
 
-    The minimum amount is 5 credits
+    Ең аз сома – 5 кредит
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    <b>${amount} кредиттерін</b> <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    сатып алғыңыз келеді ⚠️ Несиелерді әкімші қолмен береді.
+    Күту уақыты 5 минуттан 1 сағатқа дейін
 
-    <u>Select payment method:</u>
+    <u>Төлеу әдісін таңдаңыз:</u>
   update: |
     <b>🔄 Balance update</b>
 
@@ -172,28 +172,28 @@ coedit:
 
     <i>To remove editors, you need to reset the link</i>
   no_editors: |
-    No editors yet
+    Әзірге редакторлар жоқ
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 Сілтеме жіберіңіз'
+    reset: '🔁 Сілтемені қалпына келтіру'
   share: |
-    Follows the link and press "start" to co-edit the pack "${title}"
+    Сілтемені орындаңыз және буманы бірге өңдеу үшін "бастау" түймесін басыңыз "${title}"
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Сілтеме қалпына келтірілді</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    Бірлескен өңдеуге арналған жаңа сілтеме <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack not found
-      hidden: Pack successfully hidden
-      restored: Pack successfully restored
+      not_found: Пакет табылмады
+      hidden: Бума сәтті жасырылды
+      restored: Бума сәтті қалпына келтірілді
     set_pack: |
-      🌟 Selected <a href="${link}">${title}</a> pack
+      🌟 Таңдалған <a href="${link}">${title}</a> бума
 
-      <b>❔ How add?</b>
-      Send photo, video or sticker to add to the pack
+      <b>❔ Қалай қосамыз?</b>
+      Пакетке қосу үшін фотосуретті, бейнені немесе стикерді жіберіңіз
     set_inline_pack: |
       Selected <u>${title}</u> pack
 
@@ -201,252 +201,252 @@ callback:
       You can also use it by pressing the button below
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Күштіру</a></b>: ${boostStatus}
       status:
-        on: Enabled
-        off: Disabled
-    hidden: Pack <a href="${link}">${title}</a> hidden from your list.
-    restored: Pack <a href="${link}">${title}</a> restored to your list.
+        on: Қосылған
+        off: Өшірілген
+    hidden: <a href="${link}">${title}</a> бумасы тізімнен жасырылған.
+    restored: <a href="${link}">${title}</a> бумасы тізіміңізге қалпына келтірілді.
     btn:
-      hide: '❌ Hide pack'
-      delete: '🗑 Delete pack'
-      restore: '✅ Restore'
-      use_pack: '📦 Use pack'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
-      coedit: '👥 Co-edit'
-      catalog_add: '🗂 Add to catalog'
-      catalog_edit: '📝 Edit in catalog'
-      catalog_delete: '🗑 Delete from catalog'
-      catalog_share: '🔗️️ Share'
-      catalog_open: '📂 Open in catalog'
+      hide: '❌ Буманы жасыру'
+      delete: '🗑 Буманы жою'
+      restore: '✅ Қалпына келтіру'
+      use_pack: '📦 Пакетті пайдаланыңыз'
+      boost: '⚡ Күшейтіңіз'
+      frame: '🖼 Жақтау'
+      rename: '✏️ Атын өзгерту'
+      search_gif: '🔎 GIF іздеу'
+      coedit: '👥 Бірлескен өңдеу'
+      catalog_add: '🗂 Каталогқа қосу'
+      catalog_edit: '📝 Каталогта өңдеу'
+      catalog_delete: '🗑 Каталогтан жою'
+      catalog_share: '🔗️️ Бөлісіңіз'
+      catalog_open: '📂 Каталогта ашыңыз'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore pack.
+        <b>Қате!</b>
+        Буманы қалпына келтіру мүмкін емес.
       copy: |
-        <b>Error!</b>
-        Cannot find pack.
+        <b>Қате!</b>
+        Пакетті табу мүмкін емес.
   sticker:
     answerCbQuery:
-      delete: The sticker was successfully removed from the pack.
-      restored: The sticker was successfully saved to the current pack.
-    delete: The sticker was successfully removed from the pack.
-    restored: The sticker was successfully saved to the current pack.
+      delete: Стикер бумадан сәтті жойылды.
+      restored: Стикер ағымдағы бумаға сәтті сақталды.
+    delete: Стикер бумадан сәтті жойылды.
+    restored: Стикер ағымдағы бумаға сәтті сақталды.
     btn:
-      delete: '🗑 Delete'
-      copy: '🌟 Copy'
-      restore: '✅ Restore'
+      delete: '🗑 Жою'
+      copy: '🌟 Көшіру'
+      restore: '✅ Қалпына келтіру'
     error:
       not_found: |
-        ERROR!
-        Cannot find a sticker.
+        ҚАТЕ!
+        Стикер табылмады.
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>Стикер бумаға сәтті қосылды:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Бір немесе бірнеше жіберу стикерге сәйкес келетін эмодзи, егер сіз оларды қосқыңыз келсе</i>
     ok_inline: |
-      <b>Added to pack successfully:</b>
+      <b>Бумаға сәтті қосылды:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Керемет, енді сәйкес келетін эмодзиді жіберіңіз
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Күте тұрыңыз...</b>
+      Файлыңыз түрлендіру кезегінде тұр. Аяқтауды күтіңіз. Бұл біраз уақыт алуы мүмкін.
 
-      Progress: ${progress} / ${total}
+      Барысы: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Ботқа қолдау көрсеткен пайдаланушылар кезекте басымдыққа ие болады (толығырақ: /қайырымдылық)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 Уау, керемет пакет жасадың!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Боттың басқа пайдаланушылары да көре алуы үшін жалпыға ортақ стикерлер каталогына <a href="${link}">${title}</a> қосқыңыз келе ме?
+      <i>Бұл көп уақытты алмайды</i>
     error:
       reply: |
-        <b>Error!</b>
-        Please, reply to the sticker.
+        <b>Қате!</b>
+        Стикерге жауап беріңізші.
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>Сіз буманы таңдамадыңыз</b>
 
-        Please, create (/new) or choose (/packs) pack
+        Буманы жасаңыз (/жаңа) немесе (/бумалар) таңдаңыз
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        Бұл пакетте стикерлердің максималды саны бар.
 
-        You can create a new pack using the /new command.
+        /new пәрмені арқылы жаңа бума жасауға болады.
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>Бұл стикер пакетте бұрыннан бар</b>
 
-        If you want to change the emoji, send it in the following message.
+        Эмодзиді өзгерткіңіз келсе, оны келесі хабарламаға жіберіңіз.
       stickerset_invalid: |
-        <b>Error!</b>
-        Bot cannot access your current chosen pack.
+        <b>Қате!</b>
+        Бот ағымдағы таңдалған бумаға қол жеткізе алмайды.
 
-        Please, create (/new) or choose (/packs) another pack.
+        Басқа буманы (/жаңа) жасаңыз немесе (/бумаларды) таңдаңыз.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>Қате!</b>
+          Бұл файл түріне қолдау көрсетілмейді
+          Бұл фотосуретті немесе статикалық стикерді статикалық бумаға қосуға болады
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Жасау (/жаңа) немесе таңдау (/пакеттер) басқа пакет</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>Қате!</b>
+          Бұл файл түріне қолдау көрсетілмейді
+          Бұл бейне файлдарын бейне бумасына қосуға болады
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Жасау (/жаңа) немесе таңдау (/ пакеттер) басқа пакет</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>Қате!</b>
+          Бұл файл түріне қолдау көрсетілмейді
+          Бұл анимациялық файлдарды векторлық бумаға қосуға болады
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Жасау (/жаңа) немесе (/) таңдаңыз. пакеттер) басқа пакет</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>Қате!</b>
+          Бұл файл түріне қолдау көрсетілмейді
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Жасау (/жаңа) немесе басқа буманы (/бумаларды) таңдаңыз</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Күте тұрыңыз!</b>
 
-        Bot is still processing the previous video...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Бот әлі де алдыңғы бейнені өңдеуде...
+        Өңдеу басымдылығын және бірнеше стикерлерді қосу мүмкіндігін арттыру үшін сіз ботты әзірлеуге (/қайырымдылыққа) қолдау көрсете аласыз. кезек.
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>Қазіргі уақытта бот үлкен жүктемені бастан кешіруде</b>
+        Сондықтан, бейне түрлендіру тек белсенді күшейткіші бар бумалар үшін қол жетімді
 
-        For more details, follow the /donate
+        Қосымша мәліметтер алу үшін / садақа беру
       convert: |
-        <b>Error!</b>
-        Unfortunately, the bot was unable to convert your video.
+        <b>Қате!</b>
+        Өкінішке орай, бот бейнеңізді түрлендіре алмады.
 
-        Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
-        It may also be an internal error of the bot, try sending this video again.
+        Бейнеңіз ботқа түсініксіз форматта сақталған болуы мүмкін. Оның mp4 пішімінде екеніне көз жеткізіңіз.
+        Бұл боттың ішкі қатесі де болуы мүмкін, бұл бейнені қайта жіберіп көріңіз.
       too_big: |
-        <b>Error!</b>.
+        <b>Қате!</b>.
 
-        The file is too big to process. Please reduce the quality and duration before sending.
+        Файл өңдеу үшін тым үлкен. Жіберер алдында сапасы мен ұзақтығын азайтыңыз.
 news:
   join: |
-    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+    ℹ️ <a href="${link}">Бот туралы соңғы жаңалықтарды алу үшін</a> арнамызға қосылыңыз.
 
-    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
-  join_btn: '📢 Join channel'
-  not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+    <i>Бот туралы соңғы жаңалықтарды, сондай-ақ жаңартулар мен жаңа мүмкіндіктерді алу үшін арнаға жазылыңыз.</i>
+  join_btn: '📢 Каналға қосылыңыз'
+  not_joined: '🙅 Сіз арнаға жазылмағансыз'
+  continue: '✅ Жалғастыру'
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨 Пайдаланушы туралы</b>
 
-    Using this menu you can find out information about the user and his sticker packs
+    Бұл мәзірді пайдалану арқылы сіз пайдаланушы және оның стикерлер пакеттері туралы ақпаратты біле аласыз
 
-    To get information about the user, use the button below or forward his message
+    Пайдаланушы туралы ақпарат алу үшін түймені пайдаланыңыз. төменде немесе оның хабарламасын жіберіңіз
   result: |
     <b>🧑‍🎨 User info</b>
     <b>🆔 User ID:</b> <code>${userId}</code>
     <b>🎨 Packs from this user:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>Бізде бұл иесінің стикерлері туралы ақпарат жоқ</i>
   forward_hidden: |
-    The user has hidden the ability to forward messages. Use the button below to view his sticker packs.
-  select_user: '🧑‍🎨 Select user'
+    Пайдаланушы хабарламаларды қайта жіберу мүмкіндігін жасырды. Оның стикерлер пакеттерін көру үшін төмендегі түймені пайдаланыңыз.
+  select_user: '🧑‍🎨 Пайдаланушыны таңдаңыз'
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Choose pack type</u></b>
-    regular: '😊 Sticker'
-    custom_emoji: '🌟 Emoji (premium)'
+      <b><u>Пакет түрін таңдаңыз</u></b>
+    regular: '😊 Стикер'
+    custom_emoji: '🌟 Эмодзи (премиум)'
     static: '🌟 Статикалық'
-    animated: '✨ Vector'
+    animated: '✨ Вектор'
     video: '📹 Видео'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Бума түрін таңдаңыз</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>Жалпы</b> - статикалық (жылжытпаңыз), растр, файл пішім - PNG қосу алдында (бот өңделуде), қосқаннан кейін - WEBP.
+      Кәдімгі буманың мысалы - t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>Бейне</b> - анимациялық бейне бумасы. Кез келген бейне, gif және фотосуретті қосуға болады.
+      Үлгі бейне бумасы - t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>Анимациялық</b> - анимациялық, векторлық (оларда файл ішіндегі нысандардың нақты сипаттамасы бар, қажет олар кез келген масштабта анық көрсетіледі), файл пішімі - TGS, Lottie пішімінің вариациясы.
+      Анимациялық буманың мысалы - t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>Анимациялық және бейне стикерлер жиынтықтарында 50-ге дейін стикер болуы мүмкін. Статикалық жапсырмалар жиынтығында 120-ға дейін жапсырма болуы мүмкін.</i>
     pack_title: |
-      <b>Enter new stickers pack name:</b>
-      <i>You can choose random name on button.</i>
+      <b>Жаңа стикерлер бумасының атын енгізіңіз:</b>
+      <i>Түймеде кездейсоқ атауды таңдауға болады.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <b>Жаңа стикерлер жинағы үшін қысқа сілтемені енгізіңіз:</b>
+      <i>Тек ағылшын әріптерін, сандарын және астын сызуды пайдаланыңыз.</i>
+      <i>Мысалы, бұл бума қысқа сілтеме ретінде "Жануарлар" сөзін пайдаланады: https://t.me/addstickers/<u>Жануарлар</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>Түймеде кездейсоқ қысқа сілтемені таңдауға болады.</i>
     ok: |
-      Pack <a href="${link}">${title}</a> successfully created!
+      <a href="${link}">${title}</a> бумасы сәтті жасалды!
 
-      <b>Pack link:</b> <pre>${link}</pre>
+      <b>Пакет сілтемесі:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Мен файлды, фотосуретті, бейнені немесе стикерді жіберіңіз. оны жинағыңызға қосыңыз
     error:
-      title_long: Name cannot be greater than ${max} symbols.
-      name_long: Address cannot be greater than ${max} symbols.
+      title_long: Атау ${max} таңбаларынан үлкен болмауы керек.
+      name_long: Мекенжай ${max} таңбаларынан үлкен болмауы керек.
       telegram:
-        name_invalid: That address cannot be used.
-        name_occupied: This address is already taken.
+        name_invalid: Бұл мекенжайды пайдалану мүмкін емес.
+        name_occupied: Бұл мекенжай әлдеқашан алынған.
         upload_failed: |
-          <b>Error!</b>
-          Bot cannot upload stickers to Telegram.
+          <b>Қате!</b>
+          Бот стикерлерді Telegram-ға жүктей алмайды.
 
-          Please, try again later.
+          Кейінірек қайталап көріңіз.
   copy:
     enter: |
-      I can copy it, but before that, let's create a new pack
+      Мен оны көшіре аламын, бірақ оған дейін жаңа бума жасайық
     progress: |
       Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
       Progress: ${current}/${total}
     done: |
-      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      <a href="${originalLink}">${originalTitle}</a> бастап <a href="${link}">${title}</a> дейін буманы көшіру сәтті аяқталды.
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>Қате!</b>
+        Бұл мүмкіндік тек мүшелерді қайырымдылыққа беру үшін қолжетімді.
 
-        You can do this by sending the /donate command.
+        Мұны /donate пәрменін жіберу арқылы жасауға болады.
   original:
     enter: |
-      Send the sticker that was added through this bot and I will show you its original sticker.
+      Осы бот арқылы қосылған стикерді жіберіңіз, мен сізге оның түпнұсқа стикерін көрсетемін.
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the original sticker.
+        <b>Қате!</b>
+        Түпнұсқа стикерді таба алмадым.
   delete:
     enter: |
-      Send the sticker that was added through this bot and I will delete it from the pack.
+      Осы бот арқылы қосылған стикерді жіберіңіз, мен оны пакеттен өшіремін.
     confirm: |
-      Are you sure you want to delete this sticker?
+      Осы стикерді шынымен жойғыңыз келе ме?
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the sticker.
+        <b>Қате!</b>
+        Мен стикерді таба алмадым.
   rename:
     enter_name: |
-      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+      <b> <a href="${link}">${title}</a>үшін жаңа тақырып енгізіңіз:</b>
     success: |
-      <b>Title successfully changed!</b>
+      <b>Тақырып сәтті өзгертілді!</b>
 
-      New title: <a href="${link}">${title}</a>
+      Жаңа тақырып: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>Ол туралы ақпаратты іздеу үшін маған стикер немесе реттелетін эмодзи жіберіңіз:</b>
     not_found: |
-      I could not find the sticker
+      Мен стикерді таба алмадым
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
       🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
@@ -457,32 +457,32 @@ scenes:
       <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>Бізде бұл иесінің басқа стикерлері туралы ақпарат жоқ</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b> <a href="${link}">${title}</a>арттырғыңыз келетініне сенімдісіз бе?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Күшейту өңдеудің басымдылығын және кезекке бірнеше стикерлерді қосу мүмкіндігін арттырады
+      Сіз мәзірден күшейтулер туралы толығырақ ақпаратты мына жерден таба аласыз: /дона
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>Бағасы:</b> 1 кредит
+      <b>Ағымдағы баланс:</b> ${balance} кредиттер
     btn:
-      yes: Yes, boost!
-      no: No, cancel
+      yes: Иә, күшейтіңіз!
+      no: Жоқ, бас тарту
     canceled: |
-      Boosting canceled
+      Көтеру тоқтатылды
     success: |
-      Boosting successfully completed!
+      Көтермелеу сәтті аяқталды!
 
-      ${title} is now boosted
+      ${title} енді күшейтілді
     error:
       not_enough_credits: |
-        You do not have enough credits to boost this pack.
+        Бұл топтаманы арттыру үшін сізде несие жеткіліксіз.
 
-        You can top up your balance by sending the /donate command.
+        Балансыңызды /donate пәрменін жіберу арқылы толықтыруға болады.
       already_boosted: |
-        This pack is already boosted.
+        Бұл бума әлдеқашан күшейтілген.
   catalog:
     publish:
       publish_new: |
@@ -490,49 +490,49 @@ scenes:
 
         <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required pack
-        4. Forward the received message to the bot
+        <b>Бұл бумаға меншік құқығын растау үшін бірнеше қарапайым қадамдарды орындау қажет:</b>
+        1. @Stickers ботын ашыңыз
+        2. <code>жіберу /packstats</code> пәрмені
+        3. Қажетті буманы тауып таңдаңыз
+        4. Алынған хабарламаны ботқа жіберіңіз
       publish_new_access_denied: |
-        <b>Error!</b>
-        This pack is not yours.
+        <b>Қате!</b>
+        Бұл пакет сіздікі емес.
 
-        You can only publish your own packs
+        Сіз тек өз бумаңызды жариялай аласыз
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Қате!</b>
+        Сізге бұл мүмкіндікті пайдалануға тыйым салынды.
+        Әкімшіге хабарласыңыз.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your pack
-        Try to send only high-quality packs that may be of interest to a large number of people
+        Сіз "<a href="${link}">${title}</a>" бумасын біздің боттың жалпы каталогында жариялағалы жатырсыз
+        Оны боттың кез келген пайдаланушысы аты, тегтері немесе сүзгі арқылы таба алады.
+        Осыған байланысты пакетіңізді көбірек адамдар орнатады
+        Адамдардың көп бөлігін қызықтыруы мүмкін тек жоғары сапалы бумаларды жіберуге тырысыңыз
 
-        <b>Rules for publishing packs:</b>
-        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Ережелер бумаларды жариялау үшін:</b>
+        • Адамдардың тар шеңберіне арналған жеке бумаларды жарияламаңыз. Мысалы, достарыңыздың бет-әлпеттері немесе хабарламаларыңыздан алынған дәйексөздер сияқты
+        • ЕО заңдарын немесе басқа жергілікті заңдарды бұзатын жапсырма қысымдарын жарияламаңыз
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        Ол үшін қосымша ақпарат жіберуіңіз керек. каталогында жарияланған
+      continue_button: Жалғастыру
       enter_description: |
-        <b>Briefly describe your pack so that others can find it</b>
+        <b>Басқалар оны таба алатындай пакетіңізді қысқаша сипаттаңыз</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>Сондай-ақ [#]</i>
+        санаттау үшін хэштегтерді пайдалануға болады.<i>Мысалы: #аниме #мем #жануарлар #сүйкімді #кпоп #күлкілі #мысық #ойын </i>
       select_language: |
-        <b>Choose which languages your pack is for:</b>
-        <i>You can select multiple languages</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+        <b>Буманың қай тілдерге арналғанын таңдаңыз:</b>
+        <i>Бірнеше тілді таңдауға болады</i>
+      button_all_languages: Барлық тілдер
+      button_confirm_language: Растау
       set_safe: |
-        <b>Is your pack safe for users?</b>
-        <i>That is, it does not contain erotica and other shocking content</i>
+        <b>Сіздің пакетіңіз пайдаланушылар үшін қауіпсіз бе?</b>
+        <i>Яғни, оның құрамында эротика және басқа да таң қалдыратын мазмұн жоқ</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
-      no_tags: were not specified
+        safe: Иә, қауіпсіз
+        not_safe: Жоқ, бұл қауіпсіз емес
+      no_tags: нақтыланбады
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
@@ -540,34 +540,34 @@ scenes:
 
         <b>Tags:</b> ${tags}
         <b>Languages:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Жариялануды растау'
       success: |
-        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+        Құттықтаймыз, сіздің бума басқа пайдаланушылар таба алатын біздің боттың жалпы каталогында жарияланды!
 
-        You can edit the pack search information by selecting the pack with the /packs command.
+        Буманы /packs пәрменімен таңдау арқылы буманы іздеу туралы ақпаратты өңдеуге болады.
 
-        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+        <i>Сіздің пакетіңіздің статистикасын @Stickers ресми боты арқылы көруге болатынын еске саламыз</i>
     unpublish:
       success: |
-        The pack has been successfully unpublished from bot catalog.
+        Бума бот каталогынан сәтті шығарылды.
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      <a href="${link}">${title}</a>бумасын жойғыңыз келетініне сенімдісіз бе?
+      Ол біржола жойылады және оны қалпына келтіру мүмкін емес.
 
-      If you want to delete only one sticker, use the /delete command.
+      Тек бір стикерді жойғыңыз келсе, /delete пәрменін пайдаланыңыз.
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
-    confirm: Yes, I am totally sure.
+      Осы буманы шынымен жойғыңыз келетінін растау үшін <code>${confirm}</code> жіберіңіз.
+    confirm: Иә, мен толық сенімдімін.
     success: |
-      <b>Pack successfully deleted!</b>
+      <b>Бума сәтті жойылды!</b>
     error:
-      - <b>Error!</b>
-      - Opps, something went wrong.
+      - <b>Қате!</b>
+      - Ой, бірдеңе дұрыс болмады.
   frame:
     no_video: |
-      <b>Error!</b>
-      You can only add frames to video packs.
+      <b>Қате!</b>
+      Бейне бумаларына кадрларды ғана қосуға болады.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
       Frame is a transparent background around the sticker
@@ -581,50 +581,50 @@ scenes:
       <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Lite'
-      medium: '2. Medium'
-      rounded: '3. Rounded'
-      square: '4. Square'
-      circle: '5. Circle'
+      medium: '2. Орта'
+      rounded: '3. Дөңгеленген'
+      square: '4. Шаршы'
+      circle: '5. Шеңбер'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Таңдалған кадр түрі:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Фонды алып тастағыңыз келетін <u>фотосуретін</u> жіберіңіз, мен файлды фондықсыз жіберемін
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Фотосуреттермен жақсы жұмыс істейді. Сызбалармен, иллюстрациялармен және т.б. нашар жұмыс істейді.</i>
     enter_anime: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
       <i>It works best with anime pictures</i>
     choose_model: |
-      <b>Choose model:</b>
-    web_app: WebApp - for photos with people
+      <b>Үлгіні таңдаңыз:</b>
+    web_app: WebApp - адамдармен фотосуреттерге арналған
     model:
-      ordinary: Common — for photos with people
-      general: General — for any photos
-      anime: Anime — for anime pictures
-    add_to_set_btn: '🌟 Add to set'
+      ordinary: Жалпы — адамдармен фотосуреттер үшін
+      general: Жалпы — кез келген фотосуреттер үшін
+      anime: Аниме — аниме суреттері үшін
+    add_to_set_btn: '🌟 Жиынтыққа қосу'
     error: |
-      <b>Error!</b>
-      Opps, something went wrong.
+      <b>Қате!</b>
+      Ой, бірдеңе дұрыс болмады.
   leave: |
-    Action canceled.
+    Әрекеттен бас тартылды.
   btn:
-    cancel: '❌ Cancel'
+    cancel: '❌ Бас тарту'
 error:
   telegram: |
-    <b>Telegram returned an error!</b>
+    <b>Telegram қатені қайтарды!</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram returned an error:
+      Telegram қатені қайтарды:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
-    Please, contact the administrator.
+    <b>Қате!</b>
+    Сізге бұл мүмкіндікті пайдалануға тыйым салынды.
+    Әкімшіге хабарласыңыз.
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Белгісіз қате орын алды, әрекетті қайталаңыз.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Егер мәселе шешілмесе, @Ly_oBot мекенжайына жазыңыз.
+    Қай бот туралы айтып жатқаныңызды дереу жазып, мәселені бір хабарламада егжей-тегжейлі сипаттаңыз.
