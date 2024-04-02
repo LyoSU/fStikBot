@@ -3,11 +3,11 @@ language_name: '🇺🇿 O''zbek'
 name: Favorite Stickers Bot 🇺🇦
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Xabar almashish tajribangizni ko'proq e'lon qilish uchun men emoji va stiker paketlarining mag'ribiyasiman. Men sevimli rasmlaringizni, videolaringizni va GIFlaringizni chiroyli emoji va stikerlarga aylantirishga ruxsat beradi. 🎉🎊 Men bilan siz har qanday tadbir uchun shaxsiy paketlar yarata olasiz. Qo'shimcha yoqimli suhbatlaringiz uchun boshladik!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+    Stikerlarni qidirish: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 Men emoji va stiker ustasiyman! Rasmlarni, videolarni va GIFlarni jadallashtirib ajoyib stikerlarga aylantiramiz.
 ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
@@ -54,7 +54,7 @@ cmd:
     commands:
       ss: '🌟 Save sticker'
       start: '📜 Start menu'
-      help: '📖 Help'
+      help: '📖 Ma''lumotnoma'
       packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
@@ -65,7 +65,7 @@ cmd:
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
+      round: '🎥 Dumaloq shakldagi video'
       clear: '🖼️ Remove background from photo'
       about: '📦 Pack info'
       user_about: '🧑‍🎨 Creator info'
@@ -75,7 +75,7 @@ cmd:
       add_to_group: '👥 Add to group'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Open catalog'
+      catalog: '💖 Katalogni ochish'
       catalog_mini: '💖 Catalog'
       catalog_browser: '🌐 Open in browser'
       catalog_browser_mini: '🌐 In browser'
@@ -117,9 +117,9 @@ cmd:
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Videolar endi yumaloq shaklga ega bo'ladi
     disabled: |
-      Videos will no longer have a rounded shape
+      Videolar endi yumaloq shaklga ega bo‘lmaydi
 donate:
   menu: |
     <b>☕️ Bot development support</b>
@@ -338,7 +338,7 @@ news:
     <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
   join_btn: '📢 Join channel'
   not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+  continue: '✅ Davom eting'
 userAbout:
   help: |
     <b>🧑‍🎨 User about</b>
@@ -501,9 +501,9 @@ scenes:
 
         You can only publish your own packs
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Xato!</b>
+        Sizga ushbu xususiyatdan foydalanish taqiqlangan.
+        Iltimos, administratorga murojaat qiling.
       enter: |
         You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
         It can be found by any user of the bot by name, tags or filter
@@ -515,7 +515,7 @@ scenes:
         • Do not post sticker pressures that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+      continue_button: Davom eting
       enter_description: |
         <b>Briefly describe your pack so that others can find it</b>
 
@@ -532,7 +532,7 @@ scenes:
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: were not specified
+      no_tags: belgilanmagan
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
@@ -620,9 +620,9 @@ error:
       Telegram xatolikni qaytardi:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
-    Please, contact the administrator.
+    <b>Xato!</b>
+    Sizga ushbu xususiyatdan foydalanish taqiqlangan.
+    Iltimos, administratorga murojaat qiling.
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 
