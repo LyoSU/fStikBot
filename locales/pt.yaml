@@ -189,20 +189,11 @@ callback:
       not_found: Pack not found
       hidden: Pack successfully hidden
       restored: Pack successfully restored
-    set_pack:
-      static: |
-        Selected static pack <a href="${link}">${title}</a>
+    set_pack: |
+      🌟 Selected <a href="${link}">${title}</a> pack
 
-        To add a new sticker send me a photo, another static sticker.
-        For a sticker to have no background, it must be sent as a file.
-      animated: |
-        Selected animated (vector) pack <a href="${link}">${title}</a>
-
-        To add a new sticker send me a <a href="https://core.telegram.org/stickers#animated-stickers">.tgs</a> file or other animated sticker.
-      video: |
-        Pacote de vídeo selecionado <a href="${link}">${title}</a>
-
-        Para adicionar um novo adesivo, envie-me qualquer vídeo ou foto.
+      <b>❔ How add?</b>
+      Send photo, video or sticker to add to the pack
     set_inline_pack: |
       Selected <u>${title}</u> pack
 
