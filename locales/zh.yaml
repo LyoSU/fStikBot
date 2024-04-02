@@ -199,20 +199,11 @@ callback:
       not_found: 未找到包
       hidden: 包成功隐藏
       restored: 成功恢复包
-    set_pack:
-      static: |
-        选定的静态包 <a href="${link}">${title}</a>
+    set_pack: |
+      🌟 已选 <a href="${link}">${title}</a> 打包
 
-        要添加新贴纸，请给我发送一张照片和另一张静态贴纸。
-        如果贴纸没有背景，则必须以文件形式发送。
-      animated: |
-        精选动画（矢量）包 <a href="${link}">${title} </a>
-
-        要添加新贴纸，请向我发送 <a href="https://core.telegram.org/stickers#animated-stickers">.tgs </a> 文件或其他动画贴纸。
-      video: |
-        选定的视频包 <a href="${link}">${title } </a>
-
-        要添加新贴纸，请发送任何视频或照片给我。
+      <b>❔ 如何添加？</b>
+      发送照片、视频或贴纸以添加到包中
     set_inline_pack: |
       选择了<u>${title}</u>包
 
