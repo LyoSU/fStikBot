@@ -216,7 +216,7 @@ callback:
       boost: '⚡ Boost'
       frame: '🖼 Frame'
       rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
+      search_gif: '🔎 Cari GIF'
       coedit: '👥 Pengeditan bersama'
       catalog_add: '🗂 Tambahkan ke katalog'
       catalog_edit: 'Edit di katalog'
@@ -339,7 +339,7 @@ news:
     <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
   join_btn: '📢 Join channel'
   not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+  continue: '✅ Melanjutkan'
 userAbout:
   help: |
     <b>🧑‍🎨 User about</b>
@@ -581,11 +581,11 @@ scenes:
     types:
       lite: '1. Ringan'
       medium: '2. Sedang'
-      rounded: '3. Rounded'
+      rounded: '3. Bulat'
       square: '4. Square'
       circle: '5. Circle'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Jenis bingkai yang dipilih:</b> ${type}
   photoClear:
     enter: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
