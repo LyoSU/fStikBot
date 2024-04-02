@@ -189,12 +189,12 @@ callback:
     answerCbQuer:
       not_found: Paket tidak ada
       hidden: Paket stiker berhasil disembunyikan
-      restored: Pack successfully restored
+      restored: Paket berhasil dipulihkan
     set_pack: |
-      🌟 Selected <a href="${link}">${title}</a> pack
+      🌟 Terpilih <a href="${link}">${title}</a> pack
 
-      <b>❔ How add?</b>
-      Send photo, video or sticker to add to the pack
+      <b>❔ Bagaimana cara menambahkannya?</b>
+      Kirim foto, video atau stiker untuk ditambahkan ke paket
     set_inline_pack: |
       Selected <u>${title}</u> pack
 
@@ -202,40 +202,40 @@ callback:
       You can also use it by pressing the button below
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Peningkatan</a></b>: ${boostStatus}
       status:
-        on: Enabled
-        off: Disabled
-    hidden: Pack <a href="${link}">${title}</a> hidden from your list.
-    restored: Pack <a href="${link}">${title}</a> restored to your list.
+        on: Diaktifkan
+        off: Dengan disabilitas
+    hidden: Kemas <a href="${link}">${title}</a> disembunyikan dari daftar Anda.
+    restored: Kemas <a href="${link}">${title}</a> dikembalikan ke daftar Anda.
     btn:
-      hide: '❌ Hide pack'
-      delete: '🗑 Delete pack'
+      hide: '❌ Sembunyikan paket'
+      delete: '🗑 Hapus paket'
       restore: '✅ Mengembalikan'
-      use_pack: '📦 Use pack'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
+      use_pack: '📦 Gunakan paket'
+      boost: '⚡ Tingkatkan'
+      frame: '🖼 Bingkai'
+      rename: '✏️ Ganti nama'
       search_gif: '🔎 Cari GIF'
       coedit: '👥 Pengeditan bersama'
       catalog_add: '🗂 Tambahkan ke katalog'
       catalog_edit: 'Edit di katalog'
       catalog_delete: 'Hapus dari katalog'
-      catalog_share: '🔗️️ Share'
-      catalog_open: '📂 Open in catalog'
+      catalog_share: '🔗️️ Bagikan'
+      catalog_open: '📂 Buka di katalog'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore pack.
+        <b>Kesalahan!</b>
+        Tidak dapat memulihkan paket.
       copy: |
-        <b>Error!</b>
-        Cannot find pack.
+        <b>Kesalahan!</b>
+        Tidak dapat menemukan paket.
   sticker:
     answerCbQuery:
-      delete: The sticker was successfully removed from the pack.
-      restored: The sticker was successfully saved to the current pack.
-    delete: The sticker was successfully removed from the pack.
-    restored: The sticker was successfully saved to the current pack.
+      delete: Stiker berhasil dikeluarkan dari kemasannya.
+      restored: Stiker berhasil disimpan ke paket saat ini.
+    delete: Stiker berhasil dikeluarkan dari kemasannya.
+    restored: Stiker berhasil disimpan ke paket saat ini.
     btn:
       delete: '🗑 Hapus'
       copy: '🌟 Salin'
@@ -247,12 +247,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>Stiker berhasil ditambahkan ke paket:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Kirim satu atau lebih emoji yang cocok dengan stiker, jika ingin menambahkannya</i>
     ok_inline: |
-      <b>Added to pack successfully:</b>
+      <b>Berhasil ditambahkan ke paket:</b>
       <u>${title}</u>
     send_emoji: Bagus, sekarang kirim emoji yang cocok dengan stiker
     converting_process: |
@@ -263,65 +263,65 @@ sticker:
 
       <i>Pengguna yang mendukung bot mendapatkan prioritas dalam antrian (lebih lanjut: /donasi)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 Wow, kamu membuat paket yang hebat!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Apakah Anda ingin menambahkan <a href="${link}">${title}</a> ke katalog stiker publik sehingga pengguna bot lain dapat melihatnya juga?
+      <i>Tidak memakan banyak waktu</i>
     error:
       reply: |
-        <b>Error!</b>
-        Please, reply to the sticker.
+        <b>Kesalahan!</b>
+        Tolong balas stikernya.
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>Anda belum memilih paket</b>
 
-        Please, create (/new) or choose (/packs) pack
+        Silakan, buat (/baru) atau pilih (/paket) paket
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        Paket ini memiliki jumlah stiker maksimum.
 
-        You can create a new pack using the /new command.
+        Anda dapat membuat paket baru menggunakan perintah /new.
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>Stiker ini sudah ada dalam kemasan</b>
 
-        If you want to change the emoji, send it in the following message.
+        Jika ingin mengganti emoji, kirimkan melalui pesan berikut.
       stickerset_invalid: |
-        <b>Error!</b>
-        Bot cannot access your current chosen pack.
+        <b>Kesalahan!</b>
+        Bot tidak dapat mengakses paket pilihan Anda saat ini.
 
-        Please, create (/new) or choose (/packs) another pack.
+        Silakan buat (/baru) atau pilih (/paket) paket lain.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>Kesalahan!</b>
+          Jenis file ini tidak didukung
+          Anda dapat menambahkan foto atau stiker statis ini ke paket statis
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Buat (/baru) atau pilih (/paket) paket lain</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>Kesalahan!</b>
+          Jenis file ini tidak didukung
+          Anda dapat menambahkan file video ini ke paket video
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Buat (/baru) atau pilih (/ paket) paket lain</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>Kesalahan!</b>
+          Jenis file ini tidak didukung
+          Anda dapat menambahkan file animasi ini ke paket vektor
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Buat (/baru) atau pilih (/ paket) paket lain</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>Kesalahan!</b>
+          Jenis file ini tidak didukung
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
         <b>Tunggu!</b>
 
         Bot masih memproses video sebelumnya...
         Anda dapat mendukung pengembangan bot (/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>Saat ini, bot sedang mengalami beban yang sangat besar</b>
+        Oleh karena itu, konversi video hanya tersedia untuk paket dengan peningkatan aktif
 
-        For more details, follow the /donate
+        Untuk lebih jelasnya, ikuti / menyumbangkan
       convert: |
         <b>Kesalahan!</b>
         Sayangnya, bot tidak dapat mengonversi video Anda.
@@ -334,33 +334,33 @@ sticker:
         File terlalu besar untuk diproses. Harap mengurangi kualitas dan durasi sebelum mengirim.
 news:
   join: |
-    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+    ℹ️ <a href="${link}">Bergabunglah dengan saluran kami</a> untuk mendapatkan berita terbaru tentang bot.
 
-    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
-  join_btn: '📢 Join channel'
-  not_joined: '🙅 You are not subscribed to the channel'
+    <i>Berlangganan saluran ini untuk mendapatkan berita terbaru tentang bot, serta pembaruan dan fitur baru.</i>
+  join_btn: '📢 Bergabunglah dengan saluran'
+  not_joined: '🙅 Anda tidak berlangganan saluran tersebut'
   continue: '✅ Melanjutkan'
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨 Pengguna tentang</b>
 
-    Using this menu you can find out information about the user and his sticker packs
+    Dengan menggunakan menu ini Anda dapat mengetahui informasi tentang pengguna dan paket stikernya
 
-    To get information about the user, use the button below or forward his message
+    Untuk mendapatkan informasi tentang pengguna, gunakan tombol di bawah atau meneruskan pesannya
   result: |
     <b>🧑‍🎨 User info</b>
     <b>🆔 User ID:</b> <code>${userId}</code>
     <b>🎨 Packs from this user:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>Kami tidak memiliki informasi tentang stiker pemilik ini</i>
   forward_hidden: |
-    The user has hidden the ability to forward messages. Use the button below to view his sticker packs.
-  select_user: '🧑‍🎨 Select user'
+    Pengguna telah menyembunyikan kemampuan untuk meneruskan pesan. Gunakan tombol di bawah untuk melihat paket stikernya.
+  select_user: '🧑‍🎨 Pilih pengguna'
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Pilih jenis paket</u></b>
     regular: '😊 Stiker'
     custom_emoji: '🌟Emoji (premium)'
     static: '🌟 Statis'
@@ -582,30 +582,30 @@ scenes:
       lite: '1. Ringan'
       medium: '2. Sedang'
       rounded: '3. Bulat'
-      square: '4. Square'
-      circle: '5. Circle'
+      square: '4. Kotak'
+      circle: '5. Lingkaran'
     selected: |
       <b>Jenis bingkai yang dipilih:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Kirim <u>foto</u> yang ingin Anda hapus latar belakangnya dan saya akan mengirimkan file tanpa latar belakang
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Berfungsi paling baik dengan foto. Bekerja lebih buruk dengan gambar, ilustrasi, dll.</i>
     enter_anime: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
       <i>It works best with anime pictures</i>
     choose_model: |
-      <b>Choose model:</b>
-    web_app: WebApp - for photos with people
+      <b>Pilih model:</b>
+    web_app: WebApp - untuk foto bersama orang
     model:
-      ordinary: Common — for photos with people
-      general: General — for any photos
-      anime: Anime — for anime pictures
-    add_to_set_btn: '🌟 Add to set'
+      ordinary: Umum — untuk foto bersama orang
+      general: Umum — untuk foto apa pun
+      anime: Anime — untuk gambar anime
+    add_to_set_btn: '🌟 Tambahkan ke set'
     error: |
-      <b>Error!</b>
-      Opps, something went wrong.
+      <b>Kesalahan!</b>
+      Ups, ada yang tidak beres.
   leave: |
     Aksi dibatalkan.
   btn:
