@@ -275,9 +275,9 @@ sticker:
 
         Por favor, crie (/new) ou escolha (/packs) pacote
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        Este pacote possui o número máximo de adesivos.
 
-        You can create a new pack using the /new command.
+        Você pode criar um novo pacote usando o comando /new.
       have_already: |
         <b>Este sticker já está no pacote</b>
 
@@ -317,10 +317,10 @@ sticker:
         O bot ainda está processando o vídeo anterior...
         Você pode apoiar o desenvolvimento do bot (/donate) para aumentar a prioridade de processamento e permitir adicionar mais de um sticker à fila.
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>No momento, o bot está passando por uma carga enorme</b>
+        Portanto, a conversão de vídeo está disponível apenas para pacotes com boost ativo
 
-        For more details, follow the /donate
+        Para mais detalhes, siga o / doar
       convert: |
         <b>Erro!</b>
         Infelizmente, o bot não conseguiu converter o seu vídeo.
@@ -352,7 +352,7 @@ userAbout:
     <b>🎨 Packs from this user:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>Não temos informações sobre adesivos deste proprietário</i>
   forward_hidden: |
     O usuário ocultou a habilidade de encaminhar mensagens. Use o botão abaixo para ver seus pacotes de stickers.
   select_user: '🧑‍🎨 Selecionar usuário'
@@ -366,18 +366,18 @@ scenes:
     animated: '✨ Vetor'
     video: '📹 Vídeo'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Escolha o tipo de pacote</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>Comum</b> - estático (não mover), raster, arquivo formato - antes de adicionar PNG (o bot está processando), após adicionar - WEBP.
+      Um exemplo de pacote normal - t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>Vídeo</b> - pacote de vídeo de animação. Você pode adicionar qualquer vídeo, gif e foto.
+      Exemplo de pacote de vídeos - t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>Animado</b> - animado, vetorial (possuem uma descrição exata dos objetos dentro do arquivo, devido para o qual são exibidos claramente em qualquer escala), formato de arquivo - TGS, uma variação do formato Lottie.
+      Um exemplo de pacote animado - t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>Conjuntos de adesivos animados e de vídeo podem ter até 50 adesivos. Os conjuntos de adesivos estáticos podem ter até 120 adesivos.</i>
     pack_title: |
       <b>Digite o nome do novo pacote de sticker:</b>
       <i>Você pode escolher um nome aleatório no botão.</i>
@@ -457,16 +457,16 @@ scenes:
       <b>🎨 Outros pacotes deste proprietário:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>Não temos informações sobre outros adesivos deste proprietário</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Tem certeza que deseja aumentar <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Boosting aumentará a prioridade de processamento e a capacidade de adicionar mais de um adesivo à fila
+      Você pode encontrar informações mais detalhadas sobre boosts no menu visitando: /donate
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>Preço:</b> 1 crédito
+      <b>Saldo atual:</b> ${balance} créditos
     btn:
       yes: Sim, aumentar!
       no: Não, cancelar
@@ -478,9 +478,9 @@ scenes:
       ${title} será impulsionada
     error:
       not_enough_credits: |
-        You do not have enough credits to boost this pack.
+        Você não tem créditos suficientes para impulsionar este pacote.
 
-        You can top up your balance by sending the /donate command.
+        Você pode recarregar seu saldo enviando o comando /donate.
       already_boosted: |
         Este pacote já está aumentado.
   catalog:
@@ -542,27 +542,27 @@ scenes:
         <b>Languages:</b> ${languages}
       button_confirm: '✅ Confirmar publicação'
       success: |
-        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+        Parabéns, seu pacote foi publicado no diretório geral do nosso bot onde outros usuários podem encontrá-lo!
 
-        You can edit the pack search information by selecting the pack with the /packs command.
+        Você pode editar as informações de pesquisa do pacote selecionando o pacote com o comando /packs.
 
-        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+        <i>Lembramos que as estatísticas do seu pack podem ser visualizadas através do bot oficial @Stickers</i>
     unpublish:
       success: |
         O pacote foi despublicado com sucesso do catálogo de bots.
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      Tem certeza de que deseja excluir o pacote <a href="${link}">${title}</a>?
+      Ele será excluído permanentemente e não poderá ser recuperado.
 
-      If you want to delete only one sticker, use the /delete command.
+      Se você deseja excluir apenas um adesivo, use o comando /delete.
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
+      Envie <code>${confirm}</code> para confirmar que você realmente deseja excluir este pacote.
     confirm: Sim, tenho a certeza absoluta.
     success: |
       <b>Pacote excluído com sucesso!</b>
     error:
-      - <b>Error!</b>
+      - <b>Erro!</b>
       - Ops, algo deu errado.
   frame:
     no_video: |
@@ -589,15 +589,15 @@ scenes:
       <b>tipo de frame selecionado:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Envie uma <u>foto</u> da qual deseja remover o fundo e eu enviarei o arquivo sem o fundo
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Funciona melhor com fotos. Funciona pior com desenhos, ilustrações, etc.</i>
     enter_anime: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
       <i>It works best with anime pictures</i>
     choose_model: |
-      <b>Choose model:</b>
+      <b>Escolha o modelo:</b>
     web_app: WebApp - para fotos com pessoas
     model:
       ordinary: Comum — para fotos com pessoas
