@@ -19,30 +19,30 @@ cmd:
 
       💬 Butuh bantuan? Bergabunglah dengan obrolan dukungan kami di @fStikCommunity (hanya dalam bahasa Inggris)
     help: |
-      <b>List of bot commands:</b>
+      <b>Daftar perintah bot:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Buat pack stiker baru
+      /new_emoji - Buat pack emoji baru
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Hapus stiker dari pack
+      /original - Temukan stiker asli
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Daftar semua pack Anda
+      /restore - Kembalikan pack yang dihapus
+      /copy - Salin pack
+      /emoji - Ubah sufiks emoji untuk pack saat ini
+      /frame - Ubah bingkai untuk pack video saat ini
+      /publish - Publikasikan pack di katalog
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Buka katalog pack stiker
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Ubah bahasa
+      /donate - Dukung pengembang
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Obrolan dukungan: @fStikCommunity (Hanya Bahasa Inggris)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Kontak: @ly_oBot
+      👨🏻‍💻 Saluran pengembang: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -110,9 +110,9 @@ cmd:
     inline_title: Paket sebaris
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      Untuk mengubah emoji default untuk pack saat ini, kirim <code>/emoji</code> diikuti dengan emoji yang dipisah dengan spasi
 
-      For example - <code>/emoji 🌟</code>
+      Contoh - <code>/emoji 🌟</code>
     done: Emoji berhasil diubah.
     error: Ada kesalahan saat mengubah emoji!
   round_video:
@@ -122,18 +122,18 @@ cmd:
       Video tidak akan lagi berbentuk bulat
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Dukungan pengembangan bot</b>
+    Dengan mendukung pengembangan bot, Anda akan menerima kredit.
+    Untuk setiap 1 dolar, Anda akan menerima 5 kredit.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>Saldo:</b> <code>${balance}</code> kredit
+    Dengan 1 kredit, Anda memiliki kesempatan untuk meningkatkan satu pack.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Manfaat peningkatan meliputi:</b>
+    ➖ Menonaktifkan <code>"${titleSuffix}"</code> di nama pack <i>(tidak di link)</i>
+    ➖ Prioritas saat mengonversi stiker video
+    ➖ Kemampuan untuk menambahkan lebih dari satu stiker ke antrean pemrosesan
+    ➖ Durasi stiker video hingga 30 detik
   btn:
     donate: '☕️ Donasi'
   topup: |
@@ -153,9 +153,9 @@ donate:
 
     <u>Pilih metode pembayaran:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Pembaruan saldo</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Saldo: <code>${balance}</code> kredit (ditambah <code>${amount}</code> kredit)
 coedit:
   info: |
     <b>👥 Co-editing sticker pack</b>
@@ -196,10 +196,10 @@ callback:
       <b>❔ Bagaimana cara menambahkannya?</b>
       Kirim foto, video atau stiker untuk ditambahkan ke paket
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      Terpilih <u>${title}</u> pack
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      Untuk menggunakannya, tulis di chat apapun <code>@${botUsername} </code>dan spasi
+      Anda juga bisa menggunakannya dengan menekan tombol di bawah
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Peningkatan</a></b>: ${boostStatus}
@@ -348,9 +348,9 @@ userAbout:
 
     Untuk mendapatkan informasi tentang pengguna, gunakan tombol di bawah atau meneruskan pesannya
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 Info pengguna</b>
+    <b>🆔 ID Pengguna:</b> <code>${userId}</code>
+    <b>🎨 Pack dari pengguna ini:</b>
     ${packs}
   no_packs: |
     <i>Kami tidak memiliki informasi tentang stiker pemilik ini</i>
@@ -449,12 +449,12 @@ scenes:
       Kesalahan! Saya tidak dapat menemukan paketnya
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      🆔 <code>${setId}</code> <i>(Nomor unik untuk pack pemilik, bertambah per pack)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 ID Pemilik: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Pack lain dari pemilik ini:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Kami tidak memiliki informasi tentang stiker lain dari pemilik ini</i>
@@ -592,9 +592,9 @@ scenes:
 
       <i>Berfungsi paling baik dengan foto. Bekerja lebih buruk dengan gambar, ilustrasi, dll.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Kirim <u>foto</u> dari mana Anda ingin menghilangkan latar belakang dan saya akan mengirimkan file tanpa latar belakang
 
-      <i>It works best with anime pictures</i>
+      <i>Ini bekerja terbaik dengan gambar anime</i>
     choose_model: |
       <b>Pilih model:</b>
     web_app: WebApp - untuk foto bersama orang
