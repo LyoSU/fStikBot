@@ -103,7 +103,7 @@ cmd:
     types:
       regular: Stickers
       custom_emoji: Emojis
-      inline: Inline
+      inline: Инлайн
     empty: |
       <b>You have no packs yet.</b>
       To create, write a command /new

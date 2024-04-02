@@ -7,7 +7,7 @@ description:
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 Ես եմ էմոջին եւ սթիկերի վարպետը։ Փոխակերպեք լուսանկարները, տեսանյութերը եւ GIF-երը սահման սթիկերների:
 ratelimit: Not so often!
 cmd:
   start:
@@ -54,13 +54,13 @@ cmd:
     commands:
       ss: '🌟 Save sticker'
       start: '📜 Start menu'
-      help: '📖 Help'
+      help: '📖 Օգնություն'
       packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
       catalog: '📖 Catalog'
       publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      delete: '❌ Ջնջել սթիկերը'
       original: '🔍 Find original sticker'
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'

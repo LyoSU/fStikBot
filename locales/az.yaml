@@ -1,13 +1,13 @@
 ---
 language_name: '🇦🇿 Azərbaycanca'
-name: Favorite Stickers Bot 🇺🇦
+name: Sevimli Etiketlər Botu 🇺🇦
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Mən emoji və stiker paket qızıl alçısınıyam! Sevimli şəkillərinizi, videolarınızı və GIF-lərinizi konversiya və kəsmə olmadan rahatlıqla emojilərə və stikerlərə çevirmək üçün var gücümüzlə çalışırıq. 🎉🎊 Yalnız bir neçə kliklə hər hansı bir tədbir üçün personalizə edilmiş paket yarada bilərsiniz. Hələ gözləməyin, başlayaq və söhbətlərinizə bir az ✨parıltı✨ əlavə edək!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+    Stiker axtar: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 Mən stiker yaradıcısıyam! Şəkillərinizi, videolarınızı və GIF-lərinizi stikerlərə çevirə bilərəm.
 ratelimit: Çox vaxt deyil!
 cmd:
   start:
@@ -54,7 +54,7 @@ cmd:
     commands:
       ss: '🌟 Save sticker'
       start: '📜 Start menu'
-      help: '📖 Help'
+      help: '📖 Istinad'
       packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
@@ -338,7 +338,7 @@ news:
     <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
   join_btn: '📢 Join channel'
   not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+  continue: '✅ Продолжить'
 userAbout:
   help: |
     <b>🧑‍🎨 User about</b>
