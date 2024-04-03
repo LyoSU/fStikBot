@@ -394,7 +394,7 @@ scenes:
     pack_name: |
       <b>为新的贴纸包输入一个短链接：</b>
       <i>只使用英文字母、 数字和下划线。</i>
-      <i>例如，此数据包使用 "动物 "作为短链接：https://t.me/addstickers/<u>动物</u></i>。
+      <i>例如，此数据包使用 "动物 "作为短链接：https://t.me/addstickers/<u>Animals</u></i>。
 
       <i>你可以在按钮上选择随机的短链接</i>
     ok: |
