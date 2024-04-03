@@ -1,23 +1,23 @@
 ---
 language_name: '🇺🇿 O''zbek'
-name: Favorite Stickers Bot 🇺🇦
+name: Sevimli stikerlar boti 🇺🇦
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Xabar almashish tajribangizni ko'proq e'lon qilish uchun men emoji va stiker paketlarining mag'ribiyasiman. Men sevimli rasmlaringizni, videolaringizni va GIFlaringizni chiroyli emoji va stikerlarga aylantirishga ruxsat beradi. 🎉🎊 Men bilan siz har qanday tadbir uchun shaxsiy paketlar yarata olasiz. Qo'shimcha yoqimli suhbatlaringiz uchun boshladik!
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+    Stikerlarni qidirish: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 Men emoji va stiker ustasiyman! Rasmlarni, videolarni va GIFlarni jadallashtirib ajoyib stikerlarga aylantiramiz.
 ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      🧙 Salom, ${name}! Men emoji va stikerlar to‘plami ustasiman.
+      Men bir necha marta bosish orqali rasmlaringiz, videolaringiz va GIF-fayllaringizni ajoyib stikerlarga aylantira olaman
 
-      Send the /help command to learn more about what I can do
+      Nima qila olishim haqida ko'proq bilish uchun /help buyrug'ini yuboring
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 Yordam kerakmi? @fStikCommunity sahifasidagi qo'llab-quvvatlash chatimizga qo'shiling (faqat ingliz tilida)
     help: |
       <b>List of bot commands:</b>
 
@@ -52,62 +52,62 @@ cmd:
       • Kalit so‘zlar yoki tayyorlangan varaqlar bo‘yicha qidiring
       • Tashviqot uchun baho berishni unutmang. yoki stikerlar to'plamini reytingda pasaytiring
     commands:
-      ss: '🌟 Save sticker'
+      ss: '🌟 Stikerni saqlang'
       start: '📜 Start menu'
-      help: '📖 Help'
-      packs: '📁 Manage packs'
-      new: '🌝 Create sticker pack'
-      new_emoji: '😊 Create emoji pack'
-      catalog: '📖 Catalog'
-      publish: '📤 Publish pack'
-      delete: '❌ Delete sticker'
+      help: '📖 Ma''lumotnoma'
+      packs: '📁 Paketlarni boshqaring'
+      new: '🌝 Stikerlar toʻplami yarating'
+      new_emoji: '😊 Emoji toʻplami yarating'
+      catalog: '📖 Katalog'
+      publish: '📤 Paketni nashr qilish'
+      delete: '❌ Stikerni oʻchirish'
       original: '🔍 Find original sticker'
-      restore: '🔀 Restore a pack'
-      copy: '📋 Copy a pack'
+      restore: '🔀 Paketni tiklang'
+      copy: '📋 Paketdan nusxa oling'
       emoji: '📝 Change emoji suffix'
-      round: '🎥 Round shape video'
-      clear: '🖼️ Remove background from photo'
-      about: '📦 Pack info'
-      user_about: '🧑‍🎨 Creator info'
+      round: '🎥 Dumaloq shakldagi video'
+      clear: '🖼️ Suratdan fonni olib tashlang'
+      about: '📦 Paket haqida ma''lumot'
+      user_about: '🧑‍🎨 Ijodkor haqida maʼlumot'
       lang: '🌐 Change language'
-      report: '🚨 Report pack'
+      report: '🚨 Hisobot to''plami'
       donate: '☕️ Support the developer'
-      add_to_group: '👥 Add to group'
+      add_to_group: '👥 Guruhga qo''shish'
     btn:
       new: '📥 Create new'
-      catalog: '💖 Open catalog'
-      catalog_mini: '💖 Catalog'
-      catalog_browser: '🌐 Open in browser'
-      catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download Android app'
-      catalog_app_mini: '📱 Android app'
+      catalog: '💖 Katalogni ochish'
+      catalog_mini: '💖 Katalog'
+      catalog_browser: '🌐 Brauzerda oching'
+      catalog_browser_mini: '🌐 Brauzerda'
+      catalog_app: '📱 Android ilovasini yuklab oling'
+      catalog_app_mini: '📱 Android ilovasi'
   inline:
-    switch_pm: '📁 Select pack'
+    switch_pm: '📁 To''plamni tanlang'
   restore: |
-    <b>🗃 Pack restoration</b>
+    <b>🗃 Paketni tiklash</b>
 
-    To restore a pack, you need to send me a link to the pack that you want to restore
+    Paketni tiklash uchun siz tiklamoqchi bo'lgan paketga havolani yuborishingiz kerak.
   copy: |
-    <b>🗄 Copy pack</b>
+    <b>🗄 Toʻplamni nusxalash</b>
 
-    To copy another pack to a new one, you just need to send me a link to a sticker or emoji pack
+    Boshqa paketni yangisiga nusxalash uchun menga stiker yoki kulgichlar toʻplamiga havola yuborish kifoya.
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 Xabar berish</b>
 
-    If you come across a sticker pack that you believe might break the law or go against Telegram's Terms of Service, please report it to us by sending its link to @StickersReportBot
+    Agar qonunni buzishi yoki Telegramning xizmat koʻrsatish shartlariga zid kelishi mumkin boʻlgan stikerlar toʻplamiga duch kelsangiz, iltimos, uning havolasini @ manziliga yuborib, bizga xabar bering. StickersReportBot
 
-    <i>Remember that the bot is not responsible for the content of the packs and does not have the ability to control it</i>
+    <i>Esda tutingki, bot paketlar mazmuni uchun javobgar emas va uni boshqarish imkoniga ega emas</i>
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Paketlar</b>
     types:
-      regular: Stickers
-      custom_emoji: Emojis
+      regular: Stikerlar
+      custom_emoji: Emojilar
       inline: Inline
     empty: |
-      <b>You have no packs yet.</b>
-      To create, write a command /new
-    inline_title: Inline pack
+      <b>Sizda hali hech qanday paket yo'q.</b>
+      Yaratish uchun /new buyrug'ini yozing
+    inline_title: Inline paketi
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
@@ -117,9 +117,9 @@ cmd:
     error: There was an error changing emoji!
   round_video:
     enabled: |
-      Videos will now have a rounded shape
+      Videolar endi yumaloq shaklga ega bo'ladi
     disabled: |
-      Videos will no longer have a rounded shape
+      Videolar endi yumaloq shaklga ega bo‘lmaydi
 donate:
   menu: |
     <b>☕️ Bot development support</b>
@@ -135,23 +135,23 @@ donate:
     ➖ Ability to add more than one sticker to the processing queue
     ➖ Duration of video stickers up to 30 seconds
   btn:
-    donate: '☕️ Donate'
+    donate: '☕️ Xayriya qiling'
   topup: |
-    <b>Enter the amount of credits you want to buy:</b>
+    <b>Xarid qilmoqchi bo'lgan kreditlar miqdorini kiriting:</b>
 
-    <b>5 credit = 1$</b>
-    <i>Minimum amount - 5 credits</i>
+    <b>5 kredit = 1$</b>
+    <i>Minimal miqdor - 5 kredit</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Yaroqsiz summa</b>
 
-    The minimum amount is 5 credits
+    Minimal miqdor 5 ta kredit
   paymenu: |
-    You want to buy <b>${amount} credits</b> for <b>${price}$</b>
+    Siz <b>${amount} kreditlarni</b> <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    uchun sotib olmoqchisiz ⚠️ Kreditlar administrator tomonidan qo‘lda beriladi.
+    Kutish vaqti 5 daqiqadan 1 soatgacha
 
-    <u>Select payment method:</u>
+    <u>To'lov usulini tanlang:</u>
   update: |
     <b>🔄 Balance update</b>
 
@@ -172,28 +172,28 @@ coedit:
 
     <i>To remove editors, you need to reset the link</i>
   no_editors: |
-    No editors yet
+    Hozircha muharrirlar yo'q
   btn:
-    send: '📤 Send link'
-    reset: '🔁 Reset link'
+    send: '📤 Havolani yuboring'
+    reset: '🔁 Havolani tiklash'
   share: |
-    Follows the link and press "start" to co-edit the pack "${title}"
+    Havolani kuzatib boring va "${title}" to'plamini birgalikda tahrirlash uchun "start" tugmasini bosing.
   reset: |
-    <b>🔁 Link reset successful</b>
+    <b>🔁 Havolani tiklash muvaffaqiyatli amalga oshirildi</b>
 
-    New link for co-editing <a href="${link}">${title}</a>:
+    Birgalikda tahrirlash uchun yangi havola <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack not found
-      hidden: Pack successfully hidden
-      restored: Pack successfully restored
+      not_found: Paket topilmadi
+      hidden: Paket muvaffaqiyatli yashirildi
+      restored: Paket muvaffaqiyatli tiklandi
     set_pack: |
-      🌟 Selected <a href="${link}">${title}</a> pack
+      🌟 Tanlangan <a href="${link}">${title}</a> toʻplami
 
-      <b>❔ How add?</b>
-      Send photo, video or sticker to add to the pack
+      <b>❔ Qanday qilib qoʻshiladi?</b>
+      Paketga qo'shish uchun fotosurat, video yoki stiker yuboring
     set_inline_pack: |
       Selected <u>${title}</u> pack
 
@@ -203,38 +203,38 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Enabled
-        off: Disabled
-    hidden: Pack <a href="${link}">${title}</a> hidden from your list.
-    restored: Pack <a href="${link}">${title}</a> restored to your list.
+        on: Yoqilgan
+        off: O'chirilgan
+    hidden: Toʻplam <a href="${link}">${title}</a> roʻyxatingizdan yashirilgan.
+    restored: <a href="${link}">${title}</a> toʻplami roʻyxatingizga tiklandi.
     btn:
-      hide: '❌ Hide pack'
-      delete: '🗑 Delete pack'
+      hide: '❌ Paketni yashirish'
+      delete: '🗑 Paketni o''chirish'
       restore: '✅ Qayta tiklash'
-      use_pack: '📦 Use pack'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
+      use_pack: '📦 Paketdan foydalaning'
+      boost: '⚡ Kuchaytiring'
+      frame: '🖼 Ramka'
+      rename: '✏️ Nomini oʻzgartirish'
       search_gif: '🔎 Search GIF'
-      coedit: '👥 Co-edit'
+      coedit: '👥 Birgalikda tahrirlash'
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Katalogda tahrirlash'
       catalog_delete: '🗑 Katalogdan oʻchirish'
-      catalog_share: '🔗️️ Share'
-      catalog_open: '📂 Open in catalog'
+      catalog_share: '🔗️️ Ulashish'
+      catalog_open: '📂 Katalogda ochish'
     error:
       restore: |
-        <b>Error!</b>
-        Cannot restore pack.
+        <b>Xato!</b>
+        Paketni tiklab bo'lmadi.
       copy: |
-        <b>Error!</b>
-        Cannot find pack.
+        <b>Xato!</b>
+        Paket topilmadi.
   sticker:
     answerCbQuery:
-      delete: The sticker was successfully removed from the pack.
-      restored: The sticker was successfully saved to the current pack.
-    delete: The sticker was successfully removed from the pack.
-    restored: The sticker was successfully saved to the current pack.
+      delete: Stiker paketdan muvaffaqiyatli olib tashlandi.
+      restored: Stiker joriy paketga muvaffaqiyatli saqlandi.
+    delete: Stiker paketdan muvaffaqiyatli olib tashlandi.
+    restored: Stiker joriy paketga muvaffaqiyatli saqlandi.
     btn:
       delete: '🗑O''chirish'
       copy: '🌟Nusxalash'
@@ -246,12 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Sticker successfully added to pack:</b>
+      <b>Stiker paketga muvaffaqiyatli qo‘shildi:</b>
       <a href="${link}">${title}</a>
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Bir yoki bir nechtasini yuboring stikerga mos keladigan kulgichlar, agar siz ularni qo'shmoqchi bo'lsangiz</i>
     ok_inline: |
-      <b>Added to pack successfully:</b>
+      <b>Paketga muvaffaqiyatli qo'shildi:</b>
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
@@ -262,65 +262,65 @@ sticker:
 
       <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     catalog_offer: |
-      <b>😲 Wow, you made a great pack!</b>
+      <b>😲 Voy, ajoyib toʻplam yasadingiz!</b>
 
-      Would you like to add <a href="${link}">${title}</a> to the public sticker catalog so that other users of the bot can see it too?
-      <i>It does not take a lot of time</i>
+      Botning boshqa foydalanuvchilari ham koʻrishi uchun umumiy stikerlar katalogiga <a href="${link}">${title}</a> qoʻshmoqchimisiz?
+      <i>Bu ko'p vaqt talab qilmaydi</i>
     error:
       reply: |
-        <b>Error!</b>
-        Please, reply to the sticker.
+        <b>Xato!</b>
+        Iltimos, stikerga javob yozing.
       no_selected_pack: |
-        <b>You have not selected a pack</b>
+        <b>Siz toʻplamni tanlamadingiz</b>
 
-        Please, create (/new) or choose (/packs) pack
+        Iltimos, (/yangi) toʻplamni yarating yoki (/paketlar) tanlang
       stickers_too_much: |
-        This pack has the maximum number of stickers.
+        Ushbu paketda stikerlarning maksimal soni mavjud.
 
-        You can create a new pack using the /new command.
+        Siz /new buyrug'i yordamida yangi paket yaratishingiz mumkin.
       have_already: |
-        <b>This sticker is already in the pack</b>
+        <b>Ushbu stiker allaqachon paketda</b>
 
-        If you want to change the emoji, send it in the following message.
+        Agar kulgichni o'zgartirmoqchi bo'lsangiz, uni quyidagi xabarga yuboring.
       stickerset_invalid: |
-        <b>Error!</b>
-        Bot cannot access your current chosen pack.
+        <b>Xato!</b>
+        Bot joriy tanlangan paketingizga kira olmaydi.
 
-        Please, create (/new) or choose (/packs) another pack.
+        Iltimos, yarating (/yangi) yoki boshqa paketni tanlang (/paketlar).
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the static pack
+          <b>Xato!</b>
+          Bu fayl turi qoʻllab-quvvatlanmaydi
+          Siz ushbu rasm yoki statik stikerni statik toʻplamga qoʻshishingiz mumkin
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Yarating (/yangi) yoki tanlang (/paketlar) boshqa paket</i>
         video: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this video files to the video pack
+          <b>Xato!</b>
+          Bu fayl turi qoʻllab-quvvatlanmaydi
+          Siz ushbu video fayllarni video toʻplamga qoʻshishingiz mumkin
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Yaratish (/yangi) yoki (/ ni tanlang) paketlar) boshqa paket</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this animated files to the vector pack
+          <b>Xato!</b>
+          Bu fayl turi qoʻllab-quvvatlanmaydi
+          Ushbu animatsiyali fayllarni vektor toʻplamiga qoʻshishingiz mumkin
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Yaratish (/yangi) yoki (/) ni tanlang. paketlar) boshqa paket</i>
         unknown: |
-          <b>Error!</b>
-          This file type is not supported
+          <b>Xato!</b>
+          Bu fayl turi qoʻllab-quvvatlanmaydi
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Yarating (/yangi) yoki boshqa paketni tanlang (/paketlar)</i>
       wait_load: |
         <b>Kutib turing!</b>
 
         Bot hali ham avvalgi videoni qayta ishlamoqda...
         Qayta ishlash ustuvorligini oshirish va navbatga bir nechta stiker qo‘shish imkoniyatini oshirish uchun siz botni ishlab chiqishni (/dona) qo‘llab-quvvatlashingiz mumkin.
       timeout: |
-        <b>At the moment, the bot is experiencing a huge load</b>
-        Therefore, video conversion is available only for packs with active boost
+        <b>Ayni paytda bot juda katta yuklanishni boshdan kechirmoqda</b>
+        Shuning uchun video konvertatsiya faqat faol kuchaytirilgan paketlar uchun mavjud
 
-        For more details, follow the /donate
+        Batafsil ma'lumot uchun / ehson qilish
       convert: |
         <b>Xato!</b>
         Afsuski, bot videongizni aylantira olmadi.
@@ -333,66 +333,66 @@ sticker:
         Faylni qayta ishlash uchun juda katta. Yuborishdan oldin sifat va muddatni kamaytiring.
 news:
   join: |
-    ℹ️ <a href="${link}">Join our channel</a> to get the latest news about the bot.
+    ℹ️ <a href="${link}">Bot haqidagi so'nggi yangiliklardan xabardor bo'lish uchun</a> kanalimizga qo'shiling.
 
-    <i>Subscribe to the channel to get the latest news about the bot, as well as updates and new features.</i>
-  join_btn: '📢 Join channel'
-  not_joined: '🙅 You are not subscribed to the channel'
-  continue: '✅ Continue'
+    <i>Bot haqidagi eng so'nggi yangiliklar, shuningdek, yangilanishlar va yangi xususiyatlarni olish uchun kanalga obuna bo'ling.</i>
+  join_btn: '📢 Kanalga qo''shiling'
+  not_joined: '🙅 Siz kanalga obuna bo''lmagansiz'
+  continue: '✅ Davom eting'
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨 Foydalanuvchi haqida</b>
 
-    Using this menu you can find out information about the user and his sticker packs
+    Ushbu menyudan foydalanib siz foydalanuvchi va uning stiker paketlari haqida ma'lumot olishingiz mumkin
 
-    To get information about the user, use the button below or forward his message
+    Foydalanuvchi haqida ma'lumot olish uchun tugmani bosing pastga yoki uning xabarini yo'naltiring
   result: |
     <b>🧑‍🎨 User info</b>
     <b>🆔 User ID:</b> <code>${userId}</code>
     <b>🎨 Packs from this user:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about stickers of this owner</i>
+    <i>Bizda bu egasining stikerlari haqida hech qanday ma'lumot yo'q</i>
   forward_hidden: |
-    The user has hidden the ability to forward messages. Use the button below to view his sticker packs.
-  select_user: '🧑‍🎨 Select user'
+    Foydalanuvchi xabarlarni yo'naltirish imkoniyatini yashirgan. Uning stiker paketlarini ko'rish uchun quyidagi tugmadan foydalaning.
+  select_user: '🧑‍🎨 Foydalanuvchini tanlang'
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Choose pack type</u></b>
-    regular: '😊 Sticker'
+      <b><u>Paket turini tanlang</u></b>
+    regular: '😊 Stiker'
     custom_emoji: '🌟 Emoji (premium)'
     static: '🌟 Static'
     animated: '✨ Vektor'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Paket turini tanlang</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>Umumiy</b> - statik (harakat qilmang), rastr, fayl format - PNG qo'shishdan oldin (bot qayta ishlanmoqda), qo'shgandan keyin - WEBP.
+      Oddiy to'plamga misol - t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>Video</b> - animatsion video to'plami. Siz har qanday video, gif va fotosuratni qo'shishingiz mumkin.
+      Namuna video to'plami - t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>Animatsiyalangan</b> - animatsiyali, vektor (ular fayl ichidagi ob'ektlarning aniq tavsifiga ega bo'lishi kerak. ular har qanday miqyosda aniq ko'rsatiladi), fayl formati - TGS, Lottie formatining o'zgarishi.
+      Animatsion to'plamga misol - t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>Animatsion va video stikerlar to'plamida 50 tagacha stiker bo'lishi mumkin. Statik stikerlar to‘plamida 120 tagacha stiker bo‘lishi mumkin.</i>
     pack_title: |
       <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
       <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <b>Yangi stikerlar toʻplami uchun qisqa havolani kiriting:</b>
+      <i>Faqat inglizcha harflar, raqamlar va pastki chiziqdan foydalaning.</i>
+      <i>Masalan, bu toʻplam qisqa havola sifatida “Hayvonlar”dan foydalanadi: https://t.me/addstickers/<u>Hayvonlar</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>Tugmadagi tasodifiy qisqa havolani tanlashingiz mumkin.</i>
     ok: |
-      Pack <a href="${link}">${title}</a> successfully created!
+      <a href="${link}">${title}</a> toʻplami muvaffaqiyatli yaratildi!
 
-      <b>Pack link:</b> <pre>${link}</pre>
+      <b>Paket havolasi:</b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Fayl, rasm, video yoki stiker yuboring, shunda men uni to'plamingizga qo'shing
     error:
       title_long: Ism ${max} belgidan oshmasligi kerak.
       name_long: Manzil ${max} belgidan oshmasligi kerak.
@@ -400,19 +400,19 @@ scenes:
         name_invalid: Ushbu manzilni ishlatib bo'lmaydi.
         name_occupied: Ushbu manzil band.
         upload_failed: |
-          <b>Error!</b>
-          Bot cannot upload stickers to Telegram.
+          <b>Xato!</b>
+          Bot Telegram’ga stiker yuklay olmaydi.
 
-          Please, try again later.
+          Iltimos, keyinroq qayta urinib ko'ring.
   copy:
     enter: |
-      I can copy it, but before that, let's create a new pack
+      Men uni nusxalashim mumkin, lekin undan oldin yangi paket yarataylik
     progress: |
       Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
 
       Progress: ${current}/${total}
     done: |
-      Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+      <a href="${originalLink}">${originalTitle}</a> dan <a href="${link}">${title}</a> gacha toʻplamdan nusxalash muvaffaqiyatli yakunlandi.
     error:
       premium: |
         <b>Error!</b>
@@ -428,25 +428,25 @@ scenes:
         Ushbu stikerning asl nusxasini topolmadim.
   delete:
     enter: |
-      Send the sticker that was added through this bot and I will delete it from the pack.
+      Ushbu bot orqali qo'shilgan stikerni yuboring, men uni paketdan o'chirib tashlayman.
     confirm: |
-      Are you sure you want to delete this sticker?
+      Haqiqatan ham bu stikerni oʻchirib tashlamoqchimisiz?
     error:
       not_found: |
-        <b>Error!</b>
-        I could not find the sticker.
+        <b>Xato!</b>
+        Stikerni topa olmadim.
   rename:
     enter_name: |
-      <b>Enter new title for <a href="${link}">${title}</a>:</b>
+      <b> <a href="${link}">${title}</a>uchun yangi nom kiriting:</b>
     success: |
-      <b>Title successfully changed!</b>
+      <b>Sarlavha muvaffaqiyatli o'zgartirildi!</b>
 
-      New title: <a href="${link}">${title}</a>
+      Yangi nom: <a href="${link}">${title}</a>
   packAbout:
     enter: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>Bu haqda ma'lumot olish uchun menga stiker yoki maxsus kulgich yuboring:</b>
     not_found: |
-      I could not find the sticker
+      Stikerni topa olmadim
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
       🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
@@ -457,32 +457,32 @@ scenes:
       <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other stickers of this owner</i>
+      <i>Ushbu egasining boshqa stikerlari haqida bizda ma'lumot yo'q</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Haqiqatan ham <a href="${link}">${title}</a>ni kuchaytirmoqchimisiz?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Boosting qayta ishlashning ustuvorligini va navbatga bir nechta stiker qoʻshish imkoniyatini oshiradi
+      Boostlar haqida batafsil maʼlumotni menyudan topishingiz mumkin: /donate
 
-      <b>Price:</b> 1 credit
-      <b>Current balance:</b> ${balance} credits
+      <b>Narxi:</b> 1 kredit
+      <b>Joriy balans:</b> ${balance} kreditlar
     btn:
-      yes: Yes, boost!
-      no: No, cancel
+      yes: Ha, kuchaytiring!
+      no: Yo'q, bekor qiling
     canceled: |
-      Boosting canceled
+      Kuchaytirish bekor qilindi
     success: |
-      Boosting successfully completed!
+      Boost muvaffaqiyatli yakunlandi!
 
-      ${title} is now boosted
+      ${title} endi kuchaytirildi
     error:
       not_enough_credits: |
-        You do not have enough credits to boost this pack.
+        Bu toʻplamni oshirish uchun sizda yetarli kredit yoʻq.
 
-        You can top up your balance by sending the /donate command.
+        Siz /donate buyrug'ini yuborish orqali balansingizni to'ldirishingiz mumkin.
       already_boosted: |
-        This pack is already boosted.
+        Bu paket allaqachon kuchaytirilgan.
   catalog:
     publish:
       publish_new: |
@@ -490,49 +490,49 @@ scenes:
 
         <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
       owner_proof: |
-        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required pack
-        4. Forward the received message to the bot
+        <b>Ushbu paketning egaligini tasdiqlash uchun siz bir necha oddiy amallarni bajarishingiz kerak:</b>
+        1. @Stickers botini oching
+        2. <code>yuboring /packstats</code> buyrug'i
+        3. Kerakli paketni toping va tanlang
+        4. Qabul qilingan xabarni botga yo'naltiring
       publish_new_access_denied: |
-        <b>Error!</b>
-        This pack is not yours.
+        <b>Xato!</b>
+        Bu paket sizniki emas.
 
-        You can only publish your own packs
+        Siz faqat o'zingizning paketlaringizni nashr qilishingiz mumkin
       bannded: |
-        <b>Error!</b>
-        You are banned from using this feature.
-        Please, contact the administrator.
+        <b>Xato!</b>
+        Sizga ushbu xususiyatdan foydalanish taqiqlangan.
+        Iltimos, administratorga murojaat qiling.
       enter: |
-        You are about to publish the "<a href="${link}">${title}</a>" pack in our bot's public directory
-        It can be found by any user of the bot by name, tags or filter
-        Because of this, more people will install your pack
-        Try to send only high-quality packs that may be of interest to a large number of people
+        Siz "<a href="${link}">${title}</a>" to'plamini botimizning umumiy katalogida nashr qilmoqchisiz
+        Uni botning istalgan foydalanuvchisi nomi, teglari yoki filtri orqali topishi mumkin.
+        Shu sababli paketingizni ko'proq odamlar o'rnatadilar
+        Ko'p odamlarni qiziqtiradigan faqat yuqori sifatli paketlarni yuborishga harakat qiling
 
-        <b>Rules for publishing packs:</b>
-        • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        <b>Qoidalar to'plamlarni nashr qilish uchun:</b>
+        • Tor doiradagi odamlar uchun mo'ljallangan shaxsiy to'plamlaringizni nashr qilmang. Masalan, doʻstlaringizning yuzlari yoki xabarlaringizdan iqtiboslar
+        • Yevropa Ittifoqi qonunlarini yoki boshqa mahalliy qonunlarni buzuvchi stiker bosimlarini joylashtirmang
 
-        You will need to submit additional information for it to be published in the catalog
-      continue_button: Continue
+        Buning uchun qoʻshimcha maʼlumotlarni taqdim etishingiz kerak boʻladi. katalogida chop etilgan
+      continue_button: Davom eting
       enter_description: |
-        <b>Briefly describe your pack so that others can find it</b>
+        <b>To'plamingizni boshqalar topa olishi uchun qisqacha ta'riflang</b>
 
-        <i>You can also use hashtags to categorize [#]</i>
-        <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game </i>
+        <i>Siz [#]</i>
+        turkumlash uchun heshteglardan ham foydalanishingiz mumkin.<i>Masalan: #anime #mem #hayvonlar #cute #kpop #kulgili #mushuk #o'yin </i>
       select_language: |
-        <b>Choose which languages your pack is for:</b>
-        <i>You can select multiple languages</i>
+        <b>Paketingiz qaysi tillar uchun ekanligini tanlang:</b>
+        <i>Siz bir nechta tillarni tanlashingiz mumkin</i>
       button_all_languages: All languages
       button_confirm_language: Confirm
       set_safe: |
-        <b>Is your pack safe for users?</b>
-        <i>That is, it does not contain erotica and other shocking content</i>
+        <b>Sizning paketingiz foydalanuvchilar uchun xavfsizmi?</b>
+        <i>Ya'ni, unda erotik va boshqa hayratlanarli kontent mavjud emas</i>
       button_safe:
         safe: Yes, it is safe
         not_safe: No, it is not safe
-      no_tags: were not specified
+      no_tags: belgilanmagan
       confirm: |
         <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
 
@@ -542,32 +542,32 @@ scenes:
         <b>Languages:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
-        Congratulations, your pack has been published in the general directory of our bot where other users can find it!
+        Tabriklaymiz, sizning paketingiz boshqa foydalanuvchilar topa oladigan botimizning umumiy katalogida chop etildi!
 
-        You can edit the pack search information by selecting the pack with the /packs command.
+        Paketni qidirish ma'lumotlarini /packs buyrug'i bilan to'plamni tanlash orqali tahrirlashingiz mumkin.
 
-        <i>We remind you that the statistics of your pack can be viewed through the official bot @Stickers</i>
+        <i>Sizga shuni eslatib o'tamizki, paketingiz statistikasini @Stickers rasmiy boti orqali ko'rish mumkin</i>
     unpublish:
       success: |
-        The pack has been successfully unpublished from bot catalog.
+        Paket bot katalogidan muvaffaqiyatli olib tashlandi.
   delete_pack:
     enter: |
-      Are you sure you want to delete the pack <a href="${link}">${title}</a>?
-      It will be permanently deleted and cannot be recovered.
+      Haqiqatan ham <a href="${link}">${title}</a>toʻplamini oʻchirib tashlamoqchimisiz?
+      U butunlay oʻchirib tashlanadi va uni qayta tiklab boʻlmaydi.
 
-      If you want to delete only one sticker, use the /delete command.
+      Agar siz faqat bitta stikerni oʻchirmoqchi boʻlsangiz, /delete buyrugʻidan foydalaning.
 
-      Send <code>${confirm}</code> to confirm you really want to delete this pack.
-    confirm: Yes, I am totally sure.
+      Ushbu paketni haqiqatan ham oʻchirib tashlamoqchi ekanligingizni tasdiqlash uchun <code>${confirm}</code> yuboring.
+    confirm: Ha, men mutlaqo aminman.
     success: |
-      <b>Pack successfully deleted!</b>
+      <b>Toʻplam muvaffaqiyatli oʻchirildi!</b>
     error:
-      - <b>Error!</b>
-      - Opps, something went wrong.
+      - <b>Xato!</b>
+      - Opps, nimadir xato ketdi.
   frame:
     no_video: |
-      <b>Error!</b>
-      You can only add frames to video packs.
+      <b>Xato!</b>
+      Siz faqat video paketlarga ramkalar qo'shishingiz mumkin.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose frame type:</b>
       Frame is a transparent background around the sticker
@@ -581,32 +581,32 @@ scenes:
       <i>In the future, you may use the /frame command to set the type of frame</i>
     types:
       lite: '1. Lite'
-      medium: '2. Medium'
-      rounded: '3. Rounded'
-      square: '4. Square'
-      circle: '5. Circle'
+      medium: '2. O''rta'
+      rounded: '3. Dumaloq'
+      square: '4. Kvadrat'
+      circle: '5. Doira'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Tanlangan ramka turi:</b> ${type}
   photoClear:
     enter: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Orqa fonni olib tashlamoqchi bo'lgan <u>rasmini</u> yuboring va men faylni fonsiz yuboraman
 
-      <i>Works best with photos. Works worse with drawings, illustrations, etc.</i>
+      <i>Fotosuratlar bilan yaxshi ishlaydi. Chizmalar, rasmlar va boshqalar bilan yomonroq ishlaydi.</i>
     enter_anime: |
       Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
 
       <i>It works best with anime pictures</i>
     choose_model: |
-      <b>Choose model:</b>
-    web_app: WebApp - for photos with people
+      <b>Modelni tanlang:</b>
+    web_app: WebApp - odamlar bilan suratga olish uchun
     model:
-      ordinary: Common — for photos with people
-      general: General — for any photos
-      anime: Anime — for anime pictures
-    add_to_set_btn: '🌟 Add to set'
+      ordinary: Umumiy — odamlar bilan suratga olish uchun
+      general: Umumiy - har qanday fotosuratlar uchun
+      anime: Anime — anime rasmlari uchun
+    add_to_set_btn: '🌟 Toʻplamga qoʻshish'
     error: |
-      <b>Error!</b>
-      Opps, something went wrong.
+      <b>Xato!</b>
+      Op, nimadir xato ketdi.
   leave: |
     Harakat bekor qilindi.
   btn:
@@ -620,9 +620,9 @@ error:
       Telegram xatolikni qaytardi:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
-    Please, contact the administrator.
+    <b>Xato!</b>
+    Sizga ushbu xususiyatdan foydalanish taqiqlangan.
+    Iltimos, administratorga murojaat qiling.
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 
