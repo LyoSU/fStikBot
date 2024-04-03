@@ -383,9 +383,9 @@ newPackConfirm.enter(async (ctx, next) => {
     } else {
       const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
         user_id: ctx.from.id,
-        sticker_format: 'video',
+        sticker_format: 'animated',
         sticker: {
-          source: placeholder[packType]['video']
+          source: placeholder[packType]['animated']
         }
       })
 
@@ -396,7 +396,7 @@ newPackConfirm.enter(async (ctx, next) => {
         stickers: [
           {
             sticker: uploadedSticker.file_id,
-            format: 'video',
+            format: 'animated',
             emoji_list: ['🌟'],
           }
         ],
