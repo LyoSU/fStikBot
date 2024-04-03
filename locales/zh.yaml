@@ -404,16 +404,16 @@ scenes:
 
       发送文件、照片、视频或贴纸，以便我将其添加到您的套装中
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long:名称字符数不得超过 ${max} 字符
+      name_long:地址长度不得超过 ${max} 字符。
       telegram:
         name_invalid: 您不能使用这样的地址。
         name_occupied: 该地址已被占用。
-        upload_failed: |2
-           <b>错误！</b>
-          机器人无法将贴纸上传到 Telegram。
+        upload_failed: |
+          <b>错误！</b>
+         机器人无法将贴纸上传到 Telegram。
 
-           请稍后再试。
+          请稍后再试。
   copy:
     enter: |
       我可以复制它，但在此之前，让我们创建一个新的包
@@ -422,7 +422,7 @@ scenes:
 
       进度： ${current}/${total}
     done: |
-      成功完成从 <a href="${originalLink}">${originalTitle}</a> 到 <a href="${link}">${title}</a> 的打包复制。
+       成功完成从 <a href="${originalLink}">${originalTitle}</a> 到 <a href="${link}">${title}</a> 的打包复制。
     error:
       premium: |
         <b>错误！</b>
@@ -442,9 +442,9 @@ scenes:
     confirm: |
       您确定要删除这个贴纸吗？
     error:
-      not_found: |2
-         <b>错误！</b>
-        我找不到贴纸。
+      not_found: |
+        <b>错误！</b>
+       我找不到贴纸。
   rename:
     enter_name: |
       <b>输入新标题r <a href="${link}">${title}</a>:</b>
