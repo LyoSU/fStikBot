@@ -396,6 +396,7 @@ newPackConfirm.enter(async (ctx, next) => {
         stickers: [
           {
             sticker: uploadedSticker.file_id,
+            format: 'video',
             emoji_list: ['🌟'],
           }
         ],
