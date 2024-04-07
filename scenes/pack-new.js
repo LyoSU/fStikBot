@@ -10,6 +10,19 @@ const {
   substrUnicode,
 } = require('../utils')
 
+const placeholder = {
+  regular: {
+    video: 'sticker_placeholder.webm',
+    animated: 'sticker_placeholder.tgs',
+    static: 'sticker_placeholder.webp'
+  },
+  custom_emoji: {
+    video: 'emoji_placeholder.webm',
+    animated: 'sticker_placeholder.tgs',
+    static: 'emoji_placeholder.webp'
+  }
+}
+
 const animalEmojis = {
   Dog: "🐶",
   Cat: "🐱",
@@ -258,19 +271,6 @@ newPackConfirm.enter(async (ctx, next) => {
   if (!inline) name += nameSuffix
   if (!inline) title += titleSuffix
 
-  const placeholder = {
-    regular: {
-      video: 'sticker_placeholder.webm',
-      animated: 'sticker_placeholder.tgs',
-      static: 'sticker_placeholder.webp'
-    },
-    custom_emoji: {
-      video: 'emoji_placeholder.webm',
-      animated: 'sticker_placeholder.tgs',
-      static: 'emoji_placeholder.webp'
-    }
-  }
-
   let createNewStickerSet
 
   const packType = ctx.session.scene.newPack.packType || 'regular'
@@ -381,13 +381,13 @@ newPackConfirm.enter(async (ctx, next) => {
         }
       }
     } else {
-      // const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
-      //   user_id: ctx.from.id,
-      //   sticker_format: 'animated',
-      //   sticker: {
-      //     source: placeholder[packType]['animated']
-      //   }
-      // })
+      const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
+        user_id: ctx.from.id,
+        sticker_format: 'video',
+        sticker: {
+          source: placeholder[packType]['video']
+        }
+      })
 
       createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
@@ -395,8 +395,7 @@ newPackConfirm.enter(async (ctx, next) => {
         title,
         stickers: [
           {
-            sticker: 'CAACAgIAAxUHZhMSKEqm-IPSmSdxk-FQRzYqDBkAAtpMAALaTphIBWhA6uyoRTA0BA', // animated placeholder
-            format: 'animated',
+            sticker: uploadedSticker.file_id,
             emoji_list: ['🌟'],
           }
         ],
