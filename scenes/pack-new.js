@@ -381,13 +381,13 @@ newPackConfirm.enter(async (ctx, next) => {
         }
       }
     } else {
-      const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
-        user_id: ctx.from.id,
-        sticker_format: 'animated',
-        sticker: {
-          source: placeholder[packType]['animated']
-        }
-      })
+      // const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
+      //   user_id: ctx.from.id,
+      //   sticker_format: 'animated',
+      //   sticker: {
+      //     source: placeholder[packType]['animated']
+      //   }
+      // })
 
       createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
@@ -395,7 +395,7 @@ newPackConfirm.enter(async (ctx, next) => {
         title,
         stickers: [
           {
-            sticker: uploadedSticker.file_id,
+            sticker: 'CAACAgIAAxUHZhMSKEqm-IPSmSdxk-FQRzYqDBkAAtpMAALaTphIBWhA6uyoRTA0BA', // animated placeholder
             format: 'animated',
             emoji_list: ['🌟'],
           }
