@@ -147,12 +147,12 @@ donate:
   btn:
     donate: '☕️ 捐赠'
   topup: |
-    <b>输入您要购买的信用点数：</b
+    <b>输入您要购买的信用点数：</b>
 
-    <b>5 点数 = 1 美元</b
-    <i>最低金额 - 5 信用点数</i
+    <b>5 点数 = 1 美元</b>
+    <i>最低金额 - 5 信用点数</i>
   invalid_amount: |
-    <b>无效金额</b
+    <b>无效金额</b>
 
     最低金额为 5 个信用点
   paymenu: |
@@ -389,7 +389,7 @@ scenes:
 
       <i>动画和视频贴纸套装最多可有 50 个贴纸。静态贴纸套装最多可有 120 个贴纸。
     pack_title: |
-      <b>为新贴纸输入名称：</b
+      <b>为新贴纸输入名称：</b>
       <i>您也可以在下面选择一个随机生成的名称。
     pack_name: |
       <b>为新的贴纸包输入一个短链接：</b>
@@ -572,7 +572,7 @@ scenes:
       发送 <code>${confirm}</code> 以确认您真的要删除此贴包。
     confirm: 是的，我完全肯定。
     success: |
-      <b>成功删除软件包！</b
+      <b>成功删除软件包！</b>
     error:
       - <b>错误！</b>
       - 哎呀，出错了。
@@ -625,7 +625,7 @@ scenes:
     cancel: '❌ 取消'
 error:
   telegram: |
-    <b>电报返回错误！</b
+    <b>电报返回错误！</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
