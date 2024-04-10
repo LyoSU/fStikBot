@@ -548,7 +548,7 @@ scenes:
       confirm: |
         <b>确认出版"<a href="${link}">${title}</a>"</b> 包
 
-        <b>描述：</b> <i>${description}</i
+        <b>描述：</b> <i>${description}</i>
 
         <b>标签：</b> ${tags}
         <b>语言：</b> ${languages}
