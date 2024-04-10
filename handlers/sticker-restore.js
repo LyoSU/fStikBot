@@ -28,7 +28,7 @@ module.exports = async (ctx) => {
       if (fileExtension === 'tgs') {
         stickerFormat = 'animated'
         sticker.file.is_animated = true
-      } else if (fileExtension === 'webp') {
+      } else if (fileExtension === 'webm') {
         stickerFormat = 'video'
         sticker.file.is_video = true
       } else {
