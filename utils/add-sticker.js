@@ -459,13 +459,11 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       }
       userQueue.video = false
     } else {
-      // stickerExtra.sticker_format = 'static'
-
       if (!fileData) {
         fileData = await downloadFileByUrl(fileUrl)
       }
 
-      if (stickerFile.set_name) {
+      if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
         stickerExtra.sticker = stickerFile.file_id
 
         return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
