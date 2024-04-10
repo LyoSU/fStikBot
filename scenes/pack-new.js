@@ -300,6 +300,16 @@ newPackConfirm.enter(async (ctx, next) => {
       const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
 
       const uploadedStickers = (await Promise.all(stickers.map(async (sticker) => {
+        let stickerFormat
+
+        if (sticker.is_animated) {
+          stickerFormat = 'animated'
+        } else if (sticker.is_video) {
+          stickerFormat = 'video'
+        } else {
+          stickerFormat = 'static'
+        }
+
         const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
 
         const buffer = await got(fileLink, {
@@ -330,6 +340,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
         return {
           sticker: uploadedSticker.file_id,
+          format: stickerFormat,
           emoji_list: [sticker.emoji]
         }
       }))).sort((a, b) => {
@@ -355,7 +366,6 @@ newPackConfirm.enter(async (ctx, next) => {
         name,
         title,
         stickers: uploadedStickers,
-        sticker_format: stickerFormat,
         sticker_type: packType,
         needs_repainting: !!ctx.session.scene.newPack.fillColor
       }).catch((error) => {
