@@ -25,7 +25,7 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
   }
 
   // check subscribe to channel
-  const getChatMember = await ctx.telegram.getChatMember(ctx.config.ruNewsChannel.id, ctx.from.id).catch((error) => {
+  const getChatMember = await ctx.telegram.getChatMember(ctx?.config?.ruNewsChannel?.id, ctx.from.id).catch((error) => {
     console.error('getChatMember error', error)
     return {
       status: 'error',
@@ -35,14 +35,14 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
 
   if (['member', 'administrator', 'creator'].indexOf(getChatMember.status) === -1) {
     await ctx.replyWithHTML(ctx.i18n.t('news.join', {
-      link: ctx.config.ruNewsChannel.link
+      link: ctx?.config?.ruNewsChannel?.link
     }), {
       disable_web_page_preview: true,
       reply_markup: {
         inline_keyboard: [
           [{
             text: ctx.i18n.t('news.join_btn'),
-            url: ctx.config.ruNewsChannel.link
+            url: ctx?.config?.ruNewsChannel?.link
           }],
           [{
             text: ctx.i18n.t('news.continue'),
@@ -60,7 +60,7 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
 }))
 
 composer.action('start', async (ctx, next) => {
-  const getChatMember = await ctx.telegram.getChatMember(ctx.config.ruNewsChannel.id, ctx.from.id).catch((error) => {
+  const getChatMember = await ctx.telegram.getChatMember(ctx?.config?.ruNewsChannel?.id, ctx.from.id).catch((error) => {
     console.error('getChatMember error', error)
     return {
       status: 'error',
