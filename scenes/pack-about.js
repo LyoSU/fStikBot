@@ -70,6 +70,10 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.not_found'))
   }
 
+  if (!sticker.set_name) {
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.not_found'))
+  }
+
   const stickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
     stickerset: new telegramApi.Api.InputStickerSetShortName({
       shortName: sticker.set_name
