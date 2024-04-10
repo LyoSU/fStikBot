@@ -388,6 +388,10 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
           source: await downloadFileByUrl(fileUrl)
         }
       } else {
+        if (stickerExtra.sticker_format === 'static') {
+          stickerExtra.sticker_format = 'video'
+        }
+
         const stickerSetsCount = await ctx.db.StickerSet.countDocuments({
           owner: ctx.session.userInfo._id,
           video: true
