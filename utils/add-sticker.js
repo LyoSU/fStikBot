@@ -482,35 +482,16 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
         fileData = await downloadFileByUrl(fileUrl)
       }
 
-      if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
+      if (stickerFile.set_name) {
         stickerExtra.sticker = stickerFile.file_id
 
         return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
-      }
-
-      const imageSharp = sharp(fileData, { failOnError: false })
-      const imageMetadata = await imageSharp.metadata().catch(() => {})
-
-      if (!imageMetadata) {
-        throw new Error('Invalid image')
-      }
-
-      if (stickerSet.packType === 'custom_emoji') {
-        if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
-          imageSharp.resize({ width: 100, height: 100 })
-        }
       } else {
-        if (
-          imageMetadata.width > 512 || imageMetadata.height > 512 ||
-          (imageMetadata.width !== 512 && imageMetadata.height !== 512)
-        ) {
-          if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
-          else imageSharp.resize({ width: 512 })
+        stickerExtra.sticker = {
+          source: fileData
         }
-      }
 
-      stickerExtra.sticker = {
-        source: await imageSharp.webp({ quality: 100 }).png({ force: false }).toBuffer()
+        stickerExtra.sticker_format = stickerFile.is_animated ? 'animated' : 'static'
       }
     }
   }

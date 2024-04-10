@@ -19,7 +19,23 @@ module.exports = async (ctx) => {
 
       newFileUniqueId = sticker.fileUniqueId
     } else {
-      if (sticker.stickerSet.video === true) {
+      const stickerFile = await ctx.telegram.getFile(sticker.file.file_id)
+
+      const fileExtension = stickerFile.file_path.split('.').pop()
+
+      let stickerFormat
+
+      if (fileExtension === 'tgs') {
+        stickerFormat = 'animated'
+        sticker.file.is_animated = true
+      } else if (fileExtension === 'webp') {
+        stickerFormat = 'video'
+        sticker.file.is_video = true
+      } else {
+        stickerFormat = 'static'
+      }
+
+      if (stickerFormat === 'video') {
         sticker.file = sticker.info
         sticker.file.skip_reencode = true
       }
