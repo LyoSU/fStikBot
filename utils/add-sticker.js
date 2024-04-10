@@ -276,23 +276,6 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  // if (!stickerSet?.animated && stickerFile.is_animated) {
-  //   return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.animated'), {
-  //     reply_to_message_id: ctx?.message?.message_id,
-  //     allow_sending_without_reply: true
-  //   })
-  // } else if (!stickerSet?.video && (isVideo || isVideoNote)) {
-  //   return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.video'), {
-  //     reply_to_message_id: ctx?.message?.message_id,
-  //     allow_sending_without_reply: true
-  //   })
-  // } else if (!stickerFile.is_animated && stickerSet?.animated) {
-  //   return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.static'), {
-  //     reply_to_message_id: ctx?.message?.message_id,
-  //     allow_sending_without_reply: true
-  //   })
-  // }
-
   const getStickerSetCheck = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
     return {
       error: {
@@ -382,10 +365,6 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
       isVideo || isVideoNote
       || (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
     ) {
-      if (stickerExtra.sticker_format === 'static') {
-        stickerExtra.sticker_format = 'video'
-      }
-
       if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
       const userQueue = queue[ctx.from.id]
 
@@ -487,11 +466,30 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
         return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
       } else {
-        stickerExtra.sticker = {
-          source: fileData
+        const imageSharp = sharp(fileData, { failOnError: false })
+        const imageMetadata = await imageSharp.metadata().catch(() => {})
+
+        if (!imageMetadata) {
+          throw new Error('Invalid image')
         }
 
-        stickerExtra.sticker_format = stickerFile.is_animated ? 'animated' : 'static'
+        if (stickerSet.packType === 'custom_emoji') {
+          if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
+            imageSharp.resize({ width: 100, height: 100 })
+          }
+        } else {
+          if (
+            imageMetadata.width > 512 || imageMetadata.height > 512 ||
+            (imageMetadata.width !== 512 && imageMetadata.height !== 512)
+          ) {
+            if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
+            else imageSharp.resize({ width: 512 })
+          }
+        }
+
+        stickerExtra.sticker = {
+          source: await imageSharp.webp({ quality: 100 }).png({ force: false }).toBuffer()
+        }
       }
     }
   }
