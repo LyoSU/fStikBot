@@ -10,7 +10,7 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
     return next()
   }
 
-  if (!ctx.config.ruNewsChannel.id) return next()
+  if (!ctx?.config?.ruNewsChannel?.id) return next()
 
   // if not command
   if (ctx.message.text && ctx.message.text.indexOf('/') === 0) return next()
