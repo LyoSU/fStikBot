@@ -19,7 +19,7 @@ module.exports = async (ctx) => {
 
       newFileUniqueId = sticker.fileUniqueId
     } else {
-      const stickerFile = await ctx.telegram.getFile(sticker.file.file_id)
+      const stickerFile = await ctx.telegram.getFile(sticker.info.file_id)
 
       const fileExtension = stickerFile.file_path.split('.').pop()
 
