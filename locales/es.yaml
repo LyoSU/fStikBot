@@ -19,30 +19,30 @@ cmd:
 
       :speech _balloon: ¿Necesitas ayuda? Únete a nuestro chat de soporte en @fStikCommunity (sólo en inglés)
     help: |
-      <b>List of bot commands:</b>
+      <b>Lista de comandos del bot:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Crea un nuevo paquete de pegatinas
+      /new_emoji - Crea un nuevo paquete de emojis
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Elimina una pegatina de un paquete
+      /original - Encuentra la pegatina original
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Lista todos tus paquetes
+      /restore - Restaura un paquete eliminado
+      /copy - Copia un paquete
+      /emoji - Cambia el sufijo del emoji para el paquete actual
+      /frame - Cambia el marco para el paquete de video actual
+      /publish - Publica el paquete en el catálogo
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Abre el catálogo de paquetes de pegatinas
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Cambia el idioma
+      /donate - Apoya al desarrollador
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Chat de soporte: @fStikCommunity (solo en inglés)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Contactos: @ly_oBot
+      👨🏻‍💻 Canal de desarrollo: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -122,18 +122,18 @@ cmd:
       Los videos ya no tendrán una forma redondeada
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Apoyo en el desarrollo del bot</b>
+    Al apoyar el desarrollo del bot, recibirás créditos.
+    Por cada dólar, recibirás 5 créditos.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>Saldo:</b> <code>${balance}</code> créditos
+    Con 1 crédito, tienes la oportunidad de potenciar un paquete.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>La potenciación proporciona los siguientes beneficios:</b>
+    ➖ Desactivar <code>${titleSuffix}</code> en el nombre de los paquetes <i>(no en el enlace)</i>
+    ➖ Prioridad al convertir pegatinas de video
+    ➖ Capacidad de agregar más de una pegatina a la cola de procesamiento
+    ➖ Duración de las pegatinas de video de hasta 30 segundos
   btn:
     donate: '☕ Donar'
   topup: |
@@ -195,10 +195,10 @@ callback:
       <b>❔ ¿Cómo añadir?</b>
       Envía foto, vídeo o pegatinas para añadir al paquete
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      Paquete seleccionado <u>${title}</u>
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      Para usarlo, escribe en cualquier chat <code>@${botUsername} </code>y espacio
+      También puedes usarlo presionando el botón debajo
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
@@ -486,9 +486,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Envíame la pegatina del paquete que quieres publicar</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Puedes publicar cualquier paquete que te pertenezca, incluso si fueron creados en otro lugar</i>
       owner_proof: |
         <b>Para verificar la propiedad de este paquete, debe seguir unos sencillos pasos:</b>
         1. Abra el bot @Stickers
