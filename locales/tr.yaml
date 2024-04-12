@@ -19,30 +19,30 @@ cmd:
 
       💬 Yardıma mı ihtiyacınız var? @fStikCommunity adresindeki destek sohbetimize katılın (yalnızca İngilizce)
     help: |
-      <b>List of bot commands:</b>
+      <b>Çıkartma komutlarının listesi:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Yeni bir çıkartma paketi oluştur
+      /new_emoji - Yeni bir emoji paketi oluştur
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Bir çıkartmayı paketten sil
+      /original - Orijinal çıkartmayı bul
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /paketler - Tüm paketlerin listesi
+      /restore - Silinen bir paketi geri yükle
+      /copy - Bir paketi kopyala
+      /emoji - Mevcut paket için emoji ekini değiştir
+      /çerçeve - Mevcut video paketi için çerçeve değiştir
+      /yayınla - Kataloğa paketi yayınla
 
-      /catalog - Open the sticker pack catalog
+      /katalog - Çıkartma paketi kataloğunu aç
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Dili değiştir
+      /bağış - Geliştiriciyi destekle
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Destek sohbeti: @fStikCommunity (Sadece İngilizce)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 İletişim: @ly_oBot
+      👨🏻‍💻 Geliştirici kanalı: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -121,18 +121,18 @@ cmd:
       Videolar artık yuvarlak bir şekle sahip olmayacak
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Bot geliştirme desteği</b>
+    Botun gelişimini destekleyerek krediler alırsınız.
+    Her 1 dolar için, 5 kredi alırsınız.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>Bakiye:</b> <code>${balance}</code> krediler
+    1 krediyle, bir paketi hızlandırma imkanınız olur.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Hızlandırma aşağıdaki faydaları sağlar:</b>
+    ➖ Çıkartmaların adında <code>"${titleSuffix}"</code> devre dışı bırakma <i>(bağlantıda değil)</i>
+    ➖ Video çıkartmaları dönüştürürken öncelik
+    ➖ İşlem sırasına birden fazla çıkartma ekleme yeteneği
+    ➖ Video çıkartmalarının süresi 30 saniyeye kadar
   btn:
     donate: '☕️ Bağış yap'
   topup: |
@@ -152,24 +152,24 @@ donate:
 
     <u>Ödeme yöntemini seçin:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Bakiye güncellemesi</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Bakiye: <code>${balance}</code> krediler (eklenen <code>${amount}</code> krediler)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Ortak düzenleme</b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    Ortak düzenleme için bağlantı <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>Nasıl kullanılır:</b>
+    1. Pakete erişim vermek istediğiniz kişiye bağlantıyı gönderin
+    2. Bağlantıya tıkladıktan sonra, "başlat" düğmesine basmaları gerekmekte ve editörlere ekleneceklerdir
+    3. Editör, pakette çıkartma ekleyebilir, silebilir ve düzeltebilir
 
-    <b>Editors:</b>
+    <b>Editörler:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Editörleri silmek için, bağlantıyı sıfırlamanız gerekmektedir</i>
   no_editors: |
     Henüz editör yok
   btn:
@@ -194,10 +194,10 @@ callback:
       <b>❔ Nasıl eklenir?</b>
       Pakete eklemek için fotoğraf, video veya çıkartma gönderin
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      Seçilen <u>${title}</u> paket
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      Kullanmak için herhangi bir sohbete <code>@${botKullanıcıAdı}</code> yazın ve boşluk bırakın
+      Ayrıca, aşağıdaki düğmeye basarak da kullanabilirsiniz
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Güçlendirme</a></b>: ${boostStatus}
@@ -346,9 +346,9 @@ userAbout:
 
     Kullanıcı hakkında bilgi almak için butonu kullanın aşağıda veya mesajını iletin
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 Kullanıcı bilgisi</b>
+    <b>🆔 Kullanıcı IDsi:</b> <code>${userId}</code>
+    <b>🎨 Bu kullanıcının paketleri:</b>
     ${packs}
   no_packs: |
     <i>Bu sahibinin çıkartmaları hakkında hiçbir bilgimiz yok</i>
@@ -446,13 +446,13 @@ scenes:
     not_found: |
       stickerı bulamadım
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Paket:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Sahibin paketlerine benzersiz numara, her paket başına arttırılır)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Sahip ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Bu sahibin diğer paketleri:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
@@ -484,9 +484,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Yayınlamak istediğiniz paketten çıkartmayı gönderin</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Başka bir yerde oluşturulmuş olsalar bile, sizinle ilgili olan herhangi bir paketi yayınlayabilirsiniz</i>
       owner_proof: |
         <b>Bu paketin sahipliğini doğrulamak için birkaç basit adımı uygulamanız gerekir:</b>
         1. @Stickers botunu açın
@@ -532,12 +532,12 @@ scenes:
         not_safe: No, it is not safe
       no_tags: belirtilmemiş
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>"<a href="${link}">${title}</a>" paketin yayınını onaylayın</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Açıklama:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Etiketler:</b> ${tags}
+        <b>Diller:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Tebrikler, paketiniz diğer kullanıcıların bulabileceği botumuzun genel dizininde yayınlandı!
@@ -567,16 +567,16 @@ scenes:
       <b>Hata!</b>
       Video paketlerine yalnızca çerçeve ekleyebilirsiniz.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Çerçeve türünü seçin:</b>
+      Çerçeve, çıkartmanın etrafındaki şeffaf arka plan
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>lite</code> — köşeler biraz kesilecek
+      <code>medium</code> — köşeler daha fazla kesilecek
+      <code>rounded</code> — köşeler yuvarlatılacak
+      <code>square</code> — düz kenarlı çerçeve şekli, yani herhangi bir şekilde değiştirilmeyecek
+      <code>circle</code> — çerçeve daire şeklinde olacak
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>Gelecekte, türü belirlemek için /çerçeve komutunu kullanabilirsiniz</i>
     types:
       lite: '1. Basit'
       medium: '2 - Orta'
@@ -591,9 +591,9 @@ scenes:
 
       <i>Fotoğraflar ile en iyi sonucu verir. Çizimler, illüstrasyonlar vb. ile daha kötü çalışır.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Arka planı kaldırmak istediğiniz fotoğrafı gönderin ve arka planı olmayan dosyayı ben size göndereyim
 
-      <i>It works best with anime pictures</i>
+      <i>En iyi sonucu anime resimleriyle alırsınız</i>
     choose_model: |
       <b>Modeli seçin:</b>
     web_app: WebApp - insanlarla fotoğraflar için
