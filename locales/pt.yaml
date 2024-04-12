@@ -19,30 +19,30 @@ cmd:
 
       💬 Precisa de ajuda? Junte-se ao nosso chat de suporte em @fStikCommunity (apenas em inglês)
     help: |
-      <b>List of bot commands:</b>
+      <b>Lista de comandos do bot:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Criar um novo pacote de adesivos
+      /new_emoji - Criar um novo pacote de emojis
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Excluir um adesivo de um pacote
+      /original - Encontrar o adesivo original
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Listar todos os seus pacotes
+      /restore - Restaurar um pacote excluído
+      /copy - Copiar um pacote
+      /emoji - Alterar o sufixo de emojis para o pacote atual
+      /frame - Alterar o quadro para o pacote de vídeo atual
+      /publish - Publicar o pacote no catálogo
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Abrir o catálogo de pacotes de adesivos
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Mudar o idioma
+      /donate - Apoiar o desenvolvedor
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Chat de suporte: @fStikCommunity (apenas em inglês)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Contatos: @ly_oBot
+      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -347,9 +347,9 @@ userAbout:
 
     Para obter informações sobre o usuário, use o botão abaixo ou encaminhe sua mensagem
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 Informações do usuário</b>
+    <b>🆔 ID do usuário:</b> <code>${userId}</code>
+    <b>Pacotes deste usuário:</b>
     ${packs}
   no_packs: |
     <i>Não temos informações sobre adesivos deste proprietário</i>
@@ -486,9 +486,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Envie-me o adesivo do pacote que deseja publicar</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Você pode publicar qualquer pacote que seja de sua propriedade, mesmo se eles foram criados em outro lugar</i>
       owner_proof: |
         <b>Para verificar a propriedade deste pacote, você precisa seguir alguns passos simples:</b>
         1. Abra @Stickers bot
@@ -534,12 +534,12 @@ scenes:
         not_safe: Não, não é seguro
       no_tags: não foi especificado
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>Confirmar a publicação do pacote "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Descrição:</b> <i>${description}</i>
 
         <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Linguagens:</b> ${languages}
       button_confirm: '✅ Confirmar publicação'
       success: |
         Parabéns, seu pacote foi publicado no diretório geral do nosso bot onde outros usuários podem encontrá-lo!
@@ -593,9 +593,9 @@ scenes:
 
       <i>Funciona melhor com fotos. Funciona pior com desenhos, ilustrações, etc.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Envie uma <u>fotografia</u> da qual deseja remover o fundo e enviarei o arquivo sem o fundo
 
-      <i>It works best with anime pictures</i>
+      <i>Funciona melhor com imagens de anime</i>
     choose_model: |
       <b>Escolha o modelo:</b>
     web_app: WebApp - para fotos com pessoas

@@ -19,32 +19,25 @@ cmd:
 
       💬 Yordam kerakmi? @fStikCommunity sahifasidagi qo'llab-quvvatlash chatimizga qo'shiling (faqat ingliz tilida)
     help: |
-      <b>List of bot commands:</b>
+      <b>Бот командалар рўйҳати:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Янги стикер сақламасини яратиш
+      /new_emoji - Янги эмоджи сақламасини яратиш
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Сақламадан стикерни ўчириш
+      /original - Асл стикерни топиш
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Барча сақламалар рўйҳати
+      /restore - Олиб ташлаган сақламани аввалги ҳолига келтириш
+      /copy - Сақламани нусҳа олиш
+      /emoji - Жорий сақлама учун эмоджи суффиксини ўзгартириш
+      /frame - Жорий видео сақлама учун рамкани ўзгартириш
+      /publish - Сақламани каталогда чоп этиш
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Стратиграфия сақламалар каталоги
 
-      /lang - Change the language
-      /donate - Support the developer
-
-      💬 Support chat: @fStikCommunity (English only)
-
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
-
-      GitHub: https://github.com/LyoSU/fStikBot
+      /lang - Тилни ўзгартириш
+      /donate - Дастурчини дастурламоқ</i>
     catalog: |
       <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
@@ -110,9 +103,9 @@ cmd:
     inline_title: Inline paketi
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      Жорий гуруҳ учун эмоджиларни қайта йўналтириш учун <code>/emoji</code> жўнатинг, кейинги эмоджиларни бўш майдон билан ажратинг
 
-      For example - <code>/emoji 🌟</code>
+      Масалан - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
     error: There was an error changing emoji!
   round_video:
@@ -122,18 +115,18 @@ cmd:
       Videolar endi yumaloq shaklga ega bo‘lmaydi
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive credits.
-    For every 1 dollar, you will receive 5 credits.
+    <b>☕️ Бот ривожланишни ўрнату</b>
+    Ботни ривожланишидан еҳтиёт бўладиганда, кредитга эга бўлади.
+    Ҳар бир доллар учун сизга 5 кредит берилади.
 
-    <b>Balance:</b> <code>${balance}</code> credits
-    With 1 credit, you have the opportunity to boost one pack.
+    <b>Сақлама:</b> <code>${balance}</code> кредит
+    қиймати билан, сиз бир сақламани буст қилиш имкониятига эгасиз
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Буст, қуйидаги фойдаланиш ифодасини беради:</b>
+    ➖ Сақламанинг нашри диплом устига <code>"${titleSuffix}"</code>ни олиш <i>(ҳаволада эмас)</i>
+    ➖ Видео стикерларни алоқачингиз вақтини кўпайтириш
+    ➖ Чиқиб тура қуйиши мумкин бўлган стикерларни қўшиш имконияти
+    ➖ Видео стикерли узунлиги 30 сониягача
   btn:
     donate: '☕️ Xayriya qiling'
   topup: |
@@ -153,24 +146,24 @@ donate:
 
     <u>To'lov usulini tanlang:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Сақлама янгилаш</b>
 
-    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
+    Сақлама: <code>${balance}</code> мос кредитлар (қўшилган <code>${amount}</code> кредитлар)
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Ҳамкорлик</b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    Ҳамкорлик учун ҳавола <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>Қўллаш усули:</b>
+    1. Ўтказиш керак бўлган кишига ҳаволани юборинг
+    2. Ҳаволаға босқан киши “бошлаш” тугмасини босиб, тахрирчилар қаторига қўшилади
+    3. Тахрирчи тахрир қила, ўчиради ва стикерларни қўшишни бажаришга имконият беради
 
-    <b>Editors:</b>
+    <b>Тахрирчилар:</b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Тахрирчиларни олиб ташлаш учун, ҳаволани кайта олиш керак</i>
   no_editors: |
     Hozircha muharrirlar yo'q
   btn:
@@ -195,10 +188,9 @@ callback:
       <b>❔ Qanday qilib qoʻshiladi?</b>
       Paketga qo'shish uchun fotosurat, video yoki stiker yuboring
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      Танланган <u>${title}</u> гуруҳ
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      Уни кўрсатиш учун, ичидагиларда<strong>@${botUsername} </code>ни босинг ва куч пасткини босинг
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
@@ -347,9 +339,9 @@ userAbout:
 
     Foydalanuvchi haqida ma'lumot olish uchun tugmani bosing pastga yoki uning xabarini yo'naltiring
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 Фойдаланувчи ҳақида</b>
+    <b>🆔 Фойдаланувчи ID:</b> <code>${userId}</code>
+    <b>🎨 Ушбу фойдаланувчининг сақламалари:</b>
     ${packs}
   no_packs: |
     <i>Bizda bu egasining stikerlari haqida hech qanday ma'lumot yo'q</i>
@@ -408,9 +400,9 @@ scenes:
     enter: |
       Men uni nusxalashim mumkin, lekin undan oldin yangi paket yarataylik
     progress: |
-      Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      <a href="${originalLink}">${originalTitle}</a> дан <a href="${link}">${title}</a> гуруҳига нусҳа олиш
 
-      Progress: ${current}/${total}
+      Бажарилмоқда: ${current}/${total}
     done: |
       <a href="${originalLink}">${originalTitle}</a> dan <a href="${link}">${title}</a> gacha toʻplamdan nusxalash muvaffaqiyatli yakunlandi.
     error:
@@ -448,13 +440,13 @@ scenes:
     not_found: |
       Stikerni topa olmadim
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Гуруҳ:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Сақлама ёкига учун махсус рақам, ўзига хос вақтида кенгайтирилади)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Сақлама эгаси ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Бошқа сақламалар ушбу эгасидан:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Ushbu egasining boshqa stikerlari haqida bizda ma'lumot yo'q</i>
@@ -486,9 +478,9 @@ scenes:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Бажаришдан гуруҳ стикерини маҳсул кўлдириш</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Сизга тегишли бўлса, бўш майдоний стикерларни ҳам бажариш имконияти бор</i>
       owner_proof: |
         <b>Ushbu paketning egaligini tasdiqlash uchun siz bir necha oddiy amallarni bajarishingiz kerak:</b>
         1. @Stickers botini oching
@@ -534,12 +526,12 @@ scenes:
         not_safe: No, it is not safe
       no_tags: belgilanmagan
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>Гуруҳни “<a href="${link}">${title}</a>” чоп этишни тасдиқлаш</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Тавсиф:</b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Теглар:</b> ${tags}
+        <b>Тиллар:</b> ${languages}
       button_confirm: '✅ Confirm publication'
       success: |
         Tabriklaymiz, sizning paketingiz boshqa foydalanuvchilar topa oladigan botimizning umumiy katalogida chop etildi!
@@ -569,16 +561,16 @@ scenes:
       <b>Xato!</b>
       Siz faqat video paketlarga ramkalar qo'shishingiz mumkin.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;</a><b>Рамкани танлаш:</b>
+      Рамка - стикернинг о̄рақда майдонлари бўлими
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>lite</code> — кўрсатмалар бир нечта кенгайтган бўлиди
+      <code>medium</code> — кўрсатмалар кенгайтирилган
+      <code>rounded</code> — кўрсатмалар кенгайишидан ўзигача кенгайтирилган
+      <code>square</code> — рамка дайриИк ко̄рсатқич, бундан ташқари у онга ўзгартирилмайди
+      <code>circle</code> — рамка ай югурт формаида
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>Келаида, келаида рамкани тузатиш учун команда ишлаб чикарасиз</i>
     types:
       lite: '1. Lite'
       medium: '2. O''rta'
@@ -593,9 +585,7 @@ scenes:
 
       <i>Fotosuratlar bilan yaxshi ishlaydi. Chizmalar, rasmlar va boshqalar bilan yomonroq ishlaydi.</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
-
-      <i>It works best with anime pictures</i>
+      Тусанча фонини ўчириш қисматидан уч учрамаликадан рақмий олинган фотони юборинг ва мәқул ҳолатда олишим
     choose_model: |
       <b>Modelni tanlang:</b>
     web_app: WebApp - odamlar bilan suratga olish uchun
