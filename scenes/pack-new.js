@@ -66,7 +66,7 @@ const animalEmojis = {
   Gorilla: "🦍",
   Monkey: "🐒",
   Chimp: "🦧",
-  Hourse: "🐴",
+  Horse: "🐴",
   Zebra: "🦓",
   Deer: "🦌",
   Giraffe: "🦒",
