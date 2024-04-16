@@ -24,7 +24,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
   let packName
 
   if (text) {
-    const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
+    const messageTextMatch = ctx.message.text.match(/(addstickers|addemoji|addemoji)\/(.*)/)
 
     if(!messageTextMatch || !messageTextMatch[2]) {
       return ctx.scene.reenter()
