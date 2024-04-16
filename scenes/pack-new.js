@@ -1,4 +1,5 @@
 const got = require('got')
+const slug = require('limax')
 const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
@@ -255,6 +256,7 @@ newPackConfirm.enter(async (ctx, next) => {
   if (!ctx.session.scene.newPack.inline) {
     name = name.replace(/https/, '')
     name = name.replace(/t.me\/addstickers\//, '')
+    name = slug(name, { separator: '_', maintainCase: true })
     name = name.replace(/[^0-9a-z_]/gi, '')
   }
 
