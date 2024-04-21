@@ -24,7 +24,12 @@ module.exports = async (ctx) => {
       ]).resize()
     })
 
-    return ctx.scene.enter('newPack')
+    // if all stickers in sticker set is animated, set new pack to animated
+    if (getStickerSet.stickers.every(sticker => sticker.is_animated)) {
+      return ctx.scene.enter('newPack')
+    } else {
+      return ctx.scene.enter('newPackTitle')
+    }
   } else {
     await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
       reply_to_message_id: ctx.message.message_id,
