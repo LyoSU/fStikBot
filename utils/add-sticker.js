@@ -299,8 +299,6 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
     stickerExtra.sticker_format = 'static'
   }
 
-  emojis.push(stickerSet.emojiSuffix || '')
-
   if (stickerFile.is_animated) {
     // stickerExtra.sticker_format = 'animated'
 
