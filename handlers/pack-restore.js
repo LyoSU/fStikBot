@@ -6,7 +6,8 @@ module.exports = async (ctx, next) => {
   let restored = false
   const findStickerSet = await ctx.db.StickerSet.findOne({
     name: ctx.match[2],
-    owner: ctx.session.userInfo.id
+    owner: ctx.session.userInfo.id,
+    thirdParty: false
   })
 
   if (!findStickerSet) {
