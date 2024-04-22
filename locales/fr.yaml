@@ -210,7 +210,7 @@ callback:
     btn:
       hide: '❌ Cacher le pack'
       delete: '🗑️ Supprimer le pack'
-      restore: '✅ Восстановить'
+      restore: '✅ Restaurer'
       use_pack: '📦 Utiliser le pack'
       boost: '⚡ Boost'
       frame: '🖼 Frame'
@@ -236,13 +236,13 @@ callback:
     delete: L'autocollant a été retiré du pack avec succès.
     restored: L'autocollant a été enregistré avec succès dans le pack actuel.
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 Supprimer'
+      copy: '🌟 Copier'
+      restore: '✅ Restaurer'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        ERREUR!
+        Impossible de trouver un autocollant.
 sticker:
   add:
     ok: |
@@ -338,7 +338,7 @@ news:
     <i>Abonnez-vous à la chaîne pour recevoir les dernières nouvelles sur le bot, ainsi que les mises à jour et les nouvelles fonctionnalités.</i>
   join_btn: '📢 Rejoindre le canal'
   not_joined: '🙅 Vous n''êtes pas abonné au canal'
-  continue: '✅ Продолжить'
+  continue: '✅ Continuer'
 userAbout:
   help: |
     <b>🧑‍🎨 Utilisateur à propos de</b>
@@ -379,8 +379,8 @@ scenes:
 
       <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d’autocollants statiques peuvent contenir jusqu’à 120 autocollants.</i>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>Entrez le nouveau nom du pack d'autocollants:<\/b>
+      <i>Vous pouvez choisir un nom aléatoire sur le bouton.<\/i>
     pack_name: |
       <b>Entrez un lien court pour le nouveau pack d'autocollants :</b>
       <i>Utilisez uniquement des lettres, des chiffres et des tirets bas.</i>
@@ -394,10 +394,10 @@ scenes:
 
       Envoyer un fichier, photo, vidéo ou autocollant pour que je l'ajoute à votre ensemble
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: Le nom ne peut pas dépasser ${max} symboles.
+      name_long: L'adresse ne peut pas dépasser ${max} symboles.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
+        name_invalid: Cette adresse ne peut pas être utilisée.
         name_occupied: Такой адрес уже занят.
         upload_failed: |
           <b>Erreur!</b>
@@ -421,11 +421,11 @@ scenes:
         You can do this by sending the /donate command.
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      Envoyez l'autocollant qui a été ajouté via ce bot et je vous montrerai son autocollant d'origine.
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>Erreur!<\/b>
+        Je n'ai pas pu trouver l'autocollant d'origine.
   delete:
     enter: |
       Envoyez l'autocollant qui a été ajouté via ce bot et je le supprimerai du pack.
@@ -608,16 +608,16 @@ scenes:
       <b>Erreur!</b>
       Opps, quelque chose s'est mal passé.
   leave: |
-    Действие отменено.
+    Action annulée.
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ Annuler'
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
-    <code>${error}</code>
+    <b>Télégramme a renvoyé une erreur!<\/b>
+    <code>${error}<\/code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Télégramme a renvoyé une erreur:
       ${error}
   banned: |
     <b>Erreur!</b>
