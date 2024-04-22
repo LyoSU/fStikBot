@@ -241,8 +241,8 @@ callback:
       restore: '✅ Restaurar'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        ERRO!
+        Não foi possível encontrar um adesivo.
 sticker:
   add:
     ok: |

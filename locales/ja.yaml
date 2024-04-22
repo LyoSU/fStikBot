@@ -8,7 +8,7 @@ description:
     ステッカーを検索：https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙‍♀️ 絵文字とスタンプの魔法使いです！ 写真、動画、GIFをクールなスタンプに変換します。
-ratelimit: Не так часто!
+ratelimit: そう頻繁ではない！
 cmd:
   start:
     enter: |
@@ -58,7 +58,7 @@ cmd:
       packs: '📁 パックを管理'
       new: '🌝 ステッカーパックを作成'
       new_emoji: '😊 絵文字パックを作成'
-      catalog: '📖 Каталог'
+      catalog: '📖 カタログ'
       publish: '📤 パックを公開'
       delete: '❌ ステッカーを削除'
       original: '🔍 Find original sticker'
@@ -76,7 +76,7 @@ cmd:
     btn:
       new: '📥 Create new'
       catalog: '💖 カタログを開く'
-      catalog_mini: '💖 Каталог'
+      catalog_mini: '💖 カタログ'
       catalog_browser: 'ブラウザで開く'
       catalog_browser_mini: '🌐 ブラウザで'
       catalog_app: '📱 Android アプリをダウンロード'
@@ -210,7 +210,7 @@ callback:
     btn:
       hide: '❌ パックを隠す'
       delete: ':wasteバスケット: パックを削除'
-      restore: '✅ Восстановить'
+      restore: '✅ リストア'
       use_pack: '📦 Use pack'
       boost: '⚡ ブースト'
       frame: '🖼 Frame'
@@ -236,13 +236,13 @@ callback:
     delete: ステッカーはパックから正常に削除されました。
     restored: ステッカーを現在のパックに正常に保存しました。
     btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
+      delete: '🗑 削除'
+      copy: '🌟 コピー'
+      restore: '✅ リストア'
     error:
       not_found: |
-        Ошибка!
-        Не удалось найти стикер.
+        エラー！
+        ステッカーが見つかりません。
 sticker:
   add:
     ok: |
@@ -338,7 +338,7 @@ news:
     <i>チャンネルに登録して、ボットに関する最新ニュース、アップデートや新機能を入手してください。</i>
   join_btn: '📢 チャンネルに参加'
   not_joined: '🙅 チャンネルを購読していません'
-  continue: '✅ Продолжить'
+  continue: '✅ 続行'
 userAbout:
   help: |
     <b>🧑‍🎨</b>
@@ -379,8 +379,7 @@ scenes:
 
       <i>アニメーションおよびビデオ ステッカー セットには、最大 50 個のステッカーを含めることができます。静的ステッカー セットには、最大 120 枚のステッカーを含めることができます。</i>
     pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
+      <b>新しいステッカーパックの名前を入力してください：<i>ボタンでランダムな名前を選択できます。</i></b>
     pack_name: |
       <b>新しいステッカーパックの短縮リンクを入力してください:</b>
       <i>英語の文字、数字、アンダースコアのみを使用してください。</i>
@@ -394,11 +393,11 @@ scenes:
 
       ファイル、写真、ビデオ、またはステッカーを送信して、セットに追加します
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
+      title_long: 名前は${max}文字を超えることはできません。
+      name_long: アドレスは${max}文字を超えることはできません。
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
+        name_invalid: そのアドレスは使用できません。
+        name_occupied: このアドレスはすでに使用されています。
         upload_failed: |
           <b>エラー！</b>
           BotはTelegramにステッカーをアップロードできません。
@@ -421,11 +420,11 @@ scenes:
         You can do this by sending the /donate command.
   original:
     enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
+      このボットを介して追加されたステッカーを送信してください。元のステッカーを表示します。
     error:
       not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
+        <b>エラー！</b>
+        元のステッカーが見つかりませんでした。
   delete:
     enter: |
       このボットを通して追加されたステッカーを送信すると、パックから削除します。
@@ -610,16 +609,16 @@ scenes:
       <b>エラー！</b>
       オペ、何か問題が発生しました。
   leave: |
-    Действие отменено.
+    アクションがキャンセルされました。
   btn:
-    cancel: '❌ Отменить'
+    cancel: '❌ キャンセル'
 error:
   telegram: |
-    <b>Telegram вернул ошибку!</b>
+    <b>Telegramでエラーが発生しました！</b>
     <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Telegram вернул ошибку:
+      Telegramでエラーが発生しました：
       ${error}
   banned: |
     <b>エラー！</b>
