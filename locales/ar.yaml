@@ -623,8 +623,3 @@ error:
     <b>خطأ!</b>
     أنت ممنوع من استخدام هذه الميزة.
     من فضلك اتصل بالمسؤول.
-  unknown: |
-    <b>An unknown error has occurred, please try again.</b>
-
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.

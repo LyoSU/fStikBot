@@ -24,7 +24,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
   let packName
 
   if (text) {
-    const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
+    const messageTextMatch = ctx.message.text.match(/(addstickers|addemoji|addemoji)\/(.*)/)
 
     if(!messageTextMatch || !messageTextMatch[2]) {
       return ctx.scene.reenter()
@@ -37,7 +37,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
 
 
   if (packName.split('_').pop(-1) !== ctx.options.username) {
-    return 'This sticker pack is not from this bot'
+    return ctx.reply('This sticker pack is not from this bot')
   }
 
   const stickerSet = await ctx.tg.getStickerSet(packName)
@@ -48,7 +48,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
 
 
   if (!stickerSet) {
-    return 'Sticker pack not found'
+    return ctx.reply('This sticker pack does not exist')
   }
 
   ctx.session.admin = {
