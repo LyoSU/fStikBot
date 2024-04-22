@@ -8,7 +8,7 @@ description:
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙 Je suis l'assistant emoji et autocollant! Transformez des photos, des vidéos et des GIFs en autocollants cool en un clic.
-ratelimit: Не так часто!
+ratelimit: Not so often!
 cmd:
   start:
     enter: |
@@ -398,7 +398,7 @@ scenes:
       name_long: L'adresse ne peut pas dépasser ${max} symboles.
       telegram:
         name_invalid: Cette adresse ne peut pas être utilisée.
-        name_occupied: Такой адрес уже занят.
+        name_occupied: This address is already taken.
         upload_failed: |
           <b>Erreur!</b>
           Le bot ne peut pas télécharger des autocollants sur Telegram.
