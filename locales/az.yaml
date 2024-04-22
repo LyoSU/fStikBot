@@ -338,7 +338,6 @@ news:
     <i>Bot haqqında ən son xəbərləri, həmçinin yeniləmələri və yeni funksiyaları əldə etmək üçün kanala abunə olun.</i>
   join_btn: '📢 Kanala qoşulun'
   not_joined: '🙅 Siz kanala abunə deyilsiniz'
-  continue: '✅ Продолжить'
 userAbout:
   help: |
     <b>🧑‍🎨 İstifadəçi haqqında</b>

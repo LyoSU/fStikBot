@@ -8,7 +8,6 @@ description:
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙 Je suis l'assistant emoji et autocollant! Transformez des photos, des vidéos et des GIFs en autocollants cool en un clic.
-ratelimit: Не так часто!
 cmd:
   start:
     enter: |
@@ -210,7 +209,6 @@ callback:
     btn:
       hide: '❌ Cacher le pack'
       delete: '🗑️ Supprimer le pack'
-      restore: '✅ Восстановить'
       use_pack: '📦 Utiliser le pack'
       boost: '⚡ Boost'
       frame: '🖼 Frame'
@@ -235,14 +233,6 @@ callback:
       restored: L'autocollant a été enregistré avec succès dans le pack actuel.
     delete: L'autocollant a été retiré du pack avec succès.
     restored: L'autocollant a été enregistré avec succès dans le pack actuel.
-    btn:
-      delete: '🗑 Удалить'
-      copy: '🌟 Копировать'
-      restore: '✅ Восстановить'
-    error:
-      not_found: |
-        Ошибка!
-        Не удалось найти стикер.
 sticker:
   add:
     ok: |
@@ -338,7 +328,6 @@ news:
     <i>Abonnez-vous à la chaîne pour recevoir les dernières nouvelles sur le bot, ainsi que les mises à jour et les nouvelles fonctionnalités.</i>
   join_btn: '📢 Rejoindre le canal'
   not_joined: '🙅 Vous n''êtes pas abonné au canal'
-  continue: '✅ Продолжить'
 userAbout:
   help: |
     <b>🧑‍🎨 Utilisateur à propos de</b>
@@ -378,9 +367,6 @@ scenes:
       Un exemple de pack animé - t.me/addstickers/IsabelleShizue
 
       <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d’autocollants statiques peuvent contenir jusqu’à 120 autocollants.</i>
-    pack_title: |
-      <b>Введи имя для нового стикерпака:</b>
-      <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
     pack_name: |
       <b>Entrez un lien court pour le nouveau pack d'autocollants :</b>
       <i>Utilisez uniquement des lettres, des chiffres et des tirets bas.</i>
@@ -394,11 +380,7 @@ scenes:
 
       Envoyer un fichier, photo, vidéo ou autocollant pour que je l'ajoute à votre ensemble
     error:
-      title_long: Имя должно быть не больше ${max} символов.
-      name_long: Адрес должен быть не больше ${max} символов.
       telegram:
-        name_invalid: Такой адрес использовать не получится.
-        name_occupied: Такой адрес уже занят.
         upload_failed: |
           <b>Erreur!</b>
           Le bot ne peut pas télécharger des autocollants sur Telegram.
@@ -419,13 +401,6 @@ scenes:
         This feature is only available to donate members.
 
         You can do this by sending the /donate command.
-  original:
-    enter: |
-      Отправь стикер, который был добавлен через этого бота и я покажу тебе его оригинал.
-    error:
-      not_found: |
-        <b>Ошибка!</b>
-        У меня не получилось найти оригинал этого стикера.
   delete:
     enter: |
       Envoyez l'autocollant qui a été ajouté via ce bot et je le supprimerai du pack.
@@ -607,24 +582,8 @@ scenes:
     error: |
       <b>Erreur!</b>
       Opps, quelque chose s'est mal passé.
-  leave: |
-    Действие отменено.
-  btn:
-    cancel: '❌ Отменить'
 error:
-  telegram: |
-    <b>Telegram вернул ошибку!</b>
-    <code>${error}</code>
-  answerCbQuery:
-    telegram: |
-      Telegram вернул ошибку:
-      ${error}
   banned: |
     <b>Erreur!</b>
     Il vous est interdit d'utiliser cette fonctionnalité.
     Veuillez contacter l'administrateur.
-  unknown: |
-    <b>An unknown error has occurred, please try again.</b>
-
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
