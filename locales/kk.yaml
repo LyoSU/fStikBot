@@ -246,10 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Стикер бумаға сәтті қосылды:</b>
+      <b>Successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
-      <i>Бір немесе бірнеше жіберу стикерге сәйкес келетін эмодзи, егер сіз оларды қосқыңыз келсе</i>
+      Within an hour, this pack will be updated for all users.
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b>Бумаға сәтті қосылды:</b>
       <u>${title}</u>
