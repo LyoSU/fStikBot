@@ -246,12 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
-      <a href="${link}">${title}</a>
+      <b>Successfully added to pack:<\/b>
+      <a href="${link}">${title}<\/a>
 
-      Within an hour, this pack will be updated for all users.
+      Dans une heure, ce pack sera mis à jour pour tous les utilisateurs.
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Envoyez un ou plusieurs emojis correspondant à l'autocollant si vous souhaitez les ajouter<\/i>
     ok_inline: |
       <b>Ajouté au pack avec succès :</b>
       <u>${title}</u>
