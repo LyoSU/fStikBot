@@ -246,10 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>تم إضافة ملصق إلى الباقة بنجاح:</b>
+      <b>Successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
-      <i>أرسل رمز تعبيري واحد أو أكثر يطابق الملصق، إذا كنت ترغب في إضافتها</i>
+      Within an hour, this pack will be updated for all users.
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b>تمت الإضافة إلى الحزمة بنجاح:</b>
       <u>${title}</u>
