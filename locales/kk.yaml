@@ -3,9 +3,9 @@ language_name: '🇰🇿Қазақ'
 name: Сүйікті стикерлер боты 🇺🇦 
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Мен эмоджи және стикер наборларының байлаушысымын, мен сіздің хабарлама тәжірибенізді көңілініңе алу үшін келемін! Менің сиқырлы құдайданышым мақтанылған кісілер, бейнелер және GIF-тергімені шығаруға мүмкіндік береді, айтып жатпай, айналдыру және кесу қаулысыз. 🎉🎊 Менмен сіз бір-ақ нәрселер үшін шексіз ауырларды жасауға болады. Содан кейін не күтеміз? Біздің сөйлемдеріңізге көңіл бөрермеңіз?
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+    Стикерлерді іздеу: https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙 Мен эмодзилер мен стикерлер шеберімін! Фотосуреттерді, бейнелерді және GIF файлдарын бір сәтте керемет стикерлерге айналдырыңыз.
 ratelimit: Жиі емес!
@@ -246,12 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
-      <a href="${link}">${title}</a>
+      <b>Сәтті түсірілді:<\/b>
+      <a href="${link}">${title}<\/a>
 
-      Within an hour, this pack will be updated for all users.
+      Бұл стикердiң барлығынан кейін, бұл набор барлық пайдаланушылар үшін жаңартылады.
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Егер оларды қосу керек болса, стикермен байланысты бір-немесе бірнеше эмоджи жіберу<\/i>
     ok_inline: |
       <b>Бумаға сәтті қосылды:</b>
       <u>${title}</u>
