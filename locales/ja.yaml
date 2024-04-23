@@ -246,10 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>ステッカーがパックに追加されました:</b>
+      <b>Successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
-      <i>1 つ以上を送るステッカーに一致する絵文字を追加したい場合は</i>
+      Within an hour, this pack will be updated for all users.
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b></b>
       <u>${title}</u> を追加しました
