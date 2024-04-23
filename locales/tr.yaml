@@ -245,10 +245,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Çıkartma başarıyla pakete eklendi:</b>
+      <b>Successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
-      <i>Bir veya daha fazla gönder Eklemek isterseniz çıkartmayla eşleşen emojiler</i>
+      Within an hour, this pack will be updated for all users.
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b>Pakete başarıyla eklendi:</b>
       <u>${title}</u>
