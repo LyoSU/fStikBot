@@ -238,10 +238,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Stiker paketga muvaffaqiyatli qo‘shildi:</b>
+      <b>Successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
-      <i>Bir yoki bir nechtasini yuboring stikerga mos keladigan kulgichlar, agar siz ularni qo'shmoqchi bo'lsangiz</i>
+      Within an hour, this pack will be updated for all users.
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b>Paketga muvaffaqiyatli qo'shildi:</b>
       <u>${title}</u>
