@@ -245,12 +245,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
-      <a href="${link}">${title}</a>
+      <b>Pakete başarıyla eklendi:<\/b>
+      <a href="${link}">${title}<\/a>
 
-      Within an hour, this pack will be updated for all users.
+      Bir saat içinde, bu paket tüm kullanıcılar için güncellenecek.
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Etikete eşleşen bir veya daha fazla emoji gönderin, eklemek istiyorsanız<\/i>
     ok_inline: |
       <b>Pakete başarıyla eklendi:</b>
       <u>${title}</u>
