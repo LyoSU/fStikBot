@@ -256,12 +256,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
-      <a href="${link}">${title}</a>
+      <b>成功添加到包中：<\/b>
+      <a href="${link}">${title}<\/a>
 
-      Within an hour, this pack will be updated for all users.
+      1小时内，此包将更新给所有用户。
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>发送一个或多个与贴纸匹配的emoji，如果您想要添加它们<\/i>
     ok_inline: |
       <b>成功添加到包装中：</b>
       <u>${title}</u>
