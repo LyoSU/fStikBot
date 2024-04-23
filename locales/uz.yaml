@@ -19,25 +19,32 @@ cmd:
 
       💬 Yordam kerakmi? @fStikCommunity sahifasidagi qo'llab-quvvatlash chatimizga qo'shiling (faqat ingliz tilida)
     help: |
-      <b>Бот командалар рўйҳати:</b>
+      <b>List of bot commands:</b>
 
-      /new - Янги стикер сақламасини яратиш
-      /new_emoji - Янги эмоджи сақламасини яратиш
+      /new - Create a new sticker pack
+      /new_emoji - Create a new emoji pack
 
-      /delete - Сақламадан стикерни ўчириш
-      /original - Асл стикерни топиш
+      /delete - Delete a sticker from a pack
+      /original - Find the original sticker
 
-      /packs - Барча сақламалар рўйҳати
-      /restore - Олиб ташлаган сақламани аввалги ҳолига келтириш
-      /copy - Сақламани нусҳа олиш
-      /emoji - Жорий сақлама учун эмоджи суффиксини ўзгартириш
-      /frame - Жорий видео сақлама учун рамкани ўзгартириш
-      /publish - Сақламани каталогда чоп этиш
+      /packs - List all your packs
+      /restore - Restore a deleted pack
+      /copy - Copy a pack
+      /emoji - Change the emoji suffix for the current pack
+      /frame - Change the frame for the current video pack
+      /publish - Publish the pack in the catalog
 
-      /catalog - Стратиграфия сақламалар каталоги
+      /catalog - Open the sticker pack catalog
 
-      /lang - Тилни ўзгартириш
-      /donate - Дастурчини дастурламоқ</i>
+      /lang - Change the language
+      /donate - Support the developer
+
+      💬 Support chat: @fStikCommunity (English only)
+
+      🧑‍🔧 Contacts: @ly_oBot
+      👨🏻‍💻 Dev channel: @LyBlog
+
+      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
