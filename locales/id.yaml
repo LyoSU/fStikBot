@@ -247,10 +247,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Stiker berhasil ditambahkan ke paket:</b>
+      <b>Successfully added to pack:</b>
       <a href="${link}">${title}</a>
 
-      <i>Kirim satu atau lebih emoji yang cocok dengan stiker, jika ingin menambahkannya</i>
+      Within an hour, this pack will be updated for all users.
+
+      <i>Send one or more emoji that match the sticker, if you want to add them</i>
     ok_inline: |
       <b>Berhasil ditambahkan ke paket:</b>
       <u>${title}</u>
