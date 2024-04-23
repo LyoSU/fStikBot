@@ -246,12 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
-      <a href="${link}">${title}</a>
+      <b>Agregado con éxito al paquete:<\/b>
+      <a href="${link}">${title}<\/a>
 
-      Within an hour, this pack will be updated for all users.
+      En una hora, este paquete se actualizará para todos los usuarios.
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Envía uno o más emojis que coincidan con la pegatina, si quieres agregarlos.<\/i>
     ok_inline: |
       <b>Se ha añadido al paquete correctamente:</b>
       <u>${title}</u>
