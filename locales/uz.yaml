@@ -238,10 +238,7 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Stiker paketga muvaffaqiyatli qo‘shildi:</b>
-      <a href="${link}">${title}</a>
-
-      <i>Bir yoki bir nechtasini yuboring stikerga mos keladigan kulgichlar, agar siz ularni qo'shmoqchi bo'lsangiz</i>
+      <b>Uddoqqi paketga muvaffaqiyatli qo'shildi:<\/b>\n<a href="${link}">${title}<\/a>\n\nBir soat ichida, bu paket barcha foydalanuvchilar uchun yangilangan bo'ladi.\n\n<i>Agardan emoji yoki bir nechta emoji yuboring, agar ularni qo'shmoqchi bo'lsangiz.<\/i>
     ok_inline: |
       <b>Paketga muvaffaqiyatli qo'shildi:</b>
       <u>${title}</u>

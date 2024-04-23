@@ -246,10 +246,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Etiket uğurla paketə əlavə edildi:</b>
-      <a href="${link}">${title}</a>
+      <b>Uğurla paketə əlavə edildi:<\/b>
+      <a href="${link}">${title}<\/a>
 
-      <i>Bir və ya daha çox göndərin stikerə uyğun gələn emojilər, əlavə etmək istəyirsinizsə</i>
+      Bir saat ərzində, bu paket bütün istifadəçilər üçün yenilənəcəkdir.
+
+      <i>Stikerə uyğun bir neçə emoji göndərin, əgər onları əlavə etmək istəyirsinizse.<\/i>
     ok_inline: |
       <b>Paketə uğurla əlavə edildi:</b>
       <u>${title}</u>
