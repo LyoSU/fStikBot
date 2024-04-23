@@ -247,12 +247,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
-      <a href="${link}">${title}</a>
+      <b>Успешно добавлено в пакет:<\/b>
+      <a href="${link}">${title}<\/a>
 
-      Within an hour, this pack will be updated for all users.
+      В течение часа этот пакет будет обновлен для всех пользователей.
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Отправьте один или несколько эмодзи, которые соответствуют стикеру, если вы хотите их добавить.<\/i>
     ok_inline: |
       <b>Успешно добавлено к набору:</b>
       <u>${title}</u>
