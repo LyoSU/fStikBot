@@ -35,7 +35,7 @@ async function processStickerSets(stickerSets) {
       if (stickerSet.owner) {
         await telegram.getStickerSet(stickerSet.name);
 
-        const owner = await db.User.findById(stickerSet.owner).catch(() => null);
+        const owner = await db.User.findById(stickerSet.owner)
 
         if (owner) {
           stickerSet.ownerTelegramId = owner.telegram_id;
