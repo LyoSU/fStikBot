@@ -461,6 +461,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
     const userStickerSet = await ctx.db.StickerSet.newSet({
       owner: ctx.session.userInfo.id,
+      ownerTelegramId: ctx.from.id,
       name,
       title,
       animated,

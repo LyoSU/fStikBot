@@ -76,6 +76,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   const stickerSet = new db.StickerSet()
 
   stickerSet.owner = stickerSetInfo.owner
+  stickerSet.ownerTelegramId = stickerSetInfo.ownerTelegramId
   stickerSet.name = stickerSetInfo.name
   stickerSet.title = stickerSetInfo.title
   stickerSet.animated = stickerSetInfo.animated || false

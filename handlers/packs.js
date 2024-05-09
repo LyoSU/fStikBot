@@ -269,6 +269,7 @@ module.exports = async (ctx) => {
     if (!inlineSet) {
       inlineSet = await ctx.db.StickerSet.newSet({
         owner: userInfo.id,
+        ownerTelegramId: ctx.from.id,
         name: 'inline_' + ctx.from.id,
         title: ctx.i18n.t('cmd.packs.inline_title'),
         emojiSuffix: '💫',
