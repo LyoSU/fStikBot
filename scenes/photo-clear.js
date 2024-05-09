@@ -148,6 +148,7 @@ photoClear.on('photo', async (ctx) => {
       }
     })
   } else {
+    console.error(finish.error)
     ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.error'))
   }
 })
