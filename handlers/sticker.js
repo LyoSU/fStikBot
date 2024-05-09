@@ -37,6 +37,11 @@ module.exports = async (ctx, next) => {
     } else if (message.sticker) {
       stickerType = 'sticker'
     }
+
+    // if message send less than 2 seconds ago
+    if (message.date > Math.floor(Date.now() / 1000) - 2) {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
   }
 
   if (ctx.message?.text?.startsWith('/ss') && ctx.message?.reply_to_message) {
