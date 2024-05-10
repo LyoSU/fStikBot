@@ -378,10 +378,10 @@ scenes:
     pack_title: |
       <b>新しいステッカーパックの名前を入力してください：<i>ボタンでランダムな名前を選択できます。</i></b>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
+      <b>新しいステッカーパックの短縮リンクを入力してください:</b>
 
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
-      <i>You can choose random short link on button.</i>
+      <i>たとえば、このパックは「動物」を短縮リンクとして使用します: https://t.me/addstickers/<u>動物</u></i>
+      <i>ボタンでランダムに短縮リンクを選択できます。</i>
     ok: |
       パック <a href="${link}">${title}</a> 正常に作成されました!
 
