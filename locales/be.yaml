@@ -382,11 +382,11 @@ scenes:
       <b>Увядзіце назву новага пака стыкераў:</b>
       <i>Таксама вы можаце выбраць выпадкова згенераваную назву ніжэй.</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
+      <b>Увядзіце кароткае спасылка для новага пакету наклейкі:</b>
 
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <i>Напрыклад, у гэтым пакуце выкарыстоўваецца 'Жывёлы' як кароткая спасылка: https://t.me/addstickers/<u>Animals</u></i>
 
-      <i>You can choose random short link on button.</i>
+      <i>Вы можаце выбраць выпадковую кароткую спасылку на кнопце.</i>
     ok: |
       Пак <a href="${link}">${title}</a> паспяхова створаны!
 
