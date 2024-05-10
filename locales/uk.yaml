@@ -385,10 +385,11 @@ scenes:
       <b>Введіть ім'я для нового стікерпаку:</b>
       <i>Також ви можете вибрати випадково згенероване ім'я нижче.</i>
     pack_name: |
-      <b>Введіть коротку адресу для нового стікерпаку:</b>
-      <i>Адреса може складатися тільки з букв англійського алфавіту, цифр та нижніх підкреслень.</i>
-      <i>Наприклад, цей стікерпак має коротку адресу 'Animals': https://t.me/addstickers/<u>Animals</u></i>
-      <i>Також ви можете вибрати випадково згенеровану адресу нижче.</i>
+      <b>Enter a short link for new stickers pack:</b>
+
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
       Набір наклейок <a href="${link}">${title}</a> створено!
 
