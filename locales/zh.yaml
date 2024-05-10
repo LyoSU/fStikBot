@@ -394,11 +394,11 @@ scenes:
       <b>为新贴纸输入名称：</b>
       <i>您也可以在下面选择一个随机生成的名称。</i>
     pack_name: |
-      <b>为新的贴纸包输入一个短链接：</b>
-      <i>只使用英文字母、 数字和下划线。</i>
-      <i>例如，此数据包使用 "动物 "作为短链接：https://t.me/addstickers/<u>Animals</u></i>。
+      <b>Enter a short link for new stickers pack:</b>
 
-      <i>你可以在按钮上选择随机的短链接</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
       包 <a href="${link}">${title}</a> 创建成功！
 
