@@ -384,11 +384,11 @@ scenes:
       <b>Entrez le nouveau nom du pack d'autocollants:<\/b>
       <i>Vous pouvez choisir un nom aléatoire sur le bouton.<\/i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
+      <b>Entrez un lien court pour le nouveau pack de stickers:<\/b>
 
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <i>Par exemple, ce pack utilise 'Animaux' comme lien court: https://t.me/addstickers/<u>Animaux<\/u><\/i>
 
-      <i>You can choose random short link on button.</i>
+      <i>Vous pouvez choisir un lien court aléatoire sur le bouton.<\/i>
     ok: |
       Pack <a href="${link}">${title}</a> créé avec succès !
 
