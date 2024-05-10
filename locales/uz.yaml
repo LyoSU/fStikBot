@@ -19,32 +19,7 @@ cmd:
 
       💬 Yordam kerakmi? @fStikCommunity sahifasidagi qo'llab-quvvatlash chatimizga qo'shiling (faqat ingliz tilida)
     help: |
-      <b>List of bot commands:</b>
-
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
-
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
-
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
-
-      /catalog - Open the sticker pack catalog
-
-      /lang - Change the language
-      /donate - Support the developer
-
-      💬 Support chat: @fStikCommunity (English only)
-
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
-
-      GitHub: https://github.com/LyoSU/fStikBot
+      <b>Bot komandalari ro‘yxati:<\/b>\n\n\/yangi - Yangi stiker to‘plamini yaratish\n\/yangi_emoji - Yangi emoji to‘plamini yaratish\n\n\/o‘chirish - Stikerni to‘plamdan o‘chirish\n\/asal - Asal stikerni topish\n\n\/to‘plamlar - Barcha to‘plamlaringiz ro‘yxati\n\/qayta - O‘chirilgan to‘plamni tiklash\n\/nusxa - Bir to‘plamni nusxa olish\n\/emoji - Hozirgi to‘plam uchun emoji suffiksini o‘zgartirish\n\/rəmz - Hozirgi video to‘plam uchun ramka o‘zgartirish\n\/nashr - To‘plamni katalogda nashr etish\n\n\/katalog - Sticker to‘plam katalogini ochish\n\n\/til - Tilni o‘zgartirish\n\/qo‘llab-quvvatlash - Dasturchini qo‘llab-quvvatlash\n\n💬 Qo‘llab-quvvatlash chati: @fStikCommunity (faqat ingliz tili)\n\n🧑‍🔧 Aloqa: @ly_oBot\n👨🏻‍💻 Developer kanali: @LyBlog\n\nGitHub: https:\/\/github.com\/-LyoSU\/fStikBot
     catalog: |
       <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
@@ -378,11 +353,7 @@ scenes:
       <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
       <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
     pack_name: |
-      <b>Yangi stikerlar toʻplami uchun qisqa havolani kiriting:</b>
-      <i>Faqat inglizcha harflar, raqamlar va pastki chiziqdan foydalaning.</i>
-      <i>Masalan, bu toʻplam qisqa havola sifatida “Hayvonlar”dan foydalanadi: https://t.me/addstickers/<u>Hayvonlar</u></i>
-
-      <i>Tugmadagi tasodifiy qisqa havolani tanlashingiz mumkin.</i>
+      <b>Yangi stiker to'plamiga qisqa havola kiriting:<\/b>\n\n<i>Masalan, bu to'plam 'Hayvonlar'ni qisqa havola sifatida ishlatadi: https:\/\/t.me\/addstickers\/i> Hayvonlar<\/u><\/i>\n\n<i>Siz tugmachada tasodifiy qisqa havolani tanlashingiz mumkin.<\/i>
     ok: |
       <a href="${link}">${title}</a> toʻplami muvaffaqiyatli yaratildi!
 

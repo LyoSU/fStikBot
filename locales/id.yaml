@@ -386,9 +386,10 @@ scenes:
       <i>Anda dapat memilih nama acak pada tombol.</i>
     pack_name: |
       <b>Masukkan tautan pendek untuk paket stiker baru:</b>
-      <i>Gunakan hanya huruf latin, angka, dan garis bawah.</i>
-      <i>Misalnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/addstickers/Animals</i>
-      <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
+
+      <i>Contohnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/addstickers/<u>Hewan</u></i>
+
+      <i>Anda dapat memilih tautan pendek secara acak pada tombol.</i>
     ok: |
       Paket <a href="${link}">${title}</a> berhasil dibuat!
 
