@@ -387,9 +387,8 @@ scenes:
     pack_name: |
       <b>Masukkan tautan pendek untuk paket stiker baru:</b>
 
-      <i>Contohnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/addstickers/<u>Hewan</u></i>
-
-      <i>Anda dapat memilih tautan pendek secara acak pada tombol.</i>
+      <i>Misalnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/ addstickers/<u>Hewan</u></i>
+      <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
     ok: |
       Paket <a href="${link}">${title}</a> berhasil dibuat!
 

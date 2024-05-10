@@ -353,7 +353,10 @@ scenes:
       <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
       <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
     pack_name: |
-      <b>Yangi stiker to'plamiga qisqa havola kiriting:<\/b>\n\n<i>Masalan, bu to'plam 'Hayvonlar'ni qisqa havola sifatida ishlatadi: https:\/\/t.me\/addstickers\/i> Hayvonlar<\/u><\/i>\n\n<i>Siz tugmachada tasodifiy qisqa havolani tanlashingiz mumkin.<\/i>
+      <b>Yangi stikerlar toʻplami uchun qisqa havolani kiriting:</b>
+
+      <i>Masalan, bu toʻplamda “Hayvonlar” qisqa havola sifatida ishlatiladi: https://t.me/ addstickers/<u>Hayvonlar</u></i>
+      <i>Tugmadagi tasodifiy qisqa havolani tanlashingiz mumkin.</i>
     ok: |
       <a href="${link}">${title}</a> toʻplami muvaffaqiyatli yaratildi!
 

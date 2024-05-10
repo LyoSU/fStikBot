@@ -384,7 +384,10 @@ scenes:
       <b>Yeni stiker paketi üçün bir ad daxil edin:</b>
       <i>Aşağıda təsadüfi olaraq yaradılan bir ad da seçə bilərsiniz.</i>
     pack_name: |
-      <b>Yeni sticker paketi üçün qısa bir keçidləmə daxil edin:<\/b>\n\n<i>Misal olaraq, bu paket 'Heyvanlar' adını qısa keçid kimi istifadə edir: https:\/\/t.me\/addstickers\/<u>Heyvanlar<\/u><\/i>\n\n<i>Düymədə təsadüfi qısa keçid seçə bilərsiniz.<\/i>
+      <b>Yeni stikerlər paketi üçün qısa link daxil edin:</b>
+
+      <i>Məsələn, bu paket qısa link kimi "Heyvanlar"dan istifadə edir: https://t.me/ addstickers/<u>Heyvanlar</u></i>
+      <i>Düymədə təsadüfi qısa keçid seçə bilərsiniz.</i>
     ok: |
       Paket <a href="${link}">${title}</a> uğurla yaradıldı!
 
