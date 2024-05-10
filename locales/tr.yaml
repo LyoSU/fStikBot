@@ -382,10 +382,10 @@ scenes:
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
+      <b>Yeni çıkartma paketi için kısa bir bağlantı girin:</b>
 
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
-      <i>You can choose random short link on button.</i>
+      <i>Örneğin, bu paket kısa bağlantı olarak 'Hayvanlar'ı kullanır: https://t.me/ addstickers/<u>Hayvanlar</u></i>
+      <i>Düğmeden rastgele kısa bağlantıyı seçebilirsiniz.</i>
     ok: |
       Etiket paketi <a href="${link}">${title}</a> başarıyla oluşturuldu!
 
