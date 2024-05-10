@@ -384,7 +384,10 @@ scenes:
       <b>Жаңа стикерлер бумасының атын енгізіңіз:</b>
       <i>Түймеде кездейсоқ атауды таңдауға болады.</i>
     pack_name: |
-      <b>Жаңа стикер пакеті үшін кіші қосымша енгізіңіз:<\/b>\n\n<i>Мысалы, бұл пакет 'Аңшылар' деп қысқа қосымшаны қолданады: https:\/\/t.me\/addstickers\/<u>Animals<\/u><\/i>\n\n<i>Таңдалған қысқа қосымшаны түймендегі белгілер арқылы таңдауға болады.<\/i>
+      <b>Enter a short link for new stickers pack:</b>
+
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <i>You can choose random short link on button.</i>
     ok: |
       <a href="${link}">${title}</a> бумасы сәтті жасалды!
 
