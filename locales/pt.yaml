@@ -384,7 +384,10 @@ scenes:
       <b>Digite o nome do novo pacote de sticker:</b>
       <i>Você pode escolher um nome aleatório no botão.</i>
     pack_name: |
-      <b>Insira um link curto para o novo pacote de adesivos:<\/b>\n\n<i>Por exemplo, este pacote usa 'Animais' como link curto: https:\/\/t.me\/addstickers\/<u>Animais<\/u><\/i>\n\n<i>Você pode escolher um link curto aleatório no botão.<\/i>
+      <b>Enter a short link for new stickers pack:</b>
+
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <i>You can choose random short link on button.</i>
     ok: |
       Pacote <a href="${link}">${title}</a> criado com sucesso! Link
 
