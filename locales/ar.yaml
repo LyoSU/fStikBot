@@ -384,10 +384,10 @@ scenes:
       <b>أدخل اسم جديد لحزمة الملصقات:<\/b>
       <i>يمكنك اختيار اسم عشوائي على زر.<\/i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
+      <b>أدخل رابطًا قصيرًا لحزمة الملصقات الجديدة:</b>
 
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
-      <i>You can choose random short link on button.</i>
+      <i>على سبيل المثال، تستخدم هذه الحزمة "الحيوانات" كرابط قصير: https://t.me/ addstickers/<u>الحيوانات</u></i>
+      <i>يمكنك اختيار رابط قصير عشوائي على الزر.</i>
     ok: |
       حزمة <a href="${link}">${title}</a> تم إنشاؤها بنجاح!
 
