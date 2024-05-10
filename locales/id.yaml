@@ -385,11 +385,10 @@ scenes:
       <b>Masukkan nama paket stiker baru:</b>
       <i>Anda dapat memilih nama acak pada tombol.</i>
     pack_name: |
-      <b>Masukkan tautan pendek untuk paket stiker baru:</b>
+      <b>Enter a short link for new stickers pack:</b>
 
-      <i>Contohnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/addstickers/<u>Hewan</u></i>
-
-      <i>Anda dapat memilih tautan pendek secara acak pada tombol.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+      <i>You can choose random short link on button.</i>
     ok: |
       Paket <a href="${link}">${title}</a> berhasil dibuat!
 
