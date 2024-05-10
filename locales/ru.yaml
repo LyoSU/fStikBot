@@ -387,11 +387,11 @@ scenes:
       <b>Введи имя для нового стикерпака:</b>
       <i>Также вы можете выбрать случайно сгенерированное имя ниже.</i>
     pack_name: |
-      <b>Введи короткий адрес для нового стикерпака:</b>
-      <i>Адрес может состоять только из букв английского алфавита, цифр и нижнего подчёркивания.</i>
-      <i>К примеру, этот набор имеет короткий адрес 'Animals': https://t.me/addstickers/<u>Animals</u></i>
+      <b>Enter a short link for new stickers pack:</b>
 
-      <i>Также вы можете выбрать случайно сгенерированный адрес ниже.</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
       Пак <a href="${link}">${title}</a> успешно создан!
 
