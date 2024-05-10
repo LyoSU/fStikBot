@@ -391,7 +391,7 @@ scenes:
       <i>You can choose random name on button.</i>
     pack_name: |
       <b>Enter a short link for new stickers pack:</b>
-      <i>Use only English letters, digits and underscores.</i>
+
       <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
 
       <i>You can choose random short link on button.</i>

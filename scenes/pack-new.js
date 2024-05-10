@@ -232,7 +232,8 @@ const newPackName = new Scene('newPackName')
 
 newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
   reply_to_message_id: ctx.message.message_id,
-  allow_sending_without_reply: true
+  allow_sending_without_reply: true,
+  disable_web_page_preview: true,
 }))
 
 newPackName.on('text', async (ctx) => {
