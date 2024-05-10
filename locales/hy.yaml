@@ -384,11 +384,11 @@ scenes:
       <b>Մուտքագրեք նոր կպչուն պիտակների փաթեթի անունը.</b>
       <i>Դուք կարող եք ընտրել պատահական անուն կոճակի վրա:</i>
     pack_name: |
-      <b>Կպչուն պիտակների նոր փաթեթի համար մուտքագրեք կարճ հղում՝</b>
-      <i>Օգտագործեք միայն անգլերեն տառեր, թվանշաններ և ընդգծումներ:</i>
-      <i>Օրինակ, այս փաթեթը օգտագործում է «Կենդանիներ» որպես կարճ հղում՝ https://t.me/addstickers/<u>Կենդանիներ</u></i>
+      <b>Enter a short link for new stickers pack:</b>
 
-      <i>Դուք կարող եք ընտրել պատահական կարճ հղում կոճակի վրա:</i>
+      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
+
+      <i>You can choose random short link on button.</i>
     ok: |
       Pack <a href="${link}">${title}</a> successfully created!
 
