@@ -107,7 +107,7 @@ photoClear.on('photo', async (ctx) => {
   const timeoutPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('Timeout'))
-    }, 1000 * 10)
+    }, 1000 * 30)
   })
 
   const job = await removebgQueue.add({
