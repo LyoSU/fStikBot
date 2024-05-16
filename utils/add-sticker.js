@@ -137,9 +137,9 @@ const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
 const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
   let stickerAdd
 
-  let sticker = stickerExtra.sticker
+  let { sticker } = stickerExtra
 
-  if (sticker.source) {
+  if (sticker?.source) {
     const uploadedSticker = await telegram.callApi('uploadStickerFile', {
       user_id: userId,
       sticker_format: stickerExtra.sticker_format,
