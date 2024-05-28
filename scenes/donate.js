@@ -130,7 +130,7 @@ const donate = async (ctx) => {
     payload: walletPayment._id.toString(),
     start_parameter: 'donate',
     currency: 'XTR',
-    prices: [{ label: 'Credits', amount: price * 100 }]
+    prices: [{ label: 'Credits', amount: price * 10000 }]
   }).catch(() => {})
 
   const repltMarkup =  Markup.inlineKeyboard([
@@ -145,7 +145,7 @@ const donate = async (ctx) => {
       Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
       Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
     ],
-    [Markup.urlButton(`🌟 Telegram Pay — ${price}`, payLink, !payLink)]
+    [Markup.urlButton(`🌟 Telegram Stars — ${price}`, payLink, !payLink)]
   ])
 
   await ctx.replyWithHTML(message, {
