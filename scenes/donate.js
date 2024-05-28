@@ -124,10 +124,19 @@ const donate = async (ctx) => {
     }
   }
 
+  const payLink = await ctx.telegram.callApi('createInvoiceLink', {
+    title: `Donate ${amount} credits`,
+    description: comment,
+    payload: walletPayment._id.toString(),
+    start_parameter: 'donate',
+    currency: 'XTR',
+    prices: [{ label: 'Credits', amount: price * 100 }]
+  }).catch(() => {})
+
   const repltMarkup =  Markup.inlineKeyboard([
-    [Markup.callbackButton('Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
+    [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
     [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
-    [Markup.urlButton(`Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
+    [Markup.urlButton(`💳 Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
     [
       Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
       Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
@@ -135,7 +144,8 @@ const donate = async (ctx) => {
     [
       Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
       Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
-    ]
+    ],
+    [Markup.urlButton(`🌟 Telegram Pay — ${price}`, payLink, !payLink)]
   ])
 
   await ctx.replyWithHTML(message, {
