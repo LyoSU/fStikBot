@@ -136,9 +136,10 @@ const donate = async (ctx) => {
   }).catch(() => {})
 
   const repltMarkup =  Markup.inlineKeyboard([
-    [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
+    [Markup.urlButton(`🌟 Telegram Stars — ${starPrice}`, payLink, !payLink)],
     [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
-    [Markup.urlButton(`💳 Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`)],
+    [Markup.urlButton(`💳 Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.session.userInfo.locale === 'uk' || ctx.from.language_code === 'uk'))],
+    [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
     [
       Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
       Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
@@ -146,8 +147,7 @@ const donate = async (ctx) => {
     [
       Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
       Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
-    ],
-    [Markup.urlButton(`🌟 Telegram Stars — ${starPrice}`, payLink, !payLink)]
+    ]
   ])
 
   await ctx.replyWithHTML(message, {
