@@ -124,7 +124,7 @@ const donate = async (ctx) => {
     }
   }
 
-  const starPrice = price * 100
+  const starPrice = price * 10
 
   const payLink = await ctx.telegram.callApi('createInvoiceLink', {
     title: `Donate ${amount} credits`,
