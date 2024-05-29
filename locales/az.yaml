@@ -122,40 +122,40 @@ cmd:
       Videoların daha yuvarlaq forması olmayacaq
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Stars
-    For every 1 dollar, you will receive 5 Stars
+    <b>☕️ Bot inkişafı dəstəyi</b>
+    Botun inkişafını dəstəkləyərək Sız ulduzlara alacaqsınız
+    Hər 1 dollar üçün Siz 5 ulduz alacaqsınız
 
-    <b>Balance:</b> <code>${balance}</code> Stars
-    With 1 Stars, you have the opportunity to boost one pack.
+    <b>Balans:</b> <code>${balance}</code> ulduz
+    Hər 1 ulduz ilə bir paketi gücləndirmək imkanınız var.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Yeniləmə aşağıdakı faydaları verir:</b>
+    ➖<code>"${titleSuffix}"</code> adındakı paketlərdə bağlanma <i>(linkdə deyil)</i>
+    ➖ Video stikerləri çevirərkən prioritet
+    ➖ Birdən çox stikəri add etmə imkanı
+    ➖ Video stikerlərinin 30 saniyədək davamı
   btn:
     donate: '☕️ Bağışlayın'
   topup: |
-    <b>Enter the amount of Stars you want to buy:</b>
+    <b>Almaq istədiyiniz ulduzlərin miqdarını daxil edin:</b>
 
-    <b>5 Stars = 1$</b>
-    <i>Minimum amount - 5 Stars</i>
+    <b>5 ulduz = 1$</b>
+    <i>Minimum miqdar - 5 ulduz</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Yanlış miqdar</b>
 
-    The minimum amount is 5 Stars
+    Minimum miqdar 5 ulduzdur
   paymenu: |
-    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
+    <b>${amount} ulduz</b> üçün <b>${price}$</b> almaq istəyirsiniz
 
-    ⚠️ Stars are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Ulduzlar idarəçi tərəfindən əl ilə verilir.
+    Gözləmə vaxtı 5 dəqiqədən 1 saata qədərdir
 
-    <u>Select payment method:</u>
+    <u>Ödəmə üsulunu seçin:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Balans yenilə</b>
 
-    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
+    Balans: <code>${balance}</code> ulduz (əlavə olunmuş <code>${amount}</code> ulduz)
 coedit:
   info: |
     <b>👥 Birgə-redaktə</b>
@@ -461,13 +461,13 @@ scenes:
       <i>Bu sahibin digər stikerləri haqqında məlumatımız yoxdur</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>${link}-i boos etmək istədiyinizə əminsinizmi?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Boosting, çevirmənin prioritetini artıracaq və birdən çox stikər əlavə etmə imkanını təmin edəcək
+      Busta haqqında ətraflı məlumatı tapa bilərsiniz:/donate
 
-      <b>Price:</b> 1 Stars
-      <b>Current balance:</b> ${balance} Stars
+      <b>Qiymət:</b> 1 ulduz
+      <b>Cari balans:</b> ${balance} ulduz
     btn:
       yes: Bəli, gücləndirin!
       no: Xeyr, ləğv edin
@@ -479,9 +479,9 @@ scenes:
       ${title} indi gücləndirilib
     error:
       not_enough_credits: |
-        You do not have enough Stars to boost this pack.
+        Bu paketi boos etmək üçün kifayət qədər ulduzunuz yoxdur.
 
-        You can top up your balance by sending the /donate command.
+        Balansınızı artmaq üçün /donate əmrini göndərərək balansı artıra bilərsiniz.
       already_boosted: |
         Bu paket artıq gücləndirilib.
   catalog:
