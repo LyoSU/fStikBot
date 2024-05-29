@@ -156,6 +156,14 @@ donate:
     <b>🔄 Обновление баланса</b>
 
     Баланс: <code>${balance}</code> Кредиты (добавлено <code>${amount}</code> Кредитов)
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>👥 Набор стикеров для редактирования</b>
