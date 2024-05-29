@@ -122,40 +122,40 @@ cmd:
       Vídeos não terão mais formato arredondado
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Stars
-    For every 1 dollar, you will receive 5 Stars
+    <b>☕️ Suporte ao desenvolvimento do bot</b>
+    Ao apoiar o desenvolvimento do bot, você receberá créditos.
+    Para cada 1 dólar, você receberá 5 créditos
 
-    <b>Balance:</b> <code>${balance}</code> Stars
-    With 1 Stars, you have the opportunity to boost one pack.
+    <b>Saldo:</b> <code>${balance}</code> créditos
+    Com 1 crédito, você tem a oportunidade de dar um bosta num pacote de figurinhas.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>O bosta fornece os seguintes benefícios:</b>
+    ➖ Desabilitando <code>"${titleSuffix}"</code> no nome dos pacotes <i>(não no link)</i>
+    ➖ Prioridade ao converter adesivos de vídeo
+    ➖ Capacidade de adicionar mais de um adesivo à fila de processamento
+    ➖ Duração dos adesivos de vídeo de até 30 segundos
   btn:
     donate: '☕ Doar'
   topup: |
-    <b>Enter the amount of Stars you want to buy:</b>
+    <b>Insira a quantidade de Créditos que deseja comprar:</b>
 
-    <b>5 Stars = 1$</b>
-    <i>Minimum amount - 5 Stars</i>
+    <b>5 Créditos = 1$</b>
+    <i>Quantidade mínima - 5 Créditos</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Quantidade inválida</b>
 
-    The minimum amount is 5 Stars
+    A quantidade mínima são 5 Créditos
   paymenu: |
-    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
+    Você deseja comprar <b>${amount} Créditos</b> por <b>${price}$</b>
 
-    ⚠️ Stars are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Os Créditos são emitidos manualmente pelo administrador.
+    O tempo de espera varia de 5 minutos a 1 hora
 
-    <u>Select payment method:</u>
+    <u>Selecione o método de pagamento:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Atualização de saldo</b>
 
-    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
+    Saldo: <code>${balance}</code> Créditos (adicionados <code>${amount}</code> Créditos)
 coedit:
   info: |
     <b>👥 Coedição</b>
@@ -461,13 +461,13 @@ scenes:
       <i>Não temos informações sobre outros adesivos deste proprietário</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Você tem certeza de que deseja dar um bosta em <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Dar um bosta aumentará a prioridade de processamento e a capacidade de adicionar mais de um adesivo à fila
+      Você pode encontrar mais informações detalhadas sobre bostas no menu ao visitar: /donate
 
-      <b>Price:</b> 1 Stars
-      <b>Current balance:</b> ${balance} Stars
+      <b>Preço:</b> 1 Crédito
+      <b>Saldo atual:</b> ${balance} Créditos
     btn:
       yes: Sim, aumentar!
       no: Não, cancelar
@@ -479,9 +479,9 @@ scenes:
       ${title} será impulsionada
     error:
       not_enough_credits: |
-        You do not have enough Stars to boost this pack.
+        Você não possui créditos suficientes para dar um bosta neste pacote.
 
-        You can top up your balance by sending the /donate command.
+        Você pode recarregar seu saldo enviando o comando /donate.
       already_boosted: |
         Este pacote já está aumentado.
   catalog:
