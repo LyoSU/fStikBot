@@ -122,40 +122,40 @@ cmd:
       Цяпер відэа не будуць мець круглую форму
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Stars
-    For every 1 dollar, you will receive 5 Stars
+    <b>☕ Падтрымка распрацоўкі бота</b>
+    Падтрымаўшы распрацоўку бота, вы атрымаеце крэдыты.
+    За кожны долар вы атрымаеце па 5 крэдытаў.
 
-    <b>Balance:</b> <code>${balance}</code> Stars
-    With 1 Stars, you have the opportunity to boost one pack.
+    <b>Balance:</b> <code>${balance}</code> крэдытаў
+    З 1 крэдыта вы маеце магчымасць паляпшыць адзін пакет.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Паляпшэнне прадастаўляе наступныя перавагі:</b>
+    ➖ Адключэнне <code>"${titleSuffix}"</code> у назве пакетаў <i>(не ў спасылцы)</i>
+    ➖ Прыярытэт пры пераўтварэнні відэа-стікераў
+    ➖ Магчымасць дадаць больш за адзін стікер у чарзе апрацоўкі
+    ➖ Час відэа-стікераў да 30 секунд
   btn:
     donate: '☕ Падтрымка'
   topup: |
-    <b>Enter the amount of Stars you want to buy:</b>
+    <b>Увядзіце колькасць крэдытаў, якія вы хочаце набыць:</b>
 
-    <b>5 Stars = 1$</b>
-    <i>Minimum amount - 5 Stars</i>
+    <b>5 крэдытаў = 1$</b>
+    <i>Мінімальная колькасць - 5 крэдытаў</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Няправільная колькасць</b>
 
-    The minimum amount is 5 Stars
+    Мінімальная колькасць - 5 крэдытаў
   paymenu: |
-    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
+    Вы жадаеце набыць <b>${amount} крэдытаў</b> за <b>${price}$</b>
 
-    ⚠️ Stars are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Крэдыты выдаюцца ўручную адміністратарам.
+    Чакальны час становіцца ад 5 хвілін да 1 гадзіны
 
-    <u>Select payment method:</u>
+    <u>Выберыце метад аплаты:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Абнаўленне балансу</b>
 
-    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
+    Баланс: <code>${balance}</code> крэдытаў (дададзена <code>${amount}</code> крэдытаў)
 coedit:
   info: |
     <b>👥 Сумеснае рэдагаванне</b>
@@ -460,13 +460,13 @@ scenes:
       <i>Інфармацыя пра іншыя пакі гэтага ўладальніка адсутнічае</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Ці вы ўпэўненыя, што жадаеце паляпшыць <a href="${link}">${title}<\/a>?<\/b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Паляпшэнне павялічыць прыярытэт апрацоўкі і магчымасць дадаць больш за адзін стікер у чарзе
+      Вы можаце знайсці больш дэталёўнай інфармацыі пра паляпшэнні ў меню, пасетіўшы: \/donate
 
-      <b>Price:</b> 1 Stars
-      <b>Current balance:</b> ${balance} Stars
+      <b>Цана:<\/b> 1 крэдыт
+      <b>Бягучы баланс:<\/b> ${balance} крэдытаў
     btn:
       yes: Так, забусціць!
       no: Не, скасаваць
@@ -478,9 +478,9 @@ scenes:
       Пак ${title} цяпер забушчаны
     error:
       not_enough_credits: |
-        You do not have enough Stars to boost this pack.
+        У вас недастаткова крэдытаў, каб паляпшыць гэты пакет.
 
-        You can top up your balance by sending the /donate command.
+        Вы можаце папоўніць свой баланс, адправіўшы каманду \/donate.
       already_boosted: |
         Гэты пак ужо забушчаны.
   catalog:
