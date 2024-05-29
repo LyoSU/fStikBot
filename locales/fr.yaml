@@ -156,6 +156,14 @@ donate:
     <b>🔄 Mise à jour du solde</b>
 
     Solde: <code>${balance}</code> étoiles (ajout de <code>${amount}</code> étoiles)
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>:busts_in_silhouette : Co-édition</b>
