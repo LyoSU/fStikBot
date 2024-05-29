@@ -132,40 +132,40 @@ cmd:
       视频将不再是圆形
 donate:
   menu: |
-    <b>☕️ 机器人开发支持</b>
-    通过支持机器人的开发，您将获得信用点数。
-    每 1 美元，您将获得 5 个信用点。
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Stars
+    For every 1 dollar, you will receive 5 Stars
 
-    <b>余额：</b> <code>${balance}</code> 信用点数
-    使用 1 个信用点，您有机会提升一个包。
+    <b>Balance:</b> <code>${balance}</code> Stars
+    With 1 Stars, you have the opportunity to boost one pack.
 
-    <b>升级可带来以下好处：</b>
-    ➖ 禁用包名称中的 <code>"${titleSuffix}"</code> <i>（不在链接中）</i>。
-    转换视频贴纸时的优先级
-    在处理队列中添加多个贴纸的功能
-    视频贴纸的持续时间最长可达 30 秒
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
     donate: '☕️ 捐赠'
   topup: |
-    <b>输入您要购买的信用点数：</b>
+    <b>Enter the amount of Stars you want to buy:</b>
 
-    <b>5 点数 = 1 美元</b>
-    <i>最低金额 - 5 信用点数</i>
+    <b>5 Stars = 1$</b>
+    <i>Minimum amount - 5 Stars</i>
   invalid_amount: |
-    <b>无效金额</b>
+    <b>Invalid amount</b>
 
-    最低金额为 5 个信用点
+    The minimum amount is 5 Stars
   paymenu: |
-    您想以 <b>${price}$</b> 的价格购买 <b>${amount} 信用点数</b>。
+    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
 
-    ⚠️ 信用点数由管理员手动发放。
-    等待时间从 5 分钟到 1 小时不等。
+    ⚠️ Stars are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>选择付款方式：</u>
+    <u>Select payment method:</u>
   update: |
-    <b>🔄 余额更新</b>
+    <b>🔄 Balance update</b>
 
-    余额： <code>${balance}</code> 点数 （增加 <code>${amount}</code> 点数)
+    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
 coedit:
   info: |
     <b>👥 联合编辑 </b>
@@ -471,15 +471,13 @@ scenes:
       <i>我们没有该用户其他贴纸的信息</i>
   boost:
     sure: |
-      <b>你确定要提升 <a href="${link}">${title}</a>?</b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      提升将提升处理的优先级，并能将多个贴纸添加到队列中
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      您可以访问菜单，查看有关提升的更多详细信息：/donate
-
-      <b>价格:</b> 1 credit
-
-      <b>当前余额:</b> ${balance} credits
+      <b>Price:</b> 1 Stars
+      <b>Current balance:</b> ${balance} Stars
     btn:
       yes: 是，提升！
       no: 否，取消
@@ -491,9 +489,9 @@ scenes:
       ${title} 现在得到提升
     error:
       not_enough_credits: |
-        您没有足够的信用点数来提升此包。
+        You do not have enough Stars to boost this pack.
 
-        您可以发送 /donate 命令来充值。
+        You can top up your balance by sending the /donate command.
       already_boosted: |
         这个包已经提升.
   catalog:
