@@ -156,6 +156,14 @@ donate:
     <b>🔄 تحديث الرصيد<\/b>
 
     الرصيد: <code>${balance}<\/code> نجوم (تمت إضافة <code>${amount}<\/code> نجوم)
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>👥 الاشتراك في تحرير</b>
