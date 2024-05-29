@@ -122,40 +122,40 @@ cmd:
       سيكون لمقاطع الفيديو الآن شكل مستدير
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Stars
-    For every 1 dollar, you will receive 5 Stars
+    <b>☕ دعم تطوير البوت</b>
+    من خلال دعم تطوير البوت، سوف تتلقى الائتمانات.
+    مقابل كل دولار واحد ، سوف تتلقى 5 ائتمانات.
 
-    <b>Balance:</b> <code>${balance}</code> Stars
-    With 1 Stars, you have the opportunity to boost one pack.
+    <b>Balance:</b> <code>${balance}<\/code> ائتمان
+    مع كل ائتمان ، لديك فرصة لتعزيز حزمة واحدة.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>The boost provides the following benefits:<\/b>
+    ➖ تعطيل <code>"${titleSuffix}"<\/code> في اسم الحزمة <i>(ليس في الرابط)<\/i>
+    ➖ الأولوية عند تحويل ملصقات الفيديو
+    ➖ القدرة على إضافة أكثر من ملصق واحد إلى طابور المعالجة
+    ➖ مدة ملصقات الفيديو تصل إلى 30 ثانية
   btn:
     donate: '☕ التبرع'
   topup: |
-    <b>Enter the amount of Stars you want to buy:</b>
+    <b>أدخل كمية النجوم التي تريد شراؤها:<\/b>
 
-    <b>5 Stars = 1$</b>
-    <i>Minimum amount - 5 Stars</i>
+    <b>5 نجوم = 1$<\/b>
+    <i>الحد الأدنى للمبلغ - 5 نجوم<\/i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>كمية غير صالحة<\/b>
 
-    The minimum amount is 5 Stars
+    الحد الأدنى للمبلغ هو 5 نجوم
   paymenu: |
-    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
+    ترغب في شراء <b>${amount} نجوم<\/b> مقابل <b>${price}$<\/b>
 
-    ⚠️ Stars are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ يتم إصدار النجوم يدويًا من قبل المسؤول.
+    يتراوح وقت الانتظار من 5 دقائق إلى ساعة واحدة
 
-    <u>Select payment method:</u>
+    <u>حدد طريقة الدفع:<\/u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 تحديث الرصيد<\/b>
 
-    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
+    الرصيد: <code>${balance}<\/code> نجوم (تمت إضافة <code>${amount}<\/code> نجوم)
 coedit:
   info: |
     <b>👥 الاشتراك في تحرير</b>
@@ -461,13 +461,13 @@ scenes:
       <i>ليس لدينا معلومات عن الملصقات الأخرى لهذا المالك</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>هل أنت متأكد أنك تريد تعزيز <a href="${link}">${title}<\/a>?<\/b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      سيزيد التعزيز من الأولوية في المعالجة والقدرة على إضافة أكثر من ملصق واحد إلى الطابور
+      يمكنك العثور على معلومات مفصلة أكثر حول التعزيزات في القائمة عن طريق زيارة: \/donate
 
-      <b>Price:</b> 1 Stars
-      <b>Current balance:</b> ${balance} Stars
+      <b>السعر:<\/b> 1 نجوم
+      <b>الرصيد الحالي:<\/b> ${balance} نجوم
     btn:
       yes: نعم، تعزيز!
       no: لا، إلغاء
@@ -479,9 +479,9 @@ scenes:
       ${title} تم تعزيزه الآن
     error:
       not_enough_credits: |
-        You do not have enough Stars to boost this pack.
+        ليس لديك نجوم كافية لتعزيز هذه الحزمة.
 
-        You can top up your balance by sending the /donate command.
+        يمكنك شحن رصيدك عن طريق إرسال الأمر \/donate.
       already_boosted: |
         تم تعزيز هذه الحزمة بالفعل.
   catalog:
