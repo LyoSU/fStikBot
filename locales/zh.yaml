@@ -166,6 +166,14 @@ donate:
     <b>🔄 余额更新<\/b>
 
     余额： <code>${balance}<\/code> Stars（已添加 <code>${amount}<\/code> Stars）
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>👥 联合编辑 </b>
