@@ -156,6 +156,14 @@ donate:
     <b>🔄 Balans yenilə</b>
 
     Balans: <code>${balance}</code> ulduz (əlavə olunmuş <code>${amount}</code> ulduz)
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>👥 Birgə-redaktə</b>
