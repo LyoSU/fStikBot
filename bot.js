@@ -11,6 +11,7 @@ const {
 } = require('./database')
 const {
   handleError,
+  handleStats,
   handlePing,
   handleStart,
   handleHelp,
@@ -175,6 +176,7 @@ bot.use(scenes)
 bot.use(require('./handlers/admin'))
 bot.use(require('./handlers/news-channel'))
 
+bot.use(handleStats)
 bot.use(handlePing)
 
 // main commands

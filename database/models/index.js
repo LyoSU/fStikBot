@@ -4,6 +4,7 @@ const Sticker = require('./sticker')
 const StickerSet = require('./sticker-set')
 const Messaging = require('./messaging')
 const Payment = require('./payment')
+const DeepLink = require('./deeplink')
 
 module.exports = {
   User,
@@ -11,5 +12,6 @@ module.exports = {
   Sticker,
   StickerSet,
   Messaging,
-  Payment
+  Payment,
+  DeepLink
 }

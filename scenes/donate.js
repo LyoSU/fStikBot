@@ -33,7 +33,7 @@ const donate = async (ctx) => {
   const priceUAH = (price * exchangeRate.UAH).toFixed(2)
   const priceRUB = (price * exchangeRate.RUB).toFixed(2)
 
-  const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} credit`
+  const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} Stars`
 
   let ruLink
 
@@ -90,6 +90,19 @@ const donate = async (ctx) => {
 
   await walletPayment.save()
 
+  const telegramPayment = new ctx.db.Payment({
+    _id: mongoose.Types.ObjectId(),
+    user: ctx.session.userInfo._id,
+    amount,
+    price: price,
+    currency: 'XTR',
+    paymentSystem: 'telegram',
+    comment,
+    status: 'pending'
+  })
+
+  await telegramPayment.save()
+
   if (cryptoPayMe) {
     const exchangeRate = await cryptoPay.getExchangeRates()
 
@@ -127,12 +140,12 @@ const donate = async (ctx) => {
   const starPrice = amount
 
   const payLink = await ctx.telegram.callApi('createInvoiceLink', {
-    title: `Donate ${amount} credits`,
+    title: `Donate ${amount} Stars`,
     description: comment,
-    payload: walletPayment._id.toString(),
+    payload: telegramPayment._id.toString(),
     start_parameter: 'donate',
     currency: 'XTR',
-    prices: [{ label: 'Credits', amount: starPrice * 100 }]
+    prices: [{ label: 'Stars', amount: starPrice }]
   }).catch(() => {})
 
   const repltMarkup =  Markup.inlineKeyboard([
@@ -168,12 +181,12 @@ donateScene.enter(async (ctx) => {
     parse_mode: 'HTML',
     reply_markup: Markup.inlineKeyboard([
       [
-        Markup.callbackButton('10 Credits', 'donate:10'),
-        Markup.callbackButton('20 Credits', 'donate:20')
+        Markup.callbackButton('10 Stars', 'donate:10'),
+        Markup.callbackButton('20 Stars', 'donate:20')
       ],
       [
-        Markup.callbackButton('50 Credits', 'donate:50'),
-        Markup.callbackButton('100 Credits', 'donate:100')
+        Markup.callbackButton('50 Stars', 'donate:50'),
+        Markup.callbackButton('100 Stars', 'donate:100')
       ]
     ])
   })

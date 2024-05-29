@@ -21,6 +21,39 @@ const donateMenu = async (ctx) => {
   })
 }
 
+composer.on('pre_checkout_query', async (ctx) => {
+  const telegramPayment = await ctx.db.Payment.findOne({
+    _id: ctx.preCheckoutQuery.invoice_payload
+  })
+
+  if (!telegramPayment || telegramPayment.status !== 'pending') {
+    return ctx.answerPreCheckoutQuery(false, ctx.i18n.t('donate.error.already_donated'))
+  }
+
+  await ctx.answerPreCheckoutQuery(true)
+})
+
+composer.on('successful_payment', async (ctx) => {
+  const telegramPayment = await ctx.db.Payment.findOne({
+    _id: ctx.message.successful_payment.invoice_payload
+  })
+
+  if (!telegramPayment || telegramPayment.status !== 'pending') {
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
+  }
+
+  telegramPayment.status = 'paid'
+  await telegramPayment.save()
+
+  ctx.session.userInfo.balance += telegramPayment.amount
+  await ctx.session.userInfo.save()
+
+  return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
+    amount: telegramPayment.amount,
+    balance: ctx.session.userInfo.balance
+  }))
+})
+
 composer.hears(['/donate', '/boost', '/start boost', match('cmd.start.btn.club')], donateMenu)
 
 composer.action('donate:topup', async (ctx) => {
@@ -64,7 +97,7 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
   }
 
   if (!walletPayLink) {
-    return ctx.replyWithHTML(ctx.i18n.t('donate.error'))
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
   }
 
   return ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
@@ -72,7 +105,6 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
     [Markup.callbackButton('🔙 Back', 'donate:topup')]
   ]))
 })
-
 
 composer.action(/donate:(\d+)/, async (ctx) => {
   return ctx.scene.enter('donate', {
