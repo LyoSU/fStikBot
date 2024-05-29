@@ -122,40 +122,40 @@ cmd:
       Videoların daha yuvarlaq forması olmayacaq
 donate:
   menu: |
-    <b>☕️ Botun inkişafına dəstək</b>
-    Botun inkişafını dəstəkləməklə, kreditlər alacaqsınız.
-    Hər bir dollar üçün, 5 kredit alacaqsınız.
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Stars
+    For every 1 dollar, you will receive 5 Stars
 
-    <b>Balans:</b> <code>${balance}</code> kredit
-    Bir kredit ilə, bir paketi gücləndirmək imkanınız var.
+    <b>Balance:</b> <code>${balance}</code> Stars
+    With 1 Stars, you have the opportunity to boost one pack.
 
-    <b>Gücləndirilmə aşağıdakı üstünlüklər təmin edir:</b>
-    ➖ Paket adında <code>"${titleSuffix}"</code> ləqəbinin söndürülməsi <i>(linkdə deyil)</i>
-    ➖ Video stikerlərinin çevrilməsində prioritet
-    ➖ Emal növbəsinə birdən çox stiker əlavə etmək imkanı
-    ➖ Video stikerlərinin müddəti 30 saniyəyə qədər
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
     donate: '☕️ Bağışlayın'
   topup: |
-    <b>Almaq istədiyiniz kreditlərin məbləğini daxil edin:</b>
+    <b>Enter the amount of Stars you want to buy:</b>
 
-    <b>5 kredit = 1$</b>
-    <i>Minimum məbləğ - 5 kredit</i>
+    <b>5 Stars = 1$</b>
+    <i>Minimum amount - 5 Stars</i>
   invalid_amount: |
-    <b>Etibarsız məbləğ</b>
+    <b>Invalid amount</b>
 
-    Minimum məbləğ 5 kreditdir
+    The minimum amount is 5 Stars
   paymenu: |
-    <b>${amount} kreditləri</b> <b>${price}$</b>
+    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
 
-    almaq istəyirsiniz ⚠️ Kreditlər administrator tərəfindən əl ilə verilir.
-    Gözləmə müddəti 5 dəqiqə ilə 1 saat arasında dəyişir
+    ⚠️ Stars are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>Ödəniş üsulunu seçin:</u>
+    <u>Select payment method:</u>
   update: |
-    <b>🔄 Balans yeniləməsi</b>
+    <b>🔄 Balance update</b>
 
-    Balans: <code>${balance}</code> kredit (əlavə edilmiş <code>${amount}</code> kredit)
+    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
 coedit:
   info: |
     <b>👥 Birgə-redaktə</b>
@@ -461,13 +461,13 @@ scenes:
       <i>Bu sahibin digər stikerləri haqqında məlumatımız yoxdur</i>
   boost:
     sure: |
-      <b> <a href="${link}">${title}</a>artırmaq istədiyinizə əminsiniz?</b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      Artırma emal prioritetini və növbəyə birdən çox stiker əlavə etmək imkanını artıracaq
-      Menyuda gücləndiricilər haqqında daha ətraflı məlumatı aşağıdakı ünvana daxil olaraq tapa bilərsiniz: /donate
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>Qiymət:</b> 1 kredit
-      <b>Cari balans:</b> ${balance} kreditlər
+      <b>Price:</b> 1 Stars
+      <b>Current balance:</b> ${balance} Stars
     btn:
       yes: Bəli, gücləndirin!
       no: Xeyr, ləğv edin
@@ -479,9 +479,9 @@ scenes:
       ${title} indi gücləndirilib
     error:
       not_enough_credits: |
-        Bu paketi artırmaq üçün kifayət qədər kreditiniz yoxdur.
+        You do not have enough Stars to boost this pack.
 
-        Siz /donate əmrini göndərməklə balansınızı artıra bilərsiniz.
+        You can top up your balance by sending the /donate command.
       already_boosted: |
         Bu paket artıq gücləndirilib.
   catalog:
