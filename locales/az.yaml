@@ -122,40 +122,40 @@ cmd:
       Videoların daha yuvarlaq forması olmayacaq
 donate:
   menu: |
-    <b>☕️ Botun inkişafına dəstək</b>
-    Botun inkişafını dəstəkləməklə, kreditlər alacaqsınız.
-    Hər bir dollar üçün, 5 kredit alacaqsınız.
+    <b>☕️ Bot inkişafı dəstəyi</b>
+    Botun inkişafını dəstəkləyərək Sız ulduzlara alacaqsınız
+    Hər 1 dollar üçün Siz 5 ulduz alacaqsınız
 
-    <b>Balans:</b> <code>${balance}</code> kredit
-    Bir kredit ilə, bir paketi gücləndirmək imkanınız var.
+    <b>Balans:</b> <code>${balance}</code> ulduz
+    Hər 1 ulduz ilə bir paketi gücləndirmək imkanınız var.
 
-    <b>Gücləndirilmə aşağıdakı üstünlüklər təmin edir:</b>
-    ➖ Paket adında <code>"${titleSuffix}"</code> ləqəbinin söndürülməsi <i>(linkdə deyil)</i>
-    ➖ Video stikerlərinin çevrilməsində prioritet
-    ➖ Emal növbəsinə birdən çox stiker əlavə etmək imkanı
-    ➖ Video stikerlərinin müddəti 30 saniyəyə qədər
+    <b>Yeniləmə aşağıdakı faydaları verir:</b>
+    ➖<code>"${titleSuffix}"</code> adındakı paketlərdə bağlanma <i>(linkdə deyil)</i>
+    ➖ Video stikerləri çevirərkən prioritet
+    ➖ Birdən çox stikəri add etmə imkanı
+    ➖ Video stikerlərinin 30 saniyədək davamı
   btn:
     donate: '☕️ Bağışlayın'
   topup: |
-    <b>Almaq istədiyiniz kreditlərin məbləğini daxil edin:</b>
+    <b>Almaq istədiyiniz ulduzlərin miqdarını daxil edin:</b>
 
-    <b>5 kredit = 1$</b>
-    <i>Minimum məbləğ - 5 kredit</i>
+    <b>5 ulduz = 1$</b>
+    <i>Minimum miqdar - 5 ulduz</i>
   invalid_amount: |
-    <b>Etibarsız məbləğ</b>
+    <b>Yanlış miqdar</b>
 
-    Minimum məbləğ 5 kreditdir
+    Minimum miqdar 5 ulduzdur
   paymenu: |
-    <b>${amount} kreditləri</b> <b>${price}$</b>
+    <b>${amount} ulduz</b> üçün <b>${price}$</b> almaq istəyirsiniz
 
-    almaq istəyirsiniz ⚠️ Kreditlər administrator tərəfindən əl ilə verilir.
-    Gözləmə müddəti 5 dəqiqə ilə 1 saat arasında dəyişir
+    ⚠️ Ulduzlar idarəçi tərəfindən əl ilə verilir.
+    Gözləmə vaxtı 5 dəqiqədən 1 saata qədərdir
 
-    <u>Ödəniş üsulunu seçin:</u>
+    <u>Ödəmə üsulunu seçin:</u>
   update: |
-    <b>🔄 Balans yeniləməsi</b>
+    <b>🔄 Balans yenilə</b>
 
-    Balans: <code>${balance}</code> kredit (əlavə edilmiş <code>${amount}</code> kredit)
+    Balans: <code>${balance}</code> ulduz (əlavə olunmuş <code>${amount}</code> ulduz)
 coedit:
   info: |
     <b>👥 Birgə-redaktə</b>
@@ -461,13 +461,13 @@ scenes:
       <i>Bu sahibin digər stikerləri haqqında məlumatımız yoxdur</i>
   boost:
     sure: |
-      <b> <a href="${link}">${title}</a>artırmaq istədiyinizə əminsiniz?</b>
+      <b>${link}-i boos etmək istədiyinizə əminsinizmi?</b>
 
-      Artırma emal prioritetini və növbəyə birdən çox stiker əlavə etmək imkanını artıracaq
-      Menyuda gücləndiricilər haqqında daha ətraflı məlumatı aşağıdakı ünvana daxil olaraq tapa bilərsiniz: /donate
+      Boosting, çevirmənin prioritetini artıracaq və birdən çox stikər əlavə etmə imkanını təmin edəcək
+      Busta haqqında ətraflı məlumatı tapa bilərsiniz:/donate
 
-      <b>Qiymət:</b> 1 kredit
-      <b>Cari balans:</b> ${balance} kreditlər
+      <b>Qiymət:</b> 1 ulduz
+      <b>Cari balans:</b> ${balance} ulduz
     btn:
       yes: Bəli, gücləndirin!
       no: Xeyr, ləğv edin
@@ -479,9 +479,9 @@ scenes:
       ${title} indi gücləndirilib
     error:
       not_enough_credits: |
-        Bu paketi artırmaq üçün kifayət qədər kreditiniz yoxdur.
+        Bu paketi boos etmək üçün kifayət qədər ulduzunuz yoxdur.
 
-        Siz /donate əmrini göndərməklə balansınızı artıra bilərsiniz.
+        Balansınızı artmaq üçün /donate əmrini göndərərək balansı artıra bilərsiniz.
       already_boosted: |
         Bu paket artıq gücləndirilib.
   catalog:

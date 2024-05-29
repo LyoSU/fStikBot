@@ -123,39 +123,39 @@ cmd:
 donate:
   menu: |
     <b>☕️ Soutien au développement du bot</b>
-    En soutenant le développement du bot, vous recevrez des crédits.
-    Pour chaque dollar, vous recevrez 5 crédits.
+    En soutenant le développement du bot, vous recevrez des étoiles
+    Pour chaque dollar, vous recevrez 5 étoiles
 
-    <b>Solde :</b> <code>${balance}</code> crédits
-    Avec 1 crédit, vous avez la possibilité de booster un pack.
+    <b>Solde: </b><code>${balance}</code> étoiles
+    Avec 1 étoile, vous avez la possibilité de booster un pack.
 
-    <b>Les avantages du boost sont les suivants :</b>
+    <b>Le boost offre les avantages suivants :</b>
     ➖ Désactivation de <code>"${titleSuffix}"</code> dans le nom des packs <i>(pas dans le lien)</i>
     ➖ Priorité lors de la conversion des autocollants vidéo
-    ➖ Possibilité d'ajouter plus d'un autocollant à la file d'attente de traitement
+    ➖ Capacité à ajouter plus d'un autocollant à la file de traitement
     ➖ Durée des autocollants vidéo jusqu'à 30 secondes
   btn:
     donate: '☕ Faire un don'
   topup: |
-    <b>Entrez le montant de crédits que vous souhaitez acheter :</b>
+    <b>Entrez le montant d'étoiles que vous souhaitez acheter :</b>
 
-    <b>5 crédits = 1$</b>
-    <i>Montant minimum - 5 crédits</i>
+    <b>5 étoiles = 1$</b>
+    <i>Montant minimum - 5 étoiles</i>
   invalid_amount: |
-    <b>Montant non valide</b>
+    <b>Montant invalide</b>
 
-    Le montant minimum est de 5 crédits
+    Le montant minimum est de 5 étoiles
   paymenu: |
-    Vous souhaitez acheter <b>${amount} crédits</b> pour <b>${price}$</b>
+    Vous souhaitez acheter <b>${amount} étoiles</b> pour <b>${price}$</b>
 
-    ⚠️ Les crédits sont émis manuellement par l'administrateur.
-    Le temps d'attente varie de 5 minutes à 1 heure
+    ⚠️ Les étoiles sont attribuées manuellement par l'administrateur.
+    Le délai d'attente varie de 5 minutes à 1 heure
 
     <u>Sélectionnez le mode de paiement :</u>
   update: |
-    <b>:contre clockwise_arrows_button: Mise à jour du solde</b>
+    <b>🔄 Mise à jour du solde</b>
 
-    Solde: <code>${balance}</code> crédits (ajouté <code>${amount}</code> crédits)
+    Solde: <code>${balance}</code> étoiles (ajout de <code>${amount}</code> étoiles)
 coedit:
   info: |
     <b>:busts_in_silhouette : Co-édition</b>
@@ -461,13 +461,13 @@ scenes:
       <i>Nous n'avons aucune information sur les autres autocollants de ce propriétaire</i>
   boost:
     sure: |
-      <b>Êtes-vous sûr de vouloir booster <a href="${link}">${title}</a>?</b>
+      <b>Êtes-vous sûr de vouloir booster <a href="${link}">${title}<\/a> ?<\/b>
 
-      Boosting augmentera la priorité du traitement et la possibilité d'ajouter plus d'un autocollant à la file
-      Vous pouvez trouver plus d'informations détaillées sur les boosts dans le menu en visitant : /donate
+      Le boost augmentera la priorité de traitement et la capacité à ajouter plus d'un autocollant à la file d'attente
+      Vous pouvez trouver des informations plus détaillées sur les boosts dans le menu en visitant : \/donate
 
-      <b>Prix :</b> 1 crédit
-      <b>solde actuel:</b> ${balance} crédits
+      <b>Prix:<\/b> 1 étoile
+      <b>Solde actuel:<\/b> ${balance} étoiles
     btn:
       yes: Oui, booster!
       no: Non, annuler
@@ -479,9 +479,9 @@ scenes:
       ${title} est maintenant boosté
     error:
       not_enough_credits: |
-        Vous n'avez pas assez de crédits pour booster ce pack.
+        Vous n'avez pas assez d'étoiles pour booster ce pack.
 
-        Vous pouvez recharger votre solde en envoyant la commande /donate.
+        Vous pouvez recharger votre solde en envoyant la commande \/donate.
       already_boosted: |
         Ce pack est déjà boosté.
   catalog:

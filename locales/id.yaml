@@ -123,39 +123,39 @@ cmd:
 donate:
   menu: |
     <b>☕️ Dukungan pengembangan bot</b>
-    Dengan mendukung pengembangan bot, Anda akan menerima kredit.
-    Untuk setiap 1 dolar, Anda akan menerima 5 kredit.
+    Dengan mendukung pengembangan bot, Anda akan menerima Bintang
+    Untuk setiap 1 dolar, Anda akan menerima 5 Bintang
 
-    <b>Saldo:</b> <code>${balance}</code> kredit
-    Dengan 1 kredit, Anda memiliki kesempatan untuk meningkatkan satu pack.
+    <b>Saldo:</b> <code>${balance}</code> Bintang
+    Dengan 1 Bintang, Anda memiliki kesempatan untuk meningkatkan satu paket.
 
-    <b>Manfaat peningkatan meliputi:</b>
-    ➖ Menonaktifkan <code>"${titleSuffix}"</code> di nama pack <i>(tidak di link)</i>
+    <b>Peningkatan memberikan manfaat berikut:</b>
+    ➖ Menonaktifkan <code>"${titleSuffix}"</code> dalam nama paket <i>(tidak dalam tautan)</i>
     ➖ Prioritas saat mengonversi stiker video
-    ➖ Kemampuan untuk menambahkan lebih dari satu stiker ke antrean pemrosesan
+    ➖ Kemampuan untuk menambahkan lebih dari satu stiker ke antrian pengolahan
     ➖ Durasi stiker video hingga 30 detik
   btn:
     donate: '☕️ Donasi'
   topup: |
-    <b>Masukkan jumlah kredit yang ingin Anda beli:</b>
+    <b>Masukkan jumlah Bintang yang ingin Anda beli:</b>
 
-    <b>5 kredit = 1$</b>
-    <i>Jumlah minimum - 5 kredit</i>
+    <b>5 Bintang = 1$</b>
+    <i>Jumlah minimum - 5 Bintang</i>
   invalid_amount: |
     <b>Jumlah tidak valid</b>
 
     Jumlah minimum adalah 5 kredit
   paymenu: |
-    Anda ingin membeli <b>${amount} kredit</b> untuk <b>${price}$</b>
+    Anda ingin membeli <b>${amount} Bintang</b> untuk <b>${price}$</b>
 
-    ⚠️ Kredit dikeluarkan secara manual oleh administrator.
-    Waktu tunggu berkisar antara 5 menit hingga 1 jam
+    ⚠️ Bintang diterbitkan secara manual oleh administrator.
+    Rentang waktu menunggu berkisar antara 5 menit hingga 1 jam
 
     <u>Pilih metode pembayaran:</u>
   update: |
-    <b>🔄 Pembaruan saldo</b>
+    <b>🔄 Pembaruan Saldo</b>
 
-    Saldo: <code>${balance}</code> kredit (ditambah <code>${amount}</code> kredit)
+    Saldo: <code>${balance}</code> Bintang (ditambahkan <code>${amount}</code> Bintang)
 coedit:
   info: |
     <b>👥 Co-editing sticker pack</b>
@@ -462,13 +462,13 @@ scenes:
       <i>Kami tidak memiliki informasi tentang stiker lain dari pemilik ini</i>
   boost:
     sure: |
-      <b>Apakah Anda yakin ingin meningkatkan <a href="${link}">${title}</a>?</b>
+      <b>Apakah Anda yakin ingin meningkatkan <a href="${link}">${title}</a>?<\/b>
 
-      Peningkatan akan meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrean
-      Anda dapat menemukan informasi lebih detail tentang peningkatan di menu dengan mengunjungi: /donate
+      Peningkatan akan meningkatkan prioritas pengolahan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian
+      Anda dapat menemukan informasi lebih detail tentang peningkatan di menu dengan mengunjungi: \/donate
 
-      <b>Harga:</b> 1 kredit
-      <b>Saldo saat ini:</b> ${balance} kredit
+      <b>Harga:<\/b> 1 Bintang
+      <b>Saldo saat ini:<\/b> ${balance} Bintang
     btn:
       yes: Ya, tingkatkan!
       no: Tidak, batalkan
@@ -480,9 +480,9 @@ scenes:
       ${title} kini ditingkatkan
     error:
       not_enough_credits: |
-        Anda tidak memiliki cukup kredit untuk meningkatkan paket ini.
+        Anda tidak memiliki cukup Bintang untuk meningkatkan paket ini.
 
-        Anda dapat mengisi saldo dengan mengirimkan perintah /donate.
+        Anda dapat menambahkan saldo Anda dengan mengirim perintah \/donate.
       already_boosted: |
         Paket ini sudah ditingkatkan.
   catalog:

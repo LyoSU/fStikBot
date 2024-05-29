@@ -122,40 +122,40 @@ cmd:
       Vídeos não terão mais formato arredondado
 donate:
   menu: |
-    <b>☕ Bot ajuda no desenvolvimento</b>
+    <b>☕️ Suporte ao desenvolvimento do bot</b>
     Ao apoiar o desenvolvimento do bot, você receberá créditos.
-    Para cada 1 dólar, você receberá 5 créditos.
+    Para cada 1 dólar, você receberá 5 créditos
 
     <b>Saldo:</b> <code>${balance}</code> créditos
-    Com 1 crédito, você tem a oportunidade de aumentar um pacote.
+    Com 1 crédito, você tem a oportunidade de dar um bosta num pacote de figurinhas.
 
-    <b>O impulso oferece os seguintes benefícios:</b>
-    ➖ Desabilitando <code>"${titleSuffix}"</code> em pacotes <i>(não no link)</i>
-    ➖ Prioridade na conversão de adesivos de vídeo
-    ➖ Capacidade de adicionar mais de um adesivo na fila de processamento
-    ➖ Duração de adesivos de vídeo até 30 segundos
+    <b>O bosta fornece os seguintes benefícios:</b>
+    ➖ Desabilitando <code>"${titleSuffix}"</code> no nome dos pacotes <i>(não no link)</i>
+    ➖ Prioridade ao converter adesivos de vídeo
+    ➖ Capacidade de adicionar mais de um adesivo à fila de processamento
+    ➖ Duração dos adesivos de vídeo de até 30 segundos
   btn:
     donate: '☕ Doar'
   topup: |
-    <b>Digite a quantidade de créditos que deseja comprar:</b>
+    <b>Insira a quantidade de Créditos que deseja comprar:</b>
 
-    <b>5 créditos = 1$</b>
-    <i>Valor mínimo — 5 créditos</i>
+    <b>5 Créditos = 1$</b>
+    <i>Quantidade mínima - 5 Créditos</i>
   invalid_amount: |
-    <b>Valor inválido</b>
+    <b>Quantidade inválida</b>
 
-    O valor mínimo é de 5 créditos
+    A quantidade mínima são 5 Créditos
   paymenu: |
-    Você quer comprar <b>${amount} créditos</b> por <b>${price}$</b>
+    Você deseja comprar <b>${amount} Créditos</b> por <b>${price}$</b>
 
-    ⚠️ Os créditos são emitidos manualmente pelo administrador.
-    O tempo de espera varia de 5 minutos até 1 hora.
+    ⚠️ Os Créditos são emitidos manualmente pelo administrador.
+    O tempo de espera varia de 5 minutos a 1 hora
 
     <u>Selecione o método de pagamento:</u>
   update: |
-    <b>🔄 Atualização do saldo</b>
+    <b>🔄 Atualização de saldo</b>
 
-    Saldo: <code>${balance}</code> créditos (adicionado <code>${amount}</code> créditos)
+    Saldo: <code>${balance}</code> Créditos (adicionados <code>${amount}</code> Créditos)
 coedit:
   info: |
     <b>👥 Coedição</b>
@@ -461,13 +461,13 @@ scenes:
       <i>Não temos informações sobre outros adesivos deste proprietário</i>
   boost:
     sure: |
-      <b>Tem certeza que deseja aumentar <a href="${link}">${title}</a>?</b>
+      <b>Você tem certeza de que deseja dar um bosta em <a href="${link}">${title}</a>?</b>
 
-      Boosting aumentará a prioridade de processamento e a capacidade de adicionar mais de um adesivo à fila
-      Você pode encontrar informações mais detalhadas sobre boosts no menu visitando: /donate
+      Dar um bosta aumentará a prioridade de processamento e a capacidade de adicionar mais de um adesivo à fila
+      Você pode encontrar mais informações detalhadas sobre bostas no menu ao visitar: /donate
 
-      <b>Preço:</b> 1 crédito
-      <b>Saldo atual:</b> ${balance} créditos
+      <b>Preço:</b> 1 Crédito
+      <b>Saldo atual:</b> ${balance} Créditos
     btn:
       yes: Sim, aumentar!
       no: Não, cancelar
@@ -479,7 +479,7 @@ scenes:
       ${title} será impulsionada
     error:
       not_enough_credits: |
-        Você não tem créditos suficientes para impulsionar este pacote.
+        Você não possui créditos suficientes para dar um bosta neste pacote.
 
         Você pode recarregar seu saldo enviando o comando /donate.
       already_boosted: |

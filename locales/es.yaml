@@ -122,40 +122,40 @@ cmd:
       Los videos ya no tendrán una forma redondeada
 donate:
   menu: |
-    <b>☕️ Apoyo en el desarrollo del bot</b>
-    Al apoyar el desarrollo del bot, recibirás créditos.
-    Por cada dólar, recibirás 5 créditos.
+    <b>☕️ Soporte al desarrollo del bot</b>
+    Al apoyar el desarrollo del bot, recibirás Estrellas
+    Por cada 1 dólar, recibirás 5 Estrellas
 
-    <b>Saldo:</b> <code>${balance}</code> créditos
-    Con 1 crédito, tienes la oportunidad de potenciar un paquete.
+    <b>Saldo:</b> <code>${balance}</code> Estrellas
+    Con 1 Estrella, tienes la oportunidad de potenciar un paquete.
 
     <b>La potenciación proporciona los siguientes beneficios:</b>
-    ➖ Desactivar <code>${titleSuffix}</code> en el nombre de los paquetes <i>(no en el enlace)</i>
-    ➖ Prioridad al convertir pegatinas de video
-    ➖ Capacidad de agregar más de una pegatina a la cola de procesamiento
-    ➖ Duración de las pegatinas de video de hasta 30 segundos
+    ➖ Desactivación de <code>"${titleSuffix}"</code> en el nombre de los paquetes <i>(no en el enlace)</i>
+    ➖ Prioridad al convertir stickers de video
+    ➖ Capacidad para agregar más de un sticker a la cola de procesamiento
+    ➖ Duración de stickers de video de hasta 30 segundos
   btn:
     donate: '☕ Donar'
   topup: |
-    <b>Ingrese la cantidad de créditos que desea comprar:</b>
+    <b>Ingresa la cantidad de Estrellas que deseas comprar:</b>
 
-    <b>5 de crédito = 1$</b>
-    <i>Cantidad mínima - 5 créditos</i>
+    <b>5 Estrellas = 1$</b>
+    <i>Cantidad mínima - 5 Estrellas</i>
   invalid_amount: |
-    <b>Cantidad inválida</b>
+    <b>Cantidad no válida</b>
 
-    La cantidad mínima es de 5 créditos
+    La cantidad mínima es 5 Estrellas
   paymenu: |
-    Quieres comprar <b>${amount} créditos</b> por <b>${price}$</b>
+    Quieres comprar <b>${amount} Estrellas</b> por <b>${price}$</b>
 
-    ⚠️ Los créditos los emite manualmente el administrador.
-    El tiempo de espera oscila entre 5 minutos y 1 hora
+    ⚠️ Las Estrellas se emiten manualmente por el administrador.
+    El tiempo de espera varía de 5 minutos a 1 hora
 
-    <u>Seleccione método de pago:</u>
+    <u>Seleccionar método de pago:</u>
   update: |
     <b>🔄 Actualización de saldo</b>
 
-    Balance: <code>${balance}</code> créditos (se añadieron <code>${amount}</code> créditos)
+    Saldo: <code>${balance}</code> Estrellas (se han añadido <code>${amount}</code> Estrellas)
 coedit:
   info: |
     <b>👥 Co-editando</b>
@@ -461,13 +461,13 @@ scenes:
       <i>No tenemos información sobre otros stickers de este propietario</i>
   boost:
     sure: |
-      <b>¿Estás seguro de que quieres aumentar <a href="${link}">${title}</a>?</b>
+      <b>¿Estás seguro de que deseas potenciar <a href="${link}">${title}<\/a>?<\/b>
 
-      Los impulsos aumentarán la prioridad de procesamiento y la capacidad de agregar más de una pegatina a la cola
-      Puede encontrar información más detallada sobre los impulsos en el menú visitando: /donate
+      Potenciar aumentará la prioridad de procesamiento y la capacidad de agregar más de un sticker a la cola
+      Puedes encontrar información más detallada sobre las potenciaciones en el menú visitando: \/donate
 
-      <b>Precio:</b> 1 crédito
-      <b>Saldo actual:</b> ${balance} créditos
+      <b>Precio:<\/b> 1 Estrella
+      <b>Saldo actual:<\/b> ${balance} Estrellas
     btn:
       yes: Sí, ¡optimizar!
       no: No, cancelar
@@ -479,9 +479,9 @@ scenes:
       ${title} ha sido optimizada
     error:
       not_enough_credits: |
-        No tienes suficientes créditos para optimizar este paquete.
+        No tienes suficientes Estrellas para potenciar este paquete.
 
-        Puedes recargar tu saldo enviando el comando /donate.
+        Puedes aumentar tu saldo enviando el comando \/donate.
       already_boosted: |
         Este paquete ya está optimizado.
   catalog:

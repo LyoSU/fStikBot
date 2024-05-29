@@ -97,40 +97,41 @@ cmd:
       Videolar endi yumaloq shaklga ega bo‘lmaydi
 donate:
   menu: |
-    <b>☕️ Бот ривожланишни ўрнату</b>
-    Ботни ривожланишидан еҳтиёт бўладиганда, кредитга эга бўлади.
-    Ҳар бир доллар учун сизга 5 кредит берилади.
+    <b>☕️ Bot rivojlanishni qo'llab-quvvatlash</b>
+    Botni rivojlantirish uchun yulduzlarni olishasiz
+    Har bir dollarga 5 yulduz olishasiz
 
-    <b>Сақлама:</b> <code>${balance}</code> кредит
-    қиймати билан, сиз бир сақламани буст қилиш имкониятига эгасиз
+    <b>Tizim:</b> <code>${balance}</code> yulduz
+    1 yulduz bilan bir paketni bostirish imkoniyatingiz bor.
 
-    <b>Буст, қуйидаги фойдаланиш ифодасини беради:</b>
-    ➖ Сақламанинг нашри диплом устига <code>"${titleSuffix}"</code>ни олиш <i>(ҳаволада эмас)</i>
-    ➖ Видео стикерларни алоқачингиз вақтини кўпайтириш
-    ➖ Чиқиб тура қуйиши мумкин бўлган стикерларни қўшиш имконияти
-    ➖ Видео стикерли узунлиги 30 сониягача
+    <b>Bostirish quyidagi foydalanuvchilarni beradi:</b>
+    ➖ Paket nomidagi <code>"${titleSuffix}"</code>ni o'chirish <i>(havola emas)</i>
+    ➖ Video stickerlarni konvertatsiyalashda ustunlik
+    ➖ Bir nechta stickerlarni qo'shishimk chiziqlangan o'rtasiga
+    ➖ Video stickerlarining davomi 30 soniya
+
   btn:
     donate: '☕️ Xayriya qiling'
   topup: |
-    <b>Xarid qilmoqchi bo'lgan kreditlar miqdorini kiriting:</b>
+    <b>Yulduzlarni sotib olish uchun miqdorni kiriting:</b>
 
-    <b>5 kredit = 1$</b>
-    <i>Minimal miqdor - 5 kredit</i>
+    <b>5 yulduz = 1$</b>
+    <i>Eng kam miqdori - 5 yulduz</i>
   invalid_amount: |
-    <b>Yaroqsiz summa</b>
+    <b>Noto'g'ri miqdor</b>
 
-    Minimal miqdor 5 ta kredit
+    Kam miqdori 5 yulduz
   paymenu: |
-    Siz <b>${amount} kreditlarni</b> <b>${price}$</b>
+    <b><b>${amount} yulduz</b>ni <b>${price}$</b>ga sotib olmoqchisiz</b>
 
-    uchun sotib olmoqchisiz ⚠️ Kreditlar administrator tomonidan qo‘lda beriladi.
+    ⚠️ Yulduzlar boshqaruvchisi tomonidan qo'llaniladi.
     Kutish vaqti 5 daqiqadan 1 soatgacha
 
     <u>To'lov usulini tanlang:</u>
   update: |
-    <b>🔄 Сақлама янгилаш</b>
+    <b>🔄 Balans yangilanish</b>
 
-    Сақлама: <code>${balance}</code> мос кредитлар (қўшилган <code>${amount}</code> кредитлар)
+    Balans: <code>${balance}</code> yulduz (qo'shilgan: <code>${amount}</code> yulduz)
 coedit:
   info: |
     <b>👥 Ҳамкорлик</b>
@@ -430,13 +431,13 @@ scenes:
       <i>Ushbu egasining boshqa stikerlari haqida bizda ma'lumot yo'q</i>
   boost:
     sure: |
-      <b>Haqiqatan ham <a href="${link}">${title}</a>ni kuchaytirmoqchimisiz?</b>
+      <b>Siz rostdan <a href="${link}">${title}</a>ni bostirishni istaysizmi?</b>
 
-      Boosting qayta ishlashning ustuvorligini va navbatga bir nechta stiker qoʻshish imkoniyatini oshiradi
-      Boostlar haqida batafsil maʼlumotni menyudan topishingiz mumkin: /donate
+      Bostirish, ishlanish prioritetini oshiradi va bir nechta stickerlarni qatorga qo'shish imkoniyatini beradi
+      Batafsil ma'lumotlarni olin /donate bilan menyuda ko'rish</i>
 
-      <b>Narxi:</b> 1 kredit
-      <b>Joriy balans:</b> ${balance} kreditlar
+      <b>Narxi:</b> 1 yulduz
+      <b>Hozirgi balans:</b> ${balance} yulduz
     btn:
       yes: Ha, kuchaytiring!
       no: Yo'q, bekor qiling
@@ -448,9 +449,9 @@ scenes:
       ${title} endi kuchaytirildi
     error:
       not_enough_credits: |
-        Bu toʻplamni oshirish uchun sizda yetarli kredit yoʻq.
+        Sizda ushbu paketni bostirish uchun yetarli yulduzlaringiz yo'q.
 
-        Siz /donate buyrug'ini yuborish orqali balansingizni to'ldirishingiz mumkin.
+        Balansingizni oshirib (/donate buyicha buyurtma bering) balansni to'ldirishingiz mumkin.
       already_boosted: |
         Bu paket allaqachon kuchaytirilgan.
   catalog:

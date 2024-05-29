@@ -122,39 +122,39 @@ cmd:
 donate:
   menu: |
     <b>☕️ Bot geliştirme desteği</b>
-    Botun gelişimini destekleyerek krediler alırsınız.
-    Her 1 dolar için, 5 kredi alırsınız.
+    Bot gelişimini destekleyerek Yıldızlar alacaksınız
+    Her 1 dolar için 5 Yıldız alacaksınız
 
-    <b>Bakiye:</b> <code>${balance}</code> krediler
-    1 krediyle, bir paketi hızlandırma imkanınız olur.
+    <b>Bakiye:</b> <code>${balance}</code> Yıldız
+    1 Yıldız ile bir paketi destekleme fırsatına sahip olacaksınız.
 
-    <b>Hızlandırma aşağıdaki faydaları sağlar:</b>
-    ➖ Çıkartmaların adında <code>"${titleSuffix}"</code> devre dışı bırakma <i>(bağlantıda değil)</i>
-    ➖ Video çıkartmaları dönüştürürken öncelik
-    ➖ İşlem sırasına birden fazla çıkartma ekleme yeteneği
-    ➖ Video çıkartmalarının süresi 30 saniyeye kadar
+    <b>Boost, aşağıdaki avantajları sağlar:</b>
+    ➖ Paketlerde <code>"${titleSuffix}"</code>'yi devre dışı bırakma <i>(linkte değil)</i>
+    ➖ Video çıkartmaları dönüştürülürken öncelik
+    ➖ İşleme kuyruğuna birden fazla çıkartma ekleme yeteneği
+    ➖ Video çıkartmalarının süresi maksimum 30 saniye
   btn:
     donate: '☕️ Bağış yap'
   topup: |
-    <b>Satın almak istediğiniz kredi miktarını girin:</b>
+    <b>Almak istediğiniz Yıldız miktarını girin:</b>
 
-    <b>5 kredi = 1$</b>
-    <i>Minimum tutar - 5 kredi</i>
+    <b>5 Yıldız = 1$</b>
+    <i>Minimum miktar - 5 Yıldız</i>
   invalid_amount: |
     <b>Geçersiz tutar</b>
 
-    Minimum tutar 5 kredidir
+    Minimum miktar 5 Yıldız'dır
   paymenu: |
-    <b>${amount} kredi</b> satın almak istiyorsanız <b>${price}$</b>
+    Satın almak istediğiniz <b>${amount} Yıldız</b> için <b>${price}$</b>
 
-    ⚠️ Krediler yönetici tarafından manuel olarak verilir.
-    Bekleme süresi 5 dakika ila 1 saat arasında değişir
+    ⚠️ Yıldızlar yönetici tarafından manuel olarak verilir.
+    Bekleme süresi 5 dakikadan 1 saate kadar değişir
 
-    <u>Ödeme yöntemini seçin:</u>
+    <u>Ödeme yöntemi seç:</u>
   update: |
-    <b>🔄 Bakiye güncellemesi</b>
+    <b>🔄 Bakiye güncelleme</b>
 
-    Bakiye: <code>${balance}</code> krediler (eklenen <code>${amount}</code> krediler)
+    Bakiye: <code>${balance}</code> Yıldız (eklenen <code>${amount}</code> Yıldız)
 coedit:
   info: |
     <b>👥 Ortak düzenleme</b>
@@ -459,13 +459,13 @@ scenes:
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
   boost:
     sure: |
-      <b>Yükseltmek istediğinizden emin misiniz <a href="${link}">${title}</a>?</b>
+      <b><a href="${link}">${title}</a> paketini güçlendirmek istediğinizden emin misiniz?</b>
 
-      Güçlendirme, işleme önceliğini ve sıraya birden fazla çıkartma ekleme yeteneğini artıracaktır
-      Güçlendirmeler hakkında daha ayrıntılı bilgiyi menüde şu adresi ziyaret ederek bulabilirsiniz: /donate
+      Güçlendirme, işleme önceliğini ve kuyruğa birden fazla çıkartma ekleme yeteneğini artırır
+      Güçlendirmeler hakkında daha detaylı bilgiyi ziyaret ederek menüde bulabilirsiniz: /donate
 
-      <b>Fiyat:</b> 1 kredi
-      <b>Güncel bakiye:</b> ${balance} kredi
+      <b>Fiyat:</b> 1 Yıldız
+      <b>Mevcut bakiye:</b> ${balance} Yıldız
     btn:
       yes: Evet, artırın!
       no: Hayır, iptal et
@@ -477,9 +477,9 @@ scenes:
       ${title} artık güçlendirildi
     error:
       not_enough_credits: |
-        Bu paketi güçlendirmek için yeterli krediniz yok.
+        Bu paketi güçlendirmek için yeterli Yıldızınız yok.
 
-        /donate komutunu göndererek bakiyenizi doldurabilirsiniz.
+        Bakiyenizi /donate komutu göndererek doldurabilirsiniz.
       already_boosted: |
         Bu paket zaten güçlendirilmiş.
   catalog:
