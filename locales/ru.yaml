@@ -122,40 +122,40 @@ cmd:
       Видео больше не будет иметь округлую форму
 donate:
   menu: |
-    <b>☕ Поддержка разработки ботов</b>
-    Поддерживая разработку бота, вы получите кредиты.
-    За каждые 1 доллар, вы получите 5 кредитов.
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Stars
+    For every 1 dollar, you will receive 5 Stars
 
-    <b>Баланс:</b> <code>${balance}</code> Кредиты
-    За 1 кредитом, у вас есть возможность забустить один набор.
+    <b>Balance:</b> <code>${balance}</code> Stars
+    With 1 Stars, you have the opportunity to boost one pack.
 
-    <b>Усиление дает следующие преимущества:</b>
-    ➖ Отключение <code>"${titleSuffix}"</code> в имени паков <i>(не в ссылке)</i>
-    ➖ Приоритет при конвертации стикеров видео
-    ➖ Возможность добавить более одного стикера в очередь обработки
-    ➖ Продолжительность видео стикеров до 30 секунд
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
     donate: '☕️ Пожертвовать'
   topup: |
-    <b>Введите количество кредитов, которые вы хотите купить:</b>
+    <b>Enter the amount of Stars you want to buy:</b>
 
-    <b>5 кредитов = 1$</b>
-    <i>Минимальная сумма - 5 кредитов</i>
+    <b>5 Stars = 1$</b>
+    <i>Minimum amount - 5 Stars</i>
   invalid_amount: |
-    <b>Неверная сумма</b>
+    <b>Invalid amount</b>
 
-    Минимальная сумма 5 кредитов
+    The minimum amount is 5 Stars
   paymenu: |
-    Вы хотите купить <b>${amount} кредитов</b> за <b>${price}$</b>
+    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
 
-    ⚠️ Кредиты выдаются вручную администратором.
-    Время ожидания составляет от 5 минут до 1 часа.
+    ⚠️ Stars are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>Выберите способ оплаты:</u>
+    <u>Select payment method:</u>
   update: |
-    <b>🔄 Обновление баланса</b>
+    <b>🔄 Balance update</b>
 
-    Баланс: <code>${balance}</code> кредитов (добавлено <code>${amount}</code> кредитов)
+    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
 coedit:
   info: |
     <b>👥 Набор стикеров для редактирования</b>
@@ -464,13 +464,13 @@ scenes:
       <i>У нас нет информации о других стикерпаках этого владельца</i>
   boost:
     sure: |
-      <b>Вы уверены, что хотите забустить <a href="${link}">${title}</a>?</b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      Буст повысит приоритет обработки и возможность добавить в очередь более одной наклейки
-      Более подробную информацию о бусте вы можете найти в меню, посетив: /donate
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>Цена:</b> 1 кредит
-      <b>Текущий баланс:</b> ${balance} кредитов
+      <b>Price:</b> 1 Stars
+      <b>Current balance:</b> ${balance} Stars
     btn:
       yes: Да, забустить!
       no: Нет, отменить
@@ -482,9 +482,9 @@ scenes:
       ${title} теперь забущен
     error:
       not_enough_credits: |
-        У вас недостаточно кредитов, чтобы забустить этот пакет.
+        You do not have enough Stars to boost this pack.
 
-        Вы можете пополнить баланс отправив команду /donate.
+        You can top up your balance by sending the /donate command.
       already_boosted: |
         Этот набор уже забущен.
   catalog:
