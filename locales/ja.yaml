@@ -156,6 +156,14 @@ donate:
     <b>🔄 バランス更新</b>
 
     バランス：<code>${balance}</code> スター（追加：<code>${amount}</code> スター）
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>👥 共同編集</b>
