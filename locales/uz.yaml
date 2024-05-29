@@ -132,6 +132,14 @@ donate:
     <b>🔄 Balans yangilanish</b>
 
     Balans: <code>${balance}</code> yulduz (qo'shilgan: <code>${amount}</code> yulduz)
+  error:
+    already_donated: |
+      You have already received Stars for this payment
+    error: |
+      <b>Error!</b>
+      An error occurred while processing the payment
+    canceled: |
+      Payment canceled
 coedit:
   info: |
     <b>👥 Ҳамкорлик</b>
