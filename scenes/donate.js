@@ -1,11 +1,8 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const freekassa = require('@alex-kondakov/freekassa')
-const CryptoPay = require('@foile/crypto-pay-api')
 const { WalletPaySDK } = require('wallet-pay-sdk')
 const mongoose = require('mongoose')
-
-const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
 
 const walletPay = new WalletPaySDK({
   apiKey: process.env.WALLETPAY_API_KEY,
@@ -72,11 +69,6 @@ const donate = async (ctx) => {
     price
   })
 
-  const cryptoPayMe = await cryptoPay.getMe().catch(() => {})
-
-  let tonLink, usdtLink, btcLink, ethLink
-  let tonPrice, usdtPrice, btcPrice, ethPrice
-
   const walletPayment = new ctx.db.Payment({
     _id: mongoose.Types.ObjectId(),
     user: ctx.session.userInfo._id,
@@ -103,40 +95,6 @@ const donate = async (ctx) => {
 
   await telegramPayment.save()
 
-  if (cryptoPayMe) {
-    const exchangeRate = await cryptoPay.getExchangeRates()
-
-    const availableCurrencies = ['TON', 'USDT', 'BTC', 'ETH']
-
-    for (const currency of availableCurrencies) {
-      const priceCurrency = exchangeRate.find((rate) => rate.source === currency && rate.target === 'USD').rate
-
-      const invoice = await cryptoPay.createInvoice(currency, price / priceCurrency, {
-        description: comment,
-        expires_in: 3600
-      })
-
-      switch (currency) {
-        case 'TON':
-          tonLink = invoice.pay_url
-          tonPrice = (price / priceCurrency).toFixed(5)
-          break
-        case 'USDT':
-          usdtLink = invoice.pay_url
-          usdtPrice = (price / priceCurrency).toFixed(2)
-          break
-        case 'BTC':
-          btcLink = invoice.pay_url
-          btcPrice = (price / priceCurrency).toFixed(8)
-          break
-        case 'ETH':
-          ethLink = invoice.pay_url
-          ethPrice = (price / priceCurrency).toFixed(8)
-          break
-      }
-    }
-  }
-
   const starPrice = amount
 
   const payLink = await ctx.telegram.callApi('createInvoiceLink', {
@@ -152,15 +110,7 @@ const donate = async (ctx) => {
     [Markup.urlButton(`🌟 Telegram Stars — ${starPrice}`, payLink, !payLink)],
     [Markup.urlButton(`💳 Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
     [Markup.urlButton(`💳 monobank — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.i18n.locale() === 'uk'))],
-    [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
-    [
-      Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
-      Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
-    ],
-    [
-      Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
-      Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
-    ]
+    [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)]
   ])
 
   await ctx.replyWithHTML(message, {

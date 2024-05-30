@@ -2,6 +2,9 @@ const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const { match } = require('telegraf-i18n')
 const { WalletPaySDK } = require('wallet-pay-sdk')
+const CryptoPay = require('@foile/crypto-pay-api')
+
+const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
 
 const walletPay = new WalletPaySDK({
   apiKey: process.env.WALLETPAY_API_KEY,
@@ -101,8 +104,58 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
   }
 
+  const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} Stars`
+
+  let tonLink, usdtLink, btcLink, ethLink
+  let tonPrice, usdtPrice, btcPrice, ethPrice
+
+  const cryptoPayMe = await cryptoPay.getMe().catch(() => {})
+
+  if (cryptoPayMe) {
+    const exchangeRate = await cryptoPay.getExchangeRates()
+
+    const availableCurrencies = ['TON', 'USDT', 'BTC', 'ETH']
+
+    for (const currency of availableCurrencies) {
+      const priceCurrency = exchangeRate.find((rate) => rate.source === currency && rate.target === 'USD').rate
+
+      const invoice = await cryptoPay.createInvoice(currency, price / priceCurrency, {
+        description: comment,
+        expires_in: 3600
+      })
+
+      switch (currency) {
+        case 'TON':
+          tonLink = invoice.pay_url
+          tonPrice = (price / priceCurrency).toFixed(5)
+          break
+        case 'USDT':
+          usdtLink = invoice.pay_url
+          usdtPrice = (price / priceCurrency).toFixed(2)
+          break
+        case 'BTC':
+          btcLink = invoice.pay_url
+          btcPrice = (price / priceCurrency).toFixed(8)
+          break
+        case 'ETH':
+          ethLink = invoice.pay_url
+          ethPrice = (price / priceCurrency).toFixed(8)
+          break
+      }
+    }
+  }
+
+
   return ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
     [Markup.urlButton('👛 Pay via Wallet', walletPayLink, !walletPayLink)],
+    [
+      Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
+      Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
+    ],
+    [
+      Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
+      Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
+    ],
     [Markup.callbackButton('🔙 Back', 'donate:topup')]
   ]))
 })
