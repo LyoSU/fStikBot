@@ -158,12 +158,12 @@ donate:
     Saldo: <code>${balance}</code> Bintang (ditambahkan <code>${amount}</code> Bintang)
   error:
     already_donated: |
-      You have already received Stars for this payment
+      Anda sudah menerima Bintang untuk pembayaran ini
     error: |
-      <b>Error!</b>
-      An error occurred while processing the payment
+      <b>Kesalahan!<\/b>
+      Terjadi kesalahan saat memproses pembayaran
     canceled: |
-      Payment canceled
+      Pembayaran dibatalkan
 coedit:
   info: |
     <b>👥 Co-editing sticker pack</b>
