@@ -158,12 +158,12 @@ donate:
     バランス：<code>${balance}</code> スター（追加：<code>${amount}</code> スター）
   error:
     already_donated: |
-      You have already received Stars for this payment
+      この支払いについては既にスターを受け取っています
     error: |
-      <b>Error!</b>
-      An error occurred while processing the payment
+      <b>エラー！</b>
+      支払い処理中にエラーが発生しました
     canceled: |
-      Payment canceled
+      支払いがキャンセルされました
 coedit:
   info: |
     <b>👥 共同編集</b>
