@@ -134,12 +134,12 @@ donate:
     Balans: <code>${balance}</code> yulduz (qo'shilgan: <code>${amount}</code> yulduz)
   error:
     already_donated: |
-      You have already received Stars for this payment
+      Siz bu to'lov uchun allaqachon Yulduzlarni oldingiz
     error: |
-      <b>Error!</b>
-      An error occurred while processing the payment
+      <b>Xato!<\/b>
+      To'lovni qayta ishlashda xato yuz berdi
     canceled: |
-      Payment canceled
+      To'lov bekor qilindi
 coedit:
   info: |
     <b>👥 Ҳамкорлик</b>
