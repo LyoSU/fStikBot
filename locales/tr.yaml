@@ -157,12 +157,12 @@ donate:
     Bakiye: <code>${balance}</code> Yıldız (eklenen <code>${amount}</code> Yıldız)
   error:
     already_donated: |
-      You have already received Stars for this payment
+      Bu ödeme için zaten Yıldızlar aldınız
     error: |
-      <b>Error!</b>
-      An error occurred while processing the payment
+      <b>Hata!<\/b>
+      Ödemeyi işlerken bir hata oluştu
     canceled: |
-      Payment canceled
+      Ödeme iptal edildi
 coedit:
   info: |
     <b>👥 Ortak düzenleme</b>
