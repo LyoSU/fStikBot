@@ -158,12 +158,12 @@ donate:
     Saldo: <code>${balance}</code> Estrellas (se han añadido <code>${amount}</code> Estrellas)
   error:
     already_donated: |
-      You have already received Stars for this payment
+      Ya has recibido Estrellas por este pago
     error: |
-      <b>Error!</b>
-      An error occurred while processing the payment
+      <b>¡Error!<\/b>
+      Ocurrió un error al procesar el pago
     canceled: |
-      Payment canceled
+      Pago cancelado
 coedit:
   info: |
     <b>👥 Co-editando</b>
