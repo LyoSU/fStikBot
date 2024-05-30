@@ -29,6 +29,9 @@ const paymentsSchema = mongoose.Schema({
   status: {
     type: String,
     index: true
+  },
+  resultData: {
+    type: Object
   }
 }, {
   timestamps: true

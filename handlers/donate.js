@@ -43,6 +43,7 @@ composer.on('successful_payment', async (ctx) => {
   }
 
   telegramPayment.status = 'paid'
+  telegramPayment.resultData = ctx.message.successful_payment
   await telegramPayment.save()
 
   ctx.session.userInfo.balance += telegramPayment.amount
