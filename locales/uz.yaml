@@ -132,6 +132,14 @@ donate:
     <b>🔄 Balans yangilanish</b>
 
     Balans: <code>${balance}</code> yulduz (qo'shilgan: <code>${amount}</code> yulduz)
+  error:
+    already_donated: |
+      Siz bu to'lov uchun allaqachon Yulduzlarni oldingiz
+    error: |
+      <b>Xato!<\/b>
+      To'lovni qayta ishlashda xato yuz berdi
+    canceled: |
+      To'lov bekor qilindi
 coedit:
   info: |
     <b>👥 Ҳамкорлик</b>

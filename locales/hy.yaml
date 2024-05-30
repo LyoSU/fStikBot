@@ -19,30 +19,30 @@ cmd:
 
       💬 Օգնության կարիք ունեք: Միացեք մեր աջակցության զրույցին @fStikCommunity-ում (միայն անգլերեն)
     help: |
-      <b>List of bot commands:</b>
+      <b>Բոտ հրամանների ցուցակ:</b>
 
-      /new - Create a new sticker pack
-      /new_emoji - Create a new emoji pack
+      /new - Ստեղծել նոր սթիքեր փաթեթ
+      /new_emoji - Ստեղծել նոր սմայլիկ փաթեթ
 
-      /delete - Delete a sticker from a pack
-      /original - Find the original sticker
+      /delete - Ջնջել սթիքերը փաթեթից
+      /original - Գտնել սկզբնական սթիքերը
 
-      /packs - List all your packs
-      /restore - Restore a deleted pack
-      /copy - Copy a pack
-      /emoji - Change the emoji suffix for the current pack
-      /frame - Change the frame for the current video pack
-      /publish - Publish the pack in the catalog
+      /packs - Ցուցադրել բոլոր փաթեթները
+      /restore - Վերականգնել ջնջված փաթեթը
+      /copy - Կրկնել փաթեթը
+      /emoji - Փոխել ընթացիկ փաթեթի սմայլիկի վերջածանցը
+      /frame - Փոխել շրջանակը ընթացիկ վիդեո փաթեթում
+      /publish - Հրապարակել փաթեթը կատակոգիայում
 
-      /catalog - Open the sticker pack catalog
+      /catalog - Բացել սթիքեր փաթեթների կատալոգը
 
-      /lang - Change the language
-      /donate - Support the developer
+      /lang - Փոխել լեզուն
+      /donate - Աջակցել ծրագրոիս
 
-      💬 Support chat: @fStikCommunity (English only)
+      💬 Աջակցման զրույց: @fStikCommunity (միայն անգլերեն)
 
-      🧑‍🔧 Contacts: @ly_oBot
-      👨🏻‍💻 Dev channel: @LyBlog
+      🧑‍🔧 Կոնտակտներ: @ly_oBot
+      👨🏻‍💻 Դեֆլոպեր ալիք: @LyBlog
 
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
@@ -110,9 +110,9 @@ cmd:
     inline_title: Ներքին փաթեթ
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
+      Համարը փոխելու համար ընթացիկ փաթեթի emoji-ները, ուղարկեք <code> /emoji </ code> հրամանը emoji դաշտից հետո բացով
 
-      For example - <code>/emoji 🌟</code>
+      Օրինակ - <code> /emoji 🌟 </code>
     done: 'Emoji-ն հաջողությամբ փոխվեց:'
     error: 'Սխալ առաջացավ զմայլիկները փոխելիս:'
   round_video:
@@ -122,55 +122,63 @@ cmd:
       Տեսանյութերն այլևս չեն ունենա կլորացված ձև
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Stars
-    For every 1 dollar, you will receive 5 Stars
+    <b>☕️ Բոտի ծրագրավորման աջակցություն</b>
+    Բոտի մշակման աջակցման դեպքում, դուք կստանաք աստղեր
+    Ինձ մոտ 1 դոլարով դուք կստանաք 5 աստղեր
 
-    <b>Balance:</b> <code>${balance}</code> Stars
-    With 1 Stars, you have the opportunity to boost one pack.
+    <b>Մնացորդ:<\/b> <code>${balance}</code> աստղեր
+    1 աստղով դուք հնարավորություն կունենաք բարձրացնել փաթեթը
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Բարձրացումի այդ առավելությունները आहेतरा:</b>
+    ➖ Փաթեթի անվանումում «${titleSuffix}» կոդը կարտոնվի (ոչ հղումի)
+    ➖ Տեսանյութերի սթիքերների փոխարկման նախապատվությունը
+    ➖ Հնարավորություն ավելացնել մեկից ավել սթաքեր հերթին
+    ➖ Տեսանյութի սթաքերի տևողություն մինչև 30 վայրկյան
   btn:
     donate: '☕️ Նվիրիր'
   topup: |
-    <b>Enter the amount of Stars you want to buy:</b>
+    <b>Մուտքագրեք գները, որոնք ցանկանում եք գնել:</b>
 
-    <b>5 Stars = 1$</b>
-    <i>Minimum amount - 5 Stars</i>
+    <b>5 աստղեր = 1$</b>
+    <i>Նվազագույնը - 5 աստղեր</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Սխալ գումար է:</b>
 
-    The minimum amount is 5 Stars
+    Նվազագույն գումարը 5 աստղ է
   paymenu: |
-    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
+    Դուք ցանկանում եք գնել <b>${amount} աստղեր</b> տեղ <b>${price} $</b>
 
-    ⚠️ Stars are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Աստղերը հանձնարարվում են ադմինիստրատորի կողմից:
+    Սպասման ժամանակը 5 րոպեից մինչև 1 ժամ է
 
-    <u>Select payment method:</u>
+    <u>Ընտրե̄ք վճարման մեթոդը:</u>
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Մնացորդի թարմացում:</b>
 
-    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
+    Մնացորդ: <code>${balance}</code> աստղեր (ավելացված <code>${amount}</code> աստղեր)
+  error:
+    already_donated: |
+      Դուք արդեն ստացել եք աստղերը այս վճարման համար
+    error: |
+      <b>Սխալ!<\/b>
+      Սխալ է տեղի ունեցել վճարման մշակման ժամանակ
+    canceled: |
+      Վճարումը չեղարկված է
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Համախմբագիրում:<\/b>
 
-    Link for co-editing <a href="${link}">${title}</a>: <code>${colink}</code>
+    Համախմբագրման հղումը <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    <b>How to use:</b>
-    1. Send the link to the person you want to give access to the pack
-    2. After clicking on the link, they need to press "start" and they will be added to the editors
-    3. The editor can add, delete and edit stickers in the pack
+    <b>Ինչպես օգտագործել:<\/b>
+    1. Ուղարկեք հղումը մարդուն, ում ուզում եք տալ հասանելիություն փաթեթին
+    2. Հղմանը սեղմելուց հետո, նրանք պետք է սեղմեն «սկսել» և նրանք կավելացվեն խմբագիրների մեջ
+    3. Խմբագիրը կարող է ավելացնել, հեռացնել և խմբագրել սթիքերները փաթեթում
 
-    <b>Editors:</b>
+    <b>Խմբագիրներ:<\/b>
     ${editors}
 
-    <i>To remove editors, you need to reset the link</i>
+    <i>Խմբագիրներին հեռացնելու համար անհրաժեշտ է նորացնելու հղումը</i>
   no_editors: |
     Խմբագիրներ դեռ չկան
   btn:
@@ -195,10 +203,10 @@ callback:
       <b>❔ Ինչպե՞ս ավելացնել:</b>
       Ուղարկեք լուսանկար, տեսանյութ կամ կպչուկ՝ փաթեթին ավելացնելու համար
     set_inline_pack: |
-      Selected <u>${title}</u> pack
+      Ընտրված է <u>${title}</u> փաթեթը
 
-      To use it, write in any chat <code>@${botUsername} </code>and space
-      You can also use it by pressing the button below
+      Օգտագործելու համար, գրեք ցանկացած զրույցում <code>@${botUsername}</code> և բացով
+      Կարող եք նաև օգտագործել ստորև գտնվող կոճակը
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
@@ -246,12 +254,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
+      <b>Հաջողությամբ ավելացված է փաթեթին:</b>
       <a href="${link}">${title}</a>
 
-      Within an hour, this pack will be updated for all users.
+      Մեկ ժամվա ընթացքում այս փաթեթը կթարմացվի բոլոր օգտվողների համար.
 
-      <i>Send one or more emoji that match the sticker, if you want to add them</i>
+      <i>Ուղարկեք մեկ կամ ավելի սմայլիկներ, որոնք համապատասխանում են սթիքերին, եթե ցանկանում եք ավելացնել դրանք</i>
     ok_inline: |
       <b>Հաջողությամբ ավելացվել է փաթեթում՝</b>
       <u>${title}</u>
@@ -349,9 +357,9 @@ userAbout:
 
     Օգտատիրոջ մասին տեղեկություններ ստանալու համար օգտագործեք կոճակը ստորև կամ փոխանցեք նրա հաղորդագրությունը
   result: |
-    <b>🧑‍🎨 User info</b>
-    <b>🆔 User ID:</b> <code>${userId}</code>
-    <b>🎨 Packs from this user:</b>
+    <b>🧑‍🎨 Օգտագործողի ինֆո</b>
+    <b>🆔 Օգտագործողի ID:</b> <code>${userId}</code>
+    <b>🎨 Փաթեթները այս օգտագործողից:</b>
     ${packs}
   no_packs: |
     <i>Մենք տեղեկություն չունենք այս սեփականատիրոջ կպչուկների մասին</i>
@@ -384,16 +392,16 @@ scenes:
       <b>Մուտքագրեք նոր կպչուն պիտակների փաթեթի անունը.</b>
       <i>Դուք կարող եք ընտրել պատահական անուն կոճակի վրա:</i>
     pack_name: |
-      <b>Enter a short link for new stickers pack:</b>
+      <b>Մուտքագրեք նոր սթիքեր փաթեթի կարճ հղումը:</b>
 
-      <i>For example, this pack uses 'Animals' as short link: https://t.me/addstickers/<u>Animals</u></i>
-      <i>You can choose random short link on button.</i>
+      <i>Օրինակ, այս փաթեթը օգտագործում է 'Կիներ' որպես կարճ հղում: https://t.me/addstickers/<u>Կիներ</u></i>
+      <i>Կարող եք ընտրել պատահական կարճ հղում կոճակից:</i>
     ok: |
-      Pack <a href="${link}">${title}</a> successfully created!
+      Փաթեթ <a href="${link}">${title}</a> հաջողությամբ ստեղծված է:
 
-      <b>Pack link:</b> <pre>${link}</pre>
+      <b>Փաթեթի հղում:<\/b> <pre>${link}</pre>
 
-      Send a file, photo, video or sticker so that I add it to your set
+      Ուղարկեք ֆայլ, լուսանկար, տեսանյութ կամ սթիքեր, որպեսզի այն ավելացնեմ ձեր հավաքածուին
     error:
       title_long: 'Անունը չի կարող ավելի մեծ լինել, քան ${max} խորհրդանիշները:'
       name_long: 'Հասցեն չի կարող ավելի մեծ լինել, քան ${max} խորհրդանիշները:'
@@ -409,9 +417,9 @@ scenes:
     enter: |
       Ես կարող եմ պատճենել այն, բայց մինչ այդ, եկեք ստեղծենք նոր փաթեթ
     progress: |
-      Copying pack from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a>
+      Պատճենվում է փաթեթը <a href="${originalLink}">${originalTitle}</a> ից <a href="${link}">${title}</a>
 
-      Progress: ${current}/${total}
+      Արվել է: ${current} / ${total}
     done: |
       Փաթեթի պատճենումը <a href="${originalLink}">${originalTitle}</a> -ից մինչև <a href="${link}">${title}</a> հաջողությամբ ավարտվեց:
     error:
@@ -449,25 +457,25 @@ scenes:
     not_found: |
       Ես չկարողացա գտնել կպչուն
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
+      <b>📦 Փաթեթ:<\/b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Սեփականատիրոջ փաթեթների համար յուրահատուկ համար, հերթաչափորեն ավելացող փաթեթի համար)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Սեփականատիրոջ ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Այլ փաթեթներ այս սեփականատիրոջից:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Մենք տեղեկություններ չունենք այս սեփականատիրոջ այլ կպչուն պիտակների մասին</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Իսկապե՞ս ցանկանում եք բարձր սպասարկման <a href="${link}">${title}<\/a>:</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Սպասարկման բարձրացումը բարձրացնում է փոխարկման և մի քանի սթիքերների հերթի ավելացման հնարավորությունը
+      Մանրամասն տեեկություն սպասարկման մասին կարող եք գտնել մենյուում, այցելով ե տակ գնահատման /donate
 
-      <b>Price:</b> 1 Stars
-      <b>Current balance:</b> ${balance} Stars
+      <b>Արժեք:<\/b> 1 աստղ
+      <b>Ընթացիկ մնացորդ:<\/b> ${balance} աստղեր
     btn:
       yes: 'Այո, խթանել:'
       no: Ոչ, չեղարկել
@@ -479,23 +487,23 @@ scenes:
       ${title} -ն այժմ ուժեղացված է
     error:
       not_enough_credits: |
-        You do not have enough Stars to boost this pack.
+        Դուք չունեք բավարար աստղեր բարձր սպասարկման համար այս պատեթում.
 
-        You can top up your balance by sending the /donate command.
+        Դուք կարող եք ավելացնել ձեր մնացորդը ուղարկելով /donate հրամանը.
       already_boosted: |
         Այս փաթեթն արդեն ուժեղացված է:
   catalog:
     publish:
       publish_new: |
-        👌 <b>Send me the sticker from the pack you want to publish</b>
+        👌 <b>Ուղարկեք ինձ փաթեթից ցանկացած սթիքեր, որը ցանկանում եք հրապարակել</b>
 
-        <i>You can publish any pack that belong to you, even if they are created elsewhere</i>
+        <i>Կարող եք հրապարակել ցանկացած փաթեթ, որը պատկանում է ձեզ, նույնիսկ եթե դրանք ստեղծված են այլուր</i>
       owner_proof: |
-        <b>To verify ownership of this pack, you need to follow a few simple steps:</b>
-        1. Open @Stickers bot
-        2. Send <code>/packstats</code> command
-        3. Find and choose the required pack
-        4. Forward the received message to the bot
+        <b>Այս փաթեթի սեփականատիրությունը հաստատելու համար, դուք պետք է հետևեք մի քանի պարզ քայլերի:<\/b>
+        1. Բացեք @Stickers բոտը
+        2. Ուղարկեք <code> /packstats </code> հրամանը
+        3. Հայտնաբերեք և ընտրեք անհրաժեշտ փաթեթը
+        4. Թարգմանեք ստացված հաղորդագրությունը դեպի բոտը
       publish_new_access_denied: |
         <b>Սխալ.</b>
         Այս փաթեթը ձերը չէ:
@@ -535,12 +543,12 @@ scenes:
         not_safe: Ոչ, դա անվտանգ չէ
       no_tags: չեն հստակեցվել
       confirm: |
-        <b>Confirm the publication of the pack "<a href="${link}">${title}</a>"</b>
+        <b>Հաստատեք փաթեթի հրապարակումը "<a href="${link}">${title}</a>"</b>
 
-        <b>Description:</b> <i>${description}</i>
+        <b>Նկարագրություն:<\/b> <i>${description}</i>
 
-        <b>Tags:</b> ${tags}
-        <b>Languages:</b> ${languages}
+        <b>Բառեր:<\/b> ${tags}
+        <b>Լեզուներ:<\/b> ${languages}
       button_confirm: '✅ Հաստատել հրապարակումը'
       success: |
         Շնորհավորում ենք, ձեր փաթեթը հրապարակվել է մեր բոտի ընդհանուր գրացուցակում, որտեղ այլ օգտվողներ կարող են գտնել այն:
@@ -570,16 +578,16 @@ scenes:
       <b>Սխալ.</b>
       Դուք կարող եք միայն շրջանակներ ավելացնել վիդեո փաթեթներին:
     select_type: |
-      <a href="${example}">&#8203;</a><b>Choose frame type:</b>
-      Frame is a transparent background around the sticker
+      <a href="${example}">&#8203;<\/a><b>Ընտրեք շրջանակի տեսակը:</b>
+      Շրջանակն է սթիքերի շուրջի թափանցիկ ֆոնը
 
-      <code>lite</code> — the corners will be cut a little
-      <code>medium</code> — the corners will be cut more
-      <code>rounded</code> — the corners will be rounded
-      <code>square</code> — the rectangular shape of the frame, that is, it will not be changed in any way
-      <code>circle</code> — the frame will be in the form of a circle
+      <code>lite</code> — անկյունները մի փոքր կկտրվեն
+      <code>medium</code> — անկյունները ավելի շատ կկտրվեն
+      <code>rounded</code> — անկյունները կկլորացվեն
+      <code>square</code> — շրջանակի աջանաձև ձևը, այսինքն այն ոչ մի ձևով չի փոխվի
+      <code>circle</code> — շրջանակը կլինի շրջանակի տեսքով
 
-      <i>In the future, you may use the /frame command to set the type of frame</i>
+      <i>Ապագայում, դուք կարող եք օգտագործել /frame հրամանը սահմանելու համար շրջանակի տեսակը</i>
     types:
       lite: '1. Lite'
       medium: '2. Միջին'
@@ -594,9 +602,9 @@ scenes:
 
       <i>Լավագույնս աշխատում է լուսանկարների հետ: Ավելի վատ է աշխատում գծագրերի, նկարազարդումների և այլնի հետ:</i>
     enter_anime: |
-      Send a <u>photo</u> from which you want to remove the background and I will send the file without the background
+      Ուղարկեք <u>լուսանկար</u> որից ցանկանում եք հեռացնել ֆոնը և ես կուղարկեմ ֆայլը ֆոնից առանց
 
-      <i>It works best with anime pictures</i>
+      <i>Լավ է աշխատում անիմեի նկարների հետ</i>
     choose_model: |
       <b>Ընտրեք մոդել՝</b>
     web_app: WebApp - մարդկանց հետ լուսանկարների համար

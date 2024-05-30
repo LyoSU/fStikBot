@@ -156,6 +156,14 @@ donate:
     <b>🔄 バランス更新</b>
 
     バランス：<code>${balance}</code> スター（追加：<code>${amount}</code> スター）
+  error:
+    already_donated: |
+      この支払いについては既にスターを受け取っています
+    error: |
+      <b>エラー！</b>
+      支払い処理中にエラーが発生しました
+    canceled: |
+      支払いがキャンセルされました
 coedit:
   info: |
     <b>👥 共同編集</b>

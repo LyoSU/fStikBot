@@ -156,6 +156,14 @@ donate:
     <b>🔄 Pembaruan Saldo</b>
 
     Saldo: <code>${balance}</code> Bintang (ditambahkan <code>${amount}</code> Bintang)
+  error:
+    already_donated: |
+      Anda sudah menerima Bintang untuk pembayaran ini
+    error: |
+      <b>Kesalahan!<\/b>
+      Terjadi kesalahan saat memproses pembayaran
+    canceled: |
+      Pembayaran dibatalkan
 coedit:
   info: |
     <b>👥 Co-editing sticker pack</b>

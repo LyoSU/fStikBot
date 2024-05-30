@@ -156,6 +156,14 @@ donate:
     <b>🔄 Balans yenilə</b>
 
     Balans: <code>${balance}</code> ulduz (əlavə olunmuş <code>${amount}</code> ulduz)
+  error:
+    already_donated: |
+      Siz artıq bu ödəniş üçün Ulduzlar almısınız
+    error: |
+      <b>Xəta!<\/b>
+      Ödəniş işlənərkən xəta baş verdi
+    canceled: |
+      Ödəniş ləğv edildi
 coedit:
   info: |
     <b>👥 Birgə-redaktə</b>

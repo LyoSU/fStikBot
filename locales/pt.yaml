@@ -156,6 +156,14 @@ donate:
     <b>🔄 Atualização de saldo</b>
 
     Saldo: <code>${balance}</code> Créditos (adicionados <code>${amount}</code> Créditos)
+  error:
+    already_donated: |
+      Você já recebeu Estrelas por este pagamento
+    error: |
+      <b>Error!<\/b>
+      Ocorreu um erro ao processar o pagamento
+    canceled: |
+      Pagamento cancelado
 coedit:
   info: |
     <b>👥 Coedição</b>
