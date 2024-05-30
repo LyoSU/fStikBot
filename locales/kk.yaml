@@ -157,12 +157,12 @@ donate:
     Қалдық: <code>${balance}<\/code> Сақиналар (қосылған <code>${amount}<\/code> Сақиналар)
   error:
     already_donated: |
-      You have already received Stars for this payment
+      Сіз бұл төлем үшін жұлдыздарды алдыңыз
     error: |
-      <b>Error!</b>
-      An error occurred while processing the payment
+      <b>Қате!<\/b>
+      Төлемді өңдеу кезінде қате орын алды
     canceled: |
-      Payment canceled
+      Төлем тоқтатылды
 coedit:
   info: |
     <b>👥 Кемесінде басқару</b>
