@@ -150,8 +150,8 @@ const donate = async (ctx) => {
 
   const repltMarkup =  Markup.inlineKeyboard([
     [Markup.urlButton(`🌟 Telegram Stars — ${starPrice}`, payLink, !payLink)],
-    [Markup.urlButton(`Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
-    [Markup.urlButton(`💳 Card, Google Pay, Apple Pay — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.session.userInfo.locale === 'uk' || ctx.from.language_code === 'uk'))],
+    [Markup.urlButton(`💳 Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
+    [Markup.urlButton(`💳 monobank — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.i18n.locale() === 'uk'))],
     [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)],
     [
       Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
