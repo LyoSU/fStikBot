@@ -84,10 +84,10 @@ cmd:
       Yaratish uchun /new buyrug'ini yozing
     inline_title: Inline paketi
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Paketni tanlash</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Guruhda paketni ishlatish uchun, administratorlar pastdagi tugmani bosib uni tanlashlari kerak
+    select_group_pack: Paketni tanlash
   emoji:
     info: |
       Жорий гуруҳ учун эмоджиларни қайта йўналтириш учун <code>/emoji</code> жўнатинг, кейинги эмоджиларни бўш майдон билан ажратинг
@@ -219,16 +219,16 @@ callback:
         Paket topilmadi.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Paket <a href="${link}">${title}</a> muvaffaqiyatli guruhga tanlandi.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Kimlar guruh paketiga stiker qo'shishi mumkin?
+        delete: Kimlar guruh paketidan stikerlarni o'chirishi mumkin?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Hamma
+          admins: Faqat adminlar
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Xatolik!</b>
+        To'plam topilmadi.
   sticker:
     answerCbQuery:
       delete: Stiker paketdan muvaffaqiyatli olib tashlandi.
@@ -245,7 +245,7 @@ callback:
         Stikerni topib bo'lmadi.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Guruh sozlamalari muvaffaqiyatli yangilandi.
 sticker:
   add:
     ok: |
@@ -275,12 +275,12 @@ sticker:
 
         Iltimos, (/yangi) toʻplamni yarating yoki (/paketlar) tanlang
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Siz guruh paketini tanlamadingiz</b>
 
-        Please, select a pack using the /packs command
+        Iltimos, /packs buyrug'i orqali paketni tanlang
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Xatolik!</b>
+        Sizda ushbu paketga stiker qo'shish huquqi yo'q.
       stickers_too_much: |
         Ushbu paketda stikerlarning maksimal soni mavjud.
 
