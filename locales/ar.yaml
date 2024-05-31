@@ -108,6 +108,11 @@ cmd:
       <b>ليس لديك حزم بعد.</b>
       للإنشاء، اكتب الأمر /new
     inline_title: حزمة مضمنة
+    select_group_pack_info: |
+      <b>📁 Select pack</b>
+
+      To use the pack in the group, administrators must select it using the button below
+    select_group_pack: Select pack
   emoji:
     info: |
       لتغيير الرموز التعبيرية الافتراضية للحزمة الحالية، إرسال <code>/emoji</code> تليها الرموز التعبيرية مفصولة بمساحة
@@ -236,6 +241,18 @@ callback:
       copy: |
         <b>خطأ!</b>
         لا يمكن العثور على الحزمة.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> successfully selected for the group.
+      access_rights:
+        add: Who can add stickers to the group pack?
+        delete: Who can delete stickers from the group pack?
+        rights:
+          all: Everyone
+          admins: Only admins
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: تمت إزالة الملصق من الباقة بنجاح.
@@ -250,6 +267,9 @@ callback:
       not_found: |
         خطأ!
         لا يمكن العثور على ملصق.
+  group_settings:
+    success: |
+      Group settings successfully updated.
 sticker:
   add:
     ok: |
@@ -283,6 +303,13 @@ sticker:
         <b>لم تقم باختيار حزمة</b>
 
         من فضلك، قم بإنشاء (/new) أو اختر (/packs)
+      no_selected_group_pack: |
+        <b>You have not selected a group pack</b>
+
+        Please, select a pack using the /packs command
+      no_rights: |
+        <b>Error!</b>
+        You do not have the right to add stickers to this pack.
       stickers_too_much: |
         تحتوي هذه الحزمة على الحد الأقصى لعدد الملصقات.
 
