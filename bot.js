@@ -186,6 +186,10 @@ bot.start(async (ctx, next) => {
     ctx.state.type = 'inline'
     return handlePacks(ctx)
   }
+  if (ctx.startPayload === 'pack') {
+    return handlePacks(ctx)
+  }
+
   if (ctx.startPayload.startsWith('removebg_')) {
     const fileUrl = 'https://telegra.ph' + Buffer.from(ctx?.startPayload?.replace('removebg_', ''), 'base64').toString('utf-8')
 

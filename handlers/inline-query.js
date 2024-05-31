@@ -21,6 +21,16 @@ composer.on('inline_query', async (ctx, next) => {
     hide: false
   }).sort({ updatedAt: -1 }).limit(limit).skip(offset)
 
+  if (!stickerSets || stickerSets.length <= 0) {
+    return ctx.answerInlineQuery([], {
+      is_personal: true,
+      cache_time: 30,
+      next_offset: offset + limit,
+      switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+      switch_pm_parameter: 'pack'
+    })
+  }
+
   const results = stickerSets.map((stickerSet) => {
     return {
       type: 'article',
