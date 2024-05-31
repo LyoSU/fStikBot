@@ -18,6 +18,10 @@ cmd:
       Kirim perintah /help untuk mempelajari lebih lanjut tentang apa yang dapat saya lakukan
 
       💬 Butuh bantuan? Bergabunglah dengan obrolan dukungan kami di @fStikCommunity (hanya dalam bahasa Inggris)
+    group: |
+      🧙 Halo, ${groupTitle}! Aku adalah penyihir paket emoji dan stiker.
+
+      Untuk menambahkan stiker ke paket grup, gunakan perintah /ss dalam membalas foto, video, gif, atau stiker.
     help: |
       <b>Daftar perintah bot:</b>
 

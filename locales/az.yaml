@@ -18,6 +18,10 @@ cmd:
       Nə edə biləcəyim haqqında ətraflı öyrənmək üçün /help əmrini göndərin
 
       💬 Yardım lazımdır? @fStikCommunity ünvanında dəstək söhbətimizə qoşulun (yalnız ingiliscə)
+    group: |
+      🧙 Salam, ${groupTitle}! Mən emoji və stiker paketləri sehrbazıyam.
+
+      Bir stikerı qrup paketinə əlavə etmək üçün, foto, video, gif və ya stikerə cavab olaraq /ss əmrdən istifadə edin.
     help: |
       <b>Bot əmrlərinin siyahısı:</b>
 

@@ -18,6 +18,10 @@ cmd:
       Envoyez la commande /help pour en savoir plus sur ce que je peux faire
 
       💬 Besoin d'aide ? Rejoignez notre chat d'assistance à @fStikCommunity (en anglais uniquement)
+    group: |
+      🧙 Bonjour, ${groupTitle} ! Je suis le sorcier des packs d'emojis et de stickers.
+
+      Pour ajouter un sticker à un pack de groupe, utilisez la commande /ss en réponse à une photo, une vidéo, un gif ou un sticker.
     help: |
       <b>Liste des commandes du bot :</b>
 

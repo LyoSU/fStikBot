@@ -18,6 +18,10 @@ cmd:
       Neler yapabileceğim hakkında daha fazla bilgi edinmek için /help komutunu gönderin
 
       💬 Yardıma mı ihtiyacınız var? @fStikCommunity adresindeki destek sohbetimize katılın (yalnızca İngilizce)
+    group: |
+      🧙 Merhaba, ${groupTitle}! Ben emoji ve çıkartma paketi sihirbazıyım.
+
+      Bir çıkartmayı grup paketine eklemek için, bir fotoğraf, video, gif veya çıkartmaya yanıt olarak /ss komutunu kullanın.
     help: |
       <b>Çıkartma komutlarının listesi:</b>
 
