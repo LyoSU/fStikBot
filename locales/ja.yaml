@@ -19,9 +19,9 @@ cmd:
 
       💬 ヘルプが必要ですか? @fStikCommunity のサポート チャットに参加してください (英語のみ)
     group: |
-      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+      🧙 こんにちは、${groupTitle}！ 私は絵文字とステッカーパックの魔法使いです。
 
-      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
+      グループパックにステッカーを追加するには、写真、ビデオ、GIF、またはステッカーに返信して/ssコマンドを使用してください。
     help: |
       <b>ボットコマンド一覧:</b>
 
