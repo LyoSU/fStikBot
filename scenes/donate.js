@@ -30,7 +30,7 @@ const donate = async (ctx) => {
   const priceUAH = (price * exchangeRate.UAH).toFixed(2)
   const priceRUB = (price * exchangeRate.RUB).toFixed(2)
 
-  const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} Stars`
+  const comment = `@${ctx?.from?.username || ctx?.from?.id} (${ctx.from.id}) for ${amount} Stars`
 
   let ruLink
 
