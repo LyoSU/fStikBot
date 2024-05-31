@@ -86,7 +86,7 @@ module.exports = async (ctx, next) => {
 
     case 'photo':
       // eslint-disable-next-line prefer-destructuring
-      stickerFile = message.photo.slice(-1)[0]
+      if (message.photo) stickerFile = message.photo.slice(-1)[0]
       if (message.caption) stickerFile.emoji = message.caption
       break
 
@@ -96,6 +96,7 @@ module.exports = async (ctx, next) => {
 
   if (ctx.message?.text?.startsWith('/ss') && ctx.message?.reply_to_message && stickerType && !stickerFile) {
     stickerFile = ctx.message.reply_to_message[stickerType]
+    if (stickerFile.length) stickerFile = stickerFile.slice(-1)[0]
   }
 
   if (stickerType === 'text') {
