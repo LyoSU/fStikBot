@@ -286,6 +286,12 @@ bot.use(handleCoedit)
 bot.use(handleInlineQuery)
 
 bot.start(handleStart)
+bot.on('new_chat_members', (ctx, next) => {
+  if (ctx.message.new_chat_members.find((m) => m.id === ctx.botInfo.id)) {
+    return handleStart(ctx, next)
+  }
+  return next()
+})
 
 // callback
 bot.action(/(set_pack):(.*)/, handlePacks)
