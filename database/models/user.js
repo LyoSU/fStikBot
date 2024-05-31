@@ -18,15 +18,7 @@ const userSchema = mongoose.Schema({
     ref: 'StickerSet',
     index: true
   },
-  videoStickerSet: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet'
-  },
   inlineStickerSet: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet'
-  },
-  animatedStickerSet: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'StickerSet'
   },

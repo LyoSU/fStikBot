@@ -10,6 +10,7 @@ module.exports = {
   handleRestoreSticker: require('./sticker-restore'),
   handlePacks: require('./packs'),
   handleSelectPack: require('./pack-select'),
+  handleSelectGroupPack: require('./pack-select-group'),
   handleHidePack: require('./pack-hide'),
   handleRestorePack: require('./pack-restore'),
   handleCopyPack: require('./pack-copy'),
@@ -20,5 +21,6 @@ module.exports = {
   handleAboutUser: require('./user-about'),
   handleStickerUpade: require('./sticker-update'),
   handleInlineQuery: require('./inline-query'),
-  handleBoostPack: require('./pack-boost')
+  handleBoostPack: require('./pack-boost'),
+  handleGroupSettings: require('./group-settings')
 }

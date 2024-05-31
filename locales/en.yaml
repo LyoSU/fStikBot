@@ -108,6 +108,12 @@ cmd:
       <b>You have no packs yet.</b>
       To create, write a command /new
     inline_title: Inline pack
+    select_group_pack_info: |
+      <b>📁 Select pack</b>
+
+      To use the pack in the group, administrators must select it using the button below
+
+    select_group_pack: Select pack
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
@@ -238,6 +244,19 @@ callback:
       copy: |
         <b>Error!</b>
         Cannot find pack.
+
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> successfully selected for the group.
+      access_rights:
+        add: Who can add stickers to the group pack?
+        delete: Who can delete stickers from the group pack?
+        rights:
+          all: Everyone
+          admins: Only admins
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: The sticker was successfully removed from the pack.
@@ -252,6 +271,9 @@ callback:
       not_found: |
         ERROR!
         Cannot find a sticker.
+  group_settings:
+    success: |
+      Group settings successfully updated.
 sticker:
   add:
     ok: |
@@ -285,6 +307,13 @@ sticker:
         <b>You have not selected a pack</b>
 
         Please, create (/new) or choose (/packs) pack
+      no_selected_group_pack: |
+        <b>You have not selected a group pack</b>
+
+        Please, select a pack using the /packs command
+      no_rights: |
+        <b>Error!</b>
+        You do not have the right to add stickers to this pack.
       stickers_too_much: |
         This pack has the maximum number of stickers.
 

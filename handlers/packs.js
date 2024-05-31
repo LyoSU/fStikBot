@@ -21,6 +21,19 @@ const escapeHTML = (str) => str.replace(
 module.exports = async (ctx) => {
   const { userInfo } = ctx.session
 
+  // if its in group
+  if (ctx.chat.type !== 'private') {
+    const replyMarkup = Markup.inlineKeyboard([
+      Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_group_pack'), 'select_group_pack')
+    ])
+
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.packs.select_group_pack_info'), {
+      reply_markup: replyMarkup,
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
   if (!userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
   let packType = userInfo.stickerSet?.packType || 'regular'

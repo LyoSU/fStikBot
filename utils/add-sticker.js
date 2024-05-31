@@ -226,7 +226,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
   }
 }
 
-module.exports = async (ctx, inputFile, toStickerSet = false) => {
+module.exports = async (ctx, inputFile, toStickerSet) => {
   let stickerFile = inputFile
 
   const originalSticker = await ctx.db.Sticker.findOne({
@@ -235,11 +235,7 @@ module.exports = async (ctx, inputFile, toStickerSet = false) => {
 
   if (originalSticker && originalSticker.file && originalSticker.file_id) stickerFile = originalSticker.file
 
-  let { stickerSet } = ctx.session.userInfo
-
-  if (toStickerSet) {
-    stickerSet = toStickerSet
-  }
+  const stickerSet = toStickerSet
 
   if (stickerSet && stickerSet.inline) {
     const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, inputFile.emoji, stickerFile, null)

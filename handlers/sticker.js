@@ -22,14 +22,7 @@ module.exports = async (ctx, next) => {
 
   const message = ctx.message || ctx.callbackQuery.message
 
-  if (!ctx.session.userInfo.stickerSet) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
-      reply_to_message_id: message.message_id,
-      allow_sending_without_reply: true
-    })
-  }
-
-  let stickerFile, stickerSet
+  let stickerFile
   let stickerType = ctx.updateSubTypes[0]
   if (ctx.callbackQuery) {
     if (message.document) {
@@ -119,14 +112,53 @@ module.exports = async (ctx, next) => {
     stickerFile = emojiStickers[0]
   }
 
-  if (ctx.session.userInfo.stickerSet.inline) {
+  let { stickerSet } = ctx.session.userInfo
+
+  if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
+    const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id }).populate('stickerSet')
+
+    if (!group || !group.stickerSet) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_group_pack'), {
+        reply_markup: Markup.inlineKeyboard([
+          Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_group_pack'), 'select_group_pack')
+        ]),
+        reply_to_message_id: message.message_id,
+        allow_sending_without_reply: true
+      })
+    }
+
+    // if have rights to add stickers
+    if (group.settings?.rights?.add !== 'all') {
+      const chatMember = await ctx.telegram.getChatMember(ctx.chat.id, ctx.from.id)
+
+      if (!['creator', 'administrator'].includes(chatMember.status)) {
+        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_rights'), {
+          reply_to_message_id: message.message_id,
+          allow_sending_without_reply: true
+        })
+      }
+    }
+
+    if (group) {
+      stickerSet = group.stickerSet
+    }
+  }
+
+  if (!stickerSet) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
+      reply_to_message_id: message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
+  if (stickerSet.inline) {
     if (stickerType === 'photo') stickerFile = message[stickerType].pop()
     else stickerFile = message[stickerType]
 
     stickerFile.stickerType = stickerType
 
     if (message.caption) stickerFile.caption = message.caption
-    stickerFile.file_unique_id = ctx.session.userInfo.stickerSet.id + '_' + stickerFile.file_unique_id
+    stickerFile.file_unique_id = stickerSet.id + '_' + stickerFile.file_unique_id
   }
 
   if (ctx.callbackQuery) {
@@ -138,7 +170,6 @@ module.exports = async (ctx, next) => {
   }
 
   if (stickerFile) {
-    stickerSet = ctx.session.userInfo.stickerSet
     if (message.caption?.includes('roundit')) stickerFile.video_note = true
     if (message.caption?.includes('cropit')) stickerFile.forceCrop = true
     if (message.photo && message.caption?.includes('!')) stickerFile.removeBg = true
@@ -181,7 +212,7 @@ module.exports = async (ctx, next) => {
 
       ctx.session.previousSticker = null
 
-      const stickerInfo = await addSticker(ctx, stickerFile)
+      const stickerInfo = await addSticker(ctx, stickerFile, stickerSet)
 
       if (stickerInfo.wait) {
         return

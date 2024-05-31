@@ -9,7 +9,24 @@ const groupSchema = mongoose.Schema({
   },
   title: String,
   username: String,
-  memberCount: Number
+  memberCount: Number,
+  stickerSet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'StickerSet',
+    index: true
+  },
+  settings: {
+    rights: {
+      add: {
+        type: String,
+        default: 'all'
+      },
+      delete: {
+        type: String,
+        default: 'all'
+      }
+    }
+  }
 }, {
   timestamps: true
 })

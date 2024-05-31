@@ -21,6 +21,7 @@ const {
   handleRestoreSticker,
   handlePacks,
   handleSelectPack,
+  handleSelectGroupPack,
   handleHidePack,
   handleRestorePack,
   handleBoostPack,
@@ -31,7 +32,8 @@ const {
   handleEmoji,
   handleAboutUser,
   handleStickerUpade,
-  handleInlineQuery
+  handleInlineQuery,
+  handleGroupSettings
 } = require('./handlers')
 const scenes = require('./scenes')
 const {
@@ -127,7 +129,6 @@ bot.use(async (ctx, next) => {
   }
   if (ctx.callbackQuery) ctx.state.answerCbQuery = []
   return next(ctx).then(() => {
-    if (ctx.inlineQuery) return ctx.answerInlineQuery(...ctx.state.answerIQ)
     if (ctx.callbackQuery) return ctx.answerCbQuery(...ctx.state.answerCbQuery)
   })
 })
@@ -212,6 +213,9 @@ bot.start(async (ctx, next) => {
 })
 bot.command('help', handleHelp)
 bot.command('packs', handlePacks)
+bot.command('pack', handleSelectGroupPack)
+
+bot.use(handleGroupSettings)
 
 bot.action(/packs:(type):(.*)/, handlePacks)
 bot.action(/packs:(.*)/, handlePacks)

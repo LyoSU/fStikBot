@@ -6,12 +6,83 @@ const stegcloak = new StegCloak(false, false)
 
 const composer = new Composer()
 
+composer.on('inline_query', async (ctx, next) => {
+  const offset = parseInt(ctx.inlineQuery.offset) || 0
+  const limit = 50
+  const query = ctx.inlineQuery.query
+
+  if (!query || !query.includes('select_group_pack')) {
+    return next()
+  }
+
+  const stickerSets = await ctx.db.StickerSet.find({
+    owner: ctx.session.userInfo.id,
+    inline: false,
+    hide: false
+  }).sort({ updatedAt: -1 }).limit(limit).skip(offset)
+
+  const results = stickerSets.map((stickerSet) => {
+    return {
+      type: 'article',
+      id: stickerSet._id.toString(),
+      title: stickerSet.title,
+      description: stickerSet.name,
+      input_message_content: {
+        message_text: `/pack ${stickerSet.name}`,
+        parse_mode: 'HTML'
+      }
+    }
+  })
+
+  ctx.answerInlineQuery(results, {
+    is_personal: true,
+    cache_time: 30,
+    next_offset: offset + limit
+  })
+})
+
+composer.on('inline_query', async (ctx, next) => {
+  const query = ctx.inlineQuery.query
+
+  if (!query || !query.includes('group_settings')) {
+    return next()
+  }
+
+  const type = query.split(' ')[1]
+
+  const results = [
+    {
+      type: 'article',
+      id: 'everyone',
+      title: ctx.i18n.t('callback.pack.select_group.access_rights.rights.all'),
+      input_message_content: {
+        message_text: `/group_settings ${type} all`,
+        parse_mode: 'HTML'
+      }
+    },
+    {
+      type: 'article',
+      id: 'admins',
+      title: ctx.i18n.t('callback.pack.select_group.access_rights.rights.admins'),
+      input_message_content: {
+        message_text: `/group_settings ${type} admins`,
+        parse_mode: 'HTML'
+      }
+    }
+  ]
+
+  ctx.answerInlineQuery(results, {
+    is_personal: true,
+    cache_time: 30
+  })
+})
+
 composer.on('inline_query', async (ctx) => {
   const offset = parseInt(ctx.inlineQuery.offset) || 0
   const limit = 50
   const query = ctx.inlineQuery.query
 
-  let nextOffest = offset + limit
+  let nextOffset = offset + limit
 
   const stickersResult = []
 
@@ -92,13 +163,13 @@ composer.on('inline_query', async (ctx) => {
       stickersResult.push(data)
     }
 
-    ctx.state.answerIQ = [stickersResult, {
+    await ctx.answerInlineQuery(stickersResult, {
       is_personal: true,
-      cache_time: 0,
+      cache_time: 30,
       next_offset: offset + limit,
       switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
       switch_pm_parameter: 'inline_pack'
-    }]
+    })
   } else {
     let tenorResult
 
@@ -112,11 +183,11 @@ composer.on('inline_query', async (ctx) => {
     if (queryText.length >= 1) {
       tenorResult = await tenor.search(queryText, limit, offset)
 
-      nextOffest = tenorResult.next
+      nextOffset = tenorResult.next
     } else {
       tenorResult = await tenor.trending(offset || false, ctx.session.userInfo.locale)
 
-      nextOffest = tenorResult.next
+      nextOffset = tenorResult.next
     }
 
     for (const item of tenorResult.results) {
@@ -134,11 +205,11 @@ composer.on('inline_query', async (ctx) => {
       })
     }
 
-    ctx.state.answerIQ = [stickersResult, {
+    await ctx.answerInlineQuery(stickersResult, {
       is_personal: true,
-      cache_time: 0,
-      next_offset: nextOffest
-    }]
+      cache_time: 30,
+      next_offset: nextOffset
+    })
   }
 })
 
