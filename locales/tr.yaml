@@ -109,10 +109,10 @@ cmd:
       To create, write a command /new
     inline_title: Satır içi paket
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Paket seçin</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Paketin grupta kullanılması için yöneticilerin aşağıdaki düğmeyi kullanarak paketi seçmeleri gerekmektedir.
+    select_group_pack: Paket seç
   emoji:
     info: |
       Geçerli çıkartma paketi için varsayılan emojiyi değiştirmek için <code>/emoji</code> ve ardından boşlukla ayrılmış bir emoji yazın.
@@ -243,16 +243,16 @@ callback:
         Paket bulunamıyor.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Paket <a href="${link}">${title}</a> başarıyla grup için seçildi.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Kimler grup paketine çıkartma ekleyebilir?
+        delete: Kimler grup paketinden çıkartma silebilir?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Herkes
+          admins: Sadece yöneticiler
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Hata!</b>
+        Set bulunamadı.
   sticker:
     answerCbQuery:
       delete: Çıkartma paketten başarıyla çıkarıldı.
@@ -269,7 +269,7 @@ callback:
         Çıkartmayı bulamıyorum.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Grup ayarları başarıyla güncellendi.
 sticker:
   add:
     ok: |
@@ -304,12 +304,12 @@ sticker:
 
         Lütfen (/yeni) paket oluşturun veya (/packs) seçin
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Grup paketi seçmediniz</b>
 
-        Please, select a pack using the /packs command
+        Lütfen, /packs komutu ile bir paket seçin
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Hata!</b>
+        Bu pakete çıkartma ekleme hakkınız yok.
       stickers_too_much: |
         Bu pakette maksimum sayıda çıkartma bulunur.
 
