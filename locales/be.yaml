@@ -108,6 +108,11 @@ cmd:
       <b>Вы яшчэ не стварылі ніводнага пака.</b>
       Каб стварыць пак, адпраўце каманду /new
     inline_title: Убудаваны пак
+    select_group_pack_info: |
+      <b>📁 Select pack</b>
+
+      To use the pack in the group, administrators must select it using the button below
+    select_group_pack: Select pack
   emoji:
     info: |
       Каб змяніць стандартнае эмодзі для бягучага пака, адпраўце каманду <code>/emoji</code>, дадаўшы праз прабел патрэбнае эмодзі
@@ -235,6 +240,18 @@ callback:
       copy: |
         <b>Памылка!</b>
         Не атрымалася знайсці пак.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> successfully selected for the group.
+      access_rights:
+        add: Who can add stickers to the group pack?
+        delete: Who can delete stickers from the group pack?
+        rights:
+          all: Everyone
+          admins: Only admins
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Стыкер паспяхова выдалены з пака.
@@ -249,6 +266,9 @@ callback:
       not_found: |
         ПАМЫЛКА!
         Не атрымалася знайсці стыкер.
+  group_settings:
+    success: |
+      Group settings successfully updated.
 sticker:
   add:
     ok: |
@@ -282,6 +302,13 @@ sticker:
         <b>Вы не выбралі пак</b>
 
         Калі ласка, стварыце (/new) або выберыце (/packs) пак
+      no_selected_group_pack: |
+        <b>You have not selected a group pack</b>
+
+        Please, select a pack using the /packs command
+      no_rights: |
+        <b>Error!</b>
+        You do not have the right to add stickers to this pack.
       stickers_too_much: |
         У гэтым паку максімальная колькасць стыкераў.
 
