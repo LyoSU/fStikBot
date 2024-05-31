@@ -61,9 +61,31 @@ module.exports = async (ctx) => {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
 
+    // cat delete in group
+    let canDelete = false
+
+    if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
+      const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id })
+
+      if (group && group.stickerSet && group.stickerSet._id.toString() === sticker.stickerSet._id.toString()) {
+        if (group.settings.rights.delete === 'all') {
+          canDelete = true
+        } else {
+          const chatMember = await ctx.telegram.getChatMember(ctx.chat.id, ctx.from.id)
+
+          if (['creator', 'administrator'].includes(chatMember.status)) {
+            canDelete = true
+          }
+        }
+      } else {
+        return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
+      }
+    }
+
     if (
-      sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString() || // if sticker owner is the same as the user
-      (ctx.session.userInfo?.stickerSet && sticker.stickerSet.id === ctx.session.userInfo?.stickerSet?.id) // if selected sticker pack by user is the same as the sticker pack
+      sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString() // if sticker owner is the same as the user
+      || (ctx.session.userInfo?.stickerSet && sticker.stickerSet.id === ctx.session.userInfo?.stickerSet?.id) // if selected sticker pack by user is the same as the sticker pack
+      || canDelete // if user have rights to delete sticker
     ) {
       deleteSticker = sticker.info.file_id
     } else {

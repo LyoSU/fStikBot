@@ -59,7 +59,7 @@ module.exports = async (ctx, next) => {
 
   const inlineKeyboard = Markup.inlineKeyboard([
     [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.add'), 'group_settings add')],
-    // [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.delete'), 'group_settings delete')]
+    [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.delete'), 'group_settings delete')]
   ])
 
   return ctx.replyWithHTML(ctx.i18n.t('callback.pack.select_group.success', {
