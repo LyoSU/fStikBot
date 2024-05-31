@@ -109,10 +109,10 @@ cmd:
       Жасау үшін /new пәрменін жазыңыз
     inline_title: Кірістірілген бума
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Жинақты таңдаңыз</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Топта жинақты пайдалану үшін әкімшілер төмендегі батырманы қолданып оны таңдауы керек
+    select_group_pack: Жинақты таңдаңыз
   emoji:
     info: |
       Ағымдағы пакет үшін әдепкі эмоджині өзгерту үшін <code>/emoji</code> көмегімен бір босалма арқылы эмоджині көрсетіңіз
@@ -243,16 +243,16 @@ callback:
         Пакетті табу мүмкін емес.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Жинақ <a href="${link}">${title}</a> топ үшін сәтті таңдалды.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Топтық жинаққа кім стикерлер қоса алады?
+        delete: Топтық жинақтан стикерлерді кім өшіре алады?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Барлығы
+          admins: Тек әкімшілер
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Қате!</b>
+        Жинақ табылған жоқ.
   sticker:
     answerCbQuery:
       delete: Стикер бумадан сәтті жойылды.
@@ -269,7 +269,7 @@ callback:
         Стикер табылмады.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Топ параметрлері сәтті жаңартылды.
 sticker:
   add:
     ok: |
@@ -304,12 +304,12 @@ sticker:
 
         Буманы жасаңыз (/жаңа) немесе (/бумалар) таңдаңыз
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Сіз топтық жинақты таңдамадыңыз</b>
 
-        Please, select a pack using the /packs command
+        Пожалуйста, жинақты таңдау үшін /packs командасын қолданыңыз
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Қате!</b>
+        Сізде осы жинаққа стикер қосу құқығы жоқ.
       stickers_too_much: |
         Бұл пакетте стикерлердің максималды саны бар.
 
