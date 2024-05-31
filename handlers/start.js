@@ -6,6 +6,18 @@ module.exports = async (ctx) => {
     return ctx.deleteMessage()
   }
 
+  if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.start.group', {
+      groupTitle: ctx.chat.title
+    }), {
+      reply_markup: Markup.inlineKeyboard([
+        [
+          Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_group_pack'), 'select_group_pack')
+        ]
+      ])
+    })
+  }
+
   await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
     name: userName(ctx.from)
   }),
