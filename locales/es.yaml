@@ -19,9 +19,9 @@ cmd:
 
       :speech _balloon: ¿Necesitas ayuda? Únete a nuestro chat de soporte en @fStikCommunity (sólo en inglés)
     group: |
-      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+      🧙 ¡Hola, ${groupTitle}! Soy el mago de los paquetes de emojis y stickers.
 
-      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
+      Para agregar un sticker a un paquete de grupo, utiliza el comando /ss en respuesta a una foto, video, gif o sticker.
     help: |
       <b>Lista de comandos del bot:</b>
 
