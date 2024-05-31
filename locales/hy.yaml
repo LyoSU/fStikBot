@@ -18,6 +18,10 @@ cmd:
       Ուղարկեք /help հրամանը՝ ավելին իմանալու, թե ինչ կարող եմ անել
 
       💬 Օգնության կարիք ունեք: Միացեք մեր աջակցության զրույցին @fStikCommunity-ում (միայն անգլերեն)
+    group: |
+      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+
+      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
     help: |
       <b>Բոտ հրամանների ցուցակ:</b>
 
