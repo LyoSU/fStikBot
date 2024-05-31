@@ -108,6 +108,11 @@ cmd:
       <b>Vous n'avez pas encore de packs.</b>
       Pour créer, écrivez une commande /new
     inline_title: Pack Inline
+    select_group_pack_info: |
+      <b>📁 Sélectionnez le pack</b>
+
+      Pour utiliser le pack dans le groupe, les administrateurs doivent le sélectionner en utilisant le bouton ci-dessous
+    select_group_pack: Sélectionnez le pack
   emoji:
     info: |
       Pour changer l'émoji par défaut pour le pack actuel, envoyer <code>/emoji</code> suivi par les émojis séparés par un espace
@@ -237,6 +242,18 @@ callback:
       copy: |
         <b>Erreur!</b>
         Impossible de trouver le pack.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> sélectionné avec succès pour le groupe.
+      access_rights:
+        add: Qui peut ajouter des stickers au pack de groupe ?
+        delete: Qui peut supprimer des stickers du pack de groupe ?
+        rights:
+          all: Tout le monde
+          admins: Seuls les administrateurs
+      error: |
+        <b>Erreur !</b>
+        Ensemble non trouvé.
   sticker:
     answerCbQuery:
       delete: L'autocollant a été retiré du pack avec succès.
@@ -251,6 +268,9 @@ callback:
       not_found: |
         ERREUR!
         Impossible de trouver un autocollant.
+  group_settings:
+    success: |
+      Paramètres du groupe mis à jour avec succès.
 sticker:
   add:
     ok: |
@@ -284,6 +304,13 @@ sticker:
         <b>Vous n'avez pas sélectionné de pack</b>
 
         Merci de créer (/new) ou de choisir (/packs) pack
+      no_selected_group_pack: |
+        <b>Vous n'avez pas sélectionné un pack de groupe</b>
+
+        Veuillez sélectionner un pack en utilisant la commande /packs
+      no_rights: |
+        <b>Erreur !</b>
+        Vous n'avez pas le droit d'ajouter des stickers à ce pack.
       stickers_too_much: |
         Ce pack a le nombre maximum d'autocollants.
 

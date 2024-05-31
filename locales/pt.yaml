@@ -108,6 +108,11 @@ cmd:
       <b>Você ainda não tem nenhum pacote.</b>
       Para criar um, escreva o comando /new
     inline_title: Inline pack
+    select_group_pack_info: |
+      <b>📁 Selecione o pacote</b>
+
+      Para usar o pacote no grupo, os administradores devem selecioná-lo usando o botão abaixo
+    select_group_pack: Selecione o pacote
   emoji:
     info: |
       Para alterar o emoji padrão do pacote atual, envie <code>/emoji</code> seguido do emoji separado por um espaço
@@ -237,6 +242,18 @@ callback:
       copy: |
         <b>Erro!</b>
         Não foi possível encontrar o pacote.
+    select_group:
+      success: |
+        Pacote <a href="${link}">${title}</a> selecionado com sucesso para o grupo.
+      access_rights:
+        add: Quem pode adicionar stickers ao pacote do grupo?
+        delete: Quem pode excluir stickers do pacote do grupo?
+        rights:
+          all: Todos
+          admins: Somente administradores
+      error: |
+        <b>Erro!</b>
+        Conjunto não encontrado.
   sticker:
     answerCbQuery:
       delete: O adesivo foi removido com sucesso da embalagem.
@@ -251,6 +268,9 @@ callback:
       not_found: |
         ERRO!
         Não foi possível encontrar um adesivo.
+  group_settings:
+    success: |
+      Configurações do grupo atualizadas com sucesso.
 sticker:
   add:
     ok: |
@@ -284,6 +304,13 @@ sticker:
         <b>Você não selecionou um pacote</b>
 
         Por favor, crie (/new) ou escolha (/packs) pacote
+      no_selected_group_pack: |
+        <b>Você não selecionou um pacote de grupo</b>
+
+        Por favor, selecione um pacote usando o comando /packs
+      no_rights: |
+        <b>Erro!</b>
+        Você não tem permissão para adicionar stickers a este pacote.
       stickers_too_much: |
         Este pacote possui o número máximo de adesivos.
 

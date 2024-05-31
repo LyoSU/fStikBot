@@ -108,6 +108,11 @@ cmd:
       <b>Henüz bir çıkartma paketin yok</b>
       To create, write a command /new
     inline_title: Satır içi paket
+    select_group_pack_info: |
+      <b>📁 Paket seçin</b>
+
+      Paketin grupta kullanılması için yöneticilerin aşağıdaki düğmeyi kullanarak paketi seçmeleri gerekmektedir.
+    select_group_pack: Paket seç
   emoji:
     info: |
       Geçerli çıkartma paketi için varsayılan emojiyi değiştirmek için <code>/emoji</code> ve ardından boşlukla ayrılmış bir emoji yazın.
@@ -236,6 +241,18 @@ callback:
       copy: |
         <b>Hata!</b>
         Paket bulunamıyor.
+    select_group:
+      success: |
+        Paket <a href="${link}">${title}</a> başarıyla grup için seçildi.
+      access_rights:
+        add: Kimler grup paketine çıkartma ekleyebilir?
+        delete: Kimler grup paketinden çıkartma silebilir?
+        rights:
+          all: Herkes
+          admins: Sadece yöneticiler
+      error: |
+        <b>Hata!</b>
+        Set bulunamadı.
   sticker:
     answerCbQuery:
       delete: Çıkartma paketten başarıyla çıkarıldı.
@@ -250,6 +267,9 @@ callback:
       not_found: |
         Hata!
         Çıkartmayı bulamıyorum.
+  group_settings:
+    success: |
+      Grup ayarları başarıyla güncellendi.
 sticker:
   add:
     ok: |
@@ -283,6 +303,13 @@ sticker:
         <b>Paket seçmediniz</b>
 
         Lütfen (/yeni) paket oluşturun veya (/packs) seçin
+      no_selected_group_pack: |
+        <b>Grup paketi seçmediniz</b>
+
+        Lütfen, /packs komutu ile bir paket seçin
+      no_rights: |
+        <b>Hata!</b>
+        Bu pakete çıkartma ekleme hakkınız yok.
       stickers_too_much: |
         Bu pakette maksimum sayıda çıkartma bulunur.
 

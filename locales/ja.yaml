@@ -108,6 +108,11 @@ cmd:
       <b>パックはまだありません。</b>
       作成するには/new コマンドを入力してください
     inline_title: インラインパック
+    select_group_pack_info: |
+      <b>📁 パックを選択する</b>
+
+      グループでパックを使用するには、以下のボタンを使用して管理者がパックを選択する必要があります
+    select_group_pack: パックを選択
   emoji:
     info: |
       現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> の後にスペースを空けて絵文字を送信してください。
@@ -237,6 +242,18 @@ callback:
       copy: |
         <b>エラー!</b>
         パックが見つかりません。
+    select_group:
+      success: |
+        パック <a href="${link}">${title}</a> がグループに正常に選択されました。
+      access_rights:
+        add: 誰がグループパックにステッカーを追加できますか？
+        delete: 誰がグループパックからステッカーを削除できますか？
+        rights:
+          all: 全員
+          admins: 管理者のみ
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: ステッカーはパックから正常に削除されました。
@@ -251,6 +268,9 @@ callback:
       not_found: |
         エラー！
         ステッカーが見つかりません。
+  group_settings:
+    success: |
+      グループ設定が正常に更新されました。
 sticker:
   add:
     ok: |
@@ -279,6 +299,13 @@ sticker:
         <b>パック</b>
 
         を選択してください(/new) またはパック (/packs) を選択してください
+      no_selected_group_pack: |
+        <b>グループパックを選択していません</b>
+
+        /packs コマンドを使用してパックを選択してください
+      no_rights: |
+        <b>Error!</b>
+        このパックにステッカーを追加する権限がありません。
       stickers_too_much: |
         このパックにはステッカーの最大数があります。
 

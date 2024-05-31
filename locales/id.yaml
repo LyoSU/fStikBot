@@ -108,6 +108,11 @@ cmd:
       <b>Anda belum memiliki paket stiker.</b>
       Untuk membuat, tulis perintah /new
     inline_title: Paket sebaris
+    select_group_pack_info: |
+      <b>📁 Pilih paket</b>
+
+      Untuk menggunakan paket dalam grup, administrator harus memilihnya menggunakan tombol di bawah
+    select_group_pack: Pilih paket
   emoji:
     info: |
       Untuk mengubah emoji default untuk pack saat ini, kirim <code>/emoji</code> diikuti dengan emoji yang dipisah dengan spasi
@@ -238,6 +243,18 @@ callback:
       copy: |
         <b>Kesalahan!</b>
         Tidak dapat menemukan paket.
+    select_group:
+      success: |
+        Paket <a href="${link}">${title}</a> berhasil dipilih untuk grup.
+      access_rights:
+        add: Siapa yang dapat menambahkan stiker ke paket grup?
+        delete: Siapa yang dapat menghapus stiker dari paket grup?
+        rights:
+          all: Semua orang
+          admins: Hanya admin
+      error: |
+        <b>Kesalahan!</b>
+        Set tidak ditemukan.
   sticker:
     answerCbQuery:
       delete: Stiker berhasil dikeluarkan dari kemasannya.
@@ -252,6 +269,9 @@ callback:
       not_found: |
         KESALAHAN!
         Tidak dapat menemukan stiker.
+  group_settings:
+    success: |
+      Pengaturan grup berhasil diperbarui.
 sticker:
   add:
     ok: |
@@ -285,6 +305,13 @@ sticker:
         <b>Anda belum memilih paket</b>
 
         Silakan, buat (/baru) atau pilih (/paket) paket
+      no_selected_group_pack: |
+        <b>Anda belum memilih paket grup</b>
+
+        Silakan, pilih paket menggunakan perintah /packs
+      no_rights: |
+        <b>Kesalahan!</b>
+        Anda tidak memiliki hak untuk menambahkan stiker ke paket ini.
       stickers_too_much: |
         Paket ini memiliki jumlah stiker maksimum.
 

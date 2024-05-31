@@ -118,6 +118,11 @@ cmd:
       <b>您还没有包.</b>
       要创建，请编写命令 /new
     inline_title: Inline pack
+    select_group_pack_info: |
+      <b>📁 选择包</b>
+
+      要在群组中使用此包，管理员必须使用下方按钮进行选择
+    select_group_pack: 选择包
   emoji:
     info: |
       要更改当前包的默认表情符号，请发送 <code>/emoji</code> 并用空格分隔表情符号。
@@ -246,6 +251,18 @@ callback:
       copy: |
         <b>错误！</b>
         找不到包。
+    select_group:
+      success: |
+        包<a href="${link}">${title}</a>已成功为群组选择。
+      access_rights:
+        add: 谁可以添加贴纸到群组包？
+        delete: 谁可以从群组包中删除贴纸？
+        rights:
+          all: 所有人
+          admins: 只有管理员
+      error: |
+        <b>错误！</b>
+        未找到集合。
   sticker:
     answerCbQuery:
       delete: 贴纸已成功从包中取出。
@@ -260,6 +277,9 @@ callback:
       not_found: |
         错误！
         找不到标签。
+  group_settings:
+    success: |
+      群组设置已成功更新。
 sticker:
   add:
     ok: |
@@ -293,6 +313,13 @@ sticker:
         <b>您没有选择包</b>
 
         请创建 (/new) 或选择 (/packs) 包
+      no_selected_group_pack: |
+        <b>您没有选择群组包</b>
+
+        请使用 /packs 命令选择一个包
+      no_rights: |
+        <b>错误！</b>
+        您没有权限添加贴纸到此包。
       stickers_too_much: |
         该包中的贴纸数量最多。
 
