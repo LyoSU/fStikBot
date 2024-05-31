@@ -19,9 +19,9 @@ cmd:
 
       💬 Butuh bantuan? Bergabunglah dengan obrolan dukungan kami di @fStikCommunity (hanya dalam bahasa Inggris)
     group: |
-      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+      🧙 Halo, ${groupTitle}! Aku adalah penyihir paket emoji dan stiker.
 
-      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
+      Untuk menambahkan stiker ke paket grup, gunakan perintah /ss dalam membalas foto, video, gif, atau stiker.
     help: |
       <b>Daftar perintah bot:</b>
 
