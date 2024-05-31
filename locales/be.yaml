@@ -109,10 +109,10 @@ cmd:
       Каб стварыць пак, адпраўце каманду /new
     inline_title: Убудаваны пак
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Выбраць пак</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Каб выкарыстоўваць пак у групе, адміністратарам трэба выбраць яго, выкарыстоўваючы кнопку ніжэй
+    select_group_pack: Выбраць пак
   emoji:
     info: |
       Каб змяніць стандартнае эмодзі для бягучага пака, адпраўце каманду <code>/emoji</code>, дадаўшы праз прабел патрэбнае эмодзі
@@ -242,16 +242,16 @@ callback:
         Не атрымалася знайсці пак.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Пак <a href="${link}">${title}<\/a> паспяхова выбраны для групы.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Хто можа дадаваць налепкі ў групавы пак?
+        delete: Хто можа выдаляць налепкі з групавога паку?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Усе
+          admins: Толькі адміны
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Памылка!<\/b>
+        Набор не знойдзены.
   sticker:
     answerCbQuery:
       delete: Стыкер паспяхова выдалены з пака.
@@ -268,7 +268,7 @@ callback:
         Не атрымалася знайсці стыкер.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Настройкі групы паспяхова абноўлены.
 sticker:
   add:
     ok: |
@@ -303,12 +303,12 @@ sticker:
 
         Калі ласка, стварыце (/new) або выберыце (/packs) пак
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Вы не выбралі групавы пак</b>
 
-        Please, select a pack using the /packs command
+        Калі ласка, выберыце пак, выкарыстоўваючы каманду /packs
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Памылка!<\/b>
+        У вас няма правоў для дадавання налепак у гэты пак.
       stickers_too_much: |
         У гэтым паку максімальная колькасць стыкераў.
 
