@@ -108,6 +108,11 @@ cmd:
       <b>Hələ heç bir paketiniz yoxdur.</b>
       Yaratmaq üçün /new əmri yazın
     inline_title: Daxili paket
+    select_group_pack_info: |
+      <b>📁 Select pack</b>
+
+      To use the pack in the group, administrators must select it using the button below
+    select_group_pack: Select pack
   emoji:
     info: |
       Cari paket üçün default emojini dəyişdirmək üçün, <code>/emoji</code> yazın və sonra emojiyi bir boşluqla ayıraraq göndərin
@@ -237,6 +242,18 @@ callback:
       copy: |
         <b>Xəta!</b>
         Paketi tapmaq mümkün deyil.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> successfully selected for the group.
+      access_rights:
+        add: Who can add stickers to the group pack?
+        delete: Who can delete stickers from the group pack?
+        rights:
+          all: Everyone
+          admins: Only admins
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Stiker paketdən uğurla çıxarıldı.
@@ -251,6 +268,9 @@ callback:
       not_found: |
         Xəta!
         Sticker tapılmadı.
+  group_settings:
+    success: |
+      Group settings successfully updated.
 sticker:
   add:
     ok: |
@@ -284,6 +304,13 @@ sticker:
         <b>Siz paketi seçməmisiniz</b>
 
         Zəhmət olmasa, paket yaradın (/yeni) və ya (/paketlər) seçin
+      no_selected_group_pack: |
+        <b>You have not selected a group pack</b>
+
+        Please, select a pack using the /packs command
+      no_rights: |
+        <b>Error!</b>
+        You do not have the right to add stickers to this pack.
       stickers_too_much: |
         Bu paketdə stikerlərin maksimum sayı var.
 
