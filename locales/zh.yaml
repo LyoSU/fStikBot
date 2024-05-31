@@ -19,9 +19,9 @@ cmd:
 
       💬 支持聊天：@fStikCommunity （仅限英语）
     group: |
-      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+      🧙 你好，${groupTitle}！我是表情包和贴纸包的向导。
 
-      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
+      要将贴纸添加到群组包中，请在回复照片、视频、GIF 或贴纸时使用 /ss 命令。
     help: |
       <b>机器人命令列表：</b>
 
