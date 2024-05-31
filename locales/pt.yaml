@@ -109,10 +109,10 @@ cmd:
       Para criar um, escreva o comando /new
     inline_title: Inline pack
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Selecione o pacote</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Para usar o pacote no grupo, os administradores devem selecioná-lo usando o botão abaixo
+    select_group_pack: Selecione o pacote
   emoji:
     info: |
       Para alterar o emoji padrão do pacote atual, envie <code>/emoji</code> seguido do emoji separado por um espaço
@@ -244,16 +244,16 @@ callback:
         Não foi possível encontrar o pacote.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Pacote <a href="${link}">${title}</a> selecionado com sucesso para o grupo.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Quem pode adicionar stickers ao pacote do grupo?
+        delete: Quem pode excluir stickers do pacote do grupo?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Todos
+          admins: Somente administradores
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Erro!</b>
+        Conjunto não encontrado.
   sticker:
     answerCbQuery:
       delete: O adesivo foi removido com sucesso da embalagem.
@@ -270,7 +270,7 @@ callback:
         Não foi possível encontrar um adesivo.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Configurações do grupo atualizadas com sucesso.
 sticker:
   add:
     ok: |
@@ -305,12 +305,12 @@ sticker:
 
         Por favor, crie (/new) ou escolha (/packs) pacote
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Você não selecionou um pacote de grupo</b>
 
-        Please, select a pack using the /packs command
+        Por favor, selecione um pacote usando o comando /packs
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Erro!</b>
+        Você não tem permissão para adicionar stickers a este pacote.
       stickers_too_much: |
         Este pacote possui o número máximo de adesivos.
 
