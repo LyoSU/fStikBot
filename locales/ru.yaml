@@ -108,6 +108,11 @@ cmd:
       <b>У тебя нет стикерпака.</b>
       Для создания напиши /new
     inline_title: Встроенный набор
+    select_group_pack_info: |
+      <b>📁 Select pack</b>
+
+      To use the pack in the group, administrators must select it using the button below
+    select_group_pack: Select pack
   emoji:
     info: |
       Чтобы изменить эмодзи по умолчанию для текущего набора стикеров, введите <code>/emoji</code>, а затем эмодзи, разделенный пробелом.
@@ -238,6 +243,18 @@ callback:
       copy: |
         <b>Ошибка!</b>
         Не удалось найти стикерпак.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> successfully selected for the group.
+      access_rights:
+        add: Who can add stickers to the group pack?
+        delete: Who can delete stickers from the group pack?
+        rights:
+          all: Everyone
+          admins: Only admins
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Стикер был успешно удален из стикерпака.
@@ -252,6 +269,9 @@ callback:
       not_found: |
         Ошибка!
         Не удалось найти стикер.
+  group_settings:
+    success: |
+      Group settings successfully updated.
 sticker:
   add:
     ok: |
@@ -285,6 +305,13 @@ sticker:
         <b>Вы не выбрали стикерпак</b>
 
         Пожалуйста, создайте (/new) или выберите (/packs) стикерпак
+      no_selected_group_pack: |
+        <b>You have not selected a group pack</b>
+
+        Please, select a pack using the /packs command
+      no_rights: |
+        <b>Error!</b>
+        You do not have the right to add stickers to this pack.
       stickers_too_much: |
         В этом стикерпаке максимальное количество стикеров.
 
