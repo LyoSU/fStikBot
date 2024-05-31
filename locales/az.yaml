@@ -109,10 +109,10 @@ cmd:
       Yaratmaq üçün /new əmri yazın
     inline_title: Daxili paket
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Paketi seçin</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Paketdən qrupda istifadə etmək üçün inzibatçılar aşağıdakı düyməni istifadə edərək onu seçməlidirlər
+    select_group_pack: Paketi seçin
   emoji:
     info: |
       Cari paket üçün default emojini dəyişdirmək üçün, <code>/emoji</code> yazın və sonra emojiyi bir boşluqla ayıraraq göndərin
@@ -244,15 +244,15 @@ callback:
         Paketi tapmaq mümkün deyil.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Paket <a href="${link}">${title}</a> uğurla qrup üçün seçildi.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Qrup paketinə stickerləri kim əlavə edə bilər?
+        delete: Qrup paketindən stickerləri kim silə bilər?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Hər kəs
+          admins: Yalnız adminlər
       error: |
-        <b>Error!</b>
+        <b>Error!<\/b>
         Set not found.
   sticker:
     answerCbQuery:
@@ -270,7 +270,7 @@ callback:
         Sticker tapılmadı.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Grup parametrləri uğurla yeniləndi.
 sticker:
   add:
     ok: |
@@ -305,11 +305,11 @@ sticker:
 
         Zəhmət olmasa, paket yaradın (/yeni) və ya (/paketlər) seçin
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Qrup paketi seçməmisiniz</b>
 
-        Please, select a pack using the /packs command
+        Zəhmət olmasa, /packs əmrindən istifadə edərək paket seçin
       no_rights: |
-        <b>Error!</b>
+        <b>Error!<\/b>
         You do not have the right to add stickers to this pack.
       stickers_too_much: |
         Bu paketdə stikerlərin maksimum sayı var.
