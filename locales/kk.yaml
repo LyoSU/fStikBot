@@ -108,6 +108,11 @@ cmd:
       <b>Сізде әлі пакеттер жоқ.</b>
       Жасау үшін /new пәрменін жазыңыз
     inline_title: Кірістірілген бума
+    select_group_pack_info: |
+      <b>📁 Select pack</b>
+
+      To use the pack in the group, administrators must select it using the button below
+    select_group_pack: Select pack
   emoji:
     info: |
       Ағымдағы пакет үшін әдепкі эмоджині өзгерту үшін <code>/emoji</code> көмегімен бір босалма арқылы эмоджині көрсетіңіз
@@ -236,6 +241,18 @@ callback:
       copy: |
         <b>Қате!</b>
         Пакетті табу мүмкін емес.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> successfully selected for the group.
+      access_rights:
+        add: Who can add stickers to the group pack?
+        delete: Who can delete stickers from the group pack?
+        rights:
+          all: Everyone
+          admins: Only admins
+      error: |
+        <b>Error!</b>
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Стикер бумадан сәтті жойылды.
@@ -250,6 +267,9 @@ callback:
       not_found: |
         ҚАТЕ!
         Стикер табылмады.
+  group_settings:
+    success: |
+      Group settings successfully updated.
 sticker:
   add:
     ok: |
@@ -283,6 +303,13 @@ sticker:
         <b>Сіз буманы таңдамадыңыз</b>
 
         Буманы жасаңыз (/жаңа) немесе (/бумалар) таңдаңыз
+      no_selected_group_pack: |
+        <b>You have not selected a group pack</b>
+
+        Please, select a pack using the /packs command
+      no_rights: |
+        <b>Error!</b>
+        You do not have the right to add stickers to this pack.
       stickers_too_much: |
         Бұл пакетте стикерлердің максималды саны бар.
 
