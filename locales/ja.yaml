@@ -109,10 +109,10 @@ cmd:
       作成するには/new コマンドを入力してください
     inline_title: インラインパック
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 パックを選択する</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      グループでパックを使用するには、以下のボタンを使用して管理者がパックを選択する必要があります
+    select_group_pack: パックを選択
   emoji:
     info: |
       現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> の後にスペースを空けて絵文字を送信してください。
@@ -244,13 +244,13 @@ callback:
         パックが見つかりません。
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        パック <a href="${link}">${title}</a> がグループに正常に選択されました。
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: 誰がグループパックにステッカーを追加できますか？
+        delete: 誰がグループパックからステッカーを削除できますか？
         rights:
-          all: Everyone
-          admins: Only admins
+          all: 全員
+          admins: 管理者のみ
       error: |
         <b>Error!</b>
         Set not found.
@@ -270,7 +270,7 @@ callback:
         ステッカーが見つかりません。
   group_settings:
     success: |
-      Group settings successfully updated.
+      グループ設定が正常に更新されました。
 sticker:
   add:
     ok: |
@@ -300,12 +300,12 @@ sticker:
 
         を選択してください(/new) またはパック (/packs) を選択してください
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>グループパックを選択していません</b>
 
-        Please, select a pack using the /packs command
+        /packs コマンドを使用してパックを選択してください
       no_rights: |
         <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        このパックにステッカーを追加する権限がありません。
       stickers_too_much: |
         このパックにはステッカーの最大数があります。
 
