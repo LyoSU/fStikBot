@@ -109,10 +109,10 @@ cmd:
       Для создания напиши /new
     inline_title: Встроенный набор
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Выбрать набор</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Для использования набора в группе администраторы должны выбрать его, используя кнопку ниже
+    select_group_pack: Выбрать набор
   emoji:
     info: |
       Чтобы изменить эмодзи по умолчанию для текущего набора стикеров, введите <code>/emoji</code>, а затем эмодзи, разделенный пробелом.
@@ -245,15 +245,15 @@ callback:
         Не удалось найти стикерпак.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Набор <a href="${link}">${title}</a> успешно выбран для группы.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Кто может добавлять стикеры в набор группы?
+        delete: Кто может удалять стикеры из набора группы?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Все
+          admins: Только администраторы
       error: |
-        <b>Error!</b>
+        <b>Ошибка!</b>
         Set not found.
   sticker:
     answerCbQuery:
@@ -271,7 +271,7 @@ callback:
         Не удалось найти стикер.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Настройки группы успешно обновлены.
 sticker:
   add:
     ok: |
@@ -306,12 +306,12 @@ sticker:
 
         Пожалуйста, создайте (/new) или выберите (/packs) стикерпак
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Вы не выбрали набор для группы</b>
 
-        Please, select a pack using the /packs command
+        Пожалуйста, выберите набор, используя команду /packs
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Ошибка!</b>
+        Вы не имеете права добавлять стикеры в этот набор.
       stickers_too_much: |
         В этом стикерпаке максимальное количество стикеров.
 
