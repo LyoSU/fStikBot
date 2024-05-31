@@ -109,10 +109,10 @@ cmd:
       Untuk membuat, tulis perintah /new
     inline_title: Paket sebaris
     select_group_pack_info: |
-      <b>📁 Select pack</b>
+      <b>📁 Pilih paket</b>
 
-      To use the pack in the group, administrators must select it using the button below
-    select_group_pack: Select pack
+      Untuk menggunakan paket dalam grup, administrator harus memilihnya menggunakan tombol di bawah
+    select_group_pack: Pilih paket
   emoji:
     info: |
       Untuk mengubah emoji default untuk pack saat ini, kirim <code>/emoji</code> diikuti dengan emoji yang dipisah dengan spasi
@@ -245,16 +245,16 @@ callback:
         Tidak dapat menemukan paket.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> successfully selected for the group.
+        Paket <a href="${link}">${title}</a> berhasil dipilih untuk grup.
       access_rights:
-        add: Who can add stickers to the group pack?
-        delete: Who can delete stickers from the group pack?
+        add: Siapa yang dapat menambahkan stiker ke paket grup?
+        delete: Siapa yang dapat menghapus stiker dari paket grup?
         rights:
-          all: Everyone
-          admins: Only admins
+          all: Semua orang
+          admins: Hanya admin
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Kesalahan!</b>
+        Set tidak ditemukan.
   sticker:
     answerCbQuery:
       delete: Stiker berhasil dikeluarkan dari kemasannya.
@@ -271,7 +271,7 @@ callback:
         Tidak dapat menemukan stiker.
   group_settings:
     success: |
-      Group settings successfully updated.
+      Pengaturan grup berhasil diperbarui.
 sticker:
   add:
     ok: |
@@ -306,12 +306,12 @@ sticker:
 
         Silakan, buat (/baru) atau pilih (/paket) paket
       no_selected_group_pack: |
-        <b>You have not selected a group pack</b>
+        <b>Anda belum memilih paket grup</b>
 
-        Please, select a pack using the /packs command
+        Silakan, pilih paket menggunakan perintah /packs
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Kesalahan!</b>
+        Anda tidak memiliki hak untuk menambahkan stiker ke paket ini.
       stickers_too_much: |
         Paket ini memiliki jumlah stiker maksimum.
 
