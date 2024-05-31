@@ -19,9 +19,9 @@ cmd:
 
       💬 Yordam kerakmi? @fStikCommunity sahifasidagi qo'llab-quvvatlash chatimizga qo'shiling (faqat ingliz tilida)
     group: |
-      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+      🧙 Salom, ${groupTitle}! Men emoji va stiker paketi sehrgariman.
 
-      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
+      Guruh paketiga stiker qo'shish uchun, rasim, video, gif yoki stikerni javobida /ss buyrug'idan foydalaning.
     help: |
       <b>Bot komandalari ro‘yxati:<\/b>\n\n\/yangi - Yangi stiker to‘plamini yaratish\n\/yangi_emoji - Yangi emoji to‘plamini yaratish\n\n\/o‘chirish - Stikerni to‘plamdan o‘chirish\n\/asal - Asal stikerni topish\n\n\/to‘plamlar - Barcha to‘plamlaringiz ro‘yxati\n\/qayta - O‘chirilgan to‘plamni tiklash\n\/nusxa - Bir to‘plamni nusxa olish\n\/emoji - Hozirgi to‘plam uchun emoji suffiksini o‘zgartirish\n\/rəmz - Hozirgi video to‘plam uchun ramka o‘zgartirish\n\/nashr - To‘plamni katalogda nashr etish\n\n\/katalog - Sticker to‘plam katalogini ochish\n\n\/til - Tilni o‘zgartirish\n\/qo‘llab-quvvatlash - Dasturchini qo‘llab-quvvatlash\n\n💬 Qo‘llab-quvvatlash chati: @fStikCommunity (faqat ingliz tili)\n\n🧑‍🔧 Aloqa: @ly_oBot\n👨🏻‍💻 Developer kanali: @LyBlog\n\nGitHub: https:\/\/github.com\/-LyoSU\/fStikBot
     catalog: |
