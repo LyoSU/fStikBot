@@ -68,13 +68,6 @@ const i18n = new I18n({
 
 bot.use(i18n)
 
-// rate limit
-bot.use(rateLimit({
-  window: 1100,
-  limit: 3,
-  onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
-}))
-
 const limitPublicPack = Composer.optional((ctx) => {
   return ctx?.session?.userInfo?.stickerSet?.passcode === 'public'
 }, rateLimit({
@@ -306,7 +299,7 @@ bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
 bot.action(/set_language:(.*)/, handleLanguage)
 
 bot.command('ss', handleSticker)
-/
+
 // only private chat middleware
 bot.use((ctx, next) => {
   if (ctx.chat && ctx.chat.type !== 'private') return false
