@@ -159,7 +159,7 @@ module.exports = async (ctx, next) => {
     if (stickerType === 'photo') stickerFile = message[stickerType].pop()
     else stickerFile = message[stickerType]
 
-    stickerFile.stickerType = stickerType
+    if (stickerFile?.stickerType) stickerFile.stickerType = stickerType
 
     if (message.caption) stickerFile.caption = message.caption
     stickerFile.file_unique_id = stickerSet.id + '_' + stickerFile.file_unique_id
