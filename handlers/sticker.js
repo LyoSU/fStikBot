@@ -80,8 +80,8 @@ module.exports = async (ctx, next) => {
       break
 
     case 'video_note':
-        stickerFile = message.video_note
-        stickerFile.video_note = true
+        stickerFile = message?.video_note
+        if (stickerFile?.video_note) stickerFile.video_note = true
     break
 
     case 'photo':
@@ -96,7 +96,10 @@ module.exports = async (ctx, next) => {
 
   if (ctx.message?.text?.startsWith('/ss') && ctx.message?.reply_to_message && stickerType && !stickerFile) {
     stickerFile = ctx.message.reply_to_message[stickerType]
-    if (stickerFile.length) stickerFile = stickerFile.slice(-1)[0]
+    if (Array.isArray(stickerFile)) {
+      stickerFile = stickerFile.slice(-1)[0]
+    }
+    if (stickerType === 'video_note') stickerFile.video_note = true
   }
 
   if (stickerType === 'text') {

@@ -267,7 +267,7 @@ module.exports = async (ctx, inputFile, toStickerSet) => {
     emojis.push(stickerSet.emojiSuffix)
   }
 
-  const isVideo = inputFile.is_video || !!(inputFile.mime_type && inputFile.mime_type.match('video')) || inputFile.mime_type === 'image/gif' || false
+  const isVideo = inputFile.is_video || !!(inputFile.mime_type && inputFile.mime_type.match('video')) || inputFile.mime_type === 'image/gif' || inputFile.duration > 0 || false
   const isVideoNote = (inputFile.video_note) || false
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
