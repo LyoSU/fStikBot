@@ -466,6 +466,7 @@ db.connection.once('open', async () => {
 
     const groupCommands = [
       { command: 'ss', description: i18n.t(localeName, 'cmd.start.commands.ss') },
+      { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
     ]
 
     const myCommandsInGroup = await bot.telegram.callApi('getMyCommands', {
