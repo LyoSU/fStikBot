@@ -171,6 +171,8 @@ donate:
     等待时间介于 5 分钟至 1 小时之间
 
     <u>选择支付方式：<\/u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 余额更新<\/b>
 
