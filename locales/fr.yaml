@@ -161,6 +161,8 @@ donate:
     Le délai d'attente varie de 5 minutes à 1 heure
 
     <u>Sélectionnez le mode de paiement :</u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 Mise à jour du solde</b>
 
