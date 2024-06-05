@@ -161,6 +161,8 @@ donate:
     Время ожидания составляет от 5 минут до 1 часа
 
     <u>Выберите метод оплаты:</u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 Обновление баланса</b>
 
