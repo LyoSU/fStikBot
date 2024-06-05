@@ -161,6 +161,8 @@ donate:
     Gözləmə vaxtı 5 dəqiqədən 1 saata qədərdir
 
     <u>Ödəmə üsulunu seçin:</u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 Balans yenilə</b>
 
