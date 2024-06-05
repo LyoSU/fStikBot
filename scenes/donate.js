@@ -106,15 +106,23 @@ const donate = async (ctx) => {
     prices: [{ label: 'Stars', amount: starPrice }]
   }).catch(() => {})
 
-  const repltMarkup =  Markup.inlineKeyboard([
-    [Markup.urlButton(`🌟 Telegram Stars — ${starPrice}`, payLink, !payLink)],
+  const replyMarkup =  Markup.inlineKeyboard([
+    [Markup.payButton(`⭐️ Telegram Stars`)],
     [Markup.urlButton(`💳 Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
     [Markup.urlButton(`💳 monobank — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.i18n.locale() === 'uk'))],
     [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)]
   ])
 
-  await ctx.replyWithHTML(message, {
-    reply_markup: repltMarkup
+  await ctx.replyWithInvoice({
+    title: `Donate ${amount} Stars`,
+    description: ctx.i18n.t('donate.description', {
+      amount
+    }),
+    payload: telegramPayment._id.toString(),
+    currency: 'XTR',
+    prices: [{ label: 'Stars', amount: starPrice }],
+    start_parameter: 'donate',
+    reply_markup: replyMarkup
   })
 
   return ctx.scene.leave()

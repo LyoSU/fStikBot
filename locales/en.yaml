@@ -162,6 +162,8 @@ donate:
     The waiting time ranges from 5 minutes to 1 hour
 
     <u>Select payment method:</u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 Balance update</b>
 

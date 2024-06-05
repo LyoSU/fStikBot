@@ -146,18 +146,22 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
   }
 
 
-  return ctx.editMessageReplyMarkup(Markup.inlineKeyboard([
-    [Markup.urlButton('👛 Pay via Wallet', walletPayLink, !walletPayLink)],
-    [
-      Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
-      Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
-    ],
-    [
-      Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
-      Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
-    ],
-    [Markup.callbackButton('🔙 Back', 'donate:topup')]
-  ]))
+  return ctx.replyWithHTML(ctx.i18n.t('donate.paymenu', {
+    amount,
+    price
+  }), {
+    reply_markup: Markup.inlineKeyboard([
+      [Markup.urlButton('👛 Pay via Wallet', walletPayLink, !walletPayLink)],
+      [
+        Markup.urlButton(`${tonPrice} TON`, tonLink, !tonLink),
+        Markup.urlButton(`${usdtPrice} USDT`, usdtLink, !usdtLink)
+      ],
+      [
+        Markup.urlButton(`${btcPrice} BTC`, btcLink, !btcLink),
+        Markup.urlButton(`${ethPrice} ETH`, ethLink, !ethLink)
+      ]
+    ])
+  })
 })
 
 composer.action(/donate:(\d+)/, async (ctx) => {
