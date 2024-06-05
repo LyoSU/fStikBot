@@ -161,6 +161,8 @@ donate:
     待ち時間は5分から1時間までです
 
     <u>支払い方法を選択:</u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 バランス更新</b>
 
