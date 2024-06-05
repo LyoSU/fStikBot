@@ -106,10 +106,12 @@ const newPack = new Scene('newPack')
 newPack.enter(async (ctx, next) => {
   ctx.session.scene.newPack = {}
 
-  const args = ctx.message.text.split(' ')
+  if (ctx?.message?.text) {
+    const args = ctx.message.text.split(' ')
 
-  if (['fill', 'adaptive'].includes(args[1])) {
-    ctx.session.scene.newPack.fillColor = true
+    if (['fill', 'adaptive'].includes(args[1])) {
+      ctx.session.scene.newPack.fillColor = true
+    }
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
