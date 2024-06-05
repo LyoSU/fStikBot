@@ -160,6 +160,8 @@ donate:
     Bekleme süresi 5 dakikadan 1 saate kadar değişir
 
     <u>Ödeme yöntemi seç:</u>
+  description: |
+    Buying Stars, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 Bakiye güncelleme</b>
 
