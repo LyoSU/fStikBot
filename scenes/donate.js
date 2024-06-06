@@ -86,7 +86,7 @@ const donate = async (ctx) => {
     _id: mongoose.Types.ObjectId(),
     user: ctx.session.userInfo._id,
     amount,
-    price: price,
+    price: starPrice,
     currency: 'XTR',
     paymentSystem: 'telegram',
     comment,
@@ -95,16 +95,7 @@ const donate = async (ctx) => {
 
   await telegramPayment.save()
 
-  const starPrice = amount
-
-  const payLink = await ctx.telegram.callApi('createInvoiceLink', {
-    title: `Donate ${amount} Stars`,
-    description: comment,
-    payload: telegramPayment._id.toString(),
-    start_parameter: 'donate',
-    currency: 'XTR',
-    prices: [{ label: 'Stars', amount: starPrice }]
-  }).catch(() => {})
+  const starPrice = amount * 5
 
   const replyMarkup =  Markup.inlineKeyboard([
     [Markup.payButton(`⭐️ Telegram Stars`)],
