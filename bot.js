@@ -244,6 +244,8 @@ const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
 bot.action(/user_about/, userAboutHelp)
 bot.command('user_about', userAboutHelp)
 
+bot.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
+
 bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
 
 bot.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))

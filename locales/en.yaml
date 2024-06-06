@@ -130,6 +130,13 @@ cmd:
       Videos will now have a rounded shape
     disabled: |
       Videos will no longer have a rounded shape
+  paysupport: |
+    <b>👨‍💻 Pay Support</b>
+
+    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+
+    <b>Contacts:</b>
+    🧑‍💻 Developer: @ly_oBot
 donate:
   menu: |
     <b>☕️ Bot development support</b>
