@@ -99,7 +99,7 @@ const donate = async (ctx) => {
   const replyMarkup =  Markup.inlineKeyboard([
     [Markup.payButton(`⭐️ Telegram Stars`)],
     [Markup.urlButton(`💳 Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
-    [Markup.urlButton(`💳 monobank — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.i18n.locale() === 'uk'))],
+    // [Markup.urlButton(`💳 monobank — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.i18n.locale() === 'uk'))],
     [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)]
   ])
 
