@@ -161,6 +161,8 @@ donate:
     Rentang waktu menunggu berkisar antara 5 menit hingga 1 jam
 
     <u>Pilih metode pembayaran:</u>
+  description: |
+    Dengan membeli Stars, Anda mendukung pengembangan bot dan mendapatkan kesempatan untuk menggunakan fitur tambahan
   update: |
     <b>🔄 Pembaruan Saldo</b>
 

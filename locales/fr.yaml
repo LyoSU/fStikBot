@@ -161,6 +161,8 @@ donate:
     Le délai d'attente varie de 5 minutes à 1 heure
 
     <u>Sélectionnez le mode de paiement :</u>
+  description: |
+    En achetant des Étoiles, vous soutenez le développement du bot et obtenez l'opportunité d'utiliser des fonctionnalités supplémentaires
   update: |
     <b>🔄 Mise à jour du solde</b>
 

@@ -161,6 +161,8 @@ donate:
     O tempo de espera varia de 5 minutos a 1 hora
 
     <u>Selecione o método de pagamento:</u>
+  description: |
+    Ao comprar Estrelas, você apoia o desenvolvimento do bot e tem a oportunidade de usar funcionalidades adicionais
   update: |
     <b>🔄 Atualização de saldo</b>
 
