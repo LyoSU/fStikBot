@@ -81,7 +81,7 @@ module.exports = async (ctx, next) => {
 
     case 'video_note':
         stickerFile = message?.video_note
-        if (stickerFile?.video_note) stickerFile.video_note = true
+        if (message?.video_note) stickerFile.video_note = true
     break
 
     case 'photo':
