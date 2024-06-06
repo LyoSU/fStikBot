@@ -140,11 +140,11 @@ cmd:
 donate:
   menu: |
     <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Stars
-    For every 1 dollar, you will receive 5 Stars
+    By supporting the development of the bot, you will receive Credits
+    For every 1 dollar, you will receive 5 Credits
 
-    <b>Balance:</b> <code>${balance}</code> Stars
-    With 1 Stars, you have the opportunity to boost one pack.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
     <b>The boost provides the following benefits:</b>
     ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
@@ -154,31 +154,31 @@ donate:
   btn:
     donate: '☕️ Donate'
   topup: |
-    <b>Enter the amount of Stars you want to buy:</b>
+    <b>Enter the amount of Credits you want to buy:</b>
 
-    <b>5 Stars = 1$</b>
-    <i>Minimum amount - 5 Stars</i>
+    <b>5 Credits = 1$</b>
+    <i>Minimum amount - 5 Credits</i>
   invalid_amount: |
     <b>Invalid amount</b>
 
-    The minimum amount is 5 Stars
+    The minimum amount is 5 Credits
   paymenu: |
-    You want to buy <b>${amount} Stars</b> for <b>${price}$</b>
+    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
 
-    ⚠️ Stars are issued manually by the administrator.
+    ⚠️ Credits are issued manually by the administrator.
     The waiting time ranges from 5 minutes to 1 hour
 
     <u>Select payment method:</u>
   description: |
-    Buying Stars, you support the development of the bot and get the opportunity to use additional features
+    Buying Credits, you support the development of the bot and get the opportunity to use additional features
   update: |
     <b>🔄 Balance update</b>
 
-    Balance: <code>${balance}</code> Stars (added <code>${amount}</code> Stars)
+    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
 
   error:
     already_donated: |
-      You have already received Stars for this payment
+      You have already received Credits for this payment
     error: |
       <b>Error!</b>
       An error occurred while processing the payment
@@ -523,8 +523,8 @@ scenes:
       Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
       You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>Price:</b> 1 Stars
-      <b>Current balance:</b> ${balance} Stars
+      <b>Price:</b> 1 Credits
+      <b>Current balance:</b> ${balance} Credits
     btn:
       yes: Yes, boost!
       no: No, cancel
@@ -536,7 +536,7 @@ scenes:
       ${title} is now boosted
     error:
       not_enough_credits: |
-        You do not have enough Stars to boost this pack.
+        You do not have enough Credits to boost this pack.
 
         You can top up your balance by sending the /donate command.
       already_boosted: |

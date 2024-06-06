@@ -27,11 +27,11 @@ const donate = async (ctx) => {
   }
 
   const price = amount / 5
-  const starPrice = amount * 5
+  const starPrice = (price * 5).toFixed(2)
   const priceUAH = (price * exchangeRate.UAH).toFixed(2)
   const priceRUB = (price * exchangeRate.RUB).toFixed(2)
 
-  const comment = `@${ctx?.from?.username || ctx?.from?.id} (${ctx.from.id}) for ${amount} Stars`
+  const comment = `@${ctx?.from?.username || ctx?.from?.id} (${ctx.from.id}) for ${amount} Credits`
 
   let ruLink
 
@@ -104,13 +104,13 @@ const donate = async (ctx) => {
   ])
 
   await ctx.replyWithInvoice({
-    title: `Donate ${amount} Stars`,
+    title: `Donate ${amount} Credits`,
     description: ctx.i18n.t('donate.description', {
       amount
     }),
     payload: telegramPayment._id.toString(),
     currency: 'XTR',
-    prices: [{ label: 'Stars', amount: starPrice }],
+    prices: [{ label: 'Credits', amount: starPrice }],
     start_parameter: 'donate',
     reply_markup: replyMarkup
   })
@@ -129,12 +129,12 @@ donateScene.enter(async (ctx) => {
     parse_mode: 'HTML',
     reply_markup: Markup.inlineKeyboard([
       [
-        Markup.callbackButton('10 Stars', 'donate:10'),
-        Markup.callbackButton('20 Stars', 'donate:20')
+        Markup.callbackButton('10 Credits', 'donate:10'),
+        Markup.callbackButton('20 Credits', 'donate:20')
       ],
       [
-        Markup.callbackButton('50 Stars', 'donate:50'),
-        Markup.callbackButton('100 Stars', 'donate:100')
+        Markup.callbackButton('50 Credits', 'donate:50'),
+        Markup.callbackButton('100 Credits', 'donate:100')
       ]
     ])
   })

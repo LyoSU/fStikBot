@@ -104,7 +104,7 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
   }
 
-  const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} Stars`
+  const comment = `@${ctx.from.username} (${ctx.from.id}) for ${amount} Credits`
 
   let tonLink, usdtLink, btcLink, ethLink
   let tonPrice, usdtPrice, btcPrice, ethPrice
