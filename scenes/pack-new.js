@@ -282,6 +282,7 @@ newPackConfirm.enter(async (ctx, next) => {
   if (!inline) name += nameSuffix
   if (!inline) title += titleSuffix
 
+  let alreadyUploadedStickers = 0
   let createNewStickerSet
 
   const packType = ctx.session.scene.newPack.packType || 'regular'
@@ -308,68 +309,99 @@ newPackConfirm.enter(async (ctx, next) => {
         }
       })
 
-      const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
+      const originalPackType = ctx.session.scene.copyPack.sticker_type
 
-      const uploadedStickers = (await Promise.all(stickers.map(async (sticker) => {
-        let stickerFormat
+      console.log('originalPackType', originalPackType)
+      console.log('packType', packType)
 
-        if (sticker.is_animated) {
-          stickerFormat = 'animated'
-        } else if (sticker.is_video) {
-          stickerFormat = 'video'
-        } else {
-          stickerFormat = 'static'
+      let uploadedStickers = []
+
+      if (
+        originalPackType === packType
+        || ctx.session.scene.copyPack.stickers.every(sticker => sticker.is_animated)
+      ) {
+        const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
+
+        uploadedStickers = (await Promise.all(stickers.map(async (sticker) => {
+          let stickerFormat
+
+          if (sticker.is_animated) {
+            stickerFormat = 'animated'
+          } else if (sticker.is_video) {
+            stickerFormat = 'video'
+          } else {
+            stickerFormat = 'static'
+          }
+
+          const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+
+          const buffer = await got(fileLink, {
+            responseType: 'buffer'
+          }).then((response) => response.body)
+
+          const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
+            user_id: ctx.from.id,
+            sticker_format: stickerFormat,
+            sticker: {
+              source: buffer
+            }
+          }).catch((error) => {
+            return {
+              error: {
+                telegram: error
+              }
+            }
+          })
+
+          if (uploadedSticker.error) {
+            return {
+              error: {
+                telegram: uploadedSticker.error.telegram
+              }
+            }
+          }
+
+          return {
+            sticker: uploadedSticker.file_id,
+            format: stickerFormat,
+            emoji_list: [sticker.emoji]
+          }
+        }))).sort((a, b) => {
+          const aIndex = stickers.findIndex((sticker) => sticker.file_id === a.sticker)
+          const bIndex = stickers.findIndex((sticker) => sticker.file_id === b.sticker)
+
+          return aIndex - bIndex
+        })
+
+        if (uploadedStickers.some((sticker) => sticker.error)) {
+          await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
+
+          await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), {
+            reply_to_message_id: ctx.message.message_id,
+            allow_sending_without_reply: true
+          })
+
+          return ctx.scene.leave()
         }
 
-        const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
-
-        const buffer = await got(fileLink, {
-          responseType: 'buffer'
-        }).then((response) => response.body)
-
+        alreadyUploadedStickers = uploadedStickers.length
+      } else {
         const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
           user_id: ctx.from.id,
-          sticker_format: stickerFormat,
+          sticker_format: 'video',
           sticker: {
-            source: buffer
-          }
-        }).catch((error) => {
-          return {
-            error: {
-              telegram: error
-            }
+            source: placeholder[packType]['video']
           }
         })
 
-        if (uploadedSticker.error) {
-          return {
-            error: {
-              telegram: uploadedSticker.error.telegram
-            }
+        uploadedStickers = [
+          {
+            sticker: uploadedSticker.file_id,
+            format: 'video',
+            emoji_list: ['🌟'],
+            placeholder: true
           }
-        }
-
-        return {
-          sticker: uploadedSticker.file_id,
-          format: stickerFormat,
-          emoji_list: [sticker.emoji]
-        }
-      }))).sort((a, b) => {
-        const aIndex = stickers.findIndex((sticker) => sticker.file_id === a.sticker)
-        const bIndex = stickers.findIndex((sticker) => sticker.file_id === b.sticker)
-
-        return aIndex - bIndex
-      })
-
-      if (uploadedStickers.some((sticker) => sticker.error)) {
-        await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
-
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), {
-          reply_to_message_id: ctx.message.message_id,
-          allow_sending_without_reply: true
-        })
-
-        return ctx.scene.leave()
+        ]
       }
 
       createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
@@ -382,6 +414,18 @@ newPackConfirm.enter(async (ctx, next) => {
       }).catch((error) => {
         return { error }
       })
+
+      if (uploadedStickers[0].placeholder) {
+        setTimeout(async () => {
+          const getStickerSet = await ctx.telegram.getStickerSet(name)
+          const stickerInfo = getStickerSet.stickers[0]
+          if (!stickerInfo) return
+
+          await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id).catch(error => {
+            console.error('Error while deleting sticker from set: ', error)
+          })
+        }, 1000 * 10)
+      }
 
       await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
 
@@ -477,6 +521,7 @@ newPackConfirm.enter(async (ctx, next) => {
       inline,
       video,
       packType,
+      boost: !!ctx.session.scene.copyPack,
       emojiSuffix: '🌟',
       create: true
     })
@@ -541,18 +586,18 @@ newPackConfirm.enter(async (ctx, next) => {
 
     const originalPack = ctx.session.scene.copyPack
 
-    if (originalPack.stickers.length > 50) {
+    if (originalPack.stickers.length > alreadyUploadedStickers) {
       const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
         originalTitle: originalPack.title,
         originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
         title: escapeHTML(title),
         link: `${ctx.config.stickerLinkPrefix}${name}`,
-        current: 50,
+        current: alreadyUploadedStickers,
         total: originalPack.stickers.length
       }))
 
-      for (let index = 50; index < originalPack.stickers.length; index++) {
-        await addSticker(ctx, originalPack.stickers[index], userStickerSet)
+      for (let index = alreadyUploadedStickers; index < originalPack.stickers.length; index++) {
+        await addSticker(ctx, originalPack.stickers[index], userStickerSet, false)
 
         if (index % 10 === 0) {
           await ctx.telegram.editMessageText(

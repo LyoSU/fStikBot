@@ -25,7 +25,7 @@ module.exports = async (ctx) => {
     })
 
     // if all stickers in sticker set is animated, set new pack to animated
-    if (getStickerSet.stickers.every(sticker => sticker.is_animated)) {
+    if (getStickerSet.stickers.every(sticker => sticker.is_animated) || ctx.config.mainAdminId === ctx.from.id) {
       return ctx.scene.enter('newPack')
     } else {
       return ctx.scene.enter('newPackTitle')

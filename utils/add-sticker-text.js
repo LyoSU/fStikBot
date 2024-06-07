@@ -24,10 +24,6 @@ module.exports = (addStickerResult, lang) => {
   let replyMarkup = {}
 
   if (addStickerResult.ok) {
-    // ctx.session.previousSticker = {
-    //   id: addStickerResult.ok.sticker.id
-    // }
-
     if (addStickerResult.ok.inline) {
       messageText = i18n.t(lang, 'sticker.add.ok_inline', {
         title: escapeHTML(addStickerResult.ok.stickerSet.title)

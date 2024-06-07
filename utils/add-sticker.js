@@ -18,6 +18,10 @@ setInterval(() => {
 }, 1000 * 30)
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
+let botInfo = null
+telegram.getMe().then((info) => {
+  botInfo = info
+})
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -84,13 +88,15 @@ convertQueue.on('global:completed', async (jobId, result) => {
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
-  const textResult = addStickerText(uploadResult, input.locale || 'en')
+  if (input.showResult && input?.botId === botInfo.id) {
+    const textResult = addStickerText(uploadResult, input.locale || 'en')
 
-  if (textResult.messageText) {
-    await telegram.sendMessage(input.chatId, textResult.messageText, {
-      parse_mode: 'HTML',
-      reply_markup: textResult.replyMarkup
-    })
+    if (textResult.messageText) {
+      await telegram.sendMessage(input.chatId, textResult.messageText, {
+        parse_mode: 'HTML',
+        reply_markup: textResult.replyMarkup
+      })
+    }
   }
 })
 
@@ -228,7 +234,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
 
 const lastStickerTime = {}
 
-module.exports = async (ctx, inputFile, toStickerSet) => {
+module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   let stickerFile = inputFile
 
   const originalSticker = await ctx.db.Sticker.findOne({
@@ -428,9 +434,11 @@ module.exports = async (ctx, inputFile, toStickerSet) => {
 
         await convertQueue.add({
           input: {
+            botId: ctx.botInfo.id,
             userId: ctx.from.id,
             chatId: ctx.chat.id,
             locale: ctx.i18n.locale(),
+            showResult,
             convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
             stickerExtra,
             stickerSet,
