@@ -32,7 +32,11 @@ module.exports = async (ctx) => {
   if (findPacks.length > 0) {
     chunkedPacks = (findPacks.map((pack) => {
       if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
-        if (ctx.from.id === shardedUserId || ctx.from.id === ctx.config.mainAdminId) {
+        if (
+          ctx.from.id === shardedUserId
+          || ctx.from.id === ctx.config.mainAdminId
+          || ctx?.session?.userInfo?.adminRights.includes('pack')
+        ) {
           return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
         } else {
           return '<i>[hidden]</i>'

@@ -111,6 +111,37 @@ const setPremium = async (ctx, next) => {
   }
 }
 
+const refundPayment = async (ctx, next) => {
+  const paymentId = ctx.match[1]
+
+  const payment = await ctx.db.Payment.findOne({
+    "resultData.telegram_payment_charge_id": paymentId
+  })
+
+  if (!payment) return ctx.replyWithHTML('Payment not found')
+
+  const refundUser = await ctx.db.User.findOne({
+    _id: payment.user
+  })
+
+  if (!refundUser) return ctx.replyWithHTML('User not found')
+
+  const refundResult = await ctx.telegram.callApi('refundStarPayment', {
+    user_id: refundUser.telegram_id,
+    telegram_payment_charge_id: paymentId
+  }).catch(() => {})
+
+  if (!refundResult) return ctx.replyWithHTML('Refund failed')
+
+  refundUser.balance -= payment.amount
+  await refundUser.save()
+
+  payment.status = 'refunded'
+  await payment.save()
+
+  await ctx.replyWithHTML(`Payment ${paymentId} refunded`)
+}
+
 const getLastCryptoTransactions = async (ctx, next) => {
   const result = await cryptoPay.getInvoices({
     status: 'paid',
@@ -170,6 +201,7 @@ composer.command('admin', checkAdminRight, main)
 
 composer.command('ban', checkAdminRight, banUser)
 composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
+composer.hears(/\/refund (.*)/, checkAdminRight, refundPayment)
 composer.command('crypto', checkAdminRight, getLastCryptoTransactions)
 composer.command('fk', checkAdminRight, getFreeKassaTransactions)
 composer.command('mono', checkAdminRight, getLastMonoTransactions)
