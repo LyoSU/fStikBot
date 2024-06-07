@@ -226,6 +226,8 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
   }
 }
 
+const lastStickerTime = {}
+
 module.exports = async (ctx, inputFile, toStickerSet) => {
   let stickerFile = inputFile
 
@@ -462,6 +464,25 @@ module.exports = async (ctx, inputFile, toStickerSet) => {
 
         return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
       } else {
+        const currentTime = Date.now();
+        const lastTime = lastStickerTime[ctx.from.id] || 0;
+
+        if (
+          currentTime - lastTime < 1000 * 30
+          && !stickerSet?.boost
+        ) {
+          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
+            reply_to_message_id: ctx?.message?.message_id,
+            allow_sending_without_reply: true
+          })
+        }
+
+        lastStickerTime[ctx.from.id] = currentTime
+
+        setTimeout(() => {
+          delete lastStickerTime[ctx.from.id]
+        }, 1000 * 30);
+
         const imageSharp = sharp(fileData, { failOnError: false })
         const imageMetadata = await imageSharp.metadata().catch(() => {})
 
@@ -488,6 +509,10 @@ module.exports = async (ctx, inputFile, toStickerSet) => {
         }
       }
     }
+  }
+
+  if (lastStickerTime[ctx.from.id]) {
+    delete lastStickerTime[ctx.from.id]
   }
 
   return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
