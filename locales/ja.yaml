@@ -456,6 +456,15 @@ scenes:
       進行状況: ${current}/${total}
     done: |
       <a href="${originalLink}">${originalTitle}</a> から <a href="${link}">${title}</a> へのパックのコピーが正常に完了しました。
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>Error!</b>
