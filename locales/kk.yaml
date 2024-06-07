@@ -462,6 +462,15 @@ scenes:
       Толықтару: ${current}/${total}
     done: |
       <a href="${originalLink}">${originalTitle}</a> бастап <a href="${link}">${title}</a> дейін буманы көшіру сәтті аяқталды.
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>Қате!</b>
