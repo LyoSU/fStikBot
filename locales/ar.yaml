@@ -461,6 +461,15 @@ scenes:
       التقدم: ${current}/${total}
     done: |
       تم بنجاح نسخ الحزمة من <a href="${originalLink}">${originalTitle}</a> إلى <a href="${link}">${title}</a>
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>Error!</b>
