@@ -574,6 +574,8 @@ newPackConfirm.enter(async (ctx, next) => {
       })
     }
 
+    await ctx.session.userInfo.save()
+
     if (!ctx.session.scene.copyPack) {
       await ctx.replyWithHTML('👌', {
         reply_markup: {
