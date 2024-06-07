@@ -461,6 +461,15 @@ scenes:
       Ход выканання: ${current}/${total}
     done: |
       Капіяванне пака з <a href="${originalLink}">${originalTitle}</a> у <a href="${link}">${title}</a> паспяхова завершана.
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>Памылка!</b>
