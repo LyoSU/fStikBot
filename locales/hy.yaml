@@ -462,6 +462,15 @@ scenes:
       Արվել է: ${current} / ${total}
     done: |
       Փաթեթի պատճենումը <a href="${originalLink}">${originalTitle}</a> -ից մինչև <a href="${link}">${title}</a> հաջողությամբ ավարտվեց:
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>Սխալ.</b>
