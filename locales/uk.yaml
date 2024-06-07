@@ -463,6 +463,15 @@ scenes:
       Прогрес: ${current}/${total}
     done: |
       Копіювання пакунку з <a href="${originalLink}">${originalTitle}</a> до <a href="${link}">${title}</a> успішно завершено.
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>Помилка!</b>
