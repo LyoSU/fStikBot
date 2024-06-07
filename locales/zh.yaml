@@ -471,6 +471,15 @@ scenes:
       进度： ${current}/${total}
     done: |
       成功完成从 <a href="${originalLink}">${originalTitle}</a> 到 <a href="${link}">${title}</a> 的打包复制。
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: '✅ Confirm'
     error:
       premium: |
         <b>错误！</b>
