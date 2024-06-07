@@ -3,6 +3,7 @@ const slug = require('limax')
 const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
+const I18n = require('telegraf-i18n')
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
 const {
@@ -10,6 +11,8 @@ const {
   countUncodeChars,
   substrUnicode,
 } = require('../utils')
+
+const { match } = I18n
 
 const placeholder = {
   regular: {
@@ -139,8 +142,44 @@ newPack.on('message', async (ctx) => {
   } else {
     return ctx.scene.reenter();
   }
+
+  if (
+    ctx.session.scene.copyPack
+    && ctx.session.scene.copyPack.sticker_type !== newPack.packType
+  ) {
+    return ctx.scene.enter('newPackCopyPay')
+  }
+
   return ctx.scene.enter('newPackTitle');
 });
+
+const newPackCopyPay = new Scene('newPackCopyPay')
+
+newPackCopyPay.enter(async (ctx) => {
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.pay', {
+    balance: ctx.session.userInfo.balance,
+  }), {
+    reply_markup: Markup.keyboard([
+      [
+        ctx.i18n.t('scenes.copy.pay_btn')
+      ],
+      [
+        ctx.i18n.t('scenes.btn.cancel')
+      ]
+    ]).resize()
+  })
+})
+
+newPackCopyPay.hears(match('scenes.copy.pay_btn'), async (ctx) => {
+  if (ctx.session.userInfo.balance < 1) {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.boost.error.not_enough_credits'), {
+      reply_markup: Markup.removeKeyboard()
+    })
+
+    return ctx.scene.leave()
+  }
+  return ctx.scene.enter('newPackTitle')
+})
 
 const сhoosePackFormat = new Scene('сhoosePackFormat')
 
@@ -527,6 +566,7 @@ newPackConfirm.enter(async (ctx, next) => {
     })
 
     ctx.session.userInfo.stickerSet = userStickerSet
+    ctx.session.userInfo.balance -= 1
 
     if (inline) {
       ctx.session.userInfo.inlineStickerSet = userStickerSet
@@ -638,5 +678,6 @@ module.exports = [
   сhoosePackFormat,
   newPackTitle,
   newPackName,
-  newPackConfirm
+  newPackConfirm,
+  newPackCopyPay
 ]

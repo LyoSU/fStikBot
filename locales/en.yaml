@@ -471,6 +471,15 @@ scenes:
       Progress: ${current}/${total}
     done: |
       Pack copying from <a href="${originalLink}">${originalTitle}</a> to <a href="${link}">${title}</a> successfully completed.
+    pay: |
+      <b>Pack conversion</b>
+
+      Converting a package from one type to another costs 1 credit
+
+      <b>Current balance:</b> ${balance} Credits
+
+      Buy credits: /donate
+    pay_btn: ✅ Confirm
     error:
       premium: |
         <b>Error!</b>
