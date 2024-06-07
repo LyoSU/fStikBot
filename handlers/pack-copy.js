@@ -24,12 +24,7 @@ module.exports = async (ctx) => {
       ]).resize()
     })
 
-    // if all stickers in sticker set is animated, set new pack to animated
-    if (getStickerSet.stickers.every(sticker => sticker.is_animated) || ctx.config.mainAdminId === ctx.from.id) {
-      return ctx.scene.enter('newPack')
-    } else {
-      return ctx.scene.enter('newPackTitle')
-    }
+    return ctx.scene.enter('newPack')
   } else {
     await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
       reply_to_message_id: ctx.message.message_id,
