@@ -163,10 +163,10 @@ donate:
   btn:
     donate: '☕️ 捐赠'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>输入您要购买的信用点数</b>
 
-    <b>5 Credits = 1$</b>
-    <i>Minimum amount - 5 Credits</i>
+    <b>5 点数 = 1 美元</b>
+    <i>最低金额 - 5 信用点数</i>
   invalid_amount: |
     <b>Invalid amount</b>
 
