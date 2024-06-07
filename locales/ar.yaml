@@ -129,47 +129,54 @@ cmd:
       سيكون لمقاطع الفيديو الآن شكل مستدير
     disabled: |
       سيكون لمقاطع الفيديو الآن شكل مستدير
+  paysupport: |
+    <b>👨‍💻 Pay Support</b>
+
+    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+
+    <b>Contacts:</b>
+    🧑‍💻 Developer: @ly_oBot
 donate:
   menu: |
-    <b>☕ دعم تطوير البوت</b>
-    من خلال دعم تطوير البوت، سوف تتلقى الائتمانات.
-    مقابل كل دولار واحد ، سوف تتلقى 5 ائتمانات.
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
+    For every 1 dollar, you will receive 5 Credits
 
-    <b>Balance:</b> <code>${balance}<\/code> ائتمان
-    مع كل ائتمان ، لديك فرصة لتعزيز حزمة واحدة.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>The boost provides the following benefits:<\/b>
-    ➖ تعطيل <code>"${titleSuffix}"<\/code> في اسم الحزمة <i>(ليس في الرابط)<\/i>
-    ➖ الأولوية عند تحويل ملصقات الفيديو
-    ➖ القدرة على إضافة أكثر من ملصق واحد إلى طابور المعالجة
-    ➖ مدة ملصقات الفيديو تصل إلى 30 ثانية
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
     donate: '☕ التبرع'
   topup: |
-    <b>أدخل كمية النجوم التي تريد شراؤها:<\/b>
+    <b>Enter the amount of Credits you want to buy:</b>
 
-    <b>5 نجوم = 1$<\/b>
-    <i>الحد الأدنى للمبلغ - 5 نجوم<\/i>
+    <b>5 Credits = 1$</b>
+    <i>Minimum amount - 5 Credits</i>
   invalid_amount: |
-    <b>كمية غير صالحة<\/b>
+    <b>Invalid amount</b>
 
-    الحد الأدنى للمبلغ هو 5 نجوم
+    The minimum amount is 5 Credits
   paymenu: |
-    ترغب في شراء <b>${amount} نجوم<\/b> مقابل <b>${price}$<\/b>
+    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
 
-    ⚠️ يتم إصدار النجوم يدويًا من قبل المسؤول.
-    يتراوح وقت الانتظار من 5 دقائق إلى ساعة واحدة
+    ⚠️ Credits are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>حدد طريقة الدفع:<\/u>
+    <u>Select payment method:</u>
   description: |
-    من خلال شراء النجوم، أنت تدعم تطوير الروبوت وتحصل على فرصة لاستخدام ميزات إضافية
+    Buying Credits, you support the development of the bot and get the opportunity to use additional features
   update: |
-    <b>🔄 تحديث الرصيد<\/b>
+    <b>🔄 Balance update</b>
 
-    الرصيد: <code>${balance}<\/code> نجوم (تمت إضافة <code>${amount}<\/code> نجوم)
+    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
   error:
     already_donated: |
-      لقد تلقيت النجوم بالفعل مقابل هذه الدفعة
+      You have already received Credits for this payment
     error: |
       <b>خطأ!<\/b>\nحدث خطأ أثناء معالجة الدفعة
     canceled: |
@@ -501,13 +508,13 @@ scenes:
       <i>ليس لدينا معلومات عن الملصقات الأخرى لهذا المالك</i>
   boost:
     sure: |
-      <b>هل أنت متأكد أنك تريد تعزيز <a href="${link}">${title}<\/a>?<\/b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      سيزيد التعزيز من الأولوية في المعالجة والقدرة على إضافة أكثر من ملصق واحد إلى الطابور
-      يمكنك العثور على معلومات مفصلة أكثر حول التعزيزات في القائمة عن طريق زيارة: \/donate
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>السعر:<\/b> 1 نجوم
-      <b>الرصيد الحالي:<\/b> ${balance} نجوم
+      <b>Price:</b> 1 Credits
+      <b>Current balance:</b> ${balance} Credits
     btn:
       yes: نعم، تعزيز!
       no: لا، إلغاء
@@ -519,9 +526,9 @@ scenes:
       ${title} تم تعزيزه الآن
     error:
       not_enough_credits: |
-        ليس لديك نجوم كافية لتعزيز هذه الحزمة.
+        You do not have enough Credits to boost this pack.
 
-        يمكنك شحن رصيدك عن طريق إرسال الأمر \/donate.
+        You can top up your balance by sending the /donate command.
       already_boosted: |
         تم تعزيز هذه الحزمة بالفعل.
   catalog:

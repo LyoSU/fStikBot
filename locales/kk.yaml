@@ -129,46 +129,54 @@ cmd:
       Бейнелер енді дөңгелек пішінге ие болады
     disabled: |
       Бейнелердің енді дөңгелек пішіні болмайды
+  paysupport: |
+    <b>👨‍💻 Pay Support</b>
+
+    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+
+    <b>Contacts:</b>
+    🧑‍💻 Developer: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Боттың дамуына қолдау</b>
-    Боттың дамуын қолдау арқылы, Сақиналар аласыз
-    Әр 1 доллар арқылы, Сақиналар аласыз
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
+    For every 1 dollar, you will receive 5 Credits
 
-    <b>Қалдық:<\/b> <code>${balance}<\/code> Сақиналар
-    1 Сақинамен бір пакетті қосу мүмкіндігі бар
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Дамыту арқылы, осы мүмкіндіктер көрсетіледі:<\/b>
-    ➖ <code>"${titleSuffix}"<\/code> пакет атауында ажырату <i>(сілтемеде)<\/i>
-    ➖ Видео стикерлердің конвертацияларында басқаруға баса түсу
-    ➖ Жедел қағазға бірнеше стикерді қосу мүмкіндігі
-    ➖ Видео стикерлердің уақыты - 30 секунд
-
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
     donate: '☕️ Садақа беріңіз'
   topup: |
-    <b>Сақиналардың шамасын енгізіңіз:</b>
+    <b>Enter the amount of Credits you want to buy:</b>
 
-    <b>5 Сақина = 1$<\/b>
-    <i>Ең аз саны - 5 Сақина<\/i>
+    <b>5 Credits = 1$</b>
+    <i>Minimum amount - 5 Credits</i>
   invalid_amount: |
-    <b>Жарамсыз сан</b>
+    <b>Invalid amount</b>
 
-    Ең аз сан - 5 Сақина
+    The minimum amount is 5 Credits
   paymenu: |
-    Сіз <b>${amount} Сақиналарды</b> <b>${price}$</b>үшін сатып алғыңыз
+    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
 
-    ⚠️ Сақиналар жеке түрде әкімші арқылы беріледі.
-    Күту уақыты 5 минуттан 1 сағатқа дейін ауыз
+    ⚠️ Credits are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
+
+    <u>Select payment method:</u>
   description: |
-    Жұлдыздарды сатып алу арқылы сіз боттың дамуын қолдап, қосымша мүмкіндіктерді пайдалану мүмкіндігіне ие боласыз
+    Buying Credits, you support the development of the bot and get the opportunity to use additional features
   update: |
-    <b>🔄 Балансты жаңарту</b>
+    <b>🔄 Balance update</b>
 
-    Қалдық: <code>${balance}<\/code> Сақиналар (қосылған <code>${amount}<\/code> Сақиналар)
+    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
   error:
     already_donated: |
-      Сіз бұл төлем үшін жұлдыздарды алдыңыз
+      You have already received Credits for this payment
     error: |
       <b>Қате!<\/b>
       Төлемді өңдеу кезінде қате орын алды
@@ -501,13 +509,13 @@ scenes:
       <i>Бізде бұл иесінің басқа стикерлері туралы ақпарат жоқ</i>
   boost:
     sure: |
-      <b>Сіз <a href="${link}">${title}<\/a>ды бастауға келісесіз бе?<\/b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      Бастау, өңдеудің приоритетін кеңейту мен бірнеше стикерді қосу мүмкіндігін кеңейтеді
-      Мәнмен қосымша ақпарат алу үшін: \/donate мәзірге кіріңіз
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>Бағасы:<\/b> 1 Сақиналар
-      <b>Ағымдағы бағасы:<\/b> ${balance} Сақиналар
+      <b>Price:</b> 1 Credits
+      <b>Current balance:</b> ${balance} Credits
     btn:
       yes: Иә, күшейтіңіз!
       no: Жоқ, бас тарту
@@ -519,9 +527,9 @@ scenes:
       ${title} енді күшейтілді
     error:
       not_enough_credits: |
-        Сізде мұны бастау үшін ең көп сақиналар жеткізуді жеткізу жеткізген жоқ.
+        You do not have enough Credits to boost this pack.
 
-        Сақиналарды жеткізу үшін,\/donate командасын жіберу арқылы қолаңыз.
+        You can top up your balance by sending the /donate command.
       already_boosted: |
         Бұл бума әлдеқашан күшейтілген.
   catalog:

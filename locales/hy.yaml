@@ -129,47 +129,54 @@ cmd:
       Տեսանյութերն այժմ կունենան կլորացված ձև
     disabled: |
       Տեսանյութերն այլևս չեն ունենա կլորացված ձև
+  paysupport: |
+    <b>👨‍💻 Pay Support</b>
+
+    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+
+    <b>Contacts:</b>
+    🧑‍💻 Developer: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Բոտի ծրագրավորման աջակցություն</b>
-    Բոտի մշակման աջակցման դեպքում, դուք կստանաք աստղեր
-    Ինձ մոտ 1 դոլարով դուք կստանաք 5 աստղեր
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
+    For every 1 dollar, you will receive 5 Credits
 
-    <b>Մնացորդ:<\/b> <code>${balance}</code> աստղեր
-    1 աստղով դուք հնարավորություն կունենաք բարձրացնել փաթեթը
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Բարձրացումի այդ առավելությունները आहेतरा:</b>
-    ➖ Փաթեթի անվանումում «${titleSuffix}» կոդը կարտոնվի (ոչ հղումի)
-    ➖ Տեսանյութերի սթիքերների փոխարկման նախապատվությունը
-    ➖ Հնարավորություն ավելացնել մեկից ավել սթաքեր հերթին
-    ➖ Տեսանյութի սթաքերի տևողություն մինչև 30 վայրկյան
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
   btn:
     donate: '☕️ Նվիրիր'
   topup: |
-    <b>Մուտքագրեք գները, որոնք ցանկանում եք գնել:</b>
+    <b>Enter the amount of Credits you want to buy:</b>
 
-    <b>5 աստղեր = 1$</b>
-    <i>Նվազագույնը - 5 աստղեր</i>
+    <b>5 Credits = 1$</b>
+    <i>Minimum amount - 5 Credits</i>
   invalid_amount: |
-    <b>Սխալ գումար է:</b>
+    <b>Invalid amount</b>
 
-    Նվազագույն գումարը 5 աստղ է
+    The minimum amount is 5 Credits
   paymenu: |
-    Դուք ցանկանում եք գնել <b>${amount} աստղեր</b> տեղ <b>${price} $</b>
+    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
 
-    ⚠️ Աստղերը հանձնարարվում են ադմինիստրատորի կողմից:
-    Սպասման ժամանակը 5 րոպեից մինչև 1 ժամ է
+    ⚠️ Credits are issued manually by the administrator.
+    The waiting time ranges from 5 minutes to 1 hour
 
-    <u>Ընտրե̄ք վճարման մեթոդը:</u>
+    <u>Select payment method:</u>
   description: |
-    Գնեք Աստղեր, դուք աջակցում եք բոտի զարգացմանը և ստանում եք լրացուցիչ հնարավորությունների օգտագործման հնարավորություն
+    Buying Credits, you support the development of the bot and get the opportunity to use additional features
   update: |
-    <b>🔄 Մնացորդի թարմացում:</b>
+    <b>🔄 Balance update</b>
 
-    Մնացորդ: <code>${balance}</code> աստղեր (ավելացված <code>${amount}</code> աստղեր)
+    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
   error:
     already_donated: |
-      Դուք արդեն ստացել եք աստղերը այս վճարման համար
+      You have already received Credits for this payment
     error: |
       <b>Սխալ!<\/b>
       Սխալ է տեղի ունեցել վճարման մշակման ժամանակ
@@ -502,13 +509,13 @@ scenes:
       <i>Մենք տեղեկություններ չունենք այս սեփականատիրոջ այլ կպչուն պիտակների մասին</i>
   boost:
     sure: |
-      <b>Իսկապե՞ս ցանկանում եք բարձր սպասարկման <a href="${link}">${title}<\/a>:</b>
+      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
 
-      Սպասարկման բարձրացումը բարձրացնում է փոխարկման և մի քանի սթիքերների հերթի ավելացման հնարավորությունը
-      Մանրամասն տեեկություն սպասարկման մասին կարող եք գտնել մենյուում, այցելով ե տակ գնահատման /donate
+      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
+      You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>Արժեք:<\/b> 1 աստղ
-      <b>Ընթացիկ մնացորդ:<\/b> ${balance} աստղեր
+      <b>Price:</b> 1 Credits
+      <b>Current balance:</b> ${balance} Credits
     btn:
       yes: 'Այո, խթանել:'
       no: Ոչ, չեղարկել
@@ -520,9 +527,9 @@ scenes:
       ${title} -ն այժմ ուժեղացված է
     error:
       not_enough_credits: |
-        Դուք չունեք բավարար աստղեր բարձր սպասարկման համար այս պատեթում.
+        You do not have enough Credits to boost this pack.
 
-        Դուք կարող եք ավելացնել ձեր մնացորդը ուղարկելով /donate հրամանը.
+        You can top up your balance by sending the /donate command.
       already_boosted: |
         Այս փաթեթն արդեն ուժեղացված է:
   catalog:
