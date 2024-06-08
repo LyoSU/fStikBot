@@ -60,6 +60,8 @@ composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private',
 }))
 
 composer.action('start', async (ctx, next) => {
+  if (!ctx?.config?.ruNewsChannel?.id) return next()
+
   const getChatMember = await ctx.telegram.getChatMember(ctx?.config?.ruNewsChannel?.id, ctx.from.id).catch((error) => {
     console.error('getChatMember error', error)
     return {
