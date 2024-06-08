@@ -462,14 +462,14 @@ scenes:
     done: |
       Капіяванне пака з <a href="${originalLink}">${originalTitle}</a> у <a href="${link}">${title}</a> паспяхова завершана.
     pay: |
-      <b>Pack conversion</b>
+      <b>Канвертацыя пака</b>
 
-      Converting a package from one type to another costs 1 credit
+      Кошт канвертацыі аднаго тыпу пака ў іншы: 1 крэдыт
 
-      <b>Current balance:</b> ${balance} Credits
+      <b>Бягучы баланс:</b> ${balance} кр.
 
-      Buy credits: /donate
-    pay_btn: '✅ Confirm'
+      Купіць крэдыты: /donate
+    pay_btn: '✅ Пацвердзіць'
     error:
       premium: |
         <b>Памылка!</b>
