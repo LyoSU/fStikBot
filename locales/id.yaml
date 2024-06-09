@@ -130,53 +130,53 @@ cmd:
     disabled: |
       Video tidak akan lagi berbentuk bulat
   paysupport: |
-    <b>👨‍💻 Pay Support</b>
+    <b>👨‍💻 Dukungan Pembayaran</b>
 
-    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+    Untuk semua masalah terkait operasi bot, termasuk pembayaran dan donasi, Anda dapat menghubungi pengembang langsung
 
-    <b>Contacts:</b>
-    🧑‍💻 Developer: @ly_oBot
+    <b>Kontak:</b>
+    🧑‍💻 Pengembang: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
-    For every 1 dollar, you will receive 5 Credits
+    <b>☕️ Dukungan Pengembangan Bot</b>
+    Dengan mendukung pengembangan bot, Anda akan menerima Kredit
+    Untuk setiap 1 dolar, Anda akan menerima 5 Kredit
 
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    <b>Saldo:</b> <code>${balance}</code> Kredit
+    Dengan 1 Kredit, Anda memiliki kesempatan untuk meningkatkan satu paket.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Peningkatan memberikan manfaat sebagai berikut:</b>
+    ➖ Menonaktifkan <code>"${titleSuffix}"</code> dalam nama paket <i>(tidak dalam tautan)</i>
+    ➖ Prioritas saat mengonversi stiker video
+    ➖ Kemampuan menambahkan lebih dari satu stiker ke antrian pemrosesan
+    ➖ Durasi stiker video hingga 30 detik
   btn:
     donate: '☕️ Donasi'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>Masukkan jumlah Kredit yang ingin Anda beli:</b>
 
-    <b>5 Credits = 1$</b>
-    <i>Minimum amount - 5 Credits</i>
+    <b>5 Kredit = 1$</b>
+    <i>Jumlah minimum - 5 Kredit</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Jumlah tidak valid</b>
 
-    The minimum amount is 5 Credits
+    Jumlah minimum adalah 5 Kredit
   paymenu: |
-    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
+    Anda ingin membeli <b>${amount} Kredit</b> seharga <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Kredit dikeluarkan secara manual oleh administrator.
+    Waktu tunggu berkisar antara 5 menit hingga 1 jam
 
-    <u>Select payment method:</u>
+    <u>Pilih metode pembayaran:</u>
   description: |
-    Buying Credits, you support the development of the bot and get the opportunity to use additional features
+    Dengan membeli Kredit, Anda mendukung pengembangan bot dan mendapatkan kesempatan untuk menggunakan fitur tambahan
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Pembaruan Saldo</b>
 
-    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
+    Saldo: <code>${balance}</code> Kredit (ditambahkan <code>${amount}</code> Kredit)
   error:
     already_donated: |
-      You have already received Credits for this payment
+      Anda sudah menerima Kredit untuk pembayaran ini
     error: |
       <b>Kesalahan!<\/b>
       Terjadi kesalahan saat memproses pembayaran
@@ -363,10 +363,10 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
-        <b>Tunggu!</b>
+        <b>Tunggu! </b>
 
-        Bot masih memproses video sebelumnya...
-        Anda dapat mendukung pengembangan bot (/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
+        Bot masih memproses file...
+        Anda dapat mendukung pengembangan bot (/donate) untuk meningkatkan prioritas pemrosesan dan kemampuan menambahkan lebih dari satu stiker ke antrian.
       timeout: |
         <b>Saat ini, bot sedang mengalami beban yang sangat besar</b>
         Oleh karena itu, konversi video hanya tersedia untuk paket dengan peningkatan aktif
@@ -463,6 +463,15 @@ scenes:
       Proses: ${current}/${total}
     done: |
       Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a> berhasil diselesaikan.
+    pay: |
+      <b>Konversi Paket</b>
+
+      Mengonversi paket dari satu jenis ke jenis lain biaya 1 kredit
+
+      <b>Saldo saat ini:</b> ${balance} Kredit
+
+      Beli kredit: /donate
+    pay_btn: '✅ Konfirmasi'
     error:
       premium: |
         <b>Error!</b>
@@ -510,13 +519,13 @@ scenes:
       <i>Kami tidak memiliki informasi tentang stiker lain dari pemilik ini</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Apakah Anda yakin ingin meningkatkan <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Meningkatkan akan meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian
+      Anda dapat menemukan informasi lebih detail tentang peningkatan di menu dengan mengunjungi: /donate
 
-      <b>Price:</b> 1 Credits
-      <b>Current balance:</b> ${balance} Credits
+      <b>Harga:</b> 1 Kredit
+      <b>Saldo saat ini:</b> ${balance} Kredit
     btn:
       yes: Ya, tingkatkan!
       no: Tidak, batalkan
@@ -528,9 +537,9 @@ scenes:
       ${title} kini ditingkatkan
     error:
       not_enough_credits: |
-        You do not have enough Credits to boost this pack.
+        Anda tidak memiliki cukup Kredit untuk meningkatkan paket ini.
 
-        You can top up your balance by sending the /donate command.
+        Anda dapat mengisi kembali saldo Anda dengan mengirimkan perintah /donate.
       already_boosted: |
         Paket ini sudah ditingkatkan.
   catalog:

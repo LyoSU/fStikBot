@@ -130,53 +130,53 @@ cmd:
     disabled: |
       سيكون لمقاطع الفيديو الآن شكل مستدير
   paysupport: |
-    <b>👨‍💻 Pay Support</b>
+    <b>👨‍💻 دعم الدفع</b>
 
-    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+    في جميع المسائل المتعلقة بتشغيل البوت، بما في ذلك المدفوعات والتبرعات، يمكنك الاتصال بالمطور مباشرةً
 
-    <b>Contacts:</b>
-    🧑‍💻 Developer: @ly_oBot
+    <b>الاتصالات:</b>
+    🧑‍💻 المطور: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
-    For every 1 dollar, you will receive 5 Credits
+    <b>☕ دعم تطوير البوت</b>
+    بدعمك لتطوير البوت، ستحصل على نقاط
+    لكل 1 دولار، ستتلقى 5 نقاط
 
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    <b>الرصيد:</b> <code>${balance}</code> نقاط
+    مع 1 نقطة، لديك الفرصة لتعزيز حزمة واحدة.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>يوفر التحسين الفوائد التالية:</b>
+    ➖ تعطيل <code>"${titleSuffix}"</code> في أسماء الحزم <i>(ليس في الرابط)</i>
+    ➖ الأولوية عند تحويل الملصقات الفيديو
+    ➖ القدرة على إضافة أكثر من ملصق واحد إلى قائمة الانتظار للمعالجة
+    ➖ مدة ملصقات الفيديو تصل إلى 30 ثانية
   btn:
     donate: '☕ التبرع'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>أدخل عدد النقاط التي تريد شرائها:</b>
 
-    <b>5 Credits = 1$</b>
-    <i>Minimum amount - 5 Credits</i>
+    <b>5 نقاط = 1$</b>
+    <i>الحد الأدنى للمبلغ - 5 نقاط</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>كمية غير صالحة</b>
 
-    The minimum amount is 5 Credits
+    الحد الأدنى للمبلغ هو 5 نقاط
   paymenu: |
-    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
+    تريد شراء <b>${amount} نقاط</b> مقابل <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ يتم إصدار النقاط يدويًا بواسطة المسؤول.
+    فترة الانتظار تتراوح من 5 دقائق إلى ساعة واحدة
 
-    <u>Select payment method:</u>
+    <u>اختر طريقة الدفع:</u>
   description: |
-    Buying Credits, you support the development of the bot and get the opportunity to use additional features
+    عند شراء النقاط، تدعم تطوير البوت وتحصل على فرصة استخدام ميزات إضافية
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 تحديث الرصيد</b>
 
-    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
+    الرصيد: <code>${balance}</code> نقاط (تمت إضافة <code>${amount}</code> نقاط)
   error:
     already_donated: |
-      You have already received Credits for this payment
+      لقد تلقيت النقاط بالفعل لهذا الدفع
     error: |
       <b>خطأ!<\/b>\nحدث خطأ أثناء معالجة الدفعة
     canceled: |
@@ -363,8 +363,8 @@ sticker:
       wait_load: |
         <b>انتظر!</b>
 
-        البوت ما زال يعالج الفيديو السابق...
-        يمكنكم دعم تطوير البوت (/ التبرع) لزيادة أولوية المعالجة وإمكانية إضافة أكثر من ملصق إلى قائمة الانتظار.
+        البوت لا يزال يقوم بمعالجة الملف المرفق...
+        يمكنك دعم تطوير البوت (/donate) لزيادة أولوية المعالجة وإضافة أكثر من ملصق واحد إلى قائمة الانتظار.
       timeout: |
         <b>في الوقت الحالي، يواجه الروبوت حملًا كبيرًا</b>
         لذلك، تحويل الفيديو متاح فقط للحزم ذات التعزيز النشط
@@ -461,6 +461,15 @@ scenes:
       التقدم: ${current}/${total}
     done: |
       تم بنجاح نسخ الحزمة من <a href="${originalLink}">${originalTitle}</a> إلى <a href="${link}">${title}</a>
+    pay: |
+      <b>تحويل الحزمة</b>
+
+      يكلف تحويل الحزمة من نوع إلى آخر 1 نقطة
+
+      <b>الرصيد الحالي:</b> ${balance} نقاط
+
+      شراء النقاط: /donate
+    pay_btn: '✅ تأكيد'
     error:
       premium: |
         <b>Error!</b>
@@ -508,13 +517,13 @@ scenes:
       <i>ليس لدينا معلومات عن الملصقات الأخرى لهذا المالك</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>هل أنت متأكد أنك تريد تعزيز <a href="${link}">${title}؟</a></b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      سيؤدي التعزيز إلى زيادة أولوية المعالجة والقدرة على إضافة أكثر من ملصق واحد إلى قائمة الانتظار
+      يمكنك العثور على معلومات أكثر تفصيلاً حول التحسينات في القائمة عن طريق زيارة: /donate
 
-      <b>Price:</b> 1 Credits
-      <b>Current balance:</b> ${balance} Credits
+      <b>السعر:</b> 1 نقطة
+      <b>الرصيد الحالي:</b> ${balance} نقاط
     btn:
       yes: نعم، تعزيز!
       no: لا، إلغاء
@@ -526,9 +535,9 @@ scenes:
       ${title} تم تعزيزه الآن
     error:
       not_enough_credits: |
-        You do not have enough Credits to boost this pack.
+        ليس لديك نقاط كافية لتعزيز هذه الحزمة.
 
-        You can top up your balance by sending the /donate command.
+        يمكنك تعبئة رصيدك عن طريق إرسال الأمر /donate.
       already_boosted: |
         تم تعزيز هذه الحزمة بالفعل.
   catalog:
