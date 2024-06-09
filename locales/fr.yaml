@@ -362,10 +362,10 @@ sticker:
 
           <i>Créer (/new) ou choisir (/packs) un autre pack</i>
       wait_load: |
-        <b>Attendez !</b>
+        <b>Wait!</b>
 
-        Le robot est toujours en train de traiter la vidéo précédente...
-        Vous pouvez prendre en charge le développement du robot (/faire un don) pour augmenter la priorité du traitement et la possibilité d'ajouter plus d'un autocollant à La queue.
+        The bot is still processing the farting file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Pour le moment, le bot subit une énorme charge</b>
         Par conséquent, la conversion vidéo n'est disponible que pour les packs avec un boost
