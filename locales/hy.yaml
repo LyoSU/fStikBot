@@ -130,53 +130,53 @@ cmd:
     disabled: |
       Տեսանյութերն այլևս չեն ունենա կլորացված ձև
   paysupport: |
-    <b>👨‍💻 Pay Support</b>
+    <b>👨‍💻 Վճարման աջակցություն</b>
 
-    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+    Բոտի աշխատանքի հետ կապված բոլոր հարցերով, ներառյալ վճարումները և դոնացիանները, կարող եք ուղղակի կապվել մշակողին
 
-    <b>Contacts:</b>
-    🧑‍💻 Developer: @ly_oBot
+    <b>Կոնտակտներ:</b>
+    🧑‍💻 Մշակող: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
-    For every 1 dollar, you will receive 5 Credits
+    <b>☕️ Բոտի մշակման աջակցություն</b>
+    Բոտի մշակումը աջակցելու միջոցով դուք կստանաք Կրեդիտներ:
+    Յուրաքանչյուր 1 դոլարի դիմաց դուք կստանաք 5 Կրեդիտ:
 
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    <b>Պահեստ:</b> <code>${balance}</code> Կրեդիտ:
+    1 Կրեդիտով դուք հնարավորություն ունեք ավելացնել մեկ փաթեթ:
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Բնագիտության խթանման առավելությունները:</b>
+    ➖ Փաթեթի անվան մեջ <code>"${titleSuffix}"</code>-ի հեռացումը <i>(ոչ հղման մեջ)</i>
+    ➖ Անգերադասություն հոլովակների փոխարկման ժամանակ
+    ➖ Հնարավորություն ավելացնել մեկից ավելի պիտակ վերամշակման հերթում
+    ➖ Հոլովակների տևողություն մինչև 30 վայրկյան
   btn:
     donate: '☕️ Նվիրիր'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>Մուտքագրեք այն Կրեդիտների քանակը, որը ցանկանում եք գնել:</b>
 
-    <b>5 Credits = 1$</b>
-    <i>Minimum amount - 5 Credits</i>
+    <b>5 Կրեդիտ = 1$</b>
+    <i>Նվազագույն քանակը - 5 Կրեդիտ</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Անվավեր քանակ</b>
 
-    The minimum amount is 5 Credits
+    Նվազագույն քանակը 5 Կրեդիտ
   paymenu: |
-    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
+    Դուք ցանկանում եք գնել <b>${amount} Կրեդիտ</b> համար <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Կրեդիտները տրամադրվում են ադմինիստրատորի կողմից ձեռքով:
+    Սպասման ժամանակը 5 րոպեից մինչև 1 ժամ է:
 
-    <u>Select payment method:</u>
+    <u>Ընտրեք վճարման մեթոդը:</u>
   description: |
-    Buying Credits, you support the development of the bot and get the opportunity to use additional features
+    Կրեդիտների գնմամբ դուք աջակցում եք բոտի զարգացմանը և ստանում հավելյալ հնարավորությունների օգտագործման հնարավորություն
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Պահեստի թարմացում</b>
 
-    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
+    Պահեստ: <code>${balance}</code> Կրեդիտներ (ավելացվել է <code>${amount}</code> Կրեդիտներ)
   error:
     already_donated: |
-      You have already received Credits for this payment
+      Դուք արդեն ստացել եք Կրեդիտներ այս վճարման համար
     error: |
       <b>Սխալ!<\/b>
       Սխալ է տեղի ունեցել վճարման մշակման ժամանակ
@@ -362,10 +362,10 @@ sticker:
 
           <i>Ստեղծել (/նոր) կամ ընտրել (/ փաթեթավորում) մեկ այլ փաթեթ</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Սպասեք!</b>
 
-        The bot is still processing the farting file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Բոտը դեռ հոլովակի ֆայլի մշակման մեջ է...
+        Դուք կարող եք աջակցել բոտի զարգացմանը ( /donate ), որպեսզի բարձրացնեք մշակման առաջնահերթությունը և ավելացնելու հնարավորությունը մեկից ավելի պիտակ հերթում։
       timeout: |
         <b>Այս պահին բոտը մեծ ծանրաբեռնվածություն է ապրում</b>
         Հետևաբար, վիդեո փոխակերպումը հասանելի է միայն ակտիվ խթանմամբ փաթեթների համար
@@ -463,14 +463,14 @@ scenes:
     done: |
       Փաթեթի պատճենումը <a href="${originalLink}">${originalTitle}</a> -ից մինչև <a href="${link}">${title}</a> հաջողությամբ ավարտվեց:
     pay: |
-      <b>Pack conversion</b>
+      <b>Փաթեթի փոխարկում</b>
 
-      Converting a package from one type to another costs 1 credit
+      Փաթեթը մեկ տեսակից մյուս տեսակին փոխարկելը արժե 1 կրեդիտ.
 
-      <b>Current balance:</b> ${balance} Credits
+      <b>Ընթացիկ պահեստ:</b> ${balance} Կրեդիտ
 
-      Buy credits: /donate
-    pay_btn: '✅ Confirm'
+      Գնել կրեդիտներ: /donate
+    pay_btn: '✅ Հաստատել'
     error:
       premium: |
         <b>Սխալ.</b>
@@ -518,13 +518,12 @@ scenes:
       <i>Մենք տեղեկություններ չունենք այս սեփականատիրոջ այլ կպչուն պիտակների մասին</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Վստահ ե՞ք, որ ցանկանում եք խթանել <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Խթանումը կբարձրչահասացնի վերամշակման առաջնահերթությունը և բացելու հնարավորությունը ավելացնել մեկից ավելի պիտակ հերթում։
 
-      <b>Price:</b> 1 Credits
-      <b>Current balance:</b> ${balance} Credits
+      <b>Գին:</b> 1 Կրեդիտ
+      <b>Ընթացիկ պահեստ:</b> ${balance} Կրեդիտներ
     btn:
       yes: 'Այո, խթանել:'
       no: Ոչ, չեղարկել
@@ -536,9 +535,9 @@ scenes:
       ${title} -ն այժմ ուժեղացված է
     error:
       not_enough_credits: |
-        You do not have enough Credits to boost this pack.
+        Դուք չունեք բավարար Կրեդիտներ այս փաթեթը խթանելու համար:
 
-        You can top up your balance by sending the /donate command.
+        Կարող եք համալրել ձեր հաշվեկշիռը, ուղարկելով /donate հրաման.
       already_boosted: |
         Այս փաթեթն արդեն ուժեղացված է:
   catalog:
