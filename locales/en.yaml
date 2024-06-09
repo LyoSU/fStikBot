@@ -367,7 +367,7 @@ sticker:
       wait_load: |
         <b>Wait!</b>
 
-        Bot is still processing the previous video...
+        The bot is still processing the farting file...
         You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>At the moment, the bot is experiencing a huge load</b>
