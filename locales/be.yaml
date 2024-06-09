@@ -360,10 +360,10 @@ sticker:
 
           <i>Стварыце новы (/new) або выберыце існуючы (/packs) пак</i>
       wait_load: |
-        <b>Пачакайце!</b>
+        <b>Wait!</b>
 
-        Бот усё яшчэ апрацоўвае папярэдняе відэа…
-        Вы можаце падтрымаць распрацоўку бота (/donate), каб павысіць прыярытэт апрацоўкі вашых відэа і атрымаць магчымасць дадаваць у чаргу больш за адзін стыкер.
+        The bot is still processing the farting file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>У гэты момант серверы бота перагружаныя</b>
         Па гэтай прычыне канвертацыя відэа даступная толькі для забушчаных пакаў
