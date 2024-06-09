@@ -363,10 +363,10 @@ sticker:
 
           <i>Создай (/new) или выбери (/packs) другой стикерпак</i>
       wait_load: |
-        <b>Подождите!</b>
+        <b>Wait!</b>
 
-        Бот все еще обрабатывает предыдущее видео...
-        Вы можете поддержать разработку бота (/donate) для увеличения приоритета обработки и возможности добавлять в очередь несколько стикеров.
+        The bot is still processing the farting file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>На данный момент бот испытывает огромную нагрузку</b>
         Поэтому конвертация видео доступна только для стикерпаков с активным бустом
