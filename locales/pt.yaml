@@ -130,53 +130,53 @@ cmd:
     disabled: |
       Vídeos não terão mais formato arredondado
   paysupport: |
-    <b>👨‍💻 Pay Support</b>
+    <b>👨‍💻 Suporte de Pagamento</b>
 
-    On all issues related to the operation of the bot, including payments and donations, you can contact the developer directly
+    Para todas as questões relacionadas ao funcionamento do bot, incluindo pagamentos e doações, você pode entrar em contato diretamente com o desenvolvedor
 
-    <b>Contacts:</b>
-    🧑‍💻 Developer: @ly_oBot
+    <b>Contatos:</b>
+    🧑‍💻 Desenvolvedor: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
-    For every 1 dollar, you will receive 5 Credits
+    <b>☕️ Suporte ao desenvolvimento do bot</b>
+    Ao apoiar o desenvolvimento do bot, você receberá Créditos
+    Para cada 1 dólar, você receberá 5 Créditos
 
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    <b>Saldo:</b> <code>${balance}</code> Créditos
+    Com 1 Crédito, você tem a oportunidade de impulsionar um pacote.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling <code>"${titleSuffix}"</code> in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>O impulso oferece os seguintes benefícios:</b>
+    ➖ Desativação de <code>"${titleSuffix}"</code> no nome dos pacotes <i>(não no link)</i>
+    ➖ Prioridade ao converter adesivos de vídeo
+    ➖ Possibilidade de adicionar mais de um adesivo à fila de processamento
+    ➖ Duração dos adesivos de vídeo até 30 segundos
   btn:
     donate: '☕ Doar'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>Digite a quantidade de Créditos que deseja comprar:</b>
 
-    <b>5 Credits = 1$</b>
-    <i>Minimum amount - 5 Credits</i>
+    <b>5 Créditos = 1$</b>
+    <i>Quantidade mínima - 5 Créditos</i>
   invalid_amount: |
-    <b>Invalid amount</b>
+    <b>Quantidade inválida</b>
 
-    The minimum amount is 5 Credits
+    A quantidade mínima é 5 Créditos
   paymenu: |
-    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
+    Você quer comprar <b>${amount} Créditos</b> por <b>${price}$</b>
 
-    ⚠️ Credits are issued manually by the administrator.
-    The waiting time ranges from 5 minutes to 1 hour
+    ⚠️ Créditos são emitidos manualmente pelo administrador.
+    O tempo de espera varia de 5 minutos a 1 hora
 
-    <u>Select payment method:</u>
+    <u>Selecione o método de pagamento:</u>
   description: |
-    Buying Credits, you support the development of the bot and get the opportunity to use additional features
+    Comprando Créditos, você apoia o desenvolvimento do bot e obtém a oportunidade de usar recursos adicionais
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Atualização de saldo</b>
 
-    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
+    Saldo: <code>${balance}</code> Créditos (adicionado <code>${amount}</code> Créditos)
   error:
     already_donated: |
-      You have already received Credits for this payment
+      Você já recebeu Créditos para este pagamento
     error: |
       <b>Error!<\/b>
       Ocorreu um erro ao processar o pagamento
@@ -362,10 +362,10 @@ sticker:
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Aguarde!</b>
 
-        The bot is still processing the farting file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        O bot ainda está processando o arquivo...
+        Você pode apoiar o desenvolvimento do bot (/donate) para aumentar a prioridade de processamento e a capacidade de adicionar mais de um adesivo à fila.
       timeout: |
         <b>No momento, o bot está passando por uma carga enorme</b>
         Portanto, a conversão de vídeo está disponível apenas para pacotes com boost ativo
@@ -463,14 +463,14 @@ scenes:
     done: |
       Cópia de pacotes de <a href="${originalLink}">${originalTitle}</a> a <a href="${link}">${title}</a> concluída com sucesso.
     pay: |
-      <b>Pack conversion</b>
+      <b>Conversão de pacote</b>
 
-      Converting a package from one type to another costs 1 credit
+      Converter um pacote de um tipo para outro custa 1 crédito
 
-      <b>Current balance:</b> ${balance} Credits
+      <b>Saldo atual:</b> ${balance} Créditos
 
-      Buy credits: /donate
-    pay_btn: '✅ Confirm'
+      Comprar créditos: /donate
+    pay_btn: '✅ Confirmar'
     error:
       premium: |
         <b>Erro!</b>
@@ -518,13 +518,13 @@ scenes:
       <i>Não temos informações sobre outros adesivos deste proprietário</i>
   boost:
     sure: |
-      <b>Are you sure you want to boost <a href="${link}">${title}</a>?</b>
+      <b>Tem certeza de que deseja impulsionar <a href="${link}">${title}</a>?</b>
 
-      Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
-      You can find more detailed information about boosts in the menu by visiting: /donate
+      Impulsionar aumentará a prioridade de processamento e a capacidade de adicionar mais de um adesivo à fila
+      Você pode encontrar mais informações detalhadas sobre os impulsos no menu visitando: /donate
 
-      <b>Price:</b> 1 Credits
-      <b>Current balance:</b> ${balance} Credits
+      <b>Preço:</b> 1 Crédito
+      <b>Saldo atual:</b> ${balance} Créditos
     btn:
       yes: Sim, aumentar!
       no: Não, cancelar
@@ -536,9 +536,9 @@ scenes:
       ${title} será impulsionada
     error:
       not_enough_credits: |
-        You do not have enough Credits to boost this pack.
+        Você não tem Créditos suficientes para impulsionar este pacote.
 
-        You can top up your balance by sending the /donate command.
+        Você pode recarregar seu saldo enviando o comando /donate.
       already_boosted: |
         Este pacote já está aumentado.
   catalog:
