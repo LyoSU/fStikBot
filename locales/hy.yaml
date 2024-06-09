@@ -362,10 +362,10 @@ sticker:
 
           <i>Ստեղծել (/նոր) կամ ընտրել (/ փաթեթավորում) մեկ այլ փաթեթ</i>
       wait_load: |
-        <b>Սպասե՛ք։</b>
+        <b>Wait!</b>
 
-        Բոտը դեռ մշակում է նախորդ տեսանյութը...
-        Դուք կարող եք աջակցել բոտի մշակմանը (/նվիրաբերել)՝ մշակման առաջնահերթությունը և մեկից ավելի կպչուկ ավելացնելու հնարավորությունը մեծացնելու համար։ հերթը.
+        The bot is still processing the farting file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Այս պահին բոտը մեծ ծանրաբեռնվածություն է ապրում</b>
         Հետևաբար, վիդեո փոխակերպումը հասանելի է միայն ակտիվ խթանմամբ փաթեթների համար
