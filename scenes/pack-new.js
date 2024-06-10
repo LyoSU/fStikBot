@@ -565,9 +565,6 @@ newPackConfirm.enter(async (ctx, next) => {
       create: true
     })
 
-    ctx.session.userInfo.stickerSet = userStickerSet
-    ctx.session.userInfo.balance -= 1
-
     if (inline) {
       ctx.session.userInfo.inlineStickerSet = userStickerSet
       await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
@@ -612,6 +609,13 @@ newPackConfirm.enter(async (ctx, next) => {
         ]),
         parse_mode: 'HTML'
       })
+    }
+
+    ctx.session.userInfo.stickerSet = userStickerSet
+
+    // if different pack type
+    if (ctx.session.scene.copyPack && ctx.session.scene.copyPack.sticker_type !== packType) {
+      ctx.session.userInfo.balance -= 1
     }
 
     await ctx.session.userInfo.save()

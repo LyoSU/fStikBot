@@ -129,13 +129,17 @@ donateScene.enter(async (ctx) => {
     parse_mode: 'HTML',
     reply_markup: Markup.inlineKeyboard([
       [
-        Markup.callbackButton('10 Credits', 'donate:10'),
-        Markup.callbackButton('20 Credits', 'donate:20')
+        Markup.callbackButton('5 Credits', 'donate:5'),
+        Markup.callbackButton('7 Credits', 'donate:7')
       ],
       [
-        Markup.callbackButton('50 Credits', 'donate:50'),
-        Markup.callbackButton('100 Credits', 'donate:100')
-      ]
+        Markup.callbackButton('10 Credits', 'donate:10'),
+        Markup.callbackButton('15 Credits', 'donate:15')
+      ],
+      [
+        Markup.callbackButton('25 Credits', 'donate:25'),
+        Markup.callbackButton('35 Credits', 'donate:35')
+      ],
     ])
   })
 })
