@@ -357,10 +357,10 @@ sticker:
 
           <i>作成（/new）するか、別のパック</i> を選択してください。
       wait_load: |
-        <b>Wait!</b>
+        <b>待ってください！</b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        ボットはまだ前のファイルを処理中です...
+        処理の優先順位を上げたり、キューに複数のステッカーを追加できるように、ボットの開発を支援することができます (／donate)。
       timeout: |
         <b>現在、ボットに大きな負荷がかかっています</b>
         そのため、ビデオ変換はブーストが有効になっているパックでのみ利用可能です
