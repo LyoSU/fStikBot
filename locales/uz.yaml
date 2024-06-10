@@ -331,10 +331,10 @@ sticker:
 
           <i>Yarating (/yangi) yoki boshqa paketni tanlang (/paketlar)</i>
       wait_load: |
-        <b>Kutib turing!</b>
+        <b>Wait!</b>
 
-        Bot hali ham avvalgi videoni qayta ishlamoqda...
-        Qayta ishlash ustuvorligini oshirish va navbatga bir nechta stiker qo‘shish imkoniyatini oshirish uchun siz botni ishlab chiqishni (/dona) qo‘llab-quvvatlashingiz mumkin.
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Ayni paytda bot juda katta yuklanishni boshdan kechirmoqda</b>
         Shuning uchun video konvertatsiya faqat faol kuchaytirilgan paketlar uchun mavjud
