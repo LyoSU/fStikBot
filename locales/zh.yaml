@@ -371,10 +371,10 @@ sticker:
 
           <i>创建 (/new) 或选择 (/packs) 另一个包</i>
       wait_load: |
-        <b>等等!</b>
+        <b>Wait!</b>
 
-        机器人仍在处理放屁文件...
-        您可以支持开发( /donate )以提高处理优先级并能够将多个贴纸添加到队列。
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>目前，机器人正在经历巨大的负载</b>
         因此，视频转换只适用于激活了提升功能的包
