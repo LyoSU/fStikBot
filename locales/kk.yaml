@@ -362,10 +362,10 @@ sticker:
 
           <i>Жасау (/жаңа) немесе басқа буманы (/бумаларды) таңдаңыз</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Күтіңіз!<\/b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Бот алдыңғы файлды әлі өңдеп жатыр...
+        Өңдеу басымдығын арттыру және кезекке бірден көп стикер қосу мүмкіндігін алу үшін ботты қолдауыңызға болады (\/donate).
       timeout: |
         <b>Қазіргі уақытта бот үлкен жүктемені бастан кешіруде</b>
         Сондықтан, бейне түрлендіру тек белсенді күшейткіші бар бумалар үшін қол жетімді
