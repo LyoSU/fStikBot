@@ -362,10 +362,10 @@ sticker:
 
           <i>Crear (/new) o elegir (/packs) otro paquete</i>
       wait_load: |
-        <b>¡Espera!</b>
+        <b>Wait!</b>
 
-        El bot aún está procesando el archivo de pedo...
-        Puedes apoyar el desarrollo del bot (/donate) para aumentar la prioridad del procesamiento y la capacidad para agregar más de un sticker a la cola.
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Por el momento, el bot está experimentando una enorme carga</b>
         Por lo tanto, la conversión de vídeo solo está disponible para paquetes con potenciador activo

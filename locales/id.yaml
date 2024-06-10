@@ -363,10 +363,10 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
-        <b>Tunggu! </b>
+        <b>Wait!</b>
 
-        Bot masih memproses file...
-        Anda dapat mendukung pengembangan bot (/donate) untuk meningkatkan prioritas pemrosesan dan kemampuan menambahkan lebih dari satu stiker ke antrian.
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Saat ini, bot sedang mengalami beban yang sangat besar</b>
         Oleh karena itu, konversi video hanya tersedia untuk paket dengan peningkatan aktif

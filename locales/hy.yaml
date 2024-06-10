@@ -362,10 +362,10 @@ sticker:
 
           <i>Ստեղծել (/նոր) կամ ընտրել (/ փաթեթավորում) մեկ այլ փաթեթ</i>
       wait_load: |
-        <b>Սպասեք!</b>
+        <b>Wait!</b>
 
-        Բոտը դեռ հոլովակի ֆայլի մշակման մեջ է...
-        Դուք կարող եք աջակցել բոտի զարգացմանը ( /donate ), որպեսզի բարձրացնեք մշակման առաջնահերթությունը և ավելացնելու հնարավորությունը մեկից ավելի պիտակ հերթում։
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Այս պահին բոտը մեծ ծանրաբեռնվածություն է ապրում</b>
         Հետևաբար, վիդեո փոխակերպումը հասանելի է միայն ակտիվ խթանմամբ փաթեթների համար

@@ -361,10 +361,10 @@ sticker:
 
           <i>قم بإنشاء (/ جديد) أو اختر (/ حزم) حزمة أخرى</i>
       wait_load: |
-        <b>انتظر!</b>
+        <b>Wait!</b>
 
-        البوت لا يزال يقوم بمعالجة الملف المرفق...
-        يمكنك دعم تطوير البوت (/donate) لزيادة أولوية المعالجة وإضافة أكثر من ملصق واحد إلى قائمة الانتظار.
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>في الوقت الحالي، يواجه الروبوت حملًا كبيرًا</b>
         لذلك، تحويل الفيديو متاح فقط للحزم ذات التعزيز النشط
