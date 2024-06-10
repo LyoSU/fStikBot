@@ -27,7 +27,7 @@ const donate = async (ctx) => {
   }
 
   const price = amount / 5
-  const starPrice = amount * 5
+  const starPrice = amount * 10
   const priceUAH = (price * exchangeRate.UAH).toFixed(2)
   const priceRUB = (price * exchangeRate.RUB).toFixed(2)
 
