@@ -361,10 +361,10 @@ sticker:
 
           <i>Başka bir paket oluşturun (/yeni) veya seçin (/packs)</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Bekle!</b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot hala bir önceki dosyayı işliyor...
+        İşleme önceliğini artırmak ve kuyruğa birden fazla çıkartma ekleyebilmek için bot geliştirmeyi (/donate) destekleyebilirsiniz.
       timeout: |
         <b>Şu anda bot çok büyük bir yük yaşıyor</b>
         Bu nedenle, video dönüştürme yalnızca aktif güçlendirmeli paketler için kullanılabilir
