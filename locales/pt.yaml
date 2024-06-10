@@ -362,10 +362,10 @@ sticker:
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Aguarde!<\/b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        O bot ainda está processando o arquivo anterior...
+        Você pode apoiar o desenvolvimento do bot (\/donate) para aumentar a prioridade de processamento e permitir adicionar mais de um sticker à fila.
       timeout: |
         <b>No momento, o bot está passando por uma carga enorme</b>
         Portanto, a conversão de vídeo está disponível apenas para pacotes com boost ativo
