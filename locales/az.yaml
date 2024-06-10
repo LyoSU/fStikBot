@@ -362,10 +362,10 @@ sticker:
 
           <i>Yaradın (/yeni) və ya başqa paket seçin (/paketlər)</i>
       wait_load: |
-        <b>Gözləyin!</b>
+        <b>Wait!</b>
 
-        Bot hələ də fəallaşdırma faylını emal edir...
-        Botun inkişafına dəstək olmaq üçün ( /donate ), emal üstünlüyünü və növbəyə birdən çox etiket əlavə etmək imkanı əldə edə bilərsiniz.
+        The bot is still processing the previous file...
+        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
       timeout: |
         <b>Hazırda bot böyük yüklə üzləşir</b>
         Buna görə də, video çevrilmə yalnız aktiv gücləndirici paketlər üçün mövcuddur
