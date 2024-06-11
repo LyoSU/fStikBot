@@ -138,18 +138,19 @@ cmd:
     🧑‍💻 Développeur : @ly_oBot
 donate:
   menu: |
-    <b>☕️ Soutien au développement du bot</b>
-    En soutenant le développement du bot, tu recevras des Crédits
-    Pour chaque 1 dollar, tu recevras 5 Crédits
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>Solde :</b> <code>${balance}</code> Crédits
-    Avec 1 Crédit, tu auras la possibilité de booster un pack.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Le boost offre les avantages suivants :</b>
-    ➖ Désactiver <code>"${titleSuffix}"</code> dans le nom des packs <i>(pas dans le lien)</i>
-    ➖ Priorité lors de la conversion des stickers vidéo
-    ➖ Possibilité d'ajouter plus d'un sticker à la file d'attente de traitement
-    ➖ Durée des stickers vidéo jusqu'à 30 secondes
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕ Faire un don'
   topup: |
