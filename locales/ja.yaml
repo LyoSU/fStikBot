@@ -138,18 +138,19 @@ cmd:
     🧑‍💻 開発者: @ly_oBot
 donate:
   menu: |
-    <b>☕️ ボット開発サポート</b>
-    ボットの開発をサポートすることで、クレジットを受け取ることができます。
-    1ドルごとに5クレジットを受け取ります。
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>残高:</b> <code>${balance}</code> クレジット
-    1クレジットで、1つのパックをブーストすることができます。
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>ブーストは以下の利点を提供します:</b>
-    ➖ パック名から<code>"${titleSuffix}"</code>を無効にする <i>(リンクではない)</i>
-    ➖ ビデオステッカーを変換する際の優先順位
-    ➖ 処理キューに1つ以上のステッカーを追加する能力
-    ➖ ビデオステッカーの持続時間は最大30秒
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕ 寄付'
   topup: |
