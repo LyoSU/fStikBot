@@ -138,18 +138,19 @@ cmd:
     🧑‍💻 Մշակող: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Բոտի մշակման աջակցություն</b>
-    Բոտի մշակումը աջակցելու միջոցով դուք կստանաք Կրեդիտներ:
-    Յուրաքանչյուր 1 դոլարի դիմաց դուք կստանաք 5 Կրեդիտ:
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>Պահեստ:</b> <code>${balance}</code> Կրեդիտ:
-    1 Կրեդիտով դուք հնարավորություն ունեք ավելացնել մեկ փաթեթ:
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Բնագիտության խթանման առավելությունները:</b>
-    ➖ Փաթեթի անվան մեջ <code>"${titleSuffix}"</code>-ի հեռացումը <i>(ոչ հղման մեջ)</i>
-    ➖ Անգերադասություն հոլովակների փոխարկման ժամանակ
-    ➖ Հնարավորություն ավելացնել մեկից ավելի պիտակ վերամշակման հերթում
-    ➖ Հոլովակների տևողություն մինչև 30 վայրկյան
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕️ Նվիրիր'
   topup: |
