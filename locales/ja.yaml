@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕ 寄付'
   topup: |
-    <b>購入したいクレジットの数量を入力してください:</b>
-
-    <b>5クレジット=1$</b>
-    <i>最小量 - 5クレジット</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>無効な量</b>
 
