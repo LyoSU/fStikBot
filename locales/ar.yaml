@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕ التبرع'
   topup: |
-    <b>أدخل عدد النقاط التي تريد شرائها:</b>
-
-    <b>5 نقاط = 1$</b>
-    <i>الحد الأدنى للمبلغ - 5 نقاط</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>كمية غير صالحة</b>
 
