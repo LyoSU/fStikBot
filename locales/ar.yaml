@@ -138,18 +138,19 @@ cmd:
     🧑‍💻 المطور: @ly_oBot
 donate:
   menu: |
-    <b>☕ دعم تطوير البوت</b>
-    بدعمك لتطوير البوت، ستحصل على نقاط
-    لكل 1 دولار، ستتلقى 5 نقاط
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>الرصيد:</b> <code>${balance}</code> نقاط
-    مع 1 نقطة، لديك الفرصة لتعزيز حزمة واحدة.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>يوفر التحسين الفوائد التالية:</b>
-    ➖ تعطيل <code>"${titleSuffix}"</code> في أسماء الحزم <i>(ليس في الرابط)</i>
-    ➖ الأولوية عند تحويل الملصقات الفيديو
-    ➖ القدرة على إضافة أكثر من ملصق واحد إلى قائمة الانتظار للمعالجة
-    ➖ مدة ملصقات الفيديو تصل إلى 30 ثانية
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕ التبرع'
   topup: |
