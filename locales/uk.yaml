@@ -139,18 +139,19 @@ cmd:
     🧑‍💻 Розробник: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Підтримка розробки бота</b>
-    Підтримуючи розробку бота, ви отримуєте кредити
-    За кожен 1 долар ви отримаєте 5 кредитів
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>Баланс:</b> <code>${balance}</code> кредитів
-    За наявності 1 кредиту ви можете збільшити пріоритет в черзі для обробки одного пакету.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Покращення надає наступні переваги:</b>
-    ➖ Відключення <code>"${titleSuffix}"</code> в назві пакетів <i>(не в посиланні)</i>
-    ➖ Пріоритет при конвертації відео-стікерів
-    ➖ Можливість додати більше одного стікера до черги обробки
-    ➖ Тривалість відео-стікерів до 30 секунд
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕ Донат'
   topup: |
