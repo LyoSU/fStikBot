@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕️ Пожертвовать'
   topup: |
-    <b>Введите количество кредитов, которые хотите купить:</b>
-
-    <b>5 Кредитов = 1$</b>
-    <i>Минимальное количество - 5 Кредитов</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Неверное количество</b>
 
