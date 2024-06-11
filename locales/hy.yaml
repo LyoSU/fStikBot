@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕️ Նվիրիր'
   topup: |
-    <b>Մուտքագրեք այն Կրեդիտների քանակը, որը ցանկանում եք գնել:</b>
-
-    <b>5 Կրեդիտ = 1$</b>
-    <i>Նվազագույն քանակը - 5 Կրեդիտ</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Անվավեր քանակ</b>
 
