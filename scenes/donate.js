@@ -72,8 +72,7 @@ donateScene.enter(async (ctx) => {
     return donate(ctx)
   }
 
-  await ctx.editMessageText(ctx.i18n.t('donate.topup'), {
-    parse_mode: 'HTML',
+  await ctx.replyWithHTML(ctx.i18n.t('donate.topup'), {
     reply_markup: Markup.inlineKeyboard([
       [
         Markup.callbackButton('5 Credits', 'donate:5'),
