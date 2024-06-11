@@ -148,18 +148,19 @@ cmd:
     🧑‍💻 开发者: @ly_oBot
 donate:
   menu: |
-    <b>☕️ 机器人开发支持</b>
-    通过支持机器人的开发，您将获得信用点数。
-    每 1 美元，您将获得 5 个信用点。
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>余额:</b> <code>${balance}</code> 信用点
-    使用 1 个信用点，您有机会提升一个包的优先级。
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>提升提供以下好处:</b>
-    ➖ 禁用包名中的 <code>"${titleSuffix}"</code> <i>(不在链接中)</i>
-    ➖ 视频贴纸转换时优先
-    ➖ 能够将多个贴纸添加到处理队列中
-    ➖ 视频贴纸时长可达 30 秒
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕️ 捐赠'
   topup: |
