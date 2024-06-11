@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕ Donar'
   topup: |
-    <b>Introduce la cantidad de Créditos que deseas comprar:</b>
-
-    <b>5 Créditos = 1$</b>
-    <i>La cantidad mínima - 5 Créditos</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Cantidad inválida</b>
 
