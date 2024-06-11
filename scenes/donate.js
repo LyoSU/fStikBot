@@ -1,19 +1,7 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const freekassa = require('@alex-kondakov/freekassa')
 const { WalletPaySDK } = require('wallet-pay-sdk')
 const mongoose = require('mongoose')
-
-const walletPay = new WalletPaySDK({
-  apiKey: process.env.WALLETPAY_API_KEY,
-  timeoutSeconds: 10800
-})
-
-const exchangeRate = {
-  RUB: 90,
-  USD: 1,
-  UAH: 35
-}
 
 const donate = async (ctx) => {
   const amount = parseInt(ctx?.message?.text) || ( ctx?.match && parseInt(ctx?.match[1]))
@@ -28,47 +16,8 @@ const donate = async (ctx) => {
 
   const price = amount / 5
   const starPrice = amount * 10
-  const priceUAH = (price * exchangeRate.UAH).toFixed(2)
-  const priceRUB = (price * exchangeRate.RUB).toFixed(2)
 
   const comment = `@${ctx?.from?.username || ctx?.from?.id} (${ctx.from.id}) for ${amount} Credits`
-
-  let ruLink
-
-  // if locale is ru
-  if (ctx.session.userInfo.locale === 'ru' || ctx.from.language_code === 'ru') {
-    const payment = new ctx.db.Payment({
-      _id: mongoose.Types.ObjectId(),
-      user: ctx.session.userInfo._id,
-      amount,
-      price: priceRUB,
-      currency: 'RUB',
-      paymentSystem: 'freekassa',
-      comment,
-      status: 'pending'
-    })
-
-    await payment.save()
-
-    const freekassaPayment = freekassa.init()
-
-    freekassaPayment.secret1 = process.env.FREEKASSA_SECRET1
-    freekassaPayment.secret2 = process.env.FREEKASSA_SECRET2
-    freekassaPayment.shopId = process.env.FREEKASSA_SHOP_ID
-    freekassaPayment.paymentId = payment._id
-    freekassaPayment.amount = priceRUB
-    freekassaPayment.currency = 'RUB'
-    freekassaPayment.description = comment
-
-    freekassaPayment.sign()
-
-    ruLink = await freekassaPayment.create()
-  }
-
-  const message = ctx.i18n.t('donate.paymenu', {
-    amount,
-    price
-  })
 
   const walletPayment = new ctx.db.Payment({
     _id: mongoose.Types.ObjectId(),
@@ -98,9 +47,7 @@ const donate = async (ctx) => {
 
   const replyMarkup =  Markup.inlineKeyboard([
     [Markup.payButton(`⭐️ Telegram Stars`)],
-    [Markup.urlButton(`💳 Оплата — ${priceRUB}₽`, ruLink, !ruLink)],
-    // [Markup.urlButton(`💳 monobank — ${price}$ / ${priceUAH}₴`, `https://send.monobank.ua/jar/6RwLN9a9Yj?a=${priceUAH}&t=${encodeURI(comment)}`, !(ctx.i18n.locale() === 'uk'))],
-    [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)]
+    // [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)]
   ])
 
   await ctx.replyWithInvoice({

@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
-    "@alex-kondakov/freekassa": "^0.0.3",
     "@foile/crypto-pay-api": "^1.0.4",
     "@pm2/io": "^5.0.0",
     "bull": "^4.7.0",

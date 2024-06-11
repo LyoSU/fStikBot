@@ -155,9 +155,6 @@ donate:
     donate: '☕️ Donate'
   topup: |
     <b>Enter the amount of Credits you want to buy:</b>
-
-    <b>5 Credits = 1$</b>
-    <i>Minimum amount - 5 Credits</i>
   invalid_amount: |
     <b>Invalid amount</b>
 
