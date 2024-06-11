@@ -128,10 +128,7 @@ donate:
   btn:
     donate: '☕️ Xayriya qiling'
   topup: |
-    <b>Siz sotib olmoqchi bo'lgan Kreditlar miqdorini kiriting:</b>
-
-    <b>5 Kredit = 1$</b>
-    <i>Minimal miqdor - 5 Kredit</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Noto'g'ri miqdor</b>
 
