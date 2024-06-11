@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕ Падтрымка'
   topup: |
-    <b>Колькі крэдытаў вы хочаце купіць?</b>
-
-    <b>5 кр. = 1$</b>
-    <i>Мінімальная колькасць — 5 кр.</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Памылковая колькасць</b>
 
