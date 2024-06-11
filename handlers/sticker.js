@@ -2,7 +2,7 @@ const Markup = require('telegraf/markup')
 const {
   showGramAds,
   countUncodeChars,
-  substrUnicode,  
+  substrUnicode,
   addSticker,
   addStickerText
 } = require('../utils')
@@ -163,6 +163,7 @@ module.exports = async (ctx, next) => {
       }
 
       stickerSet.title = stickerSetInfo.title
+      await stickerSet.save()
     }
   }
 
