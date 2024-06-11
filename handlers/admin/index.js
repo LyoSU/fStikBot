@@ -2,7 +2,6 @@ const got = require('got')
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
-const Freekassa = require('@alex-kondakov/freekassa')
 const CryptoPay = require('@foile/crypto-pay-api')
 
 const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
@@ -157,24 +156,6 @@ const getLastCryptoTransactions = async (ctx, next) => {
   })
 }
 
-const getFreeKassaTransactions = async (ctx, next) => {
-  const freekassa = Freekassa.init()
-  freekassa.shopId = process.env.FREEKASSA_SHOP_ID
-  freekassa.key = process.env.FREEKASSA_API_KEY
-  freekassa.orderCount = 10
-  freekassa.orderStatus = 1
-
-  const result = await freekassa.orders()
-
-  const resultText = result.orders.map((item) => {
-    return `~~~~~~~~~~~~~~~~~~~~~~\n<b>${item.merchant_order_id}</b>\n${item.amount} ${item.currency} (${new Date(item.date).toLocaleString()})`
-  })
-
-  await ctx.replyWithHTML(`<b>Last FreeKassa transactions</b>\n\n${resultText.join('\n')}\n~~~~~~~~~~~~~~~~~~~~~~`, {
-    disable_web_page_preview: true
-  })
-}
-
 const getLastMonoTransactions = async (ctx, next) => {
   const result = await got(`https://api.monobank.ua/personal/statement/${process.env.MONO_ACCOUNT}/${Math.floor(Date.now() / 1000) - 86400 * 3}`, {
     headers: {
@@ -203,7 +184,6 @@ composer.command('ban', checkAdminRight, banUser)
 composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
 composer.hears(/\/refund (.*)/, checkAdminRight, refundPayment)
 composer.command('crypto', checkAdminRight, getLastCryptoTransactions)
-composer.command('fk', checkAdminRight, getFreeKassaTransactions)
 composer.command('mono', checkAdminRight, getLastMonoTransactions)
 
 composer.hears([I18n.match('start.menu.admin')], checkAdminRight, main)

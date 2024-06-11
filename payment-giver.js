@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const Freekassa = require('@alex-kondakov/freekassa')
 const { WalletPaySDK } = require('wallet-pay-sdk')
 const {
   db
@@ -19,18 +18,6 @@ const i18n = new I18n({
   defaultLanguage: 'en'
 })
 
-const getFreeKassaOrders = async () => {
-  const freekassa = Freekassa.init()
-  freekassa.shopId = process.env.FREEKASSA_SHOP_ID
-  freekassa.key = process.env.FREEKASSA_API_KEY
-  freekassa.orderCount = 10
-  freekassa.orderStatus = 1
-
-  const result = await freekassa.orders()
-
-  return result.orders
-}
-
 const getWalletPayOrders = async () => {
   const total = await walletPay.getOrderAmount()
   const offset = total.data.totalAmount - 100
@@ -44,18 +31,13 @@ const getWalletPayOrders = async () => {
 }
 
 const giveCredit = async () => {
-  let fkOrders = []
   let wpOrders = []
-
-  if (process.env.FREEKASSA_SHOP_ID && process.env.FREEKASSA_API_KEY) {
-    fkOrders = await getFreeKassaOrders()
-  }
 
   if (process.env.WALLETPAY_API_KEY) {
     wpOrders = await getWalletPayOrders()
   }
 
-  const orders = [...fkOrders, ...wpOrders].map((order) => (
+  const orders = [...wpOrders].map((order) => (
     order.merchant_order_id || order.externalId
   ))
 
