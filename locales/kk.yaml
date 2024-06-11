@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕️ Садақа беріңіз'
   topup: |
-    <b>Сатып алғыңыз келетін Кредиттер санын енгізіңіз:</b>
-
-    <b>5 Кредит = 1$</b>
-    <i>Минималды сома - 5 Кредит</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Жарамсыз сома</b>
 
