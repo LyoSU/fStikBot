@@ -72,7 +72,10 @@ donateScene.enter(async (ctx) => {
     return donate(ctx)
   }
 
-  await ctx.replyWithHTML(ctx.i18n.t('donate.topup'), {
+  await ctx.replyWithHTML(ctx.i18n.t('donate.menu', {
+    titleSuffix: ` :: @${ctx.options.username}`,
+    balance: ctx.session.userInfo.balance
+  }), {
     reply_markup: Markup.inlineKeyboard([
       [
         Markup.callbackButton('5 Credits', 'donate:5'),

@@ -14,14 +14,7 @@ const walletPay = new WalletPaySDK({
 const composer = new Composer()
 
 const donateMenu = async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('donate.menu', {
-    titleSuffix: ` :: @${ctx.options.username}`,
-    balance: ctx.session.userInfo.balance
-  }), {
-    reply_markup: Markup.inlineKeyboard([
-      [Markup.callbackButton(ctx.i18n.t('donate.btn.donate'), 'donate:topup')]
-    ])
-  })
+  return ctx.scene.enter('donate')
 }
 
 composer.on('pre_checkout_query', async (ctx) => {
