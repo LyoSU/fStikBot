@@ -1,6 +1,7 @@
 const Markup = require('telegraf/markup')
 const {
   showGramAds,
+  countUncodeChars,
   addSticker,
   addStickerText
 } = require('../utils')
@@ -117,6 +118,35 @@ module.exports = async (ctx, next) => {
   }
 
   let { stickerSet } = ctx.session.userInfo
+
+  if (!stickerSet.inline) {
+    const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => {})
+
+    if (stickerSetInfo) {
+      // if user not premium and not boosed pack and title not have bot username
+      if (!stickerSet.boost && !stickerSetInfo.title.includes(ctx.options.username)) {
+        const titleSuffix = ` :: @${ctx.options.username}`
+        const charTitleMax = ctx.config.charTitleMax
+
+        let newTitle = stickerSetInfo.title
+
+        if (countUncodeChars(newTitle) > charTitleMax) {
+          newTitle = substrUnicode(newTitle, 0, charTitleMax)
+        }
+
+        newTitle += titleSuffix
+
+        await ctx.telegram.callApi('setStickerSetTitle', {
+          name: stickerSet.name,
+          title: newTitle
+        }).catch((err) => {
+          console.log('setStickerSetTitle', err)
+        })
+      }
+
+      stickerSet.title = stickerSetInfo.title
+    }
+  }
 
   if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
     const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id }).populate('stickerSet')
