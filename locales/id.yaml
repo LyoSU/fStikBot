@@ -153,10 +153,7 @@ donate:
   btn:
     donate: '☕️ Donasi'
   topup: |
-    <b>Masukkan jumlah Kredit yang ingin Anda beli:</b>
-
-    <b>5 Kredit = 1$</b>
-    <i>Jumlah minimum - 5 Kredit</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Jumlah tidak valid</b>
 
