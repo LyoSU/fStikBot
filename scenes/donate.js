@@ -14,6 +14,10 @@ const donate = async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
   }
 
+  if (amount > 1000) {
+    return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
+  }
+
   const price = amount / 5
   const starPrice = amount * 10
 
