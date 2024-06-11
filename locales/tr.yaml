@@ -152,10 +152,7 @@ donate:
   btn:
     donate: '☕️ Bağış yap'
   topup: |
-    <b>Satın almak istediğiniz kredi miktarını girin:</b>
-
-    <b>5 kredi = 1$</b>
-    <i>Minimum tutar - 5 kredi</i>
+    <b>Enter the amount of Credits you want to buy:</b>
   invalid_amount: |
     <b>Geçersiz tutar</b>
 
