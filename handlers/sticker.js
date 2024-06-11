@@ -119,7 +119,24 @@ module.exports = async (ctx, next) => {
 
   let { stickerSet } = ctx.session.userInfo
 
-  if (!stickerSet.inline) {
+  if (!stickerSet) {
+    if (ctx.chat.type === 'private') {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
+        reply_to_message_id: message.message_id,
+        allow_sending_without_reply: true
+      })
+    } else {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
+        reply_markup: Markup.inlineKeyboard([
+          Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_pack'), 'select_pack')
+        ]),
+        reply_to_message_id: message.message_id,
+        allow_sending_without_reply: true
+      })
+    }
+  }
+
+  if (!stickerSet?.inline) {
     const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => {})
 
     if (stickerSetInfo) {
