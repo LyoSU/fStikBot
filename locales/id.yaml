@@ -138,18 +138,19 @@ cmd:
     🧑‍💻 Pengembang: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Dukungan Pengembangan Bot</b>
-    Dengan mendukung pengembangan bot, Anda akan menerima Kredit
-    Untuk setiap 1 dolar, Anda akan menerima 5 Kredit
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>Saldo:</b> <code>${balance}</code> Kredit
-    Dengan 1 Kredit, Anda memiliki kesempatan untuk meningkatkan satu paket.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Peningkatan memberikan manfaat sebagai berikut:</b>
-    ➖ Menonaktifkan <code>"${titleSuffix}"</code> dalam nama paket <i>(tidak dalam tautan)</i>
-    ➖ Prioritas saat mengonversi stiker video
-    ➖ Kemampuan menambahkan lebih dari satu stiker ke antrian pemrosesan
-    ➖ Durasi stiker video hingga 30 detik
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕️ Donasi'
   topup: |
