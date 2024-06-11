@@ -137,18 +137,19 @@ cmd:
     🧑‍💻 Geliştirici: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot geliştirme desteği</b>
-    Botun geliştirilmesini destekleyerek Kredi alırsınız
-    Her 1 dolar için 5 Kredi alırsınız
+    <b>☕️ Bot development support</b>
+    By supporting the development of the bot, you will receive Credits
 
-    <b>Bakiye:</b> <code>${balance}</code> Kredi
-    1 Kredi ile bir paketi artırma fırsatına sahipsiniz.
+    <b>Balance:</b> <code>${balance}</code> Credits
+    With 1 Credits, you have the opportunity to boost one pack.
 
-    <b>Artırma, aşağıdaki avantajları sağlar:</b>
-    ➖ Paket isimlerinde <code>"${titleSuffix}"</code> devre dışı bırakma <i>(bağlantıda değil)</i>
-    ➖ Video çıkartmalarını dönüştürmede öncelik
-    ➖ İşlem kuyruğuna birden fazla çıkartma ekleme yeteneği
-    ➖ Video çıkartmalarının süresi 30 saniyeye kadar
+    <b>The boost provides the following benefits:</b>
+    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
+    ➖ Priority when converting video stickers
+    ➖ Ability to add more than one sticker to the processing queue
+    ➖ Duration of video stickers up to 30 seconds
+
+    <b>Select the amount of Credits you want to buy:</b>
   btn:
     donate: '☕️ Bağış yap'
   topup: |
