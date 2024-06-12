@@ -467,6 +467,8 @@ scenes:
       <b>Sarlavha muvaffaqiyatli o'zgartirildi!</b>
 
       Yangi nom: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>Bu haqda ma'lumot olish uchun menga stiker yoki maxsus kulgich yuboring:</b>
