@@ -7,6 +7,17 @@ const {
   addStickerText
 } = require('../utils')
 
+const escapeHTML = (str) => str.replace(
+  /[&<>'"]/g,
+  (tag) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag)
+)
+
 module.exports = async (ctx, next) => {
   if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.reply'), {
