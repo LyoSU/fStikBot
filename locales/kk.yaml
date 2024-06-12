@@ -498,6 +498,8 @@ scenes:
       <b>Тақырып сәтті өзгертілді!</b>
 
       Жаңа тақырып: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>Ол туралы ақпаратты іздеу үшін маған стикер немесе реттелетін эмодзи жіберіңіз:</b>
