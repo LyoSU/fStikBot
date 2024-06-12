@@ -498,6 +498,8 @@ scenes:
       <b>Назву успішно змінено!</b>
 
       Нова назва: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>Надішліть мені наліпку або кастомний емодзі, щоб дізнатися інформацію про нього</b>
