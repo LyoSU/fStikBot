@@ -28,11 +28,11 @@ module.exports = async (ctx) => {
       if (fileExtension === 'tgs') {
         stickerFormat = 'animated'
         sticker.file.is_animated = true
-      } else if (fileExtension === 'webm') {
+      } else if ([ 'png', 'webp', 'jpg', 'jpeg' ].includes(fileExtension)) {
+        stickerFormat = 'static'
+      } else {
         stickerFormat = 'video'
         sticker.file.is_video = true
-      } else {
-        stickerFormat = 'static'
       }
 
       if (stickerFormat === 'video') {
