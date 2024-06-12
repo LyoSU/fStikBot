@@ -160,6 +160,17 @@ module.exports = async (ctx, next) => {
         }).catch((err) => {
           console.log('setStickerSetTitle', err)
         })
+
+        const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
+
+        const text = ctx.i18n.t('scenes.rename.success', {
+          title: escapeHTML(stickerSet.title),
+          link: `${linkPrefix}${stickerSet.name}`
+        }) + '\n' + ctx.i18n.t('scenes.rename.boost_notice', {
+          titleSuffix: escapeHTML(titleSuffix)
+        })
+
+        await ctx.replyWithHTML(text)
       }
 
       stickerSet.title = stickerSetInfo.title
