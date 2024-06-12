@@ -329,8 +329,6 @@ newPackConfirm.enter(async (ctx, next) => {
   if (inline) {
     createNewStickerSet = true
   } else {
-    const stickerFormat = animated ? 'animated' : video ? 'video' : 'static'
-
     const stickerSetByName = await ctx.db.StickerSet.findOne({ name })
 
     if (stickerSetByName) {

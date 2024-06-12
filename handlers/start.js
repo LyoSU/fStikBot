@@ -18,6 +18,10 @@ module.exports = async (ctx) => {
     })
   }
 
+  const countStickerSets = await ctx.db.StickerSet.countDocuments({
+    owner: ctx.session.userInfo.id
+  })
+
   await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
     name: userName(ctx.from)
   }),
@@ -26,13 +30,13 @@ module.exports = async (ctx) => {
       Markup.urlButton(ctx?.config?.ruAdvertising?.text, ctx?.config?.ruAdvertising?.link, ctx.i18n.locale() !== 'ru' || !ctx?.config?.ruAdvertising?.text)
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null')
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null', countStickerSets <= 0),
     ],
     [
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.delete'), 'delete_sticker'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.delete'), 'delete_sticker', countStickerSets <= 0),
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.original'), 'original')
     ],
     [
