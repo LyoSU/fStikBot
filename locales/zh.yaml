@@ -507,6 +507,8 @@ scenes:
       <b>标题已成功更改！</b>
 
       新标题<a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>
