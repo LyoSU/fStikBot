@@ -496,6 +496,8 @@ scenes:
       <b>Başlık başarıyla değiştirildi!</b>
 
       Yeni unvan: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>Bu konuda bilgi aramak için bana bir çıkartma veya özel emoji gönderin:</b>
