@@ -498,6 +498,8 @@ scenes:
       <b>Le titre a été modifié avec succès !</b>
 
       Nouveau titre : <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
