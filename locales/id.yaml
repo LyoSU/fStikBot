@@ -499,6 +499,8 @@ scenes:
       <b>Judul berhasil diubah!</b>
 
       Judul baru: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>Kirimi saya stiker atau emoji khusus untuk mencari informasi tentangnya:</b>
