@@ -492,6 +492,8 @@ scenes:
       <b>タイトルが正常に変更されました!</b>
 
       新しいタイトル: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
       <b>ステッカーやカスタム絵文字を送ってそれに関する情報を調べてみましょう:</b>
