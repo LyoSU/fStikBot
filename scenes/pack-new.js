@@ -408,9 +408,10 @@ newPackConfirm.enter(async (ctx, next) => {
           const bIndex = stickers.findIndex((sticker) => sticker.file_id === b.sticker)
 
           return aIndex - bIndex
-        })
+        }).filter((sticker) => !sticker.error)
 
-        if (uploadedStickers.some((sticker) => sticker.error)) {
+        // if < 90% of stickers uploaded
+        if (uploadedStickers.length < stickers.length * 0.90) {
           await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
 
           await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), {
