@@ -138,23 +138,23 @@ cmd:
     🧑‍💻 Tərtibatçı: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
+    <b>☕️ Bot inkişaf etdirilməsinə dəstək olun<\/b>
+    Botun inkişafına dəstək verərək, Kredit alacaqsınız
 
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    <b>Balans:<\/b> <code>${balance}<{\/code} Kreditlər
+    1 Kredit ilə, bir paketi yüksəltmək imkanı var.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Yüksəltmənin təmin etdiyi üstünlüklər:<\/b>
+    ➖ Paket adlarında "<code>${titleSuffix}<{\/code}" söndürülməsi <i>(linkdə deyil)<\/i>
+    ➖ Video stikerlərin çevrilməsində prioritet
+    ➖ Emal növbəsinə bir neçə stiker əlavə etmək imkanı
+    ➖ Video stikerlərin müddəti 30 saniyəyə qədər
 
-    <b>Select the amount of Credits you want to buy:</b>
+    <b>Almaq istədiyiniz Kreditlərin miqdarını seçin:<\/b>
   btn:
     donate: '☕️ Bağışlayın'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>Almaq istədiyiniz Kreditlərin miqdarını daxil edin:<\/b>
   invalid_amount: |
     <b>Yanlış miqdar</b>
 
@@ -499,7 +499,7 @@ scenes:
 
       Yeni başlıq: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
+      ❕ "<code>${titleSuffix}<\/code>" sonluğunu aradan qaldırmaq üçün paketi yüksəltməlisiniz. Daha ətraflı məlumat üçün menyuda: \/donate
   packAbout:
     enter: |
       <b>Bu barədə məlumat axtarmaq üçün mənə stiker və ya fərdi emoji göndərin:</b>
