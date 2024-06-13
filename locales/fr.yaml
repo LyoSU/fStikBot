@@ -138,23 +138,23 @@ cmd:
     🧑‍💻 Développeur : @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
+    <b>☕️ Soutien au développement du bot <\/b>
+    En soutenant le développement du bot, vous recevrez des Crédits
 
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    <b>Solde : <\/b> <code>${balance} <\/code> Crédits
+    Avec 1 Crédits, vous avez la possibilité de booster un pack.
 
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
+    <b>Le boost offre les avantages suivants : <\/b>
+    ➖ Désactivation de "<code>${titleSuffix} <\/code>" dans le nom des packs <i>(pas dans le lien)<\/i>
+    ➖ Priorité lors de la conversion de stickers vidéos
+    ➖ Possibilité d'ajouter plus d'un sticker dans la file d'attente
+    ➖ Durée des stickers vidéos jusqu'à 30 secondes
 
-    <b>Select the amount of Credits you want to buy:</b>
+    <b>Sélectionnez le montant de Crédits que vous souhaitez acheter : <\/b>
   btn:
     donate: '☕ Faire un don'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>Entrez le montant de Crédits que vous souhaitez acheter : </b>
   invalid_amount: |
     <b>Montant invalide</b>
 
@@ -499,7 +499,7 @@ scenes:
 
       Nouveau titre : <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
+      ❕ Pour supprimer le suffixe "<code>${titleSuffix} <\/code>", vous devez booster le pack. Plus de détails dans le menu en visitant : \/donate
   packAbout:
     enter: |
       <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
