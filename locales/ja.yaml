@@ -138,23 +138,11 @@ cmd:
     🧑‍💻 開発者: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot development support</b>
-    By supporting the development of the bot, you will receive Credits
-
-    <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
-
-    <b>The boost provides the following benefits:</b>
-    ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
-    ➖ Priority when converting video stickers
-    ➖ Ability to add more than one sticker to the processing queue
-    ➖ Duration of video stickers up to 30 seconds
-
-    <b>Select the amount of Credits you want to buy:</b>
+    <b>☕️ Bot開発支援<\/b>\nBotの開発を支援することにより、クレジットを受け取ることができます\n\n<b>残高:<\/b> <code>${balance}<\/code> クレジット\n1クレジットで1パックをブーストすることができます。\n\n<b>ブーストの利点:<\/b>\n➖ パック名から "<code>${titleSuffix}<\/code>" を無効にする <i>(リンク内では無効になりません)<\/i>\n➖ ビデオステッカーの変換時に優先処理\n➖ 処理キューに複数のステッカーを追加可能\n➖ ビデオステッカーの長さが最大30秒まで延長\n\n<b>購入したいクレジットの金額を選択してください:<\/b>
   btn:
     donate: '☕ 寄付'
   topup: |
-    <b>Enter the amount of Credits you want to buy:</b>
+    <b>購入したいクレジットの金額を入力してください:<\/b>
   invalid_amount: |
     <b>無効な量</b>
 
@@ -493,7 +481,7 @@ scenes:
 
       新しいタイトル: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
+      ❕ サフィックス "<code>${titleSuffix}<\/code>" を削除するには、パックをブーストする必要があります。 詳細はメニューでご確認ください: \/donate
   packAbout:
     enter: |
       <b>ステッカーやカスタム絵文字を送ってそれに関する情報を調べてみましょう:</b>
