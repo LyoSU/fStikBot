@@ -308,6 +308,8 @@ sticker:
 
       Apakah Anda ingin menambahkan <a href="${link}">${title}</a> ke katalog stiker publik sehingga pengguna bot lain dapat melihatnya juga?
       <i>Tidak memakan banyak waktu</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>Kesalahan!</b>
