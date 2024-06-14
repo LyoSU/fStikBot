@@ -164,17 +164,23 @@ bot.use((ctx, next) => {
   else return next()
 })
 
-// scene
-bot.use(scenes)
+const privateMessage = new Composer()
+privateMessage.use((ctx, next) => {
+  if (ctx.chat && ctx.chat.type === 'private') return next()
+  return false
+})
 
-bot.use(require('./handlers/admin'))
-bot.use(require('./handlers/news-channel'))
+// scene
+privateMessage.use(scenes)
+
+privateMessage.use(require('./handlers/admin'))
+privateMessage.use(require('./handlers/news-channel'))
 
 bot.use(handleStats)
 bot.use(handlePing)
 
 // main commands
-bot.start(async (ctx, next) => {
+privateMessage.start(async (ctx, next) => {
   if (ctx.startPayload === 'inline_pack') {
     ctx.state.type = 'inline'
     return handlePacks(ctx)
@@ -208,16 +214,16 @@ bot.start(async (ctx, next) => {
   }
   return next()
 })
-bot.command('help', handleHelp)
+privateMessage.command('help', handleHelp)
 bot.command('packs', handlePacks)
 bot.command('pack', handleSelectGroupPack)
 
 bot.use(handleGroupSettings)
 
-bot.action(/packs:(type):(.*)/, handlePacks)
-bot.action(/packs:(.*)/, handlePacks)
+privateMessage.action(/packs:(type):(.*)/, handlePacks)
+privateMessage.action(/packs:(.*)/, handlePacks)
 
-bot.start((ctx, next) => {
+privateMessage.start((ctx, next) => {
   if (ctx.startPayload.match(/^s_(.*)/)) return handleSelectPack(ctx)
   if (ctx.startPayload === 'packs') return handlePacks(ctx)
   return next()
@@ -241,47 +247,50 @@ const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
     resize_keyboard: true
   }
 })
-bot.action(/user_about/, userAboutHelp)
-bot.command('user_about', userAboutHelp)
+privateMessage.action(/user_about/, userAboutHelp)
+privateMessage.command('user_about', userAboutHelp)
 
-bot.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
+privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
 
-bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
+privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
 
-bot.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
-bot.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
-bot.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
-bot.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
-bot.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
-bot.action(/publish/, (ctx) => ctx.scene.enter('catalogPublishNew'))
-bot.command('frame', (ctx) => ctx.scene.enter('packFrame'))
-bot.action(/frame/, (ctx) => ctx.scene.enter('packFrame'))
-bot.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
-bot.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticker'))
-bot.command('catalog', handleCatalog)
-bot.action(/catalog/, handleCatalog)
-bot.command('public', handleSelectPack)
-bot.command('emoji', handleEmoji)
-bot.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
-bot.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
-bot.command('original', (ctx) => ctx.scene.enter('originalSticker'))
-bot.action(/original/, (ctx) => ctx.scene.enter('originalSticker'))
-bot.command('about', (ctx) => ctx.scene.enter('packAbout'))
-bot.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
-bot.command('search', (ctx) => ctx.scene.enter('searchStickerSet'))
-bot.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
-bot.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
-bot.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
-bot.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'))
+privateMessage.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
+privateMessage.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
+privateMessage.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
+privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
+privateMessage.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
+privateMessage.action(/publish/, (ctx) => ctx.scene.enter('catalogPublishNew'))
+privateMessage.command('frame', (ctx) => ctx.scene.enter('packFrame'))
+privateMessage.action(/frame/, (ctx) => ctx.scene.enter('packFrame'))
+privateMessage.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
+privateMessage.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticker'))
+privateMessage.command('catalog', handleCatalog)
+privateMessage.action(/catalog/, handleCatalog)
+privateMessage.command('public', handleSelectPack)
+privateMessage.command('emoji', handleEmoji)
+privateMessage.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
+privateMessage.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
+privateMessage.command('original', (ctx) => ctx.scene.enter('originalSticker'))
+privateMessage.action(/original/, (ctx) => ctx.scene.enter('originalSticker'))
+privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
+privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
+privateMessage.command('search', (ctx) => ctx.scene.enter('searchStickerSet'))
+privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
+privateMessage.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
+privateMessage.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
+privateMessage.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'))
+
 bot.command('lang', handleLanguage)
+bot.action(/set_language:(.*)/, handleLanguage)
+
 bot.command('error', ctx => ctx.replyWithHTML(error))
 
-bot.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
+privateMessage.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
 
-bot.use(handleDonate)
-bot.use(handleBoostPack)
+privateMessage.use(handleDonate)
+privateMessage.use(handleBoostPack)
+privateMessage.use(handleCoedit)
 
-bot.use(handleCoedit)
 bot.use(handleInlineQuery)
 
 bot.start(handleStart)
@@ -293,43 +302,36 @@ bot.on('new_chat_members', (ctx, next) => {
 })
 
 // callback
-bot.action(/(set_pack):(.*)/, handlePacks)
-bot.action(/(hide_pack):(.*)/, handleHidePack)
-bot.action(/(rename_pack):(.*)/, (ctx) => ctx.scene.enter('packRename'))
-bot.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
-bot.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
-bot.action(/set_language:(.*)/, handleLanguage)
+privateMessage.action(/(set_pack):(.*)/, handlePacks)
+privateMessage.action(/(hide_pack):(.*)/, handleHidePack)
+privateMessage.action(/(rename_pack):(.*)/, (ctx) => ctx.scene.enter('packRename'))
+privateMessage.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
+privateMessage.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
 
 bot.command('ss', handleSticker)
 
-// only private chat middleware
-bot.use((ctx, next) => {
-  if (ctx.chat && ctx.chat.type !== 'private') return false
-  else return next()
-})
-
 // sticker detect
-bot.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
-bot.on('message', (ctx, next) => {
+privateMessage.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
+privateMessage.on('message', (ctx, next) => {
   if (ctx.message && ctx.message.entities && ctx.message.entities[0] && ctx.message.entities[0].type === 'custom_emoji') {
     return handleSticker(ctx)
   }
   return next()
 })
-bot.action(/add_sticker/, handleSticker)
+privateMessage.action(/add_sticker/, handleSticker)
 
-bot.use((ctx, next) => {
+privateMessage.use((ctx, next) => {
   if (ctx?.message?.users_shared) {
     return handleAboutUser(ctx)
   }
   return next()
 })
-bot.on('forward', handleAboutUser)
 
-bot.on('text', handleStickerUpade)
+bot.use(privateMessage)
 
-// any message
-bot.on('message', handleStart)
+privateMessage.on('forward', handleAboutUser)
+privateMessage.on('text', handleStickerUpade)
+privateMessage.on('message', handleStart)
 
 // start bot
 db.connection.once('open', async () => {

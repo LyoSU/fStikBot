@@ -319,7 +319,19 @@ module.exports = async (ctx, next) => {
       }
     }
   } else {
-    messageText = ctx.i18n.t('sticker.add.error.file_type.unknown')
+    if (ctx.chat.type === 'private') {
+      messageText = ctx.i18n.t('sticker.add.error.file_type.unknown')
+    } else {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.quote'), {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: ctx.i18n.t('cmd.start.commands.add_to_group'), url: 'https://t.me/QuotLyBot?startgroup=bot' }]
+          ]
+        },
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
+      })
+    }
   }
 
   if (messageText) {
