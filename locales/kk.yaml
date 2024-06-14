@@ -308,7 +308,7 @@ sticker:
       Боттың басқа пайдаланушылары да көре алуы үшін жалпыға ортақ стикерлер каталогына <a href="${link}">${title}</a> қосқыңыз келе ме?
       <i>Бұл көп уақытты алмайды</i>
     quote: |
-      Use @QuotlyBot to create a quote from this message
+      Бұл хабарламадан дәйексөз жасау үшін @QuotlyBot пайдаланыңыз
     error:
       reply: |
         <b>Қате!</b>
