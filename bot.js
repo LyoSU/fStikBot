@@ -171,7 +171,7 @@ privateMessage.use((ctx, next) => {
 })
 
 // scene
-privateMessage.use(scenes)
+bot.use(scenes)
 
 privateMessage.use(require('./handlers/admin'))
 privateMessage.use(require('./handlers/news-channel'))
@@ -287,7 +287,7 @@ bot.command('error', ctx => ctx.replyWithHTML(error))
 
 privateMessage.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
 
-privateMessage.use(handleDonate)
+bot.use(handleDonate)
 privateMessage.use(handleBoostPack)
 privateMessage.use(handleCoedit)
 
