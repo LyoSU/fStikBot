@@ -290,6 +290,8 @@ sticker:
 
       ボットの他のユーザーも見られるように、 <a href="${link}">${title}</a> を公開ステッカーカタログに追加しますか？
       <i>時間はかかりませんよ</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>エラー!</b>
