@@ -180,7 +180,7 @@ bot.use(handleStats)
 bot.use(handlePing)
 
 // main commands
-privateMessage.start(async (ctx, next) => {
+bot.start(async (ctx, next) => {
   if (ctx.startPayload === 'inline_pack') {
     ctx.state.type = 'inline'
     return handlePacks(ctx)
@@ -223,7 +223,7 @@ bot.use(handleGroupSettings)
 privateMessage.action(/packs:(type):(.*)/, handlePacks)
 privateMessage.action(/packs:(.*)/, handlePacks)
 
-privateMessage.start((ctx, next) => {
+bot.start((ctx, next) => {
   if (ctx.startPayload.match(/^s_(.*)/)) return handleSelectPack(ctx)
   if (ctx.startPayload === 'packs') return handlePacks(ctx)
   return next()
