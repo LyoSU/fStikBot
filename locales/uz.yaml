@@ -265,7 +265,7 @@ sticker:
       Botning boshqa foydalanuvchilari ham koʻrishi uchun umumiy stikerlar katalogiga <a href="${link}">${title}</a> qoʻshmoqchimisiz?
       <i>Bu ko'p vaqt talab qilmaydi</i>
     quote: |
-      Use @QuotlyBot to create a quote from this message
+      Bu xabardan sitata yaratish uchun @QuotlyBot-dan foydalaning
     error:
       reply: |
         <b>Xato!</b>
