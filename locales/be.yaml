@@ -306,6 +306,8 @@ sticker:
 
       Хочаце дадаць <a href="${link}">${title}</a> у публічны каталог стыкераў, каб іншыя карыстальнікі бота таксама маглі яго ўбачыць?
       <i>Гэта не зойме шмат часу</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>Памылка!</b>
