@@ -316,6 +316,8 @@ sticker:
 
       您是否希望将 <a href="${link}">${title}</a> 添加到公共贴纸目录中，以便机器人的其他用户也能看到？
       <i>无需花费大量时间</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>错误！</b>
