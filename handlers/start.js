@@ -1,7 +1,53 @@
 const Markup = require('telegraf/markup')
 const { userName } = require('../utils')
+const handlePacks = require('./packs')
+const handleSelectPack = require('./pack-select')
 
 module.exports = async (ctx) => {
+  if (ctx.startPayload === 'inline_pack') {
+    ctx.state.type = 'inline'
+    return handlePacks(ctx)
+  }
+  if (
+    ctx.chat.type === 'private'
+    && (
+      ctx.startPayload === 'pack'
+      || ctx.startPayload === 'packs'
+    )
+  ) {
+    return handlePacks(ctx)
+  }
+  if (
+    ctx.chat.type === 'private'
+    && ctx?.startPayload?.match(/^s_(.*)/)
+  ) {
+    return handleSelectPack(ctx)
+  }
+
+  if (ctx?.startPayload?.startsWith('removebg_')) {
+    const fileUrl = 'https://telegra.ph' + Buffer.from(ctx?.startPayload?.replace('removebg_', ''), 'base64').toString('utf-8')
+
+    const file = await downloadFileByURL(fileUrl)
+
+    const webp = await sharp(file).webp().toBuffer()
+
+    return ctx.replyWithDocument({
+      source: webp,
+      filename: 'removebg.webp'
+    }, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: ctx.i18n.t('scenes.photoClear.add_to_set_btn'),
+              callback_data: 'add_sticker'
+            }
+          ]
+        ]
+      }
+    })
+  }
+
   if (ctx.chat.type === 'private' && ctx.from.is_bot) {
     return ctx.deleteMessage()
   }

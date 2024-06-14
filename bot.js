@@ -180,40 +180,6 @@ bot.use(handleStats)
 bot.use(handlePing)
 
 // main commands
-bot.start(async (ctx, next) => {
-  if (ctx.startPayload === 'inline_pack') {
-    ctx.state.type = 'inline'
-    return handlePacks(ctx)
-  }
-  if (ctx.startPayload === 'pack') {
-    return handlePacks(ctx)
-  }
-
-  if (ctx.startPayload.startsWith('removebg_')) {
-    const fileUrl = 'https://telegra.ph' + Buffer.from(ctx?.startPayload?.replace('removebg_', ''), 'base64').toString('utf-8')
-
-    const file = await downloadFileByURL(fileUrl)
-
-    const webp = await sharp(file).webp().toBuffer()
-
-    return ctx.replyWithDocument({
-      source: webp,
-      filename: 'removebg.webp'
-    }, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: ctx.i18n.t('scenes.photoClear.add_to_set_btn'),
-              callback_data: 'add_sticker'
-            }
-          ]
-        ]
-      }
-    })
-  }
-  return next()
-})
 privateMessage.command('help', handleHelp)
 bot.command('packs', handlePacks)
 bot.command('pack', handleSelectGroupPack)
@@ -222,12 +188,6 @@ bot.use(handleGroupSettings)
 
 privateMessage.action(/packs:(type):(.*)/, handlePacks)
 privateMessage.action(/packs:(.*)/, handlePacks)
-
-bot.start((ctx, next) => {
-  if (ctx.startPayload.match(/^s_(.*)/)) return handleSelectPack(ctx)
-  if (ctx.startPayload === 'packs') return handlePacks(ctx)
-  return next()
-})
 
 const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
   reply_markup: {
@@ -294,6 +254,7 @@ privateMessage.use(handleCoedit)
 bot.use(handleInlineQuery)
 
 bot.start(handleStart)
+
 bot.on('new_chat_members', (ctx, next) => {
   if (ctx.message.new_chat_members.find((m) => m.id === ctx.botInfo.id)) {
     return handleStart(ctx, next)
