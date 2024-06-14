@@ -296,7 +296,7 @@ sticker:
       Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
       <i>Não leva muito tempo</i>
     quote: |
-      Use @QuotlyBot to create a quote from this message
+      Use o @QuotlyBot para criar uma citação desta mensagem
     error:
       reply: |
         U<b>Erro!</b>
