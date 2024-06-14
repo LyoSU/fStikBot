@@ -307,6 +307,8 @@ sticker:
 
       Souhaitez-vous ajouter <a href="${link}">${title}</a> au catalogue public des autocollants afin que les autres utilisateurs du bot puissent le voir aussi ?
       <i>Cela ne prend pas beaucoup de temps</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>Erreur!</b>
