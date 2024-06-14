@@ -306,6 +306,8 @@ sticker:
 
       Botun diğer kullanıcılarının da görebilmesi için <a href="${link}">${title}</a> genel çıkartma kataloğuna eklemek ister misiniz?
       <i>Çok fazla zaman almaz</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>Hata!</b>
