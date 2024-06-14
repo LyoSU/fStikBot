@@ -307,6 +307,8 @@ sticker:
 
       Ցանկանու՞մ եք ավելացնել <a href="${link}">${title}</a> -ը հանրային սթիքերների կատալոգում, որպեսզի բոտի մյուս օգտվողները նույնպես տեսնեն այն:
       <i>Շատ ժամանակ չի խլում</i>
+    quote: |
+      Use @QuotlyBot to create a quote from this message
     error:
       reply: |
         <b>Սխալ.</b>
