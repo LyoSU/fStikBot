@@ -307,7 +307,7 @@ sticker:
       هل ترغب في إضافة <a href="${link}">${title}</a> إلى كتالوج الملصقات العام حتى يتمكن مستخدمو الروبوت الآخرون من رؤيته أيضًا؟
       <i>لا يستغرق الأمر الكثير من الوقت</i>
     quote: |
-      Use @QuotlyBot to create a quote from this message
+      استخدم @QuotlyBot لإنشاء اقتباس من هذه الرسالة
     error:
       reply: |
         <b>خطأ!</b>
