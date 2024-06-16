@@ -141,11 +141,11 @@ donate:
     <b>☕️ Dukungan pengembangan Bot</b>
     Dengan mendukung pengembangan bot, Anda akan menerima Kredit
 
-    <b>Saldo:</b> <code>${balance}\/code> Kredit
+    <b>Saldo:</b> <code>${balance}</code> Kredit
     Dengan 1 Kredit, Anda memiliki peluang untuk meningkatkan satu paket.
 
     <b>Peningkatan memberikan manfaat sebagai berikut:</b>
-    ➖ Menonaktifkan "<code>${titleSuffix}\/code>" di nama paket <i>(bukan di tautan)</i>
+    ➖ Menonaktifkan "<code>${titleSuffix}</code>" di nama paket <i>(bukan di tautan)</i>
     ➖ Prioritas saat mengonversi stiker video
     ➖ Kemampuan menambahkan lebih dari satu stiker ke antrian pemrosesan
     ➖ Durasi stiker video hingga 30 detik
