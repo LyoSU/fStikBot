@@ -187,7 +187,7 @@ callback:
       Уни кўрсатиш учун, ичидагиларда<strong>@${botUsername} </code>ни босинг ва куч пасткини босинг
     boost:
       info: |
-        \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost<\/a><\/b>: ${boostStatus}
       status:
         on: Yoqilgan
         off: O'chirilgan
@@ -258,7 +258,7 @@ sticker:
 
       Progress: ${progress} \/ ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: \/donate)</i>
+      <i>Users who supported the bot get priority in the queue (more: \/donate)<\/i>
     catalog_offer: |
       <b>😲 Voy, ajoyib toʻplam yasadingiz!</b>
 
@@ -430,7 +430,7 @@ scenes:
     pay_btn: '✅ Confirm'
     error:
       premium: |
-        <b>Tizimda Xatolik! </b>
+        <b>Tizimda Xatolik! <\/b>
         Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud.
 
         Siz buni \/donate buyrug'ini yuborish orqali qilishingiz mumkin.
