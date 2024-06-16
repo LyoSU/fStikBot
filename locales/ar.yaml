@@ -224,7 +224,7 @@ callback:
       يمكنك أيضًا استخدامها بالضغط على الزر أدناه
     boost:
       info: |
-        \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost<\/a><\/b>: ${boostStatus}
       status:
         on: تمكين
         off: معطل
@@ -295,7 +295,7 @@ sticker:
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
-      <b>Wait...</b>\nYour file is in the queue for conversion. Wait for completion. This may take some time.\n\nProgress: ${progress} \/ ${total}\n\n<i>Users who supported the bot get priority in the queue (more: \/donate)</i>
+      <b>Wait...<\/b>\nYour file is in the queue for conversion. Wait for completion. This may take some time.\n\nProgress: ${progress} \/ ${total}\n\n<i>Users who supported the bot get priority in the queue (more: \/donate)<\/i>
     catalog_offer: |
       <b>😲 واو، لقد قمت بتكوين مجموعة رائعة!</b>
 
@@ -467,7 +467,7 @@ scenes:
     pay_btn: '✅ تأكيد'
     error:
       premium: |
-        <b>Error!</b>\nThis feature is only available to donate members.\n\nYou can do this by sending the \/donate command.
+        <b>Error!<\/b>\nThis feature is only available to donate members.\n\nYou can do this by sending the \/donate command.
   original:
     enter: |
       أرسل الملصق الذي تمت إضافته من خلال هذا البوت وسأريك الملصق الأصلي الخاص به.
