@@ -72,7 +72,7 @@ cmd:
       round: '🎥 Video em formato redondo'
       clear: '🖼️ Remova o fundo da foto'
       about: '📦 Informações do Pack'
-      user_about: '🧑‍🎨 Creator info'
+      user_about: '🧑‍🎨 Informações do criador'
       lang: '🌐 Mude o idioma'
       report: '🚨 Reportar pacote'
       donate: '☕️ Apoie o desenvolvedor'
@@ -107,11 +107,11 @@ cmd:
     types:
       regular: Figurinhas
       custom_emoji: Emojis
-      inline: Inline
+      inline: Em linha
     empty: |
       <b>Você ainda não tem nenhum pacote.</b>
       Para criar um, escreva o comando /new
-    inline_title: Inline pack
+    inline_title: Pacote em linha
     select_group_pack_info: |
       <b>📁 Selecione o pacote</b>
 
@@ -213,7 +213,7 @@ callback:
       Você também pode usá-lo pressionando o botão abaixo
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Impulsionar</a></b>: ${boostStatus}
       status:
         on: Ativado
         off: Desativado
