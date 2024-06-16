@@ -138,19 +138,19 @@ cmd:
     🧑‍💻 Développeur : @ly_oBot
 donate:
   menu: |
-    <b>☕️ Soutien au développement du bot <\/b>
+    <b>☕️ Soutien au développement du bot </b>
     En soutenant le développement du bot, vous recevrez des Crédits
 
-    <b>Solde : <\/b> <code>${balance} <\/code> Crédits
+    <b>Solde : </b> <code>${balance} </code> Crédits
     Avec 1 Crédits, vous avez la possibilité de booster un pack.
 
-    <b>Le boost offre les avantages suivants : <\/b>
-    ➖ Désactivation de "<code>${titleSuffix} <\/code>" dans le nom des packs <i>(pas dans le lien)<\/i>
+    <b>Le boost offre les avantages suivants : </b>
+    ➖ Désactivation de "<code>${titleSuffix} </code>" dans le nom des packs <i>(pas dans le lien)</i>
     ➖ Priorité lors de la conversion de stickers vidéos
     ➖ Possibilité d'ajouter plus d'un sticker dans la file d'attente
     ➖ Durée des stickers vidéos jusqu'à 30 secondes
 
-    <b>Sélectionnez le montant de Crédits que vous souhaitez acheter : <\/b>
+    <b>Sélectionnez le montant de Crédits que vous souhaitez acheter : </b>
   btn:
     donate: '☕ Faire un don'
   topup: |
@@ -285,12 +285,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:<\/b>
-      <a href="${link}">${title}<\/a>
+      <b>Successfully added to pack:</b>
+      <a href="${link}">${title}</a>
 
       Dans une heure, ce pack sera mis à jour pour tous les utilisateurs.
 
-      <i>Envoyez un ou plusieurs emojis correspondant à l'autocollant si vous souhaitez les ajouter<\/i>
+      <i>Envoyez un ou plusieurs emojis correspondant à l'autocollant si vous souhaitez les ajouter</i>
     ok_inline: |
       <b>Ajouté au pack avec succès :</b>
       <u>${title}</u>
@@ -429,8 +429,8 @@ scenes:
 
       <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d’autocollants statiques peuvent contenir jusqu’à 120 autocollants.</i>
     pack_title: |
-      <b>Entrez le nouveau nom du pack d'autocollants:<\/b>
-      <i>Vous pouvez choisir un nom aléatoire sur le bouton.<\/i>
+      <b>Entrez le nouveau nom du pack d'autocollants:</b>
+      <i>Vous pouvez choisir un nom aléatoire sur le bouton.</i>
     pack_name: |
       <b>Entrez un lien court pour le nouveau pack d'autocollants :</b>
 
@@ -482,7 +482,7 @@ scenes:
       Envoyez l'autocollant qui a été ajouté via ce bot et je vous montrerai son autocollant d'origine.
     error:
       not_found: |
-        <b>Erreur!<\/b>
+        <b>Erreur!</b>
         Je n'ai pas pu trouver l'autocollant d'origine.
   delete:
     enter: |
@@ -501,7 +501,7 @@ scenes:
 
       Nouveau titre : <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ Pour supprimer le suffixe "<code>${titleSuffix} <\/code>", vous devez booster le pack. Plus de détails dans le menu en visitant : \/donate
+      ❕ Pour supprimer le suffixe "<code>${titleSuffix} </code>", vous devez booster le pack. Plus de détails dans le menu en visitant : \/donate
   packAbout:
     enter: |
       <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
@@ -673,8 +673,8 @@ scenes:
     cancel: '❌ Annuler'
 error:
   telegram: |
-    <b>Télégramme a renvoyé une erreur!<\/b>
-    <code>${error}<\/code>
+    <b>Télégramme a renvoyé une erreur!</b>
+    <code>${error}</code>
   answerCbQuery:
     telegram: |
       Télégramme a renvoyé une erreur:

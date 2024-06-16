@@ -138,23 +138,23 @@ cmd:
     🧑‍💻 Pengembang: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Dukungan pengembangan Bot<\/b>
+    <b>☕️ Dukungan pengembangan Bot</b>
     Dengan mendukung pengembangan bot, Anda akan menerima Kredit
 
-    <b>Saldo:<\/b> <code>${balance}\/code> Kredit
+    <b>Saldo:</b> <code>${balance}\/code> Kredit
     Dengan 1 Kredit, Anda memiliki peluang untuk meningkatkan satu paket.
 
-    <b>Peningkatan memberikan manfaat sebagai berikut:<\/b>
-    ➖ Menonaktifkan "<code>${titleSuffix}\/code>" di nama paket <i>(bukan di tautan)<\/i>
+    <b>Peningkatan memberikan manfaat sebagai berikut:</b>
+    ➖ Menonaktifkan "<code>${titleSuffix}\/code>" di nama paket <i>(bukan di tautan)</i>
     ➖ Prioritas saat mengonversi stiker video
     ➖ Kemampuan menambahkan lebih dari satu stiker ke antrian pemrosesan
     ➖ Durasi stiker video hingga 30 detik
 
-    <b>Pilih jumlah Kredit yang ingin Anda beli:<\/b>
+    <b>Pilih jumlah Kredit yang ingin Anda beli:</b>
   btn:
     donate: '☕️ Donasi'
   topup: |
-    <b>Masukkan jumlah Kredit yang ingin Anda beli:<\/b>
+    <b>Masukkan jumlah Kredit yang ingin Anda beli:</b>
   invalid_amount: |
     <b>Jumlah tidak valid</b>
 
@@ -176,7 +176,7 @@ donate:
     already_donated: |
       Anda sudah menerima Kredit untuk pembayaran ini
     error: |
-      <b>Kesalahan!<\/b>
+      <b>Kesalahan!</b>
       Terjadi kesalahan saat memproses pembayaran
     canceled: |
       Pembayaran dibatalkan
@@ -363,7 +363,7 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
-        <b>Tunggu!<\/b>
+        <b>Tunggu!</b>
 
         Bot masih memproses file sebelumnya...
         Anda dapat mendukung pengembangan bot (\/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.

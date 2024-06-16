@@ -138,23 +138,23 @@ cmd:
     🧑‍💻 Tərtibatçı: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot inkişaf etdirilməsinə dəstək olun<\/b>
+    <b>☕️ Bot inkişaf etdirilməsinə dəstək olun</b>
     Botun inkişafına dəstək verərək, Kredit alacaqsınız
 
-    <b>Balans:<\/b> <code>${balance}<{\/code} Kreditlər
+    <b>Balans:</b> <code>${balance}<{\/code} Kreditlər
     1 Kredit ilə, bir paketi yüksəltmək imkanı var.
 
-    <b>Yüksəltmənin təmin etdiyi üstünlüklər:<\/b>
-    ➖ Paket adlarında "<code>${titleSuffix}<{\/code}" söndürülməsi <i>(linkdə deyil)<\/i>
+    <b>Yüksəltmənin təmin etdiyi üstünlüklər:</b>
+    ➖ Paket adlarında "<code>${titleSuffix}<{\/code}" söndürülməsi <i>(linkdə deyil)</i>
     ➖ Video stikerlərin çevrilməsində prioritet
     ➖ Emal növbəsinə bir neçə stiker əlavə etmək imkanı
     ➖ Video stikerlərin müddəti 30 saniyəyə qədər
 
-    <b>Almaq istədiyiniz Kreditlərin miqdarını seçin:<\/b>
+    <b>Almaq istədiyiniz Kreditlərin miqdarını seçin:</b>
   btn:
     donate: '☕️ Bağışlayın'
   topup: |
-    <b>Almaq istədiyiniz Kreditlərin miqdarını daxil edin:<\/b>
+    <b>Almaq istədiyiniz Kreditlərin miqdarını daxil edin:</b>
   invalid_amount: |
     <b>Yanlış miqdar</b>
 
@@ -176,7 +176,7 @@ donate:
     already_donated: |
       Bu ödəniş üçün artıq Kredit almışsınız
     error: |
-      <b>Xəta!<\/b>
+      <b>Xəta!</b>
       Ödəniş işlənərkən xəta baş verdi
     canceled: |
       Ödəniş ləğv edildi
@@ -263,7 +263,7 @@ callback:
           all: Hər kəs
           admins: Yalnız adminlər
       error: |
-        <b>Error!<\/b>
+        <b>Error!</b>
         Set not found.
   sticker:
     answerCbQuery:
@@ -285,12 +285,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Uğurla paketə əlavə edildi:<\/b>
-      <a href="${link}">${title}<\/a>
+      <b>Uğurla paketə əlavə edildi:</b>
+      <a href="${link}">${title}</a>
 
       Bir saat ərzində, bu paket bütün istifadəçilər üçün yenilənəcəkdir.
 
-      <i>Stikerə uyğun bir neçə emoji göndərin, əgər onları əlavə etmək istəyirsinizse.<\/i>
+      <i>Stikerə uyğun bir neçə emoji göndərin, əgər onları əlavə etmək istəyirsinizse.</i>
     ok_inline: |
       <b>Paketə uğurla əlavə edildi:</b>
       <u>${title}</u>
@@ -322,7 +322,7 @@ sticker:
 
         Zəhmət olmasa, /packs əmrindən istifadə edərək paket seçin
       no_rights: |
-        <b>Error!<\/b>
+        <b>Error!</b>
         You do not have the right to add stickers to this pack.
       stickers_too_much: |
         Bu paketdə stikerlərin maksimum sayı var.
@@ -501,7 +501,7 @@ scenes:
 
       Yeni başlıq: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ "<code>${titleSuffix}<\/code>" sonluğunu aradan qaldırmaq üçün paketi yüksəltməlisiniz. Daha ətraflı məlumat üçün menyuda: \/donate
+      ❕ "<code>${titleSuffix}</code>" sonluğunu aradan qaldırmaq üçün paketi yüksəltməlisiniz. Daha ətraflı məlumat üçün menyuda: \/donate
   packAbout:
     enter: |
       <b>Bu barədə məlumat axtarmaq üçün mənə stiker və ya fərdi emoji göndərin:</b>

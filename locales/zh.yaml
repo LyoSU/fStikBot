@@ -148,23 +148,23 @@ cmd:
     🧑‍💻 开发者: @ly_oBot
 donate:
   menu: |
-    <b>☕️ 机器人开发支持<\/b>
+    <b>☕️ 机器人开发支持</b>
     通过支持机器人的开发，您将获得信用点数
 
-    <b>余额：<\/b> <code>${balance}<\/code> 信用点数
+    <b>余额：</b> <code>${balance}</code> 信用点数
     使用 1 个信用点，您有机会提升一个包。
 
-    <b>升级可带来以下好处：<\/b>
-    ➖ 禁用包名称中的 "<code>${titleSuffix}<\/code>" <i>（不在链接中）<\/i>
+    <b>升级可带来以下好处：</b>
+    ➖ 禁用包名称中的 "<code>${titleSuffix}</code>" <i>（不在链接中）</i>
     ➖ 转换视频贴纸时的优先级
     ➖ 在处理队列中添加多个贴纸的功能
     ➖ 视频贴纸的持续时间最长可达 30 秒
 
-    <b>请选择你想购买的信用点数：<\/b>
+    <b>请选择你想购买的信用点数：</b>
   btn:
     donate: '☕️ 捐赠'
   topup: |
-    <b>请输入你想购买的积分数量：<\/b>
+    <b>请输入你想购买的积分数量：</b>
   invalid_amount: |
     <b>无效金额</b>
 
@@ -294,12 +294,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>成功添加到包中：<\/b>
-      <a href="${link}">${title}<\/a>
+      <b>成功添加到包中：</b>
+      <a href="${link}">${title}</a>
 
       1小时内，此包将更新给所有用户。
 
-      <i>发送一个或多个与贴纸匹配的emoji，如果您想要添加它们<\/i>
+      <i>发送一个或多个与贴纸匹配的emoji，如果您想要添加它们</i>
     ok_inline: |
       <b>成功添加到包装中：</b>
       <u>${title}</u>
@@ -510,7 +510,7 @@ scenes:
 
       新标题<a href="${link}">${title}</a>
     boost_notice: |
-      ❕ 要删除后缀 "<code>${titleSuffix}<\/code>", 您需要提升包。更多详情请访问：\/donate
+      ❕ 要删除后缀 "<code>${titleSuffix}</code>", 您需要提升包。更多详情请访问：\/donate
   packAbout:
     enter: |
       <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>

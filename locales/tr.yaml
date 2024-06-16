@@ -137,23 +137,23 @@ cmd:
     🧑‍💻 Geliştirici: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot geliştirme desteği<\/b>
+    <b>☕️ Bot geliştirme desteği</b>
     Botun geliştirilmesini destekleyerek Krediler kazanacaksınız
 
-    <b>Bakiye:<\/b> <code>${balance} <\/code> Krediler
+    <b>Bakiye:</b> <code>${balance} </code> Krediler
     1 Kredi ile bir paketi yükseltme fırsatınız var.
 
-    <b>Yükseltme şu avantajları sağlar:<\/b>
-    ➖ Paket adında "<code>${titleSuffix} <\/code>" devre dışı bırakma <i>(bağlantıda değil)<\/i>
+    <b>Yükseltme şu avantajları sağlar:</b>
+    ➖ Paket adında "<code>${titleSuffix} </code>" devre dışı bırakma <i>(bağlantıda değil)</i>
     ➖ Video çıkartmaları dönüştürürken öncelik
     ➖ İşlem kuyruğuna birden fazla çıkartma ekleme yeteneği
     ➖ Video çıkartmaların süresi 30 saniyeye kadar
 
-    <b>Satın almak istediğiniz Kredi miktarını seçin:<\/b>
+    <b>Satın almak istediğiniz Kredi miktarını seçin:</b>
   btn:
     donate: '☕️ Bağış yap'
   topup: |
-    <b>Satın almak istediğiniz Kredi miktarını girin:<\/b>
+    <b>Satın almak istediğiniz Kredi miktarını girin:</b>
   invalid_amount: |
     <b>Geçersiz tutar</b>
 
@@ -175,7 +175,7 @@ donate:
     already_donated: |
       Bu ödeme için zaten Kredi aldınız
     error: |
-      <b>Hata!<\/b>
+      <b>Hata!</b>
       Ödemeyi işlerken bir hata oluştu
     canceled: |
       Ödeme iptal edildi
@@ -284,12 +284,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Pakete başarıyla eklendi:<\/b>
-      <a href="${link}">${title}<\/a>
+      <b>Pakete başarıyla eklendi:</b>
+      <a href="${link}">${title}</a>
 
       Bir saat içinde, bu paket tüm kullanıcılar için güncellenecek.
 
-      <i>Etikete eşleşen bir veya daha fazla emoji gönderin, eklemek istiyorsanız<\/i>
+      <i>Etikete eşleşen bir veya daha fazla emoji gönderin, eklemek istiyorsanız</i>
     ok_inline: |
       <b>Pakete başarıyla eklendi:</b>
       <u>${title}</u>
@@ -499,7 +499,7 @@ scenes:
 
       Yeni unvan: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ "<code>${titleSuffix} <\/code>" ekini kaldırmak için, paketi yükseltmeniz gerekir. /bağış komutunu ziyaret ederek menüden daha fazla bilgi edinebilirsiniz
+      ❕ "<code>${titleSuffix} </code>" ekini kaldırmak için, paketi yükseltmeniz gerekir. /bağış komutunu ziyaret ederek menüden daha fazla bilgi edinebilirsiniz
   packAbout:
     enter: |
       <b>Bu konuda bilgi aramak için bana bir çıkartma veya özel emoji gönderin:</b>

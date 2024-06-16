@@ -23,7 +23,7 @@ cmd:
 
       Guruh paketiga stiker qo'shish uchun, rasim, video, gif yoki stikerni javobida /ss buyrug'idan foydalaning.
     help: |
-      <b>Bot komandalari ro‘yxati:<\/b>\n\n\/yangi - Yangi stiker to‘plamini yaratish\n\/yangi_emoji - Yangi emoji to‘plamini yaratish\n\n\/o‘chirish - Stikerni to‘plamdan o‘chirish\n\/asal - Asal stikerni topish\n\n\/to‘plamlar - Barcha to‘plamlaringiz ro‘yxati\n\/qayta - O‘chirilgan to‘plamni tiklash\n\/nusxa - Bir to‘plamni nusxa olish\n\/emoji - Hozirgi to‘plam uchun emoji suffiksini o‘zgartirish\n\/rəmz - Hozirgi video to‘plam uchun ramka o‘zgartirish\n\/nashr - To‘plamni katalogda nashr etish\n\n\/katalog - Sticker to‘plam katalogini ochish\n\n\/til - Tilni o‘zgartirish\n\/qo‘llab-quvvatlash - Dasturchini qo‘llab-quvvatlash\n\n💬 Qo‘llab-quvvatlash chati: @fStikCommunity (faqat ingliz tili)\n\n🧑‍🔧 Aloqa: @ly_oBot\n👨🏻‍💻 Developer kanali: @LyBlog\n\nGitHub: https:\/\/github.com\/-LyoSU\/fStikBot
+      <b>Bot komandalari ro‘yxati:</b>\n\n\/yangi - Yangi stiker to‘plamini yaratish\n\/yangi_emoji - Yangi emoji to‘plamini yaratish\n\n\/o‘chirish - Stikerni to‘plamdan o‘chirish\n\/asal - Asal stikerni topish\n\n\/to‘plamlar - Barcha to‘plamlaringiz ro‘yxati\n\/qayta - O‘chirilgan to‘plamni tiklash\n\/nusxa - Bir to‘plamni nusxa olish\n\/emoji - Hozirgi to‘plam uchun emoji suffiksini o‘zgartirish\n\/rəmz - Hozirgi video to‘plam uchun ramka o‘zgartirish\n\/nashr - To‘plamni katalogda nashr etish\n\n\/katalog - Sticker to‘plam katalogini ochish\n\n\/til - Tilni o‘zgartirish\n\/qo‘llab-quvvatlash - Dasturchini qo‘llab-quvvatlash\n\n💬 Qo‘llab-quvvatlash chati: @fStikCommunity (faqat ingliz tili)\n\n🧑‍🔧 Aloqa: @ly_oBot\n👨🏻‍💻 Developer kanali: @LyBlog\n\nGitHub: https:\/\/github.com\/-LyoSU\/fStikBot
     catalog: |
       <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
@@ -113,11 +113,11 @@ cmd:
     🧑‍💻 Ishlab chiquvchi: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot ishlab chiqishni qo'llab-quvvatlash<\/b>\nBotning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz\n\n<b>Balans:<\/b> <code>${balance}</code> Kreditlar\n1 Kredit bilan, siz bir quti boost qilish imkoniyatiga egasiz.\n\n<b>Boost quyidagi foydalarni beradi:<\/b>\n➖ "<code>${titleSuffix}</code>" qutilari nomini o'chirish <i>(havolada emas)<\/i>\n➖ Video stikerlarni konvertatsiya qilishda ustuvorlik\n➖ Birinchi navbatda bir nechta stikerlarni joriy qilish imkoniyati\n➖ Video stikerlar davomiyligi 30 soniyagacha\n\n<b>Xarid qilish uchun Kreditlar miqdorini tanlang:<\/b>
+    <b>☕️ Bot ishlab chiqishni qo'llab-quvvatlash</b>\nBotning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz\n\n<b>Balans:</b> <code>${balance}</code> Kreditlar\n1 Kredit bilan, siz bir quti boost qilish imkoniyatiga egasiz.\n\n<b>Boost quyidagi foydalarni beradi:</b>\n➖ "<code>${titleSuffix}</code>" qutilari nomini o'chirish <i>(havolada emas)</i>\n➖ Video stikerlarni konvertatsiya qilishda ustuvorlik\n➖ Birinchi navbatda bir nechta stikerlarni joriy qilish imkoniyati\n➖ Video stikerlar davomiyligi 30 soniyagacha\n\n<b>Xarid qilish uchun Kreditlar miqdorini tanlang:</b>
   btn:
     donate: '☕️ Xayriya qiling'
   topup: |
-    <b>Xarid qilish uchun Kreditlar miqdorini kirit:<\/b>
+    <b>Xarid qilish uchun Kreditlar miqdorini kirit:</b>
   invalid_amount: |
     <b>Noto'g'ri miqdor</b>
 
@@ -139,7 +139,7 @@ donate:
     already_donated: |
       Siz bu to'lov uchun allaqachon Kreditlarni oldingiz
     error: |
-      <b>Xato!<\/b>
+      <b>Xato!</b>
       To'lovni qayta ishlashda xato yuz berdi
     canceled: |
       To'lov bekor qilindi
@@ -247,7 +247,7 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Uddoqqi paketga muvaffaqiyatli qo'shildi:<\/b>\n<a href="${link}">${title}<\/a>\n\nBir soat ichida, bu paket barcha foydalanuvchilar uchun yangilangan bo'ladi.\n\n<i>Agardan emoji yoki bir nechta emoji yuboring, agar ularni qo'shmoqchi bo'lsangiz.<\/i>
+      <b>Uddoqqi paketga muvaffaqiyatli qo'shildi:</b>\n<a href="${link}">${title}</a>\n\nBir soat ichida, bu paket barcha foydalanuvchilar uchun yangilangan bo'ladi.\n\n<i>Agardan emoji yoki bir nechta emoji yuboring, agar ularni qo'shmoqchi bo'lsangiz.</i>
     ok_inline: |
       <b>Paketga muvaffaqiyatli qo'shildi:</b>
       <u>${title}</u>

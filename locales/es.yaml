@@ -138,11 +138,11 @@ cmd:
     🧑‍💻 Desarrollador: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Apoyo al desarrollo del bot<\/b> Al apoyar el desarrollo del bot, recibirás Créditos\n\n<b>Saldo:<\/b> <code>${balance}<\/code> Créditos Con 1 Crédito, tienes la oportunidad de potenciar un pack.\n\n<b>El impulso proporciona los siguientes beneficios:<\/b> ➖ Deshabilitar "<code>${titleSuffix}<\/code>" en el nombre de los packs <i>(no en el enlace)<\/i> ➖ Prioridad al convertir stickers de video ➖ Capacidad de agregar más de un sticker a la cola de procesamiento ➖ Duración de los stickers de video hasta 30 segundos\n\n<b>Selecciona la cantidad de Créditos que deseas comprar:<\/b>
+    <b>☕️ Apoyo al desarrollo del bot</b> Al apoyar el desarrollo del bot, recibirás Créditos\n\n<b>Saldo:</b> <code>${balance}</code> Créditos Con 1 Crédito, tienes la oportunidad de potenciar un pack.\n\n<b>El impulso proporciona los siguientes beneficios:</b> ➖ Deshabilitar "<code>${titleSuffix}</code>" en el nombre de los packs <i>(no en el enlace)</i> ➖ Prioridad al convertir stickers de video ➖ Capacidad de agregar más de un sticker a la cola de procesamiento ➖ Duración de los stickers de video hasta 30 segundos\n\n<b>Selecciona la cantidad de Créditos que deseas comprar:</b>
   btn:
     donate: '☕ Donar'
   topup: |
-    <b>Ingresa la cantidad de Créditos que deseas comprar:<\/b>
+    <b>Ingresa la cantidad de Créditos que deseas comprar:</b>
   invalid_amount: |
     <b>Cantidad inválida</b>
 
@@ -164,7 +164,7 @@ donate:
     already_donated: |
       Ya has recibido Créditos por este pago
     error: |
-      <b>¡Error!<\/b>
+      <b>¡Error!</b>
       Ocurrió un error al procesar el pago
     canceled: |
       Pago cancelado
@@ -273,12 +273,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Agregado con éxito al paquete:<\/b>
-      <a href="${link}">${title}<\/a>
+      <b>Agregado con éxito al paquete:</b>
+      <a href="${link}">${title}</a>
 
       En una hora, este paquete se actualizará para todos los usuarios.
 
-      <i>Envía uno o más emojis que coincidan con la pegatina, si quieres agregarlos.<\/i>
+      <i>Envía uno o más emojis que coincidan con la pegatina, si quieres agregarlos.</i>
     ok_inline: |
       <b>Se ha añadido al paquete correctamente:</b>
       <u>${title}</u>
@@ -489,7 +489,7 @@ scenes:
 
       Nuevo título: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ Para eliminar el sufijo "<code>${titleSuffix}<\/code>", necesitas potenciar el pack. Más detalles en el menú visitando: /donate
+      ❕ Para eliminar el sufijo "<code>${titleSuffix}</code>", necesitas potenciar el pack. Más detalles en el menú visitando: /donate
   packAbout:
     enter: |
       <b>Envíame una pegatina o un emoji personalizado para buscar información al respecto:</b>

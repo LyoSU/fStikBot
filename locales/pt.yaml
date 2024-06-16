@@ -138,11 +138,11 @@ cmd:
     🧑‍💻 Desenvolvedor: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Suporte ao desenvolvimento do bot<\/b>\nAo apoiar o desenvolvimento do bot, você receberá Créditos\n\n<b>Saldo:<\/b> <code>${balance}<\/code> Créditos\nCom 1 Crédito, você tem a oportunidade de dar um boost num pacote.\n\n<b>O boost oferece os seguintes benefícios:<\/b>\n➖ Desativação de "<code>${titleSuffix}<\/code>" no nome dos pacotes <i>(não no link)<\/i>\n➖ Prioridade ao converter adesivos de vídeo\n➖ Possibilidade de adicionar mais de um adesivo à fila de processamento\n➖ Duração dos adesivos de vídeo até 30 segundos\n\n<b>Selecione a quantidade de Créditos que você deseja comprar:<\/b>
+    <b>☕️ Suporte ao desenvolvimento do bot</b>\nAo apoiar o desenvolvimento do bot, você receberá Créditos\n\n<b>Saldo:</b> <code>${balance}</code> Créditos\nCom 1 Crédito, você tem a oportunidade de dar um boost num pacote.\n\n<b>O boost oferece os seguintes benefícios:</b>\n➖ Desativação de "<code>${titleSuffix}</code>" no nome dos pacotes <i>(não no link)</i>\n➖ Prioridade ao converter adesivos de vídeo\n➖ Possibilidade de adicionar mais de um adesivo à fila de processamento\n➖ Duração dos adesivos de vídeo até 30 segundos\n\n<b>Selecione a quantidade de Créditos que você deseja comprar:</b>
   btn:
     donate: '☕ Doar'
   topup: |
-    <b>Insira a quantidade de Créditos que você deseja comprar:<\/b>
+    <b>Insira a quantidade de Créditos que você deseja comprar:</b>
   invalid_amount: |
     <b>Quantidade inválida</b>
 
@@ -164,7 +164,7 @@ donate:
     already_donated: |
       Você já recebeu Créditos para este pagamento
     error: |
-      <b>Error!<\/b>
+      <b>Error!</b>
       Ocorreu um erro ao processar o pagamento
     canceled: |
       Pagamento cancelado
@@ -273,12 +273,12 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Adicionado com sucesso ao pacote:<\/b>
-      <a href="${link}">${title}<\/a>
+      <b>Adicionado com sucesso ao pacote:</b>
+      <a href="${link}">${title}</a>
 
       Dentro de uma hora, este pacote será atualizado para todos os usuários.
 
-      <i>Envie um ou mais emojis que combinem com o sticker, se desejar adicioná-los<\/i>
+      <i>Envie um ou mais emojis que combinem com o sticker, se desejar adicioná-los</i>
     ok_inline: |
       <b>Adicionado ao pacote com sucesso:</b>
       <u>${title}</u>
@@ -350,7 +350,7 @@ sticker:
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
       wait_load: |
-        <b>Aguarde!<\/b>
+        <b>Aguarde!</b>
 
         O bot ainda está processando o arquivo anterior...
         Você pode apoiar o desenvolvimento do bot (\/donate) para aumentar a prioridade de processamento e permitir adicionar mais de um sticker à fila.
@@ -489,7 +489,7 @@ scenes:
 
       Novo título: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ Para remover o sufixo "<code>${titleSuffix}<\/code>", você precisa dar um boost no pacote. Mais detalhes no menu visitando: \/donate
+      ❕ Para remover o sufixo "<code>${titleSuffix}</code>", você precisa dar um boost no pacote. Mais detalhes no menu visitando: \/donate
   packAbout:
     enter: |
       <b>Envie-me um sticker ou emoji personalizado para procurar informações sobre ele:</b>
