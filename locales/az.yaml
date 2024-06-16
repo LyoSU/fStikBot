@@ -141,11 +141,11 @@ donate:
     <b>☕️ Bot inkişaf etdirilməsinə dəstək olun</b>
     Botun inkişafına dəstək verərək, Kredit alacaqsınız
 
-    <b>Balans:</b> <code>${balance}<{\/code} Kreditlər
+    <b>Balans:</b> <code>${balance}</code> Kreditlər
     1 Kredit ilə, bir paketi yüksəltmək imkanı var.
 
     <b>Yüksəltmənin təmin etdiyi üstünlüklər:</b>
-    ➖ Paket adlarında "<code>${titleSuffix}<{\/code}" söndürülməsi <i>(linkdə deyil)</i>
+    ➖ Paket adlarında "<code>${titleSuffix}</code>" söndürülməsi <i>(linkdə deyil)</i>
     ➖ Video stikerlərin çevrilməsində prioritet
     ➖ Emal növbəsinə bir neçə stiker əlavə etmək imkanı
     ➖ Video stikerlərin müddəti 30 saniyəyə qədər
