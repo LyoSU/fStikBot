@@ -1,13 +1,13 @@
 ---
 language_name: '🇮🇩 Indonesia'
-name:
+name: Favorite Stickers Bot 🇺🇦
 description:
   long: |
     🧙 Saya adalah penyihir emoji dan stiker, siap membuat pengalaman chatting Anda lebih menyenangkan! Dengan kekuatan ajaib saya, Anda dapat mengubah foto, video, dan GIF favorit Anda menjadi emoji dan stiker keren tanpa repot. 🎉🎊 Dengan hanya beberapa klik, Anda dapat membuat paket pribadi untuk setiap kesempatan. Jadi, tunggu apa lagi? Ayo tambahkan ✨kilauan✨ pada obrolan Anda!
 
     Cari stiker: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-
+    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
 ratelimit: Tidak terlalu sering!
 cmd:
   start:
