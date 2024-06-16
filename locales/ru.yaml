@@ -107,7 +107,7 @@ cmd:
     types:
       regular: Стикеры
       custom_emoji: Эмодзи
-      inline: Inline
+      inline: Инлайн
     empty: |
       <b>У тебя нет стикерпака.</b>
       Для создания напиши /new
