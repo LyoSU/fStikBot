@@ -3,9 +3,9 @@ language_name: '🇫🇷 Français'
 name: Bot autocollant préféré 🇺🇦
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 Je suis le sorcier des packs d'emojis et de stickers, et je suis là pour rendre votre expérience de messagerie plus amusante ! Mes pouvoirs magiques me permettent de transformer vos photos, vidéos et GIFs préférés en emojis et stickers cool sans les tracas de la conversion et du recadrage. 🎉🎊 Avec moi, vous pouvez créer des packs personnalisés pour toutes les occasions en quelques clics. Alors, qu'attendez-vous ? Commençons et ajoutons un peu de ✨magie✨ à vos conversations !
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik
+    Rechercher des stickers : https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙 Je suis l'assistant emoji et autocollant! Transformez des photos, des vidéos et des GIFs en autocollants cool en un clic.
 ratelimit: Pas si souvent!
@@ -72,19 +72,19 @@ cmd:
       round: '🎥 Vidéo en forme ronde'
       clear: '🖼️ Supprimer l''arrière-plan de la photo'
       about: '📦 Informations sur le pack'
-      user_about: '🧑‍🎨 Creator info'
-      lang: '🌐 Change language'
+      user_about: '🧑‍🎨 Infos sur le créateur'
+      lang: '🌐 Changer la langue'
       report: '🚨 Pack de rapports'
-      donate: '☕️ Support the developer'
+      donate: '☕️ Soutenir le développeur'
       add_to_group: ':busts_in_silhouette : Ajouter au groupe'
     btn:
-      new: '📥 Create new'
+      new: '📥 Créer nouveau'
       catalog: '💖 Catalogue ouvert'
       catalog_mini: '💖 Catalogue'
       catalog_browser: '🌐 Ouvrir dans le navigateur'
       catalog_browser_mini: '🌐 Dans le navigateur'
       catalog_app: '📱 Télécharger l''application Android'
-      catalog_app_mini: '📱 Android app'
+      catalog_app_mini: '📱 Application Android'
   inline:
     switch_pm: '📁 Sélectionnez le pack'
   restore: |
@@ -122,8 +122,8 @@ cmd:
       Pour changer l'émoji par défaut pour le pack actuel, envoyer <code>/emoji</code> suivi par les émojis séparés par un espace
 
       Par exemple - <code>/emoji 🌟</code>
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: Emoji modifié avec succès.
+    error: Une erreur est survenue lors du changement d'emoji !
   round_video:
     enabled: |
       Les vidéos auront maintenant une forme arrondie
@@ -199,7 +199,7 @@ coedit:
     Pas encore d'éditeurs
   btn:
     send: '📤 Envoyer le lien'
-    reset: '🔁 Reset link'
+    reset: '🔁 Réinitialiser le lien'
   share: |
     Suit le lien et appuie sur "Démarrer" pour co-éditer le pack "${title}"
   reset: |
@@ -225,7 +225,8 @@ callback:
       Vous pouvez également l'utiliser en appuyant sur le bouton ci-dessous
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+
+        ⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b> : ${boostStatus}
       status:
         on: Activé
         off: Désactivé
@@ -237,11 +238,11 @@ callback:
       restore: '✅ Restaurer'
       use_pack: '📦 Utiliser le pack'
       boost: '⚡ Boost'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
+      frame: '🖼 Cadre'
+      rename: '✏️ Renommer'
+      search_gif: '🔎 Rechercher un GIF'
       coedit: '👥 Co-editer'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 Ajouter au catalogue'
       catalog_edit: '📝 Modifier dans le catalogue'
       catalog_delete: '🗑️ Supprimer du catalogue'
       catalog_share: '🔗 Partager'
@@ -294,14 +295,14 @@ sticker:
     ok_inline: |
       <b>Ajouté au pack avec succès :</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Super, maintenant envoyez l'emoji correspondant au
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Attendez...<b>
+      Votre fichier est en file d'attente pour la conversion. Attendez la fin. Cela peut prendre du temps.
 
-      Progress: ${progress} / ${total}
+      Progression: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Les utilisateurs ayant soutenu le bot sont prioritaires dans la file d'attente (plus d'infos: /donate)<i>
     catalog_offer: |
       <b>:étonné_face: Wow, tu as fait un super pack !</b>
 
@@ -412,9 +413,9 @@ scenes:
       <b><u>Choisissez le type de pack</u></b>
     regular: '😊 Autocollant'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
+    static: '🌟 Statique'
     animated: '✨ Vecteur'
-    video: '📹 Video'
+    video: '📹 Vidéo'
     pack_format: |
       <b><u>Choisissez le type de pack</u></b>
 
@@ -470,13 +471,13 @@ scenes:
       <b>Solde actuel :</b> ${balance} Crédits
 
       Acheter des crédits : /donate
-    pay_btn: '✅ Confirm'
+    pay_btn: '✅ Confirmer'
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>Erreur !</b>
+        Cette fonctionnalité est uniquement disponible pour les membres donateurs.
 
-        You can do this by sending the /donate command.
+        Vous pouvez le faire en envoyant la commande /donate.
   original:
     enter: |
       Envoyez l'autocollant qui a été ajouté via ce bot et je vous montrerai son autocollant d'origine.
@@ -584,14 +585,14 @@ scenes:
       select_language: |
         <b>Choisissez les langues pour lesquelles votre pack est destiné :</b>
         <i>Vous pouvez sélectionner plusieurs langues</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_all_languages: Toutes les langues
+      button_confirm_language: Confirmer
       set_safe: |
         <b>Votre pack est-il sûr pour les utilisateurs ?</b>
         <i>Autrement dit, il ne contient pas d'érotisme ni d'autres contenus choquants</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: Oui, c'est sûr
+        not_safe: Non, ce n'est pas sûr
       no_tags: n'ont pas été spécifiés
       confirm: |
         <b>Confirmez la publication du pack "<a href="${link}">${title}</a>"</b>
@@ -600,7 +601,7 @@ scenes:
 
         <b>Tags :</b> ${tags}
         <b>Langues :</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Confirmer la publication'
       success: |
         Félicitations, votre pack a été publié dans l'annuaire général de notre bot où les autres utilisateurs peuvent le trouver !
 
@@ -684,7 +685,7 @@ error:
     Il vous est interdit d'utiliser cette fonctionnalité.
     Veuillez contacter l'administrateur.
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Une erreur inconnue s'est produite, veuillez réessayer.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Si le problème persiste, merci d'écrire à @Ly_oBot.
+    Veuillez préciser quel bot vous utilisez et décrire le problème en détail dans un seul message.

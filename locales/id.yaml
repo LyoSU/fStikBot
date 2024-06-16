@@ -7,7 +7,7 @@ description:
 
     Cari stiker: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 Saya adalah penyihir emoji dan stiker! Ubah foto, video, dan GIF menjadi stiker keren dalam sekejap.
 ratelimit: Tidak terlalu sering!
 cmd:
   start:
@@ -75,7 +75,7 @@ cmd:
       user_about: '🧑‍🎨 Info pembuat'
       lang: '🌐 Change language'
       report: '🚨 Paket laporan'
-      donate: '☕️ Support the developer'
+      donate: '☕️ Dukungan pengembangan bot'
       add_to_group: '👥 Tambahkan ke Grup'
     btn:
       new: '📥 Create new'
@@ -586,7 +586,7 @@ scenes:
         <b>Pilih bahasa untuk paket stiker Anda:</b>
         <i>Anda dapat memilih beberapa bahasa</i>
       button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_confirm_language: Konfirmasi
       set_safe: |
         <b>Is your sticker pack safe for users?</b>
         <i>That is, it does not contain erotica and other shocking content</i>

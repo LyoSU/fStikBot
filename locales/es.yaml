@@ -7,7 +7,7 @@ description:
 
     Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    🧙 ¡Soy el mago del emoji y los stickers! Transforma fotos, videos y GIFs en stickers geniales en un instante.
 ratelimit: '¡No tan amenudo!'
 cmd:
   start:
@@ -78,13 +78,13 @@ cmd:
       donate: '☕️ Support the developer'
       add_to_group: '👥 Añadir al grupo'
     btn:
-      new: '📥 Create new'
+      new: '📥 Crear nuevo'
       catalog: '💖 Catálogo abierto'
       catalog_mini: '💖 Catálogo'
       catalog_browser: '🌐 Abrir en navegador'
       catalog_browser_mini: '🌐 En navegador'
       catalog_app: '📱 Descargar aplicación Android'
-      catalog_app_mini: '📱 Android app'
+      catalog_app_mini: '📱 App Android'
   inline:
     switch_pm: '📁 Seleccione pack'
   restore: |
@@ -123,7 +123,7 @@ cmd:
 
       Por ejemplo - <code>/emoji 🌟</code>
     done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    error: '¡Hubo un error al cambiar el emoji!'
   round_video:
     enabled: |
       Los videos ahora tendrán una forma redondeada
@@ -282,14 +282,14 @@ sticker:
     ok_inline: |
       <b>Se ha añadido al paquete correctamente:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Genial, ahora envía el emoji que corresponde a
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Espera...</b>
+      Tu archivo está en la cola para la conversión. Espera a que se complete. Esto puede tardar un poco.
 
-      Progress: ${progress} / ${total}
+      Progreso: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Los usuarios que apoyaron al bot tienen prioridad en la cola (más info: /donate)</i>
     catalog_offer: |
       <b>😲 ¡Guau, hiciste un gran paquete!</b>
 
@@ -458,13 +458,13 @@ scenes:
       <b>Saldo actual:</b> ${balance} Créditos
 
       Comprar créditos: /donate
-    pay_btn: '✅ Confirm'
+    pay_btn: '✅ Confirmar'
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>¡Error!</b>
+        Desafortunadamente, esta función solo está disponible para aquellos que han apoyado el bot.
 
-        You can do this by sending the /donate command.
+        Puedes hacerlo enviando el comando /donate.
   original:
     enter: |
       Envíe el sticker que se agregó a través de este bot y le mostraré la original.
@@ -578,8 +578,8 @@ scenes:
         <b>¿Tu paquete es seguro para los usuarios?</b>
         <i>Es decir, no contiene erótica y otro contenido impactante</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: Sí, es seguro
+        not_safe: No, no es seguro
       no_tags: no se especificó
       confirm: |
         <b>Confirme la publicación del paquete "<a href="${link}">${title}</a>"</b>
@@ -588,7 +588,7 @@ scenes:
 
         <b>Etiquetas:</b> ${tags}
         <b>Idiomas:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Confirmar publicación'
       success: |
         ¡Enhorabuena, tu pack ha sido publicado en el directorio general de nuestro bot donde otros usuarios pueden encontrarlo!
 
@@ -610,7 +610,7 @@ scenes:
     success: |
       <b>¡Paquete eliminado exitosamente!</b>
     error:
-      - <b>Error!</b>
+      - <b>¡Error!</b>
       - Ups, algo salió mal.
   frame:
     no_video: |
@@ -672,7 +672,7 @@ error:
     Está prohibido utilizar esta función.
     Por favor, póngase en contacto con el administrador.
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Se ha producido un error desconocido, por favor intente nuevamente.</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Si el problema persiste, escriba a @Ly_oBot.
+    Por favor escriba inmediatamente sobre qué bot está hablando y describa el problema en detalle en un solo mensaje.

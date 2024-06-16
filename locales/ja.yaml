@@ -72,19 +72,19 @@ cmd:
       round: '丸'
       clear: '🖼️ 背景を写真から削除する'
       about: '📦 パック情報'
-      user_about: '🧑‍🎨 Creator info'
-      lang: '🌐 Change language'
+      user_about: '🧑‍🎨 クリエイター情報'
+      lang: '🌐 言語を変更'
       report: '🚨 レポート パック'
-      donate: '☕️ Support the developer'
+      donate: '☕️ 開発者をサポート'
       add_to_group: ':busts_in_sシルエット: グループに追加'
     btn:
-      new: '📥 Create new'
+      new: '📥 新規作成'
       catalog: '💖 カタログを開く'
       catalog_mini: '💖 カタログ'
       catalog_browser: 'ブラウザで開く'
       catalog_browser_mini: '🌐 ブラウザで'
       catalog_app: '📱 Android アプリをダウンロード'
-      catalog_app_mini: '📱 Android app'
+      catalog_app_mini: '📱 Android アプリ'
   inline:
     switch_pm: '📁 パックを選択'
   restore: |
@@ -103,10 +103,10 @@ cmd:
     <i>ボットはパックの内容に対して責任がなく、それを制御する機能もないことに注意してください</i>
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 パック</b>
     types:
       regular: ステッカー
-      custom_emoji: Emojis
+      custom_emoji: 絵文字
       inline: Inline
     empty: |
       <b>パックはまだありません。</b>
@@ -122,8 +122,8 @@ cmd:
       現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> の後にスペースを空けて絵文字を送信してください。
 
       例 - <code>/emoji 🌟</code>
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: 絵文字が正常に変更されました。
+    error: 絵文字の変更中にエラーが発生しました！
   round_video:
     enabled: |
       これから動画の形が丸くなります
@@ -187,7 +187,7 @@ coedit:
     編集者はまだいません。
   btn:
     send: '📤 リンクを送信'
-    reset: '🔁 Reset link'
+    reset: '🔁 リンクをリセット'
   share: |
     リンクをフォローし、"start"を押してパック "${title}" を共同編集します
   reset: |
@@ -223,13 +223,13 @@ callback:
       hide: '❌ パックを隠す'
       delete: ':wasteバスケット: パックを削除'
       restore: '✅ リストア'
-      use_pack: '📦 Use pack'
+      use_pack: '📦 パックを使う'
       boost: '⚡ ブースト'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
+      frame: '🖼 フレーム'
+      rename: '✏️ 名前を変更'
+      search_gif: '🔎 GIFを検索'
       coedit: ':busts_in_sシルエット: 共同編集'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 カタログに追加'
       catalog_edit: '📝 カタログで編集'
       catalog_delete: ' - カタログから削除する'
       catalog_share: '🔗 共有'
@@ -251,8 +251,8 @@ callback:
           all: 全員
           admins: 管理者のみ
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>エラー！</b>
+        セットが見つかりません。
   sticker:
     answerCbQuery:
       delete: ステッカーはパックから正常に削除されました。
@@ -277,14 +277,14 @@ sticker:
     ok_inline: |
       <b></b>
       <u>${title}</u> を追加しました
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: わかりました、次に一致する絵文字を送信してください
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>お待ちください...</b>
+      ファイルは変換待ちキューに入っています。完了までお待ちください。これは時間がかかる場合があります。
 
-      Progress: ${progress} / ${total}
+      進捗: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>ボットをサポートしたユーザーはキュー内で優先されます（詳細: /donate）</i>
     catalog_offer: |
       <b>😲 すごい、素晴らしいパックができました！</b>
 
@@ -395,9 +395,9 @@ scenes:
       <b><u>パックタイプ</u></b>
     regular: '😊 ステッカー'
     custom_emoji: '🌟 絵文字 (プレミアム)'
-    static: '🌟 Static'
+    static: '🌟 静止画'
     animated: '✨ ベクター'
-    video: '📹 Video'
+    video: '📹 ビデオ'
     pack_format: |
       <b><u>パックの種類を選択</u></b>
 
@@ -452,13 +452,13 @@ scenes:
       <b>現在の残高:</b> ${balance}クレジット
 
       クレジットを購入する: /donate
-    pay_btn: '✅ Confirm'
+    pay_btn: '✅ 確認'
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>エラー！</b>
+        この機能は寄付メンバーのみが利用可能です。
 
-        You can do this by sending the /donate command.
+        /donate コマンドを送信してこれを行うことができます。
   original:
     enter: |
       このボットを介して追加されたステッカーを送信してください。元のステッカーを表示します。
@@ -566,14 +566,14 @@ scenes:
       select_language: |
         <b>パックの言語を選択:</b>
         <i>複数の言語</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_all_languages: 全ての言語
+      button_confirm_language: 確認
       set_safe: |
         <b>あなたのパックはユーザーにとって安全ですか？</b>
         <i>つまり、エロティカやその他の衝撃的なコンテンツ</i> が含まれていません。
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: はい、安全です
+        not_safe: いいえ、安全ではありません
       no_tags: 指定されていません
       confirm: |
         <b>パックの公開を確認します "<a href="${link}">${title}</a>"</b>
@@ -582,7 +582,7 @@ scenes:
 
         <b>タグ:</b> ${tags}
         <b>言語:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ 公開確認'
       success: |
         おめでとうございます。あなたのパックは他のユーザーが見つけられるボットの一般的なディレクトリに公開されました！
 
@@ -668,7 +668,7 @@ error:
     この機能の使用は禁止されています。
     管理者に問い合わせてください。
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>不明なエラーが発生しました。もう一度お試しください。</b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    問題が解決しない場合は、@Ly_oBot に連絡してください。
+    どのボットのことを話しているのかをすぐに書き、問題を詳細に説明してください。
