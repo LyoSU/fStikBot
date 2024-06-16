@@ -122,8 +122,8 @@ cmd:
       لتغيير الرموز التعبيرية الافتراضية للحزمة الحالية، إرسال <code>/emoji</code> تليها الرموز التعبيرية مفصولة بمساحة
 
       على سبيل المثال - <code>/emoji 🌟</code>
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: تم تغيير الإيموجي بنجاح.
+    error: حدث خطأ أثناء تغيير الإيموجي!
   round_video:
     enabled: |
       سيكون لمقاطع الفيديو الآن شكل مستدير
@@ -198,7 +198,7 @@ coedit:
     لا يوجد محررين بعد
   btn:
     send: '📤 إرسال الرابط'
-    reset: '🔁 Reset link'
+    reset: '🔁 إعادة تعيين الرابط'
   share: |
     يتبع الرابط واضغط على "بدء" لتشارك في تحرير الحزمة "${title}"
   reset: |
@@ -236,11 +236,11 @@ callback:
       restore: '✅ استعادة'
       use_pack: '📦 استخدام الحزمة'
       boost: '⚡ تعزيز'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
+      frame: '🖼 إطار'
+      rename: '✏️ إعادة تسمية'
+      search_gif: '🔎 بحث عن GIF'
       coedit: '👥 تحرير مشترك'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 إضافة إلى الكتالوج'
       catalog_edit: '📝 تعديل في الكتالوج'
       catalog_delete: '🗑️ حذف من الكتالوج'
       catalog_share: '🔗 المشاركة'
@@ -293,7 +293,7 @@ sticker:
     ok_inline: |
       <b>تمت الإضافة إلى الحزمة بنجاح:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: رائع، الآن أرسل الإيموجي الذي يتطابق مع
     converting_process: |
       <b>Wait...</b>\nYour file is in the queue for conversion. Wait for completion. This may take some time.\n\nProgress: ${progress} \/ ${total}\n\n<i>Users who supported the bot get priority in the queue (more: \/donate)</i>
     catalog_offer: |
@@ -406,7 +406,7 @@ scenes:
       <b><u>اختر نوع الحزمة</u></b>
     regular: '😊 ملصق'
     custom_emoji: '🌟 Emoji (Premium)'
-    static: '🌟 Static'
+    static: '🌟 ثابت'
     animated: '✨ ناقل'
     video: '📹 فيديو'
     pack_format: |
@@ -575,14 +575,14 @@ scenes:
       select_language: |
         <b>اختر اللغات التي تحتوي عليها حزمتك:</b>
         <i>يمكنك تحديد لغات متعددة</i>
-      button_all_languages: All languages
+      button_all_languages: جميع اللغات
       button_confirm_language: تأكيد
       set_safe: |
         <b>هل حزمتك آمنة للمستخدمين؟</b>
         <i>أي أنها لا تحتوي على مواد جنسية أو محتويات مذهلة أخرى</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: نعم، إنه آمن
+        not_safe: لا، إنه غير آمن
       no_tags: لم يتم تحديد
       confirm: |
         <b>قم بتأكيد نشر الحزمة "<a href="${link}">${title}</a>"</b>
@@ -591,7 +591,7 @@ scenes:
 
         <b>العلامات:</b> ${tags}
         <b>اللغات:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ تأكيد النشر'
       success: |
         تهانينا، تم نشر حزمتك في الدليل العام للبوت الخاص بنا حيث يمكن للمستخدمين الآخرين العثور عليه!
 
@@ -631,7 +631,7 @@ scenes:
 
       <i>في المستقبل، يمكنك استخدام أمر /frame لتعيين نوع الإطار</i>
     types:
-      lite: '1. Lite'
+      lite: '1. خفيف'
       medium: '2. متوسط'
       rounded: '3. مدور'
       square: '4. مربع'
