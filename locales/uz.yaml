@@ -253,7 +253,7 @@ sticker:
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
-      <b>Wait...</b>
+      <b>Wait...<\/b>
       Your file is in the queue for conversion. Wait for completion. This may take some time.
 
       Progress: ${progress} \/ ${total}
@@ -639,7 +639,7 @@ error:
     Sizga ushbu xususiyatdan foydalanish taqiqlangan.
     Iltimos, administratorga murojaat qiling.
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>An unknown error has occurred, please try again.<\/b>
 
     If the problem persists, then write to @Ly_oBot.
     Please write immediately about which bot you are talking about and describe the problem in detail in one message.
