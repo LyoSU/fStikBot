@@ -186,7 +186,7 @@ donate:
     already_donated: |
       您已经为此支付获得了信用点
     error: |
-      <b>错误!<\b>\n处理支付时出错
+      <b>错误!</b>\n处理支付时出错
     canceled: |
       支付已取消
 coedit:

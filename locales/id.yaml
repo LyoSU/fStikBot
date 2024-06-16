@@ -502,7 +502,7 @@ scenes:
 
       Judul baru: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ Untuk menghapus akhiran "<code>${titleSuffix}<\code>", Anda perlu meningkatkan paket. Lebih detail di menu dengan mengunjungi:\/donate
+      ❕ Untuk menghapus akhiran "<code>${titleSuffix}</code>", Anda perlu meningkatkan paket. Lebih detail di menu dengan mengunjungi:\/donate
   packAbout:
     enter: |
       <b>Kirimi saya stiker atau emoji khusus untuk mencari informasi tentangnya:</b>
