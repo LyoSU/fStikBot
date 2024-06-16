@@ -68,17 +68,17 @@ cmd:
       original: '🔍 Find original sticker'
       restore: '🔀 Paketi bərpa edin'
       copy: '📋 Paketi kopyalayın'
-      emoji: '📝 Change emoji suffix'
+      emoji: '📝 Emoji şəkilçisini dəyişdirin'
       round: '🎥 Dairəvi formalı video'
       clear: '🖼️ Şəkildən fonu silin'
       about: '📦 Paket məlumatı'
       user_about: '🧑‍🎨 Yaradıcı məlumatı'
-      lang: '🌐 Change language'
+      lang: '🌐 Dili dəyişdirin'
       report: '🚨 Şikayət paketi'
-      donate: '☕️ Support the developer'
+      donate: '☕️ İnkişaf etdiricini dəstəkləyin'
       add_to_group: '👥 Qrupa əlavə edin'
     btn:
-      new: '📥 Create new'
+      new: '📥 Yenisi yaradın'
       catalog: '💖 Kataloqu açın'
       catalog_mini: '💖 Kataloq'
       catalog_browser: '🌐 Brauzerdə açın'
@@ -122,8 +122,8 @@ cmd:
       Cari paket üçün default emojini dəyişdirmək üçün, <code>/emoji</code> yazın və sonra emojiyi bir boşluqla ayıraraq göndərin
 
       Məsələn - <code>/emoji 🌟</code>
-    done: Emoji successfully changed.
-    error: There was an error changing emoji!
+    done: Emoji uğurla dəyişdirildi.
+    error: Emoji dəyişdirilməsi zamanı xəta baş verdi!
   round_video:
     enabled: |
       Videolar indi dairəvi formada olacaq
@@ -239,9 +239,9 @@ callback:
       boost: '⚡ Gücləndirin'
       frame: '🖼 Çərçivə'
       rename: '✏️ Adını dəyişdirin'
-      search_gif: '🔎 Search GIF'
+      search_gif: '🔎 GIF axtarın'
       coedit: '👥 Birgə redaktə'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 Kataloqa əlavə edin'
       catalog_edit: '📝 Kataloqda redaktə edin'
       catalog_delete: '🗑 Kataloqdan silin'
       catalog_share: '🔗️️ Paylaşın'
@@ -263,8 +263,8 @@ callback:
           all: Hər kəs
           admins: Yalnız adminlər
       error: |
-        <b>Error!</b>
-        Set not found.
+        <b>Xəta!<\/b>
+        Yığımı tapılmadı.
   sticker:
     answerCbQuery:
       delete: Stiker paketdən uğurla çıxarıldı.
@@ -294,14 +294,14 @@ sticker:
     ok_inline: |
       <b>Paketə uğurla əlavə edildi:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Əla, indi uyğun olan emoji göndərin
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>Gözləyin...<\/b>
+      Fayl konversiya növbəsindədir. Tamamlanmasını gözləyin. Bu bir az vaxt ala bilər.
 
-      Progress: ${progress} / ${total}
+      Gedişat: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>Botu dəstəkləyən istifadəçilər növbədə prioritet əldə edirlər (daha çox məlumat: /donate)<\/i>
     catalog_offer: |
       <b>😲 Vay, əla paket hazırladın!</b>
 
@@ -322,8 +322,8 @@ sticker:
 
         Zəhmət olmasa, /packs əmrindən istifadə edərək paket seçin
       no_rights: |
-        <b>Error!</b>
-        You do not have the right to add stickers to this pack.
+        <b>Xəta!<\/b>
+        Bu paketi əlav etmək hüququnuz yoxdur.
       stickers_too_much: |
         Bu paketdə stikerlərin maksimum sayı var.
 
@@ -412,7 +412,7 @@ scenes:
       <b><u>Paket növünü seçin</u></b>
     regular: '😊 Etiket'
     custom_emoji: '🌟 Emoji (mükafat)'
-    static: '🌟 Static'
+    static: '🌟 Statik'
     animated: '✨ Vektor'
     video: '📹 Video'
     pack_format: |
@@ -470,11 +470,11 @@ scenes:
       <b>Cari balans:</b> ${balance} Kredit
 
       Kredit almaq: /donate
-    pay_btn: '✅ Confirm'
+    pay_btn: '✅ Təsdiqlə'
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
+        <b>səhv!<\/b>
+        Təəssüf ki, bu xüsusiyyət yalnız botu dəstəkləyənlər üçün mövcuddur.
 
         You can do this by sending the /donate command.
   original:
@@ -584,14 +584,14 @@ scenes:
       select_language: |
         <b>Paketinizin hansı dillər üçün olduğunu seçin:</b>
         <i>Siz çoxlu dil seçə bilərsiniz</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_all_languages: Bütün dillər
+      button_confirm_language: Təsdiq edin
       set_safe: |
         <b>Paketiniz istifadəçilər üçün təhlükəsizdirmi?</b>
         <i>Yəni erotik və digər şokedici məzmun yoxdur</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: Bəli, bu təhlükəsizdir
+        not_safe: Xeyr, bu təhlükəsiz deyildir
       no_tags: müəyyən edilməmişdir
       confirm: |
         <b>"<a href="${link}">${title}</a>" paketinin dərc olunmasını təsdiqləyin</b>
@@ -600,7 +600,7 @@ scenes:
 
         <b>Teqlər:</b> ${tags}
         <b>Dillər:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Nəşri təsdiqləyin'
       success: |
         Təbrik edirik, paketiniz digər istifadəçilərin tapa biləcəyi botumuzun ümumi kataloqunda dərc olundu!
 
@@ -684,7 +684,7 @@ error:
     Sizə bu funksiyadan istifadə qadağan olunub.
     Zəhmət olmasa, administratorla əlaqə saxlayın.
   unknown: |
-    <b>An unknown error has occurred, please try again.</b>
+    <b>Naməlum xəta baş verdi, zəhmət olmasa yenidən cəhd edin.<\/b>
 
-    If the problem persists, then write to @Ly_oBot.
-    Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+    Problem davam edərsə @Ly_oBot-a yazın.
+    Zəhmət olmasa, hansı bot barədə danışdığınızı və problemi bir mesajda ətraflı şəkildə təsvir edin.
