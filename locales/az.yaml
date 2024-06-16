@@ -263,7 +263,7 @@ callback:
           all: Hər kəs
           admins: Yalnız adminlər
       error: |
-        <b>Xəta!<\/b>
+        <b>Xəta!</b>
         Yığımı tapılmadı.
   sticker:
     answerCbQuery:
@@ -296,12 +296,12 @@ sticker:
       <u>${title}</u>
     send_emoji: Əla, indi uyğun olan emoji göndərin
     converting_process: |
-      <b>Gözləyin...<\/b>
+      <b>Gözləyin...</b>
       Fayl konversiya növbəsindədir. Tamamlanmasını gözləyin. Bu bir az vaxt ala bilər.
 
       Gedişat: ${progress} / ${total}
 
-      <i>Botu dəstəkləyən istifadəçilər növbədə prioritet əldə edirlər (daha çox məlumat: /donate)<\/i>
+      <i>Botu dəstəkləyən istifadəçilər növbədə prioritet əldə edirlər (daha çox məlumat: /donate)</i>
     catalog_offer: |
       <b>😲 Vay, əla paket hazırladın!</b>
 
@@ -322,7 +322,7 @@ sticker:
 
         Zəhmət olmasa, /packs əmrindən istifadə edərək paket seçin
       no_rights: |
-        <b>Xəta!<\/b>
+        <b>Xəta!</b>
         Bu paketi əlav etmək hüququnuz yoxdur.
       stickers_too_much: |
         Bu paketdə stikerlərin maksimum sayı var.
@@ -473,7 +473,7 @@ scenes:
     pay_btn: '✅ Təsdiqlə'
     error:
       premium: |
-        <b>səhv!<\/b>
+        <b>səhv!</b>
         Təəssüf ki, bu xüsusiyyət yalnız botu dəstəkləyənlər üçün mövcuddur.
 
         You can do this by sending the /donate command.
@@ -684,7 +684,7 @@ error:
     Sizə bu funksiyadan istifadə qadağan olunub.
     Zəhmət olmasa, administratorla əlaqə saxlayın.
   unknown: |
-    <b>Naməlum xəta baş verdi, zəhmət olmasa yenidən cəhd edin.<\/b>
+    <b>Naməlum xəta baş verdi, zəhmət olmasa yenidən cəhd edin.</b>
 
     Problem davam edərsə @Ly_oBot-a yazın.
     Zəhmət olmasa, hansı bot barədə danışdığınızı və problemi bir mesajda ətraflı şəkildə təsvir edin.
