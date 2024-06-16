@@ -107,7 +107,7 @@ cmd:
     types:
       regular: Стикер
       custom_emoji: Еможи
-      inline: Inline
+      inline: Инлайн
     empty: |
       <b>Әзірге бір де бір жинағың жоқ.</b>
       /new пәрмені арқылы жаңасын жасап ал
@@ -640,7 +640,7 @@ scenes:
 
       <i>Бейтеу кейін, кадр түрін орнату үшін /frame командасын толықтыры аласыз</i>
     types:
-      lite: '1. Lite'
+      lite: '1. Лайт'
       medium: '2. Орта'
       rounded: '3. Дөңгеленген'
       square: '4. Шаршы'
