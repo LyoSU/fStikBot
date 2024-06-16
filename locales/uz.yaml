@@ -113,25 +113,11 @@ cmd:
     🧑‍💻 Ishlab chiquvchi: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot rivojlanishini qo'llab-quvvatlash</b>
-    Bottaning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz
-    1 dollar uchun sizga 5 Kredit beriladi
-
-    <b>Balans:</b> <code>${balance}</code> Kreditlar
-    1 Kredit bilan siz bir o‘ramni kuchaytirish imkoniyatiga egasiz.
-
-    <b>Kuchaytirish quyidagi imtiyozlarni beradi:</b>
-    ➖ O‘ram nomida <code>"${titleSuffix}"</code> ni o‘chirish <i>(havolada emas)</i>
-    ➖ Video stikerlarni konvertatsiya qilishda ustuvorlik
-    ➖ Qayta ishlash navbatiga bir nechta stiker qo'shish imkoniyati
-    ➖ Video stikerlar davomiyligi 30 soniyagacha
+    <b>☕️ Bot ishlab chiqishni qo'llab-quvvatlash<\/b>\nBotning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz\n\n<b>Balans:<\/b> <code>${balance}</code> Kreditlar\n1 Kredit bilan, siz bir quti boost qilish imkoniyatiga egasiz.\n\n<b>Boost quyidagi foydalarni beradi:<\/b>\n➖ "<code>${titleSuffix}</code>" qutilari nomini o'chirish <i>(havolada emas)<\/i>\n➖ Video stikerlarni konvertatsiya qilishda ustuvorlik\n➖ Birinchi navbatda bir nechta stikerlarni joriy qilish imkoniyati\n➖ Video stikerlar davomiyligi 30 soniyagacha\n\n<b>Xarid qilish uchun Kreditlar miqdorini tanlang:<\/b>
   btn:
     donate: '☕️ Xayriya qiling'
   topup: |
-    <b>Siz sotib olmoqchi bo'lgan Kreditlar miqdorini kiriting:</b>
-
-    <b>5 Kredit = 1$</b>
-    <i>Minimal miqdor - 5 Kredit</i>
+    <b>Xarid qilish uchun Kreditlar miqdorini kirit:<\/b>
   invalid_amount: |
     <b>Noto'g'ri miqdor</b>
 
@@ -278,6 +264,8 @@ sticker:
 
       Botning boshqa foydalanuvchilari ham koʻrishi uchun umumiy stikerlar katalogiga <a href="${link}">${title}</a> qoʻshmoqchimisiz?
       <i>Bu ko'p vaqt talab qilmaydi</i>
+    quote: |
+      Bu xabardan sitata yaratish uchun @QuotlyBot-dan foydalaning
     error:
       reply: |
         <b>Xato!</b>
@@ -331,10 +319,10 @@ sticker:
 
           <i>Yarating (/yangi) yoki boshqa paketni tanlang (/paketlar)</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Kutib turing!</b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot hali ham avvalgi faylni qayta ishlamoqda...
+        Qayta ishlash ustuvorligini oshirish va navbatga bir nechta stiker qo‘shish imkoniyatini oshirish uchun siz botni ishlab chiqishni (\/donate) qo‘llab-quvvatlashingiz mumkin.
       timeout: |
         <b>Ayni paytda bot juda katta yuklanishni boshdan kechirmoqda</b>
         Shuning uchun video konvertatsiya faqat faol kuchaytirilgan paketlar uchun mavjud
@@ -469,6 +457,8 @@ scenes:
       <b>Sarlavha muvaffaqiyatli o'zgartirildi!</b>
 
       Yangi nom: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ "<code>${titleSuffix}</code>" qo'shimchani olib tashlash uchun, siz qutini boost qilishingiz kerak. Batafsil ma'lumot olish uchun menyuga tashrif buyuring:\/donate
   packAbout:
     enter: |
       <b>Bu haqda ma'lumot olish uchun menga stiker yoki maxsus kulgich yuboring:</b>

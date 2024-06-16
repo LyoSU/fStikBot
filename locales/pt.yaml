@@ -138,25 +138,11 @@ cmd:
     🧑‍💻 Desenvolvedor: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Suporte ao desenvolvimento do bot</b>
-    Ao apoiar o desenvolvimento do bot, você receberá Créditos
-    Para cada 1 dólar, você receberá 5 Créditos
-
-    <b>Saldo:</b> <code>${balance}</code> Créditos
-    Com 1 Crédito, você tem a oportunidade de impulsionar um pacote.
-
-    <b>O impulso oferece os seguintes benefícios:</b>
-    ➖ Desativação de <code>"${titleSuffix}"</code> no nome dos pacotes <i>(não no link)</i>
-    ➖ Prioridade ao converter adesivos de vídeo
-    ➖ Possibilidade de adicionar mais de um adesivo à fila de processamento
-    ➖ Duração dos adesivos de vídeo até 30 segundos
+    <b>☕️ Suporte ao desenvolvimento do bot<\/b>\nAo apoiar o desenvolvimento do bot, você receberá Créditos\n\n<b>Saldo:<\/b> <code>${balance}<\/code> Créditos\nCom 1 Crédito, você tem a oportunidade de dar um boost num pacote.\n\n<b>O boost oferece os seguintes benefícios:<\/b>\n➖ Desativação de "<code>${titleSuffix}<\/code>" no nome dos pacotes <i>(não no link)<\/i>\n➖ Prioridade ao converter adesivos de vídeo\n➖ Possibilidade de adicionar mais de um adesivo à fila de processamento\n➖ Duração dos adesivos de vídeo até 30 segundos\n\n<b>Selecione a quantidade de Créditos que você deseja comprar:<\/b>
   btn:
     donate: '☕ Doar'
   topup: |
-    <b>Digite a quantidade de Créditos que deseja comprar:</b>
-
-    <b>5 Créditos = 1$</b>
-    <i>Quantidade mínima - 5 Créditos</i>
+    <b>Insira a quantidade de Créditos que você deseja comprar:<\/b>
   invalid_amount: |
     <b>Quantidade inválida</b>
 
@@ -309,6 +295,8 @@ sticker:
 
       Gostaria de adicionar o <a href="${link}">${title}</a> ao catálogo público de stickers para que outros usuários do bot também possam vê-lo?
       <i>Não leva muito tempo</i>
+    quote: |
+      Use o @QuotlyBot para criar uma citação desta mensagem
     error:
       reply: |
         U<b>Erro!</b>
@@ -362,10 +350,10 @@ sticker:
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Aguarde!<\/b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        O bot ainda está processando o arquivo anterior...
+        Você pode apoiar o desenvolvimento do bot (\/donate) para aumentar a prioridade de processamento e permitir adicionar mais de um sticker à fila.
       timeout: |
         <b>No momento, o bot está passando por uma carga enorme</b>
         Portanto, a conversão de vídeo está disponível apenas para pacotes com boost ativo
@@ -500,6 +488,8 @@ scenes:
       <b>Título alterado com sucesso!</b>
 
       Novo título: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ Para remover o sufixo "<code>${titleSuffix}<\/code>", você precisa dar um boost no pacote. Mais detalhes no menu visitando: \/donate
   packAbout:
     enter: |
       <b>Envie-me um sticker ou emoji personalizado para procurar informações sobre ele:</b>

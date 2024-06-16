@@ -138,25 +138,23 @@ cmd:
     🧑‍💻 Pengembang: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Dukungan Pengembangan Bot</b>
+    <b>☕️ Dukungan pengembangan Bot<\/b>
     Dengan mendukung pengembangan bot, Anda akan menerima Kredit
-    Untuk setiap 1 dolar, Anda akan menerima 5 Kredit
 
-    <b>Saldo:</b> <code>${balance}</code> Kredit
-    Dengan 1 Kredit, Anda memiliki kesempatan untuk meningkatkan satu paket.
+    <b>Saldo:<\/b> <code>${balance}\/code> Kredit
+    Dengan 1 Kredit, Anda memiliki peluang untuk meningkatkan satu paket.
 
-    <b>Peningkatan memberikan manfaat sebagai berikut:</b>
-    ➖ Menonaktifkan <code>"${titleSuffix}"</code> dalam nama paket <i>(tidak dalam tautan)</i>
+    <b>Peningkatan memberikan manfaat sebagai berikut:<\/b>
+    ➖ Menonaktifkan "<code>${titleSuffix}\/code>" di nama paket <i>(bukan di tautan)<\/i>
     ➖ Prioritas saat mengonversi stiker video
     ➖ Kemampuan menambahkan lebih dari satu stiker ke antrian pemrosesan
     ➖ Durasi stiker video hingga 30 detik
+
+    <b>Pilih jumlah Kredit yang ingin Anda beli:<\/b>
   btn:
     donate: '☕️ Donasi'
   topup: |
-    <b>Masukkan jumlah Kredit yang ingin Anda beli:</b>
-
-    <b>5 Kredit = 1$</b>
-    <i>Jumlah minimum - 5 Kredit</i>
+    <b>Masukkan jumlah Kredit yang ingin Anda beli:<\/b>
   invalid_amount: |
     <b>Jumlah tidak valid</b>
 
@@ -310,6 +308,8 @@ sticker:
 
       Apakah Anda ingin menambahkan <a href="${link}">${title}</a> ke katalog stiker publik sehingga pengguna bot lain dapat melihatnya juga?
       <i>Tidak memakan banyak waktu</i>
+    quote: |
+      Gunakan @QuotlyBot untuk membuat kutipan dari pesan ini
     error:
       reply: |
         <b>Kesalahan!</b>
@@ -363,10 +363,10 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Tunggu!<\/b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot masih memproses file sebelumnya...
+        Anda dapat mendukung pengembangan bot (\/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
       timeout: |
         <b>Saat ini, bot sedang mengalami beban yang sangat besar</b>
         Oleh karena itu, konversi video hanya tersedia untuk paket dengan peningkatan aktif
@@ -501,6 +501,8 @@ scenes:
       <b>Judul berhasil diubah!</b>
 
       Judul baru: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ Untuk menghapus akhiran "<code>${titleSuffix}<\code>", Anda perlu meningkatkan paket. Lebih detail di menu dengan mengunjungi:\/donate
   packAbout:
     enter: |
       <b>Kirimi saya stiker atau emoji khusus untuk mencari informasi tentangnya:</b>

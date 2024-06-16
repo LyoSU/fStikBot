@@ -137,25 +137,23 @@ cmd:
     🧑‍💻 Geliştirici: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot geliştirme desteği</b>
-    Botun geliştirilmesini destekleyerek Kredi alırsınız
-    Her 1 dolar için 5 Kredi alırsınız
+    <b>☕️ Bot geliştirme desteği<\/b>
+    Botun geliştirilmesini destekleyerek Krediler kazanacaksınız
 
-    <b>Bakiye:</b> <code>${balance}</code> Kredi
-    1 Kredi ile bir paketi artırma fırsatına sahipsiniz.
+    <b>Bakiye:<\/b> <code>${balance} <\/code> Krediler
+    1 Kredi ile bir paketi yükseltme fırsatınız var.
 
-    <b>Artırma, aşağıdaki avantajları sağlar:</b>
-    ➖ Paket isimlerinde <code>"${titleSuffix}"</code> devre dışı bırakma <i>(bağlantıda değil)</i>
-    ➖ Video çıkartmalarını dönüştürmede öncelik
+    <b>Yükseltme şu avantajları sağlar:<\/b>
+    ➖ Paket adında "<code>${titleSuffix} <\/code>" devre dışı bırakma <i>(bağlantıda değil)<\/i>
+    ➖ Video çıkartmaları dönüştürürken öncelik
     ➖ İşlem kuyruğuna birden fazla çıkartma ekleme yeteneği
-    ➖ Video çıkartmalarının süresi 30 saniyeye kadar
+    ➖ Video çıkartmaların süresi 30 saniyeye kadar
+
+    <b>Satın almak istediğiniz Kredi miktarını seçin:<\/b>
   btn:
     donate: '☕️ Bağış yap'
   topup: |
-    <b>Satın almak istediğiniz kredi miktarını girin:</b>
-
-    <b>5 kredi = 1$</b>
-    <i>Minimum tutar - 5 kredi</i>
+    <b>Satın almak istediğiniz Kredi miktarını girin:<\/b>
   invalid_amount: |
     <b>Geçersiz tutar</b>
 
@@ -308,6 +306,8 @@ sticker:
 
       Botun diğer kullanıcılarının da görebilmesi için <a href="${link}">${title}</a> genel çıkartma kataloğuna eklemek ister misiniz?
       <i>Çok fazla zaman almaz</i>
+    quote: |
+      Bu mesajdan bir alıntı oluşturmak için @QuotlyBot kullanın
     error:
       reply: |
         <b>Hata!</b>
@@ -361,10 +361,10 @@ sticker:
 
           <i>Başka bir paket oluşturun (/yeni) veya seçin (/packs)</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>Bekle!</b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot hala bir önceki dosyayı işliyor...
+        İşleme önceliğini artırmak ve kuyruğa birden fazla çıkartma ekleyebilmek için bot geliştirmeyi (/donate) destekleyebilirsiniz.
       timeout: |
         <b>Şu anda bot çok büyük bir yük yaşıyor</b>
         Bu nedenle, video dönüştürme yalnızca aktif güçlendirmeli paketler için kullanılabilir
@@ -498,6 +498,8 @@ scenes:
       <b>Başlık başarıyla değiştirildi!</b>
 
       Yeni unvan: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ "<code>${titleSuffix} <\/code>" ekini kaldırmak için, paketi yükseltmeniz gerekir. /bağış komutunu ziyaret ederek menüden daha fazla bilgi edinebilirsiniz
   packAbout:
     enter: |
       <b>Bu konuda bilgi aramak için bana bir çıkartma veya özel emoji gönderin:</b>

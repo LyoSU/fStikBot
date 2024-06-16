@@ -148,25 +148,23 @@ cmd:
     🧑‍💻 开发者: @ly_oBot
 donate:
   menu: |
-    <b>☕️ 机器人开发支持</b>
-    通过支持机器人的开发，您将获得信用点数。
-    每 1 美元，您将获得 5 个信用点。
+    <b>☕️ 机器人开发支持<\/b>
+    通过支持机器人的开发，您将获得信用点数
 
-    <b>余额:</b> <code>${balance}</code> 信用点
-    使用 1 个信用点，您有机会提升一个包的优先级。
+    <b>余额：<\/b> <code>${balance}<\/code> 信用点数
+    使用 1 个信用点，您有机会提升一个包。
 
-    <b>提升提供以下好处:</b>
-    ➖ 禁用包名中的 <code>"${titleSuffix}"</code> <i>(不在链接中)</i>
-    ➖ 视频贴纸转换时优先
-    ➖ 能够将多个贴纸添加到处理队列中
-    ➖ 视频贴纸时长可达 30 秒
+    <b>升级可带来以下好处：<\/b>
+    ➖ 禁用包名称中的 "<code>${titleSuffix}<\/code>" <i>（不在链接中）<\/i>
+    ➖ 转换视频贴纸时的优先级
+    ➖ 在处理队列中添加多个贴纸的功能
+    ➖ 视频贴纸的持续时间最长可达 30 秒
+
+    <b>请选择你想购买的信用点数：<\/b>
   btn:
     donate: '☕️ 捐赠'
   topup: |
-    <b>输入您要购买的信用点数</b>
-
-    <b>5 点数 = 1 美元</b>
-    <i>最低金额 - 5 信用点数</i>
+    <b>请输入你想购买的积分数量：<\/b>
   invalid_amount: |
     <b>无效金额</b>
 
@@ -318,6 +316,8 @@ sticker:
 
       您是否希望将 <a href="${link}">${title}</a> 添加到公共贴纸目录中，以便机器人的其他用户也能看到？
       <i>无需花费大量时间</i>
+    quote: |
+      使用 @QuotlyBot 从此消息创建引用
     error:
       reply: |
         <b>错误！</b>
@@ -371,10 +371,10 @@ sticker:
 
           <i>创建 (/new) 或选择 (/packs) 另一个包</i>
       wait_load: |
-        <b>Wait!</b>
+        <b>等等！</b>
 
-        The bot is still processing the previous file...
-        You can support bot development (/donate) to increase the priority of processing and the ability to add more than one sticker to the queue.
+        Bot 仍在处理之前的文件...
+        您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
       timeout: |
         <b>目前，机器人正在经历巨大的负载</b>
         因此，视频转换只适用于激活了提升功能的包
@@ -509,6 +509,8 @@ scenes:
       <b>标题已成功更改！</b>
 
       新标题<a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ 要删除后缀 "<code>${titleSuffix}<\/code>", 您需要提升包。更多详情请访问：\/donate
   packAbout:
     enter: |
       <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>
