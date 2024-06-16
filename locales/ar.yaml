@@ -69,7 +69,7 @@ cmd:
       restore: '🔀 استعادة الحزمة'
       copy: '📋 نسخ حزمة'
       emoji: '📝 تغيير لاحقة الأيموجي'
-      round: '🎥 Round shape video'
+      round: '🎥 فيديو شكل الجولة'
       clear: '🖼️ إزالة الخلفية من الصورة'
       about: '📦 معلومات الحزمة'
       user_about: '🧑‍🎨 معلومات المنشئ'
@@ -80,7 +80,7 @@ cmd:
     btn:
       new: '📥 إنشاء جديد'
       catalog: '💖 فتح الكتالوج'
-      catalog_mini: '💖 Catalog'
+      catalog_mini: '💖 كاتالوج'
       catalog_browser: '🌐 فتح في المتصفح'
       catalog_browser_mini: '🌐 في المتصفح'
       catalog_app: '📱 تحميل تطبيق الاندرويد'
@@ -224,7 +224,7 @@ callback:
       يمكنك أيضًا استخدامها بالضغط على الزر أدناه
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost<\/a><\/b>: ${boostStatus}
       status:
         on: تمكين
         off: معطل
@@ -295,12 +295,7 @@ sticker:
       <u>${title}</u>
     send_emoji: Great, now send the emoji that matches the
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
-
-      Progress: ${progress} / ${total}
-
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <b>Wait...<\/b>\nYour file is in the queue for conversion. Wait for completion. This may take some time.\n\nProgress: ${progress} \/ ${total}\n\n<i>Users who supported the bot get priority in the queue (more: \/donate)<\/i>
     catalog_offer: |
       <b>😲 واو، لقد قمت بتكوين مجموعة رائعة!</b>
 
@@ -413,7 +408,7 @@ scenes:
     custom_emoji: '🌟 Emoji (Premium)'
     static: '🌟 Static'
     animated: '✨ ناقل'
-    video: '📹 Video'
+    video: '📹 فيديو'
     pack_format: |
       <b><u>اختر نوع الحزمة</u></b>
 
@@ -472,10 +467,7 @@ scenes:
     pay_btn: '✅ تأكيد'
     error:
       premium: |
-        <b>Error!</b>
-        This feature is only available to donate members.
-
-        You can do this by sending the /donate command.
+        <b>Error!<\/b>\nThis feature is only available to donate members.\n\nYou can do this by sending the \/donate command.
   original:
     enter: |
       أرسل الملصق الذي تمت إضافته من خلال هذا البوت وسأريك الملصق الأصلي الخاص به.
@@ -584,7 +576,7 @@ scenes:
         <b>اختر اللغات التي تحتوي عليها حزمتك:</b>
         <i>يمكنك تحديد لغات متعددة</i>
       button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_confirm_language: تأكيد
       set_safe: |
         <b>هل حزمتك آمنة للمستخدمين؟</b>
         <i>أي أنها لا تحتوي على مواد جنسية أو محتويات مذهلة أخرى</i>
