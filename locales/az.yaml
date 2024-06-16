@@ -57,7 +57,7 @@ cmd:
       • Reytinqlərdə stiker paketini tanıtmaq və ya aşağı salmaq üçün qiymət verməyi unutmayın
     commands:
       ss: '🌟 Stikeri yadda saxlayın'
-      start: '📜 Start menu'
+      start: '📜 Start menyu'
       help: '📖 Istinad'
       packs: '📁 Paketləri idarə edin'
       new: '🌝 Etiket paketi yaradın'
@@ -65,7 +65,7 @@ cmd:
       catalog: '📖 Kataloq'
       publish: '📤 Paketi dərc edin'
       delete: '❌ Stikeri silin'
-      original: '🔍 Find original sticker'
+      original: '🔍 Orijinal stiker tap'
       restore: '🔀 Paketi bərpa edin'
       copy: '📋 Paketi kopyalayın'
       emoji: '📝 Emoji şəkilçisini dəyişdirin'
@@ -107,7 +107,7 @@ cmd:
     types:
       regular: Stikerlər
       custom_emoji: Emojilər
-      inline: Inline
+      inline: İnline
     empty: |
       <b>Hələ heç bir paketiniz yoxdur.</b>
       Yaratmaq üçün /new əmri yazın
