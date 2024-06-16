@@ -117,11 +117,11 @@ cmd:
     types:
       regular: 贴纸
       custom_emoji: 表情符号
-      inline: Inline
+      inline: 内联
     empty: |
       <b>您还没有包.</b>
       要创建，请编写命令 /new
-    inline_title: Inline pack
+    inline_title: 内联包
     select_group_pack_info: |
       <b>📁 选择包</b>
 
@@ -234,7 +234,7 @@ callback:
       您也可以按下面的按钮使用它
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">加速</a></b>: ${boostStatus}
       status:
         on: 已启用
         off: 未启用
