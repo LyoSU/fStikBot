@@ -184,7 +184,7 @@ callback:
     set_inline_pack: |
       Танланган <u>${title}</u> гуруҳ
 
-      Уни кўрсатиш учун, ичидагиларда<strong>@${botUsername} </code>ни босинг ва куч пасткини босинг
+      Уни кўрсатиш учун, ичидагиларда <code>@${botUsername}</code> ни босинг ва куч пасткини босинг
     boost:
       info: |
         \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
