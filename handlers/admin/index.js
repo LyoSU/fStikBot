@@ -179,7 +179,7 @@ const gerStarsTransactions = async (ctx, next) => {
     if (item.source) {
       return `• <b>${item.amount} stars ($${item.amount * 0.013})</b> (${new Date(item.date * 1000).toLocaleString()}) from <a href="tg://user?id=${item.source.user.id}">${item.source.user.first_name}</a>`
     }
-  })
+  }).filter((item) => item).reverse()
 
   await ctx.replyWithHTML(`<b>Last stars transactions</b>\n\n${resultText.join('\n')}`, {
     disable_web_page_preview: true
