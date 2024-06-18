@@ -173,13 +173,23 @@ const getLastMonoTransactions = async (ctx, next) => {
 }
 
 const gerStarsTransactions = async (ctx, next) => {
-  const transactions = await ctx.tg.callApi('getStarTransactions', { limit: 50 })
+  let transactions = []
 
-  const resultText = transactions.transactions.map((item) => {
+  while (true) {
+    const result = await ctx.tg.callApi('getStarTransactions', { limit: 100, offset: transactions.length })
+
+    if (!result.transactions || result.transactions.length === 0) break
+
+    transactions.push(...result.transactions)
+  }
+
+  transactions = transactions.reverse().slice(0, 20)
+
+  const resultText = transactions.map((item) => {
     if (item.source) {
       return `• <b>${item.amount} stars ($${item.amount * 0.013})</b> (${new Date(item.date * 1000).toLocaleString()}) from <a href="tg://user?id=${item.source.user.id}">${item.source.user.first_name}</a>`
     }
-  }).filter((item) => item).reverse()
+  }).filter((item) => item)
 
   await ctx.replyWithHTML(`<b>Last stars transactions</b>\n\n${resultText.join('\n')}`, {
     disable_web_page_preview: true
