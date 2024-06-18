@@ -172,6 +172,20 @@ const getLastMonoTransactions = async (ctx, next) => {
   })
 }
 
+const gerStarsTransactions = async (ctx, next) => {
+  const transactions = await ctx.tg.callApi('getStarTransactions', { limit: 50 })
+
+  const resultText = transactions.transactions.map((item) => {
+    if (item.source) {
+      return `• <b>${item.amount} stars ($${item.amount * 0.013})</b> (${new Date(item.date * 1000).toLocaleString()}) from <a href="tg://user?id=${item.source.user.id}">${item.source.user.first_name}</a>`
+    }
+  })
+
+  await ctx.replyWithHTML(`<b>Last stars transactions</b>\n\n${resultText.join('\n')}`, {
+    disable_web_page_preview: true
+  })
+}
+
 adminType.forEach((type) => {
   composer.use(Composer.optional((ctx) => {
     return ctx.config.mainAdminId === ctx?.from?.id || ctx?.session?.userInfo?.adminRights.includes(type)
@@ -185,6 +199,7 @@ composer.hears(/\/credit (.*?) (-?\d+)/, checkAdminRight, setPremium)
 composer.hears(/\/refund (.*)/, checkAdminRight, refundPayment)
 composer.command('crypto', checkAdminRight, getLastCryptoTransactions)
 composer.command('mono', checkAdminRight, getLastMonoTransactions)
+composer.command('stars', checkAdminRight, gerStarsTransactions)
 
 composer.hears([I18n.match('start.menu.admin')], checkAdminRight, main)
 composer.action(/admin:(.*)/, checkAdminRight, main)
