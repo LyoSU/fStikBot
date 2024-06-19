@@ -63,9 +63,9 @@ packRename.on('text', async (ctx) => {
   const text = ctx.i18n.t('scenes.rename.success', {
     title: escapeHTML(stickerSet.title),
     link: `${linkPrefix}${stickerSet.name}`
-  }) + '\n' + ctx.i18n.t('scenes.rename.boost_notice', {
+  }) + (titleSuffix ? ('\n' + ctx.i18n.t('scenes.rename.boost_notice', {
     titleSuffix: escapeHTML(titleSuffix)
-  })
+  })) : '')
 
   await ctx.replyWithHTML(text, {
     reply_markup: Markup.removeKeyboard()
