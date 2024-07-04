@@ -251,6 +251,7 @@ privateMessage.action(/user_about/, userAboutHelp)
 privateMessage.command('user_about', userAboutHelp)
 
 privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
+privateMessage.command('privacy', (ctx) => ctx.replyWithHTML(fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')))
 
 privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
 
@@ -435,7 +436,8 @@ db.connection.once('open', async () => {
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
       { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') },
       { command: 'report', description: i18n.t(localeName, 'cmd.start.commands.report') },
-      { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') }
+      { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') },
+      { command: 'privacy', description: i18n.t(localeName, 'cmd.start.commands.privacy') },
     ]
 
     const myCommandsInPrivate = await bot.telegram.callApi('getMyCommands', {

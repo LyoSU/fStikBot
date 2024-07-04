@@ -77,6 +77,7 @@ cmd:
       report: '🚨 Report pack'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Add to group'
+      privacy: '🔒 Privacy policy'
     btn:
       new: '📥 Create new'
       catalog: '💖 Open catalog'
