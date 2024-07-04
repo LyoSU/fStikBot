@@ -77,6 +77,7 @@ cmd:
       report: '🚨 レポート パック'
       donate: '☕️ 開発者をサポート'
       add_to_group: ':busts_in_sシルエット: グループに追加'
+      privacy: '🔒 Privacy policy'
     btn:
       new: '📥 新規作成'
       catalog: '💖 カタログを開く'
