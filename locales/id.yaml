@@ -77,6 +77,7 @@ cmd:
       report: '🚨 Paket laporan'
       donate: '☕️ Dukungan pengembangan bot'
       add_to_group: '👥 Tambahkan ke Grup'
+      privacy: '🔒 Privacy policy'
     btn:
       new: '📥 Create new'
       catalog: 'Buka katalog'
