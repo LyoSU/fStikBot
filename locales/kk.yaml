@@ -77,6 +77,7 @@ cmd:
       report: '🚨 Шағыну'
       donate: '☕️ Әзірлеушіні қолдау'
       add_to_group: '👥 Топқа қосу'
+      privacy: '🔒 Privacy policy'
     btn:
       new: '📥 Жаңасын құру'
       catalog: '💖 Каталог ашу'

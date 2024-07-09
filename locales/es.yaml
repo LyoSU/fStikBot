@@ -77,6 +77,7 @@ cmd:
       report: '🚨 Reportar paquete'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Añadir al grupo'
+      privacy: '🔒 Privacy policy'
     btn:
       new: '📥 Crear nuevo'
       catalog: '💖 Catálogo abierto'

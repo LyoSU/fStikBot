@@ -77,6 +77,7 @@ cmd:
       report: '🚨 报告包'
       donate: '☕️ 支持开发人员'
       add_to_group: '👥 添加到小组'
+      privacy: '🔒 Privacy policy'
     btn:
       new: '📥 创建新的'
       catalog: '💖 打开目录'
