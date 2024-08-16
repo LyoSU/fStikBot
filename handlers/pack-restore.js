@@ -14,7 +14,11 @@ module.exports = async (ctx, next) => {
     return next()
   }
 
-  const getStickerSet = await ctx.getStickerSet(ctx.match[2])
+  const getStickerSet = await ctx.getStickerSet(ctx.match[2]).catch(() => {})
+
+  if (!getStickerSet) {
+    return next()
+  }
 
   if (getStickerSet.name.split('_').pop(-1) === ctx.options.username) {
     if (findStickerSet) {

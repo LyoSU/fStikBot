@@ -25,10 +25,10 @@ module.exports = async (ctx) => {
     })
 
     return ctx.scene.enter('newPack')
-  } else {
-    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
-      reply_to_message_id: ctx.message.message_id,
-      allow_sending_without_reply: true
-    })
   }
+
+  await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'), {
+    reply_to_message_id: ctx.message.message_id,
+    allow_sending_without_reply: true
+  })
 }

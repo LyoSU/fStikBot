@@ -401,7 +401,7 @@ newPackConfirm.enter(async (ctx, next) => {
           return {
             sticker: uploadedSticker.file_id,
             format: stickerFormat,
-            emoji_list: [sticker.emoji]
+            emoji_list: sticker.emojis ? sticker.emojis : [sticker.emoji],
           }
         }))).sort((a, b) => {
           const aIndex = stickers.findIndex((sticker) => sticker.file_id === a.sticker)

@@ -69,8 +69,10 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     })
   }
 
-  await ctx.db.StickerSet.deleteOne({
+  await ctx.db.StickerSet.updateOne({
     _id: ctx.session.scene.data.id
+  }, {
+    deleted: true
   })
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.success'), {
