@@ -298,12 +298,12 @@ sticker:
       <u>${title}</u>
     send_emoji: Super, maintenant envoyez l'emoji correspondant au
     converting_process: |
-      <b>Attendez...<b>
+      <b>Attendez...</b>
       Votre fichier est en file d'attente pour la conversion. Attendez la fin. Cela peut prendre du temps.
 
       Progression: ${progress} / ${total}
 
-      <i>Les utilisateurs ayant soutenu le bot sont prioritaires dans la file d'attente (plus d'infos: /donate)<i>
+      <i>Les utilisateurs ayant soutenu le bot sont prioritaires dans la file d'attente (plus d'infos: /donate)</i>
     catalog_offer: |
       <b>:étonné_face: Wow, tu as fait un super pack !</b>
 
