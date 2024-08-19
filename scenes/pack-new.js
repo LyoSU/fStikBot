@@ -633,7 +633,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
     if (originalPack.stickers.length > alreadyUploadedStickers) {
       const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
-        originalTitle: originalPack.title,
+        originalTitle: escapeHTML(originalPack.title),
         originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
         title: escapeHTML(title),
         link: `${ctx.config.stickerLinkPrefix}${name}`,
@@ -648,7 +648,7 @@ newPackConfirm.enter(async (ctx, next) => {
           await ctx.telegram.editMessageText(
             message.chat.id, message.message_id, null,
             ctx.i18n.t('scenes.copy.progress', {
-              originalTitle: originalPack.title,
+              originalTitle: escapeHTML(originalPack.title),
               originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
               title: escapeHTML(title),
               link: `${ctx.config.stickerLinkPrefix}${name}`,
