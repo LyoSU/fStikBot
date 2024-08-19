@@ -296,7 +296,12 @@ sticker:
       <u>${title}</u>
     send_emoji: رائع، الآن أرسل الإيموجي الذي يتطابق مع
     converting_process: |
-      <b>Wait...</b>\nYour file is in the queue for conversion. Wait for completion. This may take some time.\n\nProgress: ${progress} \/ ${total}\n\n<i>Users who supported the bot get priority in the queue (more: \/donate)</i>
+      <b>Wait...</b>
+      Your file is in the queue for conversion. Wait for completion. This may take some time.
+
+      Progress: ${progress} / ${total}
+
+      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
     catalog_offer: |
       <b>😲 واو، لقد قمت بتكوين مجموعة رائعة!</b>
 
