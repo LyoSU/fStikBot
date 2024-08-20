@@ -102,14 +102,6 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
       packType: sticker.type,
       thirdParty: true,
     })
-  } else if (stickerSet && ownerId && ownerId !== stickerSet.ownerTelegramId) {
-    await db.StickerSet.updateOne({
-      name: sticker.set_name
-    }, {
-      $set: {
-        ownerTelegramId: ownerId
-      }
-    })
   }
 
   // get all stickerset owners from database
