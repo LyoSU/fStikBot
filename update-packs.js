@@ -30,18 +30,33 @@ function decodeStickerSetId (u64) {
 async function processStickerSets(stickerSets) {
   const processedStickerSets = [];
 
-  await Promise.all(stickerSets.map(async (stickerSet) => {
+  const handleError = (stickerSet, error) => {
+    if (error.message.includes('STICKERSET_INVALID')) {
+      console.log(`Sticker set https://t.me/addstickers/${stickerSet.name} is invalid, removing`);
+      return stickerSet.remove();
+    } else {
+      console.error(`Error processing ${stickerSet.name}: ${error.message}`);
+    }
+  };
+
+  const processStickerSet = async (stickerSet) => {
     try {
+      console.log(`Processing sticker set: ${stickerSet.name}`);
+
+      if (stickerSet.ownerTelegramId) {
+        console.log(`Sticker set ${stickerSet.name} already has ownerTelegramId, skipping further processing`);
+        processedStickerSets.push(stickerSet);
+        return;
+      }
+
       if (stickerSet.owner) {
         await telegram.getStickerSet(stickerSet.name);
-
-        const owner = await db.User.findById(stickerSet.owner)
-
+        const owner = await db.User.findById(stickerSet.owner);
         if (owner) {
           stickerSet.ownerTelegramId = owner.telegram_id;
           await stickerSet.save();
-
           processedStickerSets.push(stickerSet);
+          console.log(`Updated ownerTelegramId for sticker set: ${stickerSet.name}`);
           return;
         }
       }
@@ -64,17 +79,20 @@ async function processStickerSets(stickerSets) {
       await stickerSet.save();
 
       processedStickerSets.push(stickerSet);
-    } catch (err) {
-      if (err.message.includes('STICKERSET_INVALID')) {
-        console.log(`Sticker set https://t.me/addstickers/${stickerSet.name} is invalid, removing`);
-        await stickerSet.remove();
-      } else {
-        console.error(`${stickerSet.name}: ${err.message}`);
-      }
+      console.log(`Successfully processed sticker set: ${stickerSet.name}`);
+    } catch (error) {
+      await handleError(stickerSet, error);
     }
-  }));
+  };
 
-  console.log(`Processed ${processedStickerSets.length} sticker sets`);
+  const results = await Promise.allSettled(
+    stickerSets.map(stickerSet => processStickerSet(stickerSet))
+  );
+
+  const successCount = results.filter(result => result.status === 'fulfilled').length;
+  const failCount = results.filter(result => result.status === 'rejected').length;
+
+  console.log(`Processed ${successCount} sticker sets successfully, ${failCount} failed`);
 
   return processedStickerSets;
 }
