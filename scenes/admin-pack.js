@@ -1,62 +1,87 @@
 const Markup = require('telegraf/markup')
 const Scene = require('telegraf/scenes/base')
+const { escapeHTML } = require('../utils')
 
 const adminPackFind = new Scene('adminPackFind')
 
 adminPackFind.enter(async (ctx) => {
-  const resultText = 'Send me a sticker or a custom emoji'
+  const welcomeText = `
+<b>Welcome to the Admin Sticker Pack Management!</b>
+
+To manage a sticker pack or custom emoji set, please send me:
+• A sticker from the pack
+• A custom emoji from the set
+• The pack's share URL (e.g., https://t.me/addstickers/packname or https://t.me/addemoji/setname)
+• Or simply the pack/set name
+
+I'll help you view, edit, or remove the pack/set.
+  `
 
   const replyMarkup = Markup.inlineKeyboard([
-    [
-      Markup.callbackButton('Back', 'admin:back')
-    ]
+    [Markup.callbackButton('🏠 Back to Admin Menu', 'admin:menu')]
   ])
 
-  await ctx.editMessageText(resultText, {
-    parse_mode: 'HTML',
+  await ctx.replyWithHTML(welcomeText, {
     reply_markup: replyMarkup
   }).catch(() => {})
 })
 
-adminPackFind.on(['sticker', 'text'], async (ctx) => {
-  const { sticker, text } = ctx.message
-
+adminPackFind.on(['sticker', 'text', 'custom_emoji'], async (ctx) => {
+  const { sticker, text, custom_emoji } = ctx.message
   let packName
 
-  if (text) {
-    const messageTextMatch = ctx.message.text.match(/(addstickers|addemoji|addemoji)\/(.*)/)
+  if (sticker) {
+    packName = sticker.set_name
+  } else if (custom_emoji) {
+    packName = custom_emoji.set_name
+  } else if (text) {
+    const urlMatch = text.match(/(?:addstickers|addemoji)\/(.+)/)
+    if (urlMatch) {
+      packName = urlMatch[1]
+    } else {
+      packName = text.trim()
+    }
+  }
 
-    if(!messageTextMatch || !messageTextMatch[2]) {
-      return ctx.scene.reenter()
+  if (!packName) {
+    return ctx.replyWithHTML('❌ Invalid input. Please send a sticker, custom emoji, pack URL, or pack name.')
+  }
+
+  try {
+    let stickerSet
+    try {
+      stickerSet = await ctx.telegram.getStickerSet(packName)
+    } catch (error) {
+      // If getStickerSet fails, try getCustomEmojiStickers
+      const customEmojiStickers = await ctx.telegram.getCustomEmojiStickers([packName.split('_')[0]])
+      if (customEmojiStickers && customEmojiStickers.length > 0) {
+        stickerSet = {
+          name: packName,
+          title: 'Custom Emoji Set',
+          is_emoji: true,
+          stickers: customEmojiStickers
+        }
+      } else {
+        throw new Error('Sticker set or custom emoji set not found')
+      }
     }
 
-    packName = messageTextMatch[2]
-  } else if (sticker) {
-    packName = sticker.set_name
+    const info = await ctx.db.StickerSet.findOne({ name: packName })
+
+    if (!stickerSet) {
+      return ctx.replyWithHTML('❌ Sticker pack or custom emoji set not found. Please check the name and try again.')
+    }
+
+    if (packName.split('_').pop() !== ctx.options.username) {
+      return ctx.replyWithHTML('⚠️ This pack/set is not managed by this bot. You can only manage packs/sets created with this bot.')
+    }
+
+    ctx.session.admin = { editPack: stickerSet, info }
+    await ctx.scene.enter('adminPackEdit')
+  } catch (error) {
+    console.error('Error fetching sticker set or custom emoji set:', error)
+    return ctx.replyWithHTML('❌ An error occurred while fetching the pack/set. Please try again later.')
   }
-
-
-  if (packName.split('_').pop(-1) !== ctx.options.username) {
-    return ctx.reply('This sticker pack is not from this bot')
-  }
-
-  const stickerSet = await ctx.tg.getStickerSet(packName)
-
-  const info = await ctx.db.StickerSet.findOne({
-    name: packName
-  })
-
-
-  if (!stickerSet) {
-    return ctx.reply('This sticker pack does not exist')
-  }
-
-  ctx.session.admin = {
-    editPack: stickerSet,
-    info
-  }
-
-  await ctx.scene.enter('adminPackEdit')
 })
 
 const adminPackEdit = new Scene('adminPackEdit')
@@ -69,132 +94,109 @@ adminPackEdit.enter(async (ctx) => {
   }
 
   const packOwner = await ctx.db.User.findById(info?.owner)
+  const resultText = `
+<b>${editPack.is_emoji ? 'Custom Emoji Set' : 'Sticker Pack'} Details:</b>
 
-  const resultText = `Pack name: ${editPack.name}\nOwner: <a href="tg://user?id=${packOwner?.telegram_id}">${packOwner?.first_name}</a>`
+📦 Name: <code>${escapeHTML(editPack.name)}</code>
+🏷 Title: ${escapeHTML(editPack.title)}
+👤 Owner: <a href="tg://user?id=${packOwner?.telegram_id}">${escapeHTML(packOwner?.first_name)}</a>
+🖼 ${editPack.is_emoji ? 'Emojis' : 'Stickers'}: ${editPack.stickers.length}
 
-  const replyMarkup = Markup.inlineKeyboard([
-    [
-      Markup.callbackButton('Steal', 'admin:pack:edit:steal'),
-      Markup.callbackButton('Remove', 'admin:pack:edit:remove')
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
-    ]
-  ])
-
-  await ctx.replyWithHTML(resultText, {
-    parse_mode: 'HTML',
-    reply_markup: replyMarkup
-  }).catch(() => {})
-})
-
-adminPackEdit.action(/^admin:pack:edit:steal$/, async (ctx) => {
-  const { editPack, info } = ctx.session.admin
-
-  if (!info) {
-    return ctx.scene.enter('adminPackFind')
-  }
-
-  const resultText = `Are you sure you want to steal pack <b>${editPack.name}</b> from <a href="tg://user?id=${info.owner}">${info.owner}</a>`
+What would you like to do with this ${editPack.is_emoji ? 'set' : 'pack'}?
+  `
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton('Yes', 'admin:pack:edit:steal:yes'),
-      Markup.callbackButton('No', 'admin:pack:edit:steal:no')
+      Markup.callbackButton('🔄 Change Owner', 'admin:pack:edit:change_owner'),
+      Markup.callbackButton('🗑 Remove', 'admin:pack:edit:remove')
     ],
-    [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
-    ]
+    [Markup.callbackButton('🔙 Back to Search', 'admin:pack:find')]
   ])
 
-  await ctx.editMessageText(resultText, {
-    parse_mode: 'HTML',
-    reply_markup: replyMarkup
-  }).catch(() => {})
+  await ctx.replyWithHTML(resultText, { reply_markup: replyMarkup }).catch(() => {})
 })
 
-adminPackEdit.action(/admin:pack:edit:steal:(.*)/, async (ctx) => {
-  const { info } = ctx.session.admin
-
-  if (!info) {
-    return ctx.scene.enter('adminPackFind')
-  }
-
-  const stealType = ctx.match[1]
-
-  if (stealType === 'no') {
-    return ctx.scene.enter('adminPackEdit')
-  }
-
-  info.owner = ctx.session.userInfo.id
-  await info.save()
-
-  await ctx.deleteMessage()
-
-  ctx.state.answerCbQuery = [
-    `You have successfully stolen pack ${info.name}`,
-    true
-  ]
-
-  await ctx.scene.enter('adminPackEdit')
+adminPackEdit.action('admin:pack:edit:change_owner', async (ctx) => {
+  await ctx.answerCbQuery()
+  await ctx.replyWithHTML('👤 To change the owner, please send me the Telegram ID of the new owner.')
+  ctx.scene.state.awaitingNewOwner = true
 })
 
-adminPackEdit.action(/admin:pack:edit:remove$/, async (ctx) => {
+adminPackEdit.on('text', async (ctx) => {
+  if (ctx.scene.state.awaitingNewOwner) {
+    const newOwnerId = ctx.message.text.trim()
+    const newOwner = await ctx.db.User.findOne({ telegram_id: newOwnerId })
+
+    if (!newOwner) {
+      return ctx.replyWithHTML('❌ User not found. Please check the ID and try again.')
+    }
+
+    const { info } = ctx.session.admin
+    info.owner = newOwner._id
+    await info.save()
+
+    await ctx.replyWithHTML(`✅ ${info.is_emoji ? 'Set' : 'Pack'} owner has been changed to <a href="tg://user?id=${newOwner.telegram_id}">${escapeHTML(newOwner.first_name)}</a>`)
+    ctx.scene.state.awaitingNewOwner = false
+    return ctx.scene.reenter()
+  }
+})
+
+adminPackEdit.action('admin:pack:edit:remove', async (ctx) => {
   const { editPack } = ctx.session.admin
 
-  if (!editPack) {
-    return ctx.scene.enter('adminPackFind')
-  }
+  const confirmText = `
+⚠️ <b>Warning: ${editPack.is_emoji ? 'Custom Emoji Set' : 'Sticker Pack'} Removal</b>
 
-  const resultText = `Are you sure you want to remove pack <b>${editPack.name}</b>`
+You are about to remove the ${editPack.is_emoji ? 'set' : 'pack'} "${escapeHTML(editPack.title)}".
+This action cannot be undone.
+
+Are you sure you want to proceed?
+  `
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton('Yes', 'admin:pack:edit:remove:yes'),
-      Markup.callbackButton('No', 'admin:pack:edit:remove:no')
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('✅ Yes, remove', 'admin:pack:edit:remove:confirm'),
+      Markup.callbackButton('❌ No, cancel', 'admin:pack:edit:remove:cancel')
     ]
   ])
 
-  await ctx.editMessageText(resultText, {
+  await ctx.editMessageText(confirmText, {
     parse_mode: 'HTML',
     reply_markup: replyMarkup
   }).catch(() => {})
 })
 
-adminPackEdit.action(/admin:pack:edit:remove:(.*)/, async (ctx) => {
+adminPackEdit.action('admin:pack:edit:remove:confirm', async (ctx) => {
   const { editPack } = ctx.session.admin
 
-  if (!editPack) {
+  try {
+    const stickerSet = await ctx.telegram.getStickerSet(editPack.name)
+
+    for (const sticker of stickerSet.stickers) {
+      await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
+      await ctx.db.Sticker.deleteOne({ fileUniqueId: sticker.file_unique_id })
+    }
+
+    await ctx.db.StickerSet.deleteOne({ name: editPack.name })
+
+    await ctx.answerCbQuery(`✅ ${editPack.is_emoji ? 'Custom emoji set' : 'Sticker pack'} has been successfully removed`, true)
+    await ctx.replyWithHTML(`✅ The ${editPack.is_emoji ? 'custom emoji set' : 'sticker pack'} "${escapeHTML(editPack.title)}" has been removed.`)
     return ctx.scene.enter('adminPackFind')
+  } catch (error) {
+    console.error('Error removing sticker pack or custom emoji set:', error)
+    await ctx.answerCbQuery('❌ There was an error removing the pack/set', true).catch(() => {})
+    await ctx.replyWithHTML('❌ An error occurred while removing the pack/set. Please try again later.')
   }
+})
 
-  const removeType = ctx.match[1]
+adminPackEdit.action('admin:pack:edit:remove:cancel', async (ctx) => {
+  await ctx.answerCbQuery('Operation cancelled')
+  return ctx.scene.reenter()
+})
 
-  if (removeType === 'no') {
-    return ctx.scene.enter('adminPackEdit')
-  }
-
-  const stickerSet = await ctx.telegram.getStickerSet(editPack.name)
-
-  for (const sticker of stickerSet.stickers) {
-    await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
-
-    await ctx.db.Sticker.deleteOne({
-      fileUniqueId: sticker.file_unique_id
-    })
-  }
-
-  await ctx.deleteMessage()
-
-  ctx.state.answerCbQuery = [
-    `You have successfully removed pack ${editPack.name}`,
-    true
-  ]
-
-  await ctx.scene.enter('adminPackEdit')
+adminPackEdit.action('admin:pack:find', async (ctx) => {
+  await ctx.answerCbQuery()
+  return ctx.scene.enter('adminPackFind')
 })
 
 module.exports = [
