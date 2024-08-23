@@ -443,8 +443,8 @@ composer.action(/admin:.*/, async (ctx) => {
 })
 
 // Update the text handler to include user info viewing
-composer.on('text', async (ctx) => {
-  if (!ctx.session.awaitingInput) return
+composer.on('text', async (ctx, next) => {
+  if (!ctx.session.awaitingInput) return next()
 
   switch (ctx.session.awaitingInput) {
     case 'ban_user':

@@ -1,3 +1,4 @@
+
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const { escapeHTML } = require('../utils')
@@ -6,13 +7,14 @@ const adminPackBulkDelete = new Scene('adminPackBulkDelete')
 
 adminPackBulkDelete.enter(async (ctx) => {
   const welcomeText = `
-<b>Bulk Delete Sticker Packs</b>
+Bulk Delete Sticker Packs
 
-This tool allows you to delete all sticker packs and custom emoji sets owned by a specific user.
+This tool allows you to delete multiple sticker packs and custom emoji sets based on the links provided in your message.
 
-⚠️ <b>Warning:</b> This action is irreversible. Use with caution.
+⚠️ Warning: This action is irreversible. Use with caution.
 
-To proceed, please send me the Telegram ID of the user whose packs you want to delete.
+To proceed, please send me a message containing links to the sticker packs you want to delete.
+The links can be visible or hidden in the message entities.
 Or click "Cancel" to go back.
   `
 
@@ -23,27 +25,41 @@ Or click "Cancel" to go back.
   await ctx.replyWithHTML(welcomeText, { reply_markup: replyMarkup })
 })
 
-adminPackBulkDelete.on('text', async (ctx) => {
-  const userId = ctx.message.text.trim()
+adminPackBulkDelete.on('message', async (ctx) => {
+  const message = ctx.message
+  const entities = message.entities || message.caption_entities || []
+  const text = message.text || message.caption || ''
 
-  if (!/^\d+$/.test(userId)) {
-    return ctx.replyWithHTML('❌ Invalid input. Please send a valid Telegram user ID (numbers only).')
+  const links = new Set()
+
+  // Extract links from visible text
+  const visibleLinks = text.match(/https?:\/\/t\.me\/addstickers\/\w+/g) || []
+  visibleLinks.forEach(link => links.add(link))
+
+  // Extract links from entities
+  entities.forEach(entity => {
+    if (entity.type === 'text_link') {
+      if (entity.url.startsWith('https://t.me/addstickers/')) {
+        links.add(entity.url)
+      }
+    } else if (entity.type === 'url') {
+      const url = text.slice(entity.offset, entity.offset + entity.length)
+      if (url.startsWith('https://t.me/addstickers/')) {
+        links.add(url)
+      }
+    }
+  })
+
+  if (links.size === 0) {
+    return ctx.replyWithHTML('❌ No valid sticker pack links found in your message. Please try again with valid links.')
   }
 
-  const user = await ctx.db.User.findOne({ telegram_id: userId })
-
-  if (!user) {
-    return ctx.replyWithHTML('❌ User not found. Please check the ID and try again.')
-  }
-
-  const stickerSets = await ctx.db.StickerSet.find({ owner: user._id })
-
-  if (stickerSets.length === 0) {
-    return ctx.replyWithHTML(`No sticker packs or emoji sets found for user with ID ${escapeHTML(userId)}.`)
-  }
+  const stickerSetNames = Array.from(links).map(link => link.split('/').pop())
 
   const confirmText = `
-Found ${stickerSets.length} pack(s) owned by user ${escapeHTML(user.first_name)} (ID: ${escapeHTML(userId)}).
+Found ${stickerSetNames.length} sticker pack(s) in your message:
+
+${stickerSetNames.map(name => `• ${escapeHTML(name)}`).join('\n')}
 
 Are you sure you want to delete all these packs?
 
@@ -52,37 +68,37 @@ Are you sure you want to delete all these packs?
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton('✅ Yes, delete all', `admin:pack:bulk_delete:confirm:${userId}`),
+      Markup.callbackButton('✅ Yes, delete all', 'admin:pack:bulk_delete:confirm'),
       Markup.callbackButton('❌ No, cancel', 'admin:pack:bulk_delete:cancel')
     ]
   ])
 
+  ctx.session.stickerSetsToDelete = stickerSetNames
+
   await ctx.replyWithHTML(confirmText, { reply_markup: replyMarkup })
 })
 
-adminPackBulkDelete.action(/admin:pack:bulk_delete:confirm:(\d+)/, async (ctx) => {
-  const userId = ctx.match[1]
-  const user = await ctx.db.User.findOne({ telegram_id: userId })
+adminPackBulkDelete.action('admin:pack:bulk_delete:confirm', async (ctx) => {
+  const stickerSetNames = ctx.session.stickerSetsToDelete
 
-  if (!user) {
-    return ctx.answerCbQuery('❌ User not found. Operation cancelled.', true)
+  if (!stickerSetNames || stickerSetNames.length === 0) {
+    return ctx.answerCbQuery('❌ No sticker sets to delete. Operation cancelled.', true)
   }
 
-  const stickerSets = await ctx.db.StickerSet.find({ owner: user._id })
   let deletedCount = 0
   let errorCount = 0
 
-  for (const set of stickerSets) {
+  for (const setName of stickerSetNames) {
     try {
-      const stickerSet = await ctx.telegram.getStickerSet(set.name)
+      const stickerSet = await ctx.telegram.getStickerSet(setName)
       for (const sticker of stickerSet.stickers) {
         await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
       }
-      await ctx.db.StickerSet.deleteOne({ _id: set._id })
-      await ctx.db.Sticker.deleteMany({ stickerSet: set._id })
+      await ctx.db.StickerSet.deleteOne({ name: setName })
+      await ctx.db.Sticker.deleteMany({ stickerSet: setName })
       deletedCount++
     } catch (error) {
-      console.error(`Error deleting sticker set ${set.name}:`, error)
+      console.error(`Error deleting sticker set ${setName}:`, error)
       errorCount++
     }
   }
@@ -92,16 +108,27 @@ Operation completed:
 ✅ Successfully deleted: ${deletedCount} pack(s)
 ❌ Failed to delete: ${errorCount} pack(s)
 
-Total packs processed: ${stickerSets.length}
+Total packs processed: ${stickerSetNames.length}
   `
 
+  await ctx.answerCbQuery()
   await ctx.replyWithHTML(resultText)
+  delete ctx.session.stickerSetsToDelete
   return ctx.scene.leave()
 })
 
 adminPackBulkDelete.action('admin:pack:bulk_delete:cancel', async (ctx) => {
   await ctx.answerCbQuery('Operation cancelled')
+  delete ctx.session.stickerSetsToDelete
   return ctx.scene.leave()
+})
+
+adminPackBulkDelete.on('callback_query', async (ctx) => {
+  await ctx.answerCbQuery('Unknown action')
+})
+
+adminPackBulkDelete.on('message', async (ctx) => {
+  await ctx.reply('Please send links to sticker packs or use the buttons provided.')
 })
 
 module.exports = adminPackBulkDelete
