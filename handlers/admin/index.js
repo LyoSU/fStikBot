@@ -48,7 +48,6 @@ Welcome to the admin control center. Please select an option:
     ...adminType
       .filter(type => ctx.config.mainAdminId === ctx.from.id || ctx.session.userInfo.adminRights.includes(type))
       .map(type => [Markup.callbackButton(`⚙️ Admin ${type}`, `admin:${type}`)]),
-    [Markup.callbackButton('🏠 Back to Main Menu', 'start')]
   ]
 
   const replyMarkup = Markup.inlineKeyboard(inlineKeyboard)
