@@ -1,4 +1,4 @@
-module.exports = (str) => str.toString().replace(
+module.exports = (str) => (str == null ? '' : str).toString().replace(
   /[&<>'"]/g,
   (tag) => ({
     '&': '&amp;',
