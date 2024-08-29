@@ -94,8 +94,6 @@ adminPackBulkDelete.action('admin:pack:bulk_delete:confirm', async (ctx) => {
       for (const sticker of stickerSet.stickers) {
         await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
       }
-      await ctx.db.StickerSet.deleteOne({ name: setName })
-      await ctx.db.Sticker.deleteMany({ stickerSet: setName })
       deletedCount++
     } catch (error) {
       console.error(`Error deleting sticker set ${setName}:`, error)

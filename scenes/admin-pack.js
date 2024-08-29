@@ -177,8 +177,6 @@ adminPackEdit.action('admin:pack:edit:remove:confirm', async (ctx) => {
       await ctx.db.Sticker.deleteOne({ fileUniqueId: sticker.file_unique_id })
     }
 
-    await ctx.db.StickerSet.deleteOne({ name: editPack.name })
-
     await ctx.answerCbQuery(`✅ ${editPack.is_emoji ? 'Custom emoji set' : 'Sticker pack'} has been successfully removed`, true)
     await ctx.replyWithHTML(`✅ The ${editPack.is_emoji ? 'custom emoji set' : 'sticker pack'} "${escapeHTML(editPack.title)}" has been removed.`)
     return ctx.scene.enter('adminPackFind')
