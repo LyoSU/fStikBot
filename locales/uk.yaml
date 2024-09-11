@@ -681,9 +681,10 @@ error:
       Telegram повернув помилку:
       ${error}
   banned: |
-    <b>Помилка!</b>
-    Вам заборонено використовувати цю функцію.
-    Зверніться до адміністратора.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Сталася невідома помилка, спробуйте ще раз.</b>
 
