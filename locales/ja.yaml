@@ -665,9 +665,10 @@ error:
       Telegramでエラーが発生しました：
       ${error}
   banned: |
-    <b>エラー！</b>
-    この機能の使用は禁止されています。
-    管理者に問い合わせてください。
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>不明なエラーが発生しました。もう一度お試しください。</b>
 
