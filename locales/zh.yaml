@@ -690,9 +690,10 @@ error:
       Telegram 返回错误信息：
       ${error}
   banned: |
-    <b>错误！</b>
-    您已被禁止使用此功能。
-    请联系管理员。
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>出现未知错误，请再试一次。</b>
 
