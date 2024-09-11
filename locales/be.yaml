@@ -680,10 +680,10 @@ error:
       Telegram вярнуў памылку:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
+    <b>Памылка!</b>
+    Вам забаронена выкарыстоўваць гэтую функцыю.
 
-    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
+    <i>Калі вы лічыце, што гэта памылка, калі ласка, звяжыцеся з адміністратарам: @ly_oBot</i>
   unknown: |
     <b>Узнікла невядомая памылка, паўтарыце спробу пазней.</b>
 
