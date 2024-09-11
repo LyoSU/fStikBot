@@ -77,7 +77,7 @@ cmd:
       report: '🚨 التبليغ عن الحزمة'
       donate: '☕ أدعم المبرمج'
       add_to_group: '👥 إضافة إلى المجموعة'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 سياسة الخصوصية'
     btn:
       new: '📥 إنشاء جديد'
       catalog: '💖 فتح الكتالوج'
@@ -296,12 +296,12 @@ sticker:
       <u>${title}</u>
     send_emoji: رائع، الآن أرسل الإيموجي الذي يتطابق مع
     converting_process: |
-      <b>Wait...</b>
-      Your file is in the queue for conversion. Wait for completion. This may take some time.
+      <b>انتظر...</b>
+      ملفك في قائمة انتظار التحويل. انتظر الانتهاء. هذا قد يستغرق بعض الوقت.
 
-      Progress: ${progress} / ${total}
+      التقدم: ${progress} / ${total}
 
-      <i>Users who supported the bot get priority in the queue (more: /donate)</i>
+      <i>يحصل المستخدمون الذين دعموا الروبوت على الأولوية في قائمة الانتظار (المزيد: /donate)</i>
     catalog_offer: |
       <b>😲 واو، لقد قمت بتكوين مجموعة رائعة!</b>
 
@@ -677,10 +677,10 @@ error:
       أعاد تيليجرام خطأ:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
+    <b>خطأ!</b>
+    أنت ممنوع من استخدام هذه الميزة.
 
-    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
+    <i>إذا كنت تعتقد أن هذا خطأ، يرجى الاتصال بالمسؤول: @ly_oBot</i>
   unknown: |
     <b>حدث خطأ غير معروف، يرجى المحاولة مرة أخرى.</b>
 
