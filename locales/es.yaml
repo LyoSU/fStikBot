@@ -670,8 +670,9 @@ error:
       ${error}
   banned: |
     <b>Error!</b>
-    Está prohibido utilizar esta función.
-    Por favor, póngase en contacto con el administrador.
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Se ha producido un error desconocido, por favor intente nuevamente.</b>
 
