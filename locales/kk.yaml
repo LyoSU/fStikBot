@@ -681,9 +681,10 @@ error:
       Telegram қатені қайтарды:
       ${error}
   banned: |
-    <b>Қате!</b>
-    Сізге бұл мүмкіндікті пайдалануға тыйым салынды.
-    Әкімшіге хабарласыңыз.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Белгісіз қате орын алды, әрекетті қайталаңыз.</b>
 
