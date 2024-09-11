@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Paket laporan'
       donate: '☕️ Dukungan pengembangan bot'
       add_to_group: '👥 Tambahkan ke Grup'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Kebijakan Privasi'
     btn:
       new: '📥 Create new'
       catalog: 'Buka katalog'
@@ -681,10 +681,10 @@ error:
       Telegram mengembalikan kesalahan:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
+    <b>Kesalahan!</b>
+    Anda dilarang menggunakan fitur ini.
 
-    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
+    <i>Jika Anda berpikir ini adalah kesalahan, silakan hubungi administrator: @ly_oBot</i>
   unknown: |
     <b>Kesalahan yang tidak diketahui telah terjadi, silakan coba lagi.</b>
 
