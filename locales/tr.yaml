@@ -679,9 +679,10 @@ error:
       Telegram hatası:
       ${error}
   banned: |
-    <b>Hata!</b>
-    Bu özelliği kullanmanız yasaklandı.
-    Lütfen yönetici ile iletişime geçin.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Bilinmeyen bir hata oluştu, lütfen tekrar deneyin.</b>
 
