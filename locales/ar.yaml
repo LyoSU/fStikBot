@@ -677,9 +677,10 @@ error:
       أعاد تيليجرام خطأ:
       ${error}
   banned: |
-    <b>خطأ!</b>
-    أنت ممنوع من استخدام هذه الميزة.
-    من فضلك اتصل بالمسؤول.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>حدث خطأ غير معروف، يرجى المحاولة مرة أخرى.</b>
 
