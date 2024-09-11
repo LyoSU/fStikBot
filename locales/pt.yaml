@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Reportar pacote'
       donate: '☕️ Apoie o desenvolvedor'
       add_to_group: '👥 Adicionar ao grupo'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Política de privacidade'
     btn:
       new: '📥 Crie novo'
       catalog: '💖 Abrir catálogo'
@@ -671,7 +671,8 @@ error:
   banned: |
     <b>Erro!</b>
     Você está banido de usar essa funcionalidade.
-    Por favor, contate o administrador.
+
+    <i>Se você acha que isso é um engano, por favor contate o administrador: @ly_oBot</i>
   unknown: |
     <b>Ocorreu um erro desconhecido, por favor, tente novamente.</b>
 

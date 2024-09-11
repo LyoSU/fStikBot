@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Şikayət paketi'
       donate: '☕️ İnkişaf etdiricini dəstəkləyin'
       add_to_group: '👥 Qrupa əlavə edin'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Məxfilik siyasəti'
     btn:
       new: '📥 Yenisi yaradın'
       catalog: '💖 Kataloqu açın'
@@ -683,7 +683,8 @@ error:
   banned: |
     <b>Xəta!</b>
     Sizə bu funksiyadan istifadə qadağan olunub.
-    Zəhmət olmasa, administratorla əlaqə saxlayın.
+
+    <i>Bu bir səhv olduğunu düşünürsünüzsə, administratorla əlaqə saxlayın: @ly_oBot</i>
   unknown: |
     <b>Naməlum xəta baş verdi, zəhmət olmasa yenidən cəhd edin.</b>
 

@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Reportar paquete'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Añadir al grupo'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Política de privacidad'
     btn:
       new: '📥 Crear nuevo'
       catalog: '💖 Catálogo abierto'
@@ -669,9 +669,10 @@ error:
       Telegram dió un error:
       ${error}
   banned: |
-    <b>Error!</b>
+    <b>¡Error!</b>
     Está prohibido utilizar esta función.
-    Por favor, póngase en contacto con el administrador.
+
+    <i>Si piensas que esto es un error, por favor contacta al administrador: @ly_oBot</i>
   unknown: |
     <b>Se ha producido un error desconocido, por favor intente nuevamente.</b>
 

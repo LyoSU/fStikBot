@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Paket laporan'
       donate: '☕️ Dukungan pengembangan bot'
       add_to_group: '👥 Tambahkan ke Grup'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Kebijakan Privasi'
     btn:
       new: '📥 Create new'
       catalog: 'Buka katalog'
@@ -683,7 +683,8 @@ error:
   banned: |
     <b>Kesalahan!</b>
     Anda dilarang menggunakan fitur ini.
-    Silakan, hubungi administrator.
+
+    <i>Jika Anda berpikir ini adalah kesalahan, silakan hubungi administrator: @ly_oBot</i>
   unknown: |
     <b>Kesalahan yang tidak diketahui telah terjadi, silakan coba lagi.</b>
 

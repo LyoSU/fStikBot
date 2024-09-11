@@ -52,7 +52,7 @@ cmd:
       report: '🚨 Hisobot to''plami'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Guruhga qo''shish'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Maxfiylik siyosati'
     btn:
       new: '📥 Create new'
       catalog: '💖 Katalogni ochish'
@@ -638,7 +638,8 @@ error:
   banned: |
     <b>Xato!</b>
     Sizga ushbu xususiyatdan foydalanish taqiqlangan.
-    Iltimos, administratorga murojaat qiling.
+
+    <i>Agar bu xato deb o'ylasangiz, administratorga murojaat qiling: @ly_oBot</i>
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 

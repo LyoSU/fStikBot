@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Rapor paketi'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Gruba Ekle'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Gizlilik politikası'
     btn:
       new: '📥 Create new'
       catalog: '💖 Kataloğu aç'
@@ -681,7 +681,8 @@ error:
   banned: |
     <b>Hata!</b>
     Bu özelliği kullanmanız yasaklandı.
-    Lütfen yönetici ile iletişime geçin.
+
+    <i>Eğer bunun bir hata olduğunu düşünüyorsanız, lütfen yönetici ile iletişime geçin: @ly_oBot</i>
   unknown: |
     <b>Bilinmeyen bir hata oluştu, lütfen tekrar deneyin.</b>
 
