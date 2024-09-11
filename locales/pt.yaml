@@ -669,9 +669,10 @@ error:
       O Telegram retornou um erro:
       ${error}
   banned: |
-    <b>Erro!</b>
-    Você está banido de usar essa funcionalidade.
-    Por favor, contate o administrador.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Ocorreu um erro desconhecido, por favor, tente novamente.</b>
 
