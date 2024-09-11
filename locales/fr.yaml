@@ -682,9 +682,10 @@ error:
       Télégramme a renvoyé une erreur:
       ${error}
   banned: |
-    <b>Erreur!</b>
-    Il vous est interdit d'utiliser cette fonctionnalité.
-    Veuillez contacter l'administrateur.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Une erreur inconnue s'est produite, veuillez réessayer.</b>
 
