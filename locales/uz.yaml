@@ -52,7 +52,7 @@ cmd:
       report: '🚨 Hisobot to''plami'
       donate: '☕️ Support the developer'
       add_to_group: '👥 Guruhga qo''shish'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Maxfiylik siyosati'
     btn:
       new: '📥 Create new'
       catalog: '💖 Katalogni ochish'
@@ -636,10 +636,10 @@ error:
       Telegram xatolikni qaytardi:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
+    <b>Xato!</b>
+    Sizga ushbu xususiyatdan foydalanish taqiqlangan.
 
-    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
+    <i>Agar bu xato deb o'ylasangiz, administratorga murojaat qiling: @ly_oBot</i>
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 
