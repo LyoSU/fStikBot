@@ -77,7 +77,7 @@ cmd:
       report: '🚨 レポート パック'
       donate: '☕️ 開発者をサポート'
       add_to_group: ':busts_in_sシルエット: グループに追加'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 プライバシーポリシー'
     btn:
       new: '📥 新規作成'
       catalog: '💖 カタログを開く'
@@ -665,10 +665,10 @@ error:
       Telegramでエラーが発生しました：
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
+    <b>エラー！</b>
+    この機能の使用は禁止されています。
 
-    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
+    <i>これが間違いだと思う場合は、管理者に問い合わせてください: @ly_oBot</i>
   unknown: |
     <b>不明なエラーが発生しました。もう一度お試しください。</b>
 
