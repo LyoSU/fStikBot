@@ -77,7 +77,7 @@ cmd:
       report: '🚨 Pack de rapports'
       donate: '☕️ Soutenir le développeur'
       add_to_group: ':busts_in_silhouette : Ajouter au groupe'
-      privacy: '🔒 Privacy policy'
+      privacy: '🔒 Politique de confidentialité'
     btn:
       new: '📥 Créer nouveau'
       catalog: '💖 Catalogue ouvert'
@@ -682,10 +682,10 @@ error:
       Télégramme a renvoyé une erreur:
       ${error}
   banned: |
-    <b>Error!</b>
-    You are banned from using this feature.
+    <b>Erreur!</b>
+    Il vous est interdit d'utiliser cette fonctionnalité.
 
-    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
+    <i>Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur : @ly_oBot</i>
   unknown: |
     <b>Une erreur inconnue s'est produite, veuillez réessayer.</b>
 
