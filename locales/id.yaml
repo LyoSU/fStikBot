@@ -681,9 +681,10 @@ error:
       Telegram mengembalikan kesalahan:
       ${error}
   banned: |
-    <b>Kesalahan!</b>
-    Anda dilarang menggunakan fitur ini.
-    Silakan, hubungi administrator.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Kesalahan yang tidak diketahui telah terjadi, silakan coba lagi.</b>
 
