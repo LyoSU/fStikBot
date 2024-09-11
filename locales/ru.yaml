@@ -672,9 +672,10 @@ error:
       Telegram вернул ошибку:
       ${error}
   banned: |
-    <b>Ошибка!</b>
-    Вам запрещено использовать эту функцию.
-    Пожалуйста, свяжитесь с администратором.
+    <b>Error!</b>
+    You are banned from using this feature.
+
+    <i>If you think this is a mistake, please contact the administrator: @ly_oBot</i>
   unknown: |
     <b>Произошла неизвестная ошибка, попробуйте еще раз.</b>
 
