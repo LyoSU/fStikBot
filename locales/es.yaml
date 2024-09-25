@@ -509,7 +509,7 @@ scenes:
       <i>No tenemos información sobre otros stickers de este propietario</i>
   boost:
     sure: |
-      <b>¿Estás seguro de que quieres impulsar <a href="${link}">${title}</a>?<b>
+      <b>¿Estás seguro de que quieres impulsar <a href="${link}">${title}</a>?</b>
 
       Impulsar aumentará la prioridad de procesamiento y la capacidad para agregar más de un sticker a la cola
       Puedes encontrar información más detallada sobre los impulsos en el menú visitando: /donate
