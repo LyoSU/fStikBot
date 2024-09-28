@@ -14,6 +14,7 @@ const telegramApi = require('./telegram-api')
 const updateMonitor = require('./update-monitor')
 const showGramAds = require('./gramads')
 const downloadFileByURL = require('./download-file-by-url')
+const moderatePack = require('./moderate-pack')
 
 module.exports = {
   escapeHTML,
@@ -31,5 +32,6 @@ module.exports = {
   telegramApi,
   updateMonitor,
   showGramAds,
-  downloadFileByURL
+  downloadFileByURL,
+  moderatePack
 }

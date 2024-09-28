@@ -1,6 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const { telegramApi } = require('../utils')
+const {
+  telegramApi,
+  moderatePack
+} = require('../utils')
 const {
   db
 } = require('../database')
@@ -111,6 +114,10 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
       $ne: stickerSet?._id || null
     }
   })
+
+  // const moderationResults = await Promise.all(packs.map((pack) => moderatePack(pack.name)))
+
+  // console.log(moderationResults)
 
   let chunkedPacks = []
   const chunkSize = 70

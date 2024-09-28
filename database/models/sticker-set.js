@@ -65,8 +65,7 @@ const stickerSetsSchema = mongoose.Schema({
     default: false
   },
   publishDate: {
-    type: Date,
-    index: true
+    type: Date
   },
   about: {
     description: String,
@@ -74,57 +73,62 @@ const stickerSetsSchema = mongoose.Schema({
     languages: [String],
     safe: {
       type: Boolean,
-      default: false,
-      index: true
+      default: false
     },
     verified: {
       type: Boolean,
-      default: false,
-      index: true
+      default: false
     }
   },
   reaction: {
     like: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     },
     dislike: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     },
     total: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     }
   },
   installations: {
     day: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     },
     week: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     },
     month: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     },
     total: {
       type: Number,
-      default: 0,
-      index: true
+      default: 0
     }
   },
   moderated: {
     type: Boolean,
     default: false
+  },
+  aiModeration: {
+    checked: {
+      type: Boolean,
+      default: false,
+      index: true
+    },
+    isFlagged: {
+      type: Boolean,
+      default: false
+    },
+    categoryScores: {
+      type: Object
+    }
   },
   stickerChannel: {
     messageId: Number
