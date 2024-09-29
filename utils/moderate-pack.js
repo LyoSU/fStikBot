@@ -143,7 +143,7 @@ async function moderatePacks (skip = 0) {
     thirdParty: false,
     inline: { $ne: true },
     "aiModeration.checked": { $ne: true }
-  }).sort({ createdAt: -1 }).skip(skip).limit(500).select('name').lean()
+  }).sort({ createdAt: -1 }).skip(skip).limit(100).select('name').lean()
 
   const results = (await Promise.all(packs.map((pack) => moderatePack(pack.name)))).filter((result) => result !== null)
 
@@ -155,7 +155,7 @@ async function moderatePacks (skip = 0) {
     await db.StickerSet.updateOne({ name: result.name }, { $set: { aiModeration: { checked: true, isFlagged: result.isFlagged, categoryScores: result.categoryScores } } })
   }))
 
-  moderatePacks(skip + 1000 - results.length)
+  moderatePacks(skip + 100 - results.length)
 }
 
 moderatePacks(50000)
