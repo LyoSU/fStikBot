@@ -97,7 +97,7 @@ async function moderatePack (packName) {
     return null
   }
 
-  const stickerFiles = stickers.stickers.map((sticker) => sticker?.thumb?.file_id).slice(0, 200)
+  const stickerFiles = stickers.stickers.map((sticker) => sticker?.thumb?.file_id).filter((f) => f).slice(0, 200)
 
   const stickerImages = await Promise.all(stickerFiles.map(async (fileId) => {
     const fileLink = await telegram.getFileLink(fileId).catch(() => null)
@@ -138,11 +138,12 @@ async function moderatePack (packName) {
   }
 }
 
-async function moderatePacks () {
+async function moderatePacks (skip = 0) {
   const packs = await db.StickerSet.find({
     thirdParty: false,
+    inline: { $ne: true },
     "aiModeration.checked": { $ne: true }
-  }).sort({ createdAt: -1 }).skip(30000).limit(1000).select('name').lean()
+  }).sort({ createdAt: -1 }).skip(skip).limit(500).select('name').lean()
 
   const results = (await Promise.all(packs.map((pack) => moderatePack(pack.name)))).filter((result) => result !== null)
 
@@ -154,9 +155,9 @@ async function moderatePacks () {
     await db.StickerSet.updateOne({ name: result.name }, { $set: { aiModeration: { checked: true, isFlagged: result.isFlagged, categoryScores: result.categoryScores } } })
   }))
 
-  moderatePacks()
+  moderatePacks(skip + 1000 - results.length)
 }
 
-moderatePacks()
+moderatePacks(50000)
 
 module.exports = moderatePack
