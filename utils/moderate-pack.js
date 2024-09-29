@@ -155,7 +155,7 @@ async function moderatePacks (skip = 0) {
     await db.StickerSet.updateOne({ name: result.name }, { $set: { aiModeration: { checked: true, isFlagged: result.isFlagged, categoryScores: result.categoryScores } } })
   }))
 
-  moderatePacks(skip + 100 - results.length)
+  return moderatePacks(skip + 100 - results.length)
 }
 
 moderatePacks(50000)
