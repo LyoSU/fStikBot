@@ -158,6 +158,6 @@ async function moderatePacks (skip = 0) {
   return moderatePacks(skip + 100 - results.length)
 }
 
-moderatePacks(50000)
+// moderatePacks(50000)
 
 module.exports = moderatePack
