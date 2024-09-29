@@ -138,12 +138,11 @@ async function moderatePack (packName) {
   }
 }
 
-// review last 100 packs in the database
 async function moderatePacks () {
   const packs = await db.StickerSet.find({
     thirdParty: false,
     "aiModeration.checked": { $ne: true }
-  }).sort({ createdAt: -1 }).skip(30000).limit(200).select('name').lean()
+  }).sort({ createdAt: -1 }).skip(30000).limit(1000).select('name').lean()
 
   const results = (await Promise.all(packs.map((pack) => moderatePack(pack.name)))).filter((result) => result !== null)
 
