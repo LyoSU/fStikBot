@@ -448,7 +448,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
           fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
           timestamp: Date.now(),
           isEmoji: stickerSet.packType === 'custom_emoji',
-          // frameType, temporary disabled due to bug
+          frameType,
           forceCrop,
           maxDuration
         }, {
