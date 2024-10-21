@@ -227,7 +227,7 @@ const getStarsTransactions = async (ctx) => {
     const csvContent = [
       'Date,Amount,USD Amount,User Name,User ID',
       ...transactions.map(item => 
-        `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item.source.user.first_name.replace(/"/g, '""')}",${item.source.user.id}`
+        `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.source?.user?.first_name?.replace(/"/g, '""') || ''}",${item.source?.user?.id || ''}`
       )
     ].join('\n');
 
