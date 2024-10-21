@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const got = require('got')
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
@@ -212,20 +214,32 @@ const getStarsTransactions = async (ctx) => {
     let offset = 0
     const limit = 100
 
-    while (transactions.length < 20) {
+    while (true) {
       const result = await ctx.tg.callApi('getStarTransactions', { limit, offset })
       if (!result.transactions || result.transactions.length === 0) break
       transactions.push(...result.transactions.filter(item => item.source))
+      if (result.transactions.length < limit) break
       offset += limit
     }
 
-    transactions = transactions.slice(-20).reverse()
+    transactions.sort((a, b) => b.date - a.date)
 
-    const resultText = transactions.map((item, index) =>
+    const csvContent = [
+      'Date,Amount,USD Amount,User Name,User ID',
+      ...transactions.map(item => 
+        `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item.source.user.first_name.replace(/"/g, '""')}",${item.source.user.id}`
+      )
+    ].join('\n');
+
+    await ctx.replyWithDocument({ source: Buffer.from(csvContent, 'utf-8'), filename: 'stars_transactions.csv' })
+
+    const last20Transactions = transactions.slice(0, 20)
+
+    const resultText = last20Transactions.map((item, index) =>
       `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   👤 From: <a href="tg://user?id=${item.source.user.id}">${escape(item.source.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
     ).join('\n')
 
-    await ctx.editMessageText(`<b>📊 Last 20 Stars Transactions</b>\n\n${resultText}`, {
+    await ctx.editMessageText(`<b>📊 Last 20 Stars Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.`, {
       parse_mode: 'HTML',
       disable_web_page_preview: true,
       reply_markup: Markup.inlineKeyboard([[Markup.callbackButton('🔙 Back', 'admin:transactions')]])
