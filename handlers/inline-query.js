@@ -121,7 +121,7 @@ composer.on('inline_query', async (ctx) => {
         owner: ctx.session.userInfo.id,
         inline: true,
         $text: { $search: query }
-      })
+      }).maxTimeMS(2000)
 
       if (search) inlineSet = search
       else {
@@ -134,7 +134,7 @@ composer.on('inline_query', async (ctx) => {
           deleted: false,
           stickerSet: { $in: userStickerSet },
           $text: { $search: query }
-        }).limit(limit).skip(offset)
+        }).limit(limit).skip(offset).maxTimeMS(2000)
       }
     }
 

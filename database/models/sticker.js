@@ -9,7 +9,6 @@ const stickersSchema = mongoose.Schema({
   fileUniqueId: {
     type: String,
     index: true,
-    unique: true,
     required: true
   },
   emojis: String,
