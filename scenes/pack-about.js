@@ -107,17 +107,15 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     })
   }
 
+  const actualOwnerId = stickerSet.ownerTelegramId || ownerId
+
   // get all stickerset owners from database
   const packs = await db.StickerSet.find({
-    ownerTelegramId: ownerId,
+    ownerTelegramId: actualOwnerId,
     _id: {
       $ne: stickerSet?._id || null
     }
   })
-
-  // const moderationResults = await Promise.all(packs.map((pack) => moderatePack(pack.name)))
-
-  // console.log(moderationResults)
 
   let chunkedPacks = []
   const chunkSize = 70
@@ -126,7 +124,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     chunkedPacks = (packs.map((pack) => {
       if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
         if (
-          ctx.from.id === ownerId ||
+          ctx.from.id === actualOwnerId ||
           ctx.from.id === ctx.config.mainAdminId ||
           ctx?.session?.userInfo?.adminRights.includes('pack')
         ) {
@@ -149,11 +147,11 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
     }, [])
   }
 
-  const ownerChat = await ctx.telegram.getChat(ownerId).catch(() => null)
+  const ownerChat = await ctx.telegram.getChat(actualOwnerId).catch(() => null)
 
   let mention
-  mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${ownerId}">${escapeHTML(ownerChat?.first_name) || 'unknown'}</a>`
-  if (!mention) mention = `<a href="tg://openmessage?user_id=${ownerId}">[🤖]</a>, <a href="https://t.me/@id${ownerId}">[🍏]</a>`
+  mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${actualOwnerId}">${escapeHTML(ownerChat?.first_name) || 'unknown'}</a>`
+  if (!mention) mention = `<a href="tg://openmessage?user_id=${actualOwnerId}">[🤖]</a>, <a href="https://t.me/@id${actualOwnerId}">[🍏]</a>`
 
   let otherPacks
 
@@ -164,7 +162,7 @@ packAbout.on(['sticker', 'text'], async (ctx, next) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: escapeHTML(sticker.set_name),
-    ownerId,
+    ownerId: actualOwnerId,
     mention,
     setId,
     otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
