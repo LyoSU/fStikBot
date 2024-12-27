@@ -163,7 +163,7 @@ module.exports = async (ctx) => {
           if (stickerSet.public) {
             catalogButton = [
               [
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:unpublish:${stickerSet.id}`),
+                // Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:unpublish:${stickerSet.id}`),
                 Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`)
               ],
               [
