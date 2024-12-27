@@ -171,7 +171,7 @@ module.exports = async (ctx) => {
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_open'), `https://t.me/${ctx.options.username}/catalog?startApp=set=${stickerSet.name}&startapp=set=${stickerSet.name}`)
               ]
             ]
-          } else if (!stickerSet.animated && !stickerSet.inline && stickerSet.packType !== 'custom_emoji' && stickersCount >= 10) {
+          } else if (stickersCount >= 10 && !stickerSet.public) {
             catalogButton = [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]]
           }
 

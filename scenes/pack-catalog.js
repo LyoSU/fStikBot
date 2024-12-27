@@ -87,6 +87,18 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
 
   if (ctx.message.sticker) {
     packName = ctx.message.sticker.set_name
+  } else if (ctx.message.entities && ctx.message.entities.find(e => e.type === 'custom_emoji')) {
+    const customEmoji = ctx.message.entities.find(e => e.type === 'custom_emoji')
+
+    const emojiStickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
+      custom_emoji_ids: [customEmoji.custom_emoji_id]
+    })
+
+    if (emojiStickers?.[0]?.set_name) {
+      packName = emojiStickers[0].set_name
+    } else {
+      return ctx.scene.reenter()
+    }
   } else {
     const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
 
@@ -198,12 +210,10 @@ catalogPublish.enter(async (ctx) => {
 
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
 
-  if (stickerSet.packType === 'custom_emoji') {
-    return ctx.replyWithHTML('Custom emoji not supported yet')
-  }
+  const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.enter', {
-    link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
+    link: `${linkPrefix}${stickerSet.name}`,
     title: escapeHTML(stickerSet.title)
   }), {
     reply_markup: Markup.keyboard([
