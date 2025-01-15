@@ -50,8 +50,16 @@ module.exports = (addStickerResult, lang) => {
         messageText = i18n.t(lang, 'sticker.add.error.stickers_too_much')
       } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
-      } else if (addStickerResult.error.telegram.description.includes('file is too big')) {
+      } else if (addStickerResult.error.telegram.description.includes('file is too big') || addStickerResult.error.telegram.description.includes('STICKER_VIDEO_BIG')) {
         messageText = i18n.t(lang, 'sticker.add.error.too_big')
+      } else if (addStickerResult.error.telegram.description.includes('STICKER_PNG_NOPNG')) {
+        messageText = i18n.t(lang, 'sticker.add.error.invalid_png')
+      } else if (addStickerResult.error.telegram.description.includes('STICKER_PNG_DIMENSIONS')) {
+        messageText = i18n.t(lang, 'sticker.add.error.invalid_dimensions')
+      } else if (addStickerResult.error.telegram.description.includes('STICKER_TGS_NOTGS')) {
+        messageText = i18n.t(lang, 'sticker.add.error.invalid_animated')
+      } else if (addStickerResult.error.telegram.description.includes('STICKER_VIDEO_NOWEBM')) {
+        messageText = i18n.t(lang, 'sticker.add.error.invalid_video')
       } else {
         messageText = i18n.t(lang, 'error.telegram', {
           error: addStickerResult.error.telegram.description
