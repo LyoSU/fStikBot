@@ -281,6 +281,23 @@ callback:
       not_found: |
         ERREUR!
         Impossible de trouver un autocollant.
+      invalid_png: |
+        <b>Error!</b>
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        <b>Error!</b>
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        <b>Error!</b>
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        <b>Error!</b>
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        <b>Error!</b>
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
   group_settings:
     success: |
       Paramètres du groupe mis à jour avec succès.
