@@ -23,31 +23,88 @@ cmd:
 
       Para agregar un sticker a un paquete de grupo, utiliza el comando /ss en respuesta a una foto, video, gif o sticker.
     help: |
-      <b>Lista de comandos del bot:</b>
+      <b>🧙 ¡Bienvenido! Soy tu Asistente de Stickers y Emojis</b>
 
-      /new - Crea un nuevo paquete de pegatinas
-      /new_emoji - Crea un nuevo paquete de emojis
+      <b>🎨 Creación de Stickers y Packs</b>
 
-      /delete - Elimina una pegatina de un paquete
-      /original - Encuentra la pegatina original
+      /new - Crear un nuevo pack
+      • Elige tipo de pack: stickers o emoji
+      • Establece un nombre para tu pack
+      • Añade stickers enviando archivos multimedia
+      • Soporta fotos, videos, GIFs en cualquier formato
+      • El bot optimiza automáticamente el tamaño y convierte los archivos
 
-      /packs - Lista todos tus paquetes
-      /restore - Restaura un paquete eliminado
-      /copy - Copia un paquete
-      /emoji - Cambia el sufijo del emoji para el paquete actual
-      /frame - Cambia el marco para el paquete de video actual
-      /publish - Publica el paquete en el catálogo
+      <b>📱 Gestión de Stickers</b>
 
-      /catalog - Abre el catálogo de paquetes de pegatinas
+      /delete - Eliminar un sticker del pack
+      • Reenvía el sticker que deseas eliminar
+      • O envía un sticker del pack para eliminarlo
 
-      /lang - Cambia el idioma
-      /donate - Apoya al desarrollador
+      /original - Encontrar sticker original
+      • Localiza el sticker original creado por este bot
+      • Útil para encontrar packs similares
 
-      💬 Chat de soporte: @fStikCommunity (solo en inglés)
+      /emoji - Configurar emoji de sticker
+      • Cambia sugerencias de emoji para los stickers
+      • Añade múltiples emojis a un solo sticker
+      • Formato: 😀,😊,🙂
 
-      🧑‍🔧 Contactos: @ly_oBot
-      👨🏻‍💻 Canal de desarrollo: @LyBlog
+      /frame - Configurar marcos de video
+      • Disponible solo para stickers de video
+      • Tipos de marcos: ligero, medio, redondeado, cuadrado, círculo
+      • Se puede cambiar para el pack completo
 
+      <b>📁 Gestión de Packs</b>
+
+      /packs - Gestiona tus packs
+      • Lista de todos tus packs
+      • Editar, eliminar, configurar packs
+
+      /restore - Restaurar pack oculto
+      • Restaura packs que estaban ocultos de tu lista
+      • Los packs eliminados permanentemente no pueden restaurarse
+      • El pack reaparecerá en tu lista de /packs
+
+      /copy - Copiar packs
+      • Crea una copia de cualquier pack
+      • Capacidad de modificar la copia
+      • Todos los stickers serán copiados al nuevo pack
+
+      <b>📢 Funciones de Catálogo</b>
+
+      /catalog - Catálogo de packs de stickers
+      • Explora nuevos y populares packs
+      • Busca por palabras clave o etiquetas
+      • Califica packs para promover o bajar en los rankings
+
+      /publish - Publicar pack en el catálogo
+      • Comparte tu pack con otros usuarios
+      • Añade descripción, etiquetas y idiomas
+      • Aumenta la visibilidad del pack
+
+      <b>🛠 Características Adicionales</b>
+
+      /lang - Cambiar idioma del bot
+
+      /donate - Apoyar el desarrollo
+      • Características adicionales para donantes
+      • Prioridad en el procesamiento de archivos
+      • Límites aumentados
+
+      <b>💡 Consejos Pro:</b>
+      • El bot convierte automáticamente los archivos al formato requerido
+      • Si un sticker no aparece después de añadirlo - por favor, espera
+      • Lee los mensajes del bot - contienen explicaciones de errores
+      • Usa clips cortos para los stickers de video
+      • Los archivos PNG funcionan mejor para los stickers estáticos
+
+      <b>📮 Soporte y Comunidad:</b>
+
+      💬 Chat de soporte: @fStikCommunity (solo inglés)
+      🧑‍🔧 Contacto del desarrollador: @ly_oBot
+      👨🏻‍💻 Canal del desarrollador: @LyBlog
+
+      <b>🔗 Código Abierto:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Puede encontrar nuevos paquetes de sticker en nuestro catálogo</b>
@@ -268,6 +325,23 @@ callback:
       not_found: |
         ¡Error!
         No se pudo encontrar el pack de stickers.
+      invalid_png: |
+        <b>¡Error!</b>
+        El archivo no es una imagen PNG válida. Por favor, conviértelo al formato PNG antes de enviarlo.
+      invalid_dimensions: |
+        <b>¡Error!</b>
+        Las dimensiones del sticker son inválidas. Los stickers deben ser de 512x512 píxeles.
+      invalid_animated: |
+        <b>¡Error!</b>
+        El archivo del sticker animado no está en el formato TGS correcto.
+      invalid_video: |
+        <b>¡Error!</b>
+        El archivo de video no está en el formato WEBM correcto.
+      internal_error: |
+        <b>¡Error!</b>
+        Ocurrió un error interno mientras se procesaba el sticker.
+
+        Por favor, intenta de nuevo más tarde. Si el problema persiste, contacta al desarrollador: @ly_oBot
   group_settings:
     success: |
       Configuración del grupo actualizada con éxito.

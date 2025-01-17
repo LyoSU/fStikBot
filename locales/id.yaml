@@ -23,31 +23,88 @@ cmd:
 
       Untuk menambahkan stiker ke paket grup, gunakan perintah /ss dalam membalas foto, video, gif, atau stiker.
     help: |
-      <b>Daftar perintah bot:</b>
+      <b>🧙 Selamat datang! Saya adalah Penyihir Stiker dan Emoji Anda</b>
 
-      /new - Buat pack stiker baru
-      /new_emoji - Buat pack emoji baru
+      <b>🎨 Membuat Stiker dan Paket</b>
 
-      /delete - Hapus stiker dari pack
+      /new - Buat paket baru
+      • Pilih jenis paket: stiker atau emoji
+      • Tetapkan nama untuk paket Anda
+      • Tambahkan stiker dengan mengirimkan file media
+      • Mendukung foto, video, GIF dalam format apapun
+      • Bot secara otomatis mengoptimalkan ukuran dan mengonversi file
+
+      <b>📱 Manajemen Stiker</b>
+
+      /delete - Hapus stiker dari paket
+      • Teruskan stiker yang ingin Anda hapus
+      • Atau kirim stiker dari paket untuk menghapusnya
+
       /original - Temukan stiker asli
+      • Temukan stiker asli yang dibuat oleh bot ini
+      • Berguna untuk menemukan paket serupa
 
-      /packs - Daftar semua pack Anda
-      /restore - Kembalikan pack yang dihapus
-      /copy - Salin pack
-      /emoji - Ubah sufiks emoji untuk pack saat ini
-      /frame - Ubah bingkai untuk pack video saat ini
-      /publish - Publikasikan pack di katalog
+      /emoji - Konfigurasi emoji stiker
+      • Ubah saran emoji untuk stiker
+      • Tambahkan banyak emoji ke satu stiker
+      • Format: 😀,😊,🙂
 
-      /catalog - Buka katalog pack stiker
+      /frame - Konfigurasi bingkai video
+      • Tersedia hanya untuk stiker video
+      • Jenis bingkai: ringan, sedang, bulat, persegi, lingkaran
+      • Dapat diubah untuk seluruh paket
 
-      /lang - Ubah bahasa
-      /donate - Dukung pengembang
+      <b>📁 Manajemen Paket</b>
 
-      💬 Obrolan dukungan: @fStikCommunity (Hanya Bahasa Inggris)
+      /packs - Kelola paket Anda
+      • Daftar semua paket Anda
+      • Edit, hapus, konfigurasi paket
 
-      🧑‍🔧 Kontak: @ly_oBot
-      👨🏻‍💻 Saluran pengembang: @LyBlog
+      /restore - Pulihkan paket tersembunyi
+      • Pulihkan paket yang disembunyikan dari daftar Anda
+      • Paket yang dihapus secara permanen tidak dapat dipulihkan
+      • Paket akan muncul kembali di daftar /packs Anda
 
+      /copy - Salin paket
+      • Buat salinan dari paket apapun
+      • Kemampuan untuk memodifikasi salinan
+      • Semua stiker akan disalin ke paket baru
+
+      <b>📢 Fitur Katalog</b>
+
+      /catalog - Katalog paket stiker
+      • Jelajahi paket baru dan populer
+      • Cari berdasarkan kata kunci atau tag
+      • Beri peringkat paket untuk mempromosikan atau menurunkan peringkat
+
+      /publish - Terbitkan paket ke katalog
+      • Bagikan paket Anda dengan pengguna lain
+      • Tambahkan deskripsi, tag, dan bahasa
+      • Tingkatkan visibilitas paket
+
+      <b>🛠 Fitur Tambahan</b>
+
+      /lang - Ubah bahasa bot
+
+      /donate - Dukung pengembangan
+      • Fitur tambahan untuk donatur
+      • Pemrosesan file prioritas
+      • Batasan yang ditingkatkan
+
+      <b>💡 Tips Pro:</b>
+      • Bot secara otomatis mengonversi file ke format yang diperlukan
+      • Jika stiker tidak muncul setelah ditambahkan - mohon tunggu
+      • Baca pesan bot - mereka mengandung penjelasan kesalahan
+      • Gunakan klip pendek untuk stiker video
+      • File PNG bekerja paling baik untuk stiker statis
+
+      <b>📮 Dukungan dan Komunitas:</b>
+
+      💬 Obrolan dukungan: @fStikCommunity (Hanya bahasa Inggris)
+      🧑‍🔧 Kontak pengembang: @ly_oBot
+      👨🏻‍💻 Kanal pengembang: @LyBlog
+
+      <b>🔗 Sumber Terbuka:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>Anda dapat menemukan paket stiker baru di katalog kami</b>
@@ -281,6 +338,23 @@ callback:
       not_found: |
         KESALAHAN!
         Tidak dapat menemukan stiker.
+      invalid_png: |
+        <b>Kesalahan!</b>
+        File ini bukan gambar PNG yang valid. Silakan ubah ke format PNG sebelum mengirim.
+      invalid_dimensions: |
+        <b>Kesalahan!</b>
+        Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
+      invalid_animated: |
+        <b>Kesalahan!</b>
+        File stiker animasi tidak dalam format TGS yang benar.
+      invalid_video: |
+        <b>Kesalahan!</b>
+        File video tidak dalam format WEBM yang benar.
+      internal_error: |
+        <b>Kesalahan!</b>
+        Terjadi kesalahan internal saat memproses stiker.
+
+        Silakan coba lagi nanti. Jika masalah berlanjut, silakan hubungi pengembang: @ly_oBot
   group_settings:
     success: |
       Pengaturan grup berhasil diperbarui.

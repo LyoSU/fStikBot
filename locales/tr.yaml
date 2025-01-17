@@ -23,31 +23,88 @@ cmd:
 
       Bir çıkartmayı grup paketine eklemek için, bir fotoğraf, video, gif veya çıkartmaya yanıt olarak /ss komutunu kullanın.
     help: |
-      <b>Çıkartma komutlarının listesi:</b>
+      <b>🧙 Hoş geldiniz! Ben çıkartma ve emoji sihirbazınızım</b>
 
-      /new - Yeni bir çıkartma paketi oluştur
-      /new_emoji - Yeni bir emoji paketi oluştur
+      <b>🎨 Çıkartma ve Paket Oluşturma</b>
 
-      /delete - Bir çıkartmayı paketten sil
-      /original - Orijinal çıkartmayı bul
+      /yeni - Yeni bir paket oluştur
+      • Paket türünü seçin: çıkartmalar veya emoji
+      • Paketinize bir isim verin
+      • Medya dosyaları göndererek çıkartmalar ekleyin
+      • Fotoğraflar, videolar, GIF'ler her formatta desteklenir
+      • Bot otomatik olarak boyutu optimize eder ve dosyaları dönüştürür
 
-      /paketler - Tüm paketlerin listesi
-      /restore - Silinen bir paketi geri yükle
-      /copy - Bir paketi kopyala
-      /emoji - Mevcut paket için emoji ekini değiştir
-      /çerçeve - Mevcut video paketi için çerçeve değiştir
-      /yayınla - Kataloğa paketi yayınla
+      <b>📱 Çıkartma Yönetimi</b>
 
-      /katalog - Çıkartma paketi kataloğunu aç
+      /sil - Paketten çıkartma kaldırma
+      • Silmek istediğiniz çıkartmayı yönlendirin
+      • Veya paketten bir çıkartma gönderin ve silin
 
-      /lang - Dili değiştir
-      /bağış - Geliştiriciyi destekle
+      /orijinal - Orijinal çıkartmayı bul
+      • Bu bot tarafından oluşturulmuş orijinal çıkartmayı bul
+      • Benzer paketleri bulmak için faydalıdır
+
+      /emoji - Çıkartma emojilerini yapılandır
+      • Çıkartmalara emoji önerilerini değiştir
+      • Tek bir çıkartmaya birden fazla emoji ekleyin
+      • Format: 😀,😊,🙂
+
+      /kare - Video karelerini yapılandırın
+      • Sadece video çıkartmalar için mevcut
+      • Kare türleri: hafif, orta, yuvarlak, kare, daire
+      • Tüm paket için değiştirilebilir
+
+      <b>📁 Paket Yönetimi</b>
+
+      /paket - Paketlerinizi yönetin
+      • Tüm paketlerinizin listesi
+      • Paketleri düzenleme, silme, yapılandırma
+
+      /geri yükle - Gizli paketi geri yükle
+      • Listenizden gizlenmiş paketleri geri yükleyin
+      • Kalıcı olarak silinen paketler geri yüklenemez
+      • Paketiniz /paket listesinde tekrar görünecek
+
+      /kopyala - Paketleri kopyala
+      • Herhangi bir paketin kopyasını oluştur
+      • Kopyayı değiştirme yeteneği
+      • Tüm çıkartmalar yeni pakete kopyalanacak
+
+      <b>📢 Katalog Özellikleri</b>
+
+      /katalog - Çıkartma paketi kataloğu
+      • Yeni ve popüler paketleri gözden geçirin
+      • Anahtar kelimeler veya etiketlerle arama yapın
+      • Paketleri yükseltmek veya sıralamada düşürmek için puan verin
+
+      /yayınla - Paketi kataloğa yayınla
+      • Paketinizi diğer kullanıcılarla paylaşın
+      • Açıklama, etiketler ve diller ekleyin
+      • Paket görünürlüğünü artırın
+
+      <b>🛠 Ek Özellikler</b>
+
+      /dil - Bot dilini değiştir
+
+      /bağış - Geliştirmeyi destekleyin
+      • Bağış yapanlar için ek özellikler
+      • Öncelikli dosya işleme
+      • Artırılmış sınırlar
+
+      <b>💡 Profesyonel İpuçları:</b>
+      • Bot, dosyaları otomatik olarak gerekli formata dönüştürür
+      • Eklendikten sonra çıkartma görünmüyorsa - lütfen bekleyin
+      • Bot mesajlarını okuyun - hata açıklamaları içeriyorlar
+      • Video çıkartmaları için kısa klipler kullanın
+      • Statik çıkartmalar için PNG dosyaları en iyi sonucu verir
+
+      <b>📮 Destek ve Topluluk:</b>
 
       💬 Destek sohbeti: @fStikCommunity (Sadece İngilizce)
-
-      🧑‍🔧 İletişim: @ly_oBot
+      🧑‍🔧 Geliştirici ile iletişim: @ly_oBot
       👨🏻‍💻 Geliştirici kanalı: @LyBlog
 
+      <b>🔗 Açık Kaynak:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
@@ -279,6 +336,23 @@ callback:
       not_found: |
         Hata!
         Çıkartmayı bulamıyorum.
+      invalid_png: |
+        <b>Hata!</b>
+        Dosya geçerli bir PNG resmi değil. Lütfen göndermeden önce PNG formatına dönüştürün.
+      invalid_dimensions: |
+        <b>Hata!</b>
+        Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
+      invalid_animated: |
+        <b>Hata!</b>
+        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
+      invalid_video: |
+        <b>Hata!</b>
+        Video dosyası doğru WEBM formatında değil.
+      internal_error: |
+        <b>Hata!</b>
+        Çıkartmayı işlerken dahili bir hata oluştu.
+
+        Lütfen daha sonra tekrar deneyin. Sorun devam ederse, lütfen geliştirici ile iletişime geçin: @ly_oBot
   group_settings:
     success: |
       Grup ayarları başarıyla güncellendi.

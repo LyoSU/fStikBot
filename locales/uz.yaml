@@ -23,7 +23,89 @@ cmd:
 
       Guruh paketiga stiker qo'shish uchun, rasim, video, gif yoki stikerni javobida /ss buyrug'idan foydalaning.
     help: |
-      <b>Bot komandalari ro‘yxati:</b>\n\n\/yangi - Yangi stiker to‘plamini yaratish\n\/yangi_emoji - Yangi emoji to‘plamini yaratish\n\n\/o‘chirish - Stikerni to‘plamdan o‘chirish\n\/asal - Asal stikerni topish\n\n\/to‘plamlar - Barcha to‘plamlaringiz ro‘yxati\n\/qayta - O‘chirilgan to‘plamni tiklash\n\/nusxa - Bir to‘plamni nusxa olish\n\/emoji - Hozirgi to‘plam uchun emoji suffiksini o‘zgartirish\n\/rəmz - Hozirgi video to‘plam uchun ramka o‘zgartirish\n\/nashr - To‘plamni katalogda nashr etish\n\n\/katalog - Sticker to‘plam katalogini ochish\n\n\/til - Tilni o‘zgartirish\n\/qo‘llab-quvvatlash - Dasturchini qo‘llab-quvvatlash\n\n💬 Qo‘llab-quvvatlash chati: @fStikCommunity (faqat ingliz tili)\n\n🧑‍🔧 Aloqa: @ly_oBot\n👨🏻‍💻 Developer kanali: @LyBlog\n\nGitHub: https:\/\/github.com\/-LyoSU\/fStikBot
+      <b>🧙 Xush kelibsiz! Men sizning Stiker va Emoji Sehrgaringizman</b>
+
+      <b>🎨 Stikerlar va To'plamlar yaratish</b>
+
+      /new - Yangi to'plam yarating
+      • To'plam turini tanlang: stikerlar yoki emoji
+      • To'plamingiz uchun nom o'rnating
+      • Media fayllarni yuborish orqali stikerlar qo'shing
+      • Fotosuratlar, videolar, GIFlarni har qanday formatda qo'llab-quvvatlaydi
+      • Bot hajmini avtomatik optimizatsiya qiladi va fayllarni konvertatsiya qiladi
+
+      <b>📱 Stiker boshqaruvi</b>
+
+      /delete - To'plamdan stiker o'chirish
+      • O'chirmoqchi bo'lgan stikerlarni oldinga yuboring
+      • Yoki to'plamdan olib tashlash uchun stiker yuboring
+
+      /original - Asl stikerini topish
+      • Ushbu bot tomonidan yaratilgan asl stikerini toping
+      • O'xshash to'plamlarni topish uchun foydali
+
+      /emoji - Stiker emoji sozlamalari
+      • Stikerlar uchun emoji tavsiyalarini o'zgartirish
+      • Bir stikerni bir nechta emoji bilan qo'shish
+      • Format: 😀,😊,🙂
+
+      /frame - Video kadrlarini sozlash
+      • Faqat video stikerlar uchun mavjud
+      • Kadr turlari: yengil, o'rta, yumaloq, kvadrat, doira
+      • To'plam uchun o'zgartirilishi mumkin
+
+      <b>📁 To'plam boshqaruvi</b>
+
+      /packs - To'plamlaringizni boshqarish
+      • Barcha to'plamlaringiz ro'yxati
+      • Tahrirlash, o'chirish, to'plamlarni sozlash
+
+      /restore - Yashirin to'plamni tiklash
+      • Ro'yxatingizdan yashirilgan to'plamlarni tiklaydi
+      • Doimiy o'chirilgan to'plamlar tiklanmaydi
+      • To'plam /packs ro'yxatingizda qayta ko'rinadi
+
+      /copy - To'plamlarni nusxalash
+      • Har qanday to'plam nusxasini yarating
+      • Nusxani o'zgartirish imkoniyati
+      • Barcha stikerlar yangi to'plamga nusxalanadi
+
+      <b>📢 Katalog imkoniyatlari</b>
+
+      /catalog - Stiker to'plam katalogi
+      • Yangi va mashhur to'plamlarni ko'rib chiqing
+      • Kalit so'zlar yoki teglarga ko'ra qidiring
+      • Reytinglarni targ'ibot yoki pasaytirish uchun baholang
+
+      /publish - To'plamni katalogga joylashtirish
+      • To'plamingizni boshqa foydalanuvchilar bilan baham ko'ring
+      • Tavsif, teglarga va tillarga qo'shish
+      • To'plam darajasini oshirish
+
+      <b>🛠 Qo'shimcha Xususiyatlar</b>
+
+      /lang - Bot tilini o'zgartirish
+
+      /donate - Rivojlanishga hissa qo'shish
+      • Donorlar uchun qo'shimcha imkoniyatlar
+      • Fayllarni ustuvor qayta ishlash
+      • Chegara oshirish
+
+      <b>💡 Pro Maslahatlari:</b>
+      • Bot fayllarni kerakli formatga avtomatik aylantiradi
+      • Agar qo'shganingizdan keyin stiker ko'rinmasa - kuting
+      • Bot xabarlarini o'qing - ular xato tushuntirishlarini o'z ichiga oladi
+      • Video stikerlari uchun qisqa kliplardan foydalaning
+      • Statik stikerlar uchun PNG fayllari eng yaxshi ishlaydi
+
+      <b>📮 Qo'llab-quvvatlash va Jamiyat:</b>
+
+      💬 Qo'llab-quvvatlash chati: @fStikCommunity (Faqat inglizcha)
+      🧑‍🔧 Ishlab chiquvchi aloqasi: @ly_oBot
+      👨🏻‍💻 Ishlab chiquvchi kanali: @LyBlog
+
+      <b>🔗 Ochiq Manba:</b>
+      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Siz bizning katalogimizda yangi stikerlar to‘plamini topishingiz mumkin</b>
 
@@ -242,6 +324,23 @@ callback:
       not_found: |
         Tizimda xatolik!
         Stikerni topib bo'lmadi.
+      invalid_png: |
+        <b>Xato!</b>
+        Fayl yaroqli PNG tasviri emas. Iltimos, uni PNG formatiga aylantirib yuboring.
+      invalid_dimensions: |
+        <b>Xato!</b>
+        Stiker o'lchamlari yaroqsiz. Stikerlar 512x512 piksel bo'lishi kerak.
+      invalid_animated: |
+        <b>Xato!</b>
+        Animatsiyalangan stiker fayli to'g'ri TGS formatida emas.
+      invalid_video: |
+        <b>Xato!</b>
+        Video fayl to'g'ri WEBM formatida emas.
+      internal_error: |
+        <b>Xato!</b>
+        Stikerni qayta ishlashda ichki xato yuz berdi.
+
+        Iltimos, keyinroq qayta urinib ko'ring. Agar muammo davom etsa, iltimos, ishlab chiquvchi bilan bog'laning: @ly_oBot
   group_settings:
     success: |
       Guruh sozlamalari muvaffaqiyatli yangilandi.

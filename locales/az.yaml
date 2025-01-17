@@ -23,31 +23,88 @@ cmd:
 
       Bir stikerı qrup paketinə əlavə etmək üçün, foto, video, gif və ya stikerə cavab olaraq /ss əmrdən istifadə edin.
     help: |
-      <b>Bot əmrlərinin siyahısı:</b>
+      <b>🧙 Xoş gəldiniz! Mən sizin Stiker və Emojinizin Sehrbazıyam</b>
 
-      /new - Yeni stiker paketi yarat
-      /new_emoji - Yeni emoji paketi yarat
+      <b>🎨 Stikerlər və Paketlər Yaratmaq</b>
 
-      /delete - Paketdən stikeri sil
-      /original - Orijinal stikeri tap
+      /new - Yeni bir paket yaradın
+      • Paket növünü seçin: stikerlər və ya emoji
+      • Paketinizə bir ad verin
+      • Mediya faylları göndərməklə stiker əlavə edin
+      • Fotoşəkillər, videolar, GIF-ləri hər formatda dəstəkləyir
+      • Bot avtomatik olaraq ölçünü optimallaşdırır və faylları çevirir
 
-      /packs - Bütün paketlərinizi göstər
-      /restore - Silinmiş paketi bərpa et
-      /copy - Paketi kopyala
-      /emoji - Cari paket üçün emoji ləqəbini dəyişdir
-      /frame - Cari video paketi üçün çərçivəni dəyişdir
-      /publish - Paketi kataloqda dərc et
+      <b>📱 Stiker İdarəsi</b>
 
-      /catalog - Stiker paketi kataloğunu aç
+      /delete - Paketdən stiker silin
+      • Silmək istədiyiniz stikerləri yönləndirin
+      • Və ya silmək üçün paketdən bir stiker göndərin
 
-      /lang - Dili dəyişdir
-      /donate - İnkişafçını dəstəklə
+      /original - Orijinal stiker tapın
+      • Bu bot tərəfindən yaradılan orijinal stikerin yerləşməyini tapın
+      • Oxşar paketləri tapmaq üçün faydalıdır
 
-      💬 Dəstək çatı: @fStikCommunity (Yalnız İngiliscə)
+      /emoji - Stiker emoji konfiqurasiyası
+      • Stikerlər üçün emoji təkliflərini dəyişdirin
+      • Tək bir stikerə bir çox emoji əlavə edin
+      • Format: 😀,😊,🙂
 
-      🧑‍🔧 Əlaqə: @ly_oBot
-      👨🏻‍💻 İnkişaf kanalı: @LyBlog
+      /frame - Video kadrlərinin konfiqurasiyası
+      • Yalnız video stikerlər üçün mövcuddur
+      • Kadr növləri: yüngül, orta, yuvarlaq, kvadrat, dairəvi
+      • Bütün paket üçün dəyişdirilə bilər
 
+      <b>📁 Paket İdarəsi</b>
+
+      /packs - Paketlərinizi idarə edin
+      • Bütün paketlərinizin siyahısı
+      • Redaktə, silmə, paketləri konfiqurasiya edin
+
+      /restore - Gizli paketi bərpa edin
+      • Siyahınızdan gizlənmiş paketləri bərpa edin
+      • Daimi silinmiş paketlər bərpa olunmur
+      • Paket /packs siyahınıza yenidən görünəcək
+
+      /copy - Paketləri kopyalayın
+      • Hər hansı bir paketin surətini yaradın
+      • Surəti dəyişmək imkanı
+      • Bütün stikerlər yeni paketin içərisinə kopyalanacaq
+
+      <b>📢 Kataloq Xüsusiyyətləri</b>
+
+      /catalog - Stiker paket kataloqu
+      • Yeni və məşhur paketləri gəzin
+      • Açar sözlər və ya etiketlərdə axtarın
+      • Paketləri reytinq verməklə yüksəltmək və ya aşağı salmaq
+
+      /publish - Paketi kataloqda yayımlayın
+      • Paketinizi digər istifadəçilərlə paylaşın
+      • Təsvir, etiketlər və dillər əlavə edin
+      • Paket görünürlüğünü artırın
+
+      <b>🛠 Əlavə Xüsusiyyətlər</b>
+
+      /lang - Bot dilini dəyişdir
+
+      /donate - İnkişafı dəstəkləyin
+      • Donorlara əlavə xüsusiyyətlər
+      • Prioritet fayl emalı
+      • Artırılmış limitlər
+
+      <b>💡 Pro Məlumatlar:</b>
+      • Bot faylları tələb olunan formata avtomatik çevirir
+      • Əgər stiker əlavə etdikdən sonra görünməsə - xahiş edirik gözləyin
+      • Bot mesajlarını oxuyun - onlar xəta izahlarını ehtiva edir
+      • Video stikerlər üçün qısa kliplərdən istifadə edin
+      • Statik stikerlər üçün PNG fayllar daha yaxşı işləyir
+
+      <b>📮 Dəstək və İcma:</b>
+
+      💬 Dəstək söhbəti: @fStikCommunity (Yalnız ingilis dilində)
+      🧑‍🔧 İnkişafçı ilə əlaqə: @ly_oBot
+      👨🏻‍💻 İnkişafçı kanalı: @LyBlog
+
+      <b>🔗 Açıq Mənbə:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Siz yeni stiker paketlərini kataloqumuzda tapa bilərsiniz</b>
@@ -280,6 +337,23 @@ callback:
       not_found: |
         Xəta!
         Sticker tapılmadı.
+      invalid_png: |
+        <b>Xəta!</b>
+        Fayl etibarlı PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevirin.
+      invalid_dimensions: |
+        <b>Xəta!</b>
+        Stikerin ölçüləri etibarlı deyil. Stikerlər 512x512 piksel olmalıdır.
+      invalid_animated: |
+        <b>Xəta!</b>
+        Animasiya edilmiş stiker faylı düzgün TGS formatında deyil.
+      invalid_video: |
+        <b>Xəta!</b>
+        Video faylı düzgün WEBM formatında deyil.
+      internal_error: |
+        <b>Xəta!</b>
+        Stikerin işlənməsi zamanı daxili bir xəta baş verdi.
+
+        Zəhmət olmasa, sonra yenidən cəhd edin. Problem davam edərsə, xahiş edirik, bu inkişafçı ilə əlaqə saxlayın: @ly_oBot
   group_settings:
     success: |
       Grup parametrləri uğurla yeniləndi.
