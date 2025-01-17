@@ -23,88 +23,88 @@ cmd:
 
       要将贴纸添加到群组包中，请在回复照片、视频、GIF 或贴纸时使用 /ss 命令。
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 欢迎！我是您的贴纸和表情向导</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 创建贴纸和包</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /new - 创建一个新包
+      • 选择包类型：贴纸或表情
+      • 为您的包设定一个名称
+      • 通过发送媒体文件添加贴纸
+      • 支持任何格式的照片、视频、GIF
+      • 机器人会自动优化大小并转换文件
 
-      <b>📱 Sticker Management</b>
+      <b>📱 贴纸管理</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /delete - 从包中删除贴纸
+      • 转发您要删除的贴纸
+      • 或从包中发送贴纸以删除
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /original - 查找原始贴纸
+      • 定位由此机器人创建的原始贴纸
+      • 有助于找到类似的包
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
-      • Format: 😀,😊,🙂
+      /emoji - 配置贴纸表情
+      • 更改贴纸的表情建议
+      • 为单个贴纸添加多个表情
+      • 格式：😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /frame - 配置视频帧
+      • 仅适用于视频贴纸
+      • 帧类型：轻度，中等，圆角，方形，圆形
+      • 可更改整个包的帧
 
-      <b>📁 Pack Management</b>
+      <b>📁 包管理</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /packs - 管理您的包
+      • 列出您所有的包
+      • 编辑、删除、配置包
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /restore - 恢复隐藏的包
+      • 恢复从列表中隐藏的包
+      • 永久删除的包无法恢复
+      • 包将重新出现在您的/packs列表中
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /copy - 复制包
+      • 创建任意包的副本
+      • 可以修改副本
+      • 所有贴纸将被复制到新包中
 
-      <b>📢 Catalog Features</b>
+      <b>📢 目录功能</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /catalog - 贴纸包目录
+      • 浏览新包和热门包
+      • 按关键字或标签搜索
+      • 评价包以提升或降低排名
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /publish - 发布包到目录
+      • 与其他用户分享您的包
+      • 添加描述、标签和语言
+      • 提升包的可见性
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 附加功能</b>
 
-      /lang - Change bot language
+      /lang - 更改机器人语言
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /donate - 支持开发
+      • 为捐助者提供额外功能
+      • 优先处理文件
+      • 增加限制
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 专业提示：</b>
+      • 机器人会自动将文件转换为所需格式
+      • 如果添加后贴纸未出现 - 请稍等
+      • 阅读机器人的消息 - 它们包含错误解释
+      • 视频贴纸使用短片段
+      • PNG文件最适合制作静态贴纸
 
-      <b>📮 Support and Community:</b>
+      <b>📮 支持和社区：</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 支持聊天：@fStikCommunity（仅限英文）
+      🧑‍🔧 开发者联系：@ly_oBot
+      👨🏻‍💻 开发者频道：@LyBlog
 
-      <b>🔗 Open Source:</b>
+      <b>🔗 开源：</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 您可以在我们的目录中找到新的贴纸包</b>
@@ -347,22 +347,22 @@ callback:
         错误！
         找不到标签。
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>错误！</b>
+        该文件不是有效的PNG图像。请将其转换为PNG格式后再发送。
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>错误！</b>
+        贴纸尺寸无效。贴纸必须是512x512像素。
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>错误！</b>
+        动画贴纸文件格式不正确，应该为TGS格式。
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>错误！</b>
+        视频文件格式不正确，应为WEBM格式。
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>错误！</b>
+        处理贴纸时发生内部错误。
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        请稍后再试。如果问题仍然存在，请联系开发者：@ly_oBot
   group_settings:
     success: |
       群组设置已成功更新。
