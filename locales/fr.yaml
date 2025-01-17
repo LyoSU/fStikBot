@@ -23,32 +23,89 @@ cmd:
 
       Pour ajouter un sticker à un pack de groupe, utilisez la commande /ss en réponse à une photo, une vidéo, un gif ou un sticker.
     help: |
-      <b>Liste des commandes du bot :</b>
+      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
 
-      /new - Créer un nouveau pack d'autocollants
-      /new_emoji - Créer un nouveau pack d'émojis
+      <b>🎨 Creating Stickers and Packs</b>
 
-      /delete - Supprimer un autocollant d'un pack
-      /original - Trouver l'autocollant original
+      /new - Create a new pack
+      • Choose pack type: stickers or emoji
+      • Set a name for your pack
+      • Add stickers by sending media files
+      • Supports photos, videos, GIFs in any format
+      • Bot automatically optimizes size and converts files
 
-      /packs - Lister tous vos packs
-      /restore - Restaurer un pack supprimé
-      /copy - Copier un pack
-      /emoji - Changer le suffixe d'émoji pour le pack actuel
-      /frame - Changer le cadre pour le pack vidéo actuel
-      /publish - Publier le pack dans le catalogue
+      <b>📱 Sticker Management</b>
 
-      /catalog - Ouvrir le catalogue de pack d'autocollants
+      /delete - Remove a sticker from pack
+      • Forward the sticker you want to delete
+      • Or send a sticker from the pack to delete it
 
-      /lang - Changer la langue
-      /donate - Soutenir le développeur
+      /original - Find original sticker
+      • Locate the original sticker created by this bot
+      • Useful for finding similar packs
 
-      💬 Chat de soutien : @fStikCommunity (Anglais uniquement)
+      /emoji - Configure sticker emoji
+      • Change emoji suggestions for stickers
+      • Add multiple emoji to a single sticker
+      • Format: 😀,😊,🙂
 
-      🧑‍🔧 Contacts : @ly_oBot
-      👨🏻‍💻 Canal de dev : @LyBlog
+      /frame - Configure video frames
+      • Available only for video stickers
+      • Frame types: lite, medium, rounded, square, circle
+      • Can be changed for the entire pack
 
-      GitHub : https://github.com/LyoSU/fStikBot
+      <b>📁 Pack Management</b>
+
+      /packs - Manage your packs
+      • List of all your packs
+      • Edit, delete, configure packs
+
+      /restore - Restore hidden pack
+      • Restore packs that were hidden from your list
+      • Permanently deleted packs cannot be restored
+      • Pack will reappear in your /packs list
+
+      /copy - Copy packs
+      • Create a copy of any pack
+      • Ability to modify the copy
+      • All stickers will be copied to the new pack
+
+      <b>📢 Catalog Features</b>
+
+      /catalog - Sticker pack catalog
+      • Browse new and popular packs
+      • Search by keywords or tags
+      • Rate packs to promote or lower in rankings
+
+      /publish - Publish pack to catalog
+      • Share your pack with other users
+      • Add description, tags, and languages
+      • Boost pack visibility
+
+      <b>🛠 Additional Features</b>
+
+      /lang - Change bot language
+
+      /donate - Support development
+      • Additional features for donors
+      • Priority file processing
+      • Increased limits
+
+      <b>💡 Pro Tips:</b>
+      • Bot automatically converts files to the required format
+      • If a sticker doesn't appear after adding - please wait
+      • Read bot messages - they contain error explanations
+      • Use short clips for video stickers
+      • PNG files work best for static stickers
+
+      <b>📮 Support and Community:</b>
+
+      💬 Support chat: @fStikCommunity (English only)
+      🧑‍🔧 Developer contact: @ly_oBot
+      👨🏻‍💻 Developer channel: @LyBlog
+
+      <b>🔗 Open Source:</b>
+      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Vous pouvez trouver de nouveaux packs d'autocollants dans notre catalogue</b>
 
