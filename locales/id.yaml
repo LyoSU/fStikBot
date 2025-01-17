@@ -23,88 +23,88 @@ cmd:
 
       Untuk menambahkan stiker ke paket grup, gunakan perintah /ss dalam membalas foto, video, gif, atau stiker.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 Selamat datang! Saya adalah Penyihir Stiker dan Emoji Anda</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 Membuat Stiker dan Paket</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /new - Buat paket baru
+      • Pilih jenis paket: stiker atau emoji
+      • Tetapkan nama untuk paket Anda
+      • Tambahkan stiker dengan mengirimkan file media
+      • Mendukung foto, video, GIF dalam format apapun
+      • Bot secara otomatis mengoptimalkan ukuran dan mengonversi file
 
-      <b>📱 Sticker Management</b>
+      <b>📱 Manajemen Stiker</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /delete - Hapus stiker dari paket
+      • Teruskan stiker yang ingin Anda hapus
+      • Atau kirim stiker dari paket untuk menghapusnya
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /original - Temukan stiker asli
+      • Temukan stiker asli yang dibuat oleh bot ini
+      • Berguna untuk menemukan paket serupa
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
+      /emoji - Konfigurasi emoji stiker
+      • Ubah saran emoji untuk stiker
+      • Tambahkan banyak emoji ke satu stiker
       • Format: 😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /frame - Konfigurasi bingkai video
+      • Tersedia hanya untuk stiker video
+      • Jenis bingkai: ringan, sedang, bulat, persegi, lingkaran
+      • Dapat diubah untuk seluruh paket
 
-      <b>📁 Pack Management</b>
+      <b>📁 Manajemen Paket</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /packs - Kelola paket Anda
+      • Daftar semua paket Anda
+      • Edit, hapus, konfigurasi paket
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /restore - Pulihkan paket tersembunyi
+      • Pulihkan paket yang disembunyikan dari daftar Anda
+      • Paket yang dihapus secara permanen tidak dapat dipulihkan
+      • Paket akan muncul kembali di daftar /packs Anda
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /copy - Salin paket
+      • Buat salinan dari paket apapun
+      • Kemampuan untuk memodifikasi salinan
+      • Semua stiker akan disalin ke paket baru
 
-      <b>📢 Catalog Features</b>
+      <b>📢 Fitur Katalog</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /catalog - Katalog paket stiker
+      • Jelajahi paket baru dan populer
+      • Cari berdasarkan kata kunci atau tag
+      • Beri peringkat paket untuk mempromosikan atau menurunkan peringkat
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /publish - Terbitkan paket ke katalog
+      • Bagikan paket Anda dengan pengguna lain
+      • Tambahkan deskripsi, tag, dan bahasa
+      • Tingkatkan visibilitas paket
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 Fitur Tambahan</b>
 
-      /lang - Change bot language
+      /lang - Ubah bahasa bot
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /donate - Dukung pengembangan
+      • Fitur tambahan untuk donatur
+      • Pemrosesan file prioritas
+      • Batasan yang ditingkatkan
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 Tips Pro:</b>
+      • Bot secara otomatis mengonversi file ke format yang diperlukan
+      • Jika stiker tidak muncul setelah ditambahkan - mohon tunggu
+      • Baca pesan bot - mereka mengandung penjelasan kesalahan
+      • Gunakan klip pendek untuk stiker video
+      • File PNG bekerja paling baik untuk stiker statis
 
-      <b>📮 Support and Community:</b>
+      <b>📮 Dukungan dan Komunitas:</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 Obrolan dukungan: @fStikCommunity (Hanya bahasa Inggris)
+      🧑‍🔧 Kontak pengembang: @ly_oBot
+      👨🏻‍💻 Kanal pengembang: @LyBlog
 
-      <b>🔗 Open Source:</b>
+      <b>🔗 Sumber Terbuka:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>Anda dapat menemukan paket stiker baru di katalog kami</b>
@@ -339,22 +339,22 @@ callback:
         KESALAHAN!
         Tidak dapat menemukan stiker.
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>Kesalahan!</b>
+        File ini bukan gambar PNG yang valid. Silakan ubah ke format PNG sebelum mengirim.
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>Kesalahan!</b>
+        Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>Kesalahan!</b>
+        File stiker animasi tidak dalam format TGS yang benar.
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>Kesalahan!</b>
+        File video tidak dalam format WEBM yang benar.
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>Kesalahan!</b>
+        Terjadi kesalahan internal saat memproses stiker.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Silakan coba lagi nanti. Jika masalah berlanjut, silakan hubungi pengembang: @ly_oBot
   group_settings:
     success: |
       Pengaturan grup berhasil diperbarui.
