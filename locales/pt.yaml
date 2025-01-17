@@ -23,88 +23,88 @@ cmd:
 
       Para adicionar uma figurinha a um pacote de grupo, use o comando \/ss em resposta a uma foto, vídeo, gif ou figurinha.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 Bem-vindo! Eu sou seu Mago de Stickers e Emojis</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 Criando Stickers e Pacotes</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /new - Criar um novo pacote
+      • Escolha o tipo de pacote: stickers ou emoji
+      • Defina um nome para o seu pacote
+      • Adicione stickers enviando arquivos de mídia
+      • Suporta fotos, vídeos, GIFs em qualquer formato
+      • O bot otimiza automaticamente o tamanho e converte os arquivos
 
-      <b>📱 Sticker Management</b>
+      <b>📱 Gerenciamento de Stickers</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /delete - Remover um sticker do pacote
+      • Encaminhe o sticker que você deseja excluir
+      • Ou envie um sticker do pacote para excluí-lo
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /original - Encontrar sticker original
+      • Localize o sticker original criado por este bot
+      • Útil para encontrar pacotes similares
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
-      • Format: 😀,😊,🙂
+      /emoji - Configurar emoji do sticker
+      • Altere sugestões de emoji para stickers
+      • Adicione múltiplos emojis a um único sticker
+      • Formato: 😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /frame - Configurar quadros de vídeo
+      • Disponível apenas para stickers de vídeo
+      • Tipos de quadro: leve, médio, arredondado, quadrado, círculo
+      • Pode ser alterado para todo o pacote
 
-      <b>📁 Pack Management</b>
+      <b>📁 Gerenciamento de Pacotes</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /packs - Gerencie seus pacotes
+      • Lista de todos os seus pacotes
+      • Edite, exclua, configure pacotes
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /restore - Restaurar pacote oculto
+      • Restaure pacotes que foram ocultados da sua lista
+      • Pacotes excluídos permanentemente não podem ser restaurados
+      • O pacote reaparecerá na sua lista de /packs
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /copy - Copiar pacotes
+      • Crie uma cópia de qualquer pacote
+      • Capacidade de modificar a cópia
+      • Todos os stickers serão copiados para o novo pacote
 
-      <b>📢 Catalog Features</b>
+      <b>📢 Recursos de Catálogo</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /catalog - Catálogo de pacotes de stickers
+      • Navegue por pacotes novos e populares
+      • Pesquise por palavras-chave ou tags
+      • Avalie pacotes para promover ou rebaixar nas classificações
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /publish - Publicar pacote no catálogo
+      • Compartilhe seu pacote com outros usuários
+      • Adicione descrição, tags e idiomas
+      • Aumente a visibilidade do pacote
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 Recursos Adicionais</b>
 
-      /lang - Change bot language
+      /lang - Alterar idioma do bot
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /donate - Apoie o desenvolvimento
+      • Recursos adicionais para doadores
+      • Processamento prioritário de arquivos
+      • Limites aumentados
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 Dicas Pro:</b>
+      • O bot converte arquivos automaticamente para o formato necessário
+      • Se um sticker não aparecer após a adição - por favor, aguarde
+      • Leia as mensagens do bot - elas contêm explicações de erros
+      • Use clipes curtos para stickers de vídeo
+      • Arquivos PNG funcionam melhor para stickers estáticos
 
-      <b>📮 Support and Community:</b>
+      <b>📮 Suporte e Comunidade:</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 Chat de suporte: @fStikCommunity (somente em inglês)
+      🧑‍🔧 Contato do desenvolvedor: @ly_oBot
+      👨🏻‍💻 Canal do desenvolvedor: @LyBlog
 
-      <b>🔗 Open Source:</b>
+      <b>🔗 Código Aberto:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Você pode encontrar novos pacotes de sticker no nosso catálogo</b>
@@ -326,22 +326,22 @@ callback:
         ERRO!
         Não foi possível encontrar um adesivo.
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>Erro!</b>
+        O arquivo não é uma imagem PNG válida. Por favor, converta para o formato PNG antes de enviar.
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>Erro!</b>
+        As dimensões do sticker são inválidas. Stickers devem ter 512x512 pixels.
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>Erro!</b>
+        O arquivo de sticker animado não está no formato TGS correto.
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>Erro!</b>
+        O arquivo de vídeo não está no formato WEBM correto.
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>Erro!</b>
+        Ocorreu um erro interno ao processar o sticker.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Por favor, tente novamente mais tarde. Se o problema persistir, por favor, contate o desenvolvedor: @ly_oBot
   group_settings:
     success: |
       Configurações do grupo atualizadas com sucesso.
