@@ -23,88 +23,88 @@ cmd:
 
       Bir stikerı qrup paketinə əlavə etmək üçün, foto, video, gif və ya stikerə cavab olaraq /ss əmrdən istifadə edin.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 Xoş gəldiniz! Mən sizin Stiker və Emojinizin Sehrbazıyam</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 Stikerlər və Paketlər Yaratmaq</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /new - Yeni bir paket yaradın
+      • Paket növünü seçin: stikerlər və ya emoji
+      • Paketinizə bir ad verin
+      • Mediya faylları göndərməklə stiker əlavə edin
+      • Fotoşəkillər, videolar, GIF-ləri hər formatda dəstəkləyir
+      • Bot avtomatik olaraq ölçünü optimallaşdırır və faylları çevirir
 
-      <b>📱 Sticker Management</b>
+      <b>📱 Stiker İdarəsi</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /delete - Paketdən stiker silin
+      • Silmək istədiyiniz stikerləri yönləndirin
+      • Və ya silmək üçün paketdən bir stiker göndərin
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /original - Orijinal stiker tapın
+      • Bu bot tərəfindən yaradılan orijinal stikerin yerləşməyini tapın
+      • Oxşar paketləri tapmaq üçün faydalıdır
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
+      /emoji - Stiker emoji konfiqurasiyası
+      • Stikerlər üçün emoji təkliflərini dəyişdirin
+      • Tək bir stikerə bir çox emoji əlavə edin
       • Format: 😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /frame - Video kadrlərinin konfiqurasiyası
+      • Yalnız video stikerlər üçün mövcuddur
+      • Kadr növləri: yüngül, orta, yuvarlaq, kvadrat, dairəvi
+      • Bütün paket üçün dəyişdirilə bilər
 
-      <b>📁 Pack Management</b>
+      <b>📁 Paket İdarəsi</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /packs - Paketlərinizi idarə edin
+      • Bütün paketlərinizin siyahısı
+      • Redaktə, silmə, paketləri konfiqurasiya edin
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /restore - Gizli paketi bərpa edin
+      • Siyahınızdan gizlənmiş paketləri bərpa edin
+      • Daimi silinmiş paketlər bərpa olunmur
+      • Paket /packs siyahınıza yenidən görünəcək
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /copy - Paketləri kopyalayın
+      • Hər hansı bir paketin surətini yaradın
+      • Surəti dəyişmək imkanı
+      • Bütün stikerlər yeni paketin içərisinə kopyalanacaq
 
-      <b>📢 Catalog Features</b>
+      <b>📢 Kataloq Xüsusiyyətləri</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /catalog - Stiker paket kataloqu
+      • Yeni və məşhur paketləri gəzin
+      • Açar sözlər və ya etiketlərdə axtarın
+      • Paketləri reytinq verməklə yüksəltmək və ya aşağı salmaq
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /publish - Paketi kataloqda yayımlayın
+      • Paketinizi digər istifadəçilərlə paylaşın
+      • Təsvir, etiketlər və dillər əlavə edin
+      • Paket görünürlüğünü artırın
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 Əlavə Xüsusiyyətlər</b>
 
-      /lang - Change bot language
+      /lang - Bot dilini dəyişdir
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /donate - İnkişafı dəstəkləyin
+      • Donorlara əlavə xüsusiyyətlər
+      • Prioritet fayl emalı
+      • Artırılmış limitlər
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 Pro Məlumatlar:</b>
+      • Bot faylları tələb olunan formata avtomatik çevirir
+      • Əgər stiker əlavə etdikdən sonra görünməsə - xahiş edirik gözləyin
+      • Bot mesajlarını oxuyun - onlar xəta izahlarını ehtiva edir
+      • Video stikerlər üçün qısa kliplərdən istifadə edin
+      • Statik stikerlər üçün PNG fayllar daha yaxşı işləyir
 
-      <b>📮 Support and Community:</b>
+      <b>📮 Dəstək və İcma:</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 Dəstək söhbəti: @fStikCommunity (Yalnız ingilis dilində)
+      🧑‍🔧 İnkişafçı ilə əlaqə: @ly_oBot
+      👨🏻‍💻 İnkişafçı kanalı: @LyBlog
 
-      <b>🔗 Open Source:</b>
+      <b>🔗 Açıq Mənbə:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Siz yeni stiker paketlərini kataloqumuzda tapa bilərsiniz</b>
@@ -338,22 +338,22 @@ callback:
         Xəta!
         Sticker tapılmadı.
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>Xəta!</b>
+        Fayl etibarlı PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevirin.
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>Xəta!</b>
+        Stikerin ölçüləri etibarlı deyil. Stikerlər 512x512 piksel olmalıdır.
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>Xəta!</b>
+        Animasiya edilmiş stiker faylı düzgün TGS formatında deyil.
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>Xəta!</b>
+        Video faylı düzgün WEBM formatında deyil.
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>Xəta!</b>
+        Stikerin işlənməsi zamanı daxili bir xəta baş verdi.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Zəhmət olmasa, sonra yenidən cəhd edin. Problem davam edərsə, xahiş edirik, bu inkişafçı ilə əlaqə saxlayın: @ly_oBot
   group_settings:
     success: |
       Grup parametrləri uğurla yeniləndi.
