@@ -23,88 +23,88 @@ cmd:
 
       Bir çıkartmayı grup paketine eklemek için, bir fotoğraf, video, gif veya çıkartmaya yanıt olarak /ss komutunu kullanın.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 Hoş geldiniz! Ben çıkartma ve emoji sihirbazınızım</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 Çıkartma ve Paket Oluşturma</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /yeni - Yeni bir paket oluştur
+      • Paket türünü seçin: çıkartmalar veya emoji
+      • Paketinize bir isim verin
+      • Medya dosyaları göndererek çıkartmalar ekleyin
+      • Fotoğraflar, videolar, GIF'ler her formatta desteklenir
+      • Bot otomatik olarak boyutu optimize eder ve dosyaları dönüştürür
 
-      <b>📱 Sticker Management</b>
+      <b>📱 Çıkartma Yönetimi</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /sil - Paketten çıkartma kaldırma
+      • Silmek istediğiniz çıkartmayı yönlendirin
+      • Veya paketten bir çıkartma gönderin ve silin
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /orijinal - Orijinal çıkartmayı bul
+      • Bu bot tarafından oluşturulmuş orijinal çıkartmayı bul
+      • Benzer paketleri bulmak için faydalıdır
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
+      /emoji - Çıkartma emojilerini yapılandır
+      • Çıkartmalara emoji önerilerini değiştir
+      • Tek bir çıkartmaya birden fazla emoji ekleyin
       • Format: 😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /kare - Video karelerini yapılandırın
+      • Sadece video çıkartmalar için mevcut
+      • Kare türleri: hafif, orta, yuvarlak, kare, daire
+      • Tüm paket için değiştirilebilir
 
-      <b>📁 Pack Management</b>
+      <b>📁 Paket Yönetimi</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /paket - Paketlerinizi yönetin
+      • Tüm paketlerinizin listesi
+      • Paketleri düzenleme, silme, yapılandırma
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /geri yükle - Gizli paketi geri yükle
+      • Listenizden gizlenmiş paketleri geri yükleyin
+      • Kalıcı olarak silinen paketler geri yüklenemez
+      • Paketiniz /paket listesinde tekrar görünecek
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /kopyala - Paketleri kopyala
+      • Herhangi bir paketin kopyasını oluştur
+      • Kopyayı değiştirme yeteneği
+      • Tüm çıkartmalar yeni pakete kopyalanacak
 
-      <b>📢 Catalog Features</b>
+      <b>📢 Katalog Özellikleri</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /katalog - Çıkartma paketi kataloğu
+      • Yeni ve popüler paketleri gözden geçirin
+      • Anahtar kelimeler veya etiketlerle arama yapın
+      • Paketleri yükseltmek veya sıralamada düşürmek için puan verin
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /yayınla - Paketi kataloğa yayınla
+      • Paketinizi diğer kullanıcılarla paylaşın
+      • Açıklama, etiketler ve diller ekleyin
+      • Paket görünürlüğünü artırın
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 Ek Özellikler</b>
 
-      /lang - Change bot language
+      /dil - Bot dilini değiştir
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /bağış - Geliştirmeyi destekleyin
+      • Bağış yapanlar için ek özellikler
+      • Öncelikli dosya işleme
+      • Artırılmış sınırlar
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 Profesyonel İpuçları:</b>
+      • Bot, dosyaları otomatik olarak gerekli formata dönüştürür
+      • Eklendikten sonra çıkartma görünmüyorsa - lütfen bekleyin
+      • Bot mesajlarını okuyun - hata açıklamaları içeriyorlar
+      • Video çıkartmaları için kısa klipler kullanın
+      • Statik çıkartmalar için PNG dosyaları en iyi sonucu verir
 
-      <b>📮 Support and Community:</b>
+      <b>📮 Destek ve Topluluk:</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 Destek sohbeti: @fStikCommunity (Sadece İngilizce)
+      🧑‍🔧 Geliştirici ile iletişim: @ly_oBot
+      👨🏻‍💻 Geliştirici kanalı: @LyBlog
 
-      <b>🔗 Open Source:</b>
+      <b>🔗 Açık Kaynak:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
@@ -337,22 +337,22 @@ callback:
         Hata!
         Çıkartmayı bulamıyorum.
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>Hata!</b>
+        Dosya geçerli bir PNG resmi değil. Lütfen göndermeden önce PNG formatına dönüştürün.
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>Hata!</b>
+        Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>Hata!</b>
+        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>Hata!</b>
+        Video dosyası doğru WEBM formatında değil.
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>Hata!</b>
+        Çıkartmayı işlerken dahili bir hata oluştu.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Lütfen daha sonra tekrar deneyin. Sorun devam ederse, lütfen geliştirici ile iletişime geçin: @ly_oBot
   group_settings:
     success: |
       Grup ayarları başarıyla güncellendi.
