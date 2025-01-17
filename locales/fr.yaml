@@ -23,89 +23,89 @@ cmd:
 
       Pour ajouter un sticker à un pack de groupe, utilisez la commande /ss en réponse à une photo, une vidéo, un gif ou un sticker.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 Bienvenue ! Je suis votre Assistant d'Autocollants et Émojis</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 Création d'Autocollants et de Packs</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /new - Créer un nouveau pack
+      • Choisissez le type de pack : autocollants ou émoji
+      • Nommez votre pack
+      • Ajoutez des autocollants en envoyant des fichiers média
+      • Prend en charge les photos, vidéos, GIFs dans tout format
+      • Le bot optimise automatiquement la taille et convertit les fichiers
 
-      <b>📱 Sticker Management</b>
+      <b>📱 Gestion des Autocollants</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /delete - Supprimer un autocollant du pack
+      • Transférez l'autocollant que vous souhaitez supprimer
+      • Ou envoyez un autocollant du pack pour le supprimer
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /original - Trouver l'autocollant original
+      • Localiser l'autocollant original créé par ce bot
+      • Utile pour trouver des packs similaires
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
-      • Format: 😀,😊,🙂
+      /emoji - Configurer l'émoji de l'autocollant
+      • Modifier les suggestions d'émoji pour les autocollants
+      • Ajouter plusieurs émojis à un seul autocollant
+      • Format : 😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /frame - Configurer les cadres vidéo
+      • Disponible uniquement pour les autocollants vidéo
+      • Types de cadres : léger, moyen, arrondi, carré, cercle
+      • Peut être changé pour l'ensemble du pack
 
-      <b>📁 Pack Management</b>
+      <b>📁 Gestion des Packs</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /packs - Gérer vos packs
+      • Liste de tous vos packs
+      • Modifier, supprimer, configurer les packs
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /restore - Restaurer un pack masqué
+      • Restaurer les packs qui étaient masqués de votre liste
+      • Les packs supprimés de façon permanente ne peuvent pas être restaurés
+      • Le pack réapparaîtra dans votre liste /packs
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /copy - Copier des packs
+      • Créer une copie de n'importe quel pack
+      • Possibilité de modifier la copie
+      • Tous les autocollants seront copiés dans le nouveau pack
 
-      <b>📢 Catalog Features</b>
+      <b>📢 Caractéristiques du Catalogue</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /catalog - Catalogue de packs d'autocollants
+      • Parcourir les nouveaux packs et les populaires
+      • Recherche par mots-clés ou tags
+      • Évaluer les packs pour les promouvoir ou les abaisser dans les classements
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /publish - Publier un pack dans le catalogue
+      • Partagez votre pack avec d'autres utilisateurs
+      • Ajouter une description, des tags et des langues
+      • Augmenter la visibilité du pack
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 Fonctionnalités Supplémentaires</b>
 
-      /lang - Change bot language
+      /lang - Changer la langue du bot
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /donate - Soutenir le développement
+      • Fonctionnalités supplémentaires pour les donateurs
+      • Traitement de fichiers prioritaire
+      • Limites augmentées
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 Conseils Pro :</b>
+      • Le bot convertit automatiquement les fichiers au format requis
+      • Si un autocollant n'apparaît pas après l'ajout - veuillez attendre
+      • Lisez les messages du bot - ils contiennent les explications des erreurs
+      • Utilisez des clips courts pour les autocollants vidéo
+      • Les fichiers PNG fonctionnent mieux pour les autocollants statiques
 
-      <b>📮 Support and Community:</b>
+      <b>📮 Support et Communauté :</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 Chat de support : @fStikCommunity (en anglais seulement)
+      🧑‍🔧 Contact du développeur: @ly_oBot
+      👨🏻‍💻 Canal du développeur: @LyBlog
 
-      <b>🔗 Open Source:</b>
-      GitHub: https://github.com/LyoSU/fStikBot
+      <b>🔗 Open Source :</b>
+      GitHub : https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Vous pouvez trouver de nouveaux packs d'autocollants dans notre catalogue</b>
 
@@ -339,22 +339,22 @@ callback:
         ERREUR!
         Impossible de trouver un autocollant.
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>Erreur !</b>
+        Le fichier n'est pas une image PNG valide. Veuillez le convertir au format PNG avant de l'envoyer.
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>Erreur !</b>
+        Les dimensions de l'autocollant sont invalides. Les autocollants doivent être de 512x512 pixels.
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>Erreur !</b>
+        Le fichier d'autocollant animé n'est pas au format TGS correct.
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>Erreur !</b>
+        Le fichier vidéo n'est pas au format WEBM correct.
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>Erreur !</b>
+        Une erreur interne s'est produite lors du traitement de l'autocollant.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter le développeur : @ly_oBot
   group_settings:
     success: |
       Paramètres du groupe mis à jour avec succès.
