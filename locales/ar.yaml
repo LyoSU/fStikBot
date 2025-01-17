@@ -23,88 +23,88 @@ cmd:
 
        لإضافة ملصق إلى حزمة جماعية، استخدم الأمر /ss في الرد على صورة، فيديو، GIF، أو ملصق.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>🧙 مرحباً! أنا ساحر الملصقات والرموز التعبيرية</b>
 
-      <b>🎨 Creating Stickers and Packs</b>
+      <b>🎨 إنشاء ملصقات وحزم</b>
 
-      /new - Create a new pack
-      • Choose pack type: stickers or emoji
-      • Set a name for your pack
-      • Add stickers by sending media files
-      • Supports photos, videos, GIFs in any format
-      • Bot automatically optimizes size and converts files
+      /new - إنشاء حزمة جديدة
+      • اختر نوع الحزمة: ملصقات أو رموز تعبيرية
+      • قم بتعيين اسم لحزمتك
+      • أضف ملصقات عن طريق إرسال ملفات الوسائط
+      • يدعم الصور والفيديوهات وملفات الـ GIF بأي صيغة
+      • يقوم الروبوت بتحسين الحجم وتحويل الملفات تلقائياً
 
-      <b>📱 Sticker Management</b>
+      <b>📱 إدارة الملصقات</b>
 
-      /delete - Remove a sticker from pack
-      • Forward the sticker you want to delete
-      • Or send a sticker from the pack to delete it
+      /delete - إزالة ملصق من الحزمة
+      • أعد توجيه الملصق الذي ترغب في حذفه
+      • أو أرسل ملصق من الحزمة لحذفه
 
-      /original - Find original sticker
-      • Locate the original sticker created by this bot
-      • Useful for finding similar packs
+      /original - العثور على الملصق الأصلي
+      • حدد موقع الملصق الأصلي الذي أنشأه هذا الروبوت
+      • مفيد للعثور على حزم مشابهة
 
-      /emoji - Configure sticker emoji
-      • Change emoji suggestions for stickers
-      • Add multiple emoji to a single sticker
-      • Format: 😀,😊,🙂
+      /emoji - تكوين الرموز التعبيرية للملصق
+      • تغيير اقتراحات الرموز التعبيرية للملصقات
+      • أضف رموز تعبيرية متعددة لملصق واحد
+      • الصيغة: 😀,😊,🙂
 
-      /frame - Configure video frames
-      • Available only for video stickers
-      • Frame types: lite, medium, rounded, square, circle
-      • Can be changed for the entire pack
+      /frame - تكوين إطارات الفيديو
+      • متاحة فقط للملصقات الفيديو
+      • أنواع الإطارات: خفيف، متوسط، مدور، مربع، دائرة
+      • يمكن تغييرها للحزمة بأكملها
 
-      <b>📁 Pack Management</b>
+      <b>📁 إدارة الحزم</b>
 
-      /packs - Manage your packs
-      • List of all your packs
-      • Edit, delete, configure packs
+      /packs - إدارة حزمك
+      • قائمة بجميع حزمك
+      • تعديل، حذف، تكوين الحزم
 
-      /restore - Restore hidden pack
-      • Restore packs that were hidden from your list
-      • Permanently deleted packs cannot be restored
-      • Pack will reappear in your /packs list
+      /restore - استعادة الحزمة المخفية
+      • استعادة الحزم التي كانت مخفية من قائمتك
+      • لا يمكن استعادة الحزم المحذوفة نهائياً
+      • ستظهر الحزمة مرة أخرى في قائمة /packs
 
-      /copy - Copy packs
-      • Create a copy of any pack
-      • Ability to modify the copy
-      • All stickers will be copied to the new pack
+      /copy - نسخ الحزم
+      • إنشاء نسخة من أي حزمة
+      • إمكانية تعديل النسخة
+      • سيتم نسخ كل الملصقات إلى الحزمة الجديدة
 
-      <b>📢 Catalog Features</b>
+      <b>📢 ميزات الدليل</b>
 
-      /catalog - Sticker pack catalog
-      • Browse new and popular packs
-      • Search by keywords or tags
-      • Rate packs to promote or lower in rankings
+      /catalog - دليل حزم الملصقات
+      • تصفح الحزم الجديدة والشعبية
+      • البحث بالكلمات الدلالية أو العلامات
+      • تقييم الحزم لرفع أو تخفيض تصنيفها
 
-      /publish - Publish pack to catalog
-      • Share your pack with other users
-      • Add description, tags, and languages
-      • Boost pack visibility
+      /publish - نشر الحزمة في الدليل
+      • شارك حزمتك مع المستخدمين الآخرين
+      • أضف وصفاً وعلامات ولغات
+      • زيادة رؤية الحزمة
 
-      <b>🛠 Additional Features</b>
+      <b>🛠 ميزات إضافية</b>
 
-      /lang - Change bot language
+      /lang - تغيير لغة الروبوت
 
-      /donate - Support development
-      • Additional features for donors
-      • Priority file processing
-      • Increased limits
+      /donate - دعم التطوير
+      • ميزات إضافية للمتبرعين
+      • معالجة الملفات بشكل سريع
+      • زيادة الحدود
 
-      <b>💡 Pro Tips:</b>
-      • Bot automatically converts files to the required format
-      • If a sticker doesn't appear after adding - please wait
-      • Read bot messages - they contain error explanations
-      • Use short clips for video stickers
-      • PNG files work best for static stickers
+      <b>💡 نصائح احترافية:</b>
+      • يقوم الروبوت بتحويل الملفات تلقائياً إلى الصيغة المطلوبة
+      • إذا لم يظهر الملصق بعد الإضافة - يرجى الانتظار
+      • اقرأ رسائل الروبوت - تحتوي على تفسيرات الأخطاء
+      • استخدم مقاطع فيديو قصيرة للملصقات الفيديو
+      • تعمل ملفات PNG بشكل أفضل للملصقات الثابتة
 
-      <b>📮 Support and Community:</b>
+      <b>📮 الدعم والمجتمع:</b>
 
-      💬 Support chat: @fStikCommunity (English only)
-      🧑‍🔧 Developer contact: @ly_oBot
-      👨🏻‍💻 Developer channel: @LyBlog
+      💬 دردشة الدعم: @fStikCommunity (بالإنجليزية فقط)
+      🧑‍🔧 اتصال المطور: @ly_oBot
+      👨🏻‍💻 قناة المطور: @LyBlog
 
-      <b>🔗 Open Source:</b>
+      <b>🔗 مفتوح المصدر:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 يمكنك العثور على حزم ملصقات جديدة في الكتالوج الخاص بنا</b>
@@ -337,22 +337,22 @@ callback:
         خطأ!
         لا يمكن العثور على ملصق.
       invalid_png: |
-        <b>Error!</b>
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        <b>خطأ!</b>
+        الملف ليس صورة PNG صحيحة. يرجى تحويله إلى صيغة PNG قبل الإرسال.
       invalid_dimensions: |
-        <b>Error!</b>
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        <b>خطأ!</b>
+        أبعاد الملصق غير صحيحة. يجب أن تكون الملصقات 512x512 بكسل.
       invalid_animated: |
-        <b>Error!</b>
-        The animated sticker file is not in the correct TGS format.
+        <b>خطأ!</b>
+        ملف الملصق المتحرك ليس بالتنسيق الصحيح TGS.
       invalid_video: |
-        <b>Error!</b>
-        The video file is not in the correct WEBM format.
+        <b>خطأ!</b>
+        ملف الفيديو ليس بالتنسيق الصحيح WEBM.
       internal_error: |
-        <b>Error!</b>
-        An internal error occurred while processing the sticker.
+        <b>خطأ!</b>
+        حدث خطأ داخلي أثناء معالجة الملصق.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        يرجى المحاولة مرة أخرى لاحقاً. إذا استمرت المشكلة، يرجى الاتصال بالمطور: @ly_oBot
   group_settings:
     success: |
       تم تحديث إعدادات المجموعة بنجاح.
