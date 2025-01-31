@@ -18,11 +18,11 @@ module.exports = async (ctx) => {
 
     const { reply_to_message } = message
 
-    if (message.reply_to_message.sticker) {
+    if (message?.reply_to_message?.sticker) {
       setName = reply_to_message.sticker.set_name
 
       deleteSticker = reply_to_message.sticker.file_id
-    } else if (reply_to_message.entities && reply_to_message.entities[0] && reply_to_message.entities[0].type === 'custom_emoji') {
+    } else if (reply_to_message?.entities && reply_to_message?.entities?.[0] && reply_to_message?.entities?.[0]?.type === 'custom_emoji') {
       const customEmoji = reply_to_message.entities.find((e) => e.type === 'custom_emoji')
 
       if (!customEmoji) return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
@@ -43,7 +43,7 @@ module.exports = async (ctx) => {
 
     packBotUsername = setName.split('_').pop(-1)
 
-    if (!message.reply_to_message || !packBotUsername || packBotUsername !== ctx.options.username) {
+    if (!message?.reply_to_message || !packBotUsername || packBotUsername !== ctx?.options?.username) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
 
