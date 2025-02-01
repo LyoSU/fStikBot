@@ -227,9 +227,9 @@ const getStarsTransactions = async (ctx) => {
     transactions.sort((a, b) => b.date - a.date)
 
     const csvContent = [
-      'Date,Amount,USD Amount,User Name,User ID',
+      'Date,Transaction ID,Amount,USD Amount,User Name,User ID',
       ...transactions.map(item =>
-        `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.source?.user?.first_name?.replace(/"/g, '""') || ''}",${item.source?.user?.id || ''}`
+        `"${new Date(item.date * 1000).toLocaleString()}","${item.id}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.source?.user?.first_name?.replace(/"/g, '""') || ''}",${item.source?.user?.id || ''}`
       )
     ].join('\n');
 
@@ -238,7 +238,7 @@ const getStarsTransactions = async (ctx) => {
     const last20Transactions = transactions.slice(0, 20)
 
     const resultText = last20Transactions.map((item, index) =>
-      `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   👤 From: <a href="tg://user?id=${item.source.user.id}">${escape(item.source.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
+      `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   🆔 ID: <code>${item.id}</code>\n   👤 From: <a href="tg://user?id=${item.source.user.id}">${escape(item.source.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
     ).join('\n')
 
     await ctx.editMessageText(`<b>📊 Last 20 Stars Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.`, {
@@ -263,7 +263,7 @@ const getOutgoingTransactions = async (ctx) => {
     while (true) {
       const result = await ctx.tg.callApi('getStarTransactions', { limit, offset })
       if (!result.transactions || result.transactions.length === 0) break
-      transactions.push(...result.transactions.filter(item => item.destination))
+      transactions.push(...result.transactions.filter(item => item.receiver))
       if (result.transactions.length < limit) break
       offset += limit
     }
@@ -271,9 +271,9 @@ const getOutgoingTransactions = async (ctx) => {
     transactions.sort((a, b) => b.date - a.date)
 
     const csvContent = [
-      'Date,Amount,USD Amount,Destination Name,Destination ID',
+      'Date,Transaction ID,Amount,USD Amount,Receiver Name,Receiver ID',
       ...transactions.map(item =>
-        `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.destination?.user?.first_name?.replace(/"/g, '""') || ''}",${item.destination?.user?.id || ''}`
+        `"${new Date(item.date * 1000).toLocaleString()}","${item.id}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.receiver?.user?.first_name?.replace(/"/g, '""') || ''}",${item.receiver?.user?.id || ''}`
       )
     ].join('\n');
 
@@ -282,7 +282,7 @@ const getOutgoingTransactions = async (ctx) => {
     const last20Transactions = transactions.slice(0, 20)
 
     const resultText = last20Transactions.map((item, index) =>
-      `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   👤 To: <a href="tg://user?id=${item.destination.user.id}">${escape(item.destination.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
+      `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   🆔 ID: <code>${item.id}</code>\n   👤 To: <a href="tg://user?id=${item.receiver.user.id}">${escape(item.receiver.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
     ).join('\n')
 
     await ctx.editMessageText(`<b>📊 Last 20 Outgoing Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.`, {
