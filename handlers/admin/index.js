@@ -125,12 +125,14 @@ View transaction history:
 🔹 Crypto Transactions
 🔹 MonoBank Transactions
 🔹 Stars Transactions
+🔹 Outgoing Transactions
 `
 
   const inlineKeyboard = [
     [Markup.callbackButton('🪙 Crypto Transactions', 'admin:history:crypto')],
     [Markup.callbackButton('🏦 MonoBank Transactions', 'admin:history:mono')],
     [Markup.callbackButton('⭐️ Stars Transactions', 'admin:history:stars')],
+    [Markup.callbackButton('📤 Outgoing Transactions', 'admin:history:out')],
     [Markup.callbackButton('🔙 Back to Admin Panel', 'admin:main')]
   ]
 
@@ -226,7 +228,7 @@ const getStarsTransactions = async (ctx) => {
 
     const csvContent = [
       'Date,Amount,USD Amount,User Name,User ID',
-      ...transactions.map(item => 
+      ...transactions.map(item =>
         `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.source?.user?.first_name?.replace(/"/g, '""') || ''}",${item.source?.user?.id || ''}`
       )
     ].join('\n');
@@ -247,6 +249,50 @@ const getStarsTransactions = async (ctx) => {
   } catch (error) {
     console.error('Error fetching stars transactions:', error)
     await ctx.answerCbQuery('Failed to fetch stars transactions. Please try again later.', true)
+  }
+}
+
+// Get outgoing transactions
+const getOutgoingTransactions = async (ctx) => {
+  await ctx.answerCbQuery()
+  try {
+    let transactions = []
+    let offset = 0
+    const limit = 100
+
+    while (true) {
+      const result = await ctx.tg.callApi('getStarTransactions', { limit, offset })
+      if (!result.transactions || result.transactions.length === 0) break
+      transactions.push(...result.transactions.filter(item => item.destination))
+      if (result.transactions.length < limit) break
+      offset += limit
+    }
+
+    transactions.sort((a, b) => b.date - a.date)
+
+    const csvContent = [
+      'Date,Amount,USD Amount,Destination Name,Destination ID',
+      ...transactions.map(item =>
+        `"${new Date(item.date * 1000).toLocaleString()}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.destination?.user?.first_name?.replace(/"/g, '""') || ''}",${item.destination?.user?.id || ''}`
+      )
+    ].join('\n');
+
+    await ctx.replyWithDocument({ source: Buffer.from(csvContent, 'utf-8'), filename: 'outgoing_transactions.csv' })
+
+    const last20Transactions = transactions.slice(0, 20)
+
+    const resultText = last20Transactions.map((item, index) =>
+      `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   👤 To: <a href="tg://user?id=${item.destination.user.id}">${escape(item.destination.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
+    ).join('\n')
+
+    await ctx.editMessageText(`<b>📊 Last 20 Outgoing Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.`, {
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
+      reply_markup: Markup.inlineKeyboard([[Markup.callbackButton('🔙 Back', 'admin:transactions')]])
+    })
+  } catch (error) {
+    console.error('Error fetching outgoing transactions:', error)
+    await ctx.answerCbQuery('Failed to fetch outgoing transactions. Please try again later.', true)
   }
 }
 
@@ -426,6 +472,7 @@ composer.action('admin:finance:credits', checkAdminRight, setPremiumCredits)
 composer.action('admin:history:crypto', checkAdminRight, getLastCryptoTransactions)
 composer.action('admin:history:mono', checkAdminRight, getLastMonoTransactions)
 composer.action('admin:history:stars', checkAdminRight, getStarsTransactions)
+composer.action('admin:history:out', checkAdminRight, getOutgoingTransactions)
 
 // Handle "Back" actions
 composer.action(/admin:.*:back/, async (ctx) => {
