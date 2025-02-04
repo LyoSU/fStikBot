@@ -305,12 +305,32 @@ callback:
       catalog_share: '🔗️️ Бөлісіңіз'
       catalog_open: '📂 Каталогта ашыңыз'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Қате!</b>
-        Буманы қалпына келтіру мүмкін емес.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Қате!</b>
-        Пакетті табу мүмкін емес.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Жинақ <a href="${link}">${title}</a> топ үшін сәтті таңдалды.
@@ -412,6 +432,18 @@ sticker:
         Бот ағымдағы таңдалған бумаға қол жеткізе алмайды.
 
         Басқа буманы (/жаңа) жасаңыз немесе (/бумаларды) таңдаңыз.
+      invalid_png: |
+        <b>Қате!</b>
+        Бұл файл жарамды PNG кескіні емес. Жібермес бұрын оны PNG форматына түрлендіріңіз.
+      invalid_dimensions: |
+        <b>Қате!</b>
+        Стикер өлшемдері жарамсыз. Стикерлер 512x512 пиксель болуы керек.
+      invalid_animated: |
+        <b>Қате!</b>
+        Анимирленген стикер файлы дұрыс TGS форматында емес.
+      invalid_video: |
+        <b>Қате!</b>
+        Бейне файлы дұрыс WEBM форматында емес.
       file_type:
         static: |
           <b>Қате!</b>
