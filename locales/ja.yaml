@@ -329,8 +329,8 @@ callback:
           all: 全員
           admins: 管理者のみ
       error: |
-        <b>エラー！</b>
-        セットが見つかりません。
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: ステッカーはパックから正常に削除されました。
