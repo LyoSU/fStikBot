@@ -307,31 +307,31 @@ callback:
       catalog_open: '📂 Buka di katalog'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Kesalahan!
+        Tidak dapat menemukan stiker.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Kesalahan!
+        File bukan gambar PNG yang valid. Silakan konversi ke format PNG sebelum mengirim.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Kesalahan!
+        Dimensi stiker tidak valid. Stiker harus berukuran 512x512 piksel.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Kesalahan!
+        File stiker animasi tidak dalam format TGS yang benar.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Kesalahan!
+        File video tidak dalam format WEBM yang benar.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Kesalahan!
+        Terjadi kesalahan internal saat memproses stiker.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Silakan coba lagi nanti. Jika masalah tetap ada, silakan hubungi pengembang: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Kesalahan!
+        Tidak dapat memulihkan paket.
       copy: |
-        Error!
-        Cannot find pack.
+        Kesalahan!
+        Tidak dapat menemukan paket.
     select_group:
       success: |
         Paket <a href="${link}">${title}</a> berhasil dipilih untuk grup.
@@ -342,8 +342,8 @@ callback:
           all: Semua orang
           admins: Hanya admin
       error: |
-        Error!
-        Set not found.
+        Kesalahan!
+        Set tidak ditemukan.
   sticker:
     answerCbQuery:
       delete: Stiker berhasil dikeluarkan dari kemasannya.
