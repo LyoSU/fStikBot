@@ -315,31 +315,31 @@ callback:
       catalog_open: '📂 在目录中打开'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        错误！
+        找不到标签。
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        错误！
+        文件不是有效的PNG图像。请在发送前将其转换为PNG格式。
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        错误！
+        贴纸尺寸无效。贴纸必须为 <b>512</b>x<b>512</b> 像素。
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        错误！
+        动画标签文件的格式不正确，应为TGS格式。
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        错误！
+        视频文件的格式不正确，应为WEBM格式。
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        错误！
+        处理标签时发生内部错误。
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        请稍后再试。如果问题仍然存在，请联系开发者：@ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        错误！
+        无法还原包。
       copy: |
-        Error!
-        Cannot find pack.
+        错误！
+        找不到包。
     select_group:
       success: |
         包<a href="${link}">${title}</a>已成功为群组选择。
@@ -350,8 +350,8 @@ callback:
           all: 所有人
           admins: 只有管理员
       error: |
-        Error!
-        Set not found.
+        错误！
+        未找到集合。
   sticker:
     answerCbQuery:
       delete: 贴纸已成功从包中取出。
