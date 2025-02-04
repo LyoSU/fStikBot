@@ -340,7 +340,7 @@ callback:
           all: الجميع
           admins: فقط المسؤولين
       error: |
-        خطأ! 
+        خطأ!
          set غير موجود.
   sticker:
     answerCbQuery:
