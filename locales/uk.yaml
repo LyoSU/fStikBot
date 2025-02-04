@@ -306,31 +306,31 @@ callback:
       catalog_open: '📂 Відкрити в каталозі'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Помилка!
+        Не вдалося знайти стікер.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Помилка!
+        Файл не є дійсним зображенням PNG. Будь ласка, перетворіть його у формат PNG перед відправкою.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Помилка!
+        Розміри стікера недійсні. Стікери повинні бути 512x512 пікселів.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Помилка!
+        Файл анімованого стікера не в правильному форматі TGS.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Помилка!
+        Файл відео не в правильному форматі WEBM.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Помилка!
+        Виникла внутрішня помилка під час обробки стікера.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Будь ласка, спробуйте пізніше. Якщо проблема триває, будь ласка, зв'яжіться з розробником: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Помилка!
+        Неможливо відновити пакунок.
       copy: |
-        Error!
-        Cannot find pack.
+        Помилка!
+        Неможливо знайти пакунок.
     select_group:
       success: |
         Пак <a href="${link}">${title}</a> успішно обрано для групи.
@@ -341,8 +341,8 @@ callback:
           all: Всі
           admins: Тільки адміністратори
       error: |
-        Error!
-        Set not found.
+        Помилка!
+        Набір не знайдено.
   sticker:
     answerCbQuery:
       delete: Успішно видалено з паканку.
