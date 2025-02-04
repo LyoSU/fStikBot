@@ -307,31 +307,22 @@ callback:
       catalog_open: '📂 Ouvrir dans le catalogue'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        ERREUR!
+        Impossible de trouver un autocollant.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Erreur!\nLe fichier n'est pas une image PNG valide. Veuillez le convertir au format PNG avant de l'envoyer.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Erreur!\nLes dimensions de l'autocollant sont invalides. Les autocollants doivent être de 512x512 pixels.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Erreur!\nLe fichier d'autocollant animé n'est pas dans le format TGS correct.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Erreur!\nLe fichier vidéo n'est pas dans le format WEBM correct.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
-
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Erreur!\nUne erreur interne s'est produite lors du traitement de l'autocollant.\n\nVeuillez réessayer plus tard. Si le problème persiste, veuillez contacter le développeur : @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Erreur!\nImpossible de restaurer le pack.
       copy: |
-        Error!
-        Cannot find pack.
+        Erreur!\nImpossible de trouver le pack.
     select_group:
       success: |
         Pack <a href="${link}">${title}</a> sélectionné avec succès pour le groupe.
@@ -342,8 +333,7 @@ callback:
           all: Tout le monde
           admins: Seuls les administrateurs
       error: |
-        Error!
-        Set not found.
+        Erreur !\nEnsemble non trouvé.
   sticker:
     answerCbQuery:
       delete: L'autocollant a été retiré du pack avec succès.
