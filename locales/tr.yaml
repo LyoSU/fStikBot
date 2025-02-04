@@ -340,8 +340,8 @@ callback:
           all: Herkes
           admins: Sadece yöneticiler
       error: |
-        <b>Hata!</b>
-        Set bulunamadı.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Çıkartma paketten başarıyla çıkarıldı.
