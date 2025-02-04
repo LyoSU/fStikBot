@@ -294,31 +294,31 @@ callback:
       catalog_open: '📂 Abrir no catálogo'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Erro!
+        Não foi possível encontrar um adesivo.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Erro!
+        O arquivo não é uma imagem PNG válida. Por favor, converta para o formato PNG antes de enviar.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Erro!
+        As dimensões do adesivo são inválidas. Os adesivos devem ser de 512x512 pixels.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Erro!
+        O arquivo de adesivo animado não está no formato TGS correto.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Erro!
+        O arquivo de vídeo não está no formato WEBM correto.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Erro!
+        Ocorreu um erro interno ao processar o adesivo.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com o desenvolvedor: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Erro!
+        Não é possível restaurar o pacote.
       copy: |
-        Error!
-        Cannot find pack.
+        Erro!
+        Não foi possível encontrar o pacote.
     select_group:
       success: |
         Pacote <a href="${link}">${title}</a> selecionado com sucesso para o grupo.
@@ -329,8 +329,8 @@ callback:
           all: Todos
           admins: Somente administradores
       error: |
-        Error!
-        Set not found.
+        Erro!
+        Conjunto não encontrado.
   sticker:
     answerCbQuery:
       delete: O adesivo foi removido com sucesso da embalagem.
