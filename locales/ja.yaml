@@ -293,12 +293,32 @@ callback:
       catalog_share: '🔗 共有'
       catalog_open: '📂 カタログで開く'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>エラー!</b>
-        パックを復元できません。
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>エラー!</b>
-        パックが見つかりません。
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         パック <a href="${link}">${title}</a> がグループに正常に選択されました。
@@ -395,6 +415,18 @@ sticker:
         Botは現在選択されているパックにアクセスできません。
 
         (/new) を作成するか、別のパックを選択してください。
+      invalid_png: |
+        <b>エラー！</b>
+        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
+      invalid_dimensions: |
+        <b>エラー！</b>
+        ステッカーのサイズが無効です。ステッカーは512x512ピクセルでなければなりません。
+      invalid_animated: |
+        <b>エラー！</b>
+        アニメーションステッカーファイルが正しいTGS形式ではありません。
+      invalid_video: |
+        <b>エラー！</b>
+        ビデオファイルが正しいWEBM形式ではありません。
       file_type:
         static: |
           <b>エラー!</b>
