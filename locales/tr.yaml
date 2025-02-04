@@ -305,31 +305,31 @@ callback:
       catalog_open: '📂 Katalogda aç'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Hata!
+        Çıkartmayı bulamıyorum.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Hata!
+        Dosya geçerli bir PNG resmi değil. Lütfen göndermeden önce bunu PNG formatına dönüştürün.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Hata!
+        Çıkartmanın boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Hata!
+        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Hata!
+        Video dosyası doğru WEBM formatında değil.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Hata!
+        Çıkartmayı işlerken dahili bir hata oluştu.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Lütfen daha sonra tekrar deneyin. Sorun devam ederse, lütfen geliştiriciyle iletişime geçin: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Hata!
+        Paket geri yüklenemiyor.
       copy: |
-        Error!
-        Cannot find pack.
+        Hata!
+        Paket bulunamıyor.
     select_group:
       success: |
         Paket <a href="${link}">${title}</a> başarıyla grup için seçildi.
@@ -340,8 +340,8 @@ callback:
           all: Herkes
           admins: Sadece yöneticiler
       error: |
-        Error!
-        Set not found.
+        Hata!
+        Set bulunamadı.
   sticker:
     answerCbQuery:
       delete: Çıkartma paketten başarıyla çıkarıldı.
