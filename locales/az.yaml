@@ -341,8 +341,8 @@ callback:
           all: Hər kəs
           admins: Yalnız adminlər
       error: |
-        <b>Xəta!</b>
-        Yığımı tapılmadı.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Stiker paketdən uğurla çıxarıldı.
