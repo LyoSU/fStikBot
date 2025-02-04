@@ -341,8 +341,8 @@ callback:
           all: Всі
           admins: Тільки адміністратори
       error: |
-        <b>Помилка!</b>
-        Набір не знайдено.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Успішно видалено з паканку.
