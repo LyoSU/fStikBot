@@ -342,8 +342,8 @@ callback:
           all: Tout le monde
           admins: Seuls les administrateurs
       error: |
-        <b>Erreur !</b>
-        Ensemble non trouvé.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: L'autocollant a été retiré du pack avec succès.
