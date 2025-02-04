@@ -314,12 +314,32 @@ callback:
       catalog_share: '🔗️️ 分享'
       catalog_open: '📂 在目录中打开'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>错误！</b>
-        无法还原包。
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>错误！</b>
-        找不到包。
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         包<a href="${link}">${title}</a>已成功为群组选择。
@@ -421,6 +441,18 @@ sticker:
         Bot 无法访问您当前选择的包。
 
         请创建 (/new) 或选择 (/packs) 另一个包。
+      invalid_png: |
+        <b>错误！</b>
+        该文件不是有效的PNG图像。请将其转换为PNG格式后再发送。
+      invalid_dimensions: |
+        <b>错误！</b>
+        贴纸尺寸无效。贴纸必须是512x512像素。
+      invalid_animated: |
+        <b>错误！</b>
+        动画贴纸文件格式不正确，应该为TGS格式。
+      invalid_video: |
+        <b>错误！</b>
+        视频文件格式不正确，应为WEBM格式。
       file_type:
         static: |
           <b>错误！</b>
