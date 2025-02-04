@@ -342,8 +342,8 @@ callback:
           all: Semua orang
           admins: Hanya admin
       error: |
-        <b>Kesalahan!</b>
-        Set tidak ditemukan.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Stiker berhasil dikeluarkan dari kemasannya.
