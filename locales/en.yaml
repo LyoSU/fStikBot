@@ -343,7 +343,7 @@ callback:
           all: Everyone
           admins: Only admins
       error: |
-        <b>Error!</b>
+        Error!
         Set not found.
   sticker:
     answerCbQuery:
