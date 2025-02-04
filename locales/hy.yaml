@@ -342,8 +342,8 @@ callback:
           all: Բոլորը
           admins: Միայն ադմինները
       error: |
-        <b>Սխալ!</b>
-        Փաթեթը չէր գտնվել։
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: 'Կպչուն պիտակը հաջողությամբ հեռացվեց փաթեթից:'
