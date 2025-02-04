@@ -293,12 +293,32 @@ callback:
       catalog_share: '🔗 Compartilhar'
       catalog_open: '📂 Abrir no catálogo'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Erro!</b>
-        Não é possível restaurar o pacote.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Erro!</b>
-        Não foi possível encontrar o pacote.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Pacote <a href="${link}">${title}</a> selecionado com sucesso para o grupo.
@@ -400,6 +420,18 @@ sticker:
         Bot não pode acessar o pacote escolhido atualmente.
 
         Por favor, crie (/new) ou escolha (/packs) outro pacote.
+      invalid_png: |
+        <b>Erro!</b>
+        O arquivo não é uma imagem PNG válida. Por favor, converta para o formato PNG antes de enviar.
+      invalid_dimensions: |
+        <b>Erro!</b>
+        As dimensões do sticker são inválidas. Stickers devem ter 512x512 pixels.
+      invalid_animated: |
+        <b>Erro!</b>
+        O arquivo de sticker animado não está no formato TGS correto.
+      invalid_video: |
+        <b>Erro!</b>
+        O arquivo de vídeo não está no formato WEBM correto.
       file_type:
         static: |
           U<b>Erro!</b>
