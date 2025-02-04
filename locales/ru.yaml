@@ -330,7 +330,7 @@ callback:
           all: Все
           admins: Только администраторы
       error: |
-        <b>Ошибка!</b>
+        Error!
         Set not found.
   sticker:
     answerCbQuery:
