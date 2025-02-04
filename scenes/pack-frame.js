@@ -43,6 +43,15 @@ packFrame.hears([
   match('scenes.frame.types.lite'),
   match('scenes.frame.types.medium')
 ], async (ctx) => {
+  if (!ctx.session?.userInfo?.stickerSet) {
+    await ctx.scene.leave()
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.frame.no_sticker_set'), {
+      reply_markup: {
+        remove_keyboard: true
+      }
+    })
+  }
+
   let type
 
   switch (ctx.message.text) {
@@ -64,7 +73,7 @@ packFrame.hears([
   }
 
   const updateResulet = await ctx.db.StickerSet.updateOne({
-    _id: ctx.session?.userInfo?.stickerSet._id
+    _id: ctx.session.userInfo.stickerSet._id
   }, {
     $set: {
       frameType: type
