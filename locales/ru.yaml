@@ -295,31 +295,31 @@ callback:
       catalog_open: '📂 Открыть в каталоге'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Ошибка!
+        Не удалось найти стикер.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Ошибка!
+        Файл не является допустимым изображением PNG. Пожалуйста, преобразуйте его в формат PNG перед отправкой.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Ошибка!
+        Недопустимые размеры стикера. Стикеры должны быть размером 512x512 пикселей.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Ошибка!
+        Анимированный стикер не соответствует допустимому формату TGS.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Ошибка!
+        Видеофайл не соответствует допустимому формату WEBM.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Ошибка!
+        Произошла внутренняя ошибка при обработке стикера.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Пожалуйста, попробуйте позже. Если проблема сохраняется, пожалуйста, свяжитесь с разработчиком: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Ошибка!
+        Не удалось восстановить стикерпак.
       copy: |
-        Error!
-        Cannot find pack.
+        Ошибка!
+        Не удалось найти стикерпак.
     select_group:
       success: |
         Набор <a href="${link}">${title}</a> успешно выбран для группы.
@@ -330,7 +330,7 @@ callback:
           all: Все
           admins: Только администраторы
       error: |
-        Error!
+        Ошибка!
         Set not found.
   sticker:
     answerCbQuery:
