@@ -350,8 +350,8 @@ callback:
           all: 所有人
           admins: 只有管理员
       error: |
-        <b>错误！</b>
-        未找到集合。
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: 贴纸已成功从包中取出。
