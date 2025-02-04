@@ -293,11 +293,31 @@ callback:
       catalog_share: '🔗 Compartilhar'
       catalog_open: '📂 Abrir no catálogo'
     error:
+      not_found: |
+        Erro!
+        Não foi possível encontrar um adesivo.
+      invalid_png: |
+        Erro!
+        O arquivo não é uma imagem PNG válida. Por favor, converta para o formato PNG antes de enviar.
+      invalid_dimensions: |
+        Erro!
+        As dimensões do adesivo são inválidas. Os adesivos devem ser de 512x512 pixels.
+      invalid_animated: |
+        Erro!
+        O arquivo de adesivo animado não está no formato TGS correto.
+      invalid_video: |
+        Erro!
+        O arquivo de vídeo não está no formato WEBM correto.
+      internal_error: |
+        Erro!
+        Ocorreu um erro interno ao processar o adesivo.
+
+        Por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com o desenvolvedor: @ly_oBot
       restore: |
-        <b>Erro!</b>
+        Erro!
         Não é possível restaurar o pacote.
       copy: |
-        <b>Erro!</b>
+        Erro!
         Não foi possível encontrar o pacote.
     select_group:
       success: |
@@ -309,7 +329,7 @@ callback:
           all: Todos
           admins: Somente administradores
       error: |
-        <b>Erro!</b>
+        Erro!
         Conjunto não encontrado.
   sticker:
     answerCbQuery:
@@ -400,6 +420,18 @@ sticker:
         Bot não pode acessar o pacote escolhido atualmente.
 
         Por favor, crie (/new) ou escolha (/packs) outro pacote.
+      invalid_png: |
+        <b>Erro!</b>
+        O arquivo não é uma imagem PNG válida. Por favor, converta para o formato PNG antes de enviar.
+      invalid_dimensions: |
+        <b>Erro!</b>
+        As dimensões do sticker são inválidas. Stickers devem ter 512x512 pixels.
+      invalid_animated: |
+        <b>Erro!</b>
+        O arquivo de sticker animado não está no formato TGS correto.
+      invalid_video: |
+        <b>Erro!</b>
+        O arquivo de vídeo não está no formato WEBM correto.
       file_type:
         static: |
           U<b>Erro!</b>

@@ -304,11 +304,31 @@ callback:
       catalog_share: '🔗️️ Paylaş'
       catalog_open: '📂 Katalogda aç'
     error:
+      not_found: |
+        Hata!
+        Çıkartmayı bulamıyorum.
+      invalid_png: |
+        Hata!
+        Dosya geçerli bir PNG resmi değil. Lütfen göndermeden önce bunu PNG formatına dönüştürün.
+      invalid_dimensions: |
+        Hata!
+        Çıkartmanın boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
+      invalid_animated: |
+        Hata!
+        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
+      invalid_video: |
+        Hata!
+        Video dosyası doğru WEBM formatında değil.
+      internal_error: |
+        Hata!
+        Çıkartmayı işlerken dahili bir hata oluştu.
+
+        Lütfen daha sonra tekrar deneyin. Sorun devam ederse, lütfen geliştiriciyle iletişime geçin: @ly_oBot
       restore: |
-        <b>Hata!</b>
+        Hata!
         Paket geri yüklenemiyor.
       copy: |
-        <b>Hata!</b>
+        Hata!
         Paket bulunamıyor.
     select_group:
       success: |
@@ -320,7 +340,7 @@ callback:
           all: Herkes
           admins: Sadece yöneticiler
       error: |
-        <b>Hata!</b>
+        Hata!
         Set bulunamadı.
   sticker:
     answerCbQuery:
@@ -411,6 +431,18 @@ sticker:
         Bot mevcut seçtiğiniz pakete erişemiyor.
 
         Lütfen başka bir paket oluşturun (/yeni) veya seçin (/packs).
+      invalid_png: |
+        <b>Hata!</b>
+        Dosya geçerli bir PNG resmi değil. Lütfen göndermeden önce PNG formatına dönüştürün.
+      invalid_dimensions: |
+        <b>Hata!</b>
+        Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
+      invalid_animated: |
+        <b>Hata!</b>
+        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
+      invalid_video: |
+        <b>Hata!</b>
+        Video dosyası doğru WEBM formatında değil.
       file_type:
         static: |
           <b>Hata!</b>

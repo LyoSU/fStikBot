@@ -314,11 +314,31 @@ callback:
       catalog_share: '🔗️️ 分享'
       catalog_open: '📂 在目录中打开'
     error:
+      not_found: |
+        错误！
+        找不到标签。
+      invalid_png: |
+        错误！
+        文件不是有效的PNG图像。请在发送前将其转换为PNG格式。
+      invalid_dimensions: |
+        错误！
+        贴纸尺寸无效。贴纸必须为 <b>512</b>x<b>512</b> 像素。
+      invalid_animated: |
+        错误！
+        动画标签文件的格式不正确，应为TGS格式。
+      invalid_video: |
+        错误！
+        视频文件的格式不正确，应为WEBM格式。
+      internal_error: |
+        错误！
+        处理标签时发生内部错误。
+
+        请稍后再试。如果问题仍然存在，请联系开发者：@ly_oBot
       restore: |
-        <b>错误！</b>
+        错误！
         无法还原包。
       copy: |
-        <b>错误！</b>
+        错误！
         找不到包。
     select_group:
       success: |
@@ -330,7 +350,7 @@ callback:
           all: 所有人
           admins: 只有管理员
       error: |
-        <b>错误！</b>
+        错误！
         未找到集合。
   sticker:
     answerCbQuery:
@@ -421,6 +441,18 @@ sticker:
         Bot 无法访问您当前选择的包。
 
         请创建 (/new) 或选择 (/packs) 另一个包。
+      invalid_png: |
+        <b>错误！</b>
+        该文件不是有效的PNG图像。请将其转换为PNG格式后再发送。
+      invalid_dimensions: |
+        <b>错误！</b>
+        贴纸尺寸无效。贴纸必须是512x512像素。
+      invalid_animated: |
+        <b>错误！</b>
+        动画贴纸文件格式不正确，应该为TGS格式。
+      invalid_video: |
+        <b>错误！</b>
+        视频文件格式不正确，应为WEBM格式。
       file_type:
         static: |
           <b>错误！</b>

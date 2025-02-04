@@ -306,11 +306,31 @@ callback:
       catalog_share: '🔗️️ Bagikan'
       catalog_open: '📂 Buka di katalog'
     error:
+      not_found: |
+        Kesalahan!
+        Tidak dapat menemukan stiker.
+      invalid_png: |
+        Kesalahan!
+        File bukan gambar PNG yang valid. Silakan konversi ke format PNG sebelum mengirim.
+      invalid_dimensions: |
+        Kesalahan!
+        Dimensi stiker tidak valid. Stiker harus berukuran 512x512 piksel.
+      invalid_animated: |
+        Kesalahan!
+        File stiker animasi tidak dalam format TGS yang benar.
+      invalid_video: |
+        Kesalahan!
+        File video tidak dalam format WEBM yang benar.
+      internal_error: |
+        Kesalahan!
+        Terjadi kesalahan internal saat memproses stiker.
+
+        Silakan coba lagi nanti. Jika masalah tetap ada, silakan hubungi pengembang: @ly_oBot
       restore: |
-        <b>Kesalahan!</b>
+        Kesalahan!
         Tidak dapat memulihkan paket.
       copy: |
-        <b>Kesalahan!</b>
+        Kesalahan!
         Tidak dapat menemukan paket.
     select_group:
       success: |
@@ -322,7 +342,7 @@ callback:
           all: Semua orang
           admins: Hanya admin
       error: |
-        <b>Kesalahan!</b>
+        Kesalahan!
         Set tidak ditemukan.
   sticker:
     answerCbQuery:
@@ -413,6 +433,18 @@ sticker:
         Bot tidak dapat mengakses paket pilihan Anda saat ini.
 
         Silakan buat (/baru) atau pilih (/paket) paket lain.
+      invalid_png: |
+        <b>Kesalahan!</b>
+        File ini bukan gambar PNG yang valid. Silakan ubah ke format PNG sebelum mengirim.
+      invalid_dimensions: |
+        <b>Kesalahan!</b>
+        Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
+      invalid_animated: |
+        <b>Kesalahan!</b>
+        File stiker animasi tidak dalam format TGS yang benar.
+      invalid_video: |
+        <b>Kesalahan!</b>
+        File video tidak dalam format WEBM yang benar.
       file_type:
         static: |
           <b>Kesalahan!</b>

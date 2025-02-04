@@ -293,12 +293,22 @@ callback:
       catalog_share: '🔗 Compartir'
       catalog_open: '📂 Abrir en catálogo'
     error:
+      not_found: |
+        ¡Error!\nNo se pudo encontrar el pack de stickers.
+      invalid_png: |
+        ¡Error!\nEl archivo no es una imagen PNG válida. Por favor conviértelo al formato PNG antes de enviarlo.
+      invalid_dimensions: |
+        ¡Error!\nLas dimensiones del sticker son inválidas. Los stickers deben ser de 512x512 píxeles.
+      invalid_animated: |
+        ¡Error!\nEl archivo del sticker animado no está en el formato TGS correcto.
+      invalid_video: |
+        ¡Error!\nEl archivo de video no está en el formato WEBM correcto.
+      internal_error: |
+        ¡Error!\nSe produjo un error interno al procesar el sticker.\n\nPor favor intenta de nuevo más tarde. Si el problema persiste, por favor contacta al desarrollador: @ly_oBot
       restore: |
-        <b>Error!</b>
-        No se puede restaurar el paquete.
+        Error!\nNo se puede restaurar el paquete.
       copy: |
-        <b>Error!</b>
-        No se puede encontrar el paquete.
+        Error!\nNo se puede encontrar el paquete.
     select_group:
       success: |
         Paquete <a href="${link}">${title} </a> seleccionado exitosamente para el grupo.
@@ -309,8 +319,7 @@ callback:
           all: Todos
           admins: Solo administradores
       error: |
-        <b> ¡Error!</b>
-        Conjunto no encontrado.
+        ¡Error!\nConjunto no encontrado.
   sticker:
     answerCbQuery:
       delete: La etiqueta se eliminó con éxito del paquete.
@@ -400,6 +409,18 @@ sticker:
         Bot no puede acceder al paquete seleccionado actualmente.
 
         Por favor, cree (/new) o elija (/packs) otro paquete.
+      invalid_png: |
+        <b>¡Error!</b>
+        El archivo no es una imagen PNG válida. Por favor, conviértelo al formato PNG antes de enviarlo.
+      invalid_dimensions: |
+        <b>¡Error!</b>
+        Las dimensiones del sticker son inválidas. Los stickers deben ser de 512x512 píxeles.
+      invalid_animated: |
+        <b>¡Error!</b>
+        El archivo del sticker animado no está en el formato TGS correcto.
+      invalid_video: |
+        <b>¡Error!</b>
+        El archivo de video no está en el formato WEBM correcto.
       file_type:
         static: |
           <b>¡Error!</b>

@@ -293,11 +293,31 @@ callback:
       catalog_share: '🔗 共有'
       catalog_open: '📂 カタログで開く'
     error:
+      not_found: |
+        エラー！
+        ステッカーが見つかりません。
+      invalid_png: |
+        エラー！
+        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
+      invalid_dimensions: |
+        エラー！
+        ステッカーの寸法が無効です。ステッカーは512x512ピクセルである必要があります。
+      invalid_animated: |
+        エラー！
+        アニメーションステッカーファイルが正しいTGS形式ではありません。
+      invalid_video: |
+        エラー！
+        ビデオファイルが正しいWEBM形式ではありません。
+      internal_error: |
+        エラー！
+        ステッカー処理中に内部エラーが発生しました。
+
+        後でもう一度お試しください。問題が続く場合は、開発者にご連絡ください: @ly_oBot
       restore: |
-        <b>エラー!</b>
+        エラー!
         パックを復元できません。
       copy: |
-        <b>エラー!</b>
+        エラー!
         パックが見つかりません。
     select_group:
       success: |
@@ -309,7 +329,7 @@ callback:
           all: 全員
           admins: 管理者のみ
       error: |
-        <b>エラー！</b>
+        エラー！
         セットが見つかりません。
   sticker:
     answerCbQuery:
@@ -395,6 +415,18 @@ sticker:
         Botは現在選択されているパックにアクセスできません。
 
         (/new) を作成するか、別のパックを選択してください。
+      invalid_png: |
+        <b>エラー！</b>
+        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
+      invalid_dimensions: |
+        <b>エラー！</b>
+        ステッカーのサイズが無効です。ステッカーは512x512ピクセルでなければなりません。
+      invalid_animated: |
+        <b>エラー！</b>
+        アニメーションステッカーファイルが正しいTGS形式ではありません。
+      invalid_video: |
+        <b>エラー！</b>
+        ビデオファイルが正しいWEBM形式ではありません。
       file_type:
         static: |
           <b>エラー!</b>

@@ -306,12 +306,23 @@ callback:
       catalog_share: '🔗 Partager'
       catalog_open: '📂 Ouvrir dans le catalogue'
     error:
+      not_found: |
+        ERREUR!
+        Impossible de trouver un autocollant.
+      invalid_png: |
+        Erreur!\nLe fichier n'est pas une image PNG valide. Veuillez le convertir au format PNG avant de l'envoyer.
+      invalid_dimensions: |
+        Erreur!\nLes dimensions de l'autocollant sont invalides. Les autocollants doivent être de 512x512 pixels.
+      invalid_animated: |
+        Erreur!\nLe fichier d'autocollant animé n'est pas dans le format TGS correct.
+      invalid_video: |
+        Erreur!\nLe fichier vidéo n'est pas dans le format WEBM correct.
+      internal_error: |
+        Erreur!\nUne erreur interne s'est produite lors du traitement de l'autocollant.\n\nVeuillez réessayer plus tard. Si le problème persiste, veuillez contacter le développeur : @ly_oBot
       restore: |
-        <b>Erreur!</b>
-        Impossible de restaurer le pack.
+        Erreur!\nImpossible de restaurer le pack.
       copy: |
-        <b>Erreur!</b>
-        Impossible de trouver le pack.
+        Erreur!\nImpossible de trouver le pack.
     select_group:
       success: |
         Pack <a href="${link}">${title}</a> sélectionné avec succès pour le groupe.
@@ -322,8 +333,7 @@ callback:
           all: Tout le monde
           admins: Seuls les administrateurs
       error: |
-        <b>Erreur !</b>
-        Ensemble non trouvé.
+        Erreur !\nEnsemble non trouvé.
   sticker:
     answerCbQuery:
       delete: L'autocollant a été retiré du pack avec succès.
@@ -413,6 +423,18 @@ sticker:
         Le bot ne peut pas accéder au pack choisi actuel.
 
         Veuillez créer (/new) ou choisir (/packs) un autre pack.
+      invalid_png: |
+        <b>Erreur !</b>
+        Le fichier n'est pas une image PNG valide. Veuillez le convertir au format PNG avant de l'envoyer.
+      invalid_dimensions: |
+        <b>Erreur !</b>
+        Les dimensions de l'autocollant sont invalides. Les autocollants doivent être de 512x512 pixels.
+      invalid_animated: |
+        <b>Erreur !</b>
+        Le fichier d'autocollant animé n'est pas au format TGS correct.
+      invalid_video: |
+        <b>Erreur !</b>
+        Le fichier vidéo n'est pas au format WEBM correct.
       file_type:
         static: |
           <b>Erreur!</b>

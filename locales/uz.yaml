@@ -292,11 +292,31 @@ callback:
       catalog_share: '🔗️️ Ulashish'
       catalog_open: '📂 Katalogda ochish'
     error:
+      not_found: |
+        Tizimda xatolik!
+        Stikerni topib boʻlmadi.
+      invalid_png: |
+        Xato!
+        Fayl haqiqiy PNG rasm emas. Iltimos, uni PNG formatiga aylantiring va qayta yuboring.
+      invalid_dimensions: |
+        Xato!
+        Stiker o'lchamlari noto'g'ri. Stikerlar 512x512 piksel bo'lishi kerak.
+      invalid_animated: |
+        Xato!
+        Animatsiyali stikerni fayli toʻgʻri TGS formatida emas.
+      invalid_video: |
+        Xato!
+        Video fayl to'g'ri WEBM formatida emas.
+      internal_error: |
+        Xato!
+        Stikerni ishlov berish jarayonida ichki xato yuz berdi.
+
+        Iltimos, keyinroq qayta urinib koʻring. Muammo davom etsa, ishlab chiquvchiga murojaat qiling: @ly_oBot
       restore: |
-        <b>Xato!</b>
+        Xato!
         Paketni tiklab bo'lmadi.
       copy: |
-        <b>Xato!</b>
+        Xato!
         Paket topilmadi.
     select_group:
       success: |
@@ -308,7 +328,7 @@ callback:
           all: Hamma
           admins: Faqat adminlar
       error: |
-        <b>Xatolik!</b>
+        Xatolik!
         To'plam topilmadi.
   sticker:
     answerCbQuery:
@@ -394,6 +414,18 @@ sticker:
         Bot joriy tanlangan paketingizga kira olmaydi.
 
         Iltimos, yarating (/yangi) yoki boshqa paketni tanlang (/paketlar).
+      invalid_png: |
+        <b>Xato!</b>
+        Fayl yaroqli PNG tasviri emas. Iltimos, uni PNG formatiga aylantirib yuboring.
+      invalid_dimensions: |
+        <b>Xato!</b>
+        Stiker o'lchamlari yaroqsiz. Stikerlar 512x512 piksel bo'lishi kerak.
+      invalid_animated: |
+        <b>Xato!</b>
+        Animatsiyalangan stiker fayli to'g'ri TGS formatida emas.
+      invalid_video: |
+        <b>Xato!</b>
+        Video fayl to'g'ri WEBM formatida emas.
       file_type:
         static: |
           <b>Xato!</b>
