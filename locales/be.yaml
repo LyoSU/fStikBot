@@ -340,8 +340,8 @@ callback:
           all: Усе
           admins: Толькі адміны
       error: |
-        <b>Памылка!</b>
-        Набор не знойдзены.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Стыкер паспяхова выдалены з пака.
