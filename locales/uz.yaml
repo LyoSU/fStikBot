@@ -328,8 +328,8 @@ callback:
           all: Hamma
           admins: Faqat adminlar
       error: |
-        <b>Xatolik!</b>
-        To'plam topilmadi.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: Stiker paketdan muvaffaqiyatli olib tashlandi.
