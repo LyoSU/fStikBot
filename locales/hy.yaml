@@ -306,12 +306,32 @@ callback:
       catalog_share: '🔗️️ Կիսվել'
       catalog_open: '📂 Բացեք կատալոգում'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Սխալ.</b>
-        Հնարավոր չէ վերականգնել փաթեթը:
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Սխալ.</b>
-        Հնարավոր չէ գտնել փաթեթը:
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Փաթեթը <a href="${link}">${title}</a> հաջողությամբ ընտրված է խմբի համար։
@@ -413,6 +433,18 @@ sticker:
         Բոտը չի կարող մուտք գործել ձեր ընթացիկ ընտրված փաթեթը:
 
         Խնդրում ենք ստեղծեք (/նոր) կամ ընտրեք (/ փաթեթավորում) մեկ այլ փաթեթ:
+      invalid_png: |
+        <b>Սխալ!</b>
+        Ֆայլը վավեր PNG պատկեր չի։ Խնդրում ենք փոխարկել այն PNG ձևաչափի՝ մինչև ուղարկելը։
+      invalid_dimensions: |
+        <b>Սխալ!</b>
+        Կպչուն պատկերի չափերը վավեր չեն։ Կպչուն պիտակները պետք է լինեն 512x512 պիքսել։
+      invalid_animated: |
+        <b>Սխալ!</b>
+        Անիմացված կպչուն պատկերի ֆայլը վավեր TGS ձևաչափով չէ։
+      invalid_video: |
+        <b>Սխալ!</b>
+        Տեսագրության ֆայլը վավեր WEBM ձևաչափով չէ։
       file_type:
         static: |
           <b>Սխալ.</b>
