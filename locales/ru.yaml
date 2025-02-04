@@ -294,12 +294,32 @@ callback:
       catalog_share: '🔗 Поделиться'
       catalog_open: '📂 Открыть в каталоге'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Ошибка!</b>
-        Не удалось восстановить стикерпак.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Ошибка!</b>
-        Не удалось найти стикерпак.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Набор <a href="${link}">${title}</a> успешно выбран для группы.
@@ -401,6 +421,18 @@ sticker:
         Бот не может получить доступ к текущему выбранному стикерпаку.
 
         Пожалуйста, создайте новый (/new) или выберите (/packs) другой стикерпак.
+      invalid_png: |
+        <b>Ошибка!</b>
+        Файл не является допустимым изображением PNG. Пожалуйста, преобразуйте его в формат PNG перед отправкой.
+      invalid_dimensions: |
+        <b>Ошибка!</b>
+        Размеры стикера недопустимы. Стикеры должны иметь размеры 512x512 пикселей.
+      invalid_animated: |
+        <b>Ошибка!</b>
+        Файл анимационного стикера не в правильном формате TGS.
+      invalid_video: |
+        <b>Ошибка!</b>
+        Видео файл не в правильном формате WEBM.
       file_type:
         static: |
           <b>Ошибка!</b>
