@@ -305,31 +305,31 @@ callback:
       catalog_open: '📂 فتح في الكتالوج'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        خطأ!
+        لا يمكن العثور على ملصق.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        خطأ!
+        الملف ليس صورة PNG صالحة. يرجى تحويله إلى تنسيق PNG قبل الإرسال.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        خطأ!
+        أبعاد الملصق غير صالحة. يجب أن تكون الملصقات بحجم 512x512 بكسل.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        خطأ!
+        ملف الملصق المتحرك ليس بتنسيق TGS الصحيح.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        خطأ!
+        ملف الفيديو ليس بتنسيق WEBM الصحيح.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        خطأ!
+        حدث خطأ داخلي أثناء معالجة الملصق.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        يرجى المحاولة مرة أخرى لاحقًا. إذا استمرت المشكلة، يرجى الاتصال بالمطور: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        خطأ!
+        لا يمكن استعادة الحزمة.
       copy: |
-        Error!
-        Cannot find pack.
+        خطأ!
+        لا يمكن العثور على الحزمة.
     select_group:
       success: |
         تم اختيار الحزمة <a href="${link}">${title} </a> بنجاح للمجموعة.
@@ -340,8 +340,8 @@ callback:
           all: الجميع
           admins: فقط المسؤولين
       error: |
-        Error!
-        Set not found.
+        خطأ! 
+         set غير موجود.
   sticker:
     answerCbQuery:
       delete: تمت إزالة الملصق من الباقة بنجاح.
