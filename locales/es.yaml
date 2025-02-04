@@ -294,31 +294,21 @@ callback:
       catalog_open: '📂 Abrir en catálogo'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        ¡Error!\nNo se pudo encontrar el pack de stickers.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        ¡Error!\nEl archivo no es una imagen PNG válida. Por favor conviértelo al formato PNG antes de enviarlo.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        ¡Error!\nLas dimensiones del sticker son inválidas. Los stickers deben ser de 512x512 píxeles.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        ¡Error!\nEl archivo del sticker animado no está en el formato TGS correcto.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        ¡Error!\nEl archivo de video no está en el formato WEBM correcto.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
-
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        ¡Error!\nSe produjo un error interno al procesar el sticker.\n\nPor favor intenta de nuevo más tarde. Si el problema persiste, por favor contacta al desarrollador: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Error!\nNo se puede restaurar el paquete.
       copy: |
-        Error!
-        Cannot find pack.
+        Error!\nNo se puede encontrar el paquete.
     select_group:
       success: |
         Paquete <a href="${link}">${title} </a> seleccionado exitosamente para el grupo.
@@ -329,8 +319,7 @@ callback:
           all: Todos
           admins: Solo administradores
       error: |
-        Error!
-        Set not found.
+        ¡Error!\nConjunto no encontrado.
   sticker:
     answerCbQuery:
       delete: La etiqueta se eliminó con éxito del paquete.
