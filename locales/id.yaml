@@ -306,12 +306,32 @@ callback:
       catalog_share: '🔗️️ Bagikan'
       catalog_open: '📂 Buka di katalog'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Kesalahan!</b>
-        Tidak dapat memulihkan paket.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Kesalahan!</b>
-        Tidak dapat menemukan paket.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Paket <a href="${link}">${title}</a> berhasil dipilih untuk grup.
@@ -413,6 +433,18 @@ sticker:
         Bot tidak dapat mengakses paket pilihan Anda saat ini.
 
         Silakan buat (/baru) atau pilih (/paket) paket lain.
+      invalid_png: |
+        <b>Kesalahan!</b>
+        File ini bukan gambar PNG yang valid. Silakan ubah ke format PNG sebelum mengirim.
+      invalid_dimensions: |
+        <b>Kesalahan!</b>
+        Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
+      invalid_animated: |
+        <b>Kesalahan!</b>
+        File stiker animasi tidak dalam format TGS yang benar.
+      invalid_video: |
+        <b>Kesalahan!</b>
+        File video tidak dalam format WEBM yang benar.
       file_type:
         static: |
           <b>Kesalahan!</b>
