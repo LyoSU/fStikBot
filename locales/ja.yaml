@@ -294,31 +294,31 @@ callback:
       catalog_open: '📂 カタログで開く'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        エラー！
+        ステッカーが見つかりません。
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        エラー！
+        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        エラー！
+        ステッカーの寸法が無効です。ステッカーは512x512ピクセルである必要があります。
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        エラー！
+        アニメーションステッカーファイルが正しいTGS形式ではありません。
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        エラー！
+        ビデオファイルが正しいWEBM形式ではありません。
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        エラー！
+        ステッカー処理中に内部エラーが発生しました。
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        後でもう一度お試しください。問題が続く場合は、開発者にご連絡ください: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        エラー!
+        パックを復元できません。
       copy: |
-        Error!
-        Cannot find pack.
+        エラー!
+        パックが見つかりません。
     select_group:
       success: |
         パック <a href="${link}">${title}</a> がグループに正常に選択されました。
@@ -329,8 +329,8 @@ callback:
           all: 全員
           admins: 管理者のみ
       error: |
-        Error!
-        Set not found.
+        エラー！
+        セットが見つかりません。
   sticker:
     answerCbQuery:
       delete: ステッカーはパックから正常に削除されました。
