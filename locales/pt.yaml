@@ -329,8 +329,8 @@ callback:
           all: Todos
           admins: Somente administradores
       error: |
-        <b>Erro!</b>
-        Conjunto não encontrado.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: O adesivo foi removido com sucesso da embalagem.
