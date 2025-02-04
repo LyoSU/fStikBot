@@ -307,31 +307,21 @@ callback:
       catalog_open: '📂 Բացեք կատալոգում'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        ՍԽԱԼ\nՉհաջողվեց գտնել կպչուն։
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Սխալ։\nՖայլը ճիշտ PNG պատկեր չէ։ Խնդրում ենք այն վերածել PNG ձևաչափի մինչ ուղարկելը։
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Սխալ։\nԿպչունի չափերը սխալ են։ Կպչունները պետք է լինեն 512x512 պիքսել։
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Սխալ։\nԱնիմացվող կպչունի ֆայլը ճիշտ TGS ձևաչափով չէ։
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Սխալ։\nՏեսանյութի ֆայլը ճիշտ WEBM ձևաչափով չէ։
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
-
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Սխալ!\nՆերքին սխալ է տեղի ունեցել կպչունի մշակման ժամանակ:\n\nԽնդրում ենք փորձել նորից ուշ: Եթե խնդիրը մնում է, խնդրում ենք կապ հաստատել մշակողի հետ՝ @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Սխալ։\nՀնարավոր չէ վերականգնել փաթեթը։
       copy: |
-        Error!
-        Cannot find pack.
+        Սխալ։\nՀնարավոր չէ գտնել փաթեթը։
     select_group:
       success: |
         Փաթեթը <a href="${link}">${title}</a> հաջողությամբ ընտրված է խմբի համար։
@@ -342,8 +332,7 @@ callback:
           all: Բոլորը
           admins: Միայն ադմինները
       error: |
-        Error!
-        Set not found.
+        Սխալ!\nՓաթեթը չէր գտնվել։
   sticker:
     answerCbQuery:
       delete: 'Կպչուն պիտակը հաջողությամբ հեռացվեց փաթեթից:'
