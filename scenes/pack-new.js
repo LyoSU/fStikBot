@@ -538,7 +538,7 @@ newPackConfirm.enter(async (ctx, next) => {
   }
 
   if (createNewStickerSet) {
-    if (!inline && !ctx.session.scene.copyPack) {
+    if (!inline && !ctx?.session?.scene?.copyPack) {
       setTimeout(async () => {
         const getStickerSet = await ctx.telegram.getStickerSet(name)
         const stickerInfo = getStickerSet.stickers[0]
