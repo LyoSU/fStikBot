@@ -305,12 +305,32 @@ callback:
       catalog_share: '🔗️️ Paylaşın'
       catalog_open: '📂 Kataloqda açın'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Xəta!</b>
-        Paketi bərpa etmək mümkün deyil.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Xəta!</b>
-        Paketi tapmaq mümkün deyil.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Paket <a href="${link}">${title}</a> uğurla qrup üçün seçildi.
@@ -412,6 +432,18 @@ sticker:
         Bot cari seçdiyiniz paketə daxil ola bilmir.
 
         Zəhmət olmasa, (/yeni) yaradın və ya başqa paket seçin (/paketlər).
+      invalid_png: |
+        <b>Xəta!</b>
+        Fayl etibarlı PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevirin.
+      invalid_dimensions: |
+        <b>Xəta!</b>
+        Stikerin ölçüləri etibarlı deyil. Stikerlər 512x512 piksel olmalıdır.
+      invalid_animated: |
+        <b>Xəta!</b>
+        Animasiya edilmiş stiker faylı düzgün TGS formatında deyil.
+      invalid_video: |
+        <b>Xəta!</b>
+        Video faylı düzgün WEBM formatında deyil.
       file_type:
         static: |
           <b>Xəta!</b>
