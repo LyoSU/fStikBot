@@ -306,31 +306,31 @@ callback:
       catalog_open: '📂 Каталогта ашыңыз'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Қате!
+        Стикер табылмады.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Қате!
+        Файл жарамды PNG суреті емес. Оны PNG форматына түрлендіріп, қайтадан жіберіңіз.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Қате!
+        Стикердің өлшемдері жарамсыз. Стикерлер 512x512 пиксель болуы керек.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Қате!
+        Анимациялық стикер файлы дұрыс TGS форматында емес.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Қате!
+        Бейне файлы дұрыс WEBM форматында емес.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Қате!
+        Стикерді өңдеу кезінде ішкі қате орын алды.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Кейінірек қайтадан көріңіз. Мәселе шешілмесе, әзірлеушімен байланысыңыз: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Қате!
+        Буманы қалпына келтіру мүмкін емес.
       copy: |
-        Error!
-        Cannot find pack.
+        Қате!
+        Пакетті табу мүмкін емес.
     select_group:
       success: |
         Жинақ <a href="${link}">${title}</a> топ үшін сәтті таңдалды.
@@ -341,8 +341,8 @@ callback:
           all: Барлығы
           admins: Тек әкімшілер
       error: |
-        Error!
-        Set not found.
+        Қате!
+        Жинақ табылған жоқ.
   sticker:
     answerCbQuery:
       delete: Стикер бумадан сәтті жойылды.
