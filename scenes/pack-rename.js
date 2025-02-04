@@ -46,13 +46,27 @@ packRename.on('text', async (ctx) => {
 
   newTitle += titleSuffix
 
-  const result = await ctx.telegram.callApi('setStickerSetTitle', {
-    name: stickerSet.name,
-    title: newTitle
-  })
+  let result
+  try {
+    result = await ctx.telegram.callApi('setStickerSetTitle', {
+      name: stickerSet.name,
+      title: newTitle
+    })
+  } catch (error) {
+    if (error.message.includes('STICKERSET_INVALID')) {
+      return ctx.replyWithHTML(ctx.i18n.t('error.stickerset_invalid'), {
+        reply_markup: Markup.removeKeyboard()
+      })
+    }
+    return ctx.replyWithHTML(ctx.i18n.t('error.unknown'), {
+      reply_markup: Markup.removeKeyboard()
+    })
+  }
 
   if (!result) {
-    return ctx.replyWithHTML(ctx.i18n.t('error.unknown'))
+    return ctx.replyWithHTML(ctx.i18n.t('error.unknown'), {
+      reply_markup: Markup.removeKeyboard()
+    })
   }
 
   stickerSet.title = newTitle
