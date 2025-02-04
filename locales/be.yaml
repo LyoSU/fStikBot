@@ -304,12 +304,32 @@ callback:
       catalog_share: '🔗️️Абагуліць'
       catalog_open: '📂 Адкрыць у каталозе'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>Памылка!</b>
-        Не атрымалася аднавіць пак.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>Памылка!</b>
-        Не атрымалася знайсці пак.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         Пак «<a href="${link}">${title}</a>» паспяхова выбраны для групы.
@@ -411,6 +431,18 @@ sticker:
         Бот не можа атрымаць доступ да выбранага пака.
 
         Калі ласка, стварыце новы (/new) або выберыце існуючы (/packs) пак.
+      invalid_png: |
+        <b>Памылка!</b>
+        Файл не з'яўляецца сапраўдным PNG малюнкам. Калі ласка, канвертуйце яго ў фармат PNG перад адпраўкай.
+      invalid_dimensions: |
+        <b>Памылка!</b>
+        Памеры налепкі недапушчальныя. Налепкі павінны быць 512x512 пікселяў.
+      invalid_animated: |
+        <b>Памылка!</b>
+        Файл аніміраванай налепкі не ў правільным фармаце TGS.
+      invalid_video: |
+        <b>Памылка!</b>
+        Файл відэа не ў правільным фармаце WEBM.
       file_type:
         static: |
           <b>Памылка!</b>
