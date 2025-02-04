@@ -340,8 +340,8 @@ callback:
           all: الجميع
           admins: فقط المسؤولين
       error: |
-        <b>Error! </b>
-         set غير موجود.
+        Error!
+        Set not found.
   sticker:
     answerCbQuery:
       delete: تمت إزالة الملصق من الباقة بنجاح.
