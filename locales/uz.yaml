@@ -293,31 +293,31 @@ callback:
       catalog_open: '📂 Katalogda ochish'
     error:
       not_found: |
-        Error!
-        Cannot find a sticker.
+        Tizimda xatolik!
+        Stikerni topib boʻlmadi.
       invalid_png: |
-        Error!
-        The file is not a valid PNG image. Please convert it to PNG format before sending.
+        Xato!
+        Fayl haqiqiy PNG rasm emas. Iltimos, uni PNG formatiga aylantiring va qayta yuboring.
       invalid_dimensions: |
-        Error!
-        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+        Xato!
+        Stiker o'lchamlari noto'g'ri. Stikerlar 512x512 piksel bo'lishi kerak.
       invalid_animated: |
-        Error!
-        The animated sticker file is not in the correct TGS format.
+        Xato!
+        Animatsiyali stikerni fayli toʻgʻri TGS formatida emas.
       invalid_video: |
-        Error!
-        The video file is not in the correct WEBM format.
+        Xato!
+        Video fayl to'g'ri WEBM formatida emas.
       internal_error: |
-        Error!
-        An internal error occurred while processing the sticker.
+        Xato!
+        Stikerni ishlov berish jarayonida ichki xato yuz berdi.
 
-        Please try again later. If the problem persists, please contact the developer: @ly_oBot
+        Iltimos, keyinroq qayta urinib koʻring. Muammo davom etsa, ishlab chiquvchiga murojaat qiling: @ly_oBot
       restore: |
-        Error!
-        Cannot restore pack.
+        Xato!
+        Paketni tiklab bo'lmadi.
       copy: |
-        Error!
-        Cannot find pack.
+        Xato!
+        Paket topilmadi.
     select_group:
       success: |
         Paket <a href="${link}">${title}</a> muvaffaqiyatli guruhga tanlandi.
@@ -328,8 +328,8 @@ callback:
           all: Hamma
           admins: Faqat adminlar
       error: |
-        Error!
-        Set not found.
+        Xatolik!
+        To'plam topilmadi.
   sticker:
     answerCbQuery:
       delete: Stiker paketdan muvaffaqiyatli olib tashlandi.
