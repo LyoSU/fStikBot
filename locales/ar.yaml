@@ -304,12 +304,32 @@ callback:
       catalog_share: '🔗 المشاركة'
       catalog_open: '📂 فتح في الكتالوج'
     error:
+      not_found: |
+        Error!
+        Cannot find a sticker.
+      invalid_png: |
+        Error!
+        The file is not a valid PNG image. Please convert it to PNG format before sending.
+      invalid_dimensions: |
+        Error!
+        The sticker dimensions are invalid. Stickers must be 512x512 pixels.
+      invalid_animated: |
+        Error!
+        The animated sticker file is not in the correct TGS format.
+      invalid_video: |
+        Error!
+        The video file is not in the correct WEBM format.
+      internal_error: |
+        Error!
+        An internal error occurred while processing the sticker.
+
+        Please try again later. If the problem persists, please contact the developer: @ly_oBot
       restore: |
-        <b>خطأ!</b>
-        لا يمكن استعادة الحزمة.
+        Error!
+        Cannot restore pack.
       copy: |
-        <b>خطأ!</b>
-        لا يمكن العثور على الحزمة.
+        Error!
+        Cannot find pack.
     select_group:
       success: |
         تم اختيار الحزمة <a href="${link}">${title} </a> بنجاح للمجموعة.
@@ -411,6 +431,18 @@ sticker:
         لا يستطيع الروبوت الوصول إلى الحزمة الحالية التي اخترتها.
 
         من فضلك قم بإنشاء (/جديد) أو اختيار (/حزم) حزمة أخرى.
+      invalid_png: |
+        <b>خطأ!</b>
+        الملف ليس صورة PNG صحيحة. يرجى تحويله إلى صيغة PNG قبل الإرسال.
+      invalid_dimensions: |
+        <b>خطأ!</b>
+        أبعاد الملصق غير صحيحة. يجب أن تكون الملصقات 512x512 بكسل.
+      invalid_animated: |
+        <b>خطأ!</b>
+        ملف الملصق المتحرك ليس بالتنسيق الصحيح TGS.
+      invalid_video: |
+        <b>خطأ!</b>
+        ملف الفيديو ليس بالتنسيق الصحيح WEBM.
       file_type:
         static: |
           <b>خطأ!</b>
