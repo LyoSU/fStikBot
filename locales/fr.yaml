@@ -317,8 +317,6 @@ callback:
         Erreur!\nLe fichier d'autocollant animé n'est pas dans le format TGS correct.
       invalid_video: |
         Erreur!\nLe fichier vidéo n'est pas dans le format WEBM correct.
-      internal_error: |
-        Erreur!\nUne erreur interne s'est produite lors du traitement de l'autocollant.\n\nVeuillez réessayer plus tard. Si le problème persiste, veuillez contacter le développeur : @ly_oBot
       restore: |
         Erreur!\nImpossible de restaurer le pack.
       copy: |
@@ -360,11 +358,6 @@ callback:
       invalid_video: |
         <b>Erreur !</b>
         Le fichier vidéo n'est pas au format WEBM correct.
-      internal_error: |
-        <b>Erreur !</b>
-        Une erreur interne s'est produite lors du traitement de l'autocollant.
-
-        Veuillez réessayer plus tard. Si le problème persiste, veuillez contacter le développeur : @ly_oBot
   group_settings:
     success: |
       Paramètres du groupe mis à jour avec succès.
