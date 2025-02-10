@@ -477,6 +477,10 @@ sticker:
         <b>Hata!</b>.
 
         Dosya işlenemeyecek kadar büyük. Lütfen göndermeden önce kaliteyi ve süreyi azaltın.
+      sticker_not_found: |
+        <b>Error!</b>
+
+        This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
 news:
   join: |
     ℹ️ <a href="${link}">Botla ilgili en son haberleri almak için</a> kanalımıza katılın.
