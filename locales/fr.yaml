@@ -472,6 +472,10 @@ sticker:
         <b>Erreur!</b>.
 
         Le fichier est trop volumineux pour être traité. Veuillez réduire la qualité et la durée avant l'envoi.
+      sticker_not_found: |
+        <b>Erreur !</b>
+
+        Cet autocollant est introuvable. Veuillez vous assurer qu'il se trouve dans le bon pack ou essayez de l'ajouter à nouveau.
 news:
   join: |
     ℹ️ <a href="${link}">Rejoignez notre chaîne</a> pour recevoir les dernières nouvelles sur le bot.

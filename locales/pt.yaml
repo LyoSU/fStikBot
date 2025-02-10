@@ -466,6 +466,10 @@ sticker:
         <b>Erro!</b>
 
         O arquivo é muito grande para ser processado. Por favor, reduza a qualidade e durante antes de enviar.
+      sticker_not_found: |
+        <b>Erro!</b>
+
+        Este adesivo não pôde ser encontrado. Por favor, certifique-se de que está no pacote correto ou tente adicioná-lo novamente.
 news:
   join: |
     i <a href="${link}">Entre no nosso canal</a> para receber as últimas notícias sobre o bot.

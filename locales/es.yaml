@@ -458,6 +458,10 @@ sticker:
         <b>Error!</b>.
 
         El archivo es demasiado grande para procesar. Por favor, reduce la calidad y duración antes de enviar.
+      sticker_not_found: |
+        <b>¡Error!</b>
+
+        No se pudo encontrar esta pegatina. Por favor, asegúrese de que está en el paquete correcto o intente agregarla de nuevo.
 news:
   join: |
     i <a href="${link}">Únete a nuestro canal</a> para obtener las últimas noticias sobre el bot.

@@ -479,6 +479,10 @@ sticker:
         <b>Kesalahan!</b>.
 
         File terlalu besar untuk diproses. Harap mengurangi kualitas dan durasi sebelum mengirim.
+      sticker_not_found: |
+        <b>Error!</b>
+
+        Stiker ini tidak dapat ditemukan. Pastikan stiker ini ada dalam paket yang benar atau coba tambah lagi.
 news:
   join: |
     ℹ️ <a href="${link}">Bergabunglah dengan saluran kami</a> untuk mendapatkan berita terbaru tentang bot.

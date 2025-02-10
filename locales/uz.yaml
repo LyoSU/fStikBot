@@ -460,6 +460,10 @@ sticker:
         <b>Xato!</b>.
 
         Faylni qayta ishlash uchun juda katta. Yuborishdan oldin sifat va muddatni kamaytiring.
+      sticker_not_found: |
+        <b>Xato!</b>
+
+        Bu stiker topilmadi. To'g'ri to'plamda ekanligiga ishonch hosil qiling yoki uni qayta qo'shishga harakat qiling.
 news:
   join: |
     ℹ️ <a href="${link}">Bot haqidagi so'nggi yangiliklardan xabardor bo'lish uchun</a> kanalimizga qo'shiling.
