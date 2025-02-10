@@ -320,11 +320,6 @@ callback:
       invalid_video: |
         Xəta!
         Video faylı düzgün WEBM formatında deyil.
-      internal_error: |
-        Xəta!
-        Stiker emal edilərkən daxili səhv baş verdi.
-
-        Zəhmət olmasa sonra yenidən cəhd edin. Problem davam edərsə, zəhmət olmasa inkişaf etdirici ilə əlaqə saxlayın: @ly_oBot
       restore: |
         Xəta!
         Paketi bərpa etmək mümkün deyil.
@@ -369,11 +364,6 @@ callback:
       invalid_video: |
         <b>Xəta!</b>
         Video faylı düzgün WEBM formatında deyil.
-      internal_error: |
-        <b>Xəta!</b>
-        Stikerin işlənməsi zamanı daxili bir xəta baş verdi.
-
-        Zəhmət olmasa, sonra yenidən cəhd edin. Problem davam edərsə, xahiş edirik, bu inkişafçı ilə əlaqə saxlayın: @ly_oBot
   group_settings:
     success: |
       Grup parametrləri uğurla yeniləndi.
