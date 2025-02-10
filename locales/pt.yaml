@@ -466,6 +466,10 @@ sticker:
         <b>Erro!</b>
 
         O arquivo é muito grande para ser processado. Por favor, reduza a qualidade e durante antes de enviar.
+      sticker_not_found: |
+        <b>Error!</b>
+
+        This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
 news:
   join: |
     i <a href="${link}">Entre no nosso canal</a> para receber as últimas notícias sobre o bot.
