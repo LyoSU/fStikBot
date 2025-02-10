@@ -319,11 +319,6 @@ callback:
       invalid_video: |
         Hata!
         Video dosyası doğru WEBM formatında değil.
-      internal_error: |
-        Hata!
-        Çıkartmayı işlerken dahili bir hata oluştu.
-
-        Lütfen daha sonra tekrar deneyin. Sorun devam ederse, lütfen geliştiriciyle iletişime geçin: @ly_oBot
       restore: |
         Hata!
         Paket geri yüklenemiyor.
@@ -368,11 +363,6 @@ callback:
       invalid_video: |
         <b>Hata!</b>
         Video dosyası doğru WEBM formatında değil.
-      internal_error: |
-        <b>Hata!</b>
-        Çıkartmayı işlerken dahili bir hata oluştu.
-
-        Lütfen daha sonra tekrar deneyin. Sorun devam ederse, lütfen geliştirici ile iletişime geçin: @ly_oBot
   group_settings:
     success: |
       Grup ayarları başarıyla güncellendi.
