@@ -488,9 +488,9 @@ sticker:
 
         文件太大，无法处理。请在发送前降低质量和持续时间。
       sticker_not_found: |
-        <b>Error!</b>
+        <b>错误！</b>
 
-        This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
+        未找到此贴纸。请确保它在正确的包中或尝试重新添加。
 news:
   join: |
     ℹ️ <a href="${link}">加入我们的频道</a> 获取有关机器人的最新消息。
