@@ -472,9 +472,9 @@ sticker:
 
         Ֆայլը չափազանց մեծ է մշակման համար: Խնդրում ենք նվազեցնել որակը և տևողությունը՝ ուղարկելուց առաջ։
       sticker_not_found: |
-        <b>Error!</b>
+        <b>Սխալ!</b>
 
-        This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
+        Այս ստիկերը չի գտնվել: Խնդրում ենք համոզվել, որ այն ճիշտ փաթեթում է կամ կրկին փորձեք ավելացնել այն։
 news:
   join: |
     ℹ️ <a href="${link}">Միացեք մեր ալիքին</a> բոտի մասին վերջին նորությունները ստանալու համար:
