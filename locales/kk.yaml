@@ -479,9 +479,9 @@ sticker:
 
         Файл өңдеу үшін тым үлкен. Жіберер алдында сапасы мен ұзақтығын азайтыңыз.
       sticker_not_found: |
-        <b>Error!</b>
+        <b>Қате!</b>
 
-        This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
+        Бұл стикер табылмады. Оның дұрыс пакте екеніне көз жеткізіңіз немесе қайта қосып көріңіз.
 news:
   join: |
     ℹ️ <a href="${link}">Бот туралы соңғы жаңалықтарды алу үшін</a> арнамызға қосылыңыз.
