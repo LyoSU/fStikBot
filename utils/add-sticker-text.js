@@ -61,7 +61,9 @@ module.exports = (addStickerResult, lang) => {
       } else if (addStickerResult.error.telegram.description.includes('STICKER_VIDEO_NOWEBM')) {
         messageText = i18n.t(lang, 'sticker.add.error.invalid_video')
       } else if (addStickerResult.error.telegram.description.includes('sticker not found')) {
-        messageText = i18n.t(lang, 'sticker.add.error.internal_error')
+        messageText = i18n.t(lang, 'sticker.add.error.not_found')
+      } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
+        messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
       } else {
         messageText = i18n.t(lang, 'error.telegram', {
           error: addStickerResult.error.telegram.description
