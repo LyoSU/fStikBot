@@ -61,7 +61,7 @@ module.exports = (addStickerResult, lang) => {
       } else if (addStickerResult.error.telegram.description.includes('STICKER_VIDEO_NOWEBM')) {
         messageText = i18n.t(lang, 'sticker.add.error.invalid_video')
       } else if (addStickerResult.error.telegram.description.includes('sticker not found')) {
-        messageText = i18n.t(lang, 'sticker.add.error.not_found')
+        messageText = i18n.t(lang, 'sticker.add.error.sticker_not_found')
       } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
       } else {
@@ -69,8 +69,9 @@ module.exports = (addStickerResult, lang) => {
           error: addStickerResult.error.telegram.description
         })
       }
-    } else if (addStickerResult.error === 'ITS_ANIMATED') messageText = i18n.t(lang, 'sticker.add.error.file_type')
-    else {
+    } else if (addStickerResult.error === 'ITS_ANIMATED') {
+      messageText = i18n.t(lang, 'sticker.add.error.file_type')
+    } else {
       messageText = i18n.t(lang, 'error.telegram', {
         error: addStickerResult.error
       })
