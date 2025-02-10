@@ -461,6 +461,10 @@ sticker:
         <b>エラー！</b>.
 
         ファイルが大きすぎて処理できません。送信する前に品質と期間を減らしてください。
+      sticker_not_found: |
+        <b>Error!</b>
+
+        This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
 news:
   join: |
     ℹ️ <a href="${link}">チャンネル</a> に参加して、ボットに関する最新ニュースを入手してください。
