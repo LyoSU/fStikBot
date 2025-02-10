@@ -303,8 +303,6 @@ callback:
         ¡Error!\nEl archivo del sticker animado no está en el formato TGS correcto.
       invalid_video: |
         ¡Error!\nEl archivo de video no está en el formato WEBM correcto.
-      internal_error: |
-        ¡Error!\nSe produjo un error interno al procesar el sticker.\n\nPor favor intenta de nuevo más tarde. Si el problema persiste, por favor contacta al desarrollador: @ly_oBot
       restore: |
         Error!\nNo se puede restaurar el paquete.
       copy: |
@@ -346,11 +344,6 @@ callback:
       invalid_video: |
         <b>¡Error!</b>
         El archivo de video no está en el formato WEBM correcto.
-      internal_error: |
-        <b>¡Error!</b>
-        Ocurrió un error interno mientras se procesaba el sticker.
-
-        Por favor, intenta de nuevo más tarde. Si el problema persiste, contacta al desarrollador: @ly_oBot
   group_settings:
     success: |
       Configuración del grupo actualizada con éxito.

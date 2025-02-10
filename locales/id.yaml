@@ -321,11 +321,6 @@ callback:
       invalid_video: |
         Kesalahan!
         File video tidak dalam format WEBM yang benar.
-      internal_error: |
-        Kesalahan!
-        Terjadi kesalahan internal saat memproses stiker.
-
-        Silakan coba lagi nanti. Jika masalah tetap ada, silakan hubungi pengembang: @ly_oBot
       restore: |
         Kesalahan!
         Tidak dapat memulihkan paket.
@@ -370,11 +365,6 @@ callback:
       invalid_video: |
         <b>Kesalahan!</b>
         File video tidak dalam format WEBM yang benar.
-      internal_error: |
-        <b>Kesalahan!</b>
-        Terjadi kesalahan internal saat memproses stiker.
-
-        Silakan coba lagi nanti. Jika masalah berlanjut, silakan hubungi pengembang: @ly_oBot
   group_settings:
     success: |
       Pengaturan grup berhasil diperbarui.

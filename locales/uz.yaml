@@ -307,11 +307,6 @@ callback:
       invalid_video: |
         Xato!
         Video fayl to'g'ri WEBM formatida emas.
-      internal_error: |
-        Xato!
-        Stikerni ishlov berish jarayonida ichki xato yuz berdi.
-
-        Iltimos, keyinroq qayta urinib koʻring. Muammo davom etsa, ishlab chiquvchiga murojaat qiling: @ly_oBot
       restore: |
         Xato!
         Paketni tiklab bo'lmadi.
@@ -356,11 +351,6 @@ callback:
       invalid_video: |
         <b>Xato!</b>
         Video fayl to'g'ri WEBM formatida emas.
-      internal_error: |
-        <b>Xato!</b>
-        Stikerni qayta ishlashda ichki xato yuz berdi.
-
-        Iltimos, keyinroq qayta urinib ko'ring. Agar muammo davom etsa, iltimos, ishlab chiquvchi bilan bog'laning: @ly_oBot
   group_settings:
     success: |
       Guruh sozlamalari muvaffaqiyatli yangilandi.

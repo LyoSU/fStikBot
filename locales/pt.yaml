@@ -308,11 +308,6 @@ callback:
       invalid_video: |
         Erro!
         O arquivo de vídeo não está no formato WEBM correto.
-      internal_error: |
-        Erro!
-        Ocorreu um erro interno ao processar o adesivo.
-
-        Por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com o desenvolvedor: @ly_oBot
       restore: |
         Erro!
         Não é possível restaurar o pacote.
@@ -357,11 +352,6 @@ callback:
       invalid_video: |
         <b>Erro!</b>
         O arquivo de vídeo não está no formato WEBM correto.
-      internal_error: |
-        <b>Erro!</b>
-        Ocorreu um erro interno ao processar o sticker.
-
-        Por favor, tente novamente mais tarde. Se o problema persistir, por favor, contate o desenvolvedor: @ly_oBot
   group_settings:
     success: |
       Configurações do grupo atualizadas com sucesso.

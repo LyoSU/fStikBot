@@ -329,11 +329,6 @@ callback:
       invalid_video: |
         错误！
         视频文件的格式不正确，应为WEBM格式。
-      internal_error: |
-        错误！
-        处理标签时发生内部错误。
-
-        请稍后再试。如果问题仍然存在，请联系开发者：@ly_oBot
       restore: |
         错误！
         无法还原包。
@@ -378,11 +373,6 @@ callback:
       invalid_video: |
         <b>错误！</b>
         视频文件格式不正确，应为WEBM格式。
-      internal_error: |
-        <b>错误！</b>
-        处理贴纸时发生内部错误。
-
-        请稍后再试。如果问题仍然存在，请联系开发者：@ly_oBot
   group_settings:
     success: |
       群组设置已成功更新。
