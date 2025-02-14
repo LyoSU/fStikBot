@@ -51,7 +51,7 @@ composer.on('successful_payment', async (ctx) => {
   }))
 })
 
-composer.hears(['/donate', '/boost', '/start boost', match('cmd.start.btn.club')], donateMenu)
+composer.hears(['/donate', '/boost', '/start boost', match('cmd.start.btn.club')], Composer.privateChat(donateMenu))
 
 composer.action('donate:topup', async (ctx) => {
   return ctx.scene.enter('donate')
