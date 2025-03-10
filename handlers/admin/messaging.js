@@ -118,56 +118,110 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
 
   let resultText, replyMarkup
 
-  const statusTypes = ['Draft', 'In progress', 'Completed', 'Failed']
+  const statusTypes = ['📝 Draft', '⏳ In progress', '✅ Completed', '❌ Failed']
+  const statusColors = ['🔵', '🟡', '🟢', '🔴']
 
   if (messaging) {
     let creatorName = ctx.me
-    if (messaging.creator) creatorName = messaging.creator.full_name
-
-    let userErrors = ''
-
-    for (const key in messaging.sendErrors) {
-      const error = messaging.sendErrors[key]
-
-      const userError = await ctx.db.User.findOne({ telegram_id: error.telegram_id }).populate('personal')
-
-      userErrors += `<a href="tg://user?id=${error.telegram_id}">${userError.first_name}</a>\n`
+    if (messaging.creator) {
+      const creator = messaging.creator
+      creatorName = creator.username
+        ? `<a href="tg://user?id=${creator.telegram_id}">${creator.first_name}</a> (@${creator.username})`
+        : `<a href="tg://user?id=${creator.telegram_id}">${creator.first_name} ${creator.last_name || ''}</a>`
     }
 
-    resultText = `Message ${messaging.name} status:\n`
-    resultText += `Creator: ${creatorName}\n`
-    resultText += `Date: ${moment(messaging.date).format('DD.MM HH:mm')}\n`
-    resultText += `Created at: ${moment(messaging.createdAt).format('DD.MM HH:mm')}\n`
-    resultText += `Total: ${messaging.result.total}\n`
-    resultText += `Completed: ${messaging.result.state}\n`
-    resultText += `Delivered: ${messaging.result.state - messaging.result.error}\n`
-    resultText += `Left: ${messaging.result.total - messaging.result.state}\n`
-    resultText += `Error: ${messaging.result.error}\n`
-    resultText += `Errors: \n${userErrors}`
+    // Calculate percentages for progress indicators
+    const totalMessages = messaging.result.total || 0
+    const sentMessages = messaging.result.state || 0
+    const deliveredMessages = sentMessages - (messaging.result.error || 0)
+    const errorMessages = messaging.result.error || 0
+
+    const completionPercent = totalMessages > 0 ? Math.round((sentMessages / totalMessages) * 100) : 0
+    const deliveryPercent = sentMessages > 0 ? Math.round((deliveredMessages / sentMessages) * 100) : 0
+    const errorPercent = sentMessages > 0 ? Math.round((errorMessages / sentMessages) * 100) : 0
+
+    // Create progress bar
+    const progressBarLength = 10
+    const filledBars = Math.round((completionPercent / 100) * progressBarLength)
+    const progressBar = '▓'.repeat(filledBars) + '░'.repeat(progressBarLength - filledBars)
+
+    // Format date nicely
+    const scheduledDate = moment(messaging.date)
+    const createdDate = moment(messaging.createdAt)
+    const now = moment()
+
+    const scheduledFormatted = scheduledDate.format('DD MMM YYYY [at] HH:mm')
+    const scheduledRelative = scheduledDate.isAfter(now) ? `(${scheduledDate.fromNow()})` : ''
+    const createdFormatted = createdDate.format('DD MMM YYYY [at] HH:mm')
+
+    // Collect user errors in a cleaner way
+    let userErrors = ''
+    if (messaging.sendErrors && messaging.sendErrors.length > 0) {
+      userErrors = '\n<b>📋 Last Error Details:</b>\n'
+      const errorLimit = Math.min(5, messaging.sendErrors.length)
+
+      for (let i = 0; i < errorLimit; i++) {
+        const error = messaging.sendErrors[i]
+        if (error && error.telegram_id) {
+          userErrors += `• <a href="tg://user?id=${error.telegram_id}">User ${error.telegram_id}</a>: ${error.message || 'Unknown error'}\n`
+        }
+      }
+
+      if (messaging.sendErrors.length > errorLimit) {
+        userErrors += `<i>...and ${messaging.sendErrors.length - errorLimit} more errors</i>\n`
+      }
+    }
+
+    resultText = '<b>📊 Message Campaign Status</b>\n\n'
+    resultText += `<b>🏷 Name:</b> ${messaging.name}\n`
+    resultText += `<b>👤 Created by:</b> ${creatorName}\n`
+    resultText += `<b>⏰ Scheduled for:</b> ${scheduledFormatted} ${scheduledRelative}\n`
+    resultText += `<b>🗓 Created on:</b> ${createdFormatted}\n`
+    resultText += `<b>📊 Status:</b> ${statusColors[messaging.status] || '⚪️'} ${statusTypes[messaging.status] || 'Unknown'}\n\n`
+
+    resultText += `<b>📈 Progress:</b> ${completionPercent}% ${progressBar}\n`
+    resultText += `<b>📨 Total Recipients:</b> ${totalMessages.toLocaleString()}\n`
+    resultText += `<b>✓ Processed:</b> ${sentMessages.toLocaleString()} (${completionPercent}%)\n`
+    resultText += `<b>📬 Delivered:</b> ${deliveredMessages.toLocaleString()} (${deliveryPercent}%)\n`
+    resultText += `<b>📭 Remaining:</b> ${(totalMessages - sentMessages).toLocaleString()}\n`
+    resultText += `<b>⚠️ Errors:</b> ${errorMessages.toLocaleString()} (${errorPercent}%)\n`
+
+    resultText += userErrors
 
     let cancelButton = []
-    if (messaging.status < 2) cancelButton = [Markup.callbackButton('Cancel messaging', `admin:messaging:cancel:${ctx.match[1]}`)]
+    if (messaging.status < 2) {
+      cancelButton = [Markup.callbackButton('❌ Cancel messaging', `admin:messaging:cancel:${ctx.match[1]}`)]
+    }
 
     replyMarkup = Markup.inlineKeyboard([
       [
-        Markup.callbackButton('Update', `admin:messaging:status:${ctx.match[1]}`),
-        Markup.callbackButton('View message', `admin:messaging:view:${ctx.match[1]}`)
+        Markup.callbackButton('🔄 Refresh', `admin:messaging:status:${ctx.match[1]}`),
+        Markup.callbackButton('👁 View message', `admin:messaging:view:${ctx.match[1]}`)
       ],
       [
-        Markup.callbackButton('Edit message', `admin:messaging:edit:${ctx.match[1]}`),
-        Markup.callbackButton('Change name', `admin:messaging:change_name:${ctx.match[1]}`)
+        Markup.callbackButton('✏️ Edit message', `admin:messaging:edit:${ctx.match[1]}`),
+        Markup.callbackButton('📝 Change name', `admin:messaging:change_name:${ctx.match[1]}`)
       ],
       cancelButton,
       [
-        Markup.callbackButton('Messaging', 'admin:messaging'),
-        Markup.callbackButton('Admin', 'admin:back')
+        Markup.callbackButton('← Messaging', 'admin:messaging'),
+        Markup.callbackButton('⚙️ Admin', 'admin:back')
+      ]
+    ])
+  } else {
+    resultText = '⚠️ Message not found'
+    replyMarkup = Markup.inlineKeyboard([
+      [
+        Markup.callbackButton('← Messaging', 'admin:messaging'),
+        Markup.callbackButton('⚙️ Admin', 'admin:back')
       ]
     ])
   }
 
   await ctx.editMessageText(resultText, {
     parse_mode: 'HTML',
-    reply_markup: replyMarkup
+    reply_markup: replyMarkup,
+    disable_web_page_preview: true
   }).catch(() => {})
 })
 
