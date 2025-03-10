@@ -163,7 +163,7 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
       for (let i = 0; i < errorLimit; i++) {
         const error = messaging.sendErrors[i]
         if (error && error.telegram_id) {
-          userErrors += `• <a href="tg://user?id=${error.telegram_id}">User ${error.telegram_id}</a>: ${error.message || 'Unknown error'}\n`
+          userErrors += `• <a href="tg://user?id=${error.telegram_id}">User ${error.telegram_id}</a>: ${error.errorMessage || 'Unknown error'}\n`
         }
       }
 
