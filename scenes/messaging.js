@@ -10,12 +10,12 @@ const redis = new Redis()
 const adminMessagingName = new Scene('adminMessagingName')
 
 adminMessagingName.enter(async (ctx) => {
-  const resultText = ctx.i18n.t('admin.messaging.create.name')
+  const resultText = 'Enter a name for your messaging campaign'
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -32,12 +32,12 @@ adminMessagingName.on('text', async (ctx) => {
     messaging.name = ctx.message.text
     await messaging.save()
 
-    const resultText = ctx.i18n.t('admin.messaging.status.name_changed')
+    const resultText = 'Name changed successfully'
 
     const replyMarkup = Markup.inlineKeyboard([
       [
-        Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-        Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+        Markup.callbackButton('Messaging', 'admin:messaging'),
+        Markup.callbackButton('Admin', 'admin:back')
       ]
     ])
 
@@ -87,14 +87,14 @@ adminMessagingMessageData.enter(async (ctx) => {
 
     inlineKeyboard = inlineKeyboard.concat([
       [
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.create.add_url'), 'admin:messaging:add_url')
+        Markup.callbackButton('Add URL button', 'admin:messaging:add_url')
       ],
       [
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.create.continue'), 'admin:messaging:continue')
+        Markup.callbackButton('Continue', 'admin:messaging:continue')
       ],
       [
-        Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-        Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+        Markup.callbackButton('Messaging', 'admin:messaging'),
+        Markup.callbackButton('Admin', 'admin:back')
       ]
     ])
 
@@ -109,12 +109,12 @@ adminMessagingMessageData.enter(async (ctx) => {
 
     await ctx.telegram.callApi(method, opts).catch(console.error)
   } else {
-    const resultText = ctx.i18n.t('admin.messaging.create.send_message')
+    const resultText = 'Please send the message you want to send to users'
 
     const replyMarkup = Markup.inlineKeyboard([
       [
-        Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-        Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+        Markup.callbackButton('Messaging', 'admin:messaging'),
+        Markup.callbackButton('Admin', 'admin:back')
       ]
     ])
 
@@ -139,14 +139,16 @@ adminMessagingMessageData.on('message', async (ctx) => {
 const adminMessagingMessageUrl = new Scene('adminMessagingMessageUrl')
 
 adminMessagingMessageUrl.enter(async (ctx) => {
-  const resultText = ctx.i18n.t('admin.messaging.create.add_url_info', {
-    current: ctx.session.scene.keyboard
-  })
+  const resultText = `Send URL buttons in format: Button name - URL
+You can add multiple buttons in one line with | separator
+You can add multiple lines for different rows
+
+${ctx.session.scene.keyboard ? 'Current buttons:\n' + ctx.session.scene.keyboard : ''}`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -168,12 +170,12 @@ adminMessagingMessageData.action(/admin:messaging:continue/, async (ctx) => {
 const adminMessagingSelectDate = new Scene('adminMessagingMessageDate')
 
 adminMessagingSelectDate.enter(async (ctx) => {
-  const resultText = ctx.i18n.t('admin.messaging.create.date')
+  const resultText = 'Enter the date when the message should be sent in format DD.MM HH:mm'
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -191,22 +193,20 @@ adminMessagingSelectDate.on('text', async (ctx) => {
   if (date.isValid()) {
     ctx.session.scene.date = date
 
-    resultText = ctx.i18n.t('admin.messaging.create.date_format', {
-      date: date.format('DD.MM HH:mm')
-    })
+    resultText = `Selected date: ${date.format('DD.MM HH:mm')}`
 
     inlineKeyboard = [
-      Markup.callbackButton(ctx.i18n.t('admin.messaging.create.continue'), 'admin:messaging:continue')
+      Markup.callbackButton('Continue', 'admin:messaging:continue')
     ]
   } else {
-    resultText = ctx.i18n.t('admin.messaging.create.date_invalid')
+    resultText = 'Invalid date format. Please use DD.MM HH:mm'
   }
 
   const replyMarkup = Markup.inlineKeyboard([
     inlineKeyboard,
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -220,17 +220,17 @@ adminMessagingSelectDate.action(/admin:messaging:continue/, async (ctx) => ctx.s
 const adminMessagingSelectGroup = new Scene('adminMessagingSelectGroup')
 
 adminMessagingSelectGroup.enter(async (ctx) => {
-  const resultText = ctx.i18n.t('admin.messaging.create.group_select')
+  const resultText = 'Select the group of users to send the message to'
 
   const replyMarkup = Markup.inlineKeyboard([
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.all'), 'admin:messaging:group:all')],
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.ru'), 'admin:messaging:group:ru')],
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.uk'), 'admin:messaging:group:uk')],
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.en'), 'admin:messaging:group:en')],
+    [Markup.callbackButton('All users', 'admin:messaging:group:all')],
+    [Markup.callbackButton('Russian-speaking users', 'admin:messaging:group:ru')],
+    [Markup.callbackButton('Ukrainian-speaking users', 'admin:messaging:group:uk')],
+    [Markup.callbackButton('English-speaking users', 'admin:messaging:group:en')],
     [Markup.callbackButton('🇬🇧 Active EN users with packs', 'admin:messaging:group:en_active')],
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -312,19 +312,16 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     findUsers = result.length > 0 ? result[0].totalUsers : 0
   }
 
-  // const resultText = ctx.i18n.t('admin.messaging.create.found', {
-  //   userCount: findUsers
-  // })
   const resultText = `Good! Found ${findUsers} users`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.messaging.create.back'), 'admin:messaging:select_group'),
-      Markup.callbackButton(ctx.i18n.t('admin.messaging.create.continue'), 'admin:messaging:publish')
+      Markup.callbackButton('Back to group selection', 'admin:messaging:select_group'),
+      Markup.callbackButton('Continue', 'admin:messaging:publish')
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -345,17 +342,15 @@ adminMessagingMessageEdit.enter(async (ctx) => {
 
     redis.set(`messaging:${messaging.id}:edit_state`, 0)
 
-    const resultText = ctx.i18n.t('admin.messaging.edit.started', {
-      name: messaging.name
-    })
+    const resultText = `Editing for messaging "${messaging.name}" started`
 
     const replyMarkup = Markup.inlineKeyboard([
       [
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.create.status'), `admin:messaging:status:${messaging.id}`)
+        Markup.callbackButton('View status', `admin:messaging:status:${messaging.id}`)
       ],
       [
-        Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-        Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+        Markup.callbackButton('Messaging', 'admin:messaging'),
+        Markup.callbackButton('Admin', 'admin:back')
       ]
     ])
 
@@ -367,10 +362,7 @@ adminMessagingMessageEdit.enter(async (ctx) => {
     ctx.session.scene = null
     ctx.scene.leave()
   } else {
-    await ctx.replyWithHTML(ctx.i18n.t('admin.messaging.edit.wrong_type', {
-      type: ctx.session.scene.message.type,
-      originalType: messaging.message.type
-    }))
+    await ctx.replyWithHTML(`Message type mismatch. Current: ${ctx.session.scene.message.type}, Original: ${messaging.message.type}`)
     ctx.session.scene.message = messaging.message
     ctx.scene.enter('adminMessagingMessageData')
   }
@@ -497,17 +489,15 @@ adminMessagingPublish.enter(async (ctx) => {
 
   messaging.save()
 
-  const resultText = ctx.i18n.t('admin.messaging.create.publish', {
-    name: ctx.session.scene.name
-  })
+  const resultText = `Message "${ctx.session.scene.name}" has been created and scheduled`
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.messaging.create.status'), `admin:messaging:status:${messagingId}`)
+      Markup.callbackButton('View status', `admin:messaging:status:${messagingId}`)
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 

@@ -59,7 +59,7 @@ composer.action(/admin:messaging:cancel:(.*)/, async (ctx, next) => {
 })
 
 composer.action(/admin:messaging:list:(.*):(.*)/, async (ctx, next) => {
-  const resultText = ctx.i18n.t('admin.messaging.list.info')
+  const resultText = 'Messaging campaigns list'
 
   let messagingQuery
 
@@ -100,8 +100,8 @@ composer.action(/admin:messaging:list:(.*):(.*)/, async (ctx, next) => {
   inlineKeyboard = inlineKeyboard.concat([keyboardNavigation])
   inlineKeyboard = inlineKeyboard.concat([
     [
-      Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-      Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+      Markup.callbackButton('Messaging', 'admin:messaging'),
+      Markup.callbackButton('Admin', 'admin:back')
     ]
   ])
 
@@ -118,7 +118,7 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
 
   let resultText, replyMarkup
 
-  const statusTypes = ctx.i18n.t('admin.messaging.status.status_type').split('\n')
+  const statusTypes = ['Draft', 'In progress', 'Completed', 'Failed']
 
   if (messaging) {
     let creatorName = ctx.me
@@ -146,21 +146,21 @@ composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
     resultText += `Errors: \n${userErrors}`
 
     let cancelButton = []
-    if (messaging.status < 2) cancelButton = [Markup.callbackButton(ctx.i18n.t('admin.messaging.status.cancel'), `admin:messaging:cancel:${ctx.match[1]}`)]
+    if (messaging.status < 2) cancelButton = [Markup.callbackButton('Cancel messaging', `admin:messaging:cancel:${ctx.match[1]}`)]
 
     replyMarkup = Markup.inlineKeyboard([
       [
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.status.update'), `admin:messaging:status:${ctx.match[1]}`),
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.status.view'), `admin:messaging:view:${ctx.match[1]}`)
+        Markup.callbackButton('Update', `admin:messaging:status:${ctx.match[1]}`),
+        Markup.callbackButton('View message', `admin:messaging:view:${ctx.match[1]}`)
       ],
       [
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.status.edit'), `admin:messaging:edit:${ctx.match[1]}`),
-        Markup.callbackButton(ctx.i18n.t('admin.messaging.status.change_name'), `admin:messaging:change_name:${ctx.match[1]}`)
+        Markup.callbackButton('Edit message', `admin:messaging:edit:${ctx.match[1]}`),
+        Markup.callbackButton('Change name', `admin:messaging:change_name:${ctx.match[1]}`)
       ],
       cancelButton,
       [
-        Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
-        Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
+        Markup.callbackButton('Messaging', 'admin:messaging'),
+        Markup.callbackButton('Admin', 'admin:back')
       ]
     ])
   }
@@ -176,13 +176,13 @@ composer.action(/admin:messaging:create/, async (ctx, next) => {
 })
 
 composer.action(/admin:messaging/, async (ctx, next) => {
-  const resultText = ctx.i18n.t('admin.messaging.info')
+  const resultText = 'Messaging administration panel'
 
   const replyMarkup = Markup.inlineKeyboard([
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.menu.create'), 'admin:messaging:create')],
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.menu.scheduled'), 'admin:messaging:list:scheduled:1')],
-    [Markup.callbackButton(ctx.i18n.t('admin.messaging.menu.archive'), 'admin:messaging:list:archive:1')],
-    [Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')]
+    [Markup.callbackButton('Create new messaging', 'admin:messaging:create')],
+    [Markup.callbackButton('Scheduled messagings', 'admin:messaging:list:scheduled:1')],
+    [Markup.callbackButton('Messaging archive', 'admin:messaging:list:archive:1')],
+    [Markup.callbackButton('Back to admin', 'admin:back')]
   ])
 
   await ctx.editMessageText(resultText, {

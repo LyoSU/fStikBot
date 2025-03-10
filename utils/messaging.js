@@ -79,11 +79,7 @@ const messaging = async (messagingData) => {
             })
           } else {
             if (messagingCreator) {
-              telegram.sendMessage(messagingCreator.telegram_id, i18n.t('uk', 'admin.messaging.send_error', {
-                name: messagingData.name,
-                telegramId: chatId,
-                errorMessage: error.message
-              }), {
+              telegram.sendMessage(messagingCreator.telegram_id, `Error sending message "${messagingData.name}" to user ${chatId}: ${error.message}`, {
                 parse_mode: 'HTML'
               })
             }
