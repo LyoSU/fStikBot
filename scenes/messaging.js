@@ -227,6 +227,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
     [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.ru'), 'admin:messaging:group:ru')],
     [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.uk'), 'admin:messaging:group:uk')],
     [Markup.callbackButton(ctx.i18n.t('admin.messaging.create.group_type.en'), 'admin:messaging:group:en')],
+    [Markup.callbackButton('🇬🇧 Active EN users with packs', 'admin:messaging:group:en_active')],
     [
       Markup.callbackButton(ctx.i18n.t('admin.menu.messaging'), 'admin:messaging'),
       Markup.callbackButton(ctx.i18n.t('admin.menu.admin'), 'admin:back')
@@ -249,6 +250,8 @@ const adminMessagingСonfirmation = new Scene('adminMessagingСonfirmation')
 
 adminMessagingСonfirmation.enter(async (ctx) => {
   let findUsers = {}
+  const monthAgo = moment().subtract(1, 'month')
+  const threeMonthsAgo = moment().subtract(3, 'months')
 
   if (ctx.session.scene.type === 'all') {
     findUsers = await ctx.db.User.count({
@@ -259,7 +262,7 @@ adminMessagingСonfirmation.enter(async (ctx) => {
     findUsers = await ctx.db.User.count({
       blocked: { $ne: true },
       premium: { $ne: true },
-      locale: 'ru',
+      locale: 'ru'
       // updatedAt: { $gte: moment().subtract(1, 'months') }
     })
   } else if (ctx.session.scene.type === 'uk') {
@@ -272,6 +275,41 @@ adminMessagingСonfirmation.enter(async (ctx) => {
       blocked: { $ne: true },
       locale: 'en'
     })
+  } else if (ctx.session.scene.type === 'en_active') {
+    // Pipeline to find English-speaking users who have:
+    // - Been active in the last month
+    // - Registered at least 3 months ago
+    // - Have at least 2 sticker packs
+    const pipeline = [
+      {
+        $match: {
+          blocked: { $ne: true },
+          banned: { $ne: true },
+          locale: 'en',
+          updatedAt: { $gte: monthAgo.toDate() },
+          createdAt: { $lte: threeMonthsAgo.toDate() }
+        }
+      },
+      {
+        $lookup: {
+          from: 'stickersets',
+          localField: '_id',
+          foreignField: 'owner',
+          as: 'stickerPacks'
+        }
+      },
+      {
+        $match: {
+          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+        }
+      },
+      {
+        $count: 'totalUsers'
+      }
+    ]
+
+    const result = await ctx.db.User.aggregate(pipeline)
+    findUsers = result.length > 0 ? result[0].totalUsers : 0
   }
 
   // const resultText = ctx.i18n.t('admin.messaging.create.found', {
@@ -350,6 +388,9 @@ adminMessagingPublish.enter(async (ctx) => {
   ctx.session.scene.message.data.reply_markup = Markup.inlineKeyboard(inlineKeyboard)
 
   let usersCursor
+  const monthAgo = moment().subtract(1, 'month')
+  const threeMonthsAgo = moment().subtract(3, 'months')
+
   if (ctx.session.scene.type === 'all') {
     usersCursor = await ctx.db.User.find({
       blocked: { $ne: true },
@@ -359,7 +400,7 @@ adminMessagingPublish.enter(async (ctx) => {
     usersCursor = await ctx.db.User.find({
       blocked: { $ne: true },
       premium: { $ne: true },
-      locale: 'ru',
+      locale: 'ru'
       // updatedAt: { $gte: moment().subtract(1, 'months') }
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'uk') {
@@ -372,6 +413,55 @@ adminMessagingPublish.enter(async (ctx) => {
       blocked: { $ne: true },
       locale: 'en'
     }).select({ _id: 1, telegram_id: 1 }).cursor()
+  } else if (ctx.session.scene.type === 'en_active') {
+    // Improved query that's more efficient:
+    // First get all users matching our criteria
+    const users = await ctx.db.User.aggregate([
+      {
+        $match: {
+          blocked: { $ne: true },
+          banned: { $ne: true },
+          locale: 'en',
+          updatedAt: { $gte: monthAgo.toDate() },
+          createdAt: { $lte: threeMonthsAgo.toDate() }
+        }
+      },
+      {
+        $lookup: {
+          from: 'stickersets',
+          localField: '_id',
+          foreignField: 'owner',
+          as: 'stickerPacks',
+          pipeline: [
+            { $limit: 3 } // We only need to check if there are at least 2, so limit to 3
+          ]
+        }
+      },
+      {
+        $match: {
+          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          telegram_id: 1
+        }
+      }
+    ])
+
+    // Create a cursor-like object that implements the same interface
+    usersCursor = {
+      next: (function () {
+        let index = 0
+        return function () {
+          if (index < users.length) {
+            return Promise.resolve(users[index++])
+          }
+          return Promise.resolve(null)
+        }
+      })()
+    }
   }
 
   // const users = []
