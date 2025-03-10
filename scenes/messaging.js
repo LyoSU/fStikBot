@@ -228,6 +228,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
     [Markup.callbackButton('Ukrainian-speaking users', 'admin:messaging:group:uk')],
     [Markup.callbackButton('English-speaking users', 'admin:messaging:group:en')],
     [Markup.callbackButton('🇬🇧 Active EN users with packs', 'admin:messaging:group:en_active')],
+    [Markup.callbackButton('🌐 Active users with other languages', 'admin:messaging:group:other_active')],
     [
       Markup.callbackButton('Messaging', 'admin:messaging'),
       Markup.callbackButton('Admin', 'admin:back')
@@ -286,6 +287,41 @@ adminMessagingСonfirmation.enter(async (ctx) => {
           blocked: { $ne: true },
           banned: { $ne: true },
           locale: 'en',
+          updatedAt: { $gte: monthAgo.toDate() },
+          createdAt: { $lte: threeMonthsAgo.toDate() }
+        }
+      },
+      {
+        $lookup: {
+          from: 'stickersets',
+          localField: '_id',
+          foreignField: 'owner',
+          as: 'stickerPacks'
+        }
+      },
+      {
+        $match: {
+          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+        }
+      },
+      {
+        $count: 'totalUsers'
+      }
+    ]
+
+    const result = await ctx.db.User.aggregate(pipeline)
+    findUsers = result.length > 0 ? result[0].totalUsers : 0
+  } else if (ctx.session.scene.type === 'other_active') {
+    // Pipeline to find users with languages other than EN, RU, UK who have:
+    // - Been active in the last month
+    // - Registered at least 3 months ago
+    // - Have at least 2 sticker packs
+    const pipeline = [
+      {
+        $match: {
+          blocked: { $ne: true },
+          banned: { $ne: true },
+          locale: { $nin: ['en', 'ru', 'uk'] },
           updatedAt: { $gte: monthAgo.toDate() },
           createdAt: { $lte: threeMonthsAgo.toDate() }
         }
@@ -414,6 +450,54 @@ adminMessagingPublish.enter(async (ctx) => {
           blocked: { $ne: true },
           banned: { $ne: true },
           locale: 'en',
+          updatedAt: { $gte: monthAgo.toDate() },
+          createdAt: { $lte: threeMonthsAgo.toDate() }
+        }
+      },
+      {
+        $lookup: {
+          from: 'stickersets',
+          localField: '_id',
+          foreignField: 'owner',
+          as: 'stickerPacks',
+          pipeline: [
+            { $limit: 3 } // We only need to check if there are at least 2, so limit to 3
+          ]
+        }
+      },
+      {
+        $match: {
+          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          telegram_id: 1
+        }
+      }
+    ])
+
+    // Create a cursor-like object that implements the same interface
+    usersCursor = {
+      next: (function () {
+        let index = 0
+        return function () {
+          if (index < users.length) {
+            return Promise.resolve(users[index++])
+          }
+          return Promise.resolve(null)
+        }
+      })()
+    }
+  } else if (ctx.session.scene.type === 'other_active') {
+    // Get all users with languages other than EN, RU, UK who have been active recently and have sticker packs
+    const users = await ctx.db.User.aggregate([
+      {
+        $match: {
+          blocked: { $ne: true },
+          banned: { $ne: true },
+          locale: { $nin: ['en', 'ru', 'uk'] },
           updatedAt: { $gte: monthAgo.toDate() },
           createdAt: { $lte: threeMonthsAgo.toDate() }
         }
