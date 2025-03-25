@@ -1,0 +1,794 @@
+---
+language_name: '🇩🇪 Deutsch'
+name: Lieblings-Sticker Bot 🇺🇦
+description:
+  long: |
+    🧙 Ich bin der Emoji- und Stickerpack-Zauberer, und ich bin hier, um dein Nachrichtenerlebnis unterhaltsamer zu gestalten! Meine magischen Kräfte erlaubt es mir, deine Lieblingsfotos, Videos und GIFs ohne Konvertierungs- und Zuschneideeigenschaften in coole Emojis und Sticker zu verwandeln. 🎉🎊 Mit mir kannst du personalisierte Packs für jeden Anlass mit nur wenigen Klicks erstellen. Also, worauf wartest du noch? Lass uns anfangen und etwas ✨Glanz✨ zu deinen Chats hinzufügen!
+
+    Suche Sticker: https://play.google.com/store/apps/details?id=app.fstik
+  short: |
+    🧙 Ich bin der Emoji- und Stickerzauberer! Verwandle Fotos, Videos und GIFs im Handumdrehen in coole Sticker.
+ratelimit: Nicht so oft!
+cmd:
+  start:
+    enter: |
+      🧙 Hallo, ${name}! Ich bin der Emoji- und Sticker-Pack-Zauberer. 
+      Ich kann deine Fotos, Videos und GIFs mit nur wenigen Klicks in coole Sticker verwandeln.
+
+      Sende den /help-Befehl, um mehr darüber zu erfahren, was ich tun kann.
+
+      💬 Brauchst du Hilfe? Trete unserer Supportgruppe @fStikCommunity bei (nur Englisch).
+    group: |
+      🧙 Hallo, ${groupTitle}! Ich bin der Emoji- und Stickerpack-Zauberer.
+
+      Um einen Sticker zu einem Gruppenset hinzuzufügen, verwenden Sie den /ss-Befehl als Antwort auf ein Foto, Video, Gif oder Sticker.
+    help: |
+      <b>🧙 Willkommen! Ich bin Ihr Sticker- und Emoji-Zauberer</b>
+
+      <b>🎨 Sticker und Pakete erstellen</b>
+
+      /new - Erstellen Sie ein neues Paket
+      • Wählen Sie den Pakettyp: Sticker oder Emoji
+      • Setzen Sie einen Namen für Ihr Paket
+      • Fügen Sie Sticker hinzu, indem Sie Mediendateien senden
+      • Unterstützt Fotos, Videos, GIFs in jedem Format
+      • Der Bot optimiert automatisch die Größe und konvertiert Dateien
+
+      <b>📱 Sticker-Verwaltung</b>
+
+      /delete - Sticker aus dem Paket entfernen
+      • Leiten Sie den Sticker weiter, den Sie löschen möchten
+      • Oder senden Sie einen Sticker aus dem Paket, um ihn zu löschen
+
+      /original - Originalsticker finden
+      • Finden Sie den Originalsticker, der von diesem Bot erstellt wurde
+      • Nützlich, um ähnliche Pakete zu finden
+
+      /emoji - Sticker-Emoji konfigurieren
+      • Ändern Sie Emoji-Vorschläge für Sticker
+      • Fügen Sie einem einzelnen Sticker mehrere Emojis hinzu
+      • Format: 😀,😊,🙂
+
+      /frame - Video-Frames konfigurieren
+      • Nur für Videosticker verfügbar
+      • Rahmentypen: leicht, mittel, abgerundet, quadratisch, kreisförmig
+      • Kann für das gesamte Paket geändert werden
+
+      <b>📁 Paketverwaltung</b>
+
+      /packs - Verwalten Sie Ihre Pakete
+      • Liste aller Ihrer Pakete
+      • Bearbeiten, löschen, konfigurieren von Paketen
+
+      /restore - Verstecktes Paket wiederherstellen
+      • Wiederherstellen von Paketen, die aus Ihrer Liste versteckt waren
+      • Dauerhaft gelöschte Pakete können nicht wiederhergestellt werden
+      • Paket wird in Ihrer /packs-Liste wieder angezeigt
+
+      /copy - Pakete kopieren
+      • Erstellen Sie eine Kopie eines beliebigen Pakets
+      • Möglichkeit, die Kopie zu bearbeiten
+      • Alle Sticker werden in das neue Paket kopiert
+
+      <b>📢 Katalogfunktionen</b>
+
+      /catalog - Stickerpaketkatalog
+      • Neue und beliebte Pakete durchstöbern
+      • Suchen nach Schlüsselwörtern oder Tags
+      • Pakete bewerten, um das Ranking zu erhöhen oder zu senken
+
+      /publish - Paket im Katalog veröffentlichen
+      • Teilen Sie Ihr Paket mit anderen Benutzern
+      • Beschreibung, Tags und Sprachen hinzufügen
+      • Paket-Sichtbarkeit erhöhen
+
+      <b>🛠 Zusätzliche Funktionen</b>
+
+      /lang - Bot-Sprache ändern
+
+      /donate - Entwicklung unterstützen
+      • Zusätzliche Funktionen für Spender
+      • Vorrangbei der Dateiverarbeitung
+      • Erhöhte Limits
+
+      <b>💡 Pro-Tipps:</b>
+      • Der Bot konvertiert Dateien automatisch in das erforderliche Format
+      • Wenn ein Sticker nach dem Hinzufügen nicht angezeigt wird - bitte warten
+      • Lesen Sie Bot-Nachrichten - sie enthalten Fehlererklärungen
+      • Verwenden Sie kurze Clips für Videosticker
+      • PNG-Dateien funktionieren am besten für statische Sticker
+
+      <b>📮 Unterstützung und Community:</b>
+
+      💬 Support-Chat: @fStikCommunity (nur Englisch)
+      🧑‍🔧 Entwicklerkontakt: @ly_oBot
+      👨🏻‍💻 Entwicklerkanal: @LyBlog
+
+      <b>🔗 Open-Source:</b>
+      GitHub: https://github.com/LyoSU/fStikBot
+    catalog: |
+      <b>😻 Du kannst neue Stickerpacks in unserem Katalog finden</b>
+
+      • Klicke auf den Button unten, um Zugang zu einem riesigen Katalog von Stickerpacks für jeden Geschmack zu erhalten
+      • Suche nach Schlüsselwörtern oder in vorbereiteten Tabs
+      • Vergiss nicht zu bewerten, um das Stickerpack in den Rankings zu fördern oder zu senken
+    commands:
+      ss: '🌟 Sticker speichern'
+      start: '📜 Startmenü'
+      help: '📖 Hilfe'
+      packs: '📁 Packs verwalten'
+      new: '🌝 Stickerpack erstellen'
+      new_emoji: '😊 Emoji-Pack erstellen'
+      catalog: '📖 Katalog'
+      publish: '📤 Pack veröffentlichen'
+      delete: '❌ Sticker löschen'
+      original: '🔍 Original-Sticker finden'
+      restore: '🔀 Ein Pack wiederherstellen'
+      copy: '📋 Ein Pack kopieren'
+      emoji: '📝 Emoji-Suffix ändern'
+      round: '🎥 Abgerundetes Video'
+      clear: '🖼️ Hintergrund eines Fotos entfernen'
+      about: '📦 Pack-Info'
+      user_about: '🧑‍🎨 Erstellerinfo'
+      lang: '🌐 Sprache ändern'
+      report: '🚨 Pack melden'
+      donate: '☕️ Entwickler unterstützen'
+      add_to_group: '👥 Zur Gruppe hinzufügen'
+      privacy: '🔒 Datenschutzrichtlinie'
+    btn:
+      new: '📥 Neu erstellen'
+      catalog: '💖 Katalog öffnen'
+      catalog_mini: '💖 Katalog'
+      catalog_browser: '🌐 Im Browser öffnen'
+      catalog_browser_mini: '🌐 Im Browser'
+      catalog_app: '📱 Android-App herunterladen'
+      catalog_app_mini: '📱 Android-App'
+  inline:
+    switch_pm: '📁 Pack auswählen'
+  restore: |
+    <b>🗃 Pack-Wiederherstellung</b>
+
+    Um einen Pack wiederherzustellen, musst du mir einen Link zu dem Pack senden, das du wiederherstellen möchtest
+  copy: |
+    <b>🗄 Paket kopieren</b>
+
+    Um ein anderes Pack zu einem neuen zu kopieren, musst du mir einen Link zu einem Sticker- oder Emoji-Pack senden
+  report: |
+    <b>🚨 Bericht</b>
+
+    Falls du auf ein Stickerpack triffst, das möglicherweise gegen das Gesetz verstößt oder gegen die Nutzungsbedingungen von Telegram verstößt, melde es bitte, indem du den Link an @StickersReportBot sendest
+
+    <i>Denke daran, dass der Bot nicht für den Inhalt der Packs verantwortlich ist und keine Kontrolle darüber hat</i>
+  packs:
+    info: |
+      <b>📁 Packs</b>
+    types:
+      regular: Sticker
+      custom_emoji: Emojis
+      inline: Inline
+    empty: |
+      <b>Du hast noch keine Packs.</b>
+      Zum Erstellen schreibe den Befehl /new
+    inline_title: Inline-Pack
+    select_group_pack_info: |
+      <b>📁 Pack auswählen</b>
+
+      Um das Pack in der Gruppe zu verwenden, müssen Administratoren es mit dem Button unten auswählen
+    select_group_pack: Pack auswählen
+  emoji:
+    info: |
+      Um das Standard-Emoji für das aktuelle Pack zu ändern, sende <code>/emoji</code> gefolgt von dem Emoji, getrennt durch ein Leerzeichen
+
+      Zum Beispiel - <code>/emoji 🌟</code>
+    done: Emoji erfolgreich geändert.
+    error: Beim Ändern von Emoji ist ein Fehler aufgetreten!
+  round_video:
+    enabled: |
+      Videos haben jetzt eine runde Form
+    disabled: |
+      Videos haben jetzt keine runde Form mehr
+  paysupport: |
+    <b>👨‍💻 Zahlungssupport</b>
+
+    Bei allen Fragen im Zusammenhang mit dem Betrieb des Bots, einschließlich Zahlungen und Spenden, können Sie sich direkt an den Entwickler wenden
+
+    <b>Kontakte:</b>
+    🧑‍💻 Entwickler: @ly_oBot
+donate:
+  menu: |
+    <b>☕️ Unterstützung für die Bot-Entwicklung</b>
+    Durch die Unterstützung der Bot-Entwicklung erhalten Sie Credits
+
+    <b>Saldo:</b> <code>${balance}</code> Credits
+    Mit 1 Credits kannst du ein Pack boosten.
+
+    <b>Das Boost bietet folgende Vorteile:</b>
+    ➖ Deaktivierung von "<code>${titleSuffix}</code>" im Pack-Namen <i>(nicht im Link)</i>
+    ➖ Priorität bei der Konvertierung von Videostickern
+    ➖ Möglichkeit, mehr als einen Sticker zur Bearbeitungsliste hinzuzufügen
+    ➖ Dauer der Videosticker bis zu 30 Sekunden
+
+    <b>Wählen Sie die Anzahl der Credits aus, die Sie kaufen möchten:</b>
+  btn:
+    donate: '☕ Spenden'
+  topup: |
+    <b>Geben Sie die Anzahl der Credits ein, die Sie kaufen möchten:</b>
+  invalid_amount: |
+    <b>Ungültiger Betrag</b>
+
+    Der Mindestbetrag beträgt 5 Credits
+  paymenu: |
+    Du möchtest <b>${amount} Credits</b> für <b>${price}$</b> kaufen
+
+    ⚠️ Credits werden manuell vom Administrator vergeben.
+    Die Wartezeit reicht von 5 Minuten bis zu 1 Stunde
+
+    <u>Zahlungsmethode auswählen:</u>
+  description: |
+    Wenn Sie Credits kaufen, unterstützen Sie die Entwicklung des Bots und erhalten die Möglichkeit, zusätzliche Funktionen zu nutzen
+  update: |
+    <b>🔄 Saldo-Update</b>
+
+    Saldo: <code>${balance}</code> Credits (hinzugefügt <code>${amount}</code> Credits)
+  error:
+    already_donated: |
+      Du hast für diese Zahlung bereits Credits erhalten
+    error: |
+      <b>Fehler!</b>
+      Beim Verarbeiten der Zahlung ist ein Fehler aufgetreten
+    canceled: |
+      Zahlung storniert
+coedit:
+  info: |
+    <b>👥 Gemeinsame Bearbeitung</b>
+
+    Link zur gemeinsamen Bearbeitung <a href="${link}">${title}</a>: <code>${colink}</code>
+
+    <b>Wie benutzt man:</b>
+    1. Sende den Link an die Person, der du Zugriff auf das Pack geben möchtest
+    2. Nach dem Klicken auf den Link müssen sie "start" drücken und sie werden zu den Editoren hinzugefügt
+    3. Der Editor kann Sticker im Pack hinzufügen, löschen und bearbeiten
+
+    <b>Editoren:</b>
+    ${editors}
+
+    <i>Um Editor zu entfernen, musst du den Link zurücksetzen</i>
+  no_editors: |
+    Noch keine Editor
+  btn:
+    send: '📤 Link senden'
+    reset: '🔁 Link zurücksetzen'
+  share: |
+    Folge dem Link und drücke "start", um das Pack "${title}" gemeinsam zu bearbeiten
+  reset: |
+    <b>🔁 Link erfolgreich zurückgesetzt</b>
+
+    Neuer Link zur gemeinsamen Bearbeitung <a href="${link}">${title}</a>:
+    <code>${colink}</code>
+callback:
+  pack:
+    answerCbQuer:
+      not_found: Pack nicht gefunden
+      hidden: Pack erfolgreich verborgen
+      restored: Pack erfolgreich wiederhergestellt
+    set_pack: |
+      🌟 Ausgewähltes <a href="${link}">${title}</a> Pack
+
+      <b>❔ Wie hinzuzufügen?</b>
+      Sende ein Foto, Video oder Sticker, um es dem Pack hinzuzufügen
+    set_inline_pack: |
+      Ausgewähltes <u>${title}</u> Pack
+
+      Um es zu verwenden, schreibe in einem Chat <code>@${botUsername} </code> und Leerzeichen
+      Du kannst es auch verwenden, indem du auf den Button unten drückst
+    boost:
+      info: |
+
+        ⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+      status:
+        on: Eingeschaltet
+        off: Ausgeschaltet
+    hidden: Pack <a href="${link}">${title}</a> aus deiner Liste verborgen.
+    restored: Pack <a href="${link}">${title}</a> in deiner Liste wiederhergestellt.
+    btn:
+      hide: '❌ Pack verbergen'
+      delete: '🗑 Pack löschen'
+      restore: '✅ Wiederherstellen'
+      use_pack: '📦 Pack verwenden'
+      boost: '⚡ Boost'
+      frame: '🖼 Rahmen'
+      rename: '✏️ Umbenennen'
+      search_gif: '🔎 GIF suchen'
+      coedit: '👥 Co-editieren'
+      catalog_add: '🗂 Zum Katalog hinzufügen'
+      catalog_edit: '📝 Im Katalog bearbeiten'
+      catalog_delete: '🗑 Aus dem Katalog löschen'
+      catalog_share: '🔗️️ Teilen'
+      catalog_open: '📂 Im Katalog öffnen'
+    error:
+      not_found: |
+        Fehler!
+        Kann keinen Sticker finden.
+      invalid_png: |
+        Fehler!
+        Die Datei ist kein gültiges PNG-Bild. Bitte konvertieren Sie sie in das PNG-Format, bevor Sie sie senden.
+      invalid_dimensions: |
+        Fehler!
+        Die Stickerabmessungen sind ungültig. Sticker müssen 512x512 Pixel betragen.
+      invalid_animated: |
+        Fehler!
+        Die animierte Sticker-Datei hat nicht das richtige TGS-Format.
+      invalid_video: |
+        Fehler!
+        Die Videodatei hat nicht das richtige WEBM-Format.
+      restore: |
+        Fehler!
+        Kann Paket nicht wiederherstellen.
+      copy: |
+        Fehler!
+        Paket nicht gefunden.
+    select_group:
+      success: |
+        Pack <a href="${link}">${title}</a> erfolgreich für die Gruppe ausgewählt.
+      access_rights:
+        add: Wer darf Sticker zum Gruppenpak hinzufügen?
+        delete: Wer darf Sticker aus dem Gruppenpak löschen?
+        rights:
+          all: Jeder
+          admins: Nur Admins
+      error: |
+        Fehler!
+        Set nicht gefunden.
+  sticker:
+    answerCbQuery:
+      delete: Der Sticker wurde erfolgreich aus dem Pack entfernt.
+      restored: Der Sticker wurde erfolgreich dem aktuellen Pack hinzugefügt.
+    delete: Der Sticker wurde erfolgreich aus dem Pack entfernt.
+    restored: Der Sticker wurde erfolgreich dem aktuellen Pack hinzugefügt.
+    btn:
+      delete: '🗑 Löschen'
+      copy: '🌟 Kopieren'
+      restore: '✅ Wiederherstellen'
+    error:
+      not_found: |
+        Fehler!
+        Sticker nicht gefunden.
+      invalid_png: |
+        <b>Fehler!</b>
+        Die Datei ist kein gültiges PNG-Bild. Bitte konvertieren Sie sie in das PNG-Format, bevor Sie sie senden.
+      invalid_dimensions: |
+        <b>Fehler!</b>
+        Die Stickerabmessungen sind ungültig. Sticker müssen 512x512 Pixel betragen.
+      invalid_animated: |
+        <b>Fehler!</b>
+        Die animierte Sticker-Datei hat nicht das richtige TGS-Format.
+      invalid_video: |
+        <b>Fehler!</b>
+        Die Videodatei hat nicht das richtige WEBM-Format.
+  group_settings:
+    success: |
+      Gruppeneinstellungen erfolgreich aktualisiert.
+sticker:
+  add:
+    ok: |
+      <b>Erfolgreich zum Pack hinzugefügt:</b>
+      <a href="${link}">${title}</a>
+
+      Innerhalb einer Stunde wird dieses Pack für alle Benutzer aktualisiert.
+
+      <i>Senden Sie ein oder mehrere Emojis, die zum Sticker passen, wenn Sie sie hinzufügen möchten</i>
+    ok_inline: |
+      <b>Erfolgreich zum Pack hinzugefügt:</b>
+      <u>${title}</u>
+    send_emoji: Großartig, jetzt sende das Emoji, das zum entspricht
+    converting_process: |
+      <b>Warten...</b>
+      Ihre Datei steht zur Konvertierung in der Warteschlange. Warten Sie auf den Abschluss. Dies kann einige Zeit dauern.
+
+      Fortschritt: ${progress} / ${total}
+
+      <i>Benutzer, die den Bot unterstützt haben, erhalten Vorrang in der Warteschlange (mehr: /donate)</i>
+    catalog_offer: |
+      <b>😲 Wow, du hast ein tolles Pack erstellt!</b>
+
+      Möchtest du <a href="${link}">${title}</a> zum öffentlichen Stickerkatalog hinzufügen, damit auch andere Benutzer des Bots es sehen können?
+      <i>Es dauert nicht lange</i>
+    quote: |
+      Verwenden Sie @QuotlyBot, um ein Angebot aus dieser Nachricht zu erstellen
+    error:
+      reply: |
+        <b>Fehler!</b>
+        Bitte, antworte auf den Sticker.
+      no_selected_pack: |
+        <b>Du hast kein Pack ausgewählt</b>
+
+        Bitte erstelle (/new) oder wähle (/packs) ein Pack
+      no_selected_group_pack: |
+        <b>Du hast kein Gruppenpack ausgewählt</b>
+
+        Bitte wähle ein Pack mit dem Befehl /packs
+      no_rights: |
+        <b>Fehler!</b>
+        Du hast nicht das Recht, Sticker zu diesem Pack hinzuzufügen.
+      stickers_too_much: |
+        Dieses Pack hat die maximale Anzahl an Stickern.
+
+        Du kannst ein neues Pack mit dem Befehl /new erstellen.
+      have_already: |
+        <b>Dieser Sticker ist bereits in dem Pack</b>
+
+        Wenn du das Emoji ändern möchtest, sende es im folgenden Nachrichten.
+      stickerset_invalid: |
+        <b>Fehler!</b>
+        Bot kann nicht auf dein aktuell ausgewähltes Pack zugreifen.
+
+        Bitte erstelle (/new) oder wähle (/packs) ein anderes Pack.
+      invalid_png: |
+        <b>Fehler!</b>
+        Die Datei ist kein gültiges PNG-Bild. Bitte konvertieren Sie sie in das PNG-Format, bevor Sie sie senden.
+      invalid_dimensions: |
+        <b>Fehler!</b>
+        Die Stickerabmessungen sind ungültig. Sticker müssen 512x512 Pixel betragen.
+      invalid_animated: |
+        <b>Fehler!</b>
+        Die animierte Sticker-Datei hat nicht das richtige TGS-Format.
+      invalid_video: |
+        <b>Fehler!</b>
+        Die Videodatei hat nicht das richtige WEBM-Format.
+      file_type:
+        static: |
+          <b>Fehler!</b>
+          Dieser Dateityp wird nicht unterstützt
+          Du kannst dieses Foto oder den statischen Sticker zum statischen Pack hinzufügen
+
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+        video: |
+          <b>Fehler!</b>
+          Dieser Dateityp wird nicht unterstützt
+          Du kannst diese Videodateien zum Videopack hinzufügen
+
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+        animated: |
+          <b>Fehler!</b>
+          Dieser Dateityp wird nicht unterstützt
+          Du kannst diese animierten Dateien zum Vektorpack hinzufügen
+
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+        unknown: |
+          <b>Fehler!</b>.
+
+          Der Dateityp wird nicht unterstützt
+
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+      wait_load: |
+        <b>Warten!</b>
+
+        Der Bot verarbeitet noch die vorherige Datei...
+        Du kannst die Bot-Entwicklung unterstützen (/donate), um die Priorität bei der Bearbeitung zu erhöhen und die Möglichkeit zu erhalten, mehr als einen Sticker in die Warteschlange zu stellen.
+      timeout: |
+        <b>Zur Zeit erlebt der Bot eine enorme Belastung</b>
+        Daher ist die Videokonvertierung nur für Packs mit aktivem Boost verfügbar
+
+        Für weitere Informationen folge dem Befehl /donate
+      convert: |
+        <b>Fehler!</b>
+        Leider konnte der Bot dein Video nicht konvertieren.
+
+        Vielleicht ist dein Video in einem Format gespeichert, das dem Bot nicht verständlich ist. Stelle sicher, dass es im MP4-Format ist.
+        Es könnte auch ein interner Fehler des Bots sein, versuche, dieses Video erneut zu senden
+      too_big: |
+        <b>Fehler!</b>.
+
+        Die Datei ist zu groß, um verarbeitet zu werden. Bitte reduziere die Qualität und Dauer, bevor du sie sendest.
+      sticker_not_found: |
+        <b>Fehler!</b>
+
+        Dieser Sticker konnte nicht gefunden werden. Bitte stellen Sie sicher, dass er im richtigen Paket ist oder versuchen Sie, ihn erneut hinzuzufügen.
+news:
+  join: |
+    ℹ️ <a href="${link}">Tritt unserem Kanal bei</a>, um die neuesten Bot-News zu erhältst.
+
+    <i>Abonniere den Kanal, um die neuesten Nachrichten über den Bot sowie Updates und neue Funktionen zu erhalten.</i>
+  join_btn: '📢 Kanal beitreten'
+  not_joined: '🙅 Du bist nicht dem Kanal beigetreten'
+  continue: '✅ Fortfahren'
+userAbout:
+  help: |
+    <b>🧑‍🎨 Benutzerinfo</b>
+
+    Mit diesem Menü kannst du Informationen über den Benutzer und seine Stickerpacks herausfinden
+
+    Um Informationen über den Benutzer zu erhalten, verwenden Sie den Button unten oder leiten Sie seine Nachricht weiter
+  result: |
+    <b>🧑‍🎨 Benutzerinfo</b>
+    <b>🆔 Benutzer-ID:</b> <code>${userId}</code>
+    <b>🎨 Packs von diesem Benutzer:</b>
+    ${packs}
+  no_packs: |
+    <i>Wir haben keine Informationen über die Sticker dieses Besitzers</i>
+  forward_hidden: |
+    Der Benutzer hat die Möglichkeit zum Weiterleiten von Nachrichten verborgen. Verwenden Sie den Button unten, um seine Stickerpacks anzusehen.
+  select_user: '🧑‍🎨 Benutzer auswählen'
+scenes:
+  new_pack:
+    pack_type: |
+      <b><u>Pack-Typ wählen</u></b>
+    regular: '😊 Sticker'
+    custom_emoji: '🌟 Emoji (Premium)'
+    static: '🌟 Statisch'
+    animated: '✨ Vektor'
+    video: '📹 Video'
+    pack_format: |
+      <b><u>Pack-Typ wählen</u></b>
+
+      <b>Allgemein</b> - statisch (nicht beweglich), Raster, Dateiformat - vor dem Hinzufügen PNG (der Bot verarbeitet), nach dem Hinzufügen - WEBP.
+      Ein Beispiel für ein reguläres Pack - t.me/addstickers/Animals
+
+      <b>Video</b> - animiertes Video-Pack. Du kannst beliebige Videos, GIFs und Fotos hinzufügen.
+      Beispielvideo-Pack - t.me/addstickers/TheMascot
+
+      <b>Animiert</b> - animiert, Vektor (sie haben eine genaue Beschreibung der Objekte innerhalb der Datei, wodurch sie bei jeder Skalierung klar dargestellt werden), Dateiformat - TGS, eine Variation des Lottie-Formats.
+      Ein Beispiel für ein animiertes Pack - t.me/addstickers/IsabelleShizue
+
+      <i>Animierte und Video-Sticker-Sets können bis zu 50 Sticker enthalten. Statische Sticker-Sets können bis zu 120 Sticker enthalten.</i>
+    pack_title: |
+      <b>Gebe einen neuen Stickernamen ein:</b>
+      <i>Du kannst durch den Knopf einen zufälligen Namen wählen.</i>
+    pack_name: |
+      <b>Gebe einen kurzen Link für das neue Pack ein:</b>
+
+      <i>Zum Beispiel verwendet dieses Pack 'Animals' als Kurzlink: https://t.me/addstickers/<u>Animals</u></i>
+      <i>Du kannst durch den Knopf einen zufälligen Kurzlink wählen.</i>
+    ok: |
+      Pack <a href="${link}">${title}</a> erfolgreich erstellt!
+
+      <b>Pack-Link:</b> <pre>${link}</pre>
+
+      Sende eine Datei, ein Foto, ein Video oder einen Sticker, damit ich es deinem Set hinzufüge
+    error:
+      title_long: Name kann nicht mehr als ${max} Zeichen enthalten.
+      name_long: Adresse kann nicht mehr als ${max} Zeichen enthalten.
+      telegram:
+        name_invalid: Diese Adresse kann nicht verwendet werden.
+        name_occupied: Diese Adresse ist bereits vergeben.
+        upload_failed: |
+          <b>Fehler!</b>
+          Bot kann keine Sticker zu Telegram hochladen.
+
+          Bitte versuche es später erneut.
+  copy:
+    enter: |
+      Ich kann es kopieren, aber vorher lass uns ein neues Pack erstellen
+    progress: |
+      Kopieren des Packs von <a href="${originalLink}">${originalTitle}</a> nach <a href="${link}">${title}</a>
+
+      Fortschritt: ${current}/${total}
+    done: |
+      Pack-Kopieren von <a href="${originalLink}">${originalTitle}</a> nach <a href="${link}">${title}</a> erfolgreich abgeschlossen.
+    pay: |
+      <b>Pack-Konvertierung</b>
+
+      Das Konvertieren eines Pakets von einem Format in ein anderes kostet 1 Credit
+
+      <b>Aktueller Saldo:</b> ${balance} Credits
+
+      Credits kaufen: /donate
+    pay_btn: '✅ Bestätigen'
+    error:
+      premium: |
+        <b>Fehler!</b>
+        Diese Funktion ist nur für Spendermitglieder verfügbar.
+
+        Du kannst es tun, indem du den Befehl /donate sendest.
+  original:
+    enter: |
+      Sende den Sticker, der durch diesen Bot hinzugefügt wurde, und ich zeige dir seinen ursprünglichen Sticker.
+    error:
+      not_found: |
+        <b>Fehler!</b>
+        Ich konnte den Originalsticker nicht finden.
+  delete:
+    enter: |
+      Senden Sie den Sticker, der über diesen Bot hinzugefügt wurde, und ich werde ihn aus dem Paket löschen.
+    confirm: |
+      Sind Sie sicher, dass Sie diesen Sticker löschen möchten?
+    error:
+      not_found: |
+        <b>Fehler!</b>
+        Ich konnte den Sticker nicht finden.
+  rename:
+    enter_name: |
+      <b>Geben Sie einen neuen Titel für <a href="${link}">${title}</a> ein:</b>
+    success: |
+      <b>Titel erfolgreich geändert!</b>
+
+      Neuer Titel: <a href="${link}">${title}</a>
+    boost_notice: |
+      ❕ Um das Suffix "<code>${titleSuffix}</code>" zu entfernen, müssen Sie das Paket boosten. Mehr Details im Menü unter: /donate
+  packAbout:
+    enter: |
+      <b>Senden Sie mir einen Sticker oder ein benutzerdefiniertes Emoji, um Informationen darüber zu suchen:</b>
+    not_found: |
+      Ich konnte den Sticker nicht finden
+    result: |
+      <b>📦 Paket:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Eindeutige Nummer für die Pakete des Besitzers, pro Paket erhöht)</i>
+
+      🧑‍🎨 Besitzer-ID: <code>${ownerId}</code>
+      ${mention}
+
+      <b>🎨 Andere Pakete von diesem Besitzer:</b>
+      ${otherPacks}
+    no_other_packs: |
+      <i>Wir haben keine Informationen über andere Sticker dieses Besitzers</i>
+  boost:
+    sure: |
+      <b>Sind Sie sicher, dass Sie <a href="${link}">${title}</a> boosten möchten?</b>
+
+      Das Boosten wird die Priorität der Verarbeitung erhöhen und die Möglichkeit bieten, mehr als einen Sticker zur Warteschlange hinzuzufügen.
+      Detaillierte Informationen über Boosts finden Sie im Menü unter: /donate
+
+      <b>Preis:</b> 1 Credits
+      <b>Aktuelles Guthaben:</b> ${balance} Credits
+    btn:
+      yes: Ja, boosten!
+      no: Nein, abbrechen
+    canceled: |
+      Boosting abgebrochen
+    success: |
+      Boosting erfolgreich abgeschlossen!
+
+      ${title} ist jetzt geboostet
+    error:
+      not_enough_credits: |
+        Sie haben nicht genug Credits, um dieses Paket zu boosten.
+
+        Sie können Ihr Guthaben aufladen, indem Sie den Befehl /donate senden.
+      already_boosted: |
+        Dieses Paket ist bereits geboostet.
+  catalog:
+    publish:
+      publish_new: |
+        👌 <b>Senden Sie mir den Sticker aus dem Paket, das Sie veröffentlichen möchten</b>
+
+        <i>Sie können jedes Paket veröffentlichen, das Ihnen gehört, auch wenn es anderswo erstellt wurde</i>
+      owner_proof: |
+        <b>Um die Besitzverhältnisse dieses Pakets zu überprüfen, müssen Sie einige einfache Schritte befolgen:</b>
+        1. Öffnen Sie den Bot @Stickers
+        2. Senden Sie den Befehl <code>/packstats</code>
+        3. Finden und wählen Sie das benötigte Paket aus
+        4. Leiten Sie die erhaltene Nachricht an den Bot weiter
+      publish_new_access_denied: |
+        <b>Fehler!</b>
+        Dieses Paket gehört nicht Ihnen.
+
+        Sie können nur Ihre eigenen Pakete veröffentlichen
+      bannded: |
+        <b>Fehler!</b>
+        Sie sind von der Nutzung dieser Funktion ausgeschlossen.
+        Bitte kontaktieren Sie den Administrator.
+      enter: |
+        Sie sind dabei, das „<a href="${link}">${title}</a>“ Paket in unserem öffentlichen Verzeichnis des Bots zu veröffentlichen.
+        Es kann von jedem Bot-Benutzer nach Name, Tags oder Filter gefunden werden. 
+        Da durch werden mehr Leute Ihr Paket installieren. 
+        Versuchen Sie nur qualitativ hochwertige Pakete zu senden, die für eine große Anzahl von Menschen von Interesse sein können. 
+
+        <b>Regeln für das Veröffentlichen von Paketen:</b> 
+        • Veröffentlichen Sie keine persönlichen Pakete, die für einen engen Personenkreis gedacht sind. Zum Beispiel Gesichter Ihrer Freunde oder Zitate aus Ihren Nachrichten. 
+        • Veröffentlichen Sie keine Sticker, die gegen EU-Rechtsvorschriften oder andere lokale Gesetze verstoßen.
+
+        Sie müssen zusätzliche Informationen einreichen, damit es im Katalog veröffentlicht werden kann.
+      continue_button: Fortfahren
+      enter_description: |
+        <b>Beschreiben Sie Ihr Paket kurz, damit andere es finden können</b>
+
+        <i>Sie können auch Hashtags verwenden, um es zu kategorisieren [#]</i>
+        <i>Zum Beispiel: #anime #meme #tiere #niedlich #kpop #lustig #katze #spiel </i>
+      select_language: |
+        <b>Wählen Sie die Sprachen aus, für die Ihr Paket gedacht ist:</b>
+        <i>Sie können mehrere Sprachen auswählen</i>
+      button_all_languages: Alle Sprachen
+      button_confirm_language: Bestätigen
+      set_safe: |
+        <b>Ist Ihr Paket sicher für Benutzer?</b>
+        <i>Das heißt, es enthält keine Erotik oder anderen schockierenden Inhalte</i>
+      button_safe:
+        safe: Ja, es ist sicher
+        not_safe: Nein, es ist nicht sicher
+      no_tags: wurden nicht angegeben
+      confirm: |
+        <b>Bestätigen Sie die Veröffentlichung des Pakets "<a href="${link}">${title}</a>"</b>
+
+        <b>Beschreibung:</b> <i>${description}</i>
+
+        <b>Tags:</b> ${tags}
+        <b>Sprachen:</b> ${languages}
+      button_confirm: '✅ Veröffentlichung bestätigen'
+      success: |
+        Herzlichen Glückwunsch, Ihr Paket wurde im allgemeinen Verzeichnis unseres Bots veröffentlicht, wo andere Benutzer es finden können!
+
+        Sie können die Suchinformationen des Pakets bearbeiten, indem Sie das Paket mit dem Befehl /packs auswählen.
+
+        <i>Wir erinnern Sie daran, dass Sie die Statistiken Ihres Pakets über den offiziellen Bot @Stickers einsehen können</i>
+    unpublish:
+      success: |
+        Das Paket wurde erfolgreich aus dem Bot-Katalog entfernt.
+  delete_pack:
+    enter: |
+      Bist du sicher, dass du das Paket <a href="${link}">${title}</a> löschen möchtest?
+      Es wird dauerhaft gelöscht und kann nicht wiederhergestellt werden.
+
+      Wenn du nur einen Sticker löschen möchtest, verwende den Befehl /delete.
+
+      Sende <code>${confirm}</code>, um zu bestätigen, dass du dieses Paket wirklich löschen möchtest.
+    confirm: Ja, ich bin völlig sicher.
+    success: |
+      <b>Paket erfolgreich gelöscht!</b>
+    error:
+      - <b>Fehler!</b>
+      - Ups, etwas ist schiefgelaufen.
+  frame:
+    no_video: |
+      <b>Fehler!</b>
+      Du kannst nur Frames zu Videopaketen hinzufügen.
+    select_type: |
+      <a href="${example}">&#8203;</a><b>Rahmentyp wählen:</b> 
+      Der Rahmen ist ein transparenter Hintergrund um den Sticker. 
+
+      <code>lite</code> — die Ecken werden ein wenig abgeschnitten. 
+      <code>medium</code> — die Ecken werden mehr abgeschnitten. 
+      <code>rounded</code> — die Ecken werden abgerundet. 
+      <code>square</code> — die rechteckige Form des Rahmens, d.h. es wird nicht verändert. 
+      <code>circle</code> — der Rahmen wird in Form eines Kreises sein. 
+
+      <i>In Zukunft kannst du den Befehl /frame verwenden, um den Rahmentyp festzulegen.</i>
+    types:
+      lite: '1. Leicht'
+      medium: '2. Mittel'
+      rounded: '3. Abgerundet'
+      square: '4. Quadratisch'
+      circle: '5. Kreis'
+    selected: |
+      <b>Ausgewählter Rahmentyp:</b> ${type}
+  photoClear:
+    enter: |
+      Senden Sie ein <u>Foto</u>, von dem Sie den Hintergrund entfernen möchten, und ich sende Ihnen die Datei ohne den Hintergrund zurück
+
+      <i>Funktioniert am besten mit Fotos. Funktioniert schlechter mit Zeichnungen, Illustrationen usw.</i>
+    enter_anime: |
+      Senden Sie ein <u>Foto</u>, von dem Sie den Hintergrund entfernen möchten, und ich sende Ihnen die Datei ohne den Hintergrund zurück
+
+      <i>Funktioniert am besten mit Anime-Bildern</i>
+    choose_model: |
+      <b>Modell wählen:</b>
+    web_app: WebApp - für Fotos mit Personen
+    model:
+      ordinary: Gewöhnlich — für Fotos mit Personen
+      general: Allgemein — für alle Fotos
+      anime: Anime — für Anime-Bilder
+    add_to_set_btn: '🌟 Zum Set hinzufügen'
+    error: |
+      <b>Fehler!</b>
+      Ups, etwas ist schiefgelaufen.
+  leave: |
+    Aktion abgebrochen.
+  btn:
+    cancel: '❌ Abbrechen'
+error:
+  telegram: |
+    <b>Telegram hat einen Fehler zurückgegeben!</b>
+    <code>${error}</code>
+  answerCbQuery:
+    telegram: |
+      Telegram hat einen Fehler zurückgegeben:
+      ${error}
+  banned: |
+    <b>Fehler!</b>
+    Du bist von der Nutzung dieser Funktion ausgeschlossen.
+
+    <i>Wenn du denkst, dass dies ein Fehler ist, kontaktiere bitte den Administrator: @ly_oBot</i>
+  unknown: |
+    <b>Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</b>
+
+    Wenn das Problem weiterhin besteht, schreiben Sie an @Ly_oBot.
+    Bitte schreiben Sie sofort, um welchen Bot es sich handelt, und beschreiben Sie das Problem in einer Nachricht ausführlich.
