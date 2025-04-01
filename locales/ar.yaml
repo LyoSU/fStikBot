@@ -760,6 +760,7 @@ scenes:
       ordinary: شائع - للصور مع الناس
       general: عام - لأي صور
       anime: أنمي - لصور أنمي
+      birefnet_general: BirefNet - for any photos
     add_to_set_btn: '🌟 إضافة إلى المجموعة'
     error: |
       <b>خطأ!</b>
