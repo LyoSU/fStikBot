@@ -38,6 +38,12 @@ photoClearSelect.enter(async (ctx) => {
         ],
         [
           {
+            text: ctx.i18n.t('scenes.photoClear.model.birefnet_general'),
+            callback_data: 'model:birefnet_general'
+          }
+        ],
+        [
+          {
             text: ctx.i18n.t('scenes.photoClear.model.anime'),
             callback_data: 'model:anime'
           }
@@ -95,12 +101,16 @@ photoClear.on('photo', async (ctx) => {
   const fileUrl = await ctx.telegram.getFileLink(photo.file_id)
 
   let model = 'silueta'
+
   if (ctx.session.clerType === 'anime') {
     model = 'isnet-anime'
   } else if (ctx.session.clerType === 'general') {
     model = 'isnet-general-use'
+  } else if (ctx.session.clerType === 'birefnet_general') {
+    model = 'birefnet-general'
+  } else if (ctx.session.clerType === 'silueta' || ctx.session.clerType === 'ordinary') {
+    model = 'silueta'
   }
-
   let priority = 10
   if (ctx.i18n.locale() === 'ru') priority = 15
 
