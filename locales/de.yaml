@@ -12,7 +12,7 @@ ratelimit: Nicht so oft!
 cmd:
   start:
     enter: |
-      🧙 Hallo, ${name}! Ich bin der Emoji- und Sticker-Pack-Zauberer. 
+      🧙 Hallo, ${name}! Ich bin der Emoji- und Sticker-Pack-Zauberer.
       Ich kann deine Fotos, Videos und GIFs mit nur wenigen Klicks in coole Sticker verwandeln.
 
       Sende den /help-Befehl, um mehr darüber zu erfahren, was ich tun kann.
@@ -152,7 +152,7 @@ cmd:
   copy: |
     <b>🗄 Paket kopieren</b>
 
-    Um ein anderes Pack zu einem neuen zu kopieren, musst du mir einen Link zu einem Sticker- oder Emoji-Pack senden
+    Um ein anderes Pack zu einem neuen zu kopieren, musst du mir einen Link zu einem Sticker- oder Emojipaket senden
   report: |
     <b>🚨 Bericht</b>
 
@@ -669,12 +669,12 @@ scenes:
         Bitte kontaktieren Sie den Administrator.
       enter: |
         Sie sind dabei, das „<a href="${link}">${title}</a>“ Paket in unserem öffentlichen Verzeichnis des Bots zu veröffentlichen.
-        Es kann von jedem Bot-Benutzer nach Name, Tags oder Filter gefunden werden. 
-        Da durch werden mehr Leute Ihr Paket installieren. 
-        Versuchen Sie nur qualitativ hochwertige Pakete zu senden, die für eine große Anzahl von Menschen von Interesse sein können. 
+        Es kann von jedem Bot-Benutzer nach Name, Tags oder Filter gefunden werden.
+        Da durch werden mehr Leute Ihr Paket installieren.
+        Versuchen Sie nur qualitativ hochwertige Pakete zu senden, die für eine große Anzahl von Menschen von Interesse sein können.
 
-        <b>Regeln für das Veröffentlichen von Paketen:</b> 
-        • Veröffentlichen Sie keine persönlichen Pakete, die für einen engen Personenkreis gedacht sind. Zum Beispiel Gesichter Ihrer Freunde oder Zitate aus Ihren Nachrichten. 
+        <b>Regeln für das Veröffentlichen von Paketen:</b>
+        • Veröffentlichen Sie keine persönlichen Pakete, die für einen engen Personenkreis gedacht sind. Zum Beispiel Gesichter Ihrer Freunde oder Zitate aus Ihren Nachrichten.
         • Veröffentlichen Sie keine Sticker, die gegen EU-Rechtsvorschriften oder andere lokale Gesetze verstoßen.
 
         Sie müssen zusätzliche Informationen einreichen, damit es im Katalog veröffentlicht werden kann.
@@ -732,14 +732,14 @@ scenes:
       <b>Fehler!</b>
       Du kannst nur Frames zu Videopaketen hinzufügen.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Rahmentyp wählen:</b> 
-      Der Rahmen ist ein transparenter Hintergrund um den Sticker. 
+      <a href="${example}">&#8203;</a><b>Rahmentyp wählen:</b>
+      Der Rahmen ist ein transparenter Hintergrund um den Sticker.
 
-      <code>lite</code> — die Ecken werden ein wenig abgeschnitten. 
-      <code>medium</code> — die Ecken werden mehr abgeschnitten. 
-      <code>rounded</code> — die Ecken werden abgerundet. 
-      <code>square</code> — die rechteckige Form des Rahmens, d.h. es wird nicht verändert. 
-      <code>circle</code> — der Rahmen wird in Form eines Kreises sein. 
+      <code>lite</code> — die Ecken werden ein wenig abgeschnitten.
+      <code>medium</code> — die Ecken werden mehr abgeschnitten.
+      <code>rounded</code> — die Ecken werden abgerundet.
+      <code>square</code> — die rechteckige Form des Rahmens, d.h. es wird nicht verändert.
+      <code>circle</code> — der Rahmen wird in Form eines Kreises sein.
 
       <i>In Zukunft kannst du den Befehl /frame verwenden, um den Rahmentyp festzulegen.</i>
     types:
@@ -766,6 +766,7 @@ scenes:
       ordinary: Gewöhnlich — für Fotos mit Personen
       general: Allgemein — für alle Fotos
       anime: Anime — für Anime-Bilder
+      birefnet_general: BirefNet - für alle Fotos
     add_to_set_btn: '🌟 Zum Set hinzufügen'
     error: |
       <b>Fehler!</b>

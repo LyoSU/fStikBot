@@ -744,6 +744,7 @@ scenes:
       ordinary: Umumiy — odamlar bilan suratga olish uchun
       general: Umumiy - har qanday fotosuratlar uchun
       anime: Anime — anime rasmlari uchun
+      birefnet_general: Umumiy - har qanday fotosuratlar uchun
     add_to_set_btn: '🌟 Toʻplamga qoʻshish'
     error: |
       <b>Xato!</b>
