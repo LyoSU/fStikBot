@@ -762,7 +762,7 @@ scenes:
       ordinary: Ortak — insanlarla fotoğraflar için
       general: Genel — tüm fotoğraflar için
       anime: Anime — anime resimleri için
-      birefnet_general: BirefNet - for any photos
+      birefnet_general: BirefNet — tüm fotoğraflar için
     add_to_set_btn: '🌟 Sete ekle'
     error: |
       <b>Hata!</b>
