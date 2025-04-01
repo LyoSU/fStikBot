@@ -773,6 +773,7 @@ scenes:
       ordinary: 普通 - 用于与人合影
       general: 一般 - 任何照片
       anime: 动漫 - 用于动漫图片
+      birefnet_general: BirefNet - for any photos
     add_to_set_btn: '🌟 添加到设置'
     error: |
       <b>错误！</b>
