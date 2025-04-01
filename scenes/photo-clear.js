@@ -96,7 +96,7 @@ photoClear.on('photo', async (ctx) => {
 
   let model = 'silueta'
   if (ctx.session.clerType === 'anime') {
-    model = 'anime-seg'
+    model = 'isnet-anime'
   } else if (ctx.session.clerType === 'general') {
     model = 'isnet-general-use'
   }
