@@ -744,7 +744,7 @@ scenes:
       ordinary: Común — para fotos con personas
       general: General — para cualquier foto
       anime: Anime — para imágenes de anime
-      birefnet_general: BirefNet - for any photos
+      birefnet_general: BirefNet - para cualquier foto
     add_to_set_btn: '🌟 Añadir al conjunto'
     error: |
       <b>Error!</b>
