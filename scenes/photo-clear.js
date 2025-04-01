@@ -61,7 +61,7 @@ photoClearSelect.enter(async (ctx) => {
   })
 })
 
-photoClearSelect.action(/model:(ordinary|general|anime)/, async (ctx) => {
+photoClearSelect.action(/model:(ordinary|general|birefnet_general|anime)/, async (ctx) => {
   const [, model] = ctx.match
 
   ctx.session.clerType = model
@@ -111,6 +111,7 @@ photoClear.on('photo', async (ctx) => {
   } else if (ctx.session.clerType === 'silueta' || ctx.session.clerType === 'ordinary') {
     model = 'silueta'
   }
+
   let priority = 10
   if (ctx.i18n.locale() === 'ru') priority = 15
 
