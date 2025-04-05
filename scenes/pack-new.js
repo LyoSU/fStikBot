@@ -663,7 +663,7 @@ newPackConfirm.enter(async (ctx, next) => {
       await ctx.telegram.deleteMessage(message.chat.id, message.message_id)
 
       await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done', {
-          originalTitle: originalPack.title,
+          originalTitle: escapeHTML(originalPack.title),
           originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
           title: escapeHTML(title),
           link: `${ctx.config.stickerLinkPrefix}${name}`
