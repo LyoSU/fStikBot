@@ -36,12 +36,12 @@ photoClearSelect.enter(async (ctx) => {
             callback_data: 'model:general'
           }
         ],
-        [
-          {
-            text: ctx.i18n.t('scenes.photoClear.model.birefnet_general'),
-            callback_data: 'model:birefnet_general'
-          }
-        ],
+        // [
+        //   {
+        //     text: ctx.i18n.t('scenes.photoClear.model.birefnet_general'),
+        //     callback_data: 'model:birefnet_general'
+        //   }
+        // ],
         [
           {
             text: ctx.i18n.t('scenes.photoClear.model.anime'),
