@@ -27,7 +27,7 @@ module.exports = async (ctx) => {
   }),
   Markup.inlineKeyboard([
     [
-      Markup.urlButton(ctx?.config?.ruAdvertising?.text, ctx?.config?.ruAdvertising?.link, ctx.i18n.locale() !== 'ru' || !ctx?.config?.ruAdvertising?.text)
+      Markup.urlButton(ctx?.config?.advertising?.text, ctx?.config?.advertising?.link, !ctx?.config?.advertising?.text)
     ],
     [
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null', countStickerSets <= 0),
