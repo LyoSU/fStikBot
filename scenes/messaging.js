@@ -227,6 +227,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
     [Markup.callbackButton('Russian-speaking users', 'admin:messaging:group:ru')],
     [Markup.callbackButton('Ukrainian-speaking users', 'admin:messaging:group:uk')],
     [Markup.callbackButton('English-speaking users', 'admin:messaging:group:en')],
+    [Markup.callbackButton('🌐 Other languages', 'admin:messaging:group:other')],
     [Markup.callbackButton('🇬🇧 Active EN users with packs', 'admin:messaging:group:en_active')],
     [Markup.callbackButton('🌐 Active users with other languages', 'admin:messaging:group:other_active')],
     [
@@ -311,6 +312,12 @@ adminMessagingСonfirmation.enter(async (ctx) => {
 
     const result = await ctx.db.User.aggregate(pipeline)
     findUsers = result.length > 0 ? result[0].totalUsers : 0
+  } else if (ctx.session.scene.type === 'other') {
+    findUsers = await ctx.db.User.count({
+      blocked: { $ne: true },
+      banned: { $ne: true },
+      locale: { $nin: ['en', 'ru', 'uk'] }
+    })
   } else if (ctx.session.scene.type === 'other_active') {
     // Pipeline to find users with languages other than EN, RU, UK who have:
     // - Been active in the last month
@@ -490,6 +497,12 @@ adminMessagingPublish.enter(async (ctx) => {
         }
       })()
     }
+  } else if (ctx.session.scene.type === 'other') {
+    usersCursor = await ctx.db.User.find({
+      blocked: { $ne: true },
+      banned: { $ne: true },
+      locale: { $nin: ['en', 'ru', 'uk'] }
+    }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'other_active') {
     // Get all users with languages other than EN, RU, UK who have been active recently and have sticker packs
     const users = await ctx.db.User.aggregate([
