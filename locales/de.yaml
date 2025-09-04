@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Emoji-Suffix ändern'
       round: '🎥 Abgerundetes Video'
       clear: '🖼️ Hintergrund eines Fotos entfernen'
-      about: '📦 Pack-Info'
-      user_about: '🧑‍🎨 Erstellerinfo'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 Sprache ändern'
       report: '🚨 Pack melden'
       donate: '☕️ Entwickler unterstützen'
@@ -607,7 +606,7 @@ scenes:
       ❕ Um das Suffix "<code>${titleSuffix}</code>" zu entfernen, müssen Sie das Paket boosten. Mehr Details im Menü unter: /donate
   packAbout:
     enter: |
-      <b>Senden Sie mir einen Sticker oder ein benutzerdefiniertes Emoji, um Informationen darüber zu suchen:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       Ich konnte den Sticker nicht finden
     result: |
