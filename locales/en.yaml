@@ -613,11 +613,7 @@ scenes:
       ❕ To remove the suffix "<code>${titleSuffix}</code>", you need to boost the pack. More details in the menu by visiting: /donate
   packAbout:
     enter: |
-      <b>Choose what information you want to get:</b>
-    pack_info: '📦 Pack info'
-    user_info: '🧑‍🎨 Creator info'
-    send_sticker: |
-      <b>Send me a sticker or custom emoji to look up information about it:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       I could not find the sticker
     result: |
