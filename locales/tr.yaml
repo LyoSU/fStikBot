@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '🎥 Yuvarlak şekil videosu'
       clear: '🖼️ Fotoğraftan arka planı kaldır'
-      about: '📦 Paket bilgisi'
-      user_about: '🧑‍🎨 Yaratıcı bilgisi'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Rapor paketi'
       donate: '☕️ Support the developer'
@@ -603,7 +602,7 @@ scenes:
       ❕ "<code>${titleSuffix} </code>" ekini kaldırmak için, paketi yükseltmeniz gerekir. /bağış komutunu ziyaret ederek menüden daha fazla bilgi edinebilirsiniz
   packAbout:
     enter: |
-      <b>Bu konuda bilgi aramak için bana bir çıkartma veya özel emoji gönderin:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       stickerı bulamadım
     result: |
