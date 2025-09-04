@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '丸'
       clear: '🖼️ 背景を写真から削除する'
-      about: '📦 パック情報'
-      user_about: '🧑‍🎨 クリエイター情報'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 言語を変更'
       report: '🚨 レポート パック'
       donate: '☕️ 開発者をサポート'
@@ -587,7 +586,7 @@ scenes:
       ❕ サフィックス "<code>${titleSuffix}</code>" を削除するには、パックをブーストする必要があります。 詳細はメニューでご確認ください: \/donate
   packAbout:
     enter: |
-      <b>ステッカーやカスタム絵文字を送ってそれに関する情報を調べてみましょう:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       ステッカーが見つかりませんでした
     result: |
