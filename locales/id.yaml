@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: 'Video bentuk bulat'
       clear: '🖼️ Hapus latar belakang dari foto'
-      about: '📦 Informasi paket'
-      user_about: '🧑‍🎨 Info pembuat'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Paket laporan'
       donate: '☕️ Dukungan pengembangan bot'
@@ -606,7 +605,7 @@ scenes:
       ❕ Untuk menghapus akhiran "<code>${titleSuffix}</code>", Anda perlu meningkatkan paket. Lebih detail di menu dengan mengunjungi:\/donate
   packAbout:
     enter: |
-      <b>Kirimi saya stiker atau emoji khusus untuk mencari informasi tentangnya:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       Kesalahan! Saya tidak dapat menemukan paketnya
     result: |
