@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 更改表情符号后缀'
       round: '🎥 圆形视频'
       clear: '🖼️ 删除照片背景'
-      about: '📦 包装信息'
-      user_about: '🧑‍🎨 创作者信息'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 更改语言'
       report: '🚨 报告包'
       donate: '☕️ 支持开发人员'
@@ -614,7 +613,7 @@ scenes:
       ❕ 要删除后缀 "<code>${titleSuffix}</code>", 您需要提升包。更多详情请访问：\/donate
   packAbout:
     enter: |
-      <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       我找不到贴纸
     result: |
