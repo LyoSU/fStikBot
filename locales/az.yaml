@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Emoji şəkilçisini dəyişdirin'
       round: '🎥 Dairəvi formalı video'
       clear: '🖼️ Şəkildən fonu silin'
-      about: '📦 Paket məlumatı'
-      user_about: '🧑‍🎨 Yaradıcı məlumatı'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 Dili dəyişdirin'
       report: '🚨 Şikayət paketi'
       donate: '☕️ İnkişaf etdiricini dəstəkləyin'
@@ -605,7 +604,7 @@ scenes:
       ❕ "<code>${titleSuffix}</code>" sonluğunu aradan qaldırmaq üçün paketi yüksəltməlisiniz. Daha ətraflı məlumat üçün menyuda: \/donate
   packAbout:
     enter: |
-      <b>Bu barədə məlumat axtarmaq üçün mənə stiker və ya fərdi emoji göndərin:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       Stikeri tapa bilmədim
     result: |
