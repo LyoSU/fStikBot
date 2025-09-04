@@ -30,7 +30,6 @@ const {
   handleCoedit,
   handleLanguage,
   handleEmoji,
-  handleAboutUser,
   handleStickerUpade,
   handleInlineQuery,
   handleGroupSettings
@@ -229,26 +228,6 @@ bot.start((ctx, next) => {
   return next()
 })
 
-const userAboutHelp = (ctx) => ctx.replyWithHTML(ctx.i18n.t('userAbout.help'), {
-  reply_markup: {
-    keyboard: [
-      [{
-        text: ctx.i18n.t('userAbout.select_user'),
-        request_users: {
-          request_id: 1,
-          user_is_bot: false,
-          max_quantity: 1,
-        }
-      }],
-      [
-        ctx.i18n.t('scenes.btn.cancel')
-      ]
-    ],
-    resize_keyboard: true
-  }
-})
-privateMessage.action(/user_about/, userAboutHelp)
-privateMessage.command('user_about', userAboutHelp)
 
 privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
 privateMessage.command('privacy', (ctx) => ctx.replyWithHTML(fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')))
@@ -321,16 +300,9 @@ privateMessage.on('message', (ctx, next) => {
 })
 privateMessage.action(/add_sticker/, handleSticker)
 
-privateMessage.use((ctx, next) => {
-  if (ctx?.message?.users_shared) {
-    return handleAboutUser(ctx)
-  }
-  return next()
-})
 
 bot.use(privateMessage)
 
-privateMessage.on('forward', handleAboutUser)
 privateMessage.on('text', handleStickerUpade)
 privateMessage.on('message', handleStart)
 

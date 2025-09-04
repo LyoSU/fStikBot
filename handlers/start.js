@@ -47,8 +47,7 @@ module.exports = async (ctx) => {
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.about'), 'about'),
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.user_about'), 'user_about')
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'about')
     ],
     [
       Markup.urlButton(ctx.i18n.t('cmd.start.commands.add_to_group'), `https://t.me/${ctx.botInfo.username}?startgroup=bot`)
