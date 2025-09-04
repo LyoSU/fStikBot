@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '🎥 Dumaloq shakldagi video'
       clear: '🖼️ Suratdan fonni olib tashlang'
-      about: '📦 Paket haqida ma''lumot'
-      user_about: '🧑‍🎨 Ijodkor haqida maʼlumot'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Hisobot to''plami'
       donate: '☕️ Support the developer'
@@ -587,7 +586,7 @@ scenes:
       ❕ "<code>${titleSuffix}</code>" qo'shimchani olib tashlash uchun, siz qutini boost qilishingiz kerak. Batafsil ma'lumot olish uchun menyuga tashrif buyuring:\/donate
   packAbout:
     enter: |
-      <b>Bu haqda ma'lumot olish uchun menga stiker yoki maxsus kulgich yuboring:</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       Stikerni topa olmadim
     result: |
