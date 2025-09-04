@@ -128,8 +128,7 @@ cmd:
       emoji: '📝 Change emoji suffix'
       round: '🎥 Vidéo en forme ronde'
       clear: '🖼️ Supprimer l''arrière-plan de la photo'
-      about: '📦 Informations sur le pack'
-      user_about: '🧑‍🎨 Infos sur le créateur'
+      info: '🔍 Pack & Creator Info'
       lang: '🌐 Changer la langue'
       report: '🚨 Pack de rapports'
       donate: '☕️ Soutenir le développeur'
@@ -599,7 +598,7 @@ scenes:
       ❕ Pour supprimer le suffixe "<code>${titleSuffix} </code>", vous devez booster le pack. Plus de détails dans le menu en visitant : \/donate
   packAbout:
     enter: |
-      <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
+      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
     not_found: |
       Je n'ai pas pu trouver l'autocollant
     result: |
