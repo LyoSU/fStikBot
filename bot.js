@@ -403,7 +403,6 @@ db.connection.once('open', async () => {
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
       { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
       { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.about') },
-      { command: 'user_about', description: i18n.t(localeName, 'cmd.start.commands.user_about') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
