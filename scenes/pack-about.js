@@ -2,7 +2,8 @@ const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const {
   telegramApi,
-  moderatePack
+  moderatePack,
+  showGramAds
 } = require('../utils')
 const {
   db
@@ -65,6 +66,10 @@ packAbout.use((ctx, next) => {
 
     if (!sharedUserId) return next()
 
+    if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
+      showGramAds(ctx.chat.id)
+    }
+
     ctx.db.StickerSet.find({
       ownerTelegramId: sharedUserId
     }).then((findPacks) => {
@@ -125,6 +130,10 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   // Handle forwarded message for user info
   if (ctx.message.forward_from) {
     let sharedUserId = ctx.message.forward_from.id
+
+    if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
+      showGramAds(ctx.chat.id)
+    }
 
     const findPacks = await ctx.db.StickerSet.find({
       ownerTelegramId: sharedUserId
@@ -276,6 +285,10 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
 
       return resultArray
     }, [])
+  }
+
+  if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
+    showGramAds(ctx.chat.id)
   }
 
   const ownerChat = await ctx.telegram.getChat(actualOwnerId).catch(() => null)
