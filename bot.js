@@ -26,6 +26,7 @@ const {
   handleRestorePack,
   handleBoostPack,
   handleCatalog,
+  handleSearchCatalog,
   handleCopyPack,
   handleCoedit,
   handleLanguage,
@@ -245,7 +246,8 @@ privateMessage.action(/frame/, (ctx) => ctx.scene.enter('packFrame'))
 privateMessage.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
 privateMessage.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticker'))
 privateMessage.command('catalog', handleCatalog)
-privateMessage.action(/catalog/, handleCatalog)
+privateMessage.action(/search_catalog/, handleSearchCatalog)
+privateMessage.action(/^catalog$/, handleCatalog)
 privateMessage.command('public', handleSelectPack)
 privateMessage.command('emoji', handleEmoji)
 privateMessage.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
@@ -254,7 +256,6 @@ privateMessage.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 privateMessage.action(/original/, (ctx) => ctx.scene.enter('originalSticker'))
 privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
 privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
-privateMessage.command('search', (ctx) => ctx.scene.enter('searchStickerSet'))
 privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))

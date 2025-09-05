@@ -22,37 +22,46 @@ module.exports = async (ctx) => {
     owner: ctx.session.userInfo.id
   })
 
-  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
-    name: userName(ctx.from)
-  }),
-  Markup.inlineKeyboard([
-    [
-      Markup.urlButton(ctx?.config?.advertising?.text, ctx?.config?.advertising?.link, !ctx?.config?.advertising?.text)
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null', countStickerSets <= 0),
-    ],
-    [
+  const isNewUser = countStickerSets <= 0
+
+  const keyboard = []
+
+  if (ctx.config && ctx.config.advertising && ctx.config.advertising.text) {
+    keyboard.push([
+      Markup.urlButton(ctx.config.advertising.text, ctx.config.advertising.link)
+    ])
+  }
+
+  // Adaptive menu based on user experience
+  if (isNewUser) {
+    // For new users - focus on creating
+    keyboard.push([
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
-    ],
+    ])
+  } else {
+    // For experienced users - focus on managing packs
+    keyboard.push([
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null')
+    ])
+  }
+
+  // Common buttons for everyone
+  keyboard.push(
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.delete'), 'delete_sticker', countStickerSets <= 0),
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.original'), 'original')
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.catalog'), 'catalog'),
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.publish'), 'publish')
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog')
     ],
     [
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
     ],
     [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'about')
-    ],
-    [
       Markup.urlButton(ctx.i18n.t('cmd.start.commands.add_to_group'), `https://t.me/${ctx.botInfo.username}?startgroup=bot`)
     ]
-  ]).extra())
+  )
+
+  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
+    name: userName(ctx.from)
+  }),
+  Markup.inlineKeyboard(keyboard).extra())
 
   if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {

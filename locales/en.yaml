@@ -112,6 +112,10 @@ cmd:
       • Click the button below and get access to a huge catalog of sticker packs for every taste
       • Search by keywords or in prepared tabs
       • Don't forget to rate to promote or lower the sticker pack in the rankings
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+      
+      Find sticker packs and manage your creations:
     commands:
       ss: '🌟 Save sticker'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Manage packs'
       new: '🌝 Create sticker pack'
       new_emoji: '😊 Create emoji pack'
-      catalog: '📖 Catalog'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Publish pack'
       delete: '❌ Delete sticker'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original sticker'
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
       round: '🎥 Round shape video'
       clear: '🖼️ Remove background from photo'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Report pack'
       donate: '☕️ Support the developer'
@@ -777,6 +781,11 @@ scenes:
     error: |
       <b>Error!</b>
       Opps, something went wrong.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+      
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Action canceled.
   btn:

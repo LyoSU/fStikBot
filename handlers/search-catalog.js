@@ -1,5 +1,5 @@
 module.exports = async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {
+  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.search_catalog'), {
     reply_markup: JSON.stringify({
       inline_keyboard: [
         [
@@ -19,16 +19,17 @@ module.exports = async (ctx) => {
             text: ctx.i18n.t('cmd.start.commands.publish'),
             callback_data: 'publish'
           }
+        ],
+        [
+          {
+            text: ctx.i18n.t('cmd.start.commands.original'),
+            callback_data: 'original'
+          },
+          {
+            text: ctx.i18n.t('cmd.start.commands.info'),
+            callback_data: 'about'
+          }
         ]
-        // [
-        //   {
-        //     text: ctx.i18n.t('cmd.start.btn.catalog_browser'),
-        //     login_url: {
-        //       url: ctx.config.catalogUrl,
-        //       request_write_access: true
-        //     }
-        //   }
-        // ]
       ]
     })
   })
