@@ -112,6 +112,10 @@ cmd:
       • Aşağıdakı düyməyə klikləyin və hər zövqə uyğun stiker paketlərinin böyük kataloquna daxil olun
       • Axtarın açar sözlər və ya hazırlanmış tablarda
       • Reytinqlərdə stiker paketini tanıtmaq və ya aşağı salmaq üçün qiymət verməyi unutmayın
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Stikeri yadda saxlayın'
       start: '📜 Start menyu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Paketləri idarə edin'
       new: '🌝 Etiket paketi yaradın'
       new_emoji: '😊 Emoji paketi yaradın'
-      catalog: '📖 Kataloq'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Paketi dərc edin'
       delete: '❌ Stikeri silin'
-      original: '🔍 Orijinal stiker tap'
+      original: '🎯 Find original'
       restore: '🔀 Paketi bərpa edin'
       copy: '📋 Paketi kopyalayın'
       emoji: '📝 Emoji şəkilçisini dəyişdirin'
       round: '🎥 Dairəvi formalı video'
       clear: '🖼️ Şəkildən fonu silin'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Dili dəyişdirin'
       report: '🚨 Şikayət paketi'
       donate: '☕️ İnkişaf etdiricini dəstəkləyin'
@@ -768,6 +772,11 @@ scenes:
     error: |
       <b>Xəta!</b>
       Təəssüf, nəsə xəta baş verdi.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Fəaliyyət uğurla ləğv edildi.
   btn:
