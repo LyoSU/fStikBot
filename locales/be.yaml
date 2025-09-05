@@ -112,6 +112,10 @@ cmd:
       • Націсніце кнопку ніжэй і атрымайце доступ да вялізнага каталога набораў стыкераў на любы густ
       • Шукайце па ключавых словах або праз падрыхтаваныя ўкладкі
       • Не забывайце ацэньваць пакі, каб прасунуць або апусціць рэйтынг пака стыкераў
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Захаваць стыкер'
       start: '📜 Стартавае меню'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Кіраванне пакамі'
       new: '🌝 Стварыць пак стыкераў'
       new_emoji: '😊 Стварыць пак эмодзі'
-      catalog: '📖 Каталог'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Апублікаваць пак'
       delete: '❌ Выдаліць стыкер'
-      original: '🔍 Знайсці арыгінальны стыкер'
+      original: '🎯 Find original'
       restore: '🔀 Аднавіць пак'
       copy: '📋 Скапіяваць пак'
       emoji: '📝 Змяніць суфікс эмодзі'
       round: '🎥 Відэа круглай формы'
       clear: '🖼️ Выдаліць фон з фотаздымку'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Змяніць мову'
       report: '🚨 Паскардзіцца на пак'
       donate: '☕️ Падтрымаць распрацоўшчыка'
@@ -767,6 +771,11 @@ scenes:
     error: |
       <b>Памылка!</b>
       Ой, нешта пайшло не так.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Дзеянне скасавана.
   btn:
