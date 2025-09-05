@@ -112,6 +112,10 @@ cmd:
       • Quyidagi tugmani bosing va har qanday didga mos stikerlar to‘plamining ulkan katalogiga kirish huquqiga ega bo‘ling
       • Kalit so‘zlar yoki tayyorlangan varaqlar bo‘yicha qidiring
       • Tashviqot uchun baho berishni unutmang. yoki stikerlar to'plamini reytingda pasaytiring
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Stikerni saqlang'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Paketlarni boshqaring'
       new: '🌝 Stikerlar toʻplami yarating'
       new_emoji: '😊 Emoji toʻplami yarating'
-      catalog: '📖 Katalog'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Paketni nashr qilish'
       delete: '❌ Stikerni oʻchirish'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 Paketni tiklang'
       copy: '📋 Paketdan nusxa oling'
       emoji: '📝 Change emoji suffix'
       round: '🎥 Dumaloq shakldagi video'
       clear: '🖼️ Suratdan fonni olib tashlang'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Hisobot to''plami'
       donate: '☕️ Support the developer'
@@ -748,6 +752,11 @@ scenes:
     error: |
       <b>Xato!</b>
       Op, nimadir xato ketdi.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Harakat bekor qilindi.
   btn:
