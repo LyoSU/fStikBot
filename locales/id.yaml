@@ -112,6 +112,10 @@ cmd:
       • Klik tombol di bawah ini dan dapatkan akses ke katalog besar paket stiker untuk setiap selera
       • Cari berdasarkan kata kunci atau di tab yang sudah disiapkan
       • Jangan lupa untuk menilai untuk mempromosikan atau turunkan paket stiker di peringkat
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Simpan stikernya'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Kelola paket'
       new: '🌝 Create a new sticker pack'
       new_emoji: '😊 Buat paket emoji'
-      catalog: '📖 Katalog'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Publikasikan paket'
       delete: '❌ Hapus stiker'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 Kembalikan paket'
       copy: '📋 Salin satu paket'
       emoji: '📝 Change emoji suffix'
       round: 'Video bentuk bulat'
       clear: '🖼️ Hapus latar belakang dari foto'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Paket laporan'
       donate: '☕️ Dukungan pengembangan bot'
@@ -768,6 +772,11 @@ scenes:
     error: |
       <b>Kesalahan!</b>
       Ups, ada yang tidak beres.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Aksi dibatalkan.
   btn:
