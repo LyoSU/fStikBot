@@ -112,6 +112,10 @@ cmd:
       • Cliquez sur le bouton ci-dessous et accédez à un énorme catalogue de packs d'autocollants pour chaque goût
       • Recherchez par mots-clés ou dans les onglets
       • N'oubliez pas de noter pour promouvoir ou abaisser le pack d'autocollants dans les classements
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Enregistrer l''autocollant'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Gérer les packs'
       new: '🌝 Créez un pack d''autocollants'
       new_emoji: '😊 Créez un pack d''émoji'
-      catalog: '📖 Catalogue'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Publier le pack'
       delete: '❌ Supprimer l''autocollant'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 Restaurer un pack'
       copy: '📋 Copier un pack'
       emoji: '📝 Change emoji suffix'
       round: '🎥 Vidéo en forme ronde'
       clear: '🖼️ Supprimer l''arrière-plan de la photo'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Changer la langue'
       report: '🚨 Pack de rapports'
       donate: '☕️ Soutenir le développeur'
@@ -762,6 +766,11 @@ scenes:
     error: |
       <b>Erreur!</b>
       Opps, quelque chose s'est mal passé.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Action annulée.
   btn:
