@@ -112,6 +112,10 @@ cmd:
       • Aşağıdaki butona tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
       • Anahtar kelimelere göre veya hazırlanmış sekmelerde arama yapın
       • Tanıtmak için puan vermeyi unutmayın veya çıkartma paketini sıralamada düşürün
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Çıkartmayı kaydet'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Paketleri yönet'
       new: '🌝 Çıkartma paketini sil'
       new_emoji: '😊 Yeni bir emoji paketi oluşturun'
-      catalog: '📖 Katalog'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Paketi yayınla'
       delete: '❌ Çıkartmayı sil'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 Bir paketi geri yükle'
       copy: '📋 Bir paketi kopyala'
       emoji: '📝 Change emoji suffix'
       round: '🎥 Yuvarlak şekil videosu'
       clear: '🖼️ Fotoğraftan arka planı kaldır'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Rapor paketi'
       donate: '☕️ Support the developer'
@@ -766,6 +770,11 @@ scenes:
     error: |
       <b>Hata!</b>
       Maalesef bir şeyler ters gitti.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Eylem iptal edildi!
   btn:
