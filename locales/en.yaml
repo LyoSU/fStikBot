@@ -115,7 +115,7 @@ cmd:
     search_catalog: |
       <b>🔍 Browse & Discover</b>
       
-      Find sticker packs and manage your creations:
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Save sticker'
       start: '📜 Start menu'
@@ -126,7 +126,7 @@ cmd:
       search_catalog: '🔍 Browse & Discover'
       publish: '📤 Publish pack'
       delete: '❌ Delete sticker'
-      original: '🎯 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 Restore a pack'
       copy: '📋 Copy a pack'
       emoji: '📝 Change emoji suffix'
