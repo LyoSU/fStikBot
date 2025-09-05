@@ -112,6 +112,10 @@ cmd:
       • Klicke auf den Button unten, um Zugang zu einem riesigen Katalog von Stickerpacks für jeden Geschmack zu erhalten
       • Suche nach Schlüsselwörtern oder in vorbereiteten Tabs
       • Vergiss nicht zu bewerten, um das Stickerpack in den Rankings zu fördern oder zu senken
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Sticker speichern'
       start: '📜 Startmenü'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Packs verwalten'
       new: '🌝 Stickerpack erstellen'
       new_emoji: '😊 Emoji-Pack erstellen'
-      catalog: '📖 Katalog'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Pack veröffentlichen'
       delete: '❌ Sticker löschen'
-      original: '🔍 Original-Sticker finden'
+      original: '🎯 Find original'
       restore: '🔀 Ein Pack wiederherstellen'
       copy: '📋 Ein Pack kopieren'
       emoji: '📝 Emoji-Suffix ändern'
       round: '🎥 Abgerundetes Video'
       clear: '🖼️ Hintergrund eines Fotos entfernen'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Sprache ändern'
       report: '🚨 Pack melden'
       donate: '☕️ Entwickler unterstützen'
@@ -770,6 +774,11 @@ scenes:
     error: |
       <b>Fehler!</b>
       Ups, etwas ist schiefgelaufen.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Aktion abgebrochen.
   btn:
