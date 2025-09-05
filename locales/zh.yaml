@@ -112,6 +112,10 @@ cmd:
       • 单击下面的按钮并访问适合各种口味的大量贴纸包目录
       • 按关键字或在准备好的标签中搜索
       • 不要忘记评价以进行促销或降低贴纸包的排名
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 保存贴纸'
       start: '📜 开始菜单'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 管理包'
       new: '🌝 创建贴纸包'
       new_emoji: '😊 创建表情包'
-      catalog: '📖 目录'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 出版包'
       delete: '❌ 删除贴纸'
-      original: '🔍 查找原始贴纸'
+      original: '🎯 Find original'
       restore: '🔀 恢复一个包'
       copy: '📋 恢复一个包'
       emoji: '📝 更改表情符号后缀'
       round: '🎥 圆形视频'
       clear: '🖼️ 删除照片背景'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 更改语言'
       report: '🚨 报告包'
       donate: '☕️ 支持开发人员'
@@ -777,6 +781,11 @@ scenes:
     error: |
       <b>错误！</b>
       哎呀，出错了。
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     行动取消。
   btn:
