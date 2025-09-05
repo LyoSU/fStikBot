@@ -112,6 +112,10 @@ cmd:
       ・このボタンを押すと、色々なステッカーを手に入れる事ができます
       ・キーボードまたはスペシャルターブで検索しよう
       ・おすすめしたいまたはしたかないステッカーをレートして下さい
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 ステッカーを保存'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 パックを管理'
       new: '🌝 ステッカーパックを作成'
       new_emoji: '😊 絵文字パックを作成'
-      catalog: '📖 カタログ'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 パックを公開'
       delete: '❌ ステッカーを削除'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 パックを復元'
       copy: '📋 パックをコピー'
       emoji: '📝 Change emoji suffix'
       round: '丸'
       clear: '🖼️ 背景を写真から削除する'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 言語を変更'
       report: '🚨 レポート パック'
       donate: '☕️ 開発者をサポート'
@@ -752,6 +756,11 @@ scenes:
     error: |
       <b>エラー！</b>
       オペ、何か問題が発生しました。
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     アクションがキャンセルされました。
   btn:
