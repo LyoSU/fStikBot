@@ -112,6 +112,10 @@ cmd:
       • Haga clic en el botón de abajo y obtener acceso a un enorme catálogo de paquetes de sticker para cada gusto
       • Buscar por palabras clave o en pestañas preparadas
       • No olvide calificar para promover o bajar el paquete de sticker en el ranking
+    search_catalog: |
+      <b>🔍 Browse & Discover</b>
+
+      Find sticker packs and publish your own:
     commands:
       ss: '🌟 Guardar etiqueta'
       start: '📜 Start menu'
@@ -119,16 +123,16 @@ cmd:
       packs: '📁 Administrar paquetes'
       new: '🌝 Crear paquete de sticker'
       new_emoji: '😊 Crear paquete emoji'
-      catalog: ':open_libro: Catálogo'
+      search_catalog: '🔍 Browse & Discover'
       publish: '📤 Publicar paquete'
       delete: '❌ Eliminar sticker'
-      original: '🔍 Find original sticker'
+      original: '🎯 Find original'
       restore: '🔀 Restaurar un paquete'
       copy: '📋 Copiar un paquete'
       emoji: '📝 Change emoji suffix'
       round: ':mo-camera: Video redondeado'
       clear: '🖼️ Quitar fondo de la foto'
-      info: '🔍 Pack & Creator Info'
+      info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Change language'
       report: '🚨 Reportar paquete'
       donate: '☕️ Support the developer'
@@ -748,6 +752,11 @@ scenes:
     error: |
       <b>Error!</b>
       Opps, algo salió mal.
+  search:
+    enter: |
+      <b>🔎 Search sticker packs</b>
+
+      Enter keywords to search for sticker packs in the catalog
   leave: |
     Acción cancelada.
   btn:
