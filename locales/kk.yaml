@@ -124,6 +124,7 @@ cmd:
       new: '🌝 Стикер жинағын жасау'
       new_emoji: '😊 Еможи жинағын жасау'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 Жинақты жариялау'
       delete: '❌ Стикерді жою'
       original: '🎯 Find original'
