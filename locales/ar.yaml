@@ -124,6 +124,7 @@ cmd:
       new: '🌝 إنشاء حزمة ملصقات'
       new_emoji: '😊 إنشاء حزمة إيموجي'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 نشر الحزمة'
       delete: '❌ حذف الملصق'
       original: '🎯 Find original'
