@@ -124,6 +124,7 @@ cmd:
       new: '🌝 Çıkartma paketini sil'
       new_emoji: '😊 Yeni bir emoji paketi oluşturun'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 Paketi yayınla'
       delete: '❌ Çıkartmayı sil'
       original: '🎯 Find original'
