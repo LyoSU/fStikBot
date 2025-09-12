@@ -124,6 +124,7 @@ cmd:
       new: '🌝 Créez un pack d''autocollants'
       new_emoji: '😊 Créez un pack d''émoji'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 Publier le pack'
       delete: '❌ Supprimer l''autocollant'
       original: '🎯 Find original'
