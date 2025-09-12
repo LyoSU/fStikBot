@@ -124,6 +124,7 @@ cmd:
       new: '🌝 创建贴纸包'
       new_emoji: '😊 创建表情包'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 出版包'
       delete: '❌ 删除贴纸'
       original: '🎯 Find original'
