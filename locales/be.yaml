@@ -124,6 +124,7 @@ cmd:
       new: '🌝 Стварыць пак стыкераў'
       new_emoji: '😊 Стварыць пак эмодзі'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 Апублікаваць пак'
       delete: '❌ Выдаліць стыкер'
       original: '🎯 Find original'
