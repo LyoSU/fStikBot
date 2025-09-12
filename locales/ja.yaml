@@ -124,6 +124,7 @@ cmd:
       new: '🌝 ステッカーパックを作成'
       new_emoji: '😊 絵文字パックを作成'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 パックを公開'
       delete: '❌ ステッカーを削除'
       original: '🎯 Find original'
