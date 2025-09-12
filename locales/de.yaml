@@ -124,6 +124,7 @@ cmd:
       new: '🌝 Stickerpack erstellen'
       new_emoji: '😊 Emoji-Pack erstellen'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 Pack veröffentlichen'
       delete: '❌ Sticker löschen'
       original: '🎯 Find original'
