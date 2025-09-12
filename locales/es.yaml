@@ -124,6 +124,7 @@ cmd:
       new: '🌝 Crear paquete de sticker'
       new_emoji: '😊 Crear paquete emoji'
       search_catalog: '🔍 Browse & Discover'
+      catalog: '📖 Catalog'
       publish: '📤 Publicar paquete'
       delete: '❌ Eliminar sticker'
       original: '🎯 Find original'
