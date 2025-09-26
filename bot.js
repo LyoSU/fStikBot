@@ -84,9 +84,18 @@ bot.context.config = require('./config.json')
 // db connect
 bot.context.db = db
 
-// use session
+// use session with memory limit
+const sessionStore = new Map()
+setInterval(() => {
+  if (sessionStore.size > 10000) {
+    const entries = Array.from(sessionStore.entries())
+    entries.slice(0, 5000).forEach(([key]) => sessionStore.delete(key))
+  }
+}, 1000 * 60 * 5) // cleanup every 5 minutes
+
 bot.use(
   session({
+    store: sessionStore,
     getSessionKey: (ctx) => {
       if ((ctx.from && ctx.chat && ctx.chat.id === ctx.from.id) || (!ctx.chat && ctx.from)) {
         return `user:${ctx.from.id}`
@@ -484,4 +493,13 @@ db.connection.once('open', async () => {
   setInterval(() => {
     updateMonitor()
   }, 1000 * 25) // every 25 seconds
+
+  // Memory monitoring
+  setInterval(() => {
+    const usage = process.memoryUsage()
+    if (usage.heapUsed > 400 * 1024 * 1024) { // 400MB threshold
+      console.log('High memory usage:', Math.round(usage.heapUsed / 1024 / 1024) + 'MB')
+      if (global.gc) global.gc()
+    }
+  }, 1000 * 30) // every 30 seconds
 })

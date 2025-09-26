@@ -1,12 +1,14 @@
 const mongoose = require('mongoose')
 
 const connection = mongoose.createConnection(process.env.MONGODB_URI, {
-  poolSize: 10,
-  maxTimeMS: 3,
+  maxPoolSize: 50,
+  maxTimeMS: 30000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  maxIdleTimeMS: 30000,
   useNewUrlParser: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-  useCreateIndex: true
+
+  useUnifiedTopology: true
 })
 
 connection.on('error', error => {
@@ -15,12 +17,13 @@ connection.on('error', error => {
 })
 
 const atlasConnection = mongoose.createConnection(process.env.ATLAS_MONGODB_URI || process.env.MONGODB_URI, {
-  poolSize: 10,
-  maxTimeMS: 3,
+  maxPoolSize: 50,
+  maxTimeMS: 30000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  maxIdleTimeMS: 30000,
   useNewUrlParser: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-  useCreateIndex: true
+  useUnifiedTopology: true
 })
 
 atlasConnection.on('error', error => {

@@ -491,29 +491,37 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
           delete lastStickerTime[ctx.from.id]
         }, 1000 * 30);
 
-        const imageSharp = sharp(fileData, { failOnError: false })
+        const imageSharp = sharp(fileData, {
+          failOnError: false,
+          limitInputPixels: 268402689, // ~500MB pixel buffer limit
+          pages: 1 // only first page for multi-page formats
+        })
         const imageMetadata = await imageSharp.metadata().catch(() => {})
 
         if (!imageMetadata) {
           throw new Error('Invalid image')
         }
 
+        let pipeline = imageSharp.clone()
+
         if (stickerSet.packType === 'custom_emoji') {
           if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
-            imageSharp.resize({ width: 100, height: 100 })
+            pipeline = pipeline.resize(100, 100, {
+              fit: 'contain',
+              background: { r: 0, g: 0, b: 0, alpha: 0 }
+            })
           }
         } else {
-          if (
-            imageMetadata.width > 512 || imageMetadata.height > 512 ||
-            (imageMetadata.width !== 512 && imageMetadata.height !== 512)
-          ) {
-            if (imageMetadata.height > imageMetadata.width) imageSharp.resize({ height: 512 })
-            else imageSharp.resize({ width: 512 })
+          if (imageMetadata.width > 512 || imageMetadata.height > 512) {
+            pipeline = pipeline.resize(512, 512, {
+              fit: 'inside',
+              withoutEnlargement: true
+            })
           }
         }
 
         stickerExtra.sticker = {
-          source: await imageSharp.webp({ quality: 100 }).png({ force: false }).toBuffer()
+          source: await pipeline.webp({ quality: 85, effort: 3 }).toBuffer()
         }
       }
     }
