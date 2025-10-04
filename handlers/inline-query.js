@@ -236,7 +236,11 @@ composer.on('inline_query', async (ctx) => {
       console.error('Error answering inline query:', {
         error: error.message,
         results_count: stickersResult.length,
-        first_result_full: stickersResult.length > 0 ? stickersResult[0] : null
+        all_results: stickersResult.map(r => ({
+          id: r.id,
+          type: r.type,
+          field: Object.keys(r).find(k => k.endsWith('_file_id'))
+        }))
       })
       // Якщо помилка - повертаємо порожній результат
       await ctx.answerInlineQuery([], {
