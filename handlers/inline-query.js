@@ -146,40 +146,103 @@ composer.on('inline_query', async (ctx) => {
     }
 
     for (const sticker of searchStickers) {
-      if (!sticker.info.stickerType) {
-        const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
-        if (/document/.test(fileInfo.file_path)) sticker.info.stickerType = 'document'
-        else if (/photo/.test(fileInfo.file_path)) sticker.info.stickerType = 'photo'
-        else sticker.info.stickerType = 'sticker'
-        await sticker.save()
+      try {
+        // Пропускаємо стікери без file_id
+        if (!sticker.info || !sticker.info.file_id) continue
+
+        if (!sticker.info.stickerType) {
+          const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
+          if (/document/.test(fileInfo.file_path)) sticker.info.stickerType = 'document'
+          else if (/photo/.test(fileInfo.file_path)) sticker.info.stickerType = 'photo'
+          else sticker.info.stickerType = 'sticker'
+          await sticker.save()
+        }
+
+        if (sticker.info.stickerType === 'video_note') {
+          sticker.info.stickerType = 'document'
+        }
+
+        if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
+
+        // Для video використовуємо InlineQueryResultCachedVideo
+        let stickerType = sticker.info.stickerType
+
+        // Перевіряємо файл тільки для типу 'sticker'
+        if (stickerType === 'sticker') {
+          const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
+
+          // Фільтруємо анімовані .tgs стікери - вони не працюють в inline режимі
+          if (/\.tgs$/i.test(fileInfo.file_path)) {
+            continue
+          }
+
+          // Відео файли (.webm/.mp4 або з папки videos/) надсилаємо як video
+          if (/\.(webm|mp4)$/i.test(fileInfo.file_path) || fileInfo.file_path.includes('videos/')) {
+            stickerType = 'video'
+          }
+        }
+
+        let fieldFileIdName = stickerType + '_file_id'
+        if (stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
+
+        const data = {
+          type: stickerType,
+          id: sticker._id.toString()
+        }
+        data[fieldFileIdName] = sticker.info.file_id
+
+        // Різні типи мають різні обов'язкові поля
+        if (stickerType === 'document' || stickerType === 'video') {
+          // title обов'язкове для document і video
+          data.title = sticker.info.caption || 'File'
+          data.description = sticker.info.caption || ''
+        } else if (stickerType === 'photo' || stickerType === 'mpeg4_gif') {
+          // title опціональне для photo і mpeg4_gif
+          if (sticker.info.caption) {
+            data.title = sticker.info.caption
+            data.description = sticker.info.caption
+          }
+        }
+        // sticker не має поля title взагалі
+
+        stickersResult.push(data)
+      } catch (error) {
+        // Пропускаємо проблемний стікер, але продовжуємо обробку інших
+        console.error('Error processing sticker for inline query:', {
+          sticker_id: sticker._id,
+          type: sticker.info && sticker.info.stickerType,
+          file_id: sticker.info && sticker.info.file_id,
+          error: error.message
+        })
       }
-
-      if (sticker.info.stickerType === 'video_note') {
-        sticker.info.stickerType = 'document'
-      }
-
-      if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
-      let fieldFileIdName = sticker.info.stickerType + '_file_id'
-      if (sticker.info.stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
-
-      const data = {
-        type: sticker.info.stickerType,
-        id: sticker._id,
-        title: sticker.info.caption || sticker.info.stickerType,
-        // thumb_url: sticker.info.thumb.file_path
-      }
-      data[fieldFileIdName] = sticker.info.file_id
-
-      stickersResult.push(data)
     }
 
-    await ctx.answerInlineQuery(stickersResult, {
-      is_personal: true,
-      cache_time: 30,
-      next_offset: offset + limit,
-      switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
-      switch_pm_parameter: 'inline_pack'
-    })
+    try {
+      await ctx.answerInlineQuery(stickersResult, {
+        is_personal: true,
+        cache_time: 30,
+        next_offset: offset + limit,
+        switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+        switch_pm_parameter: 'inline_pack'
+      })
+    } catch (error) {
+      console.error('Error answering inline query:', {
+        error: error.message,
+        results_count: stickersResult.length,
+        results_sample: stickersResult.slice(0, 3).map(r => ({
+          id: r.id,
+          type: r.type,
+          has_file_id: !!(r.sticker_file_id || r.photo_file_id || r.document_file_id || r.video_file_id || r.mpeg4_file_id)
+        }))
+      })
+      // Якщо помилка - повертаємо порожній результат
+      await ctx.answerInlineQuery([], {
+        is_personal: true,
+        cache_time: 30,
+        switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+        switch_pm_parameter: 'inline_pack'
+      }).catch(() => {})
+    }
   } else {
     let tenorResult
 
