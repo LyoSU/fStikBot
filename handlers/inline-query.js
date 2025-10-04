@@ -170,20 +170,22 @@ composer.on('inline_query', async (ctx) => {
         if (stickerType === 'sticker') {
           const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
 
-          // Визначаємо тип по розширенню файлу
-          if (fileInfo.file_path.includes('animations/')) {
+          // Визначаємо тип по папці файлу
+          if (fileInfo.file_path.includes('documents/')) {
+            stickerType = 'document'
+          } else if (fileInfo.file_path.includes('photos/')) {
+            stickerType = 'photo'
+          } else if (fileInfo.file_path.includes('animations/')) {
             // .mp4 → mpeg4_gif, .gif → gif
             if (/\.mp4$/i.test(fileInfo.file_path)) {
               stickerType = 'mpeg4_gif'
             } else if (/\.gif$/i.test(fileInfo.file_path)) {
               stickerType = 'gif'
             }
-          }
-          // Конвертуємо videos/ в video
-          else if (fileInfo.file_path.includes('videos/')) {
+          } else if (fileInfo.file_path.includes('videos/')) {
             stickerType = 'video'
           }
-          // .tgs, .webm, .webp залишаються як sticker
+          // .tgs, .webm, .webp в папці stickers/ залишаються як sticker
         }
 
         let fieldFileIdName = stickerType + '_file_id'
