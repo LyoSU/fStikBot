@@ -246,7 +246,17 @@ privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
 
 privateMessage.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
 privateMessage.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
-privateMessage.action(/new_pack:(.*)/, (ctx) => ctx.scene.enter('newPack'))
+privateMessage.action(/new_pack:(.*)/, (ctx) => {
+  const packType = ctx.match[1]
+  if (packType === 'inline') {
+    ctx.session.scene = ctx.session.scene || {}
+    ctx.session.scene.newPack = {
+      inline: true,
+      packType: 'regular'
+    }
+  }
+  return ctx.scene.enter('newPack')
+})
 privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
 privateMessage.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 privateMessage.action(/publish/, (ctx) => ctx.scene.enter('catalogPublishNew'))

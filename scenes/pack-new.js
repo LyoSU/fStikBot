@@ -107,7 +107,8 @@ const escapeHTML = (str) => str.replace(
 const newPack = new Scene('newPack')
 
 newPack.enter(async (ctx, next) => {
-  ctx.session.scene.newPack = {}
+  const existingNewPack = ctx.session.scene.newPack || {}
+  ctx.session.scene.newPack = existingNewPack
 
   if (ctx?.message?.text) {
     const args = ctx.message.text.split(' ')
@@ -115,6 +116,11 @@ newPack.enter(async (ctx, next) => {
     if (['fill', 'adaptive'].includes(args[1])) {
       ctx.session.scene.newPack.fillColor = true
     }
+  }
+
+  // Якщо це інлайн пак, пропускаємо вибір типу
+  if (ctx.session.scene.newPack.inline) {
+    return ctx.scene.enter('newPackTitle')
   }
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
@@ -301,7 +307,10 @@ newPackConfirm.enter(async (ctx, next) => {
 
   let { name, title, animated, video } = ctx.session.scene.newPack
 
-  if (!ctx.session.scene.newPack.inline) {
+  // Для inline паку автоматично генеруємо name
+  if (inline) {
+    name = 'inline_' + ctx.from.id
+  } else {
     name = name.replace(/https/, '')
     name = name.replace(/t.me\/addstickers\//, '')
     name = slug(name, { separator: '_', maintainCase: true })

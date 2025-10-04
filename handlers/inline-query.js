@@ -236,7 +236,12 @@ composer.on('inline_query', async (ctx) => {
         switch_pm_parameter: 'inline_pack'
       })
     } catch (error) {
-      console.error('Error answering inline query:', error.message)
+      console.error('Error answering inline query:', {
+        error: error.message,
+        user: ctx.from.id,
+        pack: inlineSet ? inlineSet.name : 'unknown',
+        results_count: stickersResult.length
+      })
       // Якщо помилка - повертаємо порожній результат
       await ctx.answerInlineQuery([], {
         is_personal: true,
