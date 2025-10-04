@@ -233,14 +233,25 @@ composer.on('inline_query', async (ctx) => {
         switch_pm_parameter: 'inline_pack'
       })
     } catch (error) {
+      // Логуємо file_path для всіх mpeg4_gif щоб знайти проблемний
+      const mpeg4Stickers = searchStickers.filter(s =>
+        stickersResult.some(r => r.id === s._id.toString() && r.type === 'mpeg4_gif')
+      )
+
+      for (const s of mpeg4Stickers) {
+        try {
+          const fileInfo = await ctx.tg.getFile(s.info.file_id)
+          console.log('mpeg4_gif file:', {
+            id: s._id.toString(),
+            file_path: fileInfo.file_path,
+            file_id: s.info.file_id
+          })
+        } catch (e) {}
+      }
+
       console.error('Error answering inline query:', {
         error: error.message,
-        results_count: stickersResult.length,
-        all_results: stickersResult.map(r => ({
-          id: r.id,
-          type: r.type,
-          field: Object.keys(r).find(k => k.endsWith('_file_id'))
-        }))
+        results_count: stickersResult.length
       })
       // Якщо помилка - повертаємо порожній результат
       await ctx.answerInlineQuery([], {
