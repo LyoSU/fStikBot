@@ -164,26 +164,35 @@ composer.on('inline_query', async (ctx) => {
 
         if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
 
-        // Для video використовуємо InlineQueryResultCachedVideo
         let stickerType = sticker.info.stickerType
 
         // Перевіряємо файл тільки для типу 'sticker'
         if (stickerType === 'sticker') {
           const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
 
-          // Фільтруємо анімовані .tgs стікери - вони не працюють в inline режимі
+          // Фільтруємо тільки анімовані .tgs стікери
           if (/\.tgs$/i.test(fileInfo.file_path)) {
             continue
           }
 
-          // Відео файли (.webm/.mp4 або з папки videos/) надсилаємо як video
-          if (/\.(webm|mp4)$/i.test(fileInfo.file_path) || fileInfo.file_path.includes('videos/')) {
+          // Визначаємо тип по розширенню файлу
+          if (fileInfo.file_path.includes('animations/')) {
+            // .mp4 → mpeg4_gif, .gif → gif
+            if (/\.mp4$/i.test(fileInfo.file_path)) {
+              stickerType = 'mpeg4_gif'
+            } else if (/\.gif$/i.test(fileInfo.file_path)) {
+              stickerType = 'gif'
+            }
+          }
+          // Конвертуємо videos/ в video
+          else if (fileInfo.file_path.includes('videos/')) {
             stickerType = 'video'
           }
         }
 
         let fieldFileIdName = stickerType + '_file_id'
         if (stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
+        if (stickerType === 'gif') fieldFileIdName = 'gif_file_id'
 
         const data = {
           type: stickerType,
@@ -196,8 +205,8 @@ composer.on('inline_query', async (ctx) => {
           // title обов'язкове для document і video
           data.title = sticker.info.caption || 'File'
           data.description = sticker.info.caption || ''
-        } else if (stickerType === 'photo' || stickerType === 'mpeg4_gif') {
-          // title опціональне для photo і mpeg4_gif
+        } else if (stickerType === 'photo' || stickerType === 'mpeg4_gif' || stickerType === 'gif') {
+          // title опціональне для photo, mpeg4_gif та gif
           if (sticker.info.caption) {
             data.title = sticker.info.caption
             data.description = sticker.info.caption
@@ -229,11 +238,7 @@ composer.on('inline_query', async (ctx) => {
       console.error('Error answering inline query:', {
         error: error.message,
         results_count: stickersResult.length,
-        results_sample: stickersResult.slice(0, 3).map(r => ({
-          id: r.id,
-          type: r.type,
-          has_file_id: !!(r.sticker_file_id || r.photo_file_id || r.document_file_id || r.video_file_id || r.mpeg4_file_id)
-        }))
+        first_result_full: stickersResult.length > 0 ? stickersResult[0] : null
       })
       // Якщо помилка - повертаємо порожній результат
       await ctx.answerInlineQuery([], {
