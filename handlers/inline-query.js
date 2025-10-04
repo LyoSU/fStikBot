@@ -170,11 +170,6 @@ composer.on('inline_query', async (ctx) => {
         if (stickerType === 'sticker') {
           const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
 
-          // Фільтруємо тільки анімовані .tgs стікери
-          if (/\.tgs$/i.test(fileInfo.file_path)) {
-            continue
-          }
-
           // Визначаємо тип по розширенню файлу
           if (fileInfo.file_path.includes('animations/')) {
             // .mp4 → mpeg4_gif, .gif → gif
@@ -188,6 +183,7 @@ composer.on('inline_query', async (ctx) => {
           else if (fileInfo.file_path.includes('videos/')) {
             stickerType = 'video'
           }
+          // .tgs, .webm, .webp залишаються як sticker
         }
 
         let fieldFileIdName = stickerType + '_file_id'
