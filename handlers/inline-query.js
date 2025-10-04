@@ -176,11 +176,14 @@ composer.on('inline_query', async (ctx) => {
           } else if (fileInfo.file_path.includes('photos/')) {
             stickerType = 'photo'
           } else if (fileInfo.file_path.includes('animations/')) {
-            // .mp4 → mpeg4_gif, .gif → gif
+            // ТІЛЬКИ файли з розширенням .mp4 або .gif
             if (/\.mp4$/i.test(fileInfo.file_path)) {
               stickerType = 'mpeg4_gif'
             } else if (/\.gif$/i.test(fileInfo.file_path)) {
               stickerType = 'gif'
+            } else {
+              // Файли без розширення в animations/ пропускаємо
+              continue
             }
           } else if (fileInfo.file_path.includes('videos/')) {
             stickerType = 'video'
@@ -233,26 +236,7 @@ composer.on('inline_query', async (ctx) => {
         switch_pm_parameter: 'inline_pack'
       })
     } catch (error) {
-      // Логуємо file_path для всіх mpeg4_gif щоб знайти проблемний
-      const mpeg4Stickers = searchStickers.filter(s =>
-        stickersResult.some(r => r.id === s._id.toString() && r.type === 'mpeg4_gif')
-      )
-
-      for (const s of mpeg4Stickers) {
-        try {
-          const fileInfo = await ctx.tg.getFile(s.info.file_id)
-          console.log('mpeg4_gif file:', {
-            id: s._id.toString(),
-            file_path: fileInfo.file_path,
-            file_id: s.info.file_id
-          })
-        } catch (e) {}
-      }
-
-      console.error('Error answering inline query:', {
-        error: error.message,
-        results_count: stickersResult.length
-      })
+      console.error('Error answering inline query:', error.message)
       // Якщо помилка - повертаємо порожній результат
       await ctx.answerInlineQuery([], {
         is_personal: true,
