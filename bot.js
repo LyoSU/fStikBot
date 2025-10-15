@@ -507,7 +507,7 @@ db.connection.once('open', async () => {
   // Memory monitoring
   setInterval(() => {
     const usage = process.memoryUsage()
-    if (usage.heapUsed > 400 * 1024 * 1024) { // 400MB threshold
+    if (usage.heapUsed > 2048 * 1024 * 1024) { // 2GB threshold
       console.log('High memory usage:', Math.round(usage.heapUsed / 1024 / 1024) + 'MB')
       if (global.gc) global.gc()
     }
