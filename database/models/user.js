@@ -32,10 +32,14 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
-  locale: String,
+  locale: {
+    type: String,
+    index: true
+  },
   blocked: {
     type: Boolean,
-    default: false
+    default: false,
+    index: true
   },
   adminRights: {
     type: Array,
@@ -63,5 +67,8 @@ const userSchema = mongoose.Schema({
 }, {
   timestamps: true
 })
+
+// Compound index for messaging queries
+userSchema.index({ locale: 1, blocked: 1 })
 
 module.exports = userSchema

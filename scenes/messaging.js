@@ -256,102 +256,88 @@ adminMessagingСonfirmation.enter(async (ctx) => {
   const threeMonthsAgo = moment().subtract(3, 'months')
 
   if (ctx.session.scene.type === 'all') {
-    findUsers = await ctx.db.User.count({
+    findUsers = await ctx.db.User.countDocuments({
       blocked: { $ne: true },
       locale: { $ne: 'ru' }
     })
   } else if (ctx.session.scene.type === 'ru') {
-    findUsers = await ctx.db.User.count({
+    findUsers = await ctx.db.User.countDocuments({
       blocked: { $ne: true },
       premium: { $ne: true },
       locale: 'ru'
       // updatedAt: { $gte: moment().subtract(1, 'months') }
     })
   } else if (ctx.session.scene.type === 'uk') {
-    findUsers = await ctx.db.User.count({
+    findUsers = await ctx.db.User.countDocuments({
       blocked: { $ne: true },
       locale: 'uk'
     })
   } else if (ctx.session.scene.type === 'en') {
-    findUsers = await ctx.db.User.count({
+    findUsers = await ctx.db.User.countDocuments({
       blocked: { $ne: true },
       locale: 'en'
     })
   } else if (ctx.session.scene.type === 'en_active') {
-    // Pipeline to find English-speaking users who have:
-    // - Been active in the last month
-    // - Registered at least 3 months ago
-    // - Have at least 2 sticker packs
+    // Start from stickersets - find owners with >=2 packs, then filter by user conditions
     const pipeline = [
-      {
-        $match: {
-          blocked: { $ne: true },
-          banned: { $ne: true },
-          locale: 'en',
-          updatedAt: { $gte: monthAgo.toDate() },
-          createdAt: { $lte: threeMonthsAgo.toDate() }
-        }
-      },
+      { $group: { _id: '$owner', packCount: { $sum: 1 } } },
+      { $match: { packCount: { $gte: 2 } } },
       {
         $lookup: {
-          from: 'stickersets',
+          from: 'users',
           localField: '_id',
-          foreignField: 'owner',
-          as: 'stickerPacks'
+          foreignField: '_id',
+          as: 'user'
         }
       },
+      { $unwind: '$user' },
       {
         $match: {
-          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+          'user.blocked': { $ne: true },
+          'user.banned': { $ne: true },
+          'user.locale': 'en',
+          'user.updatedAt': { $gte: monthAgo.toDate() },
+          'user.createdAt': { $lte: threeMonthsAgo.toDate() }
         }
       },
-      {
-        $count: 'totalUsers'
-      }
+      { $count: 'totalUsers' }
     ]
 
-    const result = await ctx.db.User.aggregate(pipeline)
+    const result = await ctx.db.StickerSet.aggregate(pipeline).allowDiskUse(true)
     findUsers = result.length > 0 ? result[0].totalUsers : 0
   } else if (ctx.session.scene.type === 'other') {
-    findUsers = await ctx.db.User.count({
+    findUsers = await ctx.db.User.countDocuments({
       blocked: { $ne: true },
       banned: { $ne: true },
       locale: { $nin: ['en', 'ru', 'uk'] }
     })
   } else if (ctx.session.scene.type === 'other_active') {
-    // Pipeline to find users with languages other than EN, RU, UK who have:
-    // - Been active in the last month
-    // - Registered at least 3 months ago
-    // - Have at least 2 sticker packs
+    // Start from stickersets - find owners with >=2 packs, then filter by user conditions
     const pipeline = [
-      {
-        $match: {
-          blocked: { $ne: true },
-          banned: { $ne: true },
-          locale: { $nin: ['en', 'ru', 'uk'] },
-          updatedAt: { $gte: monthAgo.toDate() },
-          createdAt: { $lte: threeMonthsAgo.toDate() }
-        }
-      },
+      { $group: { _id: '$owner', packCount: { $sum: 1 } } },
+      { $match: { packCount: { $gte: 2 } } },
       {
         $lookup: {
-          from: 'stickersets',
+          from: 'users',
           localField: '_id',
-          foreignField: 'owner',
-          as: 'stickerPacks'
+          foreignField: '_id',
+          as: 'user'
         }
       },
+      { $unwind: '$user' },
       {
         $match: {
-          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+          'user.blocked': { $ne: true },
+          'user.banned': { $ne: true },
+          'user.locale': { $nin: ['en', 'ru', 'uk'] },
+          'user.updatedAt': { $gte: monthAgo.toDate() },
+          'user.createdAt': { $lte: threeMonthsAgo.toDate() }
         }
       },
-      {
-        $count: 'totalUsers'
-      }
+      { $count: 'totalUsers' }
     ]
 
-    const result = await ctx.db.User.aggregate(pipeline)
+    const result = await ctx.db.StickerSet.aggregate(pipeline).allowDiskUse(true)
     findUsers = result.length > 0 ? result[0].totalUsers : 0
   }
 
@@ -449,37 +435,32 @@ adminMessagingPublish.enter(async (ctx) => {
       locale: 'en'
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'en_active') {
-    // Use cursor to stream results without loading all into memory
-    usersCursor = ctx.db.User.aggregate([
-      {
-        $match: {
-          blocked: { $ne: true },
-          banned: { $ne: true },
-          locale: 'en',
-          updatedAt: { $gte: monthAgo.toDate() },
-          createdAt: { $lte: threeMonthsAgo.toDate() }
-        }
-      },
+    // Start from stickersets - more efficient with owner index
+    usersCursor = ctx.db.StickerSet.aggregate([
+      { $group: { _id: '$owner', packCount: { $sum: 1 } } },
+      { $match: { packCount: { $gte: 2 } } },
       {
         $lookup: {
-          from: 'stickersets',
+          from: 'users',
           localField: '_id',
-          foreignField: 'owner',
-          as: 'stickerPacks',
-          pipeline: [
-            { $limit: 3 }
-          ]
+          foreignField: '_id',
+          as: 'user'
         }
       },
+      { $unwind: '$user' },
       {
         $match: {
-          'stickerPacks.1': { $exists: true }
+          'user.blocked': { $ne: true },
+          'user.banned': { $ne: true },
+          'user.locale': 'en',
+          'user.updatedAt': { $gte: monthAgo.toDate() },
+          'user.createdAt': { $lte: threeMonthsAgo.toDate() }
         }
       },
       {
         $project: {
-          _id: 1,
-          telegram_id: 1
+          _id: '$user._id',
+          telegram_id: '$user.telegram_id'
         }
       }
     ]).allowDiskUse(true).cursor({ batchSize: 1000 })
@@ -490,37 +471,32 @@ adminMessagingPublish.enter(async (ctx) => {
       locale: { $nin: ['en', 'ru', 'uk'] }
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'other_active') {
-    // Use cursor to stream results without loading all into memory
-    usersCursor = ctx.db.User.aggregate([
-      {
-        $match: {
-          blocked: { $ne: true },
-          banned: { $ne: true },
-          locale: { $nin: ['en', 'ru', 'uk'] },
-          updatedAt: { $gte: monthAgo.toDate() },
-          createdAt: { $lte: threeMonthsAgo.toDate() }
-        }
-      },
+    // Start from stickersets - more efficient with owner index
+    usersCursor = ctx.db.StickerSet.aggregate([
+      { $group: { _id: '$owner', packCount: { $sum: 1 } } },
+      { $match: { packCount: { $gte: 2 } } },
       {
         $lookup: {
-          from: 'stickersets',
+          from: 'users',
           localField: '_id',
-          foreignField: 'owner',
-          as: 'stickerPacks',
-          pipeline: [
-            { $limit: 3 }
-          ]
+          foreignField: '_id',
+          as: 'user'
         }
       },
+      { $unwind: '$user' },
       {
         $match: {
-          'stickerPacks.1': { $exists: true }
+          'user.blocked': { $ne: true },
+          'user.banned': { $ne: true },
+          'user.locale': { $nin: ['en', 'ru', 'uk'] },
+          'user.updatedAt': { $gte: monthAgo.toDate() },
+          'user.createdAt': { $lte: threeMonthsAgo.toDate() }
         }
       },
       {
         $project: {
-          _id: 1,
-          telegram_id: 1
+          _id: '$user._id',
+          telegram_id: '$user.telegram_id'
         }
       }
     ]).allowDiskUse(true).cursor({ batchSize: 1000 })
