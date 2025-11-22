@@ -449,9 +449,8 @@ adminMessagingPublish.enter(async (ctx) => {
       locale: 'en'
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'en_active') {
-    // Improved query that's more efficient:
-    // First get all users matching our criteria
-    const users = await ctx.db.User.aggregate([
+    // Use cursor to stream results without loading all into memory
+    usersCursor = ctx.db.User.aggregate([
       {
         $match: {
           blocked: { $ne: true },
@@ -468,13 +467,13 @@ adminMessagingPublish.enter(async (ctx) => {
           foreignField: 'owner',
           as: 'stickerPacks',
           pipeline: [
-            { $limit: 3 } // We only need to check if there are at least 2, so limit to 3
+            { $limit: 3 }
           ]
         }
       },
       {
         $match: {
-          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+          'stickerPacks.1': { $exists: true }
         }
       },
       {
@@ -483,20 +482,7 @@ adminMessagingPublish.enter(async (ctx) => {
           telegram_id: 1
         }
       }
-    ])
-
-    // Create a cursor-like object that implements the same interface
-    usersCursor = {
-      next: (function () {
-        let index = 0
-        return function () {
-          if (index < users.length) {
-            return Promise.resolve(users[index++])
-          }
-          return Promise.resolve(null)
-        }
-      })()
-    }
+    ]).allowDiskUse(true).cursor({ batchSize: 1000 })
   } else if (ctx.session.scene.type === 'other') {
     usersCursor = await ctx.db.User.find({
       blocked: { $ne: true },
@@ -504,8 +490,8 @@ adminMessagingPublish.enter(async (ctx) => {
       locale: { $nin: ['en', 'ru', 'uk'] }
     }).select({ _id: 1, telegram_id: 1 }).cursor()
   } else if (ctx.session.scene.type === 'other_active') {
-    // Get all users with languages other than EN, RU, UK who have been active recently and have sticker packs
-    const users = await ctx.db.User.aggregate([
+    // Use cursor to stream results without loading all into memory
+    usersCursor = ctx.db.User.aggregate([
       {
         $match: {
           blocked: { $ne: true },
@@ -522,13 +508,13 @@ adminMessagingPublish.enter(async (ctx) => {
           foreignField: 'owner',
           as: 'stickerPacks',
           pipeline: [
-            { $limit: 3 } // We only need to check if there are at least 2, so limit to 3
+            { $limit: 3 }
           ]
         }
       },
       {
         $match: {
-          'stickerPacks.1': { $exists: true } // At least 2 sticker packs
+          'stickerPacks.1': { $exists: true }
         }
       },
       {
@@ -537,20 +523,7 @@ adminMessagingPublish.enter(async (ctx) => {
           telegram_id: 1
         }
       }
-    ])
-
-    // Create a cursor-like object that implements the same interface
-    usersCursor = {
-      next: (function () {
-        let index = 0
-        return function () {
-          if (index < users.length) {
-            return Promise.resolve(users[index++])
-          }
-          return Promise.resolve(null)
-        }
-      })()
-    }
+    ]).allowDiskUse(true).cursor({ batchSize: 1000 })
   }
 
   // const users = []
@@ -558,18 +531,22 @@ adminMessagingPublish.enter(async (ctx) => {
   const key = `messaging:${messagingId}`
 
   let usersCount = 0
+  const BATCH_SIZE = 1000
 
-  let promises = []
+  let batch = []
   for (let user = await usersCursor.next(); user != null; user = await usersCursor.next()) {
-    promises.push(redis.rpush(key + ':users', [user.telegram_id]))
+    batch.push(user.telegram_id)
     usersCount++
-    if (usersCount % 100000 === 0) {
-      await Promise.all(promises)
-      promises = []
+
+    if (batch.length >= BATCH_SIZE) {
+      await redis.rpush(key + ':users', batch)
+      batch = []
     }
   }
-  // Wait for any remaining promises to resolve
-  await Promise.all(promises)
+  // Push remaining users
+  if (batch.length > 0) {
+    await redis.rpush(key + ':users', batch)
+  }
 
   const messaging = new ctx.db.Messaging()
 
