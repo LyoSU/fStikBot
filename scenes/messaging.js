@@ -537,7 +537,7 @@ adminMessagingPublish.enter(async (ctx) => {
     date: ctx.session.scene.date
   })
 
-  messaging.save()
+  await messaging.save()
 
   const resultText = `Message "${ctx.session.scene.name}" has been created and scheduled`
 
