@@ -35,8 +35,5 @@ const stickersSchema = mongoose.Schema({
 })
 
 stickersSchema.index({ caption: 'text' })
-stickersSchema.index({ stickerSet: 1, deleted: 1 })
-stickersSchema.index({ stickerSet: 1, fileUniqueId: 1, deleted: 1 })
-stickersSchema.index({ 'file.file_unique_id': 1, deleted: 1 })
 
 module.exports = stickersSchema
