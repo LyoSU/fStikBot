@@ -261,6 +261,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Pacote não encontrado
+      not_owner: Este não é o seu pacote
       hidden: Pacote oculto com sucesso
       restored: Pacote restaurado com sucesso
     set_pack: |
@@ -653,7 +654,7 @@ scenes:
         Este pacote não é seu.
 
         Você só pode publicar seus próprios pacotes
-      bannded: |
+      banned: |
         <b>Erro!</b>
         Você está banido de usar essa funcionalidade.
         Por favor, contate o administrador.
