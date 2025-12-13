@@ -1,11 +1,11 @@
 ---
 language_name: '🇪🇸 Español'
-name: Bot de pegatinas favorito 🇺🇦
+name: Bot de pegatinas favorito
 description:
   long: |
     🧙 Soy el mago del paquete de emojis y pegatinas, ¡y estoy aquí para hacer que tu experiencia de mensajería sea más divertida! Mis poderes mágicos me permiten transformar tus fotos, videos y GIF favoritos en divertidos emojis y calcomanías sin la molestia de convertirlos y recortarlos. 🎉🎊 Conmigo puedes crear packs personalizados para cualquier ocasión con tan solo unos clics. ¿Entonces, Qué esperas? ¡Comencemos y agreguemos un poco de ✨chispa✨ a sus chats!
 
-    Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik
+    Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 ¡Soy el mago del emoji y los stickers! Transforma fotos, videos y GIFs en stickers geniales en un instante.
 ratelimit: '¡No tan amenudo!'
