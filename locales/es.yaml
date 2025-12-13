@@ -1,11 +1,11 @@
 ---
 language_name: '🇪🇸 Español'
-name: Bot de pegatinas favorito 🇺🇦
+name: Bot de pegatinas favorito
 description:
   long: |
     🧙 Soy el mago del paquete de emojis y pegatinas, ¡y estoy aquí para hacer que tu experiencia de mensajería sea más divertida! Mis poderes mágicos me permiten transformar tus fotos, videos y GIF favoritos en divertidos emojis y calcomanías sin la molestia de convertirlos y recortarlos. 🎉🎊 Conmigo puedes crear packs personalizados para cualquier ocasión con tan solo unos clics. ¿Entonces, Qué esperas? ¡Comencemos y agreguemos un poco de ✨chispa✨ a sus chats!
 
-    Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik
+    Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 ¡Soy el mago del emoji y los stickers! Transforma fotos, videos y GIFs en stickers geniales en un instante.
 ratelimit: '¡No tan amenudo!'
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 Crear paquete de sticker'
       new_emoji: '😊 Crear paquete emoji'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: ':open_libro: Catálogo'
       publish: '📤 Publicar paquete'
       delete: '❌ Eliminar sticker'
-      original: '🎯 Find original'
+      original: '🔍 Find original sticker'
       restore: '🔀 Restaurar un paquete'
       copy: '📋 Copiar un paquete'
       emoji: '📝 Change emoji suffix'
@@ -589,7 +589,7 @@ scenes:
       ❕ Para eliminar el sufijo "<code>${titleSuffix}</code>", necesitas potenciar el pack. Más detalles en el menú visitando: /donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>Envíame una pegatina o un emoji personalizado para buscar información al respecto:</b>
     not_found: |
       No pude encontrar la etiqueta
     result: |
