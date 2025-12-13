@@ -1,11 +1,11 @@
 ---
 language_name: '🇯🇵 日本人'
-name: Favorite Stickers Bot
+name: 'お気に入りのステッカー :ウクライナ:'
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 私は絵文字とステッカーパックの魔法使いです。あなたのメッセージング体験をより楽しくするためにここにいます！私の魔法の力で、お気に入りの写真、ビデオ、GIFを変換やトリミングの手間なしに、クールな絵文字やステッカーに変えることができます。🎉🎊 私と一緒に、たった数回のクリックで、どんな場面にも合わせた個人用パックを作成することができます。さあ、いっしょに始めて、あなたのチャットに✨スパークル✨を加えましょう！
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    ステッカーを検索：https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙‍♀️ 絵文字とスタンプの魔法使いです！ 写真、動画、GIFをクールなスタンプに変換します。
 ratelimit: そう頻繁ではない！
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 ステッカーパックを作成'
       new_emoji: '😊 絵文字パックを作成'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 カタログ'
       publish: '📤 パックを公開'
       delete: '❌ ステッカーを削除'
-      original: '🎯 Find original'
+      original: '🔍 Find original sticker'
       restore: '🔀 パックを復元'
       copy: '📋 パックをコピー'
       emoji: '📝 Change emoji suffix'
@@ -261,6 +261,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: パックが見つかりません
+      not_owner: これはあなたのパックではありません
       hidden: パックを非表示にしました
       restored: パックを復元しました
     set_pack: |
@@ -591,7 +592,7 @@ scenes:
       ❕ サフィックス "<code>${titleSuffix}</code>" を削除するには、パックをブーストする必要があります。 詳細はメニューでご確認ください: \/donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>ステッカーやカスタム絵文字を送ってそれに関する情報を調べてみましょう:</b>
     not_found: |
       ステッカーが見つかりませんでした
     result: |
@@ -647,7 +648,7 @@ scenes:
         このパックはあなたのものではありません。
 
         自分のパックのみを公開できます
-      bannded: |
+      banned: |
         <b>エラー！</b>
         この機能の使用は禁止されています。
         管理者に問い合わせてください。
