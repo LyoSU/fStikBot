@@ -205,7 +205,7 @@ donate:
     By supporting the development of the bot, you will receive Credits
 
     <b>Balance:</b> <code>${balance}</code> Credits
-    With 1 Credits, you have the opportunity to boost one pack.
+    With 1 Credit, you have the opportunity to boost one pack.
 
     <b>The boost provides the following benefits:</b>
     ➖ Disabling "<code>${titleSuffix}</code>" in packs name <i>(not in link)</i>
@@ -265,7 +265,7 @@ coedit:
     send: '📤 Send link'
     reset: '🔁 Reset link'
   share: |
-    Follows the link and press "start" to co-edit the pack "${title}"
+    Follow the link and press "start" to co-edit the pack "${title}"
   reset: |
     <b>🔁 Link reset successful</b>
 
@@ -280,8 +280,8 @@ callback:
     set_pack: |
         🌟 Selected <a href="${link}">${title}</a> pack
 
-        <b>❔ How add?</b>
-        Send photo, video or sticker to add to the pack
+        <b>❔ How to add?</b>
+        Send a photo, video or sticker to add to the pack
     set_inline_pack: |
       Selected <u>${title}</u> pack
 
@@ -385,7 +385,7 @@ sticker:
     ok_inline: |
       <b>Added to pack successfully:</b>
       <u>${title}</u>
-    send_emoji: Great, now send the emoji that matches the
+    send_emoji: Great, now send the emoji that matches the sticker
     converting_process: |
       <b>Wait...</b>
       Your file is in the queue for conversion. Wait for completion. This may take some time.
@@ -450,13 +450,13 @@ sticker:
         video: |
           <b>Error!</b>
           This file type is not supported
-          You can add this video files to the video pack
+          You can add these video files to the video pack
 
           <i>Create (/new) or choose (/packs) another pack</i>
         animated: |
           <b>Error!</b>
           This file type is not supported
-          You can add this animated files to the vector pack
+          You can add these animated files to the vector pack
 
           <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
@@ -481,7 +481,7 @@ sticker:
         Perhaps your video is saved in a format incomprehensible to the bot. Make sure it is in mp4 format.
         It may also be an internal error of the bot, try sending this video again.
       too_big: |
-        <b>Error!</b>.
+        <b>Error!</b>
 
         The file is too big to process. Please reduce the quality and duration before sending.
       sticker_not_found: |
@@ -500,7 +500,7 @@ news:
 
 userAbout:
   help: |
-    <b>🧑‍🎨 User about</b>
+    <b>🧑‍🎨 About user</b>
 
     Using this menu you can find out information about the user and his sticker packs
 
@@ -579,7 +579,7 @@ scenes:
     pay: |
       <b>Pack conversion</b>
 
-      Converting a package from one type to another costs 1 credit
+      Converting a pack from one type to another costs 1 credit
 
       <b>Current balance:</b> ${balance} Credits
 
@@ -686,7 +686,7 @@ scenes:
 
         <b>Rules for publishing packs:</b>
         • Do not publish your personal packs intended for a narrow circle of people. For example, such as the faces of your friends or quotes from your messages
-        • Do not post sticker pressures that violate EU laws or other local laws
+        • Do not post stickers that violate EU laws or other local laws
 
         You will need to submit additional information for it to be published in the catalog
       continue_button: Continue
@@ -737,7 +737,7 @@ scenes:
       <b>Pack successfully deleted!</b>
     error:
       - <b>Error!</b>
-      - Opps, something went wrong.
+      - Oops, something went wrong.
   frame:
     no_video: |
       <b>Error!</b>
@@ -781,7 +781,7 @@ scenes:
     add_to_set_btn: '🌟 Add to set'
     error: |
       <b>Error!</b>
-      Opps, something went wrong.
+      Oops, something went wrong.
   search:
     enter: |
       <b>🔎 Search sticker packs</b>
