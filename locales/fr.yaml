@@ -655,7 +655,7 @@ scenes:
         Ce pack n'est pas le vôtre.
 
         Vous ne pouvez publier que vos propres packs
-      bannded: |
+      banned: |
         <b>Erreur!</b>
         Il vous est interdit d'utiliser cette fonctionnalité.
         Veuillez contacter l'administrateur.

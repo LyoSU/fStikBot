@@ -662,7 +662,7 @@ scenes:
         Paket stiker ini bukan milik Anda.
 
         Anda hanya dapat mempublikasikan paket stiker Anda sendiri
-      bannded: |
+      banned: |
         <b>Kesalahan!</b>
         Anda dilarang menggunakan fitur ini.
         Silakan, hubungi administrator.

@@ -659,7 +659,7 @@ scenes:
         Bu paket sizin değil.
 
         Yalnızca kendi paketlerinizi yayınlayabilirsiniz
-      bannded: |
+      banned: |
         <b>Hata!</b>
         Bu özelliği kullanmanız yasaklandı.
         Lütfen yönetici ile iletişime geçin.

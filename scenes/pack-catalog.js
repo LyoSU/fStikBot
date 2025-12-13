@@ -194,7 +194,7 @@ const catalogPublish = new Scene('catalogPublish')
 
 catalogPublish.enter(async (ctx) => {
   if (ctx.session.userInfo.publicBan === true) {
-    await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.bannded'))
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.banned'))
     return ctx.scene.leave()
   }
 

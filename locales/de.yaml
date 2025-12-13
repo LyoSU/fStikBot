@@ -663,7 +663,7 @@ scenes:
         Dieses Paket gehört nicht Ihnen.
 
         Sie können nur Ihre eigenen Pakete veröffentlichen
-      bannded: |
+      banned: |
         <b>Fehler!</b>
         Sie sind von der Nutzung dieser Funktion ausgeschlossen.
         Bitte kontaktieren Sie den Administrator.

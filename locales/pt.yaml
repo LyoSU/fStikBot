@@ -649,7 +649,7 @@ scenes:
         Este pacote não é seu.
 
         Você só pode publicar seus próprios pacotes
-      bannded: |
+      banned: |
         <b>Erro!</b>
         Você está banido de usar essa funcionalidade.
         Por favor, contate o administrador.

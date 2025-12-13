@@ -275,6 +275,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Pack not found
+      not_owner: This is not your pack
       hidden: Pack successfully hidden
       restored: Pack successfully restored
     set_pack: |
@@ -639,7 +640,7 @@ scenes:
       Boosting will increase the priority of processing and the ability to add more than one sticker to the queue
       You can find more detailed information about boosts in the menu by visiting: /donate
 
-      <b>Price:</b> 1 Credits
+      <b>Price:</b> 1 Credit
       <b>Current balance:</b> ${balance} Credits
     btn:
       yes: Yes, boost!
@@ -674,7 +675,7 @@ scenes:
         This pack is not yours.
 
         You can only publish your own packs
-      bannded: |
+      banned: |
         <b>Error!</b>
         You are banned from using this feature.
         Please, contact the administrator.

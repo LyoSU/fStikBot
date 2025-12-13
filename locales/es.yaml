@@ -641,7 +641,7 @@ scenes:
         Este paquete no es tuyo.
 
         Solo puede publicar sus propios paquetes
-      bannded: |
+      banned: |
         <b>Error!</b>
         Está prohibido utilizar esta función.
         Por favor, póngase en contacto con el administrador.

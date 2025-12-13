@@ -661,7 +661,7 @@ scenes:
         Bu paket sizin deyil.
 
         Siz yalnız öz paketlərinizi dərc edə bilərsiniz
-      bannded: |
+      banned: |
         <b>Xəta!</b>
         Sizə bu funksiyadan istifadə qadağan olunub.
         Zəhmət olmasa, administratorla əlaqə saxlayın.
