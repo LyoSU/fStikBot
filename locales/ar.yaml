@@ -1,11 +1,11 @@
 ---
 language_name: '🇸🇦 عربي'
-name: بوت الملصقات المفضلة
+name: Favorite Stickers Bot
 description:
   long: |
-    🧙 أنا معالج الإيموجي والملصقات، وأنا هنا لأجعل تجربة المراسلة الخاصة بك أكثر متعة! تتيح لي قوتي السحرية تحويل الصور ومقاطع الفيديو وملفات GIF المفضلة لديك إلى إيموجيات وملصقات رائعة دون متاعب التحويل والاقتصاص. 🎉🎊 معي، يمكنك إنشاء حزم مخصصة لأي مناسبة ببضع نقرات فقط. فما تنتظرون؟ لنبدأ ونضيف بعض ✨التألق✨ إلى دردشاتك!
+    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
 
-    ملصقات البحث: https://play.google.com/store/apps/details?id=app.fstik
+    Search stickers: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 أنا معالج الإيموجي والملصقات! حوّل الصور ومقاطع الفيديو وملفات GIF إلى ملصقات رائعة في لمح البصر.
 ratelimit: ليس في الكثير من الاحيان!
