@@ -269,7 +269,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Փաթեթը չի գտնվել
-      not_owner: Սdelays delays
+      not_owner: Դա ձեր փաթեթը չէ
       hidden: Փաթեթը հաջողությամբ թաքցվեց
       restored: Փաթեթը հաջողությամբ վերականգնվեց
     set_pack: |
