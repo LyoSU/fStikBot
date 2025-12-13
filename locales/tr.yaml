@@ -118,29 +118,29 @@ cmd:
       Find sticker packs and publish your own:
     commands:
       ss: '🌟 Çıkartmayı kaydet'
-      start: '📜 Start menu'
-      help: '📖 Dökümanlar'
+      start: '📜 Başlangıç menüsü'
+      help: '📖 Yardım'
       packs: '📁 Paketleri yönet'
-      new: '🌝 Çıkartma paketini sil'
-      new_emoji: '😊 Yeni bir emoji paketi oluşturun'
+      new: '🌝 Çıkartma paketi oluştur'
+      new_emoji: '😊 Emoji paketi oluştur'
       search_catalog: '🔍 Browse & Discover'
       catalog: '📖 Katalog'
       publish: '📤 Paketi yayınla'
       delete: '❌ Çıkartmayı sil'
-      original: '🔍 Find original sticker'
+      original: '🔍 Orijinal çıkartmayı bul'
       restore: '🔀 Bir paketi geri yükle'
       copy: '📋 Bir paketi kopyala'
-      emoji: '📝 Change emoji suffix'
-      round: '🎥 Yuvarlak şekil videosu'
+      emoji: '📝 Emoji soneki değiştir'
+      round: '🎥 Yuvarlak video'
       clear: '🖼️ Fotoğraftan arka planı kaldır'
       info: 'ℹ️ Pack & Creator Info'
-      lang: '🌐 Change language'
-      report: '🚨 Rapor paketi'
-      donate: '☕️ Support the developer'
+      lang: '🌐 Dil değiştir'
+      report: '🚨 Paketi şikayet et'
+      donate: '☕️ Geliştiriciyi destekle'
       add_to_group: '👥 Gruba Ekle'
       privacy: '🔒 Gizlilik politikası'
     btn:
-      new: '📥 Create new'
+      new: '📥 Yeni oluştur'
       catalog: '💖 Kataloğu aç'
       catalog_mini: '💖 Katalog'
       catalog_browser: '🌐 Tarayıcıda aç'
@@ -172,7 +172,7 @@ cmd:
       inline: Inline
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
-      To create, write a command /new
+      Oluşturmak için /new komutunu yaz
     inline_title: Satır içi paket
     select_group_pack_info: |
       <b>📁 Paket seçin</b>
@@ -272,6 +272,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket bulunamadı
+      not_owner: Bu sizin paketiniz değil
       hidden: Paket başarıyla gizlendi
       restored: Paket başarıyla geri yüklendi
     set_pack: |
@@ -288,21 +289,21 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Güçlendirme</a></b>: ${boostStatus}
       status:
-        on: Etkinleştirilmiş
-        off: Engelli
+        on: Etkin
+        off: Devre dışı
     hidden: Paket <a href="${link}">${title}</a> listenizden gizlendi.
     restored: Paket <a href="${link}">${title}</a> listenize geri yüklendi.
     btn:
       hide: '❌ Paketi gizle'
       delete: '🗑 Paketi sil'
-      restore: '✅ Sıfırla'
+      restore: '✅ Geri yükle'
       use_pack: '📦 Paketi kullan'
-      boost: '⚡ Artırma'
+      boost: '⚡ Güçlendir'
       frame: '🖼 Çerçeve'
       rename: '✏️ Yeniden adlandır'
-      search_gif: '🔎 Arama GIF''i'
+      search_gif: '🔎 GIF ara'
       coedit: '👥 Ortak düzenleme'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 Kataloğa ekle'
       catalog_edit: '📝 Katalogda düzenle'
       catalog_delete: '🗑 Katalogdan sil'
       catalog_share: '🔗️️ Paylaş'
@@ -350,7 +351,7 @@ callback:
     btn:
       delete: '🗑 Sil'
       copy: '🌟 Kopyala'
-      restore: '✅ Sıfırla'
+      restore: '✅ Geri yükle'
     error:
       not_found: |
         Hata!
@@ -470,7 +471,7 @@ sticker:
         <b>Şu anda bot çok büyük bir yük yaşıyor</b>
         Bu nedenle, video dönüştürme yalnızca aktif güçlendirmeli paketler için kullanılabilir
 
-        Daha fazla ayrıntı için / bağış yapmak
+        Daha fazla ayrıntı için /donate komutuna bakın
       convert: |
         <b>Hata!</b>
         Maalesef bot videonuzu dönüştüremedi.
@@ -478,7 +479,7 @@ sticker:
         Belki de videonuz bot için anlaşılmaz bir biçimde kaydedilmiştir. mp4 formatında olduğundan emin olun.
         Botun dahili bir hatası da olabilir, bu videoyu tekrar göndermeyi deneyin.
       too_big: |
-        <b>Hata!</b>.
+        <b>Hata!</b>
 
         Dosya işlenemeyecek kadar büyük. Lütfen göndermeden önce kaliteyi ve süreyi azaltın.
       sticker_not_found: |
@@ -516,7 +517,7 @@ scenes:
       <b><u>Paket türünü seçin</u></b>
     regular: '😊 Çıkartmalar'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
+    static: '🌟 Statik'
     animated: '✨ vektör'
     video: '📹 Video'
     pack_format: |
@@ -663,7 +664,7 @@ scenes:
         Bu paket sizin değil.
 
         Yalnızca kendi paketlerinizi yayınlayabilirsiniz
-      bannded: |
+      banned: |
         <b>Hata!</b>
         Bu özelliği kullanmanız yasaklandı.
         Lütfen yönetici ile iletişime geçin.
@@ -687,14 +688,14 @@ scenes:
       select_language: |
         <b>Paketinizin hangi dillere yönelik olduğunu seçin:</b>
         <i>Birden fazla dil seçebilirsiniz</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_all_languages: Tüm diller
+      button_confirm_language: Onayla
       set_safe: |
         <b>Paketiniz kullanıcılar için güvenli mi?</b>
         <i>Yani erotik ve diğer şok edici içerikleri barındırmaz</i>
       button_safe:
-        safe: Yes, it is safe
-        not_safe: No, it is not safe
+        safe: Evet, güvenli
+        not_safe: Hayır, güvenli değil
       no_tags: belirtilmemiş
       confirm: |
         <b>"<a href="${link}">${title}</a>" paketin yayınını onaylayın</b>
@@ -703,7 +704,7 @@ scenes:
 
         <b>Etiketler:</b> ${tags}
         <b>Diller:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Yayını onayla'
       success: |
         Tebrikler, paketiniz diğer kullanıcıların bulabileceği botumuzun genel dizininde yayınlandı!
 
@@ -743,11 +744,11 @@ scenes:
 
       <i>Gelecekte, türü belirlemek için /çerçeve komutunu kullanabilirsiniz</i>
     types:
-      lite: '1. Basit'
-      medium: '2 - Orta'
+      lite: '1. Hafif'
+      medium: '2. Orta'
       rounded: '3. Yuvarlak'
       square: '4. Kare'
-      circle: '5. Çember'
+      circle: '5. Daire'
     selected: |
       <b>Seçilen çerçeve tipi:</b> ${type}
   photoClear:
