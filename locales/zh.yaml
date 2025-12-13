@@ -278,6 +278,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: 未找到包
+      not_owner: 这不是你的贴纸包
       hidden: 包成功隐藏
       restored: 成功恢复包
     set_pack: |

@@ -26,7 +26,7 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
-const localseFile = fs.readdirSync('./locales/')
+const localesFile = fs.readdirSync('./locales/')
 
 const escapeHTML = (str) => str.replace(
   /[&<>'"]/g,
@@ -254,7 +254,7 @@ catalogEnterDescription.on('text', async (ctx) => {
 
   if (entities?.length > 0) {
     const hashtags = []
-    let currnetHashtag = ''
+    let currentHashtag = ''
     let currentEntity = null
 
     // find hashtags in text via entities
@@ -267,12 +267,12 @@ catalogEnterDescription.on('text', async (ctx) => {
 
       if (currentEntity) {
         if (text[offset] !== '#') {
-          currnetHashtag += text[offset]
+          currentHashtag += text[offset]
         }
 
-        if (currentEntity.length === currnetHashtag.length + 1) {
-          hashtags.push(currnetHashtag)
-          currnetHashtag = ''
+        if (currentEntity.length === currentHashtag.length + 1) {
+          hashtags.push(currentHashtag)
+          currentHashtag = ''
           currentEntity = null
         }
       }
@@ -296,7 +296,7 @@ catalogSelectLanguage.enter(async (ctx) => {
 
   const locales = {}
 
-  localseFile.forEach((fileName) => {
+  localesFile.forEach((fileName) => {
     const localName = fileName.split('.')[0]
     if (localName === 'ru' || i18n.t('ru', 'language_name') !== i18n.t(localName, 'language_name')) {
       locales[localName] = {

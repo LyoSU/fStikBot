@@ -257,6 +257,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paquete no encontrado
+      not_owner: Este no es tu paquete
       hidden: Paquete escondido correctamente
       restored: Paquete restaurado correctamente
     set_pack: |

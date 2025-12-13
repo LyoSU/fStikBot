@@ -269,6 +269,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Pack introuvable
+      not_owner: Ce n'est pas votre pack
       hidden: Pack masqué avec succès
       restored: Pack restauré avec succès
     set_pack: |

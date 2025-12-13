@@ -269,6 +269,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket tapılmadı
+      not_owner: Bu sizin paketiniz deyil
       hidden: Paket uğurla gizlədilib
       restored: Paket uğurla bərpa edildi
     set_pack: |

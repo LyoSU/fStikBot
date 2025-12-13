@@ -257,6 +257,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket topilmadi
+      not_owner: Bu sizning to'plamingiz emas
       hidden: Paket muvaffaqiyatli yashirildi
       restored: Paket muvaffaqiyatli tiklandi
     set_pack: |

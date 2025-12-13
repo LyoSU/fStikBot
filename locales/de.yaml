@@ -269,6 +269,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Pack nicht gefunden
+      not_owner: Das ist nicht dein Paket
       hidden: Pack erfolgreich verborgen
       restored: Pack erfolgreich wiederhergestellt
     set_pack: |

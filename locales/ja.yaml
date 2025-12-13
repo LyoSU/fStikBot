@@ -257,6 +257,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: パックが見つかりません
+      not_owner: これはあなたのパックではありません
       hidden: パックを非表示にしました
       restored: パックを復元しました
     set_pack: |

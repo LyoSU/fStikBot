@@ -270,6 +270,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket tidak ada
+      not_owner: Ini bukan paket Anda
       hidden: Paket stiker berhasil disembunyikan
       restored: Paket berhasil dipulihkan
     set_pack: |
