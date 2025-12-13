@@ -1,11 +1,11 @@
 ---
 language_name: '🇧🇷 Português'
-name: Bot de Figurinhas Favoritas 🇺🇦
+name: Bot de Figurinhas Favoritas
 description:
   long: |
     🧙 Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
 
-    Pesquise adesivos: https://play.google.com/store/apps/details?id=app.fstik
+    Pesquise adesivos: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 Eu sou o mago dos emojis e figurinhas! Transforme fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
 ratelimit: Não tão frequente!
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 Criar pacote de stickers'
       new_emoji: '😊 Criar pacote de emoji'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 Catálogo'
       publish: '📤 Publicar pacote'
       delete: '❌ Excluir figurinha'
-      original: '🎯 Find original'
+      original: '🔍 Encontre o sticker original'
       restore: '🔀 Restaurar um pacote'
       copy: '📋 Copiar um pacote'
       emoji: '📝 Altere o emoji vinculado'
@@ -597,7 +597,7 @@ scenes:
       ❕ Para remover o sufixo "<code>${titleSuffix}</code>", você precisa dar um boost no pacote. Mais detalhes no menu visitando: \/donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>Envie-me um sticker ou emoji personalizado para procurar informações sobre ele:</b>
     not_found: |
       Eu não consegui encontrar o sticker
     result: |
