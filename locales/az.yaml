@@ -1,11 +1,11 @@
 ---
 language_name: '🇦🇿 Azərbaycanca'
-name: Sevimli Etiketlər Botu 🇺🇦
+name: Sevimli Etiketlər Botu
 description:
   long: |
     🧙 Mən emoji və stiker paket qızıl alçısınıyam! Sevimli şəkillərinizi, videolarınızı və GIF-lərinizi konversiya və kəsmə olmadan rahatlıqla emojilərə və stikerlərə çevirmək üçün var gücümüzlə çalışırıq. 🎉🎊 Yalnız bir neçə kliklə hər hansı bir tədbir üçün personalizə edilmiş paket yarada bilərsiniz. Hələ gözləməyin, başlayaq və söhbətlərinizə bir az ✨parıltı✨ əlavə edək!
 
-    Stiker axtar: https://play.google.com/store/apps/details?id=app.fstik
+    Stiker axtar: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 Mən stiker yaradıcısıyam! Şəkillərinizi, videolarınızı və GIF-lərinizi stikerlərə çevirə bilərəm.
 ratelimit: Çox vaxt deyil!
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 Etiket paketi yaradın'
       new_emoji: '😊 Emoji paketi yaradın'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 Kataloq'
       publish: '📤 Paketi dərc edin'
       delete: '❌ Stikeri silin'
-      original: '🎯 Find original'
+      original: '🔍 Orijinal stiker tap'
       restore: '🔀 Paketi bərpa edin'
       copy: '📋 Paketi kopyalayın'
       emoji: '📝 Emoji şəkilçisini dəyişdirin'
@@ -609,7 +609,7 @@ scenes:
       ❕ "<code>${titleSuffix}</code>" sonluğunu aradan qaldırmaq üçün paketi yüksəltməlisiniz. Daha ətraflı məlumat üçün menyuda: \/donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>Bu barədə məlumat axtarmaq üçün mənə stiker və ya fərdi emoji göndərin:</b>
     not_found: |
       Stikeri tapa bilmədim
     result: |
