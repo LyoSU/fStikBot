@@ -1,11 +1,11 @@
 ---
 language_name: '🇩🇪 Deutsch'
-name: Lieblings-Sticker Bot 🇺🇦
+name: Lieblings-Sticker Bot
 description:
   long: |
     🧙 Ich bin der Emoji- und Stickerpack-Zauberer, und ich bin hier, um dein Nachrichtenerlebnis unterhaltsamer zu gestalten! Meine magischen Kräfte erlaubt es mir, deine Lieblingsfotos, Videos und GIFs ohne Konvertierungs- und Zuschneideeigenschaften in coole Emojis und Sticker zu verwandeln. 🎉🎊 Mit mir kannst du personalisierte Packs für jeden Anlass mit nur wenigen Klicks erstellen. Also, worauf wartest du noch? Lass uns anfangen und etwas ✨Glanz✨ zu deinen Chats hinzufügen!
 
-    Suche Sticker: https://play.google.com/store/apps/details?id=app.fstik
+    Suche Sticker: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 Ich bin der Emoji- und Stickerzauberer! Verwandle Fotos, Videos und GIFs im Handumdrehen in coole Sticker.
 ratelimit: Nicht so oft!
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 Stickerpack erstellen'
       new_emoji: '😊 Emoji-Pack erstellen'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 Katalog'
       publish: '📤 Pack veröffentlichen'
       delete: '❌ Sticker löschen'
-      original: '🎯 Find original'
+      original: '🔍 Original-Sticker finden'
       restore: '🔀 Ein Pack wiederherstellen'
       copy: '📋 Ein Pack kopieren'
       emoji: '📝 Emoji-Suffix ändern'
@@ -611,7 +611,7 @@ scenes:
       ❕ Um das Suffix "<code>${titleSuffix}</code>" zu entfernen, müssen Sie das Paket boosten. Mehr Details im Menü unter: /donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>Senden Sie mir einen Sticker oder ein benutzerdefiniertes Emoji, um Informationen darüber zu suchen:</b>
     not_found: |
       Ich konnte den Sticker nicht finden
     result: |
