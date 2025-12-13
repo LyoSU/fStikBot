@@ -88,7 +88,7 @@ cmd:
 
       /donate - Entwicklung unterstützen
       • Zusätzliche Funktionen für Spender
-      • Vorrangbei der Dateiverarbeitung
+      • Vorrang bei der Dateiverarbeitung
       • Erhöhte Limits
 
       <b>💡 Pro-Tipps:</b>
@@ -256,9 +256,9 @@ coedit:
     <b>Editoren:</b>
     ${editors}
 
-    <i>Um Editor zu entfernen, musst du den Link zurücksetzen</i>
+    <i>Um Editoren zu entfernen, musst du den Link zurücksetzen</i>
   no_editors: |
-    Noch keine Editor
+    Noch keine Editoren
   btn:
     send: '📤 Link senden'
     reset: '🔁 Link zurücksetzen'
@@ -273,6 +273,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Pack nicht gefunden
+      not_owner: Das ist nicht dein Paket
       hidden: Pack erfolgreich verborgen
       restored: Pack erfolgreich wiederhergestellt
     set_pack: |
@@ -384,7 +385,7 @@ sticker:
     ok_inline: |
       <b>Erfolgreich zum Pack hinzugefügt:</b>
       <u>${title}</u>
-    send_emoji: Großartig, jetzt sende das Emoji, das zum entspricht
+    send_emoji: Großartig, jetzt sende das Emoji, das zum Sticker passt
     converting_process: |
       <b>Warten...</b>
       Ihre Datei steht zur Konvertierung in der Warteschlange. Warten Sie auf den Abschluss. Dies kann einige Zeit dauern.
@@ -421,7 +422,7 @@ sticker:
       have_already: |
         <b>Dieser Sticker ist bereits in dem Pack</b>
 
-        Wenn du das Emoji ändern möchtest, sende es im folgenden Nachrichten.
+        Wenn du das Emoji ändern möchtest, sende es in der nächsten Nachricht.
       stickerset_invalid: |
         <b>Fehler!</b>
         Bot kann nicht auf dein aktuell ausgewähltes Pack zugreifen.
@@ -459,7 +460,7 @@ sticker:
 
           <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
         unknown: |
-          <b>Fehler!</b>.
+          <b>Fehler!</b>
 
           Der Dateityp wird nicht unterstützt
 
@@ -481,7 +482,7 @@ sticker:
         Vielleicht ist dein Video in einem Format gespeichert, das dem Bot nicht verständlich ist. Stelle sicher, dass es im MP4-Format ist.
         Es könnte auch ein interner Fehler des Bots sein, versuche, dieses Video erneut zu senden
       too_big: |
-        <b>Fehler!</b>.
+        <b>Fehler!</b>
 
         Die Datei ist zu groß, um verarbeitet zu werden. Bitte reduziere die Qualität und Dauer, bevor du sie sendest.
       sticker_not_found: |
@@ -490,7 +491,7 @@ sticker:
         Dieser Sticker konnte nicht gefunden werden. Bitte stellen Sie sicher, dass er im richtigen Paket ist oder versuchen Sie, ihn erneut hinzuzufügen.
 news:
   join: |
-    ℹ️ <a href="${link}">Tritt unserem Kanal bei</a>, um die neuesten Bot-News zu erhältst.
+    ℹ️ <a href="${link}">Tritt unserem Kanal bei</a>, um die neuesten Bot-News zu erhalten.
 
     <i>Abonniere den Kanal, um die neuesten Nachrichten über den Bot sowie Updates und neue Funktionen zu erhalten.</i>
   join_btn: '📢 Kanal beitreten'
@@ -667,7 +668,7 @@ scenes:
         Dieses Paket gehört nicht Ihnen.
 
         Sie können nur Ihre eigenen Pakete veröffentlichen
-      bannded: |
+      banned: |
         <b>Fehler!</b>
         Sie sind von der Nutzung dieser Funktion ausgeschlossen.
         Bitte kontaktieren Sie den Administrator.
