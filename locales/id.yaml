@@ -274,6 +274,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket tidak ada
+      not_owner: Ini bukan paket Anda
       hidden: Paket stiker berhasil disembunyikan
       restored: Paket berhasil dipulihkan
     set_pack: |
@@ -666,7 +667,7 @@ scenes:
         Paket stiker ini bukan milik Anda.
 
         Anda hanya dapat mempublikasikan paket stiker Anda sendiri
-      bannded: |
+      banned: |
         <b>Kesalahan!</b>
         Anda dilarang menggunakan fitur ini.
         Silakan, hubungi administrator.
