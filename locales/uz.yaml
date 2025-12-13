@@ -261,6 +261,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket topilmadi
+      not_owner: Bu sizning to'plamingiz emas
       hidden: Paket muvaffaqiyatli yashirildi
       restored: Paket muvaffaqiyatli tiklandi
     set_pack: |
@@ -647,7 +648,7 @@ scenes:
         Bu paket sizniki emas.
 
         Siz faqat o'zingizning paketlaringizni nashr qilishingiz mumkin
-      bannded: |
+      banned: |
         <b>Xato!</b>
         Sizga ushbu xususiyatdan foydalanish taqiqlangan.
         Iltimos, administratorga murojaat qiling.
