@@ -1,11 +1,11 @@
 ---
 language_name: '🇺🇿 O''zbek'
-name: Sevimli stikerlar boti 🇺🇦
+name: Sevimli stikerlar boti
 description:
   long: |
     🧙 Xabar almashish tajribangizni ko'proq e'lon qilish uchun men emoji va stiker paketlarining mag'ribiyasiman. Men sevimli rasmlaringizni, videolaringizni va GIFlaringizni chiroyli emoji va stikerlarga aylantirishga ruxsat beradi. 🎉🎊 Men bilan siz har qanday tadbir uchun shaxsiy paketlar yarata olasiz. Qo'shimcha yoqimli suhbatlaringiz uchun boshladik!
 
-    Stikerlarni qidirish: https://play.google.com/store/apps/details?id=app.fstik
+    Stikerlarni qidirish: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 Men emoji va stiker ustasiyman! Rasmlarni, videolarni va GIFlarni jadallashtirib ajoyib stikerlarga aylantiramiz.
 ratelimit: Bunchalik tez-tez emas!
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 Stikerlar toʻplami yarating'
       new_emoji: '😊 Emoji toʻplami yarating'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 Katalog'
       publish: '📤 Paketni nashr qilish'
       delete: '❌ Stikerni oʻchirish'
-      original: '🎯 Find original'
+      original: '🔍 Find original sticker'
       restore: '🔀 Paketni tiklang'
       copy: '📋 Paketdan nusxa oling'
       emoji: '📝 Change emoji suffix'
@@ -591,7 +591,7 @@ scenes:
       ❕ "<code>${titleSuffix}</code>" qo'shimchani olib tashlash uchun, siz qutini boost qilishingiz kerak. Batafsil ma'lumot olish uchun menyuga tashrif buyuring:\/donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>Bu haqda ma'lumot olish uchun menga stiker yoki maxsus kulgich yuboring:</b>
     not_found: |
       Stikerni topa olmadim
     result: |
