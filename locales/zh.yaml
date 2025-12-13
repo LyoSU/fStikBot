@@ -1,11 +1,11 @@
 ---
 language_name: '🇨🇳 简体中文'
-name: Favorite Stickers Bot
+name: 最喜欢的贴纸机器人🇺🇦
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    🧙 我是表情包和贴纸大师，来让你的聊天更有趣！我的魔法可以将你最喜欢的照片，视频和 GIF 转换成酷炫的表情包和贴纸，无需麻烦的转换和裁剪。🎉🎊 通过我，你只需要几个点击就可以为任何场合创建个性化的贴纸包。那么，你还在等什么呢？让我们开始，给你的聊天添加一些✨闪光✨！
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    搜索贴纸: https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙‍♀️ 我是表情符号和贴纸巫师！转换照片、视频和 GIF 成为酷炫的贴纸轻而易举。
 ratelimit: 不经常如此！
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 创建贴纸包'
       new_emoji: '😊 创建表情包'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 目录'
       publish: '📤 出版包'
       delete: '❌ 删除贴纸'
-      original: '🎯 Find original'
+      original: '🔍 查找原始贴纸'
       restore: '🔀 恢复一个包'
       copy: '📋 恢复一个包'
       emoji: '📝 更改表情符号后缀'
@@ -282,6 +282,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: 未找到包
+      not_owner: 这不是你的贴纸包
       hidden: 包成功隐藏
       restored: 成功恢复包
     set_pack: |
@@ -618,7 +619,7 @@ scenes:
       ❕ 要删除后缀 "<code>${titleSuffix}</code>", 您需要提升包。更多详情请访问：\/donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>
     not_found: |
       我找不到贴纸
     result: |
@@ -674,7 +675,7 @@ scenes:
         这个包不是你的。
 
         您只能发布自己的包
-      bannded: |
+      banned: |
         <b>错误！</b>
         您已被禁止使用此功能。
         请联系管理员。
