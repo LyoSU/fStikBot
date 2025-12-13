@@ -118,26 +118,26 @@ cmd:
       Find sticker packs and publish your own:
     commands:
       ss: '🌟 Enregistrer l''autocollant'
-      start: '📜 Start menu'
+      start: '📜 Menu de démarrage'
       help: '📖 Aide'
       packs: '📁 Gérer les packs'
-      new: '🌝 Créez un pack d''autocollants'
-      new_emoji: '😊 Créez un pack d''émoji'
+      new: '🌝 Créer un pack d''autocollants'
+      new_emoji: '😊 Créer un pack d''émoji'
       search_catalog: '🔍 Browse & Discover'
       catalog: '📖 Catalogue'
       publish: '📤 Publier le pack'
       delete: '❌ Supprimer l''autocollant'
-      original: '🔍 Find original sticker'
+      original: '🔍 Trouver l''autocollant original'
       restore: '🔀 Restaurer un pack'
       copy: '📋 Copier un pack'
-      emoji: '📝 Change emoji suffix'
+      emoji: '📝 Modifier le suffixe émoji'
       round: '🎥 Vidéo en forme ronde'
       clear: '🖼️ Supprimer l''arrière-plan de la photo'
       info: 'ℹ️ Pack & Creator Info'
       lang: '🌐 Changer la langue'
-      report: '🚨 Pack de rapports'
+      report: '🚨 Signaler un pack'
       donate: '☕️ Soutenir le développeur'
-      add_to_group: ':busts_in_silhouette : Ajouter au groupe'
+      add_to_group: '👥 Ajouter au groupe'
       privacy: '🔒 Politique de confidentialité'
     btn:
       new: '📥 Créer nouveau'
@@ -244,7 +244,7 @@ donate:
       Paiement annulé
 coedit:
   info: |
-    <b>:busts_in_silhouette : Co-édition</b>
+    <b>👥 Co-édition</b>
 
     Lien pour co-éditer <a href="${link}">${title}</a>: <code>${colink}</code>
 
@@ -253,7 +253,7 @@ coedit:
     2. Après avoir cliqué sur le lien, ils doivent appuyer sur "démarrer" et ils seront ajoutés aux éditeurs
     3. L'éditeur peut ajouter, supprimer et éditer des autocollants dans le pack
 
-    <b>Editors:</b>
+    <b>Éditeurs :</b>
     ${editors}
 
     <i>Pour supprimer des éditeurs, vous devez réinitialiser le lien</i>
@@ -273,6 +273,7 @@ callback:
   pack:
     answerCbQuer:
       not_found: Pack introuvable
+      not_owner: Ce n'est pas votre pack
       hidden: Pack masqué avec succès
       restored: Pack restauré avec succès
     set_pack: |
@@ -368,7 +369,7 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Successfully added to pack:</b>
+      <b>Ajouté au pack avec succès :</b>
       <a href="${link}">${title}</a>
 
       Dans une heure, ce pack sera mis à jour pour tous les utilisateurs.
@@ -377,7 +378,7 @@ sticker:
     ok_inline: |
       <b>Ajouté au pack avec succès :</b>
       <u>${title}</u>
-    send_emoji: Super, maintenant envoyez l'emoji correspondant au
+    send_emoji: Super, maintenant envoyez l'emoji correspondant à l'autocollant
     converting_process: |
       <b>Attendez...</b>
       Votre fichier est en file d'attente pour la conversion. Attendez la fin. Cela peut prendre du temps.
@@ -386,7 +387,7 @@ sticker:
 
       <i>Les utilisateurs ayant soutenu le bot sont prioritaires dans la file d'attente (plus d'infos: /donate)</i>
     catalog_offer: |
-      <b>:étonné_face: Wow, tu as fait un super pack !</b>
+      <b>😲 Wow, tu as fait un super pack !</b>
 
       Souhaitez-vous ajouter <a href="${link}">${title}</a> au catalogue public des autocollants afin que les autres utilisateurs du bot puissent le voir aussi ?
       <i>Cela ne prend pas beaucoup de temps</i>
@@ -473,7 +474,7 @@ sticker:
         Peut-être que votre vidéo est enregistrée dans un format incompréhensible pour le bot. Assurez-vous qu'il est au format mp4.
         Il peut également s'agir d'une erreur interne du bot, essayez d'envoyer cette vidéo à nouveau.
       too_big: |
-        <b>Erreur!</b>.
+        <b>Erreur !</b>
 
         Le fichier est trop volumineux pour être traité. Veuillez réduire la qualité et la durée avant l'envoi.
       sticker_not_found: |
@@ -490,7 +491,7 @@ news:
   continue: '✅ Continuer'
 userAbout:
   help: |
-    <b>🧑‍🎨 Utilisateur à propos de</b>
+    <b>🧑‍🎨 À propos de l'utilisateur</b>
 
     En utilisant ce menu, vous pouvez trouver des informations sur l'utilisateur et ses packs d'autocollants
 
@@ -607,13 +608,13 @@ scenes:
     not_found: |
       Je n'ai pas pu trouver l'autocollant
     result: |
-      <b>:paquet : Pack :</b> <a href="${link}">${name}</a>
+      <b>📦 Pack :</b> <a href="${link}">${name}</a>
       🆔 <code>${setId}</code> <i>(Numéro unique pour les packs du propriétaire, incrémenté par pack)</i>
 
       🧑‍🎨 ID du propriétaire : <code>${ownerId}</code>
       ${mention}
 
-      <b>Aartist_palette: Autres packs de ce propriétaire :</b>
+      <b>🎨 Autres packs de ce propriétaire :</b>
       ${otherPacks}
     no_other_packs: |
       <i>Nous n'avons aucune information sur les autres autocollants de ce propriétaire</i>
@@ -659,7 +660,7 @@ scenes:
         Ce pack n'est pas le vôtre.
 
         Vous ne pouvez publier que vos propres packs
-      bannded: |
+      banned: |
         <b>Erreur!</b>
         Il vous est interdit d'utiliser cette fonctionnalité.
         Veuillez contacter l'administrateur.
@@ -673,7 +674,7 @@ scenes:
         • Ne publiez pas vos packs personnels destinés à un cercle restreint de personnes. Par exemple, tels que les visages de vos amis ou les citations de vos messages
         • Ne publiez pas de pressions sur les autocollants qui violent les lois européennes ou d'autres lois locales
 
-        . Vous devrez soumettre des informations supplémentaires pour qu'elles soient publiées dans le catalogue
+        Vous devrez soumettre des informations supplémentaires pour qu'elles soient publiées dans le catalogue
       continue_button: Continuer
       enter_description: |
         <b>Décrivez brièvement votre pack pour que les autres puissent le trouver</b>
@@ -748,13 +749,13 @@ scenes:
       <b>Type de cadre sélectionné :</b> ${type}
   photoClear:
     enter: |
-      Envoyez une photo <u></u> à partir de laquelle vous voulez supprimer l'arrière-plan et je vais envoyer le fichier sans le fond
+      Envoyez une <u>photo</u> à partir de laquelle vous voulez supprimer l'arrière-plan et je vais envoyer le fichier sans le fond
 
-      <i>fonctionne mieux avec les photos. Travaille pire avec les dessins, les illustrations, etc.</i>
+      <i>Fonctionne mieux avec les photos. Fonctionne moins bien avec les dessins, les illustrations, etc.</i>
     enter_anime: |
-      Envoyer une photo <u></u> à partir de laquelle vous voulez supprimer l'arrière-plan et je vais envoyer le fichier sans l'arrière-plan
+      Envoyez une <u>photo</u> à partir de laquelle vous voulez supprimer l'arrière-plan et je vais envoyer le fichier sans l'arrière-plan
 
-      <i>Il fonctionne mieux avec les images d'anime</i>
+      <i>Fonctionne mieux avec les images d'anime</i>
     choose_model: |
       <b>Choisissez le modèle :</b>
     web_app: WebApp - pour les photos avec des personnes
@@ -763,10 +764,10 @@ scenes:
       general: Général — pour toutes les photos
       anime: Anime — pour les photos d'anime
       birefnet_general: BirefNet - pour toutes les photos
-    add_to_set_btn: '🌟 Ajouter à la définition'
+    add_to_set_btn: '🌟 Ajouter au pack'
     error: |
-      <b>Erreur!</b>
-      Opps, quelque chose s'est mal passé.
+      <b>Erreur !</b>
+      Oups, quelque chose s'est mal passé.
   search:
     enter: |
       <b>🔎 Search sticker packs</b>
