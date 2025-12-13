@@ -1,11 +1,11 @@
 ---
 language_name: '🇫🇷 Français'
-name: Bot autocollant préféré 🇺🇦
+name: Bot autocollant préféré
 description:
   long: |
     🧙 Je suis le sorcier des packs d'emojis et de stickers, et je suis là pour rendre votre expérience de messagerie plus amusante ! Mes pouvoirs magiques me permettent de transformer vos photos, vidéos et GIFs préférés en emojis et stickers cool sans les tracas de la conversion et du recadrage. 🎉🎊 Avec moi, vous pouvez créer des packs personnalisés pour toutes les occasions en quelques clics. Alors, qu'attendez-vous ? Commençons et ajoutons un peu de ✨magie✨ à vos conversations !
 
-    Rechercher des stickers : https://play.google.com/store/apps/details?id=app.fstik
+    Rechercher des stickers : https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 Je suis l'assistant emoji et autocollant! Transformez des photos, des vidéos et des GIFs en autocollants cool en un clic.
 ratelimit: Pas si souvent!
@@ -124,10 +124,10 @@ cmd:
       new: '🌝 Créez un pack d''autocollants'
       new_emoji: '😊 Créez un pack d''émoji'
       search_catalog: '🔍 Browse & Discover'
-      catalog: '📖 Catalog'
+      catalog: '📖 Catalogue'
       publish: '📤 Publier le pack'
       delete: '❌ Supprimer l''autocollant'
-      original: '🎯 Find original'
+      original: '🔍 Find original sticker'
       restore: '🔀 Restaurer un pack'
       copy: '📋 Copier un pack'
       emoji: '📝 Change emoji suffix'
@@ -603,7 +603,7 @@ scenes:
       ❕ Pour supprimer le suffixe "<code>${titleSuffix} </code>", vous devez booster le pack. Plus de détails dans le menu en visitant : \/donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
     not_found: |
       Je n'ai pas pu trouver l'autocollant
     result: |
