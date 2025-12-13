@@ -8,7 +8,7 @@ description:
     Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     🧙 ¡Soy el mago del emoji y los stickers! Transforma fotos, videos y GIFs en stickers geniales en un instante.
-ratelimit: '¡No tan amenudo!'
+ratelimit: '¡No tan a menudo!'
 cmd:
   start:
     enter: |
@@ -17,7 +17,7 @@ cmd:
 
       Envía el comando /help para aprender más sobre lo que puedo hacer
 
-      :speech _balloon: ¿Necesitas ayuda? Únete a nuestro chat de soporte en @fStikCommunity (sólo en inglés)
+      💬 ¿Necesitas ayuda? Únete a nuestro chat de soporte en @fStikCommunity (solo en inglés)
     group: |
       🧙 ¡Hola, ${groupTitle}! Soy el mago de los paquetes de emojis y stickers.
 
@@ -113,26 +113,26 @@ cmd:
       • Buscar por palabras clave o en pestañas preparadas
       • No olvide calificar para promover o bajar el paquete de sticker en el ranking
     commands:
-      ss: '🌟 Guardar etiqueta'
-      start: '📜 Start menu'
+      ss: '🌟 Guardar sticker'
+      start: '📜 Menú de inicio'
       help: '📖 Ayuda'
       packs: '📁 Administrar paquetes'
       new: '🌝 Crear paquete de sticker'
       new_emoji: '😊 Crear paquete emoji'
-      catalog: ':open_libro: Catálogo'
+      catalog: '📖 Catálogo'
       publish: '📤 Publicar paquete'
       delete: '❌ Eliminar sticker'
-      original: '🔍 Find original sticker'
+      original: '🔍 Buscar sticker original'
       restore: '🔀 Restaurar un paquete'
       copy: '📋 Copiar un paquete'
-      emoji: '📝 Change emoji suffix'
-      round: ':mo-camera: Video redondeado'
+      emoji: '📝 Cambiar sufijo emoji'
+      round: '🎥 Video redondeado'
       clear: '🖼️ Quitar fondo de la foto'
       about: '📦 Información del paquete'
-      user_about: '🧑‍🎨 Creator info'
-      lang: '🌐 Change language'
+      user_about: '🧑‍🎨 Info del creador'
+      lang: '🌐 Cambiar idioma'
       report: '🚨 Reportar paquete'
-      donate: '☕️ Support the developer'
+      donate: '☕️ Apoyar al desarrollador'
       add_to_group: '👥 Añadir al grupo'
       privacy: '🔒 Política de privacidad'
     btn:
@@ -168,7 +168,7 @@ cmd:
       inline: Inline
     empty: |
       <b>Aún no tienes paquetes.</b>
-      Para crear, escribe un comando /nuevo
+      Para crear, escribe el comando /new
     inline_title: Paquete en línea
     select_group_pack_info: |
       <b>📁 Seleccionar paquete</b>
@@ -180,7 +180,7 @@ cmd:
       Para cambiar el emoji predeterminado del paquete actual, envía <code>/emoji</code> seguido por el emoji separado por un espacio
 
       Por ejemplo - <code>/emoji 🌟</code>
-    done: Emoji successfully changed.
+    done: Emoji cambiado con éxito.
     error: '¡Hubo un error al cambiar el emoji!'
   round_video:
     enabled: |
@@ -237,7 +237,7 @@ coedit:
     2. Después de hacer clic en el enlace, deben presionar "Iniciar" y se añadirán a los editores
     3. El editor puede añadir, borre y edite stickers en el paquete
 
-    <b>Editors:</b>
+    <b>Editores:</b>
     ${editors}
 
     <i>Para eliminar editores, necesitas reiniciar el enlace</i>
@@ -245,7 +245,7 @@ coedit:
     Aún no hay editores
   btn:
     send: '📤 Enviar enlace'
-    reset: '🔁 Reset link'
+    reset: '🔁 Restablecer enlace'
   share: |
     Sigue el enlace y pulsa "Iniciar" para coeditar el pack "${title}"
   reset: |
@@ -275,19 +275,19 @@ callback:
       status:
         on: Activado
         off: Deshabilitado
-    hidden: Empaca <a href="${link}">${title}</a> oculto de tu lista.
+    hidden: Pack <a href="${link}">${title}</a> oculto de tu lista.
     restored: Pack <a href="${link}">${title}</a> restaurado a tu lista.
     btn:
       hide: '❌ Ocultar paquete'
       delete: '🗑️ Eliminar paquete'
-      restore: 'Recuperar'
+      restore: '✅ Restaurar'
       use_pack: '📦 Usar paquete'
-      boost: '⚡ Boost'
-      frame: '🖼 Frame'
-      rename: '✏️ Rename'
-      search_gif: '🔎 Search GIF'
+      boost: '⚡ Impulsar'
+      frame: '🖼 Marco'
+      rename: '✏️ Renombrar'
+      search_gif: '🔎 Buscar GIF'
       coedit: '👥 Co-edición'
-      catalog_add: '🗂 Add to catalog'
+      catalog_add: '🗂 Añadir al catálogo'
       catalog_edit: '📝 Editar en catálogo'
       catalog_delete: '🗑️ Eliminar del catálogo'
       catalog_share: '🔗 Compartir'
@@ -327,7 +327,7 @@ callback:
     btn:
       delete: '🗑 Eliminar'
       copy: '🌟 Copiar'
-      restore: 'Recuperar'
+      restore: '✅ Restaurar'
     error:
       not_found: |
         ¡Error!
@@ -359,7 +359,7 @@ sticker:
     ok_inline: |
       <b>Se ha añadido al paquete correctamente:</b>
       <u>${title}</u>
-    send_emoji: Genial, ahora envía el emoji que corresponde a
+    send_emoji: Genial, ahora envía el emoji que corresponde al sticker
     converting_process: |
       <b>Espera...</b>
       Tu archivo está en la cola para la conversión. Espera a que se complete. Esto puede tardar un poco.
@@ -418,26 +418,26 @@ sticker:
         static: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
-          Puedes agregar esta foto o pegatina estática al paquete estático
+          Puedes agregar esta foto o sticker estático al paquete estático
 
-          <i>Crear (/nuevo) o elegir (/paquetes) otro paquete</i>
+          <i>Crea (/new) o elige (/packs) otro paquete</i>
         video: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
-          Puede agregar estos archivos de video al paquete de videos
+          Puedes agregar estos archivos de video al paquete de videos
 
-          <i>Crear (/nuevo) o elegir (/ paquetes) otro paquete</i>
+          <i>Crea (/new) o elige (/packs) otro paquete</i>
         animated: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
           Puedes agregar estos archivos animados al paquete de vectores
 
-          <i>Crear (/nuevo) o elegir (/ paquetes) otro paquete</i>
+          <i>Crea (/new) o elige (/packs) otro paquete</i>
         unknown: |
-          <b>Error!</b>
-          Este tipo de archivo no es compatible con
+          <b>¡Error!</b>
+          Este tipo de archivo no es compatible
 
-          <i>Crear (/new) o elegir (/packs) otro paquete</i>
+          <i>Crea (/new) o elige (/packs) otro paquete</i>
       wait_load: |
         <b>¡Espera!</b>
 
@@ -455,7 +455,7 @@ sticker:
         Tal vez tu vídeo se guarde en un formato inviable para el bot. Asegúrese de que está en formato mp4.
         También puede ser un error interno del bot, intente enviar este video de nuevo.
       too_big: |
-        <b>Error!</b>.
+        <b>¡Error!</b>
 
         El archivo es demasiado grande para procesar. Por favor, reduce la calidad y duración antes de enviar.
       sticker_not_found: |
@@ -464,7 +464,7 @@ sticker:
         No se pudo encontrar esta pegatina. Por favor, asegúrese de que está en el paquete correcto o intente agregarla de nuevo.
 news:
   join: |
-    i <a href="${link}">Únete a nuestro canal</a> para obtener las últimas noticias sobre el bot.
+    ℹ️ <a href="${link}">Únete a nuestro canal</a> para obtener las últimas noticias sobre el bot.
 
     <i>Suscríbete al canal para obtener las últimas noticias sobre el bot, así como actualizaciones y nuevas características.</i>
   join_btn: '📢 Unirse al canal'
@@ -472,7 +472,7 @@ news:
   continue: '✅ Continuar'
 userAbout:
   help: |
-    <b>🧑‍🎨 Usuario sobre</b>
+    <b>🧑‍🎨 Información del usuario</b>
 
     Usando este menú puedes encontrar información sobre el usuario y sus paquetes de stickers
 
@@ -493,7 +493,7 @@ scenes:
       <b><u>Elija el tipo de paquete</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
+    static: '🌟 Estático'
     animated: '✨ Vector'
     video: '📹 Video'
     pack_format: |
@@ -665,8 +665,8 @@ scenes:
       select_language: |
         <b>Elige para qué idiomas es tu paquete:</b>
         <i>Puedes seleccionar varios idiomas</i>
-      button_all_languages: All languages
-      button_confirm_language: Confirm
+      button_all_languages: Todos los idiomas
+      button_confirm_language: Confirmar
       set_safe: |
         <b>¿Tu paquete es seguro para los usuarios?</b>
         <i>Es decir, no contiene erótica y otro contenido impactante</i>
@@ -747,8 +747,8 @@ scenes:
       birefnet_general: BirefNet - para cualquier foto
     add_to_set_btn: '🌟 Añadir al conjunto'
     error: |
-      <b>Error!</b>
-      Opps, algo salió mal.
+      <b>¡Error!</b>
+      Ups, algo salió mal.
   leave: |
     Acción cancelada.
   btn:
