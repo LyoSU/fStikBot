@@ -156,7 +156,7 @@ cmd:
   report: |
     <b>🚨 Rapor</b>
 
-    Yasaları ihlal edebileceğini veya Telegram'ın Hizmet Koşullarına aykırı olabileceğini düşündüğünüz bir çıkartma paketiyle karşılaşırsanız, lütfen bağlantısını @ adresine göndererek bize bildirin. ÇıkartmalarReportBot
+    Yasaları ihlal edebileceğini veya Telegram'ın Hizmet Koşullarına aykırı olabileceğini düşündüğünüz bir çıkartma paketiyle karşılaşırsanız, lütfen bağlantısını @StickersReportBot adresine göndererek bize bildirin
 
     <i>Botun paketlerin içeriğinden sorumlu olmadığını ve onu kontrol etme yeteneğinin olmadığını unutmayın</i>
   packs:

@@ -8,7 +8,7 @@ description:
     搜索贴纸: https://play.google.com/store/apps/details?id=app.fstik
   short: |
     🧙‍♀️ 我是表情符号和贴纸巫师！转换照片、视频和 GIF 成为酷炫的贴纸轻而易举。
-ratelimit: 不经常如此！
+ratelimit: 操作太频繁了！
 cmd:
   start:
     enter: |

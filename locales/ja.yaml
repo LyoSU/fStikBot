@@ -1,6 +1,6 @@
 ---
-language_name: '🇯🇵 日本人'
-name: 'お気に入りのステッカー :ウクライナ:'
+language_name: '🇯🇵 日本語'
+name: 'お気に入りステッカーBot'
 description:
   long: |
     🧙 私は絵文字とステッカーパックの魔法使いです。あなたのメッセージング体験をより楽しくするためにここにいます！私の魔法の力で、お気に入りの写真、ビデオ、GIFを変換やトリミングの手間なしに、クールな絵文字やステッカーに変えることができます。🎉🎊 私と一緒に、たった数回のクリックで、どんな場面にも合わせた個人用パックを作成することができます。さあ、いっしょに始めて、あなたのチャットに✨スパークル✨を加えましょう！
@@ -110,11 +110,11 @@ cmd:
       <b>😻 カタログで新たなステッカーを見つけよう〜</b>
 
       ・このボタンを押すと、色々なステッカーを手に入れる事ができます
-      ・キーボードまたはスペシャルターブで検索しよう
+      ・キーワードまたはタブで検索しよう
       ・おすすめしたいまたはしたかないステッカーをレートして下さい
     commands:
       ss: '🌟 ステッカーを保存'
-      start: '📜 Start menu'
+      start: '📜 スタートメニュー'
       help: '📖 ヘルプ'
       packs: '📁 パックを管理'
       new: '🌝 ステッカーパックを作成'
@@ -122,10 +122,10 @@ cmd:
       catalog: '📖 カタログ'
       publish: '📤 パックを公開'
       delete: '❌ ステッカーを削除'
-      original: '🔍 Find original sticker'
+      original: '🎯 元のステッカーを検索'
       restore: '🔀 パックを復元'
       copy: '📋 パックをコピー'
-      emoji: '📝 Change emoji suffix'
+      emoji: '📝 絵文字を変更'
       round: '丸'
       clear: '🖼️ 背景を写真から削除する'
       about: '📦 パック情報'
@@ -133,7 +133,7 @@ cmd:
       lang: '🌐 言語を変更'
       report: '🚨 レポート パック'
       donate: '☕️ 開発者をサポート'
-      add_to_group: ':busts_in_sシルエット: グループに追加'
+      add_to_group: '👥 グループに追加'
       privacy: '🔒 プライバシーポリシー'
     btn:
       new: '📥 新規作成'
@@ -261,10 +261,10 @@ callback:
       hidden: パックを非表示にしました
       restored: パックを復元しました
     set_pack: |
-      🌟Selected <a href="${link}">${title}</a> pack
+      🌟 <a href="${link}">${title}</a> パックを選択しました
 
-      <b>❔ How add?</b>
-      パックに追加する写真、ビデオ、ステッカーを送信する
+      <b>❔ 追加方法</b>
+      パックに追加する写真、ビデオ、ステッカーを送信してください
     set_inline_pack: |
       選択された<u>${title}</u>パック
 
@@ -280,17 +280,17 @@ callback:
     restored: <a href="${link}">${title}</a> をリストに復元しました。
     btn:
       hide: '❌ パックを隠す'
-      delete: ':wasteバスケット: パックを削除'
+      delete: '🗑 パックを削除'
       restore: '✅ リストア'
       use_pack: '📦 パックを使う'
       boost: '⚡ ブースト'
       frame: '🖼 フレーム'
       rename: '✏️ 名前を変更'
       search_gif: '🔎 GIFを検索'
-      coedit: ':busts_in_sシルエット: 共同編集'
+      coedit: '👥 共同編集'
       catalog_add: '🗂 カタログに追加'
       catalog_edit: '📝 カタログで編集'
-      catalog_delete: ' - カタログから削除する'
+      catalog_delete: '🗑 カタログから削除'
       catalog_share: '🔗 共有'
       catalog_open: '📂 カタログで開く'
     error:
@@ -730,7 +730,7 @@ scenes:
       medium: '2. 中'
       rounded: '3. 丸みを帯びた'
       square: '4. スクエア'
-      circle: '5円'
+      circle: '5. 円形'
     selected: |
       <b>選択したフレームタイプ:</b> ${type}
   photoClear:

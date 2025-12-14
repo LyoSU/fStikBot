@@ -385,7 +385,7 @@ sticker:
       Use o @QuotlyBot para criar uma citação desta mensagem
     error:
       reply: |
-        U<b>Erro!</b>
+        <b>Erro!</b>
         Por favor, responda ao adesivo.
       no_selected_pack: |
         <b>Você não selecionou um pacote</b>
@@ -425,19 +425,19 @@ sticker:
         O arquivo de vídeo não está no formato WEBM correto.
       file_type:
         static: |
-          U<b>Erro!</b>
+          <b>Erro!</b>
           Este tipo de arquivo não é suportado
           Você pode adicionar este adesivo estático ou foto ao pacote estático
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
         video: |
-          U<b>Erro!</b>
+          <b>Erro!</b>
           Este tipo de arquivo não é suportado
           Você pode adicionar este arquivo de vídeo ao pacote de vídeo
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
         animated: |
-          U<b>Erro!</b>
+          <b>Erro!</b>
           Este tipo de arquivo não é suportado
           Você pode adicionar este arquivo animado ao vetor do pacote
 
@@ -646,7 +646,7 @@ scenes:
         3. Encontre e escolha o pacote necessário
         4. Encaminhe a mensagem recebida para o bot
       publish_new_access_denied: |
-        U<b>Erro!</b>
+        <b>Erro!</b>
         Este pacote não é seu.
 
         Você só pode publicar seus próprios pacotes
