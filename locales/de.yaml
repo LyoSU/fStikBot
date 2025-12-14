@@ -3,7 +3,7 @@ language_name: '🇩🇪 Deutsch'
 name: Lieblings-Sticker Bot
 description:
   long: |
-    🧙 Ich bin der Emoji- und Stickerpack-Zauberer, und ich bin hier, um dein Nachrichtenerlebnis unterhaltsamer zu gestalten! Meine magischen Kräfte erlaubt es mir, deine Lieblingsfotos, Videos und GIFs ohne Konvertierungs- und Zuschneideeigenschaften in coole Emojis und Sticker zu verwandeln. 🎉🎊 Mit mir kannst du personalisierte Packs für jeden Anlass mit nur wenigen Klicks erstellen. Also, worauf wartest du noch? Lass uns anfangen und etwas ✨Glanz✨ zu deinen Chats hinzufügen!
+    🧙 Ich bin der Emoji- und Stickerpack-Zauberer, und ich bin hier, um dein Nachrichtenerlebnis unterhaltsamer zu gestalten! Meine magischen Kräfte erlauben es mir, deine Lieblingsfotos, Videos und GIFs ohne Konvertierungs- und Zuschneideeigenschaften in coole Emojis und Sticker zu verwandeln. 🎉🎊 Mit mir kannst du personalisierte Packs für jeden Anlass mit nur wenigen Klicks erstellen. Also, worauf wartest du noch? Lass uns anfangen und etwas ✨Glanz✨ zu deinen Chats hinzufügen!
 
     Suche Sticker: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
@@ -21,13 +21,13 @@ cmd:
     group: |
       🧙 Hallo, ${groupTitle}! Ich bin der Emoji- und Stickerpack-Zauberer.
 
-      Um einen Sticker zu einem Gruppenset hinzuzufügen, verwenden Sie den /ss-Befehl als Antwort auf ein Foto, Video, Gif oder Sticker.
+      Um einen Sticker zu einem Gruppenset hinzuzufügen, verwende den /ss-Befehl als Antwort auf ein Foto, Video, Gif oder Sticker.
     help: |
-      <b>🧙 Willkommen! Ich bin Ihr Sticker- und Emoji-Zauberer</b>
+      <b>🧙 Willkommen! Ich bin dein Sticker- und Emoji-Zauberer</b>
 
       <b>🎨 Sticker und Pakete erstellen</b>
 
-      /new - Erstellen Sie ein neues Paket
+      /new - Erstelle ein neues Paket
       • Wählen Sie den Pakettyp: Sticker oder Emoji
       • Setzen Sie einen Namen für Ihr Paket
       • Fügen Sie Sticker hinzu, indem Sie Mediendateien senden
