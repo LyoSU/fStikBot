@@ -768,7 +768,7 @@ scenes:
       general: Genel — tüm fotoğraflar için
       anime: Anime — anime resimleri için
       birefnet_general: BirefNet — tüm fotoğraflar için
-    add_to_set_btn: '🌟 Sete ekle'
+    add_to_set_btn: '🌟 Add to pack'
     error: |
       <b>Hata!</b>
       Maalesef bir şeyler ters gitti.
