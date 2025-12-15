@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Stikerlar
       custom_emoji: Emojilar
-      inline: Inline
+      inline: For search
     empty: |
       <b>Sizda hali hech qanday paket yo'q.</b>
       Yaratish uchun /new buyrug'ini yozing
-    inline_title: Inline paketi
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Paketni tanlash</b>
 
@@ -423,11 +423,11 @@ sticker:
         Video fayl to'g'ri WEBM formatida emas.
       file_type:
         static: |
-          <b>Xato!</b>
-          Bu fayl turi qoʻllab-quvvatlanmaydi
-          Siz ushbu rasm yoki statik stikerni statik toʻplamga qoʻshishingiz mumkin
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Yarating (/yangi) yoki tanlang (/paketlar) boshqa paket</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Xato!</b>
           Bu fayl turi qoʻllab-quvvatlanmaydi
@@ -435,11 +435,11 @@ sticker:
 
           <i>Yaratish (/yangi) yoki (/ ni tanlang) paketlar) boshqa paket</i>
         animated: |
-          <b>Xato!</b>
-          Bu fayl turi qoʻllab-quvvatlanmaydi
-          Ushbu animatsiyali fayllarni vektor toʻplamiga qoʻshishingiz mumkin
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Yaratish (/yangi) yoki (/) ni tanlang. paketlar) boshqa paket</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Xato!</b>
           Bu fayl turi qoʻllab-quvvatlanmaydi
@@ -500,22 +500,22 @@ scenes:
       <b><u>Paket turini tanlang</u></b>
     regular: '😊 Stiker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
-    animated: '✨ Vektor'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
-      <b><u>Paket turini tanlang</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Umumiy</b> - statik (harakat qilmang), rastr, fayl format - PNG qo'shishdan oldin (bot qayta ishlanmoqda), qo'shgandan keyin - WEBP.
-      Oddiy to'plamga misol - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - animatsion video to'plami. Siz har qanday video, gif va fotosuratni qo'shishingiz mumkin.
-      Namuna video to'plami - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animatsiyalangan</b> - animatsiyali, vektor (ular fayl ichidagi ob'ektlarning aniq tavsifiga ega bo'lishi kerak. ular har qanday miqyosda aniq ko'rsatiladi), fayl formati - TGS, Lottie formatining o'zgarishi.
-      Animatsion to'plamga misol - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Animatsion va video stikerlar to'plamida 50 tagacha stiker bo'lishi mumkin. Statik stikerlar to‘plamida 120 tagacha stiker bo‘lishi mumkin.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
       <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
