@@ -769,7 +769,7 @@ scenes:
       general: عام - لأي صور
       anime: أنمي - لصور أنمي
       birefnet_general: BiRefNet - لأي صور
-    add_to_set_btn: '🌟 إضافة إلى المجموعة'
+    add_to_set_btn: '🌟 Add to pack'
     error: |
       <b>خطأ!</b>
       عفوًا، حدث خطأ ما.
