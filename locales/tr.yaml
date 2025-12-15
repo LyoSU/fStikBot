@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Çıkartmalar
       custom_emoji: Emojiler
-      inline: Inline
+      inline: For search
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       Oluşturmak için /new komutunu yaz
-    inline_title: Satır içi paket
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Paket seçin</b>
 
@@ -440,11 +440,11 @@ sticker:
         Video dosyası doğru WEBM formatında değil.
       file_type:
         static: |
-          <b>Hata!</b>
-          Bu dosya türü desteklenmiyor
-          Bu fotoğrafı veya statik etiketi statik pakete ekleyebilirsiniz
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Oluştur (/yeni) veya seçin (/packs) başka bir paket</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Hata!</b>
           Bu dosya türü desteklenmiyor
@@ -452,11 +452,11 @@ sticker:
 
           <i>Oluştur (/yeni) veya (/ paket) başka bir paket</i>
         animated: |
-          <b>Hata!</b>
-          Bu dosya türü desteklenmiyor
-          Bu animasyonlu dosyaları vektör paketine ekleyebilirsiniz
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Oluştur (/yeni) veya (/ paket) başka bir paket</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Hata!</b>
           Bu dosya türü desteklenmiyor
@@ -517,22 +517,22 @@ scenes:
       <b><u>Paket türünü seçin</u></b>
     regular: '😊 Çıkartmalar'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Statik'
-    animated: '✨ vektör'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
-      <b><u>Çıkartma paketi türünü seçin</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Ortak</b> - statik (hareket etmeyin), raster, dosya formatı - PNG eklemeden önce (bot işliyor), ekledikten sonra - WEBP.
-      Normal çıkartma paketi örneği - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - animasyon video paketi. Herhangi bir video, gif ve fotoğraf ekleyebilirsiniz.
-      Örnek video çıkartma paketi - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animasyonlu</b> - animasyonlu, vektör (dosyanın içindeki nesnelerin tam bir açıklaması vardır, bu nedenle her ölçekte net bir şekilde görüntülenirler), dosya formatı - TGS, Lottie biçiminin bir varyasyonu.
-      Animasyonlu çıkartma paketi örneği - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Animasyonlu ve video çıkartma setlerinde en fazla 50 çıkartma bulunabilir. Statik çıkartma setlerinde en fazla 120 çıkartma bulunabilir.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
