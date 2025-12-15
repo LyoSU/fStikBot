@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Autocollants
       custom_emoji: Emojis
-      inline: Inline
+      inline: For search
     empty: |
       <b>Vous n'avez pas encore de packs.</b>
       Pour créer, écrivez une commande /new
-    inline_title: Pack Inline
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Sélectionnez le pack</b>
 
@@ -435,11 +435,11 @@ sticker:
         Le fichier vidéo n'est pas au format WEBM correct.
       file_type:
         static: |
-          <b>Erreur!</b>
-          Ce type de fichier n'est pas pris en charge
-          Vous pouvez ajouter cet autocollant photo ou statique au pack statique
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Créer (/new) ou choisir (/packs) un autre pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Erreur!</b>
           Ce type de fichier n'est pas pris en charge
@@ -447,11 +447,11 @@ sticker:
 
           <i>Créer (/new) ou choisir (/packs) un autre pack</i>
         animated: |
-          <b>Erreur!</b>
-          Ce type de fichier n'est pas pris en charge
-          Vous pouvez ajouter ces fichiers animés au pack vectoriel
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Créer (/new) ou choisir (/packs) un autre pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Erreur!</b>
           Ce type de fichier n'est pas pris en charge
@@ -512,22 +512,22 @@ scenes:
       <b><u>Choisissez le type de pack</u></b>
     regular: '😊 Autocollant'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Statique'
-    animated: '✨ Vecteur'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Vidéo'
     pack_format: |
-      <b><u>Choisissez le type de pack</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Commun</b> - statique (ne pas déplacer), raster, fichier format - avant d'ajouter PNG (le bot est en cours de traitement), après avoir ajouté - WEBP.
-      Un exemple de pack régulier - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Vidéo</b> - pack vidéo d'animation. Vous pouvez ajouter n'importe quelle vidéo, gif et photo.
-      Exemple de pack vidéo - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animé</b> - animé, vectoriel (ils ont une description exacte des objets à l'intérieur du fichier, en raison auquel ils sont affichés clairement à n'importe quelle échelle), format de fichier - TGS, une variante du format Lottie.
-      Un exemple de pack animé - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d’autocollants statiques peuvent contenir jusqu’à 120 autocollants.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Entrez le nouveau nom du pack d'autocollants:</b>
       <i>Vous pouvez choisir un nom aléatoire sur le bouton.</i>
