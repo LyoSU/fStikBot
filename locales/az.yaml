@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Stikerlər
       custom_emoji: Emojilər
-      inline: İnline
+      inline: For search
     empty: |
       <b>Hələ heç bir paketiniz yoxdur.</b>
       Yaratmaq üçün /new əmri yazın
-    inline_title: Daxili paket
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Paketi seçin</b>
 
@@ -441,11 +441,11 @@ sticker:
         Video faylı düzgün WEBM formatında deyil.
       file_type:
         static: |
-          <b>Xəta!</b>
-          Bu fayl növü dəstəklənmir
-          Bu foto və ya statik stikeri statik paketə əlavə edə bilərsiniz
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Yaradın (/yeni) və ya seçin (/paketlər) başqa paket</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Xəta!</b>
           Bu fayl növü dəstəklənmir
@@ -453,11 +453,11 @@ sticker:
 
           <i>Yaradın (/yeni) və ya seçin (/ paketlər) başqa bir paket</i>
         animated: |
-          <b>Xəta!</b>
-          Bu fayl növü dəstəklənmir
-          Siz bu cizgi fayllarını vektor paketinə əlavə edə bilərsiniz
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Yaradın (/yeni) və ya seçin (/ paketlər) başqa bir paket</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Xəta!</b>
           Bu fayl növü dəstəklənmir
@@ -518,22 +518,22 @@ scenes:
       <b><u>Paket növünü seçin</u></b>
     regular: '😊 Etiket'
     custom_emoji: '🌟 Emoji (mükafat)'
-    static: '🌟 Statik'
-    animated: '✨ Vektor'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
-      <b><u>Paket növünü seçin</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Ümumi</b> - statik (hərəkət etməyin), rastr, fayl format - PNG əlavə etməzdən əvvəl (bot emal olunur), əlavə etdikdən sonra - WEBP.
-      Adi paketin nümunəsi - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - animasiya video paketi. İstənilən video, gif və foto əlavə edə bilərsiniz.
-      Nümunə video paketi - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animasiyalı</b> - animasiyalı, vektor (onlarda faylın daxilində olan obyektlərin dəqiq təsviri var. hər hansı bir miqyasda aydın şəkildə göstərildiyi), fayl formatı - TGS, Lottie formatının bir variasiyası.
-      Animasiya paketinə nümunə - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Animasiyalı və video stiker dəstlərində 50-yə qədər stiker ola bilər. Statik stiker dəstlərində 120-yə qədər stiker ola bilər.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Yeni stiker paketi üçün bir ad daxil edin:</b>
       <i>Aşağıda təsadüfi olaraq yaradılan bir ad da seçə bilərsiniz.</i>
