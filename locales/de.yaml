@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Sticker
       custom_emoji: Emojis
-      inline: Inline
+      inline: For search
     empty: |
       <b>Du hast noch keine Packs.</b>
       Zum Erstellen schreibe den Befehl /new
-    inline_title: Inline-Pack
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Pack auswählen</b>
 
@@ -442,11 +442,11 @@ sticker:
         Die Videodatei hat nicht das richtige WEBM-Format.
       file_type:
         static: |
-          <b>Fehler!</b>
-          Dieser Dateityp wird nicht unterstützt
-          Du kannst dieses Foto oder den statischen Sticker zum statischen Pack hinzufügen
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Fehler!</b>
           Dieser Dateityp wird nicht unterstützt
@@ -454,11 +454,11 @@ sticker:
 
           <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
         animated: |
-          <b>Fehler!</b>
-          Dieser Dateityp wird nicht unterstützt
-          Du kannst diese animierten Dateien zum Vektorpack hinzufügen
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Fehler!</b>
 
@@ -520,22 +520,22 @@ scenes:
       <b><u>Pack-Typ wählen</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (Premium)'
-    static: '🌟 Statisch'
-    animated: '✨ Vektor'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
-      <b><u>Pack-Typ wählen</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Allgemein</b> - statisch (nicht beweglich), Raster, Dateiformat - vor dem Hinzufügen PNG (der Bot verarbeitet), nach dem Hinzufügen - WEBP.
-      Ein Beispiel für ein reguläres Pack - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - animiertes Video-Pack. Du kannst beliebige Videos, GIFs und Fotos hinzufügen.
-      Beispielvideo-Pack - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animiert</b> - animiert, Vektor (sie haben eine genaue Beschreibung der Objekte innerhalb der Datei, wodurch sie bei jeder Skalierung klar dargestellt werden), Dateiformat - TGS, eine Variation des Lottie-Formats.
-      Ein Beispiel für ein animiertes Pack - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Animierte und Video-Sticker-Sets können bis zu 50 Sticker enthalten. Statische Sticker-Sets können bis zu 120 Sticker enthalten.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Gebe einen neuen Stickernamen ein:</b>
       <i>Du kannst durch den Knopf einen zufälligen Namen wählen.</i>
