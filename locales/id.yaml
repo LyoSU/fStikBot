@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Stiker
       custom_emoji: Emoji
-      inline: Tombol sebaris
+      inline: For search
     empty: |
       <b>Anda belum memiliki paket stiker.</b>
       Untuk membuat, tulis perintah /new
-    inline_title: Paket sebaris
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Pilih paket</b>
 
@@ -442,11 +442,11 @@ sticker:
         File video tidak dalam format WEBM yang benar.
       file_type:
         static: |
-          <b>Kesalahan!</b>
-          Jenis file ini tidak didukung
-          Anda dapat menambahkan foto atau stiker statis ini ke paket statis
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Buat (/baru) atau pilih (/paket) paket lain</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>Kesalahan!</b>
           Jenis file ini tidak didukung
@@ -454,11 +454,11 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/ paket) paket lain</i>
         animated: |
-          <b>Kesalahan!</b>
-          Jenis file ini tidak didukung
-          Anda dapat menambahkan file animasi ini ke paket vektor
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Buat (/baru) atau pilih (/ paket) paket lain</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>Kesalahan!</b>
           Jenis file ini tidak didukung
@@ -519,22 +519,22 @@ scenes:
       <b><u>Pilih jenis paket</u></b>
     regular: '😊 Stiker'
     custom_emoji: '🌟Emoji (premium)'
-    static: '🌟 Statis'
-    animated: '✨ Vektor'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
-      <b><u>Pilih jenis paket</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Umum</b> - statis (tidak bergerak), raster, file format - sebelum menambahkan PNG (bot sedang memproses), setelah menambahkan - WEBP.
-      Contoh paket reguler - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - paket video animasi. Anda dapat menambahkan video, gif, dan foto apa pun.
-      Contoh paket video - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animasi</b> - animasi, vektor (mereka memiliki deskripsi yang tepat tentang objek di dalam file, karena yang ditampilkan dengan jelas pada skala apa pun), format file - TGS, variasi dari format Lottie.
-      Contoh paket animasi - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Kumpulan stiker animasi dan video dapat berisi hingga 50 stiker. Set stiker statis dapat memiliki hingga 120 stiker.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Masukkan nama paket stiker baru:</b>
       <i>Anda dapat memilih nama acak pada tombol.</i>
