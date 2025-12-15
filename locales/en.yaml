@@ -779,14 +779,14 @@ scenes:
       general: General — for any photos
       anime: Anime — for anime pictures
       birefnet_general: BirefNet - for any photos
-    add_to_set_btn: '🌟 Add to set'
+    add_to_set_btn: '🌟 Add to pack'
     error: |
       <b>Error!</b>
       Oops, something went wrong.
   search:
     enter: |
       <b>🔎 Search sticker packs</b>
-      
+
       Enter keywords to search for sticker packs in the catalog
   leave: |
     Action canceled.
