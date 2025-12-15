@@ -779,7 +779,7 @@ scenes:
       general: 一般 - 任何照片
       anime: 动漫 - 用于动漫图片
       birefnet_general: 一般 - 任何照片
-    add_to_set_btn: '🌟 添加到设置'
+    add_to_set_btn: '🌟 Add to pack'
     error: |
       <b>错误！</b>
       哎呀，出错了。
