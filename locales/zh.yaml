@@ -179,11 +179,11 @@ cmd:
     types:
       regular: 贴纸
       custom_emoji: 表情符号
-      inline: 内联
+      inline: For search
     empty: |
       <b>您还没有包.</b>
       要创建，请编写命令 /new
-    inline_title: 内联包
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 选择包</b>
 
@@ -450,11 +450,11 @@ sticker:
         视频文件格式不正确，应为WEBM格式。
       file_type:
         static: |
-          <b>错误！</b>
-          不支持该文件类型
-          您可以将这张照片或静态贴纸添加到静态包中
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>错误！</b>
           不支持该文件类型
@@ -462,11 +462,11 @@ sticker:
 
           <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         animated: |
-          <b>错误！</b>
-          不支持该文件类型
-          您可以将该动画文件添加到矢量包中
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>错误！</b>
           不支持该文件类型
@@ -527,22 +527,22 @@ scenes:
       <b><u>选择包装类型</u></b>
     regular: '😊 贴纸'
     custom_emoji: '🌟 表情符号（高级）'
-    static: '🌟 静态'
-    animated: '✨ 矢量'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 视频'
     pack_format: |
-      <b><u>选择包类型</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>常见问题</b> - 静态（不移动），光栅，文件格式 - 添加前为 PNG（机器人正在处理），添加后为 WEBP。
-      常规包示例 - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>视频</b> - 动画视频包。您可以添加任何视频、gif 和照片。
-      视频示例包 - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animated</b> - 动画，矢量（它们对文件中的对象有精确的描述，因此在任何比例下都能清晰显示），文件格式 - TGS，Lottie 格式的一种变体。
-      动画包示例 - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>动画和视频贴纸套装最多可有 50 个贴纸。静态贴纸套装最多可有 120 个贴纸。
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>为新贴纸输入名称：</b>
       <i>您也可以在下面选择一个随机生成的名称。</i>
