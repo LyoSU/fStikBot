@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Pegatinas
       custom_emoji: Emojis
-      inline: Inline
+      inline: For search
     empty: |
       <b>Aún no tienes paquetes.</b>
       Para crear, escribe el comando /new
-    inline_title: Paquete en línea
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Seleccionar paquete</b>
 
@@ -421,11 +421,11 @@ sticker:
         El archivo de video no está en el formato WEBM correcto.
       file_type:
         static: |
-          <b>¡Error!</b>
-          Este tipo de archivo no es compatible
-          Puedes agregar esta foto o sticker estático al paquete estático
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>Crea (/new) o elige (/packs) otro paquete</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
@@ -433,11 +433,11 @@ sticker:
 
           <i>Crea (/new) o elige (/packs) otro paquete</i>
         animated: |
-          <b>¡Error!</b>
-          Este tipo de archivo no es compatible
-          Puedes agregar estos archivos animados al paquete de vectores
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>Crea (/new) o elige (/packs) otro paquete</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
@@ -498,22 +498,22 @@ scenes:
       <b><u>Elija el tipo de paquete</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Estático'
-    animated: '✨ Vector'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
-      <b><u>Elija el tipo de paquete</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>Común</b> - estático (no se mueva), raster, formato de archivo - antes de añadir PNG (el bot está procesando), después de añadir - WEBP.
-      Un ejemplo de un paquete normal - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - paquete de vídeo de animación. Puede añadir cualquier vídeo, gif y foto.
-      pack de vídeo de muestra - t. e/addstickers/La mascota
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animada</b> - vector animado, (tienen una descripción exacta de los objetos dentro del archivo, debido a que se muestran claramente en cualquier escala), formato de archivo - TGS, una variación del formato Lottie.
-      Un ejemplo de un paquete animado - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>juegos animados y pegatinas de vídeo pueden tener hasta 50 pegatinas. Los conjuntos estáticos de pegatinas pueden tener hasta 120 pegatinas.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Introduzca un nombre para el nuevo pack de stickers:</b>
       <i>También puede elegir un nombre generado aleatoriamente a continuación.</i>
