@@ -169,11 +169,11 @@ cmd:
     types:
       regular: ステッカー
       custom_emoji: 絵文字
-      inline: Inline
+      inline: For search
     empty: |
       <b>パックはまだありません。</b>
       作成するには/new コマンドを入力してください
-    inline_title: インラインパック
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 パックを選択する</b>
 
@@ -424,11 +424,11 @@ sticker:
         ビデオファイルが正しいWEBM形式ではありません。
       file_type:
         static: |
-          <b>エラー!</b>
-          このファイルタイプはサポートされていません
-          この写真または静的ステッカーを静的パックに追加できます
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>作成 (/新規) または選択してください(/パック) 別のパック</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>エラー!</b>
           このファイルの種類はサポートされていません
@@ -436,11 +436,11 @@ sticker:
 
           <i>作成 (/新規) または (/パック) 別のパック</i>
         animated: |
-          <b>エラー!</b>
-          このファイルタイプはサポートされていません
-          このアニメーションファイルをベクターパックに追加できます
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>別のパックを作成 (/new) するか、選択 (/packs) します</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>エラー！</b>
           このファイルタイプはサポートされていません。
@@ -501,22 +501,22 @@ scenes:
       <b><u>パックタイプ</u></b>
     regular: '😊 ステッカー'
     custom_emoji: '🌟 絵文字 (プレミアム)'
-    static: '🌟 静止画'
-    animated: '✨ ベクター'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 ビデオ'
     pack_format: |
-      <b><u>パックの種類を選択</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>共通</b> - 静的 (移動しない)、ラスター、ファイル形式 - PNG 追加前 (ボットが処理中)、追加後 - WEBP。
-      通常パックの例 - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>ビデオ</b> - アニメーションビデオパック。ビデオ、gif、写真を追加できます。
-      サンプル ビデオ パック - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>アニメーション</b> - アニメーション、ベクター (ファイル内のオブジェクトの正確な説明が含まれているため、ファイル形式 - TGS、Lottie 形式のバリエーション。
-      アニメーション パックの例 - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>アニメーションおよびビデオ ステッカー セットには、最大 50 個のステッカーを含めることができます。静的ステッカー セットには、最大 120 枚のステッカーを含めることができます。</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>新しいステッカーパックの名前を入力してください：<i>ボタンでランダムな名前を選択できます。</i></b>
     pack_name: |
