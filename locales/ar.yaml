@@ -169,11 +169,11 @@ cmd:
     types:
       regular: الملصقات
       custom_emoji: ايموجي
-      inline: مضمنة
+      inline: For search
     empty: |
       <b>ليس لديك حزم بعد.</b>
       للإنشاء، اكتب الأمر /new
-    inline_title: حزمة مضمنة
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 اختر حزمة</b>
 
@@ -440,11 +440,11 @@ sticker:
         ملف الفيديو ليس بالتنسيق الصحيح WEBM.
       file_type:
         static: |
-          <b>خطأ!</b>
-          نوع الملف هذا غير مدعوم
-          يمكنك إضافة هذه الصورة أو الملصق الثابت إلى الحزمة الثابتة
+          <b>Error!</b>
+          This file type is not supported
+          You can add this photo or static sticker to the regular pack
 
-          <i>إنشاء (/ جديد) أو اختيار (/ حزم) حزمة أخرى</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         video: |
           <b>خطأ!</b>
           هذا النوع من الملفات غير مدعوم
@@ -452,11 +452,11 @@ sticker:
 
           <i>إنشاء (/ جديد) أو اختيار (/ حزم) حزمة أخرى</i>
         animated: |
-          <b>خطأ!</b>
-          هذا النوع من الملفات غير مدعوم
-          يمكنك إضافة هذه الملفات المتحركة إلى حزمة المتجهات
+          <b>Error!</b>
+          This file type is not supported
+          You can add these animated files to the animated pack
 
-          <i>إنشاء (/ جديد) أو اختيار (/ حزم) حزمة أخرى</i>
+          <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
           <b>خطأ!</b>
           نوع الملف هذا غير مدعوم
@@ -517,22 +517,22 @@ scenes:
       <b><u>اختر نوع الحزمة</u></b>
     regular: '😊 ملصق'
     custom_emoji: '🌟 Emoji (Premium)'
-    static: '🌟 ثابت'
-    animated: '✨ ناقل'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 فيديو'
     pack_format: |
-      <b><u>اختر نوع الحزمة</u></b>
+      <b><u>Choose pack type</u></b>
 
-      <b>الشائع</b> - ثابت (لا تتحرك)، raster, تنسيق الملف - قبل إضافة PNG (البوت قيد المعالجة)، بعد إضافة - WEBP.
-      مثال على حزمة عادية - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>فيديو</b> - حزمة فيديو متحركة. يمكنك إضافة أي فيديو، هدية وصورة.
-      عينة من حزمة الفيديو - ت. / ملصقات/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b></b> - متحركة، متجهة (لديها وصف دقيق للأشياء داخل الملف, بسبب عرضها بوضوح في أي مقياس)، شكل الملف - TGS, وهو نوع من تنسيق Lottie.
-      مثال على حزمة متحركة - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>يمكن أن تحتوي مجموعات ملصقات متحركة وملصقات فيديو على ما يصل إلى 50 ملصقة. مجموعات الملصقات الثابتة يمكن أن تحتوي على ما يصل إلى 120 ملصقا.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>أدخل اسم جديد لحزمة الملصقات:</b>
       <i>يمكنك اختيار اسم عشوائي على زر.</i>
