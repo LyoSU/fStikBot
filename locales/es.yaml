@@ -750,7 +750,7 @@ scenes:
       general: General — para cualquier foto
       anime: Anime — para imágenes de anime
       birefnet_general: BirefNet - para cualquier foto
-    add_to_set_btn: '🌟 Añadir al conjunto'
+    add_to_set_btn: '🌟 Add to pack'
     error: |
       <b>¡Error!</b>
       Ups, algo salió mal.
