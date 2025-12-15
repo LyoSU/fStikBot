@@ -169,11 +169,11 @@ cmd:
     types:
       regular: Stickers
       custom_emoji: Emojis
-      inline: Inline
+      inline: For search
     empty: |
       <b>You have no packs yet.</b>
       To create, write a command /new
-    inline_title: Inline pack
+    inline_title: Search pack
     select_group_pack_info: |
       <b>📁 Select pack</b>
 
@@ -445,7 +445,7 @@ sticker:
         static: |
           <b>Error!</b>
           This file type is not supported
-          You can add this photo or static sticker to the static pack
+          You can add this photo or static sticker to the regular pack
 
           <i>Create (/new) or choose (/packs) another pack</i>
         video: |
@@ -457,7 +457,7 @@ sticker:
         animated: |
           <b>Error!</b>
           This file type is not supported
-          You can add these animated files to the vector pack
+          You can add these animated files to the animated pack
 
           <i>Create (/new) or choose (/packs) another pack</i>
         unknown: |
@@ -527,22 +527,22 @@ scenes:
       <b><u>Choose pack type</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
-    animated: '✨ Vector'
+    static: '🖼 Regular'
+    animated: '✨ Animated'
     video: '📹 Video'
     pack_format: |
       <b><u>Choose pack type</u></b>
 
-      <b>Common</b> - static (do not move), raster, file format - before adding PNG (the bot is processing), after adding - WEBP.
-      An example of a regular pack - t.me/addstickers/Animals
+      <b>🖼 Regular</b> — still image. Best for photos.
+      Example — t.me/addstickers/Animals
 
-      <b>Video</b> - animation video pack. You can add any video, gif and photo.
-      Sample video pack - t.me/addstickers/TheMascot
+      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
+      Example — t.me/addstickers/TheMascot
 
-      <b>Animated</b> - animated, vector (they have an exact description of the objects inside the file, due to which they are displayed clearly at any scale), file format - TGS, a variation of the Lottie format.
-      An example of an animated pack - t.me/addstickers/IsabelleShizue
+      <b>✨ Animated</b> — smooth animation. Created with special tools.
+      Example — t.me/addstickers/IsabelleShizue
 
-      <i>Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers.</i>
+      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Enter new stickers pack name:</b>
       <i>You can choose random name on button.</i>
