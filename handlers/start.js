@@ -26,12 +26,6 @@ module.exports = async (ctx) => {
 
   const keyboard = []
 
-  if (ctx.config && ctx.config.advertising && ctx.config.advertising.text) {
-    keyboard.push([
-      Markup.urlButton(ctx.config.advertising.text, ctx.config.advertising.link)
-    ])
-  }
-
   // Adaptive menu based on user experience
   if (isNewUser) {
     // For new users - focus on creating
@@ -51,6 +45,9 @@ module.exports = async (ctx) => {
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog')
     ],
     [
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.guide'), 'guide:menu')
+    ],
+    [
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
     ],
     [
@@ -58,10 +55,16 @@ module.exports = async (ctx) => {
     ]
   )
 
-  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.enter', {
+  // Build message text with optional advertising
+  let messageText = ctx.i18n.t('cmd.start.enter', {
     name: userName(ctx.from)
-  }),
-  Markup.inlineKeyboard(keyboard).extra())
+  })
+
+  if (ctx.config?.advertising?.text && ctx.config?.advertising?.link) {
+    messageText += `\n\n<a href="${ctx.config.advertising.link}">${ctx.config.advertising.text}</a>`
+  }
+
+  await ctx.replyWithHTML(messageText, Markup.inlineKeyboard(keyboard).extra())
 
   if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {

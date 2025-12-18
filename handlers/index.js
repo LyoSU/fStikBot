@@ -17,6 +17,7 @@ module.exports = {
   handleCoedit: require('./coedit'),
   handleCatalog: require('./catalog'),
   handleSearchCatalog: require('./search-catalog'),
+  handleGuide: require('./guide'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
   handleStickerUpade: require('./sticker-update'),

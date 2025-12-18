@@ -27,6 +27,7 @@ const {
   handleBoostPack,
   handleCatalog,
   handleSearchCatalog,
+  handleGuide,
   handleCopyPack,
   handleCoedit,
   handleLanguage,
@@ -267,6 +268,7 @@ privateMessage.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticke
 privateMessage.command('catalog', handleCatalog)
 privateMessage.action(/search_catalog/, handleSearchCatalog)
 privateMessage.action(/^catalog$/, handleCatalog)
+privateMessage.action(/guide:(.*)/, handleGuide)
 privateMessage.command('public', handleSelectPack)
 privateMessage.command('emoji', handleEmoji)
 privateMessage.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
