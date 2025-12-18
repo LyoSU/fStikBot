@@ -64,7 +64,10 @@ module.exports = async (ctx) => {
     messageText += `\n\n<a href="${ctx.config.advertising.link}">${ctx.config.advertising.text}</a>`
   }
 
-  await ctx.replyWithHTML(messageText, Markup.inlineKeyboard(keyboard).extra())
+  await ctx.replyWithHTML(messageText, {
+    disable_web_page_preview: true,
+    ...Markup.inlineKeyboard(keyboard).extra()
+  })
 
   if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {

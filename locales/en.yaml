@@ -163,7 +163,8 @@ cmd:
 
       <b>Useful commands:</b>
       • /clear — remove background from photo
-      • /frame — set video sticker shape (round, square, etc.)
+      • /frame — set video sticker shape:
+        └ lite, medium, rounded, square, circle
 
       <b>💡 Tip:</b> Send PNG as <b>File</b> (📎) to keep transparency. "Photo" mode compresses and removes it.
     manage: |
@@ -193,6 +194,11 @@ cmd:
       • Can contain stickers, photos, GIFs, videos
       • Create in /packs → "For search" tab
       • Also has GIF search mode (via Tenor)
+
+      <b>Co-edit (share pack editing):</b>
+      Tap pack → Co-edit → get a link.
+      Anyone with link can add/delete stickers in your pack.
+      Reset link to remove all editors.
 
       <b>Pack options:</b>
       Tap any pack in /packs → rename, boost, co-edit, delete.
