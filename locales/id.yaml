@@ -139,6 +139,7 @@ cmd:
       donate: '☕️ Dukungan pengembangan bot'
       add_to_group: '👥 Tambahkan ke Grup'
       privacy: '🔒 Kebijakan Privasi'
+      guide: '📖 How to use'
     btn:
       new: '📥 Create new'
       catalog: 'Buka katalog'
@@ -147,6 +148,116 @@ cmd:
       catalog_browser_mini: '🌐 Di browser'
       catalog_app: '📱 Unduh aplikasi Android'
       catalog_app_mini: '📱 Aplikasi Android'
+  guide:
+    menu: |
+      <b>📖 How to use</b>
+
+      Choose a topic:
+    create: |
+      <b>🎨 Create stickers</b>
+
+      1. Send /new to create a pack
+      2. Choose type: regular, video, or emoji
+      3. Send photos, videos, or GIFs
+      4. Done! Bot converts everything automatically
+
+      <b>Useful commands:</b>
+      • /clear — remove background from photo
+      • /frame — set video sticker shape:
+        └ lite, medium, rounded, square, circle
+
+      <b>💡 Tip:</b> Send PNG as <b>File</b> (📎) to keep transparency. "Photo" mode compresses and removes it.
+    manage: |
+      <b>📁 Manage packs</b>
+
+      <b>Commands:</b>
+      • /packs — your packs list
+      • /delete — remove a sticker
+      • /copy — copy any pack
+      • /restore — recover hidden packs
+      • /original — find original sticker
+      • /about — pack and creator info
+
+      <b>Change emoji:</b>
+      Send a sticker → send new emoji.
+      Or send emoji right after adding.
+
+      <b>Default pack emoji:</b>
+      /emoji 🔥 — all new stickers get this.
+
+      <b>In groups:</b>
+      /ss (reply to media) — quick add to group pack.
+
+      <b>Inline packs (For search):</b>
+      A separate pack type for quick access via @botname in any chat.
+      • Not a real Telegram pack — stored in bot only
+      • Can contain stickers, photos, GIFs, videos
+      • Create in /packs → "For search" tab
+      • Also has GIF search mode (via Tenor)
+
+      <b>Co-edit (share pack editing):</b>
+      Tap pack → Co-edit → get a link.
+      Anyone with link can add/delete stickers in your pack.
+      Reset link to remove all editors.
+
+      <b>Pack options:</b>
+      Tap any pack in /packs → rename, boost, co-edit, delete.
+    catalog: |
+      <b>🔍 Find & share packs</b>
+
+      • /catalog — browse popular packs
+      • /publish — share your pack publicly
+      • Rate packs ⭐ to help others discover good ones
+
+      Good packs get more visibility. Yours can go viral 🔥
+    boost: |
+      <b>⚡ Boost & extras</b>
+
+      <b>Boost benefits:</b>
+      • No "${titleSuffix}" suffix in pack name
+      • Priority video processing
+      • Longer videos (up to 30 sec)
+      • Add multiple stickers at once
+
+      <b>Hidden feature:</b>
+      /new fill — create adaptive emoji (changes color with text).
+
+      Get boost → /donate
+    problems: |
+      <b>❓ FAQ & Fixes</b>
+
+      <b>⚫ Background turned black?</b>
+      Telegram removes transparency when you send as "Photo".
+      → Send PNG as <b>File</b> (📎 paperclip icon).
+
+      <b>🔄 Changes not showing?</b>
+      Telegram caches stickers. Wait ~1 hour or restart the app.
+
+      <b>📹 Video not animating?</b>
+      Likely a weird format. Try converting to MP4 or send as File instead of Video.
+
+      <b>🗑 How to delete a sticker?</b>
+      Send /delete, then tap the sticker you want to remove.
+
+      <b>🤏 Sticker too small?</b>
+      Crop your image to a square (1:1) before sending.
+
+      <b>🔗 How to remove "_by_fStikBot" from link?</b>
+      You can't. Telegram requires this suffix to identify which bot created the pack. It's a platform rule, not ours.
+
+      <b>💎 Do I need Premium?</b>
+      • Create packs: Free
+      • Use stickers: Free
+      • Send custom emoji: Premium only (Telegram rule)
+
+      <b>Still stuck?</b> @fStikCommunity
+    btn:
+      create: '🎨 Create stickers'
+      manage: '📁 Kelola paket'
+      catalog: '🔍 Find & share'
+      boost: '⚡ Boost & extras'
+      problems: '❓ Problems?'
+      back: '← Back'
   inline:
     switch_pm: '📁 Pilih paket'
   restore: |
