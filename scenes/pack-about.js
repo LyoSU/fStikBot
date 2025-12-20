@@ -113,10 +113,8 @@ packAbout.use((ctx, next) => {
         userId: sharedUserId,
         packs: packsToReturn ? packsToReturn.join(', ') : ctx.i18n.t('userAbout.no_packs')
       })).then(() => {
-        if (chunkedPacks && chunkedPacks.length > 1) {
-          for (let i = 1; i < chunkedPacks.length; i++) {
-            ctx.replyWithHTML(chunkedPacks[i].join(', '))
-          }
+        for (const chunk of chunkedPacks) {
+          ctx.replyWithHTML(chunk.join(', '))
         }
       })
     })
@@ -180,10 +178,8 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
       packs: packsToReturn ? packsToReturn.join(', ') : ctx.i18n.t('userAbout.no_packs')
     }))
 
-    if (chunkedPacks && chunkedPacks.length > 1) {
-      for (let i = 1; i < chunkedPacks.length; i++) {
-        await ctx.replyWithHTML(chunkedPacks[i].join(', '))
-      }
+    for (const chunk of chunkedPacks) {
+      await ctx.replyWithHTML(chunk.join(', '))
     }
     return
   }
@@ -324,10 +320,8 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     ]).extra()
   })
 
-  if (chunkedPacks && chunkedPacks.length > 1) {
-    for (let i = 1; i < chunkedPacks.length; i++) {
-      await ctx.replyWithHTML(chunkedPacks[i].join(', '))
-    }
+  for (const chunk of chunkedPacks) {
+    await ctx.replyWithHTML(chunk.join(', '))
   }
 })
 

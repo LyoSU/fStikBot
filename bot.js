@@ -306,10 +306,10 @@ privateMessage.command('emoji', handleEmoji)
 privateMessage.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 privateMessage.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
 privateMessage.command('original', (ctx) => ctx.scene.enter('originalSticker'))
-privateMessage.action(/original/, (ctx) => ctx.scene.enter('originalSticker'))
+privateMessage.action(/^original$/, (ctx) => ctx.scene.enter('originalSticker'))
 privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
 privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
-privateMessage.action(/download_original/, async (ctx) => {
+privateMessage.action(/^download_original$/, async (ctx) => {
   await ctx.answerCbQuery()
 
   const sticker = ctx.session?.lastStickerForDownload
