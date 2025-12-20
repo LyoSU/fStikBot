@@ -1,6 +1,6 @@
 ---
 language_name: '🇪🇸 Español'
-name: Bot de pegatinas favorito
+name: fStik — Stickers y Emoji
 description:
   long: |
     🧙 Soy el mago del paquete de emojis y pegatinas, ¡y estoy aquí para hacer que tu experiencia de mensajería sea más divertida! Mis poderes mágicos me permiten transformar tus fotos, videos y GIF favoritos en divertidos emojis y calcomanías sin la molestia de convertirlos y recortarlos. 🎉🎊 Conmigo puedes crear packs personalizados para cualquier ocasión con tan solo unos clics. ¿Entonces, qué esperas? ¡Comencemos y agreguemos un poco de ✨chispa✨ a sus chats!
@@ -280,11 +280,11 @@ cmd:
     types:
       regular: Pegatinas
       custom_emoji: Emojis
-      inline: For search
+      inline: Inline
     empty: |
       <b>Aún no tienes paquetes.</b>
       Para crear, escribe el comando /new
-    inline_title: Search pack
+    inline_title: Paquete en línea
     select_group_pack_info: |
       <b>📁 Seleccionar paquete</b>
 
@@ -532,11 +532,11 @@ sticker:
         El archivo de video no está en el formato WEBM correcto.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>¡Error!</b>
+          Este tipo de archivo no es compatible
+          Puedes agregar esta foto o sticker estático al paquete estático
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Crea (/new) o elige (/packs) otro paquete</i>
         video: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
@@ -544,11 +544,11 @@ sticker:
 
           <i>Crea (/new) o elige (/packs) otro paquete</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>¡Error!</b>
+          Este tipo de archivo no es compatible
+          Puedes agregar estos archivos animados al paquete de vectores
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Crea (/new) o elige (/packs) otro paquete</i>
         unknown: |
           <b>¡Error!</b>
           Este tipo de archivo no es compatible
@@ -609,22 +609,22 @@ scenes:
       <b><u>Elija el tipo de paquete</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 Estático'
+    animated: '✨ Vector'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Elija el tipo de paquete</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>Común</b> - estático (no se mueva), raster, formato de archivo - antes de añadir PNG (el bot está procesando), después de añadir - WEBP.
+      Un ejemplo de un paquete normal - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>Video</b> - paquete de vídeo de animación. Puede añadir cualquier vídeo, gif y foto.
+      pack de vídeo de muestra - t. e/addstickers/La mascota
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animada</b> - vector animado, (tienen una descripción exacta de los objetos dentro del archivo, debido a que se muestran claramente en cualquier escala), formato de archivo - TGS, una variación del formato Lottie.
+      Un ejemplo de un paquete animado - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>juegos animados y pegatinas de vídeo pueden tener hasta 50 pegatinas. Los conjuntos estáticos de pegatinas pueden tener hasta 120 pegatinas.</i>
     pack_title: |
       <b>Introduzca un nombre para el nuevo pack de stickers:</b>
       <i>También puede elegir un nombre generado aleatoriamente a continuación.</i>
@@ -861,7 +861,7 @@ scenes:
       general: General — para cualquier foto
       anime: Anime — para imágenes de anime
       birefnet_general: BirefNet - para cualquier foto
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 Añadir al conjunto'
     error: |
       <b>¡Error!</b>
       Ups, algo salió mal.
