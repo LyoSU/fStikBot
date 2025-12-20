@@ -373,6 +373,50 @@ privateMessage.action(/^download_original$/, async (ctx) => {
     }
   }
 })
+privateMessage.action(/^show_all_packs$/, async (ctx) => {
+  await ctx.answerCbQuery()
+
+  const data = ctx.session?.showAllPacksData
+  if (!data) {
+    return
+  }
+
+  const packs = await db.StickerSet.find({
+    ownerTelegramId: data.ownerId,
+    _id: { $ne: data.excludeSetId }
+  })
+
+  if (packs.length === 0) {
+    return
+  }
+
+  const chunkSize = 70
+  const formattedPacks = packs.map((pack) => {
+    if (pack.name.toLowerCase().endsWith('fstikbot') && pack.public !== true) {
+      if (
+        ctx.from.id === data.ownerId ||
+        ctx.from.id === ctx.config.mainAdminId ||
+        ctx?.session?.userInfo?.adminRights?.includes('pack')
+      ) {
+        return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
+      } else {
+        return '<i>[hidden]</i>'
+      }
+    }
+    return `<a href="https://t.me/addstickers/${pack.name}">${pack.name}</a>`
+  })
+
+  // Skip first 70 (already shown) and send the rest in chunks
+  const remainingPacks = formattedPacks.slice(chunkSize)
+  const chunks = []
+  for (let i = 0; i < remainingPacks.length; i += chunkSize) {
+    chunks.push(remainingPacks.slice(i, i + chunkSize))
+  }
+
+  for (const chunk of chunks) {
+    await ctx.replyWithHTML(chunk.join(', '), { disable_web_page_preview: true })
+  }
+})
 privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))

@@ -705,6 +705,7 @@ scenes:
       Sticker not found.
     btn:
       download: '📎 Download file'
+      show_all_packs: '📦 All packs (${count})'
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
       🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>

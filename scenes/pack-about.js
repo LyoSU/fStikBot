@@ -307,6 +307,24 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     is_animated: sticker.is_animated
   }
 
+  // Save data for "show all packs" button
+  const totalOtherPacks = packs.length
+  if (chunkedPacks.length > 0) {
+    ctx.session.showAllPacksData = {
+      ownerId: actualOwnerId,
+      excludeSetId: stickerSet?._id || null
+    }
+  }
+
+  // Build keyboard
+  const keyboard = [[Markup.callbackButton(ctx.i18n.t('scenes.packAbout.btn.download'), 'download_original')]]
+  if (chunkedPacks.length > 0) {
+    keyboard.push([Markup.callbackButton(
+      ctx.i18n.t('scenes.packAbout.btn.show_all_packs', { count: totalOtherPacks }),
+      'show_all_packs'
+    )])
+  }
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: escapeHTML(sticker.set_name),
@@ -315,14 +333,9 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     setId,
     otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
   }), {
-    ...Markup.inlineKeyboard([
-      [Markup.callbackButton(ctx.i18n.t('scenes.packAbout.btn.download'), 'download_original')]
-    ]).extra()
+    disable_web_page_preview: true,
+    ...Markup.inlineKeyboard(keyboard).extra()
   })
-
-  for (const chunk of chunkedPacks) {
-    await ctx.replyWithHTML(chunk.join(', '))
-  }
 })
 
 module.exports = packAbout
