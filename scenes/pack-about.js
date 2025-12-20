@@ -109,13 +109,29 @@ packAbout.use((ctx, next) => {
         packsToReturn = chunkedPacks.shift()
       }
 
+      // Save data for "show all packs" button
+      const totalPacks = findPacks.length
+      if (chunkedPacks.length > 0) {
+        ctx.session.showAllPacksData = {
+          ownerId: sharedUserId,
+          excludeSetId: null
+        }
+      }
+
+      const keyboard = []
+      if (chunkedPacks.length > 0) {
+        keyboard.push([Markup.callbackButton(
+          ctx.i18n.t('scenes.packAbout.btn.show_all_packs', { count: totalPacks }),
+          'show_all_packs'
+        )])
+      }
+
       ctx.replyWithHTML(ctx.i18n.t('userAbout.result', {
         userId: sharedUserId,
         packs: packsToReturn ? packsToReturn.join(', ') : ctx.i18n.t('userAbout.no_packs')
-      })).then(() => {
-        for (const chunk of chunkedPacks) {
-          ctx.replyWithHTML(chunk.join(', '))
-        }
+      }), {
+        disable_web_page_preview: true,
+        ...(keyboard.length > 0 ? Markup.inlineKeyboard(keyboard).extra() : {})
       })
     })
 
@@ -173,14 +189,30 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
       packsToReturn = chunkedPacks.shift()
     }
 
+    // Save data for "show all packs" button
+    const totalPacks = findPacks.length
+    if (chunkedPacks.length > 0) {
+      ctx.session.showAllPacksData = {
+        ownerId: sharedUserId,
+        excludeSetId: null
+      }
+    }
+
+    const keyboard = []
+    if (chunkedPacks.length > 0) {
+      keyboard.push([Markup.callbackButton(
+        ctx.i18n.t('scenes.packAbout.btn.show_all_packs', { count: totalPacks }),
+        'show_all_packs'
+      )])
+    }
+
     await ctx.replyWithHTML(ctx.i18n.t('userAbout.result', {
       userId: sharedUserId,
       packs: packsToReturn ? packsToReturn.join(', ') : ctx.i18n.t('userAbout.no_packs')
-    }))
-
-    for (const chunk of chunkedPacks) {
-      await ctx.replyWithHTML(chunk.join(', '))
-    }
+    }), {
+      disable_web_page_preview: true,
+      ...(keyboard.length > 0 ? Markup.inlineKeyboard(keyboard).extra() : {})
+    })
     return
   }
   if (!ctx.message) return
