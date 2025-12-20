@@ -284,10 +284,10 @@ module.exports = async (ctx) => {
       // else title = `🌟 ${title}`
 
       if (
-        userInfo.stickerSet?.id.toString() === pack.id.toString()
+        userInfo.stickerSet?._id?.toString() === pack._id.toString()
       ) title += ` ✅`
 
-      keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack.id}`)])
+      keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack._id}`)])
     })
   } else {
     messageText = ctx.i18n.t('cmd.packs.empty')
