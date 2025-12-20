@@ -1,6 +1,6 @@
 ---
 language_name: '🇮🇩 Indonesia'
-name: Favorite Stickers Bot
+name: fStik — Stiker & Emoji
 description:
   long: |
     🧙 Saya adalah penyihir emoji dan stiker, siap membuat pengalaman chatting Anda lebih menyenangkan! Dengan kekuatan ajaib saya, Anda dapat mengubah foto, video, dan GIF favorit Anda menjadi emoji dan stiker keren tanpa repot. 🎉🎊 Dengan hanya beberapa klik, Anda dapat membuat paket pribadi untuk setiap kesempatan. Jadi, tunggu apa lagi? Ayo tambahkan ✨kilauan✨ pada obrolan Anda!
@@ -280,11 +280,11 @@ cmd:
     types:
       regular: Stiker
       custom_emoji: Emoji
-      inline: For search
+      inline: Tombol sebaris
     empty: |
       <b>Anda belum memiliki paket stiker.</b>
       Untuk membuat, tulis perintah /new
-    inline_title: Search pack
+    inline_title: Paket sebaris
     select_group_pack_info: |
       <b>📁 Pilih paket</b>
 
@@ -553,11 +553,11 @@ sticker:
         File video tidak dalam format WEBM yang benar.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>Kesalahan!</b>
+          Jenis file ini tidak didukung
+          Anda dapat menambahkan foto atau stiker statis ini ke paket statis
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Buat (/baru) atau pilih (/paket) paket lain</i>
         video: |
           <b>Kesalahan!</b>
           Jenis file ini tidak didukung
@@ -565,11 +565,11 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/ paket) paket lain</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>Kesalahan!</b>
+          Jenis file ini tidak didukung
+          Anda dapat menambahkan file animasi ini ke paket vektor
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Buat (/baru) atau pilih (/ paket) paket lain</i>
         unknown: |
           <b>Kesalahan!</b>
           Jenis file ini tidak didukung
@@ -630,22 +630,22 @@ scenes:
       <b><u>Pilih jenis paket</u></b>
     regular: '😊 Stiker'
     custom_emoji: '🌟Emoji (premium)'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 Statis'
+    animated: '✨ Vektor'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Pilih jenis paket</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>Umum</b> - statis (tidak bergerak), raster, file format - sebelum menambahkan PNG (bot sedang memproses), setelah menambahkan - WEBP.
+      Contoh paket reguler - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>Video</b> - paket video animasi. Anda dapat menambahkan video, gif, dan foto apa pun.
+      Contoh paket video - t.me/addstickers/TheMascot
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animasi</b> - animasi, vektor (mereka memiliki deskripsi yang tepat tentang objek di dalam file, karena yang ditampilkan dengan jelas pada skala apa pun), format file - TGS, variasi dari format Lottie.
+      Contoh paket animasi - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>Kumpulan stiker animasi dan video dapat berisi hingga 50 stiker. Set stiker statis dapat memiliki hingga 120 stiker.</i>
     pack_title: |
       <b>Masukkan nama paket stiker baru:</b>
       <i>Anda dapat memilih nama acak pada tombol.</i>
@@ -881,7 +881,7 @@ scenes:
       general: Umum — untuk foto apa pun
       anime: Anime — untuk gambar anime
       birefnet_general: BirefNet - untuk foto apa pun
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 Tambahkan ke set'
     error: |
       <b>Kesalahan!</b>
       Ups, ada yang tidak beres.
