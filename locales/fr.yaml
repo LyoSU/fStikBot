@@ -1,6 +1,6 @@
 ---
 language_name: '🇫🇷 Français'
-name: Bot autocollant préféré
+name: fStik — Stickers & Emoji
 description:
   long: |
     🧙 Je suis le sorcier des packs d'emojis et de stickers, et je suis là pour rendre votre expérience de messagerie plus amusante ! Mes pouvoirs magiques me permettent de transformer vos photos, vidéos et GIFs préférés en emojis et stickers cool sans les tracas de la conversion et du recadrage. 🎉🎊 Avec moi, vous pouvez créer des packs personnalisés pour toutes les occasions en quelques clics. Alors, qu'attendez-vous ? Commençons et ajoutons un peu de ✨magie✨ à vos conversations !
@@ -280,11 +280,11 @@ cmd:
     types:
       regular: Autocollants
       custom_emoji: Emojis
-      inline: For search
+      inline: Inline
     empty: |
       <b>Vous n'avez pas encore de packs.</b>
       Pour créer, écrivez une commande /new
-    inline_title: Search pack
+    inline_title: Pack Inline
     select_group_pack_info: |
       <b>📁 Sélectionnez le pack</b>
 
@@ -546,11 +546,11 @@ sticker:
         Le fichier vidéo n'est pas au format WEBM correct.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>Erreur!</b>
+          Ce type de fichier n'est pas pris en charge
+          Vous pouvez ajouter cet autocollant photo ou statique au pack statique
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Créer (/new) ou choisir (/packs) un autre pack</i>
         video: |
           <b>Erreur!</b>
           Ce type de fichier n'est pas pris en charge
@@ -558,11 +558,11 @@ sticker:
 
           <i>Créer (/new) ou choisir (/packs) un autre pack</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>Erreur!</b>
+          Ce type de fichier n'est pas pris en charge
+          Vous pouvez ajouter ces fichiers animés au pack vectoriel
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Créer (/new) ou choisir (/packs) un autre pack</i>
         unknown: |
           <b>Erreur!</b>
           Ce type de fichier n'est pas pris en charge
@@ -623,22 +623,22 @@ scenes:
       <b><u>Choisissez le type de pack</u></b>
     regular: '😊 Autocollant'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 Statique'
+    animated: '✨ Vecteur'
     video: '📹 Vidéo'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Choisissez le type de pack</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>Commun</b> - statique (ne pas déplacer), raster, fichier format - avant d'ajouter PNG (le bot est en cours de traitement), après avoir ajouté - WEBP.
+      Un exemple de pack régulier - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>Vidéo</b> - pack vidéo d'animation. Vous pouvez ajouter n'importe quelle vidéo, gif et photo.
+      Exemple de pack vidéo - t.me/addstickers/TheMascot
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animé</b> - animé, vectoriel (ils ont une description exacte des objets à l'intérieur du fichier, en raison auquel ils sont affichés clairement à n'importe quelle échelle), format de fichier - TGS, une variante du format Lottie.
+      Un exemple de pack animé - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d’autocollants statiques peuvent contenir jusqu’à 120 autocollants.</i>
     pack_title: |
       <b>Entrez le nouveau nom du pack d'autocollants:</b>
       <i>Vous pouvez choisir un nom aléatoire sur le bouton.</i>
@@ -875,7 +875,7 @@ scenes:
       general: Général — pour toutes les photos
       anime: Anime — pour les photos d'anime
       birefnet_general: BirefNet - pour toutes les photos
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 Ajouter au pack'
     error: |
       <b>Erreur !</b>
       Oups, quelque chose s'est mal passé.
