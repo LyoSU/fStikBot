@@ -6,6 +6,7 @@ const Composer = require('telegraf/composer')
 const session = require('telegraf/session')
 const rateLimit = require('telegraf-ratelimit')
 const I18n = require('telegraf-i18n')
+const got = require('got')
 const {
   db
 } = require('./database')
@@ -308,6 +309,63 @@ privateMessage.command('original', (ctx) => ctx.scene.enter('originalSticker'))
 privateMessage.action(/original/, (ctx) => ctx.scene.enter('originalSticker'))
 privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
 privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
+privateMessage.action(/download_original/, async (ctx) => {
+  await ctx.answerCbQuery()
+
+  const sticker = ctx.session?.lastStickerForDownload
+  if (!sticker) {
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
+  }
+
+  const stickerInfo = await db.Sticker.findOne({
+    fileUniqueId: sticker.file_unique_id,
+    file: { $ne: null }
+  })
+
+  if (stickerInfo) {
+    await ctx.replyWithSticker(stickerInfo.file.file_id, {
+      caption: stickerInfo.emojis
+    }).catch(async (stickerError) => {
+      if (stickerError.description.match(/emoji/)) {
+        const fileLink = await ctx.telegram.getFileLink(stickerInfo.file.file_id)
+        await ctx.replyWithDocument({
+          url: fileLink,
+          filename: `${stickerInfo.file.file_unique_id}.webp`
+        }).catch((error) => {
+          ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
+        })
+      } else {
+        ctx.replyWithPhoto(stickerInfo.file.file_id, {
+          caption: stickerInfo.emojis
+        }).catch((photoError) => {
+          ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: photoError.description }))
+        })
+      }
+    })
+  } else {
+    const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+
+    if (fileLink.endsWith('.webp')) {
+      const buffer = await got(fileLink).buffer()
+      const image = sharp(buffer, { failOnError: false }).png()
+      await ctx.replyWithDocument({
+        source: image,
+        filename: `${sticker.file_unique_id}.png`
+      }).catch((error) => {
+        ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
+      })
+    } else if (fileLink.endsWith('.webm')) {
+      await ctx.replyWithDocument({
+        url: fileLink,
+        filename: `${sticker.file_unique_id}.webm`
+      }).catch((error) => {
+        ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
+      })
+    } else {
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
+    }
+  }
+})
 privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))

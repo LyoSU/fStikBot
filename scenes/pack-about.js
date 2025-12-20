@@ -303,6 +303,14 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     otherPacks = chunkedPacks.shift()
   }
 
+  // Save sticker for download button
+  ctx.session.lastStickerForDownload = {
+    file_id: sticker.file_id,
+    file_unique_id: sticker.file_unique_id,
+    is_video: sticker.is_video,
+    is_animated: sticker.is_animated
+  }
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: escapeHTML(sticker.set_name),
@@ -310,7 +318,11 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     mention,
     setId,
     otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
-  }))
+  }), {
+    ...Markup.inlineKeyboard([
+      [Markup.callbackButton(ctx.i18n.t('scenes.packAbout.btn.download'), 'download_original')]
+    ]).extra()
+  })
 
   if (chunkedPacks && chunkedPacks.length > 1) {
     for (let i = 1; i < chunkedPacks.length; i++) {
