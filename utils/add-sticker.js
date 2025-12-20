@@ -12,9 +12,17 @@ const addStickerText = require('../utils/add-sticker-text')
 
 EventEmitter.defaultMaxListeners = 100
 
-let queue = {}
+// Queue with TTL-based cleanup instead of full reset
+const queue = new Map()
+const QUEUE_TTL = 1000 * 60 * 5 // 5 minutes TTL
+
 setInterval(() => {
-  queue = {}
+  const now = Date.now()
+  for (const [key, value] of queue) {
+    if (now - value.timestamp > QUEUE_TTL) {
+      queue.delete(key)
+    }
+  }
 }, 1000 * 30)
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
@@ -74,7 +82,7 @@ updateConvertQueueMessages()
 convertQueue.on('global:completed', async (jobId, result) => {
   const { input, metadata, content } = JSON.parse(result)
 
-  delete queue[input.chatId]
+  queue.delete(input.chatId)
 
   const stickerExtra = input.stickerExtra
 
@@ -102,8 +110,12 @@ convertQueue.on('global:completed', async (jobId, result) => {
 
 convertQueue.on('global:failed', async (jobId, errorData) => {
   const job = await convertQueue.getJob(jobId)
+  if (!job) return
 
   const { input, metadata, content } = job.data
+
+  // Clean up queue on failure
+  if (input?.chatId) queue.delete(input.chatId)
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
@@ -126,18 +138,33 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
   job.remove()
 })
 
-const downloadFileByUrl = (fileUrl) => new Promise((resolve, reject) => {
+const downloadFileByUrl = (fileUrl, timeout = 30000) => new Promise((resolve, reject) => {
   const data = []
+  let totalSize = 0
+  const MAX_SIZE = 20 * 1024 * 1024 // 20MB limit
 
-  https.get(fileUrl, (response) => {
+  const req = https.get(fileUrl, (response) => {
     response.on('data', (chunk) => {
+      totalSize += chunk.length
+      if (totalSize > MAX_SIZE) {
+        req.destroy()
+        reject(new Error('File too large'))
+        return
+      }
       data.push(chunk)
     })
 
     response.on('end', () => {
       resolve(Buffer.concat(data))
     })
-  }).on('error', reject)
+  })
+
+  req.on('error', reject)
+
+  req.setTimeout(timeout, () => {
+    req.destroy()
+    reject(new Error('Download timeout'))
+  })
 })
 
 const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
@@ -367,8 +394,8 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       isVideo || isVideoNote
       || (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
     ) {
-      if (!queue[ctx.from.id]) queue[ctx.from.id] = {}
-      const userQueue = queue[ctx.from.id]
+      if (!queue.has(ctx.from.id)) queue.set(ctx.from.id, { timestamp: Date.now(), video: false })
+      const userQueue = queue.get(ctx.from.id)
 
       if (userQueue.video && !stickerSet?.boost) {
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {

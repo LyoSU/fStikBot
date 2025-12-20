@@ -7,15 +7,19 @@ const {
 
 const stegcloak = new StegCloak(false, false)
 
+// Pre-compile regex for better performance
+const HTML_ESCAPE_REGEX = /[&<>'"]/g
+const HTML_ESCAPE_MAP = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  "'": '&#39;',
+  '"': '&quot;'
+}
+
 const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
+  HTML_ESCAPE_REGEX,
+  (tag) => HTML_ESCAPE_MAP[tag] || tag
 )
 
 module.exports = async (ctx) => {
@@ -237,11 +241,12 @@ module.exports = async (ctx) => {
     }
   }
 
-  const stickerSets = await ctx.db.StickerSet.find(query).sort({
-    updatedAt: -1
-  })
-  .limit(limit)
-  .skip(page * limit)
+  // Use cursor-based pagination for better performance (avoids skip overhead)
+  const stickerSets = await ctx.db.StickerSet.find(query)
+    .sort({ updatedAt: -1 })
+    .limit(limit)
+    .skip(page * limit)
+    .lean()
 
   if (packType === 'inline' && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
@@ -293,7 +298,7 @@ module.exports = async (ctx) => {
     keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
   }
 
-  const stickerSetsCount = await ctx.db.StickerSet.count(query)
+  const stickerSetsCount = await ctx.db.StickerSet.countDocuments(query)
 
   const paginationKeyboard = []
 

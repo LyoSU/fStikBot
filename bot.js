@@ -85,18 +85,46 @@ bot.context.config = require('./config.json')
 // db connect
 bot.context.db = db
 
-// use session with memory limit
+// Session store with TTL-based cleanup (more memory efficient)
 const sessionStore = new Map()
+const sessionTimestamps = new Map()
+const SESSION_TTL = 1000 * 60 * 60 // 1 hour TTL
+
+// Cleanup expired sessions every 2 minutes
 setInterval(() => {
-  if (sessionStore.size > 10000) {
-    const entries = Array.from(sessionStore.entries())
-    entries.slice(0, 5000).forEach(([key]) => sessionStore.delete(key))
+  const now = Date.now()
+  let cleaned = 0
+  for (const [key, timestamp] of sessionTimestamps) {
+    if (now - timestamp > SESSION_TTL) {
+      sessionStore.delete(key)
+      sessionTimestamps.delete(key)
+      cleaned++
+    }
   }
-}, 1000 * 60 * 5) // cleanup every 5 minutes
+  if (cleaned > 0) {
+    console.log(`Session cleanup: removed ${cleaned} expired sessions, ${sessionStore.size} active`)
+  }
+}, 1000 * 60 * 2)
+
+// Wrap session store to track timestamps
+const sessionStoreWrapper = {
+  get: (key) => {
+    sessionTimestamps.set(key, Date.now())
+    return sessionStore.get(key)
+  },
+  set: (key, value) => {
+    sessionTimestamps.set(key, Date.now())
+    return sessionStore.set(key, value)
+  },
+  delete: (key) => {
+    sessionTimestamps.delete(key)
+    return sessionStore.delete(key)
+  }
+}
 
 bot.use(
   session({
-    store: sessionStore,
+    store: sessionStoreWrapper,
     getSessionKey: (ctx) => {
       if ((ctx.from && ctx.chat && ctx.chat.id === ctx.from.id) || (!ctx.chat && ctx.from)) {
         return `user:${ctx.from.id}`
@@ -241,7 +269,10 @@ bot.start((ctx, next) => {
 
 
 privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
-privateMessage.command('privacy', (ctx) => ctx.replyWithHTML(fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')))
+
+// Cache privacy.html at startup
+const privacyHtml = fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')
+privateMessage.command('privacy', (ctx) => ctx.replyWithHTML(privacyHtml))
 
 privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
 

@@ -17,8 +17,16 @@ const rtOP = io.metric({
 // })
 
 setInterval(() => {
-  if (Object.keys(stats.times).length > 1) {
-    const time = Object.keys(stats.times).shift()
+  const keys = Object.keys(stats.times)
+
+  // Prevent memory accumulation: clean up old entries if too many
+  if (keys.length > 60) {
+    const keysToDelete = keys.slice(0, keys.length - 60)
+    keysToDelete.forEach(key => delete stats.times[key])
+  }
+
+  if (keys.length > 1) {
+    const time = keys[0]
 
     const rps = stats.times[time].length
     if (stats.rpsAvrg > 0) stats.rpsAvrg = (stats.rpsAvrg + rps) / 2
@@ -35,12 +43,6 @@ setInterval(() => {
     console.log('🔄 response time avrg total:', stats.responseTimeAvrg)
 
     rtOP.set(stats.responseTimeAvrg)
-
-    // db.Stats.create({
-    //   rps,
-    //   responseTime: lastResponseTimeAvrg,
-    //   date: new Date()
-    // })
 
     delete stats.times[time]
   }

@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
   },
   inlineStickerSet: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet'
+    ref: 'StickerSet',
+    index: true
   },
   inlineType: {
     type: String

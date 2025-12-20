@@ -10,7 +10,11 @@ const {
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const redis = new Redis()
+// Redis connection with retry strategy
+const redis = new Redis({
+  retryStrategy: (times) => Math.min(times * 50, 2000),
+  maxRetriesPerRequest: 3
+})
 
 const telegram = new Telegram(process.env.MAIN_BOT_TOKEN)
 
@@ -19,6 +23,24 @@ const i18n = new I18n({
   defaultLanguage: 'uk',
   defaultLanguageOnMissing: true
 })
+
+// Cache config at startup instead of reading on every call
+let cachedConfig = null
+function getConfig() {
+  if (!cachedConfig) {
+    cachedConfig = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+  }
+  return cachedConfig
+}
+
+// Reload config every 5 minutes
+setInterval(() => {
+  try {
+    cachedConfig = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+  } catch (e) {
+    console.error('Failed to reload config:', e.message)
+  }
+}, 1000 * 60 * 5)
 
 const messaging = async (messagingData) => {
   console.log(messagingData.id, `messaging ${messagingData.name} start`)
@@ -38,7 +60,7 @@ const messaging = async (messagingData) => {
     messagingCreator = data
   })
 
-  const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+  const config = getConfig()
 
   const count = config.messaging.limit.max || 10
 
@@ -124,7 +146,7 @@ const messagingEdit = (messagingData) => new Promise((resolve) => {
   messagingData.editStatus = 2
   messagingData.save()
 
-  const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+  const config = getConfig()
 
   const key = `messaging:${messagingData.id}`
   const count = config.messaging.limit.max || 10
@@ -176,27 +198,52 @@ const messagingEdit = (messagingData) => new Promise((resolve) => {
   }, config.messaging.limit.duration || 1000)
 })
 
-setTimeout(async function f () {
-  const cursorMessaging = await db.Messaging.find({
-    status: { $lte: 0 },
-    date: {
-      $lte: new Date()
+// Process messaging queues without cursor/listener leak
+let isProcessingMessaging = false
+let isProcessingEdit = false
+
+async function processMessagingQueue() {
+  if (isProcessingMessaging) return
+  isProcessingMessaging = true
+
+  try {
+    const pendingMessages = await db.Messaging.find({
+      status: { $lte: 0 },
+      date: { $lte: new Date() }
+    }).limit(10)
+
+    for (const msg of pendingMessages) {
+      await messaging(msg)
     }
-  }).cursor()
+  } catch (error) {
+    console.error('Error processing messaging queue:', error.message)
+  } finally {
+    isProcessingMessaging = false
+  }
+}
 
-  cursorMessaging.on('data', messaging)
+async function processEditQueue() {
+  if (isProcessingEdit) return
+  isProcessingEdit = true
 
-  const cursorMessagingEdit = await db.Messaging.find({
-    editStatus: 1,
-    date: {
-      $lte: new Date()
+  try {
+    const pendingEdits = await db.Messaging.find({
+      editStatus: 1,
+      date: { $lte: new Date() }
+    }).limit(10)
+
+    for (const msg of pendingEdits) {
+      await messagingEdit(msg)
     }
-  }).cursor()
+  } catch (error) {
+    console.error('Error processing edit queue:', error.message)
+  } finally {
+    isProcessingEdit = false
+  }
+}
 
-  cursorMessagingEdit.on('data', messagingEdit)
-
-  setTimeout(f, 5000)
-}, 5000)
+setInterval(processMessagingQueue, 5000)
+setInterval(processEditQueue, 5000)
 
 const restartMessaging = async () => {
   const messagingData = await db.Messaging.findOne({

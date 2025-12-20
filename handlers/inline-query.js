@@ -4,6 +4,75 @@ const { tenor } = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
 
+// Cache for file type detection to avoid repeated API calls
+const fileTypeCache = new Map()
+const FILE_TYPE_CACHE_TTL = 1000 * 60 * 60 // 1 hour
+
+// Cleanup old cache entries every 10 minutes
+setInterval(() => {
+  const now = Date.now()
+  for (const [key, value] of fileTypeCache) {
+    if (now - value.timestamp > FILE_TYPE_CACHE_TTL) {
+      fileTypeCache.delete(key)
+    }
+  }
+}, 1000 * 60 * 10)
+
+// Batch file type detection with caching
+async function detectStickerTypes(ctx, stickers) {
+  const results = new Map()
+  const toFetch = []
+
+  // Check cache first
+  for (const sticker of stickers) {
+    if (!sticker.info || !sticker.info.file_id) continue
+
+    const cached = fileTypeCache.get(sticker.info.file_id)
+    if (cached) {
+      results.set(sticker._id.toString(), cached.type)
+    } else if (!sticker.info.stickerType) {
+      toFetch.push(sticker)
+    } else {
+      results.set(sticker._id.toString(), sticker.info.stickerType)
+    }
+  }
+
+  // Batch fetch uncached items (limit concurrency to avoid rate limits)
+  if (toFetch.length > 0) {
+    const BATCH_SIZE = 10
+    for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
+      const batch = toFetch.slice(i, i + BATCH_SIZE)
+      const promises = batch.map(async (sticker) => {
+        try {
+          const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
+          let type = 'sticker'
+
+          if (/document/.test(fileInfo.file_path)) type = 'document'
+          else if (/photo/.test(fileInfo.file_path)) type = 'photo'
+
+          // Cache the result
+          fileTypeCache.set(sticker.info.file_id, { type, timestamp: Date.now() })
+
+          // Update sticker in DB (fire and forget)
+          sticker.info.stickerType = type
+          sticker.save().catch(() => {})
+
+          return { id: sticker._id.toString(), type }
+        } catch {
+          return { id: sticker._id.toString(), type: 'sticker' }
+        }
+      })
+
+      const batchResults = await Promise.all(promises)
+      for (const { id, type } of batchResults) {
+        results.set(id, type)
+      }
+    }
+  }
+
+  return results
+}
+
 const composer = new Composer()
 
 composer.on('inline_query', async (ctx, next) => {
@@ -19,7 +88,7 @@ composer.on('inline_query', async (ctx, next) => {
     owner: ctx.session.userInfo.id,
     inline: false,
     hide: false
-  }).sort({ updatedAt: -1 }).limit(limit).skip(offset)
+  }).select('_id title name').sort({ updatedAt: -1 }).limit(limit).skip(offset).lean()
 
   if (!stickerSets || stickerSets.length <= 0) {
     return ctx.answerInlineQuery([], {
@@ -125,14 +194,15 @@ composer.on('inline_query', async (ctx) => {
 
       if (search) inlineSet = search
       else {
-        const userStickerSet = await ctx.db.StickerSet.find({
+        // Only fetch _id for filtering, not full documents
+        const userStickerSetIds = await ctx.db.StickerSet.find({
           owner: ctx.session.userInfo.id,
           hide: false
-        })
+        }).select('_id').lean()
 
         searchStickers = await ctx.db.Sticker.find({
           deleted: false,
-          stickerSet: { $in: userStickerSet },
+          stickerSet: { $in: userStickerSetIds.map(s => s._id) },
           $text: { $search: query }
         }).limit(limit).skip(offset).maxTimeMS(2000)
       }
@@ -145,51 +215,17 @@ composer.on('inline_query', async (ctx) => {
       }).limit(limit).skip(offset)
     }
 
+    // Pre-fetch all sticker types in parallel (optimized)
+    const stickerTypes = await detectStickerTypes(ctx, searchStickers)
+
     for (const sticker of searchStickers) {
       try {
-        // Пропускаємо стікери без file_id
         if (!sticker.info || !sticker.info.file_id) continue
 
-        if (!sticker.info.stickerType) {
-          const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
-          if (/document/.test(fileInfo.file_path)) sticker.info.stickerType = 'document'
-          else if (/photo/.test(fileInfo.file_path)) sticker.info.stickerType = 'photo'
-          else sticker.info.stickerType = 'sticker'
-          await sticker.save()
-        }
+        let stickerType = stickerTypes.get(sticker._id.toString()) || sticker.info.stickerType || 'sticker'
 
-        if (sticker.info.stickerType === 'video_note') {
-          sticker.info.stickerType = 'document'
-        }
-
-        if (sticker.info.stickerType === 'animation') sticker.info.stickerType = 'mpeg4_gif'
-
-        let stickerType = sticker.info.stickerType
-
-        // Перевіряємо файл тільки для типу 'sticker'
-        if (stickerType === 'sticker') {
-          const fileInfo = await ctx.tg.getFile(sticker.info.file_id)
-
-          // Визначаємо тип по папці файлу
-          if (fileInfo.file_path.includes('documents/')) {
-            stickerType = 'document'
-          } else if (fileInfo.file_path.includes('photos/')) {
-            stickerType = 'photo'
-          } else if (fileInfo.file_path.includes('animations/')) {
-            // ТІЛЬКИ файли з розширенням .mp4 або .gif
-            if (/\.mp4$/i.test(fileInfo.file_path)) {
-              stickerType = 'mpeg4_gif'
-            } else if (/\.gif$/i.test(fileInfo.file_path)) {
-              stickerType = 'gif'
-            } else {
-              // Файли без розширення в animations/ пропускаємо
-              continue
-            }
-          } else if (fileInfo.file_path.includes('videos/')) {
-            stickerType = 'video'
-          }
-          // .tgs, .webm, .webp в папці stickers/ залишаються як sticker
-        }
+        if (stickerType === 'video_note') stickerType = 'document'
+        if (stickerType === 'animation') stickerType = 'mpeg4_gif'
 
         let fieldFileIdName = stickerType + '_file_id'
         if (stickerType === 'mpeg4_gif') fieldFileIdName = 'mpeg4_file_id'
@@ -201,27 +237,20 @@ composer.on('inline_query', async (ctx) => {
         }
         data[fieldFileIdName] = sticker.info.file_id
 
-        // Різні типи мають різні обов'язкові поля
         if (stickerType === 'document' || stickerType === 'video') {
-          // title обов'язкове для document і video
           data.title = sticker.info.caption || 'File'
           data.description = sticker.info.caption || ''
         } else if (stickerType === 'photo' || stickerType === 'mpeg4_gif' || stickerType === 'gif') {
-          // title опціональне для photo, mpeg4_gif та gif
           if (sticker.info.caption) {
             data.title = sticker.info.caption
             data.description = sticker.info.caption
           }
         }
-        // sticker не має поля title взагалі
 
         stickersResult.push(data)
       } catch (error) {
-        // Пропускаємо проблемний стікер, але продовжуємо обробку інших
         console.error('Error processing sticker for inline query:', {
           sticker_id: sticker._id,
-          type: sticker.info && sticker.info.stickerType,
-          file_id: sticker.info && sticker.info.file_id,
           error: error.message
         })
       }

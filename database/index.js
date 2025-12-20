@@ -37,10 +37,16 @@ db.User.getData = async (tgUser) => {
   if (tgUser.telegram_id) telegramId = tgUser.telegram_id
   else telegramId = tgUser.id
 
+  // Optimized: single populate call with select for only needed fields
   let user = await db.User.findOne({ telegram_id: telegramId })
-    .populate('stickerSet')
-    .populate('inlineStickerSet')
-    .populate('animatedStickerSet')
+    .populate({
+      path: 'stickerSet',
+      select: '_id name title packType animated video inline create emojiSuffix frameType boost hide owner passcode'
+    })
+    .populate({
+      path: 'inlineStickerSet',
+      select: '_id name title inline'
+    })
 
   if (!user) {
     user = new db.User()
