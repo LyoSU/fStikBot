@@ -1,6 +1,6 @@
 ---
 language_name: '🇨🇳 简体中文'
-name: 最喜欢的贴纸机器人🇺🇦
+name: fStik — 贴纸和表情
 description:
   long: |
     🧙 我是表情包和贴纸大师，来让你的聊天更有趣！我的魔法可以将你最喜欢的照片，视频和 GIF 转换成酷炫的表情包和贴纸，无需麻烦的转换和裁剪。🎉🎊 通过我，你只需要几个点击就可以为任何场合创建个性化的贴纸包。那么，你还在等什么呢？让我们开始，给你的聊天添加一些✨闪光✨！
@@ -290,11 +290,11 @@ cmd:
     types:
       regular: 贴纸
       custom_emoji: 表情符号
-      inline: For search
+      inline: 内联
     empty: |
       <b>您还没有包.</b>
       要创建，请编写命令 /new
-    inline_title: Search pack
+    inline_title: 内联包
     select_group_pack_info: |
       <b>📁 选择包</b>
 
@@ -561,11 +561,11 @@ sticker:
         视频文件格式不正确，应为WEBM格式。
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>错误！</b>
+          不支持该文件类型
+          您可以将这张照片或静态贴纸添加到静态包中
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         video: |
           <b>错误！</b>
           不支持该文件类型
@@ -573,11 +573,11 @@ sticker:
 
           <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>错误！</b>
+          不支持该文件类型
+          您可以将该动画文件添加到矢量包中
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
         unknown: |
           <b>错误！</b>
           不支持该文件类型
@@ -638,22 +638,22 @@ scenes:
       <b><u>选择包装类型</u></b>
     regular: '😊 贴纸'
     custom_emoji: '🌟 表情符号（高级）'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 静态'
+    animated: '✨ 矢量'
     video: '📹 视频'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>选择包类型</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>常见问题</b> - 静态（不移动），光栅，文件格式 - 添加前为 PNG（机器人正在处理），添加后为 WEBP。
+      常规包示例 - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>视频</b> - 动画视频包。您可以添加任何视频、gif 和照片。
+      视频示例包 - t.me/addstickers/TheMascot
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animated</b> - 动画，矢量（它们对文件中的对象有精确的描述，因此在任何比例下都能清晰显示），文件格式 - TGS，Lottie 格式的一种变体。
+      动画包示例 - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>动画和视频贴纸套装最多可有 50 个贴纸。静态贴纸套装最多可有 120 个贴纸。
     pack_title: |
       <b>为新贴纸输入名称：</b>
       <i>您也可以在下面选择一个随机生成的名称。</i>
@@ -890,7 +890,7 @@ scenes:
       general: 一般 - 任何照片
       anime: 动漫 - 用于动漫图片
       birefnet_general: 一般 - 任何照片
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 添加到设置'
     error: |
       <b>错误！</b>
       哎呀，出错了。
