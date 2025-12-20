@@ -1,29 +1,28 @@
 ---
 language_name: '🇺🇸 English'
-name: Favorite Stickers Bot
+name: fStik — Stickers & Emoji
 description:
   long: |
-    🧙 I'm the emoji and sticker pack wizard, and I'm here to make your messaging experience more fun! My magic powers let me transform your favorite photos, videos, and GIFs into cool emojis and stickers without the hassle of conversion and cropping. 🎉🎊 With me, you can create personalized packs for any occasion with just a few clicks. So, what are you waiting for? Let's get started and add some ✨sparkle✨ to your chats!
+    Create custom stickers and emoji from photos, videos, and GIFs. No manual conversion or cropping needed — just send your files and the bot handles everything. Create personal packs in a few clicks.
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    🧙 I'm the emoji and sticker wizard! Transform photos, videos, and GIFs into cool stickers in a snap.
+    Create stickers and emoji from photos, videos, and GIFs. Fast and easy.
 ratelimit: Not so often!
 cmd:
   start:
     enter: |
-      🧙 Hello, ${name}! I'm the emoji and sticker pack wizard.
-      I can transform your photos, videos, and GIFs into cool stickers with just a few clicks
+      Hey ${name}! I create stickers and emoji from your photos, videos, and GIFs.
 
-      Send the /help command to learn more about what I can do
+      Send /help to see what I can do
 
-      💬 Need help? Join our support chat at @fStikCommunity (English only)
+      💬 Need help? @fStikCommunity (English only)
     group: |
-      🧙 Hello, ${groupTitle}! I'm the emoji and sticker pack wizard.
+      Hey ${groupTitle}! I create stickers and emoji packs.
 
-      To add a sticker to a group pack, use the /ss command in reply to a photo, video, gif, or sticker.
+      To add a sticker to a group pack, use /ss in reply to a photo, video, gif, or sticker.
     help: |
-      <b>🧙 Welcome! I'm your Sticker and Emoji Wizard</b>
+      <b>Sticker & Emoji Bot</b>
 
       <b>🎨 Creating Stickers and Packs</b>
 
