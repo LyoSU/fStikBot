@@ -1,6 +1,6 @@
 ---
 language_name: '🇩🇪 Deutsch'
-name: Lieblings-Sticker Bot
+name: fStik — Sticker & Emoji
 description:
   long: |
     🧙 Ich bin der Emoji- und Stickerpack-Zauberer, und ich bin hier, um dein Nachrichtenerlebnis unterhaltsamer zu gestalten! Meine magischen Kräfte erlauben es mir, deine Lieblingsfotos, Videos und GIFs ohne Konvertierungs- und Zuschneideeigenschaften in coole Emojis und Sticker zu verwandeln. 🎉🎊 Mit mir kannst du personalisierte Packs für jeden Anlass mit nur wenigen Klicks erstellen. Also, worauf wartest du noch? Lass uns anfangen und etwas ✨Glanz✨ zu deinen Chats hinzufügen!
@@ -280,11 +280,11 @@ cmd:
     types:
       regular: Sticker
       custom_emoji: Emojis
-      inline: For search
+      inline: Inline
     empty: |
       <b>Du hast noch keine Packs.</b>
       Zum Erstellen schreibe den Befehl /new
-    inline_title: Search pack
+    inline_title: Inline-Pack
     select_group_pack_info: |
       <b>📁 Pack auswählen</b>
 
@@ -553,11 +553,11 @@ sticker:
         Die Videodatei hat nicht das richtige WEBM-Format.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>Fehler!</b>
+          Dieser Dateityp wird nicht unterstützt
+          Du kannst dieses Foto oder den statischen Sticker zum statischen Pack hinzufügen
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
         video: |
           <b>Fehler!</b>
           Dieser Dateityp wird nicht unterstützt
@@ -565,11 +565,11 @@ sticker:
 
           <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>Fehler!</b>
+          Dieser Dateityp wird nicht unterstützt
+          Du kannst diese animierten Dateien zum Vektorpack hinzufügen
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
         unknown: |
           <b>Fehler!</b>
 
@@ -631,22 +631,22 @@ scenes:
       <b><u>Pack-Typ wählen</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (Premium)'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 Statisch'
+    animated: '✨ Vektor'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Pack-Typ wählen</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>Allgemein</b> - statisch (nicht beweglich), Raster, Dateiformat - vor dem Hinzufügen PNG (der Bot verarbeitet), nach dem Hinzufügen - WEBP.
+      Ein Beispiel für ein reguläres Pack - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>Video</b> - animiertes Video-Pack. Du kannst beliebige Videos, GIFs und Fotos hinzufügen.
+      Beispielvideo-Pack - t.me/addstickers/TheMascot
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animiert</b> - animiert, Vektor (sie haben eine genaue Beschreibung der Objekte innerhalb der Datei, wodurch sie bei jeder Skalierung klar dargestellt werden), Dateiformat - TGS, eine Variation des Lottie-Formats.
+      Ein Beispiel für ein animiertes Pack - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>Animierte und Video-Sticker-Sets können bis zu 50 Sticker enthalten. Statische Sticker-Sets können bis zu 120 Sticker enthalten.</i>
     pack_title: |
       <b>Gebe einen neuen Stickernamen ein:</b>
       <i>Du kannst durch den Knopf einen zufälligen Namen wählen.</i>
@@ -883,7 +883,7 @@ scenes:
       general: Allgemein — für alle Fotos
       anime: Anime — für Anime-Bilder
       birefnet_general: BirefNet - für alle Fotos
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 Zum Set hinzufügen'
     error: |
       <b>Fehler!</b>
       Ups, etwas ist schiefgelaufen.
