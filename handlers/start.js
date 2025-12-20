@@ -28,32 +28,34 @@ module.exports = async (ctx) => {
 
   // Adaptive menu based on user experience
   if (isNewUser) {
-    // For new users - focus on creating
+    // For new users - focus on creating first pack
     keyboard.push([
       Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
     ])
   } else {
-    // For experienced users - focus on managing packs
+    // For experienced users - both manage and create
     keyboard.push([
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null')
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
     ])
   }
 
-  // Common buttons for everyone
-  keyboard.push(
-    [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog')
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.guide'), 'guide:menu')
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
-    ],
-    [
-      Markup.urlButton(ctx.i18n.t('cmd.start.commands.add_to_group'), `https://t.me/${ctx.botInfo.username}?startgroup=bot`)
-    ]
-  )
+  // Tools row
+  keyboard.push([
+    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog'),
+    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
+  ])
+
+  // Discovery & Help row
+  keyboard.push([
+    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'pack_about'),
+    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.guide'), 'guide:menu')
+  ])
+
+  // Add to group
+  keyboard.push([
+    Markup.urlButton(ctx.i18n.t('cmd.start.commands.add_to_group'), `https://t.me/${ctx.botInfo.username}?startgroup=bot`)
+  ])
 
   // Build message text with optional advertising
   let messageText = ctx.i18n.t('cmd.start.enter', {

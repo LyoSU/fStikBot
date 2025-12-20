@@ -451,16 +451,15 @@ db.connection.once('open', async () => {
     const privateCommands = [
       { command: 'start', description: i18n.t(localeName, 'cmd.start.commands.start') },
       { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
-      { command: 'copy', description: i18n.t(localeName, 'cmd.start.commands.copy') },
-      { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
-      { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
-      { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.info') },
-      { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
+      { command: 'new', description: i18n.t(localeName, 'cmd.start.commands.new') },
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
+      { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
+      { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.info') },
+      { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
+      { command: 'copy', description: i18n.t(localeName, 'cmd.start.commands.copy') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
-      { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') },
-      { command: 'report', description: i18n.t(localeName, 'cmd.start.commands.report') },
       { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') },
+      { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') },
       { command: 'privacy', description: i18n.t(localeName, 'cmd.start.commands.privacy') },
     ]
 

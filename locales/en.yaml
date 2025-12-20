@@ -120,17 +120,17 @@ cmd:
       packs: '📁 My packs'
       new: '➕ New pack'
       new_emoji: '➕ New emoji pack'
-      search_catalog: '🔍 Catalog'
-      catalog: '🔍 Catalog'
+      search_catalog: '🔍 Find stickers'
+      catalog: '🔍 Find stickers'
       publish: '📤 Publish'
       delete: '🗑 Delete sticker'
-      original: '🔎 Find original'
+      original: '🔎 Find source'
       restore: '♻️ Restore pack'
       copy: '📋 Copy pack'
       emoji: '😀 Change emoji'
       round: '⭕ Round video'
       clear: '✂️ Remove background'
-      info: 'ℹ️ About pack'
+      info: '🔎 Whose sticker'
       lang: '🌐 Language'
       report: '🚨 Report'
       donate: '⭐ Support'
@@ -671,10 +671,13 @@ scenes:
         You can do this by sending the /donate command.
   original:
     enter: |
-      Send sticker — I'll find the original.
+      <b>🔎 Find source</b>
+
+      Send a sticker — I'll show which pack it was copied from.
+      If no source found — you'll get the file (PNG/WEBM).
     error:
       not_found: |
-        Original not found.
+        Source not found. Here's the sticker file:
   delete:
     enter: |
       Send sticker to delete.
