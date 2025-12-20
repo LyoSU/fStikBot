@@ -361,6 +361,13 @@ privateMessage.action(/^download_original$/, async (ctx) => {
       }).catch((error) => {
         ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
       })
+    } else if (fileLink.endsWith('.tgs')) {
+      await ctx.replyWithDocument({
+        url: fileLink,
+        filename: `${sticker.file_unique_id}.tgs`
+      }).catch((error) => {
+        ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
+      })
     } else {
       await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
     }

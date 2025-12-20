@@ -115,6 +115,21 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
           allow_sending_without_reply: true
         })
       })
+    } else if (fileLink.endsWith('.tgs')) {
+      await ctx.replyWithDocument({
+        url: fileLink,
+        filename: `${sticker.file_unique_id}.tgs`
+      }, {
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
+      }).catch((error) => {
+        ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
+          error: error.description
+        }), {
+          reply_to_message_id: ctx.message.message_id,
+          allow_sending_without_reply: true
+        })
+      })
     } else {
       await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), {
         reply_to_message_id: ctx.message.message_id,
