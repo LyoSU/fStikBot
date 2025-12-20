@@ -110,9 +110,9 @@ cmd:
       Search packs by keywords or browse popular ones.
       Rate packs to help others discover good ones.
     search_catalog: |
-      <b>🔍 Browse & Discover</b>
-      
-      Find sticker packs and publish your own:
+      <b>🌐 Pack catalog</b>
+
+      Browse other users' packs or publish your own:
     commands:
       ss: '🌟 Save sticker'
       start: '📜 Menu'
@@ -120,8 +120,8 @@ cmd:
       packs: '📁 My packs'
       new: '➕ New pack'
       new_emoji: '➕ New emoji pack'
-      search_catalog: '🔍 Find stickers'
-      catalog: '🔍 Find stickers'
+      search_catalog: '🌐 Catalog'
+      catalog: '🌐 Catalog'
       publish: '📤 Publish'
       delete: '🗑 Delete sticker'
       original: '🔎 Find source'
@@ -680,12 +680,14 @@ scenes:
         Source not found. Here's the sticker file:
   delete:
     enter: |
-      Send sticker to delete.
+      <b>🗑 Delete sticker</b>
+
+      Send the sticker you want to remove from the pack.
     confirm: |
-      Delete this sticker?
+      Remove this sticker from the pack?
     error:
       not_found: |
-        Sticker not found.
+        Sticker not found in database. It may have been created without this bot.
   rename:
     enter_name: |
       New name for <a href="${link}">${title}</a>:
@@ -695,9 +697,14 @@ scenes:
       Boost will remove "${titleSuffix}" → /donate
   packAbout:
     enter: |
-      <b>Send me a sticker for pack info, or forward a message/select user for creator info:</b>
+      <b>🔎 Whose sticker</b>
+
+      Send a sticker — I'll show the pack, creator, and their other packs.
+      Or forward a message — I'll show that person's packs.
     not_found: |
-      I could not find the sticker
+      Sticker not found.
+    btn:
+      download: '📎 Download file'
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
       🆔 <code>${setId}</code> <i>(Unique number for owner's packs, incremented per pack)</i>
@@ -827,13 +834,15 @@ scenes:
       <b>Selected frame type:</b> ${type}
   photoClear:
     enter: |
-      Send photo — I'll remove the background.
+      <b>✂️ Remove background</b>
 
-      <i>Works best with photos of people</i>
+      Send a photo — you'll get a PNG without background.
+      <i>Works best with photos of people.</i>
     enter_anime: |
-      Send photo — I'll remove the background.
+      <b>✂️ Remove background</b>
 
-      <i>Works best with anime</i>
+      Send a photo — you'll get a PNG without background.
+      <i>Works best with anime.</i>
     choose_model: |
       Model:
     web_app: WebApp — for photos with people
@@ -847,7 +856,9 @@ scenes:
       Something went wrong. Try again.
   search:
     enter: |
-      🔎 Enter keywords to search
+      <b>🔍 Search stickers</b>
+
+      Enter keywords — I'll find packs in the catalog.
   leave: |
     Canceled
   btn:

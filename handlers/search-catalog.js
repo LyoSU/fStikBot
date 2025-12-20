@@ -19,16 +19,6 @@ module.exports = async (ctx) => {
             text: ctx.i18n.t('cmd.start.commands.publish'),
             callback_data: 'publish'
           }
-        ],
-        [
-          {
-            text: ctx.i18n.t('cmd.start.commands.original'),
-            callback_data: 'original'
-          },
-          {
-            text: ctx.i18n.t('cmd.start.commands.info'),
-            callback_data: 'about'
-          }
         ]
       ]
     })
