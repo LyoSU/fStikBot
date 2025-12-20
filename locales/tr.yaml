@@ -1,6 +1,6 @@
 ---
 language_name: '🇹🇷 Türkçe'
-name: Favori Çıkartma Botu
+name: fStik — Çıkartmalar ve Emoji
 description:
   long: |
     🧙 Ben emoji ve çıkartma paketi büyücüsüyüm, mesajlaşma deneyiminizi daha eğlenceli hale getirmek için buradayım! Favori fotoğraf, video ve GIF'lerinizi dönüştürmeden ve kırpma işlemi yapmadan harika emoji ve çıkartmalara dönüştürmek için sihirli güçlerim var. 🎉🎊 Benimle, birkaç tıklama ile herhangi bir durum için kişiselleştirilmiş paketler oluşturabilirsiniz. Hadi başlayalım ve sohbetlerinize ✨parıltı✨ ekleyelim!
@@ -280,11 +280,11 @@ cmd:
     types:
       regular: Çıkartmalar
       custom_emoji: Emojiler
-      inline: For search
+      inline: Inline
     empty: |
       <b>Henüz bir çıkartma paketin yok</b>
       Oluşturmak için /new komutunu yaz
-    inline_title: Search pack
+    inline_title: Satır içi paket
     select_group_pack_info: |
       <b>📁 Paket seçin</b>
 
@@ -551,11 +551,11 @@ sticker:
         Video dosyası doğru WEBM formatında değil.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>Hata!</b>
+          Bu dosya türü desteklenmiyor
+          Bu fotoğrafı veya statik etiketi statik pakete ekleyebilirsiniz
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Oluştur (/yeni) veya seçin (/packs) başka bir paket</i>
         video: |
           <b>Hata!</b>
           Bu dosya türü desteklenmiyor
@@ -563,11 +563,11 @@ sticker:
 
           <i>Oluştur (/yeni) veya (/ paket) başka bir paket</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>Hata!</b>
+          Bu dosya türü desteklenmiyor
+          Bu animasyonlu dosyaları vektör paketine ekleyebilirsiniz
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Oluştur (/yeni) veya (/ paket) başka bir paket</i>
         unknown: |
           <b>Hata!</b>
           Bu dosya türü desteklenmiyor
@@ -628,22 +628,22 @@ scenes:
       <b><u>Paket türünü seçin</u></b>
     regular: '😊 Çıkartmalar'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 Statik'
+    animated: '✨ vektör'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Çıkartma paketi türünü seçin</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>Ortak</b> - statik (hareket etmeyin), raster, dosya formatı - PNG eklemeden önce (bot işliyor), ekledikten sonra - WEBP.
+      Normal çıkartma paketi örneği - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>Video</b> - animasyon video paketi. Herhangi bir video, gif ve fotoğraf ekleyebilirsiniz.
+      Örnek video çıkartma paketi - t.me/addstickers/TheMascot
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animasyonlu</b> - animasyonlu, vektör (dosyanın içindeki nesnelerin tam bir açıklaması vardır, bu nedenle her ölçekte net bir şekilde görüntülenirler), dosya formatı - TGS, Lottie biçiminin bir varyasyonu.
+      Animasyonlu çıkartma paketi örneği - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>Animasyonlu ve video çıkartma setlerinde en fazla 50 çıkartma bulunabilir. Statik çıkartma setlerinde en fazla 120 çıkartma bulunabilir.</i>
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
@@ -879,7 +879,7 @@ scenes:
       general: Genel — tüm fotoğraflar için
       anime: Anime — anime resimleri için
       birefnet_general: BirefNet — tüm fotoğraflar için
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 Sete ekle'
     error: |
       <b>Hata!</b>
       Maalesef bir şeyler ters gitti.
