@@ -1,6 +1,6 @@
 ---
 language_name: '🇧🇷 Português'
-name: Bot de Figurinhas Favoritas
+name: fStik — Figurinhas e Emoji
 description:
   long: |
     🧙 Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
@@ -280,11 +280,11 @@ cmd:
     types:
       regular: Figurinhas
       custom_emoji: Emojis
-      inline: For search
+      inline: Em linha
     empty: |
       <b>Você ainda não tem nenhum pacote.</b>
       Para criar um, escreva o comando /new
-    inline_title: Search pack
+    inline_title: Pacote em linha
     select_group_pack_info: |
       <b>📁 Selecione o pacote</b>
 
@@ -540,11 +540,11 @@ sticker:
         O arquivo de vídeo não está no formato WEBM correto.
       file_type:
         static: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add this photo or static sticker to the regular pack
+          <b>Erro!</b>
+          Este tipo de arquivo não é suportado
+          Você pode adicionar este adesivo estático ou foto ao pacote estático
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Criar (/new) ou escolher (/packs) outro pacote</i>
         video: |
           <b>Erro!</b>
           Este tipo de arquivo não é suportado
@@ -552,11 +552,11 @@ sticker:
 
           <i>Criar (/new) ou escolher (/packs) outro pacote</i>
         animated: |
-          <b>Error!</b>
-          This file type is not supported
-          You can add these animated files to the animated pack
+          <b>Erro!</b>
+          Este tipo de arquivo não é suportado
+          Você pode adicionar este arquivo animado ao vetor do pacote
 
-          <i>Create (/new) or choose (/packs) another pack</i>
+          <i>Criar (/new) ou escolher (/packs) outro pacote</i>
         unknown: |
           <b>Erro!</b>
           Este tipo de arquivo não é suportado
@@ -617,22 +617,22 @@ scenes:
       <b><u>Escolher tipo de pacote</u></b>
     regular: '😊 Adesivo'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
+    static: '🌟 Estático'
+    animated: '✨ Vetor'
     video: '📹 Vídeo'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Escolha o tipo de pacote</u></b>
 
-      <b>🖼 Regular</b> — still image. Best for photos.
-      Example — t.me/addstickers/Animals
+      <b>Comum</b> - estático (não mover), raster, arquivo formato - antes de adicionar PNG (o bot está processando), após adicionar - WEBP.
+      Um exemplo de pacote normal - t.me/addstickers/Animals
 
-      <b>📹 Video</b> — from videos, GIFs, or photos. Most popular choice.
-      Example — t.me/addstickers/TheMascot
+      <b>Vídeo</b> - pacote de vídeo de animação. Você pode adicionar qualquer vídeo, gif e foto.
+      Exemplo de pacote de vídeos - t.me/addstickers/TheMascot
 
-      <b>✨ Animated</b> — smooth animation. Created with special tools.
-      Example — t.me/addstickers/IsabelleShizue
+      <b>Animado</b> - animado, vetorial (possuem uma descrição exata dos objetos dentro do arquivo, devido para o qual são exibidos claramente em qualquer escala), formato de arquivo - TGS, uma variação do formato Lottie.
+      Um exemplo de pacote animado - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated packs — up to 50 stickers. Regular — up to 120.</i>
+      <i>Conjuntos de adesivos animados e de vídeo podem ter até 50 adesivos. Os conjuntos de adesivos estáticos podem ter até 120 adesivos.</i>
     pack_title: |
       <b>Digite o nome do novo pacote de sticker:</b>
       <i>Você pode escolher um nome aleatório no botão.</i>
@@ -869,7 +869,7 @@ scenes:
       general: Geral — para quaisquer fotos
       anime: Anime - para fotos de animes
       birefnet_general: BirefNet - para quaisquer fotos
-    add_to_set_btn: '🌟 Add to pack'
+    add_to_set_btn: '🌟 Adicionar ao conjunto'
     error: |
       <b>Erro!</b>
       Opps, algo deu errado.
