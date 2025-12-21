@@ -4,7 +4,7 @@ const { WalletPaySDK } = require('wallet-pay-sdk')
 const mongoose = require('mongoose')
 
 const donate = async (ctx) => {
-  const amount = parseInt(ctx?.message?.text) || ( ctx?.match && parseInt(ctx?.match[1]))
+  const amount = parseInt(ctx.scene.state.amount) || (ctx.match && parseInt(ctx.match[1]))
 
   if (isNaN(amount)) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
@@ -96,7 +96,5 @@ donateScene.enter(async (ctx) => {
     ])
   })
 })
-
-donateScene.on('text', donate)
 
 module.exports = donateScene
