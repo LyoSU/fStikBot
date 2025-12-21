@@ -61,12 +61,13 @@ const createInvoiceForAmount = async (ctx, amount, starPrice) => {
 
   await payment.save()
 
-  const invoiceLink = await ctx.telegram.createInvoiceLink({
+  const invoiceLink = await ctx.telegram.callApi('createInvoiceLink', {
     title: ctx.i18n.t('donate.invoice_title', { amount }),
     description: ctx.i18n.t('donate.description', { amount }),
     payload: payment._id.toString(),
+    provider_token: '',
     currency: 'XTR',
-    prices: [{ label: 'Credits', amount: starPrice }]
+    prices: JSON.stringify([{ label: 'Credits', amount: starPrice }])
   })
 
   return invoiceLink
