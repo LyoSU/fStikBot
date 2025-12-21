@@ -318,6 +318,7 @@ donate:
     • Видео до 30 секунд
 
     <b>Сколько кредитов купить?</b>
+  invoice_title: '${amount} Кредитов'
   btn:
     donate: '☕️ Донат'
   topup: |

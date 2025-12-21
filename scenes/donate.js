@@ -1,6 +1,5 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const { WalletPaySDK } = require('wallet-pay-sdk')
 const mongoose = require('mongoose')
 
 // Regional pricing tiers
@@ -48,103 +47,66 @@ const calculateStarPrice = (credits, locale) => {
   return Math.round(basePrice * multiplier)
 }
 
-const donate = async (ctx) => {
-  const amount = parseInt(ctx.scene.state.amount) || (ctx.match && parseInt(ctx.match[1]))
-
-  if (isNaN(amount)) {
-    return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
-  }
-
-  if (amount < 1) {
-    return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
-  }
-
-  if (amount > 1000) {
-    return ctx.replyWithHTML(ctx.i18n.t('donate.invalid_amount'))
-  }
-
-  const locale = ctx.i18n.locale()
-  const price = amount * 0.5 // USD price for crypto payments
-  const starPrice = calculateStarPrice(amount, locale)
-
-  const comment = `@${ctx?.from?.username || ctx?.from?.id} (${ctx.from.id}) for ${amount} Credits`
-
-  const walletPayment = new ctx.db.Payment({
-    _id: mongoose.Types.ObjectId(),
-    user: ctx.session.userInfo._id,
-    amount,
-    price: price,
-    currency: 'USD',
-    paymentSystem: 'walletpay',
-    comment,
-    status: 'pending'
-  })
-
-  await walletPayment.save()
-
-  const telegramPayment = new ctx.db.Payment({
+// Create invoice link for a specific credit amount
+const createInvoiceForAmount = async (ctx, amount, starPrice) => {
+  const payment = new ctx.db.Payment({
     _id: mongoose.Types.ObjectId(),
     user: ctx.session.userInfo._id,
     amount,
     price: starPrice,
     currency: 'XTR',
     paymentSystem: 'telegram',
-    comment,
     status: 'pending'
   })
 
-  await telegramPayment.save()
+  await payment.save()
 
-  const replyMarkup =  Markup.inlineKeyboard([
-    [Markup.payButton(`⭐️ Telegram Stars`)],
-    // [Markup.callbackButton('👛 Crypto (TON, USDT, BTC)', `donate:walletpay:${walletPayment._id.toString()}`)]
-  ])
-
-  await ctx.replyWithInvoice({
-    title: `Donate ${amount} Credits`,
-    description: ctx.i18n.t('donate.description', {
-      amount
-    }),
-    payload: telegramPayment._id.toString(),
+  const invoiceLink = await ctx.telegram.createInvoiceLink({
+    title: ctx.i18n.t('donate.invoice_title', { amount }),
+    description: ctx.i18n.t('donate.description', { amount }),
+    payload: payment._id.toString(),
     currency: 'XTR',
-    prices: [{ label: 'Credits', amount: starPrice }],
-    start_parameter: 'donate',
-    reply_markup: replyMarkup
+    prices: [{ label: 'Credits', amount: starPrice }]
   })
 
-  return ctx.scene.leave()
+  return invoiceLink
 }
 
 const donateScene = new Scene('donate')
 
 donateScene.enter(async (ctx) => {
-  if (ctx.scene.state.amount) {
-    return donate(ctx)
-  }
-
   const locale = ctx.i18n.locale()
+  const packages = [1, 3, 5, 10, 25]
+  const discounts = { 1: '', 3: '', 5: ' (-20%)', 10: ' (-30%)', 25: ' (-40%)' }
 
-  // Calculate prices for each package based on user's region
-  const prices = {
-    1: calculateStarPrice(1, locale),
-    3: calculateStarPrice(3, locale),
-    5: calculateStarPrice(5, locale),
-    10: calculateStarPrice(10, locale),
-    25: calculateStarPrice(25, locale)
+  // Calculate prices for each package
+  const prices = {}
+  for (const amount of packages) {
+    prices[amount] = calculateStarPrice(amount, locale)
   }
+
+  // Create invoice links for all packages in parallel
+  const invoiceLinks = {}
+  await Promise.all(
+    packages.map(async (amount) => {
+      invoiceLinks[amount] = await createInvoiceForAmount(ctx, amount, prices[amount])
+    })
+  )
+
+  // Build buttons with direct payment links
+  const buttons = packages.map((amount) => {
+    const label = amount === 1 ? '1 Credit' : `${amount} Credits`
+    return [Markup.urlButton(`${label} — ${prices[amount]} ⭐${discounts[amount]}`, invoiceLinks[amount])]
+  })
 
   await ctx.replyWithHTML(ctx.i18n.t('donate.menu', {
     titleSuffix: ` :: @${ctx.options.username}`,
     balance: ctx.session.userInfo.balance
   }), {
-    reply_markup: Markup.inlineKeyboard([
-      [Markup.callbackButton(`1 Credit — ${prices[1]} ⭐`, 'donate:1')],
-      [Markup.callbackButton(`3 Credits — ${prices[3]} ⭐`, 'donate:3')],
-      [Markup.callbackButton(`5 Credits — ${prices[5]} ⭐ (-20%)`, 'donate:5')],
-      [Markup.callbackButton(`10 Credits — ${prices[10]} ⭐ (-30%)`, 'donate:10')],
-      [Markup.callbackButton(`25 Credits — ${prices[25]} ⭐ (-40%)`, 'donate:25')],
-    ])
+    reply_markup: Markup.inlineKeyboard(buttons)
   })
+
+  return ctx.scene.leave()
 })
 
 module.exports = donateScene

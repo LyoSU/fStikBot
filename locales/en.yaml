@@ -318,6 +318,7 @@ donate:
     • Videos up to 30 seconds
 
     <b>How many credits?</b>
+  invoice_title: '${amount} Credits'
   btn:
     donate: '☕️ Donate'
   topup: |

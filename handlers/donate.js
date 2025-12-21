@@ -157,12 +157,6 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
   })
 })
 
-composer.action(/donate:(\d+)/, async (ctx) => {
-  return ctx.scene.enter('donate', {
-    amount: ctx.match[1]
-  })
-})
-
 composer.start(async (ctx, next) => {
   if (ctx.startPayload === 'donate') {
     return donateMenu(ctx)
