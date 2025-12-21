@@ -3,11 +3,18 @@ language_name: '🇧🇷 Português'
 name: fStik — Figurinhas e Emoji
 description:
   long: |
-    🧙 Sou a feiticeira dos pacotes de emoticons e adesivos. Com meus poderes mágicos, transformo suas fotos, vídeos e GIFs favoritos em emojis e adesivos incríveis sem a necessidade de cortes ou conversões. 🎉🎊 Comigo, você pode criar pacotes personalizados para qualquer ocasião com apenas alguns cliques. Então, vamos começar e dar mais ✨brilho✨ às suas conversas!
+    Crie stickers e emojis de fotos, vídeos e GIFs sem conversão manual. Tudo é processado automaticamente.
+
+    Recursos:
+    • Gerenciamento de pacotes
+    • Stickers de vídeo e emoji personalizados
+    • Baixar arquivos originais
+    • Converter para imagem
+    • Catálogo de stickers
 
     Pesquise adesivos: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    🧙 Eu sou o mago dos emojis e figurinhas! Transforme fotos, vídeos e GIFs em adesivos legais em um piscar de olhos.
+    Crie stickers e emojis de fotos, vídeos e GIFs. Rápido e fácil. 🇺🇦
 ratelimit: Não tão frequente!
 cmd:
   start:

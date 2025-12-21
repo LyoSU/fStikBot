@@ -3,7 +3,14 @@ language_name: '🇺🇸 English'
 name: fStik — Stickers & Emoji
 description:
   long: |
-    Create custom stickers and emoji from photos, videos, and GIFs. No manual conversion or cropping needed — just send your files and the bot handles everything. Create personal packs in a few clicks.
+    Create stickers and emoji from photos, videos, and GIFs. No manual conversion — bot handles everything. Easier than @Stickers.
+
+    Features:
+    • Easy pack management
+    • Video stickers & custom emoji
+    • Download original files
+    • Convert sticker/video/GIF to image
+    • Sticker catalog
 
     Search stickers: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |

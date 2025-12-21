@@ -3,18 +3,18 @@ language_name: '🇪🇸 Español'
 name: fStik — Stickers y Emoji
 description:
   long: |
-    Crea packs personalizados de stickers y emojis — envía imágenes, videos, GIFs o stickers existentes.
+    Crea stickers y emojis desde fotos, videos y GIFs sin conversión manual. Todo se procesa automáticamente.
 
-    Funciones:
-    • Gestión fácil de packs
+    Características:
+    • Gestión de packs
     • Stickers de video y emoji personalizados
     • Descarga archivos originales
-    • Convierte sticker/video/GIF a imagen
-    • Catálogo de packs
+    • Convierte a imagen
+    • Catálogo de stickers
 
     Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Crea stickers y emojis personalizados desde fotos, videos y GIFs. Rápido y fácil. 🇺🇦
+    Crea stickers y emojis desde fotos, videos y GIFs. Rápido y fácil. 🇺🇦
 ratelimit: '¡No tan a menudo!'
 cmd:
   start:
