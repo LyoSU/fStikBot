@@ -196,7 +196,7 @@ cmd:
     🧑‍💻 Ishlab chiquvchi: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Bot ishlab chiqishni qo'llab-quvvatlash</b>\nBotning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz\n\n<b>Balans:</b> <code>${balance}</code> Kreditlar\n1 Kredit bilan, siz bir quti boost qilish imkoniyatiga egasiz.\n\n<b>Boost quyidagi foydalarni beradi:</b>\n➖ "<code>${titleSuffix}</code>" qutilari nomini o'chirish <i>(havolada emas)</i>\n➖ Video stikerlarni konvertatsiya qilishda ustuvorlik\n➖ Birinchi navbatda bir nechta stikerlarni joriy qilish imkoniyati\n➖ Video stikerlar davomiyligi 30 soniyagacha\n\n<b>Xarid qilish uchun Kreditlar miqdorini tanlang:</b>
+    <b>☕️ Bot ishlab chiqishni qo'llab-quvvatlash</b>\nBotning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz\n\n<b>Balans:</b> <code>${balance}</code> Kreditlar\n1 Kredit bilan, siz bir quti boost qilish imkoniyatiga egasiz.\n\n<b>Boost quyidagi foydalarni beradi:</b>\n➖ Paket nomida "<code>${titleSuffix}</code>" yo'q <i>(havolada emas)</i>\n➖ Sarlavha 64 belgigacha (35 o'rniga)\n➖ Videolar 35 soniyagacha\n➖ Ustuvor konvertatsiya navbati\n➖ Bir vaqtning o'zida bir nechta stikerlar\n➖ Reklamasiz\n\n<b>Xarid qilish uchun Kreditlar miqdorini tanlang:</b>
   btn:
     donate: '☕️ Xayriya qiling'
   topup: |

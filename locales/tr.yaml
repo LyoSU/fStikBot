@@ -198,14 +198,16 @@ donate:
     <b>☕️ Bot geliştirme desteği</b>
     Botun geliştirilmesini destekleyerek Krediler kazanacaksınız
 
-    <b>Bakiye:</b> <code>${balance} </code> Krediler
+    <b>Bakiye:</b> <code>${balance}</code> Krediler
     1 Kredi ile bir paketi yükseltme fırsatınız var.
 
     <b>Yükseltme şu avantajları sağlar:</b>
-    ➖ Paket adında "<code>${titleSuffix} </code>" devre dışı bırakma <i>(bağlantıda değil)</i>
-    ➖ Video çıkartmaları dönüştürürken öncelik
-    ➖ İşlem kuyruğuna birden fazla çıkartma ekleme yeteneği
-    ➖ Video çıkartmaların süresi 30 saniyeye kadar
+    ➖ Paket adında "<code>${titleSuffix}</code>" olmaz <i>(bağlantıda değil)</i>
+    ➖ Başlık 64 karaktere kadar (35 yerine)
+    ➖ 35 saniyeye kadar videolar
+    ➖ Dönüştürme kuyruğunda öncelik
+    ➖ Aynı anda birden fazla çıkartma
+    ➖ Reklam yok
 
     <b>Satın almak istediğiniz Kredi miktarını seçin:</b>
   btn:

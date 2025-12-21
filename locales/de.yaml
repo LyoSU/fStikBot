@@ -204,9 +204,11 @@ donate:
 
     <b>Das Boost bietet folgende Vorteile:</b>
     ➖ Deaktivierung von "<code>${titleSuffix}</code>" im Pack-Namen <i>(nicht im Link)</i>
-    ➖ Priorität bei der Konvertierung von Videostickern
-    ➖ Möglichkeit, mehr als einen Sticker zur Bearbeitungsliste hinzuzufügen
-    ➖ Dauer der Videosticker bis zu 30 Sekunden
+    ➖ Titel bis zu 64 Zeichen (statt 35)
+    ➖ Videosticker bis zu 35 Sekunden
+    ➖ Priorität bei der Konvertierungswarteschlange
+    ➖ Mehrere Sticker gleichzeitig
+    ➖ Keine Werbung
 
     <b>Wählen Sie die Anzahl der Credits aus, die Sie kaufen möchten:</b>
   btn:

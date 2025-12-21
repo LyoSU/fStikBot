@@ -204,9 +204,11 @@ donate:
 
     <b>Le boost offre les avantages suivants : </b>
     ➖ Désactivation de "<code>${titleSuffix} </code>" dans le nom des packs <i>(pas dans le lien)</i>
-    ➖ Priorité lors de la conversion de stickers vidéos
-    ➖ Possibilité d'ajouter plus d'un sticker dans la file d'attente
-    ➖ Durée des stickers vidéos jusqu'à 30 secondes
+    ➖ Titre jusqu'à 64 caractères (au lieu de 35)
+    ➖ Vidéos jusqu'à 35 secondes
+    ➖ File de conversion prioritaire
+    ➖ Plusieurs stickers à la fois
+    ➖ Pas de publicités
 
     <b>Sélectionnez le montant de Crédits que vous souhaitez acheter : </b>
   btn:

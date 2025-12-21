@@ -196,7 +196,21 @@ cmd:
     🧑‍💻 Desenvolvedor: @ly_oBot
 donate:
   menu: |
-    <b>☕️ Suporte ao desenvolvimento do bot</b>\nAo apoiar o desenvolvimento do bot, você receberá Créditos\n\n<b>Saldo:</b> <code>${balance}</code> Créditos\nCom 1 Crédito, você tem a oportunidade de dar um boost num pacote.\n\n<b>O boost oferece os seguintes benefícios:</b>\n➖ Desativação de "<code>${titleSuffix}</code>" no nome dos pacotes <i>(não no link)</i>\n➖ Prioridade ao converter adesivos de vídeo\n➖ Possibilidade de adicionar mais de um adesivo à fila de processamento\n➖ Duração dos adesivos de vídeo até 30 segundos\n\n<b>Selecione a quantidade de Créditos que você deseja comprar:</b>
+    <b>☕️ Suporte ao desenvolvimento do bot</b>
+    Ao apoiar o desenvolvimento do bot, você receberá Créditos
+
+    <b>Saldo:</b> <code>${balance}</code> Créditos
+    Com 1 Crédito, você tem a oportunidade de dar um boost num pacote.
+
+    <b>O boost oferece os seguintes benefícios:</b>
+    ➖ Sem "<code>${titleSuffix}</code>" no nome do pacote <i>(não no link)</i>
+    ➖ Título até 64 caracteres (em vez de 35)
+    ➖ Vídeos até 35 segundos
+    ➖ Prioridade na fila de conversão
+    ➖ Vários adesivos de uma vez
+    ➖ Sem anúncios
+
+    <b>Selecione a quantidade de Créditos que você deseja comprar:</b>
   btn:
     donate: '☕ Doar'
   topup: |

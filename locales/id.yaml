@@ -203,10 +203,12 @@ donate:
     Dengan 1 Kredit, Anda memiliki peluang untuk meningkatkan satu paket.
 
     <b>Peningkatan memberikan manfaat sebagai berikut:</b>
-    ➖ Menonaktifkan "<code>${titleSuffix}</code>" di nama paket <i>(bukan di tautan)</i>
-    ➖ Prioritas saat mengonversi stiker video
-    ➖ Kemampuan menambahkan lebih dari satu stiker ke antrian pemrosesan
-    ➖ Durasi stiker video hingga 30 detik
+    ➖ Tanpa "<code>${titleSuffix}</code>" di nama paket <i>(bukan di tautan)</i>
+    ➖ Judul hingga 64 karakter (bukan 35)
+    ➖ Video hingga 35 detik
+    ➖ Prioritas dalam antrian konversi
+    ➖ Beberapa stiker sekaligus
+    ➖ Tanpa iklan
 
     <b>Pilih jumlah Kredit yang ingin Anda beli:</b>
   btn:

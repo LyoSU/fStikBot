@@ -313,9 +313,11 @@ donate:
 
     <b>Boost gives you:</b>
     • No "<code>${titleSuffix}</code>" in pack name
-    • Priority video conversion
-    • Multiple stickers in queue at once
-    • Videos up to 30 seconds
+    • Title up to 64 characters (instead of 35)
+    • Videos up to 35 seconds
+    • Priority conversion queue
+    • Multiple stickers at once
+    • No ads
 
     <b>How many credits?</b>
   invoice_title: '${amount} Credits'

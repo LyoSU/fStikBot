@@ -203,10 +203,12 @@ donate:
     1 Kredit ilə, bir paketi yüksəltmək imkanı var.
 
     <b>Yüksəltmənin təmin etdiyi üstünlüklər:</b>
-    ➖ Paket adlarında "<code>${titleSuffix}</code>" söndürülməsi <i>(linkdə deyil)</i>
-    ➖ Video stikerlərin çevrilməsində prioritet
-    ➖ Emal növbəsinə bir neçə stiker əlavə etmək imkanı
-    ➖ Video stikerlərin müddəti 30 saniyəyə qədər
+    ➖ Paket adında "<code>${titleSuffix}</code>" yoxdur <i>(linkdə deyil)</i>
+    ➖ Başlıq 64 simvola qədər (35 əvəzinə)
+    ➖ Videolar 35 saniyəyə qədər
+    ➖ Prioritet çevrilmə növbəsi
+    ➖ Eyni zamanda bir neçə stiker
+    ➖ Reklamsız
 
     <b>Almaq istədiyiniz Kreditlərin miqdarını seçin:</b>
   btn:
