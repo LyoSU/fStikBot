@@ -3,11 +3,18 @@ language_name: '🇫🇷 Français'
 name: fStik — Stickers & Emoji
 description:
   long: |
-    🧙 Je suis le sorcier des packs d'emojis et de stickers, et je suis là pour rendre votre expérience de messagerie plus amusante ! Mes pouvoirs magiques me permettent de transformer vos photos, vidéos et GIFs préférés en emojis et stickers cool sans les tracas de la conversion et du recadrage. 🎉🎊 Avec moi, vous pouvez créer des packs personnalisés pour toutes les occasions en quelques clics. Alors, qu'attendez-vous ? Commençons et ajoutons un peu de ✨magie✨ à vos conversations !
+    Créez des packs de stickers et emojis personnalisés — envoyez images, vidéos, GIFs ou stickers existants.
+
+    Fonctions :
+    • Gestion facile des packs
+    • Stickers vidéo et emojis personnalisés
+    • Téléchargement de fichiers originaux
+    • Conversion sticker/vidéo/GIF en image
+    • Catalogue de packs
 
     Rechercher des stickers : https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    🧙 Je suis l'assistant emoji et autocollant! Transformez des photos, des vidéos et des GIFs en autocollants cool en un clic.
+    Créez stickers et emojis depuis photos, vidéos et GIFs. Rapide et facile. 🇺🇦
 ratelimit: Pas si souvent!
 cmd:
   start:
@@ -218,7 +225,7 @@ donate:
   invalid_amount: |
     <b>Montant invalide</b>
 
-    Le montant minimum est de 5 Crédits
+    Le montant minimum est de 1 Crédit
   paymenu: |
     Tu veux acheter <b>${amount} Crédits</b> pour <b>${price}$</b>
 
@@ -350,16 +357,16 @@ callback:
         ERREUR!
         Impossible de trouver un autocollant.
       invalid_png: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Le fichier n'est pas une image PNG valide. Veuillez le convertir au format PNG avant de l'envoyer.
       invalid_dimensions: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Les dimensions de l'autocollant sont invalides. Les autocollants doivent être de 512x512 pixels.
       invalid_animated: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Le fichier d'autocollant animé n'est pas au format TGS correct.
       invalid_video: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Le fichier vidéo n'est pas au format WEBM correct.
   group_settings:
     success: |
@@ -420,16 +427,16 @@ sticker:
 
         Veuillez créer (/new) ou choisir (/packs) un autre pack.
       invalid_png: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Le fichier n'est pas une image PNG valide. Veuillez le convertir au format PNG avant de l'envoyer.
       invalid_dimensions: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Les dimensions de l'autocollant sont invalides. Les autocollants doivent être de 512x512 pixels.
       invalid_animated: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Le fichier d'autocollant animé n'est pas au format TGS correct.
       invalid_video: |
-        <b>Erreur !</b>
+        <b>Erreur !</b>
         Le fichier vidéo n'est pas au format WEBM correct.
       file_type:
         static: |
@@ -525,14 +532,14 @@ scenes:
       <b>Animé</b> - animé, vectoriel (ils ont une description exacte des objets à l'intérieur du fichier, en raison auquel ils sont affichés clairement à n'importe quelle échelle), format de fichier - TGS, une variante du format Lottie.
       Un exemple de pack animé - t.me/addstickers/IsabelleShizue
 
-      <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d’autocollants statiques peuvent contenir jusqu’à 120 autocollants.</i>
+      <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d'autocollants statiques peuvent contenir jusqu'à 120 autocollants.</i>
     pack_title: |
       <b>Entrez le nouveau nom du pack d'autocollants:</b>
       <i>Vous pouvez choisir un nom aléatoire sur le bouton.</i>
     pack_name: |
-      <b>Entrez un lien court pour le nouveau pack d'autocollants :</b>
+      <b>Entrez un lien court pour le nouveau pack d'autocollants :</b>
 
-      <i>Par exemple, ce pack utilise « Animaux » comme lien court : https://t.me/ addstickers/<u>Animaux</u></i>
+      <i>Par exemple, ce pack utilise « Animaux » comme lien court : https://t.me/ addstickers/<u>Animaux</u></i>
       <i>Vous pouvez choisir un lien court aléatoire sur le bouton.</i>
     ok: |
       Pack <a href="${link}">${title}</a> créé avec succès !
@@ -595,14 +602,14 @@ scenes:
     enter_name: |
       <b>Entrez un nouveau titre pour <a href="${link}">${title}</a>:</b>
     success: |
-      <b>Le titre a été modifié avec succès !</b>
+      <b>Le titre a été modifié avec succès !</b>
 
       Nouveau titre : <a href="${link}">${title}</a>
     boost_notice: |
       ❕ Pour supprimer le suffixe "<code>${titleSuffix} </code>", vous devez booster le pack. Plus de détails dans le menu en visitant : \/donate
   packAbout:
     enter: |
-      <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
+      <b>Envoyez-moi un autocollant ou un emoji personnalisé pour rechercher des informations à ce sujet :</b>
     not_found: |
       Je n'ai pas pu trouver l'autocollant
     result: |
@@ -648,7 +655,7 @@ scenes:
 
         <i>Vous pouvez publier n'importe quel pack qui vous appartient, même si elles sont créées ailleurs</i>
       owner_proof: |
-        <b>Pour vérifier la propriété de ce pack, vous devez suivre quelques étapes simples :</b>
+        <b>Pour vérifier la propriété de ce pack, vous devez suivre quelques étapes simples :</b>
         1. Ouvrez le bot @Stickers
         2. Envoyez <code>/packstats</code> commande
         3. Recherchez et choisissez le pack requis
@@ -680,12 +687,12 @@ scenes:
         <i>Vous pouvez également utiliser des hashtags pour catégoriser [#]</i>
         <i>Par exemple : #anime #meme #animals #cute #kpop #drôle #cat #game </i>
       select_language: |
-        <b>Choisissez les langues pour lesquelles votre pack est destiné :</b>
+        <b>Choisissez les langues pour lesquelles votre pack est destiné :</b>
         <i>Vous pouvez sélectionner plusieurs langues</i>
       button_all_languages: Toutes les langues
       button_confirm_language: Confirmer
       set_safe: |
-        <b>Votre pack est-il sûr pour les utilisateurs ?</b>
+        <b>Votre pack est-il sûr pour les utilisateurs ?</b>
         <i>Autrement dit, il ne contient pas d'érotisme ni d'autres contenus choquants</i>
       button_safe:
         safe: Oui, c'est sûr
@@ -718,7 +725,7 @@ scenes:
       Envoyez <code>${confirm}</code> pour confirmer que vous souhaitez vraiment supprimer ce pack.
     confirm: Oui, je suis tout à fait sûr.
     success: |
-      <b>Pack supprimé avec succès !</b>
+      <b>Pack supprimé avec succès !</b>
     error:
       - <b>Erreur!</b>
       - Oups, une erreur s'est produite.

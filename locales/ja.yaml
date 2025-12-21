@@ -204,7 +204,7 @@ donate:
   invalid_amount: |
     <b>無効な量</b>
 
-    最小量は5クレジットです
+    最小は1クレジットです
   paymenu: |
     <b>${amount}クレジット</b> を <b>${price}$</b> で購入する
 

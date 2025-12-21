@@ -204,7 +204,7 @@ donate:
   invalid_amount: |
     <b>Noto'g'ri miqdor</b>
 
-    Minimal miqdor 5 Kredit
+    Minimal miqdor 1 Kredit
   paymenu: |
     Siz <b>${amount} Kredit</b> ni <b>${price}$</b> ga sotib olmoqchisiz
 

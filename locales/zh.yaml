@@ -228,7 +228,7 @@ donate:
   invalid_amount: |
     <b>无效金额</b>
 
-    最低金额是 5 个信用点
+    最低金额是 1 个信用点
   paymenu: |
     您要购买 <b>${amount} 个信用点</b>，价格为 <b>${price}$</b>
 

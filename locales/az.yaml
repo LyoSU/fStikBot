@@ -218,7 +218,7 @@ donate:
   invalid_amount: |
     <b>Yanlış miqdar</b>
 
-    Ən az miqdar 5 Kredittir
+    Ən az miqdar 1 Kreditdir
   paymenu: |
     <b>${amount} Kredit</b> üçün <b>${price}$</b> almaq istəyirsiniz
 

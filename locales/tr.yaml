@@ -217,7 +217,7 @@ donate:
   invalid_amount: |
     <b>Geçersiz tutar</b>
 
-    Minimum tutar 5 kredidir
+    Minimum tutar 1 kredidir
   paymenu: |
     <b>${amount} Kredi</b> satın almak istiyorsunuz için <b>${price}$</b>
 
