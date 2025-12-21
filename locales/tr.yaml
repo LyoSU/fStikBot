@@ -12,10 +12,12 @@ ratelimit: Pek sık değil!
 cmd:
   start:
     enter: |
-      Hey ${name}!
-      I create stickers and emoji from photos, videos, and GIFs.
+      🧙 Merhaba, ${name}! Ben emoji ve çıkartma paketi sihirbazıyım.
+      Fotoğraflarınızı, videolarınızı ve GIF'lerinizi sadece birkaç tıklamayla harika çıkartmalara dönüştürebilirim
 
-      💬 @fStikCommunity
+      Neler yapabileceğim hakkında daha fazla bilgi edinmek için /help komutunu gönderin
+
+      💬 Yardıma mı ihtiyacınız var? @fStikCommunity adresindeki destek sohbetimize katılın (yalnızca İngilizce)
     group: |
       🧙 Merhaba, ${groupTitle}! Ben emoji ve çıkartma paketi sihirbazıyım.
 
@@ -105,42 +107,43 @@ cmd:
       <b>🔗 Açık Kaynak:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
-      <b>🔍 Sticker Catalog</b>
+      <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
 
-      Search packs by keywords or browse popular ones.
-      Rate packs to help others discover good ones.
+      • Aşağıdaki butona tıklayın ve her zevke uygun çıkartma paketlerinden oluşan geniş bir kataloğa erişin
+      • Anahtar kelimelere göre veya hazırlanmış sekmelerde arama yapın
+      • Tanıtmak için puan vermeyi unutmayın veya çıkartma paketini sıralamada düşürün
     search_catalog: |
       <b>🌐 Pack catalog</b>
 
       Browse other users' packs or publish your own:
     commands:
       ss: '🌟 Çıkartmayı kaydet'
-      start: '📜 Menu'
-      help: '❓ Help'
-      packs: '📁 My packs'
-      new: '➕ New pack'
-      new_emoji: '➕ New emoji pack'
+      start: '📜 Başlangıç menüsü'
+      help: '📖 Yardım'
+      packs: '📁 Paketleri yönet'
+      new: '🌝 Çıkartma paketi oluştur'
+      new_emoji: '😊 Emoji paketi oluştur'
       search_catalog: '🌐 Catalog'
-      catalog: '🌐 Catalog'
-      publish: '📤 Publish'
-      delete: '🗑 Delete sticker'
-      original: '🔎 Find source'
-      restore: '♻️ Restore pack'
-      copy: '📋 Copy pack'
-      emoji: '😀 Change emoji'
-      round: '⭕ Round video'
-      clear: '✂️ Remove background'
+      catalog: '📖 Katalog'
+      publish: '📤 Paketi yayınla'
+      delete: '❌ Çıkartmayı sil'
+      original: '🔍 Orijinal çıkartmayı bul'
+      restore: '🔀 Bir paketi geri yükle'
+      copy: '📋 Bir paketi kopyala'
+      emoji: '📝 Emoji soneki değiştir'
+      round: '🎥 Yuvarlak video'
+      clear: '🖼️ Fotoğraftan arka planı kaldır'
       info: '🔎 Whose sticker'
-      lang: '🌐 Language'
-      report: '🚨 Report'
-      donate: '⭐ Support'
+      lang: '🌐 Dil değiştir'
+      report: '🚨 Paketi şikayet et'
+      donate: '☕️ Geliştiriciyi destekle'
       add_to_group: '👥 Gruba Ekle'
-      privacy: '🔒 Privacy'
-      guide: '❓ Help'
+      privacy: '🔒 Gizlilik politikası'
+      guide: '📖 Yardım'
     btn:
-      new: '➕ New pack'
-      catalog: '🔍 Catalog'
-      catalog_mini: '🔍 Catalog'
+      new: '📥 Yeni oluştur'
+      catalog: '💖 Kataloğu aç'
+      catalog_mini: '💖 Katalog'
       catalog_browser: '🌐 Tarayıcıda aç'
       catalog_browser_mini: '🌐 Tarayıcıda'
       catalog_app: '📱 Android uygulamasını indirin'
@@ -258,17 +261,19 @@ cmd:
   inline:
     switch_pm: '📁 Paket seç'
   restore: |
-    <b>♻️ Restore pack</b>
+    <b>🗃 Paket restorasyonu</b>
 
-    Send link to the pack you want to restore.
+    Bir paketi geri yüklemek için bana geri yüklemek istediğiniz paketin bağlantısını göndermeniz gerekiyor
   copy: |
-    <b>📋 Copy pack</b>
+    <b>🗄 Paketi kopyala</b>
 
-    Send link to the pack you want to copy.
+    Başka bir paketi yenisine kopyalamak için bana bir çıkartma veya emoji paketinin bağlantısını göndermeniz yeterli
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 Rapor</b>
 
-    Found a pack that violates rules? Send link to @StickersReportBot
+    Yasaları ihlal edebileceğini veya Telegram'ın Hizmet Koşullarına aykırı olabileceğini düşündüğünüz bir çıkartma paketiyle karşılaşırsanız, lütfen bağlantısını @StickersReportBot adresine göndererek bize bildirin
+
+    <i>Botun paketlerin içeriğinden sorumlu olmadığını ve onu kontrol etme yeteneğinin olmadığını unutmayın</i>
   packs:
     info: |
       <b>📁 Paketler</b>
@@ -277,7 +282,8 @@ cmd:
       custom_emoji: Emojiler
       inline: Inline
     empty: |
-      No packs yet. Create one → /new
+      <b>Henüz bir çıkartma paketin yok</b>
+      Oluşturmak için /new komutunu yaz
     inline_title: Satır içi paket
     select_group_pack_info: |
       <b>📁 Paket seçin</b>
@@ -304,18 +310,22 @@ cmd:
     🧑‍💻 Geliştirici: @ly_oBot
 donate:
   menu: |
-    <b>⭐ Support the bot</b>
+    <b>☕️ Bot geliştirme desteği</b>
+    Botun geliştirilmesini destekleyerek Krediler kazanacaksınız
 
-    <b>Balance:</b> ${balance} credits
-    1 credit = boost one pack
+    <b>Bakiye:</b> <code>${balance}</code> Krediler
+    1 Kredi ile bir paketi yükseltme fırsatınız var.
 
-    <b>Boost gives you:</b>
-    • No "<code>${titleSuffix}</code>" in pack name
-    • Priority video conversion
-    • Multiple stickers in queue at once
-    • Videos up to 30 seconds
+    <b>Yükseltme şu avantajları sağlar:</b>
+    ➖ Paket adında "<code>${titleSuffix}</code>" olmaz <i>(bağlantıda değil)</i>
+    ➖ Başlık 64 karaktere kadar (35 yerine)
+    ➖ 35 saniyeye kadar videolar
+    ➖ Dönüştürme kuyruğunda öncelik
+    ➖ Aynı anda birden fazla çıkartma
+    ➖ Reklam yok
 
-    <b>How many credits?</b>
+    <b>Satın almak istediğiniz Kredi miktarını seçin:</b>
+  invoice_title: '${amount} Credits'
   btn:
     donate: '☕️ Bağış yap'
   topup: |
@@ -323,7 +333,7 @@ donate:
   invalid_amount: |
     <b>Geçersiz tutar</b>
 
-    Minimum tutar 5 kredidir
+    Minimum tutar 1 kredidir
   paymenu: |
     <b>${amount} Kredi</b> satın almak istiyorsunuz için <b>${price}$</b>
 
@@ -347,17 +357,21 @@ donate:
       Ödeme iptal edildi
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Ortak düzenleme</b>
 
-    Link: <code>${colink}</code>
+    Ortak düzenleme için bağlantı <a href="${link}">${title}</a>: <code>${colink}</code>
 
-    Share it — others can add/delete stickers in <a href="${link}">${title}</a>.
+    <b>Nasıl kullanılır:</b>
+    1. Pakete erişim vermek istediğiniz kişiye bağlantıyı gönderin
+    2. Bağlantıya tıkladıktan sonra, "başlat" düğmesine basmaları gerekmekte ve editörlere ekleneceklerdir
+    3. Editör, pakette çıkartma ekleyebilir, silebilir ve düzeltebilir
 
-    <b>Editors:</b> ${editors}
+    <b>Editörler:</b>
+    ${editors}
 
-    <i>Reset link to remove all</i>
+    <i>Editörleri silmek için, bağlantıyı sıfırlamanız gerekmektedir</i>
   no_editors: |
-    none
+    Henüz editör yok
   btn:
     send: '📤 Bağlantıyı gönder'
     reset: '🔁 Bağlantıyı sıfırla'
@@ -372,17 +386,19 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket bulunamadı
-      not_owner: Not your pack
-      hidden: Pack hidden
-      restored: Pack restored
+      not_owner: Bu sizin paketiniz değil
+      hidden: Paket başarıyla gizlendi
+      restored: Paket başarıyla geri yüklendi
     set_pack: |
-      ✅ Selected <a href="${link}">${title}</a>
+      🌟 Seçilen <a href="${link}">${title}</a> paket
 
-      Send photo, video or sticker to add.
+      <b>❔ Nasıl eklenir?</b>
+      Pakete eklemek için fotoğraf, video veya çıkartma gönderin
     set_inline_pack: |
-      ✅ Selected <u>${title}</u>
+      Seçilen <u>${title}</u> paket
 
-      Use: <code>@${botUsername} </code>in any chat.
+      Kullanmak için herhangi bir sohbete <code>@${botKullanıcıAdı}</code> yazın ve boşluk bırakın
+      Ayrıca, aşağıdaki düğmeye basarak da kullanabilirsiniz
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Güçlendirme</a></b>: ${boostStatus}
@@ -472,19 +488,28 @@ callback:
 sticker:
   add:
     ok: |
-      ✅ Added to <a href="${link}">${title}</a>
+      <b>Pakete başarıyla eklendi:</b>
+      <a href="${link}">${title}</a>
 
-      <i>You can send emoji for this sticker</i>
+      Bir saat içinde, bu paket tüm kullanıcılar için güncellenecek.
+
+      <i>Etikete eşleşen bir veya daha fazla emoji gönderin, eklemek istiyorsanız</i>
     ok_inline: |
-      ✅ Added to <u>${title}</u>
-    send_emoji: Send emoji for this sticker
+      <b>Pakete başarıyla eklendi:</b>
+      <u>${title}</u>
+    send_emoji: Harika, şimdi çıkartmayla eşleşen emojiyi gönder
     converting_process: |
-      ⏳ Converting: ${progress}/${total}
+      <b>Bekle...</b>
+      Dosyanız dönüştürülmek üzere sırada. Tamamlanmasını bekleyin. Bu biraz zaman alabilir.
 
-      <i>Boost = priority → /donate</i>
+      İlerleme: ${progress} / ${total}
+
+      <i>Botu destekleyen kullanıcılar kuyrukta öncelik kazanır (devamı: /donate)</i>
     catalog_offer: |
-      Want to share <a href="${link}">${title}</a>?
-      Add it to the catalog so others can find it.
+      <b>😲 Vay, harika bir paket yapmışsın!</b>
+
+      Botun diğer kullanıcılarının da görebilmesi için <a href="${link}">${title}</a> genel çıkartma kataloğuna eklemek ister misiniz?
+      <i>Çok fazla zaman almaz</i>
     quote: |
       Bu mesajdan bir alıntı oluşturmak için @QuotlyBot kullanın
     error:
@@ -552,17 +577,21 @@ sticker:
 
           <i>Başka bir paket oluşturun (/yeni) veya seçin (/packs)</i>
       wait_load: |
-        ⏳ Still processing previous file...
+        <b>Bekle!</b>
 
-        Boost = multiple files at once → /donate
+        Bot hala bir önceki dosyayı işliyor...
+        İşleme önceliğini artırmak ve kuyruğa birden fazla çıkartma ekleyebilmek için bot geliştirmeyi (/donate) destekleyebilirsiniz.
       timeout: |
-        ⚠️ High load. Video conversion only for boosted packs.
+        <b>Şu anda bot çok büyük bir yük yaşıyor</b>
+        Bu nedenle, video dönüştürme yalnızca aktif güçlendirmeli paketler için kullanılabilir
 
-        /donate
+        Daha fazla ayrıntı için /donate komutuna bakın
       convert: |
-        Couldn't convert video.
+        <b>Hata!</b>
+        Maalesef bot videonuzu dönüştüremedi.
 
-        Try MP4 format or send again.
+        Belki de videonuz bot için anlaşılmaz bir biçimde kaydedilmiştir. mp4 formatında olduğundan emin olun.
+        Botun dahili bir hatası da olabilir, bu videoyu tekrar göndermeyi deneyin.
       too_big: |
         <b>Hata!</b>
 
@@ -573,8 +602,10 @@ sticker:
         Bu çıkartma bulunamadı. Lütfen doğru pakette olduğundan emin olun veya tekrar eklemeyi deneyin.
 news:
   join: |
-    📢 <a href="${link}">Subscribe</a> for updates and new features.
-  join_btn: '📢 Subscribe'
+    ℹ️ <a href="${link}">Botla ilgili en son haberleri almak için</a> kanalımıza katılın.
+
+    <i>Botla ilgili en son haberlerin yanı sıra güncellemeler ve yeni özellikler almak için kanala abone olun.</i>
+  join_btn: '📢Kanala katılın'
   not_joined: '🙅 Kanala abone değilsiniz'
   continue: '✅ Devam'
 userAbout:
@@ -597,35 +628,38 @@ userAbout:
 scenes:
   new_pack:
     pack_type: |
-      <b>Pack type:</b>
-    regular: '🖼 Stickers'
-    custom_emoji: '✨ Emoji'
+      <b><u>Paket türünü seçin</u></b>
+    regular: '😊 Çıkartmalar'
+    custom_emoji: '🌟 Emoji (premium)'
     static: '🌟 Statik'
     animated: '✨ vektör'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Çıkartma paketi türünü seçin</u></b>
 
-      <b>Regular</b> — static stickers from images. PNG, JPG, WEBP.
-      Example: t.me/addstickers/Animals
+      <b>Ortak</b> - statik (hareket etmeyin), raster, dosya formatı - PNG eklemeden önce (bot işliyor), ekledikten sonra - WEBP.
+      Normal çıkartma paketi örneği - t.me/addstickers/Animals
 
-      <b>Animated</b> — smooth animation. Requires special .TGS files.
-      Example: t.me/addstickers/IsabelleShizue
+      <b>Video</b> - animasyon video paketi. Herhangi bir video, gif ve fotoğraf ekleyebilirsiniz.
+      Örnek video çıkartma paketi - t.me/addstickers/TheMascot
 
-      <b>Video</b> — from videos, GIFs, or photos. Most popular.
-      Example: t.me/addstickers/TheMascot
+      <b>Animasyonlu</b> - animasyonlu, vektör (dosyanın içindeki nesnelerin tam bir açıklaması vardır, bu nedenle her ölçekte net bir şekilde görüntülenirler), dosya formatı - TGS, Lottie biçiminin bir varyasyonu.
+      Animasyonlu çıkartma paketi örneği - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated — up to 50 stickers. Regular — up to 120.</i>
+      <i>Animasyonlu ve video çıkartma setlerinde en fazla 50 çıkartma bulunabilir. Statik çıkartma setlerinde en fazla 120 çıkartma bulunabilir.</i>
     pack_title: |
-      <b>Pack name:</b>
+      <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
-      <b>Short link:</b>
+      <b>Yeni çıkartma paketi için kısa bir bağlantı girin:</b>
 
-      Example: t.me/addstickers/<u>MyStickers</u>
+      <i>Örneğin, bu paket kısa bağlantı olarak 'Hayvanlar'ı kullanır: https://t.me/ addstickers/<u>Hayvanlar</u></i>
+      <i>Düğmeden rastgele kısa bağlantıyı seçebilirsiniz.</i>
     ok: |
-      ✅ Pack created: <a href="${link}">${title}</a>
+      Etiket paketi <a href="${link}">${title}</a> başarıyla oluşturuldu!
 
-      Send photo, video or sticker to add.
+      <b>Çıkartma paketi linki:</b> <pre>${link}</pre>
+
+      Bir dosya, fotoğraf, video veya çıkartma gönderin ki setinize ekleyeyim
     error:
       title_long: İsim ${max}  değerinden büyük olamaz.
       name_long: Kısa link ${max} değerinden büyük olamaz.
@@ -639,11 +673,13 @@ scenes:
           Lütfen daha sonra tekrar deneyin.
   copy:
     enter: |
-      First, let's create a new pack for the copy.
+      Kopyalayabilirim ama ondan önce yeni bir paket oluşturalım
     progress: |
-      ⏳ Copying: ${current}/${total}
+      Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama
+
+      Durum: ${current}/${total}
     done: |
-      ✅ Copied to <a href="${link}">${title}</a>
+      Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama başarılı sonuçlandı.
     pay: |
       <b>Paket dönüştürme</b>
 
@@ -661,38 +697,34 @@ scenes:
         Bunu yapmak için /donate komutunu kullanabilirsin.
   original:
     enter: |
-      <b>🔎 Find source</b>
-
-      Send a sticker — I'll show which pack it was copied from.
-      If no source found — you'll get the file (PNG/WEBM).
+      Bu botla eklenen çıkartmayı gönderin, size orijinal çıkartmasını göstereceğim.
     error:
       not_found: |
-        Source not found. Here's the sticker file:
+        <b>Hata!</b>
+        Orijinal çıkartmayı bulamıyorum.
   delete:
     enter: |
-      <b>🗑 Delete sticker</b>
-
-      Send the sticker you want to remove from the pack.
+      Bu bot aracılığıyla eklenen çıkartmayı gönderin, çıkartma paketinden silerim.
     confirm: |
-      Remove this sticker from the pack?
+      Bu çıkartmayı silmek istediğinizden emin misiniz?
     error:
       not_found: |
-        Sticker not found in database. It may have been created without this bot.
+        <b>Hata!</b>
+        Çıkartmayı bulamadım.
   rename:
     enter_name: |
-      New name for <a href="${link}">${title}</a>:
+      <b> <a href="${link}">${title}</a>:</b>için yeni başlık girin
     success: |
-      ✅ Renamed: <a href="${link}">${title}</a>
+      <b>Başlık başarıyla değiştirildi!</b>
+
+      Yeni unvan: <a href="${link}">${title}</a>
     boost_notice: |
-      Boost will remove "${titleSuffix}" → /donate
+      ❕ "<code>${titleSuffix} </code>" ekini kaldırmak için, paketi yükseltmeniz gerekir. /bağış komutunu ziyaret ederek menüden daha fazla bilgi edinebilirsiniz
   packAbout:
     enter: |
-      <b>🔎 Whose sticker</b>
-
-      Send a sticker — I'll show the pack, creator, and their other packs.
-      Or forward a message — I'll show that person's packs.
+      <b>Bu konuda bilgi aramak için bana bir çıkartma veya özel emoji gönderin:</b>
     not_found: |
-      Sticker not found.
+      stickerı bulamadım
     btn:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
@@ -709,22 +741,29 @@ scenes:
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
   boost:
     sure: |
-      Boost <a href="${link}">${title}</a>?
+      <b><a href="${link}">${title}</a> artırmak istediğinizden emin misiniz?</b>
 
-      <b>Price:</b> 1 credit
-      <b>Balance:</b> ${balance}
+      Artırma, işleme önceliğini ve kuyruğa birden fazla çıkartma ekleme yeteneğini artırır
+      Bağış yapmak hakkında daha fazla bilgiyi menüde /donate komutuyla bulabilirsiniz
+
+      <b>Fiyat:</b> 1 Kredi
+      <b>Mevcut bakiye:</b> ${balance} Kredi
     btn:
-      yes: '⚡ Güçlendir'
-      no: Cancel
+      yes: 'Evet, artırın!'
+      no: Hayır, iptal et
     canceled: |
-      Canceled
+      Yükseltme iptal edildi
     success: |
-      ⚡ ${title} boosted!
+      Yükseltme başarıyla tamamlandı!
+
+      ${title} artık güçlendirildi
     error:
       not_enough_credits: |
-        Not enough credits. /donate
+        Bu paketi artırmak için yeterli Krediniz yok.
+
+        Bakiye yüklemek için /donate komutunu gönderin.
       already_boosted: |
-        Already boosted.
+        Bu paket zaten güçlendirilmiş.
   catalog:
     publish:
       publish_new: |
@@ -747,14 +786,16 @@ scenes:
         Bu özelliği kullanmanız yasaklandı.
         Lütfen yönetici ile iletişime geçin.
       enter: |
-        Publish <a href="${link}">${title}</a> to the catalog?
+        "<a href="${link}">${title}</a>" paketini botumuzun genel dizininde yayınlamak üzeresiniz
+        Botun herhangi bir kullanıcısı tarafından isme, etiketlere veya filtreye göre bulunabilir
+        Bu nedenle paketinizi daha fazla kişi kuracaktır
+        Yalnızca çok sayıda kişinin ilgisini çekebilecek yüksek kaliteli paketler göndermeye çalışın
 
-        Other users will be able to find your pack by name or tags.
+        <b>Kurallar paket yayınlamak için:</b>
+        • Dar bir insan grubuna yönelik kişisel paketlerinizi yayınlamayın. Örneğin, arkadaşlarınızın yüzleri veya mesajlarınızdan alıntılar gibi
+        • AB yasalarını veya diğer yerel yasaları ihlal eden çıkartma baskıları paylaşmayın
 
-        <b>Rules:</b>
-        • Quality packs for wide audience only
-        • No personal photos or private content
-        • No illegal content
+        Bunun olması için ek bilgi göndermeniz gerekecektir. katalogda yayınlandı
       continue_button: Devam
       enter_description: |
         <b>Başkalarının bulabilmesi için paketinizi kısaca tanımlayın</b>
@@ -792,14 +833,17 @@ scenes:
         Paket bot kataloğundan başarıyla kaldırıldı.
   delete_pack:
     enter: |
-      ⚠️ Delete <a href="${link}">${title}</a> forever?
+      <a href="${link}">${title}</a>paketini silmek istediğinizden emin misiniz?
+      Kalıcı olarak silinecek ve kurtarılamaz.
 
-      Send <code>${confirm}</code> to confirm.
-    confirm: Yes, delete
+      Yalnızca bir çıkartmayı silmek istiyorsanız, /delete komutunu kullanın.
+
+      Bu paketi gerçekten silmek istediğinizi onaylamak için <code>${confirm}</code> gönderin.
+    confirm: Evet, kesinlikle eminim.
     success: |
-      🗑 Pack deleted
+      <b>Paket başarıyla silindi!</b>
     error:
-      - Something went wrong.
+      - <b>Hata!</b>
   frame:
     no_video: |
       <b>Hata!</b>
@@ -825,44 +869,49 @@ scenes:
       <b>Seçilen çerçeve tipi:</b> ${type}
   photoClear:
     enter: |
-      <b>✂️ Remove background</b>
+      Arka planı kaldırmak istediğiniz bir <u>fotoğraf</u> gönderin, ben de arka planı olmayan dosyayı göndereceğim
 
-      Send a photo — you'll get a PNG without background.
-      <i>Works best with photos of people.</i>
+      <i>Fotoğraflar ile en iyi sonucu verir. Çizimler, illüstrasyonlar vb. ile daha kötü çalışır.</i>
     enter_anime: |
-      <b>✂️ Remove background</b>
+      Arka planı kaldırmak istediğiniz fotoğrafı gönderin ve arka planı olmayan dosyayı ben size göndereyim
 
-      Send a photo — you'll get a PNG without background.
-      <i>Works best with anime.</i>
+      <i>En iyi sonucu anime resimleriyle alırsınız</i>
     choose_model: |
-      Model:
-    web_app: WebApp — for photos with people
+      <b>Modeli seçin:</b>
+    web_app: WebApp - insanlarla fotoğraflar için
     model:
       ordinary: Ortak — insanlarla fotoğraflar için
       general: Genel — tüm fotoğraflar için
       anime: Anime — anime resimleri için
-      birefnet_general: BirefNet — for any photos
+      birefnet_general: BirefNet — tüm fotoğraflar için
     add_to_set_btn: '🌟 Sete ekle'
     error: |
-      Something went wrong. Try again.
+      <b>Hata!</b>
+      Maalesef bir şeyler ters gitti.
   search:
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
   leave: |
-    Canceled
+    Eylem iptal edildi!
   btn:
-    cancel: '← Cancel'
+    cancel: '❌ İptal'
 error:
   telegram: |
-    Telegram error: <code>${error}</code>
+    <b>Telegram hatası!</b>
+    <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Error: ${error}
+      Telegram hatası:
+      ${error}
   banned: |
-    🚫 Access denied. Questions → @ly_oBot
-  unknown: |
-    Something went wrong. Try again.
+    <b>Hata!</b>
+    Bu özelliği kullanmanız yasaklandı.
 
-    Still not working? Message @Ly_oBot
+    <i>Eğer bunun bir hata olduğunu düşünüyorsanız, lütfen yönetici ile iletişime geçin: @ly_oBot</i>
+  unknown: |
+    <b>Bilinmeyen bir hata oluştu, lütfen tekrar deneyin.</b>
+
+    Sorun devam ederse @Ly_oBot'a yazın.
+    Lütfen hangi bottan bahsettiğinizi hemen yazın ve sorunu tek mesajda ayrıntılı olarak açıklayın.
