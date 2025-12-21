@@ -325,7 +325,7 @@ donate:
   invalid_amount: |
     <b>Invalid amount</b>
 
-    The minimum amount is 5 Credits
+    The minimum amount is 1 Credit
   paymenu: |
     You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
 

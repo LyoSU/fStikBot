@@ -216,7 +216,7 @@ donate:
   invalid_amount: |
     <b>Ungültiger Betrag</b>
 
-    Der Mindestbetrag beträgt 5 Credits
+    Der Mindestbetrag beträgt 1 Credit
   paymenu: |
     Du möchtest <b>${amount} Credits</b> für <b>${price}$</b> kaufen
 
