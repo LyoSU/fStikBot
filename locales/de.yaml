@@ -3,11 +3,18 @@ language_name: '🇩🇪 Deutsch'
 name: fStik — Sticker & Emoji
 description:
   long: |
-    🧙 Ich bin der Emoji- und Stickerpack-Zauberer, und ich bin hier, um dein Nachrichtenerlebnis unterhaltsamer zu gestalten! Meine magischen Kräfte erlauben es mir, deine Lieblingsfotos, Videos und GIFs ohne Konvertierungs- und Zuschneideeigenschaften in coole Emojis und Sticker zu verwandeln. 🎉🎊 Mit mir kannst du personalisierte Packs für jeden Anlass mit nur wenigen Klicks erstellen. Also, worauf wartest du noch? Lass uns anfangen und etwas ✨Glanz✨ zu deinen Chats hinzufügen!
+    Erstelle Sticker und Emojis aus Fotos, Videos und GIFs – keine manuelle Konvertierung nötig, der Bot erledigt alles.
 
-    Suche Sticker: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Funktionen:
+    • Paket-Verwaltung
+    • Video-Sticker & benutzerdefinierte Emojis
+    • Originale herunterladen
+    • Zu Bild konvertieren
+    • Sticker-Katalog
+
+    Sticker suchen: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    🧙 Ich bin der Emoji- und Stickerzauberer! Verwandle Fotos, Videos und GIFs im Handumdrehen in coole Sticker.
+    Erstelle Sticker und Emojis aus Fotos, Videos, GIFs. Sticker-Katalog und Suche. 🇺🇦
 ratelimit: Nicht so oft!
 cmd:
   start:
