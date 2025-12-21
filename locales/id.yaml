@@ -3,11 +3,18 @@ language_name: '🇮🇩 Indonesia'
 name: fStik — Stiker & Emoji
 description:
   long: |
-    🧙 Saya adalah penyihir emoji dan stiker, siap membuat pengalaman chatting Anda lebih menyenangkan! Dengan kekuatan ajaib saya, Anda dapat mengubah foto, video, dan GIF favorit Anda menjadi emoji dan stiker keren tanpa repot. 🎉🎊 Dengan hanya beberapa klik, Anda dapat membuat paket pribadi untuk setiap kesempatan. Jadi, tunggu apa lagi? Ayo tambahkan ✨kilauan✨ pada obrolan Anda!
+    Buat stiker dan emoji dari foto, video, dan GIF tanpa perlu konversi manual - bot menangani semuanya!
 
-    Cari stiker: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Fitur:
+    • Manajemen paket
+    • Stiker video & emoji khusus
+    • Unduh file asli
+    • Konversi ke gambar
+    • Katalog stiker
+
+    Cari stiker: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    🧙 Saya adalah penyihir emoji dan stiker! Ubah foto, video, dan GIF menjadi stiker keren dalam sekejap.
+    Buat stiker dan emoji dari foto, video, GIF. Katalog dan pencarian stiker. 🇺🇦
 ratelimit: Tidak terlalu sering!
 cmd:
   start:
