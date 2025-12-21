@@ -12,10 +12,12 @@ ratelimit: Tidak terlalu sering!
 cmd:
   start:
     enter: |
-      Hey ${name}!
-      I create stickers and emoji from photos, videos, and GIFs.
+      🧙 Halo, ${name}! Saya adalah ahli paket emoji dan stiker.
+      Saya dapat mengubah foto, video, dan GIF Anda menjadi stiker keren hanya dengan beberapa klik
 
-      💬 @fStikCommunity
+      Kirim perintah /help untuk mempelajari lebih lanjut tentang apa yang dapat saya lakukan
+
+      💬 Butuh bantuan? Bergabunglah dengan obrolan dukungan kami di @fStikCommunity (hanya dalam bahasa Inggris)
     group: |
       🧙 Halo, ${groupTitle}! Aku adalah penyihir paket emoji dan stiker.
 
@@ -105,42 +107,43 @@ cmd:
       <b>🔗 Sumber Terbuka:</b>
       GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
-      <b>🔍 Sticker Catalog</b>
+      <b>Anda dapat menemukan paket stiker baru di katalog kami</b>
 
-      Search packs by keywords or browse popular ones.
-      Rate packs to help others discover good ones.
+      • Klik tombol di bawah ini dan dapatkan akses ke katalog besar paket stiker untuk setiap selera
+      • Cari berdasarkan kata kunci atau di tab yang sudah disiapkan
+      • Jangan lupa untuk menilai untuk mempromosikan atau turunkan paket stiker di peringkat
     search_catalog: |
       <b>🌐 Pack catalog</b>
 
       Browse other users' packs or publish your own:
     commands:
       ss: '🌟 Simpan stikernya'
-      start: '📜 Menu'
-      help: '❓ Help'
-      packs: '📁 My packs'
-      new: '➕ New pack'
-      new_emoji: '➕ New emoji pack'
+      start: '📜 Start menu'
+      help: '📖 Bantuan'
+      packs: '📁 Kelola paket'
+      new: '🌝 Create a new sticker pack'
+      new_emoji: '😊 Buat paket emoji'
       search_catalog: '🌐 Catalog'
-      catalog: '🌐 Catalog'
-      publish: '📤 Publish'
-      delete: '🗑 Delete sticker'
-      original: '🔎 Find source'
-      restore: '♻️ Restore pack'
-      copy: '📋 Copy pack'
-      emoji: '😀 Change emoji'
-      round: '⭕ Round video'
-      clear: '✂️ Remove background'
+      catalog: '📖 Katalog'
+      publish: '📤 Publikasikan paket'
+      delete: '❌ Hapus stiker'
+      original: '🔍 Find original sticker'
+      restore: '🔀 Kembalikan paket'
+      copy: '📋 Salin satu paket'
+      emoji: '📝 Change emoji suffix'
+      round: 'Video bentuk bulat'
+      clear: '🖼️ Hapus latar belakang dari foto'
       info: '🔎 Whose sticker'
-      lang: '🌐 Language'
-      report: '🚨 Report'
-      donate: '⭐ Support'
+      lang: '🌐 Change language'
+      report: '🚨 Paket laporan'
+      donate: '☕️ Dukungan pengembangan bot'
       add_to_group: '👥 Tambahkan ke Grup'
-      privacy: '🔒 Privacy'
-      guide: '❓ Help'
+      privacy: '🔒 Kebijakan Privasi'
+      guide: '📖 Bantuan'
     btn:
-      new: '➕ New pack'
-      catalog: '🔍 Catalog'
-      catalog_mini: '🔍 Catalog'
+      new: '📥 Create new'
+      catalog: 'Buka katalog'
+      catalog_mini: '💖 Katalog'
       catalog_browser: '🌐 Buka di browser'
       catalog_browser_mini: '🌐 Di browser'
       catalog_app: '📱 Unduh aplikasi Android'
@@ -258,17 +261,19 @@ cmd:
   inline:
     switch_pm: '📁 Pilih paket'
   restore: |
-    <b>♻️ Restore pack</b>
+    <b>🗃 Pemulihan paket</b>
 
-    Send link to the pack you want to restore.
+    Untuk memulihkan paket, Anda perlu mengirimi saya tautan ke paket yang ingin Anda pulihkan
   copy: |
-    <b>📋 Copy pack</b>
+    <b>🗄 Salin paket</b>
 
-    Send link to the pack you want to copy.
+    Untuk menyalin paket lain ke paket baru, Anda hanya perlu mengirimi saya tautan ke stiker atau paket emoji
   report: |
-    <b>🚨 Report</b>
+    <b>🚨 Laporkan</b>
 
-    Found a pack that violates rules? Send link to @StickersReportBot
+    Jika Anda menemukan paket stiker yang Anda yakini melanggar hukum atau melanggar Ketentuan Layanan Telegram, harap laporkan kepada kami dengan mengirimkan tautannya ke @ StickersReportBot
+
+    <i>Ingatlah bahwa bot tidak bertanggung jawab atas konten paket dan tidak memiliki kemampuan untuk mengontrolnya</i>
   packs:
     info: |
       <b>📁 Paket</b>
@@ -277,7 +282,8 @@ cmd:
       custom_emoji: Emoji
       inline: Tombol sebaris
     empty: |
-      No packs yet. Create one → /new
+      <b>Anda belum memiliki paket stiker.</b>
+      Untuk membuat, tulis perintah /new
     inline_title: Paket sebaris
     select_group_pack_info: |
       <b>📁 Pilih paket</b>
@@ -305,18 +311,22 @@ cmd:
     🧑‍💻 Pengembang: @ly_oBot
 donate:
   menu: |
-    <b>⭐ Support the bot</b>
+    <b>☕️ Dukungan pengembangan Bot</b>
+    Dengan mendukung pengembangan bot, Anda akan menerima Kredit
 
-    <b>Balance:</b> ${balance} credits
-    1 credit = boost one pack
+    <b>Saldo:</b> <code>${balance}</code> Kredit
+    Dengan 1 Kredit, Anda memiliki peluang untuk meningkatkan satu paket.
 
-    <b>Boost gives you:</b>
-    • No "<code>${titleSuffix}</code>" in pack name
-    • Priority video conversion
-    • Multiple stickers in queue at once
-    • Videos up to 30 seconds
+    <b>Peningkatan memberikan manfaat sebagai berikut:</b>
+    ➖ Tanpa "<code>${titleSuffix}</code>" di nama paket <i>(bukan di tautan)</i>
+    ➖ Judul hingga 64 karakter (bukan 35)
+    ➖ Video hingga 35 detik
+    ➖ Prioritas dalam antrian konversi
+    ➖ Beberapa stiker sekaligus
+    ➖ Tanpa iklan
 
-    <b>How many credits?</b>
+    <b>Pilih jumlah Kredit yang ingin Anda beli:</b>
+  invoice_title: '${amount} Credits'
   btn:
     donate: '☕️ Donasi'
   topup: |
@@ -324,7 +334,7 @@ donate:
   invalid_amount: |
     <b>Jumlah tidak valid</b>
 
-    Jumlah minimum adalah 5 Kredit
+    Jumlah minimum adalah 1 Kredit
   paymenu: |
     Anda ingin membeli <b>${amount} Kredit</b> seharga <b>${price}$</b>
 
@@ -348,17 +358,22 @@ donate:
       Pembayaran dibatalkan
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Co-editing sticker pack</b>
 
-    Link: <code>${colink}</code>
+    Tautan untuk co-editing <a href="${link}">${title}</a>:
+    <code>${colink}</code>
 
-    Share it — others can add/delete stickers in <a href="${link}">${title}</a>.
+    <b>Cara menggunakan:</b>
+    1. Kirim tautan ke orang yang ingin Anda beri akses ke paket stiker
+    2. Setelah mengklik tautan, mereka perlu menekan "mulai" dan mereka akan ditambahkan ke editor
+    3. Editor dapat menambah, menghapus, dan mengedit stiker di paket stiker
 
-    <b>Editors:</b> ${editors}
+    <b>Editor:</b>
+    ${editors}
 
-    <i>Reset link to remove all</i>
+    <i>Untuk menghapus editor, Anda perlu mengatur ulang tautan</i>
   no_editors: |
-    none
+    Belum ada editor
   btn:
     send: '📤 Kirim tautan'
     reset: '🔁 Setel ulang tautan'
@@ -373,17 +388,19 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket tidak ada
-      not_owner: Not your pack
-      hidden: Pack hidden
-      restored: Pack restored
+      not_owner: Ini bukan paket Anda
+      hidden: Paket stiker berhasil disembunyikan
+      restored: Paket berhasil dipulihkan
     set_pack: |
-      ✅ Selected <a href="${link}">${title}</a>
+      🌟 Terpilih <a href="${link}">${title}</a> pack
 
-      Send photo, video or sticker to add.
+      <b>❔ Bagaimana cara menambahkannya?</b>
+      Kirim foto, video atau stiker untuk ditambahkan ke paket
     set_inline_pack: |
-      ✅ Selected <u>${title}</u>
+      Terpilih <u>${title}</u> pack
 
-      Use: <code>@${botUsername} </code>in any chat.
+      Untuk menggunakannya, tulis di chat apapun <code>@${botUsername} </code>dan spasi
+      Anda juga bisa menggunakannya dengan menekan tombol di bawah
     boost:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Peningkatan</a></b>: ${boostStatus}
@@ -473,19 +490,28 @@ callback:
 sticker:
   add:
     ok: |
-      ✅ Added to <a href="${link}">${title}</a>
+      <b>Berhasil ditambahkan ke paket:</b>
+      <a href="${link}">${title}</a>
 
-      <i>You can send emoji for this sticker</i>
+      Dalam waktu satu jam, paket ini akan diperbarui untuk semua pengguna.
+
+      <i>Kirim satu atau lebih emoji yang sesuai dengan stiker, jika Anda ingin menambahkannya</i>
     ok_inline: |
-      ✅ Added to <u>${title}</u>
-    send_emoji: Send emoji for this sticker
+      <b>Berhasil ditambahkan ke paket:</b>
+      <u>${title}</u>
+    send_emoji: Bagus, sekarang kirim emoji yang cocok dengan stiker
     converting_process: |
-      ⏳ Converting: ${progress}/${total}
+      <b>Tunggu...</b>
+      File Anda sedang dalam antrian untuk konversi. Tunggu sampai selesai. Ini mungkin memakan waktu.
 
-      <i>Boost = priority → /donate</i>
+      Kemajuan: ${progress} / ${total}
+
+      <i>Pengguna yang mendukung bot mendapatkan prioritas dalam antrian (lebih lanjut: /donasi)</i>
     catalog_offer: |
-      Want to share <a href="${link}">${title}</a>?
-      Add it to the catalog so others can find it.
+      <b>😲 Wow, kamu membuat paket yang hebat!</b>
+
+      Apakah Anda ingin menambahkan <a href="${link}">${title}</a> ke katalog stiker publik sehingga pengguna bot lain dapat melihatnya juga?
+      <i>Tidak memakan banyak waktu</i>
     quote: |
       Gunakan @QuotlyBot untuk membuat kutipan dari pesan ini
     error:
@@ -553,17 +579,21 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
-        ⏳ Still processing previous file...
+        <b>Tunggu!</b>
 
-        Boost = multiple files at once → /donate
+        Bot masih memproses file sebelumnya...
+        Anda dapat mendukung pengembangan bot (\/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
       timeout: |
-        ⚠️ High load. Video conversion only for boosted packs.
+        <b>Saat ini, bot sedang mengalami beban yang sangat besar</b>
+        Oleh karena itu, konversi video hanya tersedia untuk paket dengan peningkatan aktif
 
-        /donate
+        Untuk lebih jelasnya, ikuti / menyumbangkan
       convert: |
-        Couldn't convert video.
+        <b>Kesalahan!</b>
+        Sayangnya, bot tidak dapat mengonversi video Anda.
 
-        Try MP4 format or send again.
+        Mungkin video Anda disimpan dalam format yang tidak dapat dipahami oleh bot. Pastikan dalam format mp4.
+        Mungkin juga kesalahan internal bot, coba kirim video ini lagi.
       too_big: |
         <b>Kesalahan!</b>.
 
@@ -574,8 +604,10 @@ sticker:
         Stiker ini tidak dapat ditemukan. Pastikan stiker ini ada dalam paket yang benar atau coba tambah lagi.
 news:
   join: |
-    📢 <a href="${link}">Subscribe</a> for updates and new features.
-  join_btn: '📢 Subscribe'
+    ℹ️ <a href="${link}">Bergabunglah dengan saluran kami</a> untuk mendapatkan berita terbaru tentang bot.
+
+    <i>Berlangganan saluran ini untuk mendapatkan berita terbaru tentang bot, serta pembaruan dan fitur baru.</i>
+  join_btn: '📢 Bergabunglah dengan saluran'
   not_joined: '🙅 Anda tidak berlangganan saluran tersebut'
   continue: '✅ Melanjutkan'
 userAbout:
@@ -598,35 +630,39 @@ userAbout:
 scenes:
   new_pack:
     pack_type: |
-      <b>Pack type:</b>
-    regular: '🖼 Stickers'
-    custom_emoji: '✨ Emoji'
+      <b><u>Pilih jenis paket</u></b>
+    regular: '😊 Stiker'
+    custom_emoji: '🌟Emoji (premium)'
     static: '🌟 Statis'
     animated: '✨ Vektor'
     video: '📹 Video'
     pack_format: |
-      <b><u>Choose pack type</u></b>
+      <b><u>Pilih jenis paket</u></b>
 
-      <b>Regular</b> — static stickers from images. PNG, JPG, WEBP.
-      Example: t.me/addstickers/Animals
+      <b>Umum</b> - statis (tidak bergerak), raster, file format - sebelum menambahkan PNG (bot sedang memproses), setelah menambahkan - WEBP.
+      Contoh paket reguler - t.me/addstickers/Animals
 
-      <b>Animated</b> — smooth animation. Requires special .TGS files.
-      Example: t.me/addstickers/IsabelleShizue
+      <b>Video</b> - paket video animasi. Anda dapat menambahkan video, gif, dan foto apa pun.
+      Contoh paket video - t.me/addstickers/TheMascot
 
-      <b>Video</b> — from videos, GIFs, or photos. Most popular.
-      Example: t.me/addstickers/TheMascot
+      <b>Animasi</b> - animasi, vektor (mereka memiliki deskripsi yang tepat tentang objek di dalam file, karena yang ditampilkan dengan jelas pada skala apa pun), format file - TGS, variasi dari format Lottie.
+      Contoh paket animasi - t.me/addstickers/IsabelleShizue
 
-      <i>Video and animated — up to 50 stickers. Regular — up to 120.</i>
+      <i>Kumpulan stiker animasi dan video dapat berisi hingga 50 stiker. Set stiker statis dapat memiliki hingga 120 stiker.</i>
     pack_title: |
-      <b>Pack name:</b>
+      <b>Masukkan nama paket stiker baru:</b>
+      <i>Anda dapat memilih nama acak pada tombol.</i>
     pack_name: |
-      <b>Short link:</b>
+      <b>Masukkan tautan pendek untuk paket stiker baru:</b>
 
-      Example: t.me/addstickers/<u>MyStickers</u>
+      <i>Misalnya, paket ini menggunakan 'Hewan' sebagai tautan pendek: https://t.me/ addstickers/<u>Hewan</u></i>
+      <i>Anda dapat memilih tautan pendek acak pada tombol.</i>
     ok: |
-      ✅ Pack created: <a href="${link}">${title}</a>
+      Paket <a href="${link}">${title}</a> berhasil dibuat!
 
-      Send photo, video or sticker to add.
+      <b>Tautan paket:</b> <pre>${link}</pre>
+
+      Kirim file, foto, video atau stiker agar saya tambahkan ke set Anda
     error:
       title_long: Nama tidak boleh lebih dari ${max} simbol.
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
@@ -640,11 +676,13 @@ scenes:
           Silakan coba lagi nanti.
   copy:
     enter: |
-      First, let's create a new pack for the copy.
+      Saya bisa menyalinnya, tapi sebelum itu, mari buat paket baru
     progress: |
-      ⏳ Copying: ${current}/${total}
+      Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a>
+
+      Proses: ${current}/${total}
     done: |
-      ✅ Copied to <a href="${link}">${title}</a>
+      Menyalin paket stiker dari <a href="${originalLink}">${originalTitle}</a> ke <a href="${link}">${title}</a> berhasil diselesaikan.
     pay: |
       <b>Konversi Paket</b>
 
@@ -662,38 +700,34 @@ scenes:
         Anda dapat melakukan ini dengan mengirimkan perintah /donate.
   original:
     enter: |
-      <b>🔎 Find source</b>
-
-      Send a sticker — I'll show which pack it was copied from.
-      If no source found — you'll get the file (PNG/WEBM).
+      Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
     error:
       not_found: |
-        Source not found. Here's the sticker file:
+        <b>Kesalahan!</b>
+        Saya tidak dapat menemukan stiker aslinya.
   delete:
     enter: |
-      <b>🗑 Delete sticker</b>
-
-      Send the sticker you want to remove from the pack.
+      Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
     confirm: |
-      Remove this sticker from the pack?
+      Apakah Anda yakin ingin menghapus ini?
     error:
       not_found: |
-        Sticker not found in database. It may have been created without this bot.
+        <b>Kesalahan!</b>
+        Saya tidak dapat menemukan paketnya.
   rename:
     enter_name: |
-      New name for <a href="${link}">${title}</a>:
+      <b>Masukkan judul baru untuk <a href="${link}">${title}</a>:</b>
     success: |
-      ✅ Renamed: <a href="${link}">${title}</a>
+      <b>Judul berhasil diubah!</b>
+
+      Judul baru: <a href="${link}">${title}</a>
     boost_notice: |
-      Boost will remove "${titleSuffix}" → /donate
+      ❕ Untuk menghapus akhiran "<code>${titleSuffix}</code>", Anda perlu meningkatkan paket. Lebih detail di menu dengan mengunjungi:\/donate
   packAbout:
     enter: |
-      <b>🔎 Whose sticker</b>
-
-      Send a sticker — I'll show the pack, creator, and their other packs.
-      Or forward a message — I'll show that person's packs.
+      <b>Kirimi saya stiker atau emoji khusus untuk mencari informasi tentangnya:</b>
     not_found: |
-      Sticker not found.
+      Kesalahan! Saya tidak dapat menemukan paketnya
     btn:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
@@ -710,22 +744,29 @@ scenes:
       <i>Kami tidak memiliki informasi tentang stiker lain dari pemilik ini</i>
   boost:
     sure: |
-      Boost <a href="${link}">${title}</a>?
+      <b>Apakah Anda yakin ingin meningkatkan <a href="${link}">${title}</a>?</b>
 
-      <b>Price:</b> 1 credit
-      <b>Balance:</b> ${balance}
+      Meningkatkan akan meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian
+      Anda dapat menemukan informasi lebih detail tentang peningkatan di menu dengan mengunjungi: /donate
+
+      <b>Harga:</b> 1 Kredit
+      <b>Saldo saat ini:</b> ${balance} Kredit
     btn:
-      yes: '⚡ Tingkatkan'
-      no: Cancel
+      yes: 'Ya, tingkatkan!'
+      no: Tidak, batalkan
     canceled: |
-      Canceled
+      Peningkatan dibatalkan
     success: |
-      ⚡ ${title} boosted!
+      Peningkatan berhasil diselesaikan!
+
+      ${title} kini ditingkatkan
     error:
       not_enough_credits: |
-        Not enough credits. /donate
+        Anda tidak memiliki cukup Kredit untuk meningkatkan paket ini.
+
+        Anda dapat mengisi kembali saldo Anda dengan mengirimkan perintah /donate.
       already_boosted: |
-        Already boosted.
+        Paket ini sudah ditingkatkan.
   catalog:
     publish:
       publish_new: |
@@ -748,14 +789,16 @@ scenes:
         Anda dilarang menggunakan fitur ini.
         Silakan, hubungi administrator.
       enter: |
-        Publish <a href="${link}">${title}</a> to the catalog?
+        Anda akan memublikasikan paket "<a href="${link}">${title}</a>" di direktori publik bot kami
+        Paket ini dapat ditemukan oleh pengguna bot mana pun berdasarkan nama, tag, atau filter
+        Karena itu, lebih banyak orang akan menginstal paket Anda
+        Cobalah untuk hanya mengirim paket berkualitas tinggi yang mungkin menarik bagi banyak orang
 
-        Other users will be able to find your pack by name or tags.
+        <b>Aturan untuk penerbitan paket:</b>
+        • Jangan mempublikasikan paket pribadi Anda yang ditujukan untuk kalangan sempit. Misalnya, seperti wajah teman Anda atau kutipan dari pesan Anda
+        • Jangan memasang stiker bertekanan yang melanggar undang-undang UE atau undang-undang setempat lainnya
 
-        <b>Rules:</b>
-        • Quality packs for wide audience only
-        • No personal photos or private content
-        • No illegal content
+        Anda harus mengirimkan informasi tambahan agar dapat diterbitkan dalam katalog
       continue_button: Melanjutkan
       enter_description: |
         <b>Jelaskan secara singkat paket stiker Anda sehingga orang lain dapat menemukannya</b>
@@ -793,14 +836,17 @@ scenes:
         Paket telah berhasil dibatalkan publikasinya dari katalog bot.
   delete_pack:
     enter: |
-      ⚠️ Delete <a href="${link}">${title}</a> forever?
+      Apakah Anda yakin ingin menghapus paket <a href="${link}">${title}</a>?
+      Ini akan dihapus secara permanen dan tidak dapat dipulihkan.
 
-      Send <code>${confirm}</code> to confirm.
-    confirm: Yes, delete
+      Jika ingin menghapus satu stiker saja, gunakan perintah /delete.
+
+      Kirim <code>${confirm}</code> untuk mengonfirmasi bahwa Anda benar-benar ingin menghapus paket ini.
+    confirm: Ya, saya sangat yakin.
     success: |
-      🗑 Pack deleted
+      <b>Paket berhasil dihapus!</b>
     error:
-      - Something went wrong.
+      - <b>Kesalahan!</b>
   frame:
     no_video: |
       <b>Kesalahan!</b>
@@ -825,44 +871,49 @@ scenes:
       <b>Jenis bingkai yang dipilih:</b> ${type}
   photoClear:
     enter: |
-      <b>✂️ Remove background</b>
+      Kirim <u>foto</u> yang ingin Anda hapus latar belakangnya dan saya akan mengirimkan file tanpa latar belakang
 
-      Send a photo — you'll get a PNG without background.
-      <i>Works best with photos of people.</i>
+      <i>Berfungsi paling baik dengan foto. Bekerja lebih buruk dengan gambar, ilustrasi, dll.</i>
     enter_anime: |
-      <b>✂️ Remove background</b>
+      Kirim <u>foto</u> dari mana Anda ingin menghilangkan latar belakang dan saya akan mengirimkan file tanpa latar belakang
 
-      Send a photo — you'll get a PNG without background.
-      <i>Works best with anime.</i>
+      <i>Ini bekerja terbaik dengan gambar anime</i>
     choose_model: |
-      Model:
-    web_app: WebApp — for photos with people
+      <b>Pilih model:</b>
+    web_app: WebApp - untuk foto bersama orang
     model:
       ordinary: Umum — untuk foto bersama orang
       general: Umum — untuk foto apa pun
       anime: Anime — untuk gambar anime
-      birefnet_general: BirefNet — for any photos
+      birefnet_general: BirefNet - untuk foto apa pun
     add_to_set_btn: '🌟 Tambahkan ke set'
     error: |
-      Something went wrong. Try again.
+      <b>Kesalahan!</b>
+      Ups, ada yang tidak beres.
   search:
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
   leave: |
-    Canceled
+    Aksi dibatalkan.
   btn:
-    cancel: '← Cancel'
+    cancel: '❌ Batal'
 error:
   telegram: |
-    Telegram error: <code>${error}</code>
+    <b>Telegram mengembalikan kesalahan!</b>
+    <code>${error}</code>
   answerCbQuery:
     telegram: |
-      Error: ${error}
+      Telegram mengembalikan kesalahan:
+      ${error}
   banned: |
-    🚫 Access denied. Questions → @ly_oBot
-  unknown: |
-    Something went wrong. Try again.
+    <b>Kesalahan!</b>
+    Anda dilarang menggunakan fitur ini.
 
-    Still not working? Message @Ly_oBot
+    <i>Jika Anda berpikir ini adalah kesalahan, silakan hubungi administrator: @ly_oBot</i>
+  unknown: |
+    <b>Kesalahan yang tidak diketahui telah terjadi, silakan coba lagi.</b>
+
+    Jika masalah berlanjut, maka tulislah untuk @Ly_oBot.
+    Harap segera menulis tentang bot mana yang Anda bicarakan dan jelaskan masalahnya secara rinci dalam satu pesan.
