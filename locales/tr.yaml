@@ -12,9 +12,9 @@ description:
     • Resme dönüştür
     • Çıkartma kataloğu
 
-    Çıkartmaları aramak için: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Çıkartmaları aramak için: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Fotoğraf, video ve GIF'lerden çıkartma ve emoji oluşturun. Hızlı ve kolay. 🇺🇦
+    Fotoğraf, video, GIF'lerden sticker ve emoji oluşturun. Katalog ve arama. 🇺🇦
 ratelimit: Pek sık değil!
 cmd:
   start:

@@ -12,9 +12,9 @@ description:
     • Convert sticker/video/GIF to image
     • Sticker catalog
 
-    Search stickers: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Search stickers: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Create stickers and emoji from photos, videos, and GIFs. Fast and easy. 🇺🇦
+    Create stickers and emoji from photos, videos, GIFs. Sticker catalog and search. 🇺🇦
 ratelimit: Not so often!
 cmd:
   start:

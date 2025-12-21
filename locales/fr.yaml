@@ -12,9 +12,9 @@ description:
     • Convertir en image
     • Catalogue de stickers
 
-    Rechercher des stickers : https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Rechercher des stickers : play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Créez stickers et emojis depuis photos, vidéos et GIFs. Rapide et facile. 🇺🇦
+    Créez stickers et emojis depuis photos, vidéos, GIFs. Catalogue et recherche. 🇺🇦
 ratelimit: Pas si souvent!
 cmd:
   start:

@@ -12,9 +12,9 @@ description:
     • Stiker/video/GIF-ni rasmga aylantirish
     • Stikerlar katalogi
 
-    Stikerlarni qidirish: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Stikerlarni qidirish: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Foto, video va GIF-lardan stikerlar va emoji yarating. Tez va oson. 🇺🇦
+    Foto, video, GIF'lardan stiker va emoji yarating. Katalog va qidiruv. 🇺🇦
 ratelimit: Bunchalik tez-tez emas!
 cmd:
   start:

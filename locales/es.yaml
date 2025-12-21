@@ -12,9 +12,9 @@ description:
     • Convierte a imagen
     • Catálogo de stickers
 
-    Buscar pegatinas: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Buscar pegatinas: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Crea stickers y emojis desde fotos, videos y GIFs. Rápido y fácil. 🇺🇦
+    Crea stickers y emojis desde fotos, videos, GIFs. Catálogo y búsqueda de stickers. 🇺🇦
 ratelimit: '¡No tan a menudo!'
 cmd:
   start:

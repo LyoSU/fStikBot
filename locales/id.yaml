@@ -12,9 +12,9 @@ description:
     • Konversi ke gambar
     • Katalog stiker
 
-    Cari stiker: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Cari stiker: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Buat stiker dan emoji dari foto, video, dan GIF. Cepat dan mudah. 🇺🇦
+    Buat stiker dan emoji dari foto, video, GIF. Katalog dan pencarian stiker. 🇺🇦
 ratelimit: Tidak terlalu sering!
 cmd:
   start:

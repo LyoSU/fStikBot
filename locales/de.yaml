@@ -12,9 +12,9 @@ description:
     • Zu Bild konvertieren
     • Sticker-Katalog
 
-    Sticker suchen: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Sticker suchen: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Erstelle Sticker und Emojis aus Fotos, Videos und GIFs. Schnell und einfach. 🇺🇦
+    Erstelle Sticker und Emojis aus Fotos, Videos, GIFs. Sticker-Katalog und Suche. 🇺🇦
 ratelimit: Nicht so oft!
 cmd:
   start:

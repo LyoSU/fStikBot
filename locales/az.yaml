@@ -12,9 +12,9 @@ description:
     • Stiker/video/GIF-i şəkilə çevirmək
     • Stikerlər kataloqu
 
-    Stiker axtar: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Stiker axtar: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Foto, video və GIF-lərdən stikerlər və emoji yaradın. Sürətli və asan. 🇺🇦
+    Foto, video, GIF'lərdən stiker və emoji yaradın. Katalog və axtarış. 🇺🇦
 ratelimit: Çox vaxt deyil!
 cmd:
   start:

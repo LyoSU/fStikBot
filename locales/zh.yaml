@@ -12,9 +12,9 @@ description:
     • 转换为图片
     • 贴纸目录
 
-    搜索贴纸: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    搜索贴纸: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    从照片、视频和GIF创建贴纸和表情。快速便捷。🇺🇦
+    从照片、视频、GIF创建贴纸和表情。贴纸目录和搜索。🇺🇦
 ratelimit: 操作太频繁了！
 cmd:
   start:
