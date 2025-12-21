@@ -3,11 +3,18 @@ language_name: '🇦🇿 Azərbaycanca'
 name: fStik — Stikerlər və Emoji
 description:
   long: |
-    🧙 Mən emoji və stiker paket qızıl alçısınıyam! Sevimli şəkillərinizi, videolarınızı və GIF-lərinizi konversiya və kəsmə olmadan rahatlıqla emojilərə və stikerlərə çevirmək üçün var gücümüzlə çalışırıq. 🎉🎊 Yalnız bir neçə kliklə hər hansı bir tədbir üçün personalizə edilmiş paket yarada bilərsiniz. Hələ gözləməyin, başlayaq və söhbətlərinizə bir az ✨parıltı✨ əlavə edək!
+    Foto, video və GIF-lərdən çevirmə olmadan stikerlər və emoji yaradın!
 
-    Stiker axtar: https://play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    Xüsusiyyətlər:
+    • Asan paket idarəsi
+    • Video stikerlər və fərdi emoji
+    • Orijinal faylları yükləmək
+    • Stiker/video/GIF-i şəkilə çevirmək
+    • Stikerlər kataloqu
+
+    Stiker axtar: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    🧙 Mən stiker yaradıcısıyam! Şəkillərinizi, videolarınızı və GIF-lərinizi stikerlərə çevirə bilərəm.
+    Foto, video, GIF'lərdən stiker və emoji yaradın. Katalog və axtarış. 🇺🇦
 ratelimit: Çox vaxt deyil!
 cmd:
   start:
