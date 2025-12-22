@@ -241,12 +241,15 @@ module.exports = async (ctx) => {
     }
   }
 
-  // Use cursor-based pagination for better performance (avoids skip overhead)
+  // Fetch limit+1 to check if there's a next page (avoids separate countDocuments query)
   const stickerSets = await ctx.db.StickerSet.find(query)
     .sort({ updatedAt: -1 })
-    .limit(limit)
+    .limit(limit + 1)
     .skip(page * limit)
     .lean()
+
+  const hasNextPage = stickerSets.length > limit
+  if (hasNextPage) stickerSets.pop()
 
   if (packType === 'inline' && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
@@ -298,14 +301,12 @@ module.exports = async (ctx) => {
     keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
   }
 
-  const stickerSetsCount = await ctx.db.StickerSet.countDocuments(query)
-
   const paginationKeyboard = []
 
   if (page > 0) {
     paginationKeyboard.push(Markup.callbackButton('◀️', `packs:${page - 1}`))
   }
-  if (stickerSetsCount > (page + 1) * limit) {
+  if (hasNextPage) {
     paginationKeyboard.push(Markup.callbackButton('▶️', `packs:${page + 1}`))
   }
 
