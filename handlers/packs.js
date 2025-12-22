@@ -90,6 +90,14 @@ module.exports = async (ctx) => {
   let page = 0
   let limit = 10
 
+  // Initialize packs count cache in session
+  if (!ctx.session.packsCount) {
+    ctx.session.packsCount = {}
+  }
+
+  // Check if type changed - need to recount
+  const typeChanged = ctx.callbackQuery && ctx.match && ctx.match[1] === 'type'
+
   if (ctx.callbackQuery) {
     page = parseInt(ctx.match[1]) || 0
   }
@@ -251,6 +259,13 @@ module.exports = async (ctx) => {
   const hasNextPage = stickerSets.length > limit
   if (hasNextPage) stickerSets.pop()
 
+  // Cache count on first page or type change, use cached value otherwise
+  let totalCount = ctx.session.packsCount[packType]
+  if (totalCount === undefined || page === 0 || typeChanged) {
+    totalCount = await ctx.db.StickerSet.countDocuments(query)
+    ctx.session.packsCount[packType] = totalCount
+  }
+
   if (packType === 'inline' && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
       owner: userInfo.id,
@@ -276,7 +291,11 @@ module.exports = async (ctx) => {
   const keyboardMarkup = []
 
   if (stickerSets.length > 0) {
-    messageText = ctx.i18n.t('cmd.packs.info')
+    const totalPages = Math.ceil(totalCount / limit)
+    const statsText = totalCount > limit
+      ? `\n<i>${page + 1}/${totalPages} (${totalCount})</i>\n`
+      : ''
+    messageText = ctx.i18n.t('cmd.packs.info') + statsText
 
     stickerSets.forEach((pack) => {
       let { title } = pack
