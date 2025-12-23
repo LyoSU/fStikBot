@@ -305,7 +305,7 @@ privateMessage.command('public', handleSelectPack)
 privateMessage.command('emoji', handleEmoji)
 privateMessage.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
 privateMessage.command('restore', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.restore')))
-privateMessage.command('original', (ctx) => ctx.scene.enter('originalSticker'))
+privateMessage.command('original', (ctx) => ctx.scene.enter('packAbout'))
 privateMessage.action(/^original$/, (ctx) => ctx.scene.enter('originalSticker'))
 privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
 privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
@@ -564,6 +564,7 @@ db.connection.once('open', async () => {
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
       { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.info') },
+      { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
       { command: 'copy', description: i18n.t(localeName, 'cmd.start.commands.copy') },
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
