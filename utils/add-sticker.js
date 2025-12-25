@@ -170,6 +170,15 @@ const downloadFileByUrl = (fileUrl, timeout = 30000) => new Promise((resolve, re
 const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
   let stickerAdd
 
+  // Validate stickerExtra has required fields
+  if (!stickerExtra || !stickerExtra.sticker) {
+    return {
+      error: {
+        message: 'Invalid sticker data: sticker is undefined'
+      }
+    }
+  }
+
   let { sticker } = stickerExtra
 
   if (sticker?.source) {
@@ -192,6 +201,15 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
     }
 
     stickerExtra.sticker = uploadedSticker.file_id
+  }
+
+  // Final validation before API call
+  if (!stickerExtra.sticker) {
+    return {
+      error: {
+        message: 'Sticker file not uploaded properly'
+      }
+    }
   }
 
   if (stickerSet.create === false) {
