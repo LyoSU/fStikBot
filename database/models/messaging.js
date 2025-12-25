@@ -38,4 +38,10 @@ const schema = mongoose.Schema({
   timestamps: true
 })
 
+// Indexes for queue processing queries
+schema.index({ status: 1, date: 1 })
+schema.index({ editStatus: 1, date: 1 })
+schema.index({ creator: 1 })
+schema.index({ createdAt: -1 })
+
 module.exports = schema

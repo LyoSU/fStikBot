@@ -204,7 +204,7 @@ composer.on('inline_query', async (ctx) => {
           deleted: false,
           stickerSet: { $in: userStickerSetIds.map(s => s._id) },
           $text: { $search: query }
-        }).limit(limit).skip(offset).maxTimeMS(2000)
+        }).select('_id info emojis fileUniqueId').limit(limit).skip(offset).maxTimeMS(2000).lean()
       }
     }
 
@@ -212,7 +212,7 @@ composer.on('inline_query', async (ctx) => {
       searchStickers = await ctx.db.Sticker.find({
         deleted: false,
         stickerSet: inlineSet
-      }).limit(limit).skip(offset)
+      }).select('_id info emojis fileUniqueId').limit(limit).skip(offset).lean()
     }
 
     // Pre-fetch all sticker types in parallel (optimized)

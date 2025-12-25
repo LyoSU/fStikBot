@@ -11,7 +11,7 @@ module.exports = async (ctx) => {
 
   sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
-  }).populate('stickerSet')
+  }).populate('stickerSet', '_id name owner inline passcode')
 
   if(!sticker) {
     let setName

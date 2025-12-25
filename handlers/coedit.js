@@ -70,7 +70,7 @@ composer.action(/coedit:(.*)/, async (ctx) => {
 
   const editorsList = await ctx.db.User.find({
     stickerSet: stickerSet._id
-  })
+  }).select('_id telegram_id first_name').limit(100).lean()
 
   const editors = editorsList.map((user) => {
     return `<a href="tg://user?id=${user.telegram_id}">${escapeHTML(user.first_name)}</a>`

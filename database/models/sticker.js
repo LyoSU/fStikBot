@@ -34,6 +34,11 @@ const stickersSchema = mongoose.Schema({
   timestamps: true
 })
 
-stickersSchema.index({ caption: 'text' })
+// Text index for search
+stickersSchema.index({ 'info.caption': 'text' })
+
+// Compound index for common queries (stickerSet + deleted filter)
+stickersSchema.index({ stickerSet: 1, deleted: 1 })
+stickersSchema.index({ stickerSet: 1, fileUniqueId: 1 })
 
 module.exports = stickersSchema

@@ -33,7 +33,7 @@ async function processStickerSets(stickerSets) {
   const handleError = (stickerSet, error) => {
     if (error.message.includes('STICKERSET_INVALID')) {
       console.log(`Sticker set https://t.me/addstickers/${stickerSet.name} is invalid, removing`);
-      return stickerSet.remove();
+      return stickerSet.deleteOne();
     } else {
       console.error(`Error processing ${stickerSet.name}: ${error.message}`);
     }

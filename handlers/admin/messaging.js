@@ -114,7 +114,7 @@ composer.action(/admin:messaging:list:(.*):(.*)/, async (ctx, next) => {
 })
 
 composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
-  const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] }).populate('creator')
+  const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] }).populate('creator', '_id telegram_id first_name').lean()
 
   let resultText, replyMarkup
 

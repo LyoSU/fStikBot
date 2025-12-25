@@ -72,7 +72,7 @@ packAbout.use((ctx, next) => {
 
     ctx.db.StickerSet.find({
       ownerTelegramId: sharedUserId
-    }).then((findPacks) => {
+    }).select('_id name public').limit(500).lean().then((findPacks) => {
       let chunkedPacks = []
       const chunkSize = 70
 

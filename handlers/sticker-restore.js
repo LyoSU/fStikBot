@@ -6,7 +6,7 @@ const {
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
-  }).populate('stickerSet')
+  }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner')
 
   if (sticker) {
     let newFileUniqueId
