@@ -56,9 +56,11 @@ const messaging = async (messagingData) => {
 
   let messagingCreator
 
-  db.User.findById(messagingData.creator).then((data) => {
-    messagingCreator = data
-  })
+  try {
+    messagingCreator = await db.User.findById(messagingData.creator)
+  } catch (err) {
+    console.error('Failed to fetch messaging creator:', err.message)
+  }
 
   const config = getConfig()
 
@@ -95,9 +97,9 @@ const messaging = async (messagingData) => {
           if (error?.parameters?.retry_after) {
             return new Error(error)
           } else if (['blocked by the user', 'user is deactivated', 'chat not found'].some(e => new RegExp(e).test(error.description))) {
-            db.User.findOne({ telegram_id: chatId }).then((blockedUser) => {
-              blockedUser.blocked = true
-              blockedUser.save()
+            // Use updateOne to avoid race conditions and fire-and-forget issues
+            db.User.updateOne({ telegram_id: chatId }, { blocked: true }).catch((err) => {
+              console.error('Failed to mark user as blocked:', err.message)
             })
           } else {
             if (messagingCreator) {
@@ -140,11 +142,11 @@ const messaging = async (messagingData) => {
   }
 }
 
-const messagingEdit = (messagingData) => new Promise((resolve) => {
+const messagingEdit = (messagingData) => new Promise(async (resolve) => {
   console.log(`messaging edit ${messagingData.name} start`)
 
   messagingData.editStatus = 2
-  messagingData.save()
+  await messagingData.save()
 
   const config = getConfig()
 
@@ -158,9 +160,10 @@ const messagingEdit = (messagingData) => new Promise((resolve) => {
     if (state >= messagingData.result.total) {
       console.log(`messaging edit ${messagingData.name} end`)
       messagingData.editStatus = 0
-      messagingData.save()
+      await messagingData.save()
       clearInterval(interval)
       resolve()
+      return
     }
 
     const users = await redis.lrange(key, state, state + count).catch(() => {
@@ -168,7 +171,8 @@ const messagingEdit = (messagingData) => new Promise((resolve) => {
     })
 
     if (users && users.length > 0) {
-      users.forEach(async (chatId) => {
+      // Use for...of instead of forEach for proper async handling
+      for (const chatId of users) {
         const messageId = await redis.get(key + ':messages:' + chatId)
         if (messagingData.message.type === 'text') {
           telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
@@ -192,7 +196,7 @@ const messagingEdit = (messagingData) => new Promise((resolve) => {
             console.log(error)
           })
         }
-      })
+      }
       await redis.set(key + ':edit_state', state + count)
     }
   }, config.messaging.limit.duration || 1000)

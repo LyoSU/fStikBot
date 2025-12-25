@@ -21,11 +21,21 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
 
     if (stickerSet.boost) return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.already_boosted'), true)
 
-    stickerSet.boost = true
-    await stickerSet.save()
+    // Use atomic operations to prevent race conditions
+    const updateResult = await ctx.db.StickerSet.updateOne(
+      { _id: stickerSet._id, boost: { $ne: true } },
+      { $set: { boost: true } }
+    )
 
+    if (updateResult.modifiedCount === 0) {
+      return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.already_boosted'), true)
+    }
+
+    await ctx.db.User.updateOne(
+      { _id: ctx.session.userInfo._id },
+      { $inc: { balance: -1 } }
+    )
     ctx.session.userInfo.balance -= 1
-    await ctx.session.userInfo.save()
 
     await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.success', {
       title: stickerSet.title

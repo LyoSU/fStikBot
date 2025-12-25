@@ -94,6 +94,17 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.boost = stickerSetInfo.boost || false
   await stickerSet.save()
 
+  // Increment user's pack count
+  if (stickerSetInfo.owner && stickerSetInfo.create) {
+    const countField = stickerSetInfo.inline
+      ? 'packsCount.inline'
+      : `packsCount.${stickerSetInfo.packType || 'regular'}`
+    await db.User.updateOne(
+      { _id: stickerSetInfo.owner },
+      { $inc: { [countField]: 1 } }
+    )
+  }
+
   return stickerSet
 }
 

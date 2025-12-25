@@ -14,8 +14,19 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 
-  stickerSet.hide = stickerSet.hide !== true
-  stickerSet.save()
+  const wasHidden = stickerSet.hide === true
+  const newHideValue = !wasHidden
+  await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { hide: newHideValue })
+  stickerSet.hide = newHideValue
+
+  // Update user's pack count
+  const countField = stickerSet.inline
+    ? 'packsCount.inline'
+    : `packsCount.${stickerSet.packType || 'regular'}`
+  await ctx.db.User.updateOne(
+    { _id: stickerSet.owner },
+    { $inc: { [countField]: wasHidden ? 1 : -1 } }
+  )
 
   if (stickerSet.hide === true) {
     answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.hidden')

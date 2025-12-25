@@ -886,3 +886,7 @@ error:
     Something went wrong. Try again.
 
     Still not working? Message @Ly_oBot
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.

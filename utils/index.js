@@ -15,6 +15,7 @@ const updateMonitor = require('./update-monitor')
 const showGramAds = require('./gramads')
 const downloadFileByURL = require('./download-file-by-url')
 const moderatePack = require('./moderate-pack')
+const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware } = require('./retry-api')
 
 module.exports = {
   escapeHTML,
@@ -33,5 +34,9 @@ module.exports = {
   updateMonitor,
   showGramAds,
   downloadFileByURL,
-  moderatePack
+  moderatePack,
+  withRetry,
+  isRateLimitError,
+  getRetryAfter,
+  retryMiddleware
 }

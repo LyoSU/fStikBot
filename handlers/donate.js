@@ -42,12 +42,17 @@ composer.on('successful_payment', async (ctx) => {
   telegramPayment.resultData = ctx.message.successful_payment
   await telegramPayment.save()
 
-  ctx.session.userInfo.balance += telegramPayment.amount
-  await ctx.session.userInfo.save()
+  // Use atomic $inc to prevent race conditions
+  const updatedUser = await ctx.db.User.findByIdAndUpdate(
+    ctx.session.userInfo._id,
+    { $inc: { balance: telegramPayment.amount } },
+    { new: true }
+  )
+  ctx.session.userInfo.balance = updatedUser.balance
 
   return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
     amount: telegramPayment.amount,
-    balance: ctx.session.userInfo.balance
+    balance: updatedUser.balance
   }))
 })
 
@@ -178,12 +183,17 @@ composer.start(async (ctx, next) => {
         payment.status = 'paid'
         await payment.save()
 
-        ctx.session.userInfo.balance += payment.amount
-        await ctx.session.userInfo.save()
+        // Use atomic $inc to prevent race conditions
+        const updatedUser = await ctx.db.User.findByIdAndUpdate(
+          ctx.session.userInfo._id,
+          { $inc: { balance: payment.amount } },
+          { new: true }
+        )
+        ctx.session.userInfo.balance = updatedUser.balance
 
         return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
           amount: payment.amount,
-          balance: ctx.session.userInfo.balance
+          balance: updatedUser.balance
         }))
       }
     }

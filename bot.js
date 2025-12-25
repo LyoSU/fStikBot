@@ -43,7 +43,8 @@ const {
   updateGroup,
   stats,
   updateMonitor,
-  downloadFileByURL
+  downloadFileByURL,
+  retryMiddleware
 } = require('./utils')
 
 global.startDate = new Date()
@@ -69,6 +70,9 @@ const i18n = new I18n({
 })
 
 bot.use(i18n)
+
+// Auto-retry on 429 rate limit errors
+bot.use(retryMiddleware())
 
 const limitPublicPack = Composer.optional((ctx) => {
   return ctx?.session?.userInfo?.stickerSet?.passcode === 'public'

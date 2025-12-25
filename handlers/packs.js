@@ -1,9 +1,5 @@
 const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
-const {
-  countUncodeChars,
-  substrUnicode
-} = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
 
@@ -90,14 +86,6 @@ module.exports = async (ctx) => {
   let page = 0
   let limit = 10
 
-  // Initialize packs count cache in session
-  if (!ctx.session.packsCount) {
-    ctx.session.packsCount = {}
-  }
-
-  // Check if type changed - need to recount
-  const typeChanged = ctx.callbackQuery && ctx.match && ctx.match[1] === 'type'
-
   if (ctx.callbackQuery) {
     page = parseInt(ctx.match[1]) || 0
   }
@@ -118,7 +106,7 @@ module.exports = async (ctx) => {
       packType = stickerSet.inline ? 'inline' : stickerSet.packType
 
       stickerSet.updatedAt = new Date()
-      await stickerSet.save()
+      await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
 
       if (stickerSet?.owner.toString() === userInfo.id.toString()) {
         await ctx.answerCbQuery()
@@ -186,10 +174,6 @@ module.exports = async (ctx) => {
           } else if (stickersCount >= 10 && !stickerSet.public) {
             catalogButton = [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]]
           }
-
-          let type = 'static'
-          if (stickerSet.animated) type = 'animated'
-          if (stickerSet.video) type = 'video'
 
           const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
@@ -259,11 +243,11 @@ module.exports = async (ctx) => {
   const hasNextPage = stickerSets.length > limit
   if (hasNextPage) stickerSets.pop()
 
-  // Cache count on first page or type change, use cached value otherwise
-  let totalCount = ctx.session.packsCount[packType]
-  if (totalCount === undefined || page === 0 || typeChanged) {
+  // Use cached count from user document, fallback to countDocuments for old users
+  let totalCount = userInfo.packsCount?.[packType] ?? 0
+  if (totalCount === 0 && stickerSets.length > 0) {
+    // Fallback for users without packsCount (lazy migration)
     totalCount = await ctx.db.StickerSet.countDocuments(query)
-    ctx.session.packsCount[packType] = totalCount
   }
 
   if (packType === 'inline' && stickerSets.length <= 0) {

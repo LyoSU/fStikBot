@@ -1,7 +1,7 @@
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
 const errorStackParser = require('error-stack-parser')
-const { escapeHTML } = require('../utils')
+const { escapeHTML, isRateLimitError, getRetryAfter } = require('../utils')
 
 async function errorLog (error, ctx) {
   const errorInfo = errorStackParser.parse(error)
@@ -44,6 +44,20 @@ async function errorLog (error, ctx) {
 
 module.exports = async (error, ctx) => {
   console.error(error)
+
+  // Handle 429 rate limit errors gracefully
+  if (isRateLimitError(error)) {
+    const retryAfter = getRetryAfter(error)
+    console.log(`[RateLimit] 429 error, retry_after: ${retryAfter}s`)
+
+    if (ctx?.chat?.type === 'private') {
+      const waitText = retryAfter
+        ? ctx.i18n.t('error.rate_limit_seconds', { seconds: retryAfter })
+        : ctx.i18n.t('error.rate_limit')
+      await ctx.replyWithHTML(waitText).catch(() => {})
+    }
+    return
+  }
 
   errorLog(error, ctx).catch(e => {
     console.error('errorLog error:', e)

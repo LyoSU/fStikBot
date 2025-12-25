@@ -184,8 +184,10 @@ module.exports = async (ctx, next) => {
         await ctx.replyWithHTML(text)
       }
 
-      stickerSet.title = stickerSetInfo.title
-      await stickerSet.save()
+      if (stickerSet.title !== stickerSetInfo.title) {
+        stickerSet.title = stickerSetInfo.title
+        await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { title: stickerSetInfo.title })
+      }
     }
   }
 

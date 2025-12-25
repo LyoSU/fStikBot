@@ -64,6 +64,11 @@ const userSchema = mongoose.Schema({
   publicBan: {
     type: Boolean,
     default: false
+  },
+  packsCount: {
+    regular: { type: Number, default: 0 },
+    custom_emoji: { type: Number, default: 0 },
+    inline: { type: Number, default: 0 }
   }
 }, {
   timestamps: true

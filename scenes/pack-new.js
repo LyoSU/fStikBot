@@ -621,12 +621,19 @@ newPackConfirm.enter(async (ctx, next) => {
 
     ctx.session.userInfo.stickerSet = userStickerSet
 
-    // if different pack type
+    // if different pack type, use atomic $inc to prevent race conditions
     if (ctx.session.scene.copyPack && ctx.session.scene.copyPack.sticker_type !== packType) {
+      await ctx.db.User.updateOne(
+        { _id: ctx.session.userInfo._id },
+        { $inc: { balance: -1 }, $set: { stickerSet: userStickerSet._id } }
+      )
       ctx.session.userInfo.balance -= 1
+    } else {
+      await ctx.db.User.updateOne(
+        { _id: ctx.session.userInfo._id },
+        { $set: { stickerSet: userStickerSet._id } }
+      )
     }
-
-    await ctx.session.userInfo.save()
 
     if (!ctx.session.scene.copyPack) {
       await ctx.replyWithHTML('👌', {
