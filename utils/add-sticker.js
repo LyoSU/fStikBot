@@ -221,7 +221,17 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
   }
 
   if (stickerSet.create === false) {
-    stickerAdd = await telegram.createNewStickerSet(userId, stickerSet.name, stickerSet.title, stickerExtra).catch((error) => {
+    stickerAdd = await telegram.callApi('createNewStickerSet', {
+      user_id: userId,
+      name: stickerSet.name,
+      title: stickerSet.title,
+      stickers: [{
+        sticker: stickerExtra.sticker,
+        format: stickerExtra.sticker_format,
+        emoji_list: stickerExtra.emojis
+      }],
+      sticker_type: stickerSet.packType === 'custom_emoji' ? 'custom_emoji' : 'regular'
+    }).catch((error) => {
       return {
         error: {
           telegram: error
