@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 Pilih paket'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃 Pemulihan paket</b>
 
@@ -358,6 +363,9 @@ donate:
   error:
     already_donated: |
       Anda sudah menerima Kredit untuk pembayaran ini
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>Kesalahan!</b>
       Terjadi kesalahan saat memproses pembayaran
@@ -919,8 +927,13 @@ error:
     Anda dilarang menggunakan fitur ini.
 
     <i>Jika Anda berpikir ini adalah kesalahan, silakan hubungi administrator: @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>Kesalahan yang tidak diketahui telah terjadi, silakan coba lagi.</b>
 
     Jika masalah berlanjut, maka tulislah untuk @Ly_oBot.
     Harap segera menulis tentang bot mana yang Anda bicarakan dan jelaskan masalahnya secara rinci dalam satu pesan.
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
