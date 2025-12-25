@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 Sélectionnez le pack'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃️ Restauration du pack</b>
 
@@ -358,6 +363,9 @@ donate:
   error:
     already_donated: |
       Tu as déjà reçu des Crédits pour ce paiement
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>Erreur !</b>
       Une erreur s'est produite lors du traitement du paiement
@@ -913,8 +921,13 @@ error:
     Il vous est interdit d'utiliser cette fonctionnalité.
 
     <i>Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur : @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>Une erreur inconnue s'est produite, veuillez réessayer.</b>
 
     Si le problème persiste, merci d'écrire à @Ly_oBot.
     Veuillez préciser quel bot vous utilisez et décrire le problème en détail dans un seul message.
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
