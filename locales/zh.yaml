@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 选择包'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃 包装修复</b>
 
@@ -368,6 +373,9 @@ donate:
   error:
     already_donated: |
       您已经为此支付获得了信用点
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>错误!</b>\n处理支付时出错
     canceled: |
@@ -928,8 +936,13 @@ error:
     您被禁止使用此功能。
 
     <i>如果您认为这是一个错误，请联系管理员：@ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>出现未知错误，请再试一次。</b>
 
     如果问题仍然存在，请写到 @Ly_oBot。
     请立即写出你谈论的机器人并在一个消息中详细描述问题。
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
