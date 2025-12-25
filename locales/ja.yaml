@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 パックを選択'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃️ パックの復元</b>
 
@@ -344,6 +349,9 @@ donate:
   error:
     already_donated: |
       この支払いに対して既にクレジットを受け取っています。
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>エラー！</b>
       支払い処理中にエラーが発生しました
@@ -901,8 +909,13 @@ error:
     この機能の使用は禁止されています。
 
     <i>これが間違いだと思う場合は、管理者に問い合わせてください: @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>不明なエラーが発生しました。もう一度お試しください。</b>
 
     問題が解決しない場合は、@Ly_oBot に連絡してください。
     どのボットのことを話しているのかをすぐに書き、問題を詳細に説明してください。
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
