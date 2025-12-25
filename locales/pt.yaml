@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 Selecione o pacote'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃️ Pack restoration</b>
 
@@ -358,6 +363,9 @@ donate:
   error:
     already_donated: |
       Você já recebeu Créditos para este pagamento
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>Error!</b>
       Ocorreu um erro ao processar o pagamento
@@ -919,8 +927,13 @@ error:
     Você está banido de usar essa funcionalidade.
 
     <i>Se você acha que isso é um engano, por favor contate o administrador: @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>Ocorreu um erro desconhecido, por favor, tente novamente.</b>
 
     Se o problema persistir, escreva para @Ly_oBot.
     Por favor, escreva imediatamente sobre qual bot você está falando e descreva o problema em detalhes em uma mensagem.
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
