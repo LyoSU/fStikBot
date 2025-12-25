@@ -1,15 +1,5 @@
 const Markup = require('telegraf/markup')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
+const { escapeHTML } = require('../utils')
 
 module.exports = async (ctx, next) => {
   const packsName = ctx.message.text.split(' ')[1]

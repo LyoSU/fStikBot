@@ -7,6 +7,7 @@ const I18n = require('telegraf-i18n')
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
 const {
+  escapeHTML,
   addSticker,
   countUncodeChars,
   substrUnicode,
@@ -92,17 +93,6 @@ const animalEmojis = {
 };
 
 const stegcloak = new StegCloak(false, false)
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
 
 const newPack = new Scene('newPack')
 

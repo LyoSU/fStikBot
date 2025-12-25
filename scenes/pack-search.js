@@ -1,16 +1,6 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
+const { escapeHTML } = require('../utils')
 
 const searchStickerSet = new Scene('searchStickerSet')
 

@@ -1,21 +1,11 @@
 const StegCloak = require('stegcloak')
 const Composer = require('telegraf/composer')
 const crypto = require('crypto')
+const { escapeHTML } = require('../utils')
 
 const generatePasscode = () => {
   return crypto.randomBytes(6).toString('hex')
 }
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
 
 const composer = new Composer()
 
@@ -25,11 +15,11 @@ composer.action(/coedit:reset:(.*)/, async (ctx) => {
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
 
   if (!stickerSet) {
-    return ctx.answerCbQuery('error', true)
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
   }
 
   if (stickerSet?.owner.toString() !== ctx.session.userInfo.id.toString()) {
-    return ctx.answerCbQuery('error', true)
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 
   stickerSet.passcode = generatePasscode()
@@ -55,11 +45,11 @@ composer.action(/coedit:(.*)/, async (ctx) => {
   const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
 
   if (!stickerSet) {
-    return ctx.answerCbQuery('error', true)
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
   }
 
   if (stickerSet?.owner.toString() !== ctx.session.userInfo.id.toString()) {
-    return ctx.answerCbQuery('error', true)
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 
   if (!stickerSet.passcode) {

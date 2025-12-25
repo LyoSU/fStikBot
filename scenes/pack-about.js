@@ -1,6 +1,7 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const {
+  escapeHTML,
   telegramApi,
   moderatePack,
   showGramAds
@@ -8,17 +9,6 @@ const {
 const {
   db
 } = require('../database')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
 
 function decodeStickerSetId (u64) {
   let u32 = u64 >> 32n

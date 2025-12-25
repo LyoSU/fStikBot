@@ -1,22 +1,8 @@
 const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
+const { escapeHTML } = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
-
-// Pre-compile regex for better performance
-const HTML_ESCAPE_REGEX = /[&<>'"]/g
-const HTML_ESCAPE_MAP = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  "'": '&#39;',
-  '"': '&quot;'
-}
-
-const escapeHTML = (str) => str.replace(
-  HTML_ESCAPE_REGEX,
-  (tag) => HTML_ESCAPE_MAP[tag] || tag
-)
 
 module.exports = async (ctx) => {
   const { userInfo } = ctx.session
@@ -100,7 +86,7 @@ module.exports = async (ctx) => {
       const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
       if (!stickerSet) {
-        return ctx.answerCbQuery('error', true)
+        return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
       }
 
       packType = stickerSet.inline ? 'inline' : stickerSet.packType
@@ -215,7 +201,7 @@ module.exports = async (ctx) => {
           }
         }
       } else {
-        await ctx.answerCbQuery('error', true)
+        await ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
       }
     }
   }

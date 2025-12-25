@@ -1,22 +1,12 @@
 const Markup = require('telegraf/markup')
 const {
+  escapeHTML,
   showGramAds,
   countUncodeChars,
   substrUnicode,
   addSticker,
   addStickerText
 } = require('../utils')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
 
 module.exports = async (ctx, next) => {
   if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
@@ -229,7 +219,8 @@ module.exports = async (ctx, next) => {
   }
 
   if (stickerSet.inline) {
-    if (stickerType === 'photo') stickerFile = message[stickerType].pop()
+    // Use slice(-1)[0] instead of pop() to avoid mutating the original array
+    if (stickerType === 'photo') stickerFile = message[stickerType].slice(-1)[0]
     else stickerFile = message[stickerType]
 
     if (stickerFile?.stickerType) stickerFile.stickerType = stickerType

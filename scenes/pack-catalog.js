@@ -6,7 +6,7 @@ const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const mongoose = require('mongoose')
 const { db } = require('../database')
-const { telegramApi } = require('../utils')
+const { escapeHTML, telegramApi } = require('../utils')
 
 function stickerSetIdToOwnerId (u64) {
   let u32 = u64 >> 32n
@@ -27,17 +27,6 @@ const i18n = new I18n({
 })
 
 const localesFile = fs.readdirSync('./locales/')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
 
 const createStickerSet = async (packName, userInfo) => {
   let stickerSet = await db.StickerSet.findOne({

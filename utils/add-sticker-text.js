@@ -1,23 +1,13 @@
 const path = require('path')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
+const escapeHTML = require('./html-escape')
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
   defaultLanguage: 'uk',
   defaultLanguageOnMissing: true
 })
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
 
 module.exports = (addStickerResult, lang) => {
   let messageText = ''

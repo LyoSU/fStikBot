@@ -264,6 +264,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 Select pack'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>♻️ Restore pack</b>
 
@@ -353,6 +358,9 @@ donate:
   error:
     already_donated: |
       You have already received Credits for this payment
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>Error!</b>
       An error occurred while processing the payment
@@ -882,6 +890,7 @@ error:
       Error: ${error}
   banned: |
     🚫 Access denied. Questions → @ly_oBot
+  access_denied: Access denied
   unknown: |
     Something went wrong. Try again.
 

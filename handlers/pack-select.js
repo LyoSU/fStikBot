@@ -1,15 +1,5 @@
 const Markup = require('telegraf/markup')
-
-const escapeHTML = (str) => str.replace(
-  /[&<>'"]/g,
-  (tag) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    "'": '&#39;',
-    '"': '&quot;'
-  }[tag] || tag)
-)
+const { escapeHTML } = require('../utils')
 
 module.exports = async (ctx) => {
   const { userInfo } = ctx.session
@@ -24,7 +14,7 @@ module.exports = async (ctx) => {
   })
 
   if (!stickerSet) {
-    return ctx.replyWithHTML('error')
+    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
   }
 
   if (stickerSet.owner.toString() === userInfo.id.toString() || stickerSet.passcode === passcode) {
@@ -66,6 +56,6 @@ module.exports = async (ctx) => {
       })
     }
   } else {
-    await ctx.replyWithHTML('error')
+    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'))
   }
 }

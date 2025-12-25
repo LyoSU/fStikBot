@@ -8,10 +8,10 @@ const packDelete = new Scene('packDelete')
 packDelete.enter(async (ctx) => {
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[1])
 
-  if (!stickerSet) return ctx.answerCbQuery('Error')
+  if (!stickerSet) return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
 
   if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
-    await ctx.answerCbQuery(ctx.i18n.t('Access denied'), true)
+    await ctx.answerCbQuery(ctx.i18n.t('error.access_denied'), true)
     return ctx.scene.leave()
   }
 

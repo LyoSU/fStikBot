@@ -137,7 +137,10 @@ const messaging = async (messagingData) => {
   while (true) {
     const messagingData = await messagingSend()
 
-    if (messagingData.status >= 2 || messagingData.result.total === 0 || messagingData.result.state === 0) return messagingData
+    // Exit when: completed (status>=2), no users (total===0), or all processed (state>=total)
+    if (messagingData.status >= 2 || messagingData.result.total === 0 || messagingData.result.state >= messagingData.result.total) {
+      return messagingData
+    }
     await delay(config.messaging.limit.duration || 1000)
   }
 }

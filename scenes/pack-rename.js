@@ -12,7 +12,7 @@ packRename.enter(async (ctx) => {
   const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
 
   if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
-    await ctx.answerCbQuery(ctx.i18n.t('Access denied'), true)
+    await ctx.answerCbQuery(ctx.i18n.t('error.access_denied'), true)
     return ctx.scene.leave()
   }
 

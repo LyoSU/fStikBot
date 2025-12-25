@@ -48,6 +48,12 @@ composer.on('successful_payment', async (ctx) => {
     { $inc: { balance: telegramPayment.amount } },
     { new: true }
   )
+
+  if (!updatedUser) {
+    console.error('User not found after payment:', ctx.session.userInfo._id)
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.user_not_found'))
+  }
+
   ctx.session.userInfo.balance = updatedUser.balance
 
   return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
@@ -68,7 +74,7 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
   })
 
   if (!payment) {
-    return ctx.replyWithHTML('Payment not found')
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.not_found'))
   }
 
   let walletPayLink
@@ -173,7 +179,7 @@ composer.start(async (ctx, next) => {
     const payment = await ctx.db.Payment.findById(payId)
 
     if (!payment) {
-      return ctx.replyWithHTML('Payment not found')
+      return ctx.replyWithHTML(ctx.i18n.t('donate.error.not_found'))
     }
 
     if (payment.status === 'pending') {
@@ -189,6 +195,12 @@ composer.start(async (ctx, next) => {
           { $inc: { balance: payment.amount } },
           { new: true }
         )
+
+        if (!updatedUser) {
+          console.error('User not found after payment:', ctx.session.userInfo._id)
+          return ctx.replyWithHTML(ctx.i18n.t('donate.error.user_not_found'))
+        }
+
         ctx.session.userInfo.balance = updatedUser.balance
 
         return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
@@ -199,7 +211,7 @@ composer.start(async (ctx, next) => {
     }
 
     if (payment.status === 'paid') {
-      return ctx.replyWithHTML('Payment already paid')
+      return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_paid'))
     }
   }
 
