@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 اختر حزمة'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃 استعادة الحزمة</b>
 
@@ -358,6 +363,9 @@ donate:
   error:
     already_donated: |
       لقد تلقيت النقاط بالفعل لهذا الدفع
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>خطأ!</b>\nحدث خطأ أثناء معالجة الدفعة
     canceled: |
@@ -918,8 +926,13 @@ error:
     أنت ممنوع من استخدام هذه الميزة.
 
     <i>إذا كنت تعتقد أن هذا خطأ، يرجى الاتصال بالمسؤول: @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>حدث خطأ غير معروف، يرجى المحاولة مرة أخرى.</b>
 
     إذا استمرت المشكلة، فاكتب إلى @Ly_oBot.
     يرجى كتابة فورًا عن الروبوت الذي تتحدث عنه ووصف المشكلة بالتفصيل في رسالة واحدة.
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
