@@ -111,7 +111,7 @@ module.exports = async (ctx) => {
   } else {
     deleteStickerFromSet = await ctx.deleteStickerFromSet(deleteSticker).catch((error) => {
       ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
-        error: error.description
+        error: error?.description || error?.message || 'Unknown error'
       }), true)
     })
   }

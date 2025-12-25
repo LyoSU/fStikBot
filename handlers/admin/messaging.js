@@ -9,6 +9,8 @@ composer.action(/admin:messaging:select_group/, async (ctx) => ctx.scene.enter('
 composer.action(/admin:messaging:publish/, async (ctx) => ctx.scene.enter('adminMessagingPublish'))
 
 composer.action(/admin:messaging:view:(.*)/, async (ctx, next) => {
+  await ctx.answerCbQuery()
+
   const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] })
 
   if (messaging) {
@@ -17,7 +19,9 @@ composer.action(/admin:messaging:view:(.*)/, async (ctx, next) => {
       chat_id: ctx.chat.id
     })
 
-    ctx.telegram.callApi(method, opts)
+    await ctx.telegram.callApi(method, opts).catch((error) => {
+      console.error('Failed to send messaging preview:', error.message)
+    })
   }
 })
 
@@ -34,11 +38,15 @@ composer.action(/admin:messaging:change_name:(.*)/, async (ctx, next) => {
 composer.action(/admin:messaging:cancel:(.*)/, async (ctx, next) => {
   const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] })
 
+  if (!messaging) {
+    return ctx.answerCbQuery('Messaging not found', true)
+  }
+
   messaging.status = 2
   messaging.result = {
     waiting: 0
   }
-  messaging.save()
+  await messaging.save()
 
   const resultText = `Message ${messaging.name} canceled`
 
@@ -69,9 +77,9 @@ composer.action(/admin:messaging:list:(.*):(.*)/, async (ctx, next) => {
   const messagingTotal = await ctx.db.Messaging.countDocuments(messagingQuery)
 
   const pageCount = 10
-  let page = parseInt(ctx.match[2])
+  let page = parseInt(ctx.match[2], 10) || 1
 
-  if (page <= 0) page = 1
+  if (page <= 0 || !Number.isFinite(page)) page = 1
   if (pageCount * page > messagingTotal) page = Math.ceil(messagingTotal / pageCount)
 
   const prevPage = page - 1

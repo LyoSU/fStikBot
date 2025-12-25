@@ -106,7 +106,7 @@ module.exports = async (ctx, next) => {
   }
 
   if (stickerType === 'text') {
-    const customEmoji = message.entities.find((e) => e.type === 'custom_emoji')
+    const customEmoji = message.entities?.find((e) => e.type === 'custom_emoji')
 
     if (!customEmoji) return next()
 

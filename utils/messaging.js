@@ -157,50 +157,56 @@ const messagingEdit = (messagingData) => new Promise(async (resolve) => {
   const count = config.messaging.limit.max || 10
 
   const interval = setInterval(async () => {
-    console.log('messaging edit')
-    const state = parseInt(await redis.get(key + ':edit_state')) || 0
+    try {
+      console.log('messaging edit')
+      const state = parseInt(await redis.get(key + ':edit_state')) || 0
 
-    if (state >= messagingData.result.total) {
-      console.log(`messaging edit ${messagingData.name} end`)
-      messagingData.editStatus = 0
-      await messagingData.save()
+      if (state >= messagingData.result.total) {
+        console.log(`messaging edit ${messagingData.name} end`)
+        messagingData.editStatus = 0
+        await messagingData.save()
+        clearInterval(interval)
+        resolve()
+        return
+      }
+
+      const users = await redis.lrange(key, state, state + count).catch(() => {
+        clearInterval(interval)
+      })
+
+      if (users && users.length > 0) {
+        // Use for...of instead of forEach for proper async handling
+        for (const chatId of users) {
+          const messageId = await redis.get(key + ':messages:' + chatId)
+          if (messagingData.message.type === 'text') {
+            telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
+              parse_mode: messagingData.message.data.parse_mode,
+              disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
+              reply_markup: messagingData.message.data.reply_markup
+            }).catch((error) => {
+              console.error('Edit text error:', error.message)
+            })
+          } else {
+            telegram.editMessageMedia(chatId, messageId, null, {
+              type: messagingData.message.type,
+              media: messagingData.message.data[messagingData.message.type],
+              caption: messagingData.message.data.caption || '',
+              parse_mode: messagingData.message.data.parse_mode
+            }, {
+              parse_mode: messagingData.message.data.parse_mode,
+              disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
+              reply_markup: messagingData.message.data.reply_markup
+            }).catch((error) => {
+              console.error('Edit media error:', error.message)
+            })
+          }
+        }
+        await redis.set(key + ':edit_state', state + count)
+      }
+    } catch (error) {
+      console.error('Messaging edit interval error:', error.message)
       clearInterval(interval)
       resolve()
-      return
-    }
-
-    const users = await redis.lrange(key, state, state + count).catch(() => {
-      clearInterval(interval)
-    })
-
-    if (users && users.length > 0) {
-      // Use for...of instead of forEach for proper async handling
-      for (const chatId of users) {
-        const messageId = await redis.get(key + ':messages:' + chatId)
-        if (messagingData.message.type === 'text') {
-          telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
-            parse_mode: messagingData.message.data.parse_mode,
-            disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
-            reply_markup: messagingData.message.data.reply_markup
-          }).catch((error) => {
-            console.log(error)
-          })
-        } else {
-          telegram.editMessageMedia(chatId, messageId, null, {
-            type: messagingData.message.type,
-            media: messagingData.message.data[messagingData.message.type],
-            caption: messagingData.message.data.caption || '',
-            parse_mode: messagingData.message.data.parse_mode
-          }, {
-            parse_mode: messagingData.message.data.parse_mode,
-            disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
-            reply_markup: messagingData.message.data.reply_markup
-          }).catch((error) => {
-            console.log(error)
-          })
-        }
-      }
-      await redis.set(key + ':edit_state', state + count)
     }
   }, config.messaging.limit.duration || 1000)
 })
@@ -249,8 +255,19 @@ async function processEditQueue() {
   }
 }
 
-setInterval(processMessagingQueue, 5000)
-setInterval(processEditQueue, 5000)
+// Track intervals for graceful shutdown
+const messagingInterval = setInterval(processMessagingQueue, 5000)
+const editInterval = setInterval(processEditQueue, 5000)
+
+// Graceful shutdown handler
+const shutdownMessaging = () => {
+  console.log('Shutting down messaging queues...')
+  clearInterval(messagingInterval)
+  clearInterval(editInterval)
+}
+
+process.on('SIGTERM', shutdownMessaging)
+process.on('SIGINT', shutdownMessaging)
 
 const restartMessaging = async () => {
   const messagingData = await db.Messaging.findOne({

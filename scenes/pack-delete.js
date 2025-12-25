@@ -46,7 +46,8 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
   }).catch(error => { return { error } })
 
   if (result.error) {
-    if (result.error.message.includes('STICKERSET_INVALID')) {
+    const errorMessage = result.error?.message || result.error?.description || ''
+    if (errorMessage.includes('STICKERSET_INVALID')) {
       await ctx.db.StickerSet.deleteOne({
         _id: ctx.session.scene.data.id
       })
