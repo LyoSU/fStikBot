@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 Paket seç'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃 Paket restorasyonu</b>
 
@@ -357,6 +362,9 @@ donate:
   error:
     already_donated: |
       Bu ödeme için zaten Kredi aldınız
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>Hata!</b>
       Ödemeyi işlerken bir hata oluştu
@@ -917,8 +925,13 @@ error:
     Bu özelliği kullanmanız yasaklandı.
 
     <i>Eğer bunun bir hata olduğunu düşünüyorsanız, lütfen yönetici ile iletişime geçin: @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>Bilinmeyen bir hata oluştu, lütfen tekrar deneyin.</b>
 
     Sorun devam ederse @Ly_oBot'a yazın.
     Lütfen hangi bottan bahsettiğinizi hemen yazın ve sorunu tek mesajda ayrıntılı olarak açıklayın.
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
