@@ -267,6 +267,11 @@ cmd:
       back: '← Back'
   inline:
     switch_pm: '📁 To''plamni tanlang'
+  lang:
+    choose: |
+      🌐 Choose language
+
+      Help with translation: https://crwd.in/fStikBot
   restore: |
     <b>🗃 Paketni tiklash</b>
 
@@ -344,6 +349,9 @@ donate:
   error:
     already_donated: |
       Siz bu to'lov uchun allaqachon Kreditlarni oldingiz
+    already_paid: Payment already completed
+    not_found: Payment not found
+    user_not_found: User not found
     error: |
       <b>Xato!</b>
       To'lovni qayta ishlashda xato yuz berdi
@@ -897,8 +905,13 @@ error:
     Sizga ushbu xususiyatdan foydalanish taqiqlangan.
 
     <i>Agar bu xato deb o'ylasangiz, administratorga murojaat qiling: @ly_oBot</i>
+  access_denied: Access denied
   unknown: |
     <b>An unknown error has occurred, please try again.</b>
 
     If the problem persists, then write to @Ly_oBot.
     Please write immediately about which bot you are talking about and describe the problem in detail in one message.
+  rate_limit: |
+    ⏳ Too many requests. Please wait a moment and try again.
+  rate_limit_seconds: |
+    ⏳ Too many requests. Please wait ${seconds} seconds.
