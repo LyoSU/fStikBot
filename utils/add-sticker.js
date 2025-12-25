@@ -86,10 +86,20 @@ convertQueue.on('global:completed', async (jobId, result) => {
 
   const stickerExtra = input.stickerExtra
 
-  if (metadata) {
-    stickerExtra.sticker = {
-      source: Buffer.from(content, 'base64')
+  // Handle case when conversion failed (no metadata/content)
+  if (!metadata || !content) {
+    if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
+
+    if (input?.botId === botInfo?.id) {
+      await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
+        parse_mode: 'HTML'
+      }).catch(() => {})
     }
+    return
+  }
+
+  stickerExtra.sticker = {
+    source: Buffer.from(content, 'base64')
   }
 
   const uploadResult = await uploadSticker(input.userId, input.stickerSet, input.stickerFile, stickerExtra)
@@ -116,8 +126,6 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
 
   // Clean up queue on failure
   if (input?.chatId) queue.delete(input.chatId)
-
-  if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
