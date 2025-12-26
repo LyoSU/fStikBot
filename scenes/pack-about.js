@@ -276,7 +276,7 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   })
 
   let chunkedPacks = []
-  const chunkSize = 70
+  const chunkSize = 20 // Reduced to prevent "message too long" errors
 
   if (packs.length > 0) {
     chunkedPacks = (packs.map((pack) => {
@@ -347,13 +347,17 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     )])
   }
 
+  const otherPacksText = otherPacks
+    ? otherPacks.slice(0, 15).join(', ') + (otherPacks.length > 15 ? '...' : '')
+    : ctx.i18n.t('scenes.packAbout.no_other_packs')
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: escapeHTML(sticker.set_name),
     ownerId: actualOwnerId,
     mention,
     setId,
-    otherPacks: otherPacks ? otherPacks.join(', ') : ctx.i18n.t('scenes.packAbout.no_other_packs')
+    otherPacks: otherPacksText
   }), {
     disable_web_page_preview: true,
     ...Markup.inlineKeyboard(keyboard).extra()

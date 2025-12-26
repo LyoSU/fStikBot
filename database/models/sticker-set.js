@@ -148,4 +148,8 @@ stickerSetsSchema.index({
   }
 })
 
+// Compound indexes for inline query performance
+stickerSetsSchema.index({ owner: 1, inline: 1, hide: 1, updatedAt: -1 })
+stickerSetsSchema.index({ owner: 1, hide: 1 })
+
 module.exports = stickerSetsSchema

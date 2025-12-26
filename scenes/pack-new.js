@@ -280,6 +280,11 @@ newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_na
 }))
 
 newPackName.on('text', async (ctx) => {
+  // Ensure scene state exists
+  if (!ctx.session.scene?.newPack) {
+    return ctx.scene.enter('newPack')
+  }
+
   ctx.session.scene.newPack.name = ctx.message.text
 
   return ctx.scene.enter('newPackConfirm')

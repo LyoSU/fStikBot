@@ -119,6 +119,11 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
 }
 
 db.Sticker.addSticker = async (stickerSet, emojisText = '', info, file) => {
+  // Validate required fields
+  if (!info || !info.file_unique_id) {
+    throw new Error('Sticker info with file_unique_id is required')
+  }
+
   const sticker = new db.Sticker()
 
   sticker.stickerSet = stickerSet
