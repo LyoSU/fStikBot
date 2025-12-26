@@ -278,6 +278,15 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
     if (getStickerSet.error) {
       return getStickerSet
     }
+
+    if (!getStickerSet.stickers || getStickerSet.stickers.length === 0) {
+      return {
+        error: {
+          message: 'Sticker set is empty after adding sticker'
+        }
+      }
+    }
+
     const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
     const sticker = await db.Sticker.addSticker(stickerSet._id, stickerExtra.emojis, stickerInfo, stickerFile)
