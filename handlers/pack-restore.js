@@ -1,8 +1,6 @@
 const { escapeHTML } = require('../utils')
 
 module.exports = async (ctx, next) => {
-  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
-
   let messageText = ctx.i18n.t('callback.pack.error.restore')
 
   let restored = false
