@@ -44,25 +44,54 @@ module.exports = async (ctx, next) => {
         { $set: { deleted: true, deletedAt: new Date() } }
       )
 
-      for (const sticker of getStickerSet.stickers) {
-        let findSticker = await ctx.db.Sticker.findOne({
-          fileUniqueId: sticker.file_unique_id
-        })
+      // Batch fetch existing stickers (single query instead of N queries)
+      const fileUniqueIds = getStickerSet.stickers.map(s => s.file_unique_id)
+      const existingStickers = await ctx.db.Sticker.find({
+        fileUniqueId: { $in: fileUniqueIds }
+      }).lean()
+      const stickerMap = new Map(existingStickers.map(s => [s.fileUniqueId, s]))
 
-        if (!findSticker) {
-          findSticker = new ctx.db.Sticker()
+      // Prepare bulk operations
+      const bulkOps = getStickerSet.stickers.map(sticker => {
+        const existing = stickerMap.get(sticker.file_unique_id)
 
-          findSticker.fileUniqueId = sticker.file_unique_id
-          findSticker.emoji = sticker.emoji + findStickerSet.emojiSuffix
+        if (existing) {
+          // Update existing sticker
+          return {
+            updateOne: {
+              filter: { _id: existing._id },
+              update: {
+                $set: {
+                  deleted: false,
+                  deletedAt: null,
+                  fileId: sticker.file_id,
+                  stickerType: sticker.type || null,
+                  stickerSet: findStickerSet._id
+                }
+              }
+            }
+          }
+        } else {
+          // Insert new sticker
+          return {
+            insertOne: {
+              document: {
+                fileUniqueId: sticker.file_unique_id,
+                emojis: sticker.emoji + findStickerSet.emojiSuffix,
+                deleted: false,
+                deletedAt: null,
+                fileId: sticker.file_id,
+                stickerType: sticker.type || null,
+                stickerSet: findStickerSet._id
+              }
+            }
+          }
         }
+      })
 
-        // Restore sticker - write to new flat format only
-        findSticker.deleted = false
-        findSticker.deletedAt = null
-        findSticker.fileId = sticker.file_id
-        findSticker.stickerType = sticker.type || null
-        findSticker.stickerSet = findStickerSet
-        await findSticker.save()
+      // Execute all operations in single batch
+      if (bulkOps.length > 0) {
+        await ctx.db.Sticker.bulkWrite(bulkOps, { ordered: false })
       }
 
       messageText = ctx.i18n.t('callback.pack.restored', {

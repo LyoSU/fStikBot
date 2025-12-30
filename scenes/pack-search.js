@@ -15,19 +15,30 @@ searchStickerSet.enter(async (ctx) => {
 })
 
 searchStickerSet.on('text', async (ctx) => {
-  const stickerSet = await ctx.db.StickerSet.find({
+  const stickerSets = await ctx.db.StickerSet.find({
     public: true,
     $text: { $search: ctx.message.text }
-  }).limit(100)
+  }).select('name title').limit(100).lean()
 
-  if (stickerSet?.length > 0) {
+  if (stickerSets && stickerSets.length > 0) {
+    // Batch verify packs with Telegram API (parallel with concurrency limit)
+    const BATCH_SIZE = 10
     const packList = []
 
-    for (const pack of stickerSet) {
-      const stickerSetInfo = await ctx.telegram.getStickerSet(pack.name).catch(() => null)
+    for (let i = 0; i < stickerSets.length; i += BATCH_SIZE) {
+      const batch = stickerSets.slice(i, i + BATCH_SIZE)
+      const results = await Promise.all(
+        batch.map(pack =>
+          ctx.telegram.getStickerSet(pack.name)
+            .then(info => ({ pack, info }))
+            .catch(() => ({ pack, info: null }))
+        )
+      )
 
-      if (stickerSetInfo && stickerSetInfo.stickers.length > 0) {
-        packList.push(`<a href="${ctx.config.stickerLinkPrefix}${pack.name}">${escapeHTML(pack.title)}</a>`)
+      for (const { pack, info } of results) {
+        if (info && info.stickers && info.stickers.length > 0) {
+          packList.push(`<a href="${ctx.config.stickerLinkPrefix}${pack.name}">${escapeHTML(pack.title)}</a>`)
+        }
       }
     }
 

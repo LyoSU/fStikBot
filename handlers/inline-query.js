@@ -10,6 +10,7 @@ const stegcloak = new StegCloak(false, false)
 
 const fileTypeCache = new Map()
 const FILE_TYPE_CACHE_TTL = 1000 * 60 * 60 // 1 hour
+const FILE_TYPE_CACHE_MAX_SIZE = 50000 // Max entries to prevent memory bloat
 
 // Cleanup old cache entries periodically
 setInterval(() => {
@@ -20,6 +21,22 @@ setInterval(() => {
     }
   }
 }, 1000 * 60 * 10)
+
+/**
+ * Add to cache with size limit (LRU-like eviction)
+ */
+function cacheFileType (fileId, type) {
+  // Evict oldest entries if cache is full
+  if (fileTypeCache.size >= FILE_TYPE_CACHE_MAX_SIZE) {
+    const entriesToDelete = Math.floor(FILE_TYPE_CACHE_MAX_SIZE * 0.1) // Remove 10%
+    const iterator = fileTypeCache.keys()
+    for (let i = 0; i < entriesToDelete; i++) {
+      const key = iterator.next().value
+      if (key) fileTypeCache.delete(key)
+    }
+  }
+  fileTypeCache.set(fileId, { type, timestamp: Date.now() })
+}
 
 // ===================
 // HELPER FUNCTIONS
@@ -97,8 +114,8 @@ async function detectStickerTypes (ctx, stickers) {
           if (/document/.test(fileInfo.file_path)) type = 'document'
           else if (/photo/.test(fileInfo.file_path)) type = 'photo'
 
-          // Cache the result
-          fileTypeCache.set(fileId, { type, timestamp: Date.now() })
+          // Cache the result (with size limit)
+          cacheFileType(fileId, type)
 
           // Update sticker in DB (fire and forget for performance)
           ctx.db.Sticker.updateOne(

@@ -94,6 +94,7 @@ bot.context.db = db
 const sessionStore = new Map()
 const sessionTimestamps = new Map()
 const SESSION_TTL = 1000 * 60 * 60 // 1 hour TTL
+const SESSION_MAX_SIZE = 100000 // Max sessions to prevent memory bloat
 
 // Cleanup expired sessions every 2 minutes
 setInterval(() => {
@@ -111,6 +112,15 @@ setInterval(() => {
   }
 }, 1000 * 60 * 2)
 
+// Evict oldest sessions if limit reached
+function evictOldestSessions (count) {
+  const sorted = [...sessionTimestamps.entries()].sort((a, b) => a[1] - b[1])
+  for (let i = 0; i < count && i < sorted.length; i++) {
+    sessionStore.delete(sorted[i][0])
+    sessionTimestamps.delete(sorted[i][0])
+  }
+}
+
 // Wrap session store to track timestamps
 const sessionStoreWrapper = {
   get: (key) => {
@@ -118,6 +128,10 @@ const sessionStoreWrapper = {
     return sessionStore.get(key)
   },
   set: (key, value) => {
+    // Evict 10% oldest if at capacity
+    if (sessionStore.size >= SESSION_MAX_SIZE) {
+      evictOldestSessions(Math.floor(SESSION_MAX_SIZE * 0.1))
+    }
     sessionTimestamps.set(key, Date.now())
     return sessionStore.set(key, value)
   },
