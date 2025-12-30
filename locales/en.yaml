@@ -735,6 +735,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>We have no information about other stickers of this owner</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       Boost <a href="${link}">${title}</a>?

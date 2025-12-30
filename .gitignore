@@ -63,6 +63,7 @@ typings/
 tmp
 tgsnake
 session
+.mtproto-session
 
 .DS_Store
 config.json

@@ -235,45 +235,60 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.not_found'))
   }
 
-  const stickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
-    stickerset: new telegramApi.Api.InputStickerSetShortName({
-      shortName: sticker.set_name
-    }),
-    hash: 0
-  }))
-
-  if (!stickerSetInfo) {
-    return ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.not_found'))
-  }
-
-  const { ownerId, setId } = decodeStickerSetId(stickerSetInfo.set.id.value)
-
-  // find sticker set in database
+  // First check database
   let stickerSet = await db.StickerSet.findOne({
     name: sticker.set_name
   })
 
-  if (!stickerSet) {
-    stickerSet = await db.StickerSet.create({
-      ownerTelegramId: ownerId,
-      name: sticker.set_name,
-      title: stickerSetInfo.set.title,
-      animated: sticker.is_animated,
-      video: sticker.is_video,
-      packType: sticker.type,
-      thirdParty: true,
-    })
+  let ownerId = stickerSet?.ownerTelegramId || null
+  let setId = null
+
+  // Only use MTProto if we don't have owner info in database
+  if (!ownerId && telegramApi.client) {
+    try {
+      const stickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
+        stickerset: new telegramApi.Api.InputStickerSetShortName({
+          shortName: sticker.set_name
+        }),
+        hash: 0
+      }))
+
+      if (stickerSetInfo) {
+        const decoded = decodeStickerSetId(stickerSetInfo.set.id.value)
+        ownerId = decoded.ownerId
+        setId = decoded.setId
+
+        // Save to database for future requests
+        if (!stickerSet) {
+          stickerSet = await db.StickerSet.create({
+            ownerTelegramId: ownerId,
+            name: sticker.set_name,
+            title: stickerSetInfo.set.title,
+            animated: sticker.is_animated,
+            video: sticker.is_video,
+            packType: sticker.type,
+            thirdParty: true,
+          })
+        } else if (!stickerSet.ownerTelegramId) {
+          // Update existing record with owner info
+          stickerSet.ownerTelegramId = ownerId
+          await stickerSet.save()
+        }
+      }
+    } catch (err) {
+      // MTProto API unavailable, continue without owner info
+    }
   }
 
-  const actualOwnerId = stickerSet.ownerTelegramId || ownerId
+  const actualOwnerId = ownerId
 
-  // get all stickerset owners from database
-  const packs = await db.StickerSet.find({
-    ownerTelegramId: actualOwnerId,
-    _id: {
-      $ne: stickerSet?._id || null
-    }
-  })
+  // get all stickerset owners from database (only if we have owner info)
+  const packs = actualOwnerId
+    ? await db.StickerSet.find({
+        ownerTelegramId: actualOwnerId,
+        _id: { $ne: stickerSet?._id || null }
+      })
+    : []
 
   let chunkedPacks = []
   const chunkSize = 20 // Reduced to prevent "message too long" errors
@@ -309,11 +324,14 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     showGramAds(ctx.chat.id)
   }
 
-  const ownerChat = await ctx.telegram.getChat(actualOwnerId).catch(() => null)
+  let ownerChat = null
+  let mention = ctx.i18n.t('scenes.packAbout.unknown_owner')
 
-  let mention
-  mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${actualOwnerId}">${escapeHTML(ownerChat?.first_name) || 'unknown'}</a>`
-  if (!mention) mention = `<a href="tg://openmessage?user_id=${actualOwnerId}">[🤖]</a>, <a href="https://t.me/@id${actualOwnerId}">[🍏]</a>`
+  if (actualOwnerId) {
+    ownerChat = await ctx.telegram.getChat(actualOwnerId).catch(() => null)
+    mention = (!ownerChat || ownerChat?.has_private_forwards === true) ? undefined : `<a href="tg://user?id=${actualOwnerId}">${escapeHTML(ownerChat?.first_name) || 'unknown'}</a>`
+    if (!mention) mention = `<a href="tg://openmessage?user_id=${actualOwnerId}">[🤖]</a>, <a href="https://t.me/@id${actualOwnerId}">[🍏]</a>`
+  }
 
   let otherPacks
 
@@ -354,9 +372,9 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: escapeHTML(sticker.set_name),
-    ownerId: actualOwnerId,
+    ownerId: actualOwnerId ?? '?',
     mention,
-    setId,
+    setId: setId ?? '?',
     otherPacks: otherPacksText
   }), {
     disable_web_page_preview: true,
