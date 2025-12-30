@@ -223,7 +223,8 @@ module.exports = async (ctx, next) => {
     if (stickerType === 'photo') stickerFile = message[stickerType].slice(-1)[0]
     else stickerFile = message[stickerType]
 
-    if (stickerFile?.stickerType) stickerFile.stickerType = stickerType
+    // Always set stickerType for inline packs based on detected type
+    if (stickerFile) stickerFile.stickerType = stickerType
 
     if (message.caption) stickerFile.caption = message.caption
     stickerFile.file_unique_id = stickerSet.id + '_' + stickerFile.file_unique_id
