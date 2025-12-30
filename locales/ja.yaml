@@ -736,6 +736,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>この所有者の他のステッカーに関する情報はありません</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b><a href="${link}">${title}</a> を本当にブーストしますか?</b>
