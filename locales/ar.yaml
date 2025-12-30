@@ -755,6 +755,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>ليس لدينا معلومات عن الملصقات الأخرى لهذا المالك</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b>هل أنت متأكد أنك تريد تعزيز <a href="${link}">${title}؟</a></b>
