@@ -99,11 +99,12 @@ stickersSchema.index({ stickerSet: 1, deleted: 1 })
 stickersSchema.index({ fileUniqueId: 1 })
 
 // TTL index - auto-delete documents 30 days after deletedAt is set
+// Note: TTL only deletes docs where deletedAt is a Date, so null values are safe
 stickersSchema.index(
   { deletedAt: 1 },
   {
     expireAfterSeconds: 30 * 24 * 60 * 60, // 30 days
-    partialFilterExpression: { deletedAt: { $ne: null } }
+    partialFilterExpression: { deletedAt: { $type: 'date' } }
   }
 )
 
