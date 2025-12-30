@@ -147,7 +147,8 @@ db.Sticker.addSticker = async (stickerSet, emojisText = '', info, originalFile =
   if (originalFile && originalFile.file_id && originalFile.file_id !== info.file_id) {
     stickerData.original = {
       fileId: originalFile.file_id,
-      fileUniqueId: originalFile.file_unique_id
+      fileUniqueId: originalFile.file_unique_id,
+      stickerType: originalFile.stickerType || null
     }
   }
 

@@ -21,7 +21,8 @@ const stickersSchema = mongoose.Schema({
   // NEW: Original file data (only if different from current)
   original: {
     fileId: String,
-    fileUniqueId: String
+    fileUniqueId: String,
+    stickerType: String
   },
 
   // LEGACY: Keep for backwards compatibility (old documents)
@@ -78,6 +79,10 @@ stickersSchema.methods.getOriginalFileUniqueId = function () {
 
 stickersSchema.methods.hasOriginal = function () {
   return !!((this.original && this.original.fileId) || (this.file && this.file.file_id))
+}
+
+stickersSchema.methods.getOriginalStickerType = function () {
+  return (this.original && this.original.stickerType) || (this.file && this.file.stickerType)
 }
 
 // ===================

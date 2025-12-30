@@ -48,6 +48,18 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
   if (stickerInfo && stickerInfo.hasOriginal()) {
     const originalFileId = stickerInfo.getOriginalFileId()
     const originalFileUniqueId = stickerInfo.getOriginalFileUniqueId()
+    const originalType = stickerInfo.getOriginalStickerType()
+
+    // Determine file extension based on stored type or fallback to webp
+    const getExtension = (type) => {
+      const extensions = {
+        photo: 'jpg',
+        video: 'mp4',
+        animation: 'gif',
+        document: 'webp'
+      }
+      return extensions[type] || 'webp'
+    }
 
     await ctx.replyWithSticker(originalFileId, {
       caption: sticker.emojis,
@@ -56,10 +68,11 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
     }).catch(async (stickerError) => {
       if (stickerError.description.match(/emoji/)) {
         const fileLink = await ctx.telegram.getFileLink(originalFileId)
+        const ext = getExtension(originalType)
 
         await ctx.replyWithDocument({
           url: fileLink,
-          filename: `${originalFileUniqueId}.webp`
+          filename: `${originalFileUniqueId}.${ext}`
         }, {
           reply_to_message_id: ctx.message.message_id,
           allow_sending_without_reply: true
@@ -72,13 +85,18 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
           })
         })
       } else {
-        ctx.replyWithPhoto(originalFileId, {
+        // Try sending based on original type, fallback to photo
+        const sendMethod = originalType === 'video' || originalType === 'animation'
+          ? ctx.replyWithVideo.bind(ctx)
+          : ctx.replyWithPhoto.bind(ctx)
+
+        sendMethod(originalFileId, {
           caption: stickerInfo.emojis,
           reply_to_message_id: ctx.message.message_id,
           allow_sending_without_reply: true
-        }).catch((photoError) => {
+        }).catch((sendError) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
-            error: photoError.description
+            error: sendError.description
           }), {
             reply_to_message_id: ctx.message.message_id,
             allow_sending_without_reply: true

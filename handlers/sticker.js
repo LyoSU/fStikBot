@@ -239,9 +239,14 @@ module.exports = async (ctx, next) => {
   }
 
   if (stickerFile) {
-    if (message.caption?.includes('roundit')) stickerFile.video_note = true
-    if (message.caption?.includes('cropit')) stickerFile.forceCrop = true
-    if (message.photo && message.caption?.includes('!')) stickerFile.removeBg = true
+    // Set stickerType for all packs (used when storing original file)
+    if (!stickerFile.stickerType && stickerType) {
+      stickerFile.stickerType = stickerType
+    }
+
+    if (message.caption && message.caption.includes('roundit')) stickerFile.video_note = true
+    if (message.caption && message.caption.includes('cropit')) stickerFile.forceCrop = true
+    if (message.photo && message.caption && message.caption.includes('!')) stickerFile.removeBg = true
 
     const originalSticker = await ctx.db.Sticker.findOne({
       stickerSet,
