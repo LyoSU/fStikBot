@@ -6,7 +6,7 @@ module.exports = async (ctx) => {
 
   let passcode
 
-  if (ctx.startPayload) passcode = ctx.startPayload.match(/s_(.*)/)[1]
+  if (ctx.startPayload) passcode = ctx.startPayload.match(/s_(.*)/)?.[1]
   if (ctx?.message?.text === '/public') passcode = 'public'
 
   const stickerSet = await ctx.db.StickerSet.findOne({

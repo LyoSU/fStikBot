@@ -1,6 +1,8 @@
 const { escapeHTML } = require('../utils')
 
 module.exports = async (ctx, next) => {
+  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
+
   let messageText = ctx.i18n.t('callback.pack.error.restore')
 
   let restored = false
@@ -40,7 +42,7 @@ module.exports = async (ctx, next) => {
     if (restored) {
       await ctx.db.Sticker.updateMany({ stickerSet: findStickerSet }, { $set: { deleted: true } })
 
-      getStickerSet.stickers.forEach(async (sticker) => {
+      for (const sticker of getStickerSet.stickers) {
         let findSticker = await ctx.db.Sticker.findOne({
           fileUniqueId: sticker.file_unique_id
         })
@@ -56,8 +58,8 @@ module.exports = async (ctx, next) => {
         findSticker.fileId = sticker.file_id
         findSticker.info = sticker
         findSticker.stickerSet = findStickerSet
-        findSticker.save()
-      })
+        await findSticker.save()
+      }
 
       messageText = ctx.i18n.t('callback.pack.restored', {
         title: escapeHTML(findStickerSet.title),

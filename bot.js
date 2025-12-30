@@ -182,7 +182,7 @@ bot.use((ctx, next) => {
     ctx.from.language_code === 'uk'
   ) {
     ctx.session.userInfo.locale = 'uk'
-    ctx.session.userInfo.save()
+    ctx.session.userInfo.save().catch(() => {})
     ctx.i18n.locale('uk')
   }
   return next()
@@ -279,7 +279,8 @@ privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.
 const privacyHtml = fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')
 privateMessage.command('privacy', (ctx) => ctx.replyWithHTML(privacyHtml))
 
-privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleRestorePack)
+// Pack link handler chain: restore (if owner) → copy (if not owner)
+privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleRestorePack)
 
 privateMessage.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
 privateMessage.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
@@ -294,7 +295,7 @@ privateMessage.action(/new_pack:(.*)/, (ctx) => {
   }
   return ctx.scene.enter('newPack')
 })
-privateMessage.hears(/(addstickers|addemoji|addemoji)\/(.*)/, handleCopyPack)
+privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleCopyPack)
 privateMessage.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
 privateMessage.action(/publish/, (ctx) => ctx.scene.enter('catalogPublishNew'))
 privateMessage.command('frame', (ctx) => ctx.scene.enter('packFrame'))
