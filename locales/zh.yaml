@@ -765,6 +765,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>我们没有该用户其他贴纸的信息</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b>您确定要提升 <a href="${link}">${title}</a> 吗？</b>
