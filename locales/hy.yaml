@@ -749,6 +749,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>Մենք տեղեկություններ չունենք այս սեփականատիրոջ այլ կպչուն պիտակների մասին</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b>Վստահ ե՞ք, որ ցանկանում եք խթանել <a href="${link}">${title}</a>?</b>
