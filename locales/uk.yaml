@@ -710,7 +710,7 @@ scenes:
       show_all_packs: '📦 Всі паки (${count})'
     result: |
       <b>📦 Пак:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Унікальний номер паку власника, збільшується з кожним паком)</i>
+      🔢 Стікерів: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
 
       🧑‍🎨 ID власника: <code>${ownerId}</code>
       ${mention}
