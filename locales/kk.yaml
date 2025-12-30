@@ -746,13 +746,13 @@ scenes:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
     result: |
-      <b>📦 Пакет:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Сайландырған №, санатылған қавылы пакетке уақытша қосылмайды)</i>
+      <b>📦 Pack:</b> <a href="${link}">${name}</a>
+      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
 
-      🧑‍🎨 Іесі ID: <code>${ownerId}</code>
+      🧑‍🎨 Owner ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Бұл іесінің басқа пакеттері:</b>
+      <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Бізде бұл иесінің басқа стикерлері туралы ақпарат жоқ</i>
