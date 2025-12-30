@@ -746,13 +746,13 @@ scenes:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
     result: |
-      <b>📦 Пак:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(унікальны нумар пакаў уладальніка, павялічваецца з кожным пакам)</i>
+      <b>📦 Pack:</b> <a href="${link}">${name}</a>
+      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
 
-      🧑‍🎨 ID уладальніка: <code>${ownerId}</code>
+      🧑‍🎨 Owner ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Іншыя пакі ад гэтага ўладальніка:</b>
+      <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Інфармацыя пра іншыя пакі гэтага ўладальніка адсутнічае</i>
