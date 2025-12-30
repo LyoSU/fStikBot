@@ -756,6 +756,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>Não temos informações sobre outros adesivos deste proprietário</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b>Tem certeza de que deseja impulsionar <a href="${link}">${title}</a>?</b>
