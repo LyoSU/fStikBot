@@ -719,6 +719,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>У нас немає інформації про інші паки цього власника</i>
+    unknown_owner: '<i>Невідомо</i>'
   boost:
     sure: |
       Бустнути <a href="${link}">${title}</a>?
