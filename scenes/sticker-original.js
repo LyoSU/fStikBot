@@ -36,23 +36,30 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
     sticker = ctx.message.sticker
   }
 
+  // Query supports both new (original) and legacy (file) schema
   const stickerInfo = await ctx.db.Sticker.findOne({
     fileUniqueId: sticker.file_unique_id,
-    file: { $ne: null }
+    $or: [
+      { 'original.fileId': { $ne: null } },
+      { 'file.file_id': { $ne: null } }
+    ]
   })
 
-  if (stickerInfo) {
-    await ctx.replyWithSticker(stickerInfo.file.file_id, {
+  if (stickerInfo && stickerInfo.hasOriginal()) {
+    const originalFileId = stickerInfo.getOriginalFileId()
+    const originalFileUniqueId = stickerInfo.getOriginalFileUniqueId()
+
+    await ctx.replyWithSticker(originalFileId, {
       caption: sticker.emojis,
       reply_to_message_id: ctx.message.message_id,
       allow_sending_without_reply: true
     }).catch(async (stickerError) => {
       if (stickerError.description.match(/emoji/)) {
-        const fileLink = await ctx.telegram.getFileLink(stickerInfo.file.file_id)
+        const fileLink = await ctx.telegram.getFileLink(originalFileId)
 
         await ctx.replyWithDocument({
           url: fileLink,
-          filename: `${stickerInfo.file.file_unique_id}.webp`
+          filename: `${originalFileUniqueId}.webp`
         }, {
           reply_to_message_id: ctx.message.message_id,
           allow_sending_without_reply: true
@@ -65,13 +72,13 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
           })
         })
       } else {
-        ctx.replyWithPhoto(stickerInfo.file.file_id, {
+        ctx.replyWithPhoto(originalFileId, {
           caption: stickerInfo.emojis,
           reply_to_message_id: ctx.message.message_id,
           allow_sending_without_reply: true
-        }).catch((pohotoError) => {
+        }).catch((photoError) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', {
-            error: pohotoError.description
+            error: photoError.description
           }), {
             reply_to_message_id: ctx.message.message_id,
             allow_sending_without_reply: true

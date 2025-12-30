@@ -64,7 +64,7 @@ module.exports = async (ctx, next) => {
   }
 
   const updateResult = await ctx.tg.callApi('setStickerEmojiList', {
-    sticker: sticker.info.file_id,
+    sticker: sticker.getFileId(),
     emoji_list: emojis
   }).catch((error) => {
     console.log(error)

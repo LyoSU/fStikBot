@@ -20,15 +20,10 @@ Object.keys(collections).forEach((collectionName) => {
   atlasDb[collectionName] = atlasConnection.model(collectionName, collections[collectionName])
 })
 
-const fileInfoNormalize = (fileInfo) => {
-  if (!fileInfo) return {}
-  if (fileInfo.caption) fileInfo.caption = fileInfo.caption.substr(0, 150)
-  return {
-    stickerType: fileInfo.stickerType || null,
-    file_id: fileInfo.file_id,
-    file_unique_id: fileInfo.file_unique_id,
-    caption: fileInfo.caption || null
-  }
+// Truncate string to max length
+const truncate = (str, maxLength) => {
+  if (!str) return null
+  return str.length > maxLength ? str.substr(0, maxLength) : str
 }
 
 db.User.getData = async (tgUser) => {
@@ -74,7 +69,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   if (oldStickerSet) {
     await db.Sticker.updateMany(
       { stickerSet: oldStickerSet.id },
-      { $set: { deleted: true } }
+      { $set: { deleted: true, deletedAt: new Date() } }
     )
     await oldStickerSet.remove()
   }
@@ -118,20 +113,45 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
   return stickerSet
 }
 
-db.Sticker.addSticker = async (stickerSet, emojisText = '', info, file) => {
-  // Validate required fields
+/**
+ * Add a new sticker to the database
+ * Uses optimized flat structure for new documents (backwards-compatible)
+ *
+ * @param {ObjectId|string} stickerSet - The sticker set ID
+ * @param {string|string[]} emojisText - Emoji(s) associated with the sticker
+ * @param {Object} info - Current sticker info from Telegram API
+ * @param {Object} [originalFile] - Original file data (if different from current)
+ * @returns {Promise<Document>} The created sticker document
+ */
+db.Sticker.addSticker = async (stickerSet, emojisText = '', info, originalFile = null) => {
   if (!info || !info.file_unique_id) {
     throw new Error('Sticker info with file_unique_id is required')
   }
 
-  const sticker = new db.Sticker()
+  const emojis = Array.isArray(emojisText)
+    ? emojisText.join(' ')
+    : truncate(emojisText, 150)
 
-  sticker.stickerSet = stickerSet
-  sticker.fileId = info.file_id
-  sticker.fileUniqueId = info.file_unique_id
-  sticker.emojis = typeof emojisText === 'string' ? emojisText.substr(0, 150) : emojisText.join(' ')
-  sticker.info = fileInfoNormalize(info)
-  if (typeof file === 'object') sticker.file = fileInfoNormalize(file)
+  const stickerData = {
+    stickerSet,
+    fileUniqueId: info.file_unique_id,
+    emojis,
+
+    // New flat fields (optimized storage)
+    fileId: info.file_id,
+    stickerType: info.stickerType || null,
+    caption: truncate(info.caption, 150)
+  }
+
+  // Store original only if provided AND different from current
+  if (originalFile && originalFile.file_id && originalFile.file_id !== info.file_id) {
+    stickerData.original = {
+      fileId: originalFile.file_id,
+      fileUniqueId: originalFile.file_unique_id
+    }
+  }
+
+  const sticker = new db.Sticker(stickerData)
   await sticker.save()
 
   return sticker

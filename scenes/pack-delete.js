@@ -46,7 +46,7 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
   }).catch(error => { return { error } })
 
   if (result.error) {
-    const errorMessage = result.error?.message || result.error?.description || ''
+    const errorMessage = (result.error && (result.error.message || result.error.description)) || ''
     if (errorMessage.includes('STICKERSET_INVALID')) {
       await ctx.db.StickerSet.deleteOne({
         _id: ctx.session.scene.data.id
@@ -70,10 +70,18 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     })
   }
 
+  // Mark sticker set as deleted
   await ctx.db.StickerSet.updateOne({
     _id: ctx.session.scene.data.id
   }, {
     deleted: true
+  })
+
+  // Mark all stickers for TTL cleanup (30 days)
+  await ctx.db.Sticker.updateMany({
+    stickerSet: ctx.session.scene.data.id
+  }, {
+    $set: { deleted: true, deletedAt: new Date() }
   })
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.success'), {

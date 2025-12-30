@@ -322,25 +322,32 @@ privateMessage.action(/^download_original$/, async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
   }
 
+  // Query supports both new (original) and legacy (file) schema
   const stickerInfo = await db.Sticker.findOne({
     fileUniqueId: sticker.file_unique_id,
-    file: { $ne: null }
+    $or: [
+      { 'original.fileId': { $ne: null } },
+      { 'file.file_id': { $ne: null } }
+    ]
   })
 
-  if (stickerInfo) {
-    await ctx.replyWithSticker(stickerInfo.file.file_id, {
+  if (stickerInfo && stickerInfo.hasOriginal()) {
+    const originalFileId = stickerInfo.getOriginalFileId()
+    const originalFileUniqueId = stickerInfo.getOriginalFileUniqueId()
+
+    await ctx.replyWithSticker(originalFileId, {
       caption: stickerInfo.emojis
     }).catch(async (stickerError) => {
       if (stickerError.description.match(/emoji/)) {
-        const fileLink = await ctx.telegram.getFileLink(stickerInfo.file.file_id)
+        const fileLink = await ctx.telegram.getFileLink(originalFileId)
         await ctx.replyWithDocument({
           url: fileLink,
-          filename: `${stickerInfo.file.file_unique_id}.webp`
+          filename: `${originalFileUniqueId}.webp`
         }).catch((error) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
         })
       } else {
-        ctx.replyWithPhoto(stickerInfo.file.file_id, {
+        ctx.replyWithPhoto(originalFileId, {
           caption: stickerInfo.emojis
         }).catch((photoError) => {
           ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: photoError.description }))

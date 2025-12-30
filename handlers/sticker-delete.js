@@ -87,7 +87,7 @@ module.exports = async (ctx) => {
       || (ctx.session.userInfo?.stickerSet && sticker.stickerSet.id === ctx.session.userInfo?.stickerSet?.id) // if selected sticker pack by user is the same as the sticker pack
       || canDelete // if user have rights to delete sticker
     ) {
-      deleteSticker = sticker.info.file_id
+      deleteSticker = sticker.getFileId()
     } else {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
@@ -121,12 +121,13 @@ module.exports = async (ctx) => {
 
     ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker?.info?.file_unique_id}`, !sticker?.info)
+        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker?.fileUniqueId}`, !sticker)
       ])
     }).catch(() => {})
 
     if (sticker) {
       sticker.deleted = true
+      sticker.deletedAt = new Date()
       await sticker.save()
     }
   }

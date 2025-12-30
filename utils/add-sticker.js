@@ -313,7 +313,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     fileUniqueId: stickerFile.file_unique_id
   })
 
-  if (originalSticker && originalSticker.file && originalSticker.file_id) stickerFile = originalSticker.file
+  // Use original file if available (supports both new and legacy schema)
+  if (originalSticker && originalSticker.hasOriginal()) {
+    stickerFile = {
+      file_id: originalSticker.getOriginalFileId(),
+      file_unique_id: originalSticker.getOriginalFileUniqueId()
+    }
+  }
 
   const stickerSet = toStickerSet
 

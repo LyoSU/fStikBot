@@ -38,7 +38,11 @@ module.exports = async (ctx, next) => {
     }
 
     if (restored) {
-      await ctx.db.Sticker.updateMany({ stickerSet: findStickerSet }, { $set: { deleted: true } })
+      // Mark all stickers as deleted with TTL timestamp before re-syncing
+      await ctx.db.Sticker.updateMany(
+        { stickerSet: findStickerSet },
+        { $set: { deleted: true, deletedAt: new Date() } }
+      )
 
       for (const sticker of getStickerSet.stickers) {
         let findSticker = await ctx.db.Sticker.findOne({
@@ -52,9 +56,11 @@ module.exports = async (ctx, next) => {
           findSticker.emoji = sticker.emoji + findStickerSet.emojiSuffix
         }
 
+        // Restore sticker - write to new flat format only
         findSticker.deleted = false
+        findSticker.deletedAt = null
         findSticker.fileId = sticker.file_id
-        findSticker.info = sticker
+        findSticker.stickerType = sticker.type || null
         findSticker.stickerSet = findStickerSet
         await findSticker.save()
       }

@@ -12,33 +12,92 @@ const stickersSchema = mongoose.Schema({
     required: true
   },
   emojis: String,
+
+  // NEW: Flat fields (used for new documents)
+  fileId: String,
+  stickerType: String,
+  caption: String,
+
+  // NEW: Original file data (only if different from current)
+  original: {
+    fileId: String,
+    fileUniqueId: String
+  },
+
+  // LEGACY: Keep for backwards compatibility (old documents)
   info: {
     stickerType: String,
     file_id: String,
     file_unique_id: String,
-    caption: {
-      type: String,
-      text: true
-    }
+    caption: String
   },
   file: {
     stickerType: String,
     file_id: String,
     file_unique_id: String
   },
+
   deleted: {
     type: Boolean,
     default: false
+  },
+
+  // NEW: For TTL auto-cleanup
+  deletedAt: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true
 })
 
-// Text index for search
-stickersSchema.index({ 'info.caption': 'text' })
+// ===================
+// GETTER METHODS
+// Read from new format OR fallback to legacy
+// ===================
 
-// Compound index for common queries (stickerSet + deleted filter)
+stickersSchema.methods.getFileId = function () {
+  return this.fileId || (this.info && this.info.file_id)
+}
+
+stickersSchema.methods.getStickerType = function () {
+  return this.stickerType || (this.info && this.info.stickerType) || 'sticker'
+}
+
+stickersSchema.methods.getCaption = function () {
+  return this.caption || (this.info && this.info.caption)
+}
+
+stickersSchema.methods.getOriginalFileId = function () {
+  return (this.original && this.original.fileId) || (this.file && this.file.file_id)
+}
+
+stickersSchema.methods.getOriginalFileUniqueId = function () {
+  return (this.original && this.original.fileUniqueId) || (this.file && this.file.file_unique_id)
+}
+
+stickersSchema.methods.hasOriginal = function () {
+  return !!((this.original && this.original.fileId) || (this.file && this.file.file_id))
+}
+
+// ===================
+// INDEXES
+// ===================
+
+// Text index for search (supports both old and new caption fields)
+stickersSchema.index({ caption: 'text', 'info.caption': 'text' })
+
+// Compound index for common queries
 stickersSchema.index({ stickerSet: 1, deleted: 1 })
 stickersSchema.index({ stickerSet: 1, fileUniqueId: 1 })
+
+// TTL index - auto-delete documents 30 days after deletedAt is set
+stickersSchema.index(
+  { deletedAt: 1 },
+  {
+    expireAfterSeconds: 30 * 24 * 60 * 60, // 30 days
+    partialFilterExpression: { deletedAt: { $ne: null } }
+  }
+)
 
 module.exports = stickersSchema
