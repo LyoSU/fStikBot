@@ -99,13 +99,14 @@ stickersSchema.index({ stickerSet: 1, deleted: 1 })
 stickersSchema.index({ fileUniqueId: 1 })
 
 // TTL index - auto-delete documents 30 days after deletedAt is set
-// Note: TTL only deletes docs where deletedAt is a Date, so null values are safe
-stickersSchema.index(
-  { deletedAt: 1 },
-  {
-    expireAfterSeconds: 30 * 24 * 60 * 60, // 30 days
-    partialFilterExpression: { deletedAt: { $type: 'date' } }
-  }
-)
+// Note: Created manually in MongoDB, not via Mongoose to avoid recreation issues
+// db.stickers.createIndex({ deletedAt: 1 }, { expireAfterSeconds: 2592000, partialFilterExpression: { deletedAt: { $type: "date" } } })
+// stickersSchema.index(
+//   { deletedAt: 1 },
+//   {
+//     expireAfterSeconds: 30 * 24 * 60 * 60, // 30 days
+//     partialFilterExpression: { deletedAt: { $type: 'date' } }
+//   }
+// )
 
 module.exports = stickersSchema
