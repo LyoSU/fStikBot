@@ -314,10 +314,12 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   })
 
   // Use original file if available (supports both new and legacy schema)
+  // This preserves the chain: Pack A → Pack B → Pack C all point to original source
   if (originalSticker && originalSticker.hasOriginal()) {
     stickerFile = {
       file_id: originalSticker.getOriginalFileId(),
-      file_unique_id: originalSticker.getOriginalFileUniqueId()
+      file_unique_id: originalSticker.getOriginalFileUniqueId(),
+      stickerType: originalSticker.getOriginalStickerType() || stickerFile.stickerType
     }
   }
 

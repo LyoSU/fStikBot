@@ -92,9 +92,11 @@ stickersSchema.methods.getOriginalStickerType = function () {
 // Text index for search (supports both old and new caption fields)
 stickersSchema.index({ caption: 'text', 'info.caption': 'text' })
 
-// Compound index for common queries
+// Compound index for inline queries (stickerSet + deleted)
 stickersSchema.index({ stickerSet: 1, deleted: 1 })
-stickersSchema.index({ stickerSet: 1, fileUniqueId: 1 })
+
+// Single field index - highly selective, covers most lookups
+stickersSchema.index({ fileUniqueId: 1 })
 
 // TTL index - auto-delete documents 30 days after deletedAt is set
 stickersSchema.index(
