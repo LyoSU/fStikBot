@@ -744,13 +744,13 @@ scenes:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
     result: |
-      <b>📦 Paket:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Sahibin paketlerine benzersiz numara, her paket başına arttırılır)</i>
+      <b>📦 Pack:</b> <a href="${link}">${name}</a>
+      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
 
-      🧑‍🎨 Sahip ID: <code>${ownerId}</code>
+      🧑‍🎨 Owner ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Bu sahibin diğer paketleri:</b>
+      <b>🎨 Other packs from this owner:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
