@@ -754,6 +754,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b><a href="${link}">${title}</a> artırmak istediğinizden emin misiniz?</b>
