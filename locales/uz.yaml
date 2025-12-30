@@ -736,6 +736,7 @@ scenes:
       ${otherPacks}
     no_other_packs: |
       <i>Ushbu egasining boshqa stikerlari haqida bizda ma'lumot yo'q</i>
+    unknown_owner: '<i>Unknown</i>'
   boost:
     sure: |
       <b>Haqiqatan ham <a href="${link}">${title}</a> ni kuchaytirmoqchimisiz?</b>
