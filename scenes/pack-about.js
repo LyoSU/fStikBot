@@ -11,6 +11,16 @@ const {
 } = require('../database')
 const decodeStickerSetId = require('../utils/decode-sticker-set-id')
 
+// Telegram datacenter regions
+const DC_REGIONS = {
+  1: '🇺🇸 USA',
+  2: '🇪🇺 Europe',
+  3: '🇺🇸 USA',
+  4: '🇪🇺 Europe',
+  5: '🇸🇬 Asia',
+  7: '🇺🇸 USA'
+}
+
 const packAbout = new Scene('packAbout')
 
 packAbout.enter(async (ctx) => {
@@ -228,6 +238,8 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
 
   let ownerId = stickerSet?.ownerTelegramId || null
   let setId = null
+  let dcId = null
+  let stickerCount = null
 
   // Only use MTProto if we don't have owner info in database
   if (!ownerId && telegramApi.client) {
@@ -243,6 +255,8 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
         const decoded = decodeStickerSetId(stickerSetInfo.set.id.value)
         ownerId = decoded.ownerId
         setId = decoded.setId
+        dcId = decoded.dcId
+        stickerCount = stickerSetInfo.set.count
 
         // Save to database for future requests
         if (!stickerSet) {
@@ -355,12 +369,17 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     ? otherPacks.slice(0, 15).join(', ') + (otherPacks.length > 15 ? '...' : '')
     : ctx.i18n.t('scenes.packAbout.no_other_packs')
 
+  const dcRegion = dcId ? DC_REGIONS[dcId] || '?' : null
+  const dcDisplay = dcId ? `${dcRegion}` : '?'
+
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
     link: `https://t.me/addstickers/${sticker.set_name}`,
     name: escapeHTML(sticker.set_name),
     ownerId: actualOwnerId ?? '?',
     mention,
     setId: setId ?? '?',
+    dcId: dcDisplay,
+    stickerCount: stickerCount ?? '?',
     otherPacks: otherPacksText
   }), {
     disable_web_page_preview: true,
