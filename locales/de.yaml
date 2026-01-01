@@ -618,6 +618,10 @@ sticker:
         <b>Fehler!</b>
 
         Dieser Sticker konnte nicht gefunden werden. Bitte stellen Sie sicher, dass er im richtigen Paket ist oder versuchen Sie, ihn erneut hinzuzufügen.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Tritt unserem Kanal bei</a>, um die neuesten Bot-News zu erhalten.
