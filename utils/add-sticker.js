@@ -362,8 +362,17 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     emojis.push(stickerSet.emojiSuffix)
   }
 
-  const isVideo = inputFile.is_video || !!(inputFile.mime_type && inputFile.mime_type.match('video')) || inputFile.mime_type === 'image/gif' || inputFile.duration > 0 || false
-  const isVideoNote = (inputFile.video_note) || false
+  // Unified video detection - check all possible sources
+  const stickerType = stickerFile.stickerType
+  const isVideo =
+    stickerFile.is_video ||
+    stickerType === 'video' ||
+    stickerType === 'video_note' ||
+    inputFile.is_video ||
+    !!(inputFile.mime_type && inputFile.mime_type.match('video')) ||
+    inputFile.mime_type === 'image/gif' ||
+    inputFile.duration > 0
+  const isVideoNote = inputFile.video_note || stickerType === 'video_note'
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -384,15 +393,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
 
   if (stickerFile.is_animated) {
     stickerExtra.sticker_format = 'animated'
-  } else if (stickerFile.is_video || isVideo || isVideoNote) {
+  } else if (isVideo || isVideoNote) {
     stickerExtra.sticker_format = 'video'
   } else {
     stickerExtra.sticker_format = 'static'
   }
 
   if (stickerFile.is_animated) {
-    // stickerExtra.sticker_format = 'animated'
-
     const fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
       return {
         error: {
