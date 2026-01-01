@@ -615,6 +615,10 @@ sticker:
         <b>Памылка!</b>
 
         Гэты сцікер не знойдзены. Калі ласка, пераканайцеся, што ён у правільным наборы, або паспрабуйце дадаць яго зноў.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Падпішыцеся на наш канал,</a> каб атрымліваць апошнія навіны пра нашага бота.
