@@ -609,6 +609,10 @@ sticker:
         <b>Սխալ!</b>
 
         Այս ստիկերը չի գտնվել: Խնդրում ենք համոզվել, որ այն ճիշտ փաթեթում է կամ կրկին փորձեք ավելացնել այն։
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Միացեք մեր ալիքին</a> բոտի մասին վերջին նորությունները ստանալու համար:
