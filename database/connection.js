@@ -6,15 +6,11 @@ const isSrvUri = (uri) => uri && uri.startsWith('mongodb+srv://')
 // Основне з'єднання
 const mainUri = process.env.MONGODB_URI
 const connection = mongoose.createConnection(mainUri, {
-  // directConnection тільки для звичайних URI, не для SRV
   ...(isSrvUri(mainUri) ? {} : { directConnection: true }),
   maxPoolSize: 10,
   minPoolSize: 2,
-  maxIdleTimeMS: 30000,
   serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-  connectTimeoutMS: 10000,
-  heartbeatFrequencyMS: 10000,
+  socketTimeoutMS: 30000,
   retryWrites: true,
   retryReads: true
 })
@@ -24,7 +20,7 @@ connection.on('error', error => {
 })
 
 connection.on('disconnected', () => {
-  console.warn('MongoDB disconnected, attempting to reconnect...')
+  console.warn('MongoDB disconnected')
 })
 
 connection.on('reconnected', () => {
@@ -37,16 +33,14 @@ const atlasConnection = mongoose.createConnection(atlasUri, {
   ...(isSrvUri(atlasUri) ? {} : { directConnection: true }),
   maxPoolSize: 5,
   minPoolSize: 1,
-  maxIdleTimeMS: 60000,
-  serverSelectionTimeoutMS: 10000,
-  socketTimeoutMS: 45000,
-  connectTimeoutMS: 10000,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 30000,
   retryWrites: true,
   retryReads: true
 })
 
 atlasConnection.on('error', error => {
-  console.error('Atlas MongoDB connection error:', error)
+  console.error('Atlas MongoDB error:', error)
 })
 
 module.exports = {
