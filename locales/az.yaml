@@ -616,6 +616,10 @@ sticker:
         <b>Səhv!</b>
 
         Bu stikeri tapmaq mümkün olmadı. Zəhmət olmasa onun doğru paketdə olub-olmadığını yoxlayın və ya yenidən əlavə etməyə çalışın.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Bot haqqında ən son xəbərləri əldə etmək üçün</a> kanalımıza qoşulun.
