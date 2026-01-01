@@ -597,6 +597,10 @@ sticker:
         <b>エラー!</b>
 
         このステッカーは見つかりませんでした。正しいパックにあることを確認するか、もう一度追加してみてください。
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">チャンネル</a> に参加して、ボットに関する最新ニュースを入手してください。
