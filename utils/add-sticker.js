@@ -326,7 +326,12 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     stickerFile = {
       file_id: originalSticker.getOriginalFileId(),
       file_unique_id: originalSticker.getOriginalFileUniqueId(),
-      stickerType: originalSticker.getOriginalStickerType() || stickerFile.stickerType
+      stickerType: originalSticker.getOriginalStickerType() || stickerFile.stickerType,
+      // Preserve these fields for proper sticker type detection
+      set_name: stickerFile.set_name,
+      type: stickerFile.type,
+      is_animated: stickerFile.is_animated,
+      is_video: stickerFile.is_video
     }
   }
 
