@@ -608,6 +608,10 @@ sticker:
         <b>¡Error!</b>
 
         No se pudo encontrar esta pegatina. Por favor, asegúrese de que está en el paquete correcto o intente agregarla de nuevo.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Únete a nuestro canal</a> para obtener las últimas noticias sobre el bot.
