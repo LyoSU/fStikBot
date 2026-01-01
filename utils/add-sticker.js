@@ -602,13 +602,15 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
             })
           }
         } else {
-          // Calculate final width after resize (for padding calculation)
+          // Calculate final dimensions after resize
           let finalWidth = imageMetadata.width
+          let finalHeight = imageMetadata.height
 
           // For regular stickers, resize if larger than 512
           if (imageMetadata.width > 512 || imageMetadata.height > 512) {
             const scale = Math.min(512 / imageMetadata.width, 512 / imageMetadata.height)
             finalWidth = Math.round(imageMetadata.width * scale)
+            finalHeight = Math.round(imageMetadata.height * scale)
 
             pipeline = pipeline.resize(512, 512, {
               fit: 'inside',
@@ -616,16 +618,28 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
             })
           }
 
-          // Add horizontal padding to make width 512
-          if (finalWidth < 512) {
-            const paddingLeft = Math.floor((512 - finalWidth) / 2)
-            const paddingRight = Math.ceil((512 - finalWidth) / 2)
-
-            pipeline = pipeline.extend({
-              left: paddingLeft,
-              right: paddingRight,
-              background: { r: 0, g: 0, b: 0, alpha: 0 }
-            })
+          // Only add padding if neither side is 512 (one side must be exactly 512)
+          if (finalWidth < 512 && finalHeight < 512) {
+            // Pad the larger dimension to 512
+            if (finalWidth >= finalHeight) {
+              // Landscape or square - pad width
+              const paddingLeft = Math.floor((512 - finalWidth) / 2)
+              const paddingRight = Math.ceil((512 - finalWidth) / 2)
+              pipeline = pipeline.extend({
+                left: paddingLeft,
+                right: paddingRight,
+                background: { r: 0, g: 0, b: 0, alpha: 0 }
+              })
+            } else {
+              // Portrait - pad height
+              const paddingTop = Math.floor((512 - finalHeight) / 2)
+              const paddingBottom = Math.ceil((512 - finalHeight) / 2)
+              pipeline = pipeline.extend({
+                top: paddingTop,
+                bottom: paddingBottom,
+                background: { r: 0, g: 0, b: 0, alpha: 0 }
+              })
+            }
           }
         }
 
