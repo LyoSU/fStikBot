@@ -596,6 +596,10 @@ sticker:
         <b>Xato!</b>
 
         Bu stiker topilmadi. To'g'ri to'plamda ekanligiga ishonch hosil qiling yoki uni qayta qo'shishga harakat qiling.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Bot haqidagi so'nggi yangiliklardan xabardor bo'lish uchun</a> kanalimizga qo'shiling.
