@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const connection = mongoose.createConnection(process.env.MONGODB_URI, {
   directConnection: true,
-  maxPoolSize: 50,
+  maxPoolSize: 10,
   maxTimeMS: 30000,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
@@ -17,7 +17,7 @@ connection.on('error', error => {
 })
 
 const atlasConnection = mongoose.createConnection(process.env.ATLAS_MONGODB_URI || process.env.MONGODB_URI, {
-  maxPoolSize: 50,
+  maxPoolSize: 10,
   maxTimeMS: 30000,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
