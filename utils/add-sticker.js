@@ -602,21 +602,24 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
             })
           }
         } else {
+          // Calculate final width after resize (for padding calculation)
+          let finalWidth = imageMetadata.width
+
           // For regular stickers, resize if larger than 512
           if (imageMetadata.width > 512 || imageMetadata.height > 512) {
+            const scale = Math.min(512 / imageMetadata.width, 512 / imageMetadata.height)
+            finalWidth = Math.round(imageMetadata.width * scale)
+
             pipeline = pipeline.resize(512, 512, {
               fit: 'inside',
               withoutEnlargement: true
             })
           }
 
-          // Get dimensions after potential resize
-          const resizedMetadata = await pipeline.clone().metadata()
-
           // Add horizontal padding to make width 512
-          if (resizedMetadata.width < 512) {
-            const paddingLeft = Math.floor((512 - resizedMetadata.width) / 2)
-            const paddingRight = Math.ceil((512 - resizedMetadata.width) / 2)
+          if (finalWidth < 512) {
+            const paddingLeft = Math.floor((512 - finalWidth) / 2)
+            const paddingRight = Math.ceil((512 - finalWidth) / 2)
 
             pipeline = pipeline.extend({
               left: paddingLeft,
@@ -627,7 +630,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
         }
 
         stickerExtra.sticker = {
-          source: await pipeline.png({ quality: 85, effort: 3 }).toBuffer()
+          source: await pipeline.png({ compressionLevel: 6, effort: 3 }).toBuffer()
         }
       }
     }

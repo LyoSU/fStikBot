@@ -373,9 +373,9 @@ privateMessage.action(/^download_original$/, async (ctx) => {
 
     if (fileLink.endsWith('.webp')) {
       const buffer = await got(fileLink).buffer()
-      const image = sharp(buffer, { failOnError: false }).png()
+      const pngBuffer = await sharp(buffer, { failOnError: false }).png().toBuffer()
       await ctx.replyWithDocument({
-        source: image,
+        source: pngBuffer,
         filename: `${sticker.file_unique_id}.png`
       }).catch((error) => {
         ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
