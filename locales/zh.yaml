@@ -625,6 +625,10 @@ sticker:
         <b>错误！</b>
 
         未找到此贴纸。请确保它在正确的包中或尝试重新添加。
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">加入我们的频道</a> 获取有关机器人的最新消息。
