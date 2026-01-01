@@ -616,6 +616,10 @@ sticker:
         <b>Erro!</b>
 
         Este adesivo não pôde ser encontrado. Por favor, certifique-se de que está no pacote correto ou tente adicioná-lo novamente.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     i <a href="${link}">Entre no nosso canal</a> para receber as últimas notícias sobre o bot.
