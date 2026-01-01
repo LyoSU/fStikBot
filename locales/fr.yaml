@@ -610,6 +610,10 @@ sticker:
         <b>Erreur !</b>
 
         Cet autocollant est introuvable. Veuillez vous assurer qu'il se trouve dans le bon pack ou essayez de l'ajouter à nouveau.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Rejoignez notre chaîne</a> pour recevoir les dernières nouvelles sur le bot.
