@@ -617,6 +617,10 @@ sticker:
         <b>Error!</b>
 
         Stiker ini tidak dapat ditemukan. Pastikan stiker ini ada dalam paket yang benar atau coba tambah lagi.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Bergabunglah dengan saluran kami</a> untuk mendapatkan berita terbaru tentang bot.
