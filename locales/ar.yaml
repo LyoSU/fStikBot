@@ -615,6 +615,10 @@ sticker:
         <b>خطأ!</b>
 
         تعذر العثور على هذه الملصق. يرجى التأكد من أنه في الحزمة الصحيحة أو حاول إضافته مرة أخرى.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     (ط) <a href="${link}">انضم لقناتنا</a> للحصول على آخر الأخبار عن البوت.
