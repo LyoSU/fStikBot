@@ -616,6 +616,10 @@ sticker:
         <b>Қате!</b>
 
         Бұл стикер табылмады. Оның дұрыс пакте екеніне көз жеткізіңіз немесе қайта қосып көріңіз.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Бот туралы соңғы жаңалықтарды алу үшін</a> арнамызға қосылыңыз.
