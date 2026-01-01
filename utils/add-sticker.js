@@ -585,18 +585,28 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
           delete lastStickerTime[ctx.from.id]
         }, 1000 * 30);
 
+        if (!fileData || fileData.length === 0) {
+          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
+            reply_to_message_id: ctx?.message?.message_id,
+            allow_sending_without_reply: true
+          })
+        }
+
         const imageSharp = sharp(fileData, {
           failOnError: false,
           limitInputPixels: 268402689, // ~500MB pixel buffer limit
           pages: 1 // only first page for multi-page formats
         })
         const imageMetadata = await imageSharp.metadata().catch((err) => {
-          console.error('Sharp metadata error:', err.message, 'Buffer size:', fileData?.length)
+          console.error('Sharp metadata error:', err.message, 'Buffer size:', fileData?.length, 'First bytes:', fileData?.slice(0, 20)?.toString('hex'))
           return null
         })
 
         if (!imageMetadata) {
-          throw new Error('Invalid image: unable to read metadata')
+          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
+            reply_to_message_id: ctx?.message?.message_id,
+            allow_sending_without_reply: true
+          })
         }
 
         let pipeline = imageSharp.clone()

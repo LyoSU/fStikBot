@@ -592,6 +592,10 @@ sticker:
         <b>Error!</b>
 
         This sticker could not be found. Please ensure it is in the correct pack or try adding it again.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 
 news:
   join: |
