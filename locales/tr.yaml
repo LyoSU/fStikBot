@@ -615,6 +615,10 @@ sticker:
         <b>Hata!</b>
 
         Bu çıkartma bulunamadı. Lütfen doğru pakette olduğundan emin olun veya tekrar eklemeyi deneyin.
+      invalid_image: |
+        <b>Error!</b>
+
+        Unable to process this image. Please try sending a different file or format.
 news:
   join: |
     ℹ️ <a href="${link}">Botla ilgili en son haberleri almak için</a> kanalımıza katılın.
