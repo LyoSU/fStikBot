@@ -152,6 +152,13 @@ const downloadFileByUrl = (fileUrl, timeout = 30000) => new Promise((resolve, re
   const MAX_SIZE = 20 * 1024 * 1024 // 20MB limit
 
   const req = https.get(fileUrl, (response) => {
+    // Check for successful response status
+    if (response.statusCode !== 200) {
+      req.destroy()
+      reject(new Error(`Download failed with status ${response.statusCode}`))
+      return
+    }
+
     response.on('data', (chunk) => {
       totalSize += chunk.length
       if (totalSize > MAX_SIZE) {
@@ -576,10 +583,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
           limitInputPixels: 268402689, // ~500MB pixel buffer limit
           pages: 1 // only first page for multi-page formats
         })
-        const imageMetadata = await imageSharp.metadata().catch(() => {})
+        const imageMetadata = await imageSharp.metadata().catch((err) => {
+          console.error('Sharp metadata error:', err.message, 'Buffer size:', fileData?.length)
+          return null
+        })
 
         if (!imageMetadata) {
-          throw new Error('Invalid image')
+          throw new Error('Invalid image: unable to read metadata')
         }
 
         let pipeline = imageSharp.clone()
