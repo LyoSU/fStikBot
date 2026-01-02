@@ -422,7 +422,16 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       return fileUrl
     }
 
-    const animatedData = await downloadFileByUrl(fileUrl)
+    let animatedData
+    try {
+      animatedData = await downloadFileByUrl(fileUrl)
+    } catch (err) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
+      })
+    }
+
     stickerExtra.sticker = {
       source: animatedData,
       sticker_format: 'animated'
@@ -455,9 +464,16 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
     if (isVideo || isVideoNote) {
       // Video stickers need to be downloaded and re-uploaded
-      stickerExtra.sticker = {
-        source: await downloadFileByUrl(fileUrl)
+      let videoData
+      try {
+        videoData = await downloadFileByUrl(fileUrl)
+      } catch (err) {
+        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+          reply_to_message_id: ctx?.message?.message_id,
+          allow_sending_without_reply: true
+        })
       }
+      stickerExtra.sticker = { source: videoData }
     } else {
       // Static stickers can use file_id directly
       stickerExtra.sticker = stickerFile.file_id
@@ -517,9 +533,17 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
 
     // Skip re-encoding if explicitly requested
     if (inputFile.skip_reencode) {
-      stickerExtra.sticker = {
-        source: await downloadFileByUrl(fileUrl)
+      let skipData
+      try {
+        skipData = await downloadFileByUrl(fileUrl)
+      } catch (err) {
+        userQueue.video = false
+        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+          reply_to_message_id: ctx?.message?.message_id,
+          allow_sending_without_reply: true
+        })
       }
+      stickerExtra.sticker = { source: skipData }
       userQueue.video = false
       return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
     }
@@ -609,7 +633,14 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   }, 1000 * 30)
 
   if (!fileData) {
-    fileData = await downloadFileByUrl(fileUrl)
+    try {
+      fileData = await downloadFileByUrl(fileUrl)
+    } catch (err) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
+      })
+    }
   }
 
   if (!fileData || fileData.length === 0) {
