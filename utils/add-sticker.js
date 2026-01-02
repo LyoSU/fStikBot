@@ -468,6 +468,15 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     ) {
       // For video stickers/emoji already in a Telegram set with matching type,
       // download and use directly without size check or re-encoding
+      console.log('DEBUG video sticker check:', {
+        'stickerFile.set_name': stickerFile.set_name,
+        'stickerFile.type': stickerFile.type,
+        'stickerSet.packType': stickerSet.packType,
+        'inputFile.set_name': inputFile.set_name,
+        'inputFile.type': inputFile.type,
+        'inputFile.file_size': inputFile.file_size,
+        'inputFile.duration': inputFile.duration
+      })
       if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
         stickerExtra.sticker = {
           source: await downloadFileByUrl(fileUrl)
