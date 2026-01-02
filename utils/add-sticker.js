@@ -82,7 +82,7 @@ updateConvertQueueMessages()
 convertQueue.on('global:completed', async (jobId, result) => {
   const { input, metadata, content } = JSON.parse(result)
 
-  queue.delete(input.chatId)
+  queue.delete(input.userId)
 
   const stickerExtra = input.stickerExtra
 
@@ -125,7 +125,7 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
   const { input, metadata, content } = job.data
 
   // Clean up queue on failure
-  if (input?.chatId) queue.delete(input.chatId)
+  if (input?.userId) queue.delete(input.userId)
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
@@ -416,275 +416,274 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
           telegram: error
         }
       }
-
     })
 
-    fileData = await downloadFileByUrl(fileUrl)
+    if (fileUrl.error) {
+      return fileUrl
+    }
+
+    const animatedData = await downloadFileByUrl(fileUrl)
     stickerExtra.sticker = {
-      source: fileData,
+      source: animatedData,
       sticker_format: 'animated'
     }
+
+    return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
+  }
+
+  // Non-animated stickers (static or video)
+  let fileUrl
+  let fileData
+
+  if (stickerFile.fileUrl) {
+    fileUrl = stickerFile.fileUrl
   } else {
-    let fileUrl
-    let fileData
+    fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
+      return {
+        error: {
+          telegram: error
+        }
+      }
+    })
 
-    if (stickerFile.fileUrl) {
-      fileUrl = stickerFile.fileUrl
+    if (fileUrl.error) {
+      return fileUrl
+    }
+  }
+
+  // For stickers already in a Telegram set with matching type - use directly
+  if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
+    if (isVideo || isVideoNote) {
+      // Video stickers need to be downloaded and re-uploaded
+      stickerExtra.sticker = {
+        source: await downloadFileByUrl(fileUrl)
+      }
     } else {
-      fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
-        return {
-          error: {
-            telegram: error
-          }
-        }
+      // Static stickers can use file_id directly
+      stickerExtra.sticker = stickerFile.file_id
+    }
+    return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
+  }
 
+  // Remove background if requested
+  if (inputFile.removeBg) {
+    let priority = 10
+    if (stickerSet?.boost) priority = 5
+    else if (ctx.i18n.locale() === 'ru') priority = 15
+
+    const job = await removebgQueue.add({
+      fileUrl,
+    }, {
+      priority,
+      attempts: 1,
+      removeOnComplete: true
+    })
+
+    const { content } = await job.finished()
+
+    const trimBuffer = await sharp(Buffer.from(content, 'base64'))
+      .trim()
+      .toBuffer()
+
+    fileData = trimBuffer
+  }
+
+  // Determine if video processing is needed
+  const needsVideoProcessing = isVideo || isVideoNote ||
+    (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
+
+  if (needsVideoProcessing) {
+    // Video queue management
+    if (!queue.has(ctx.from.id)) queue.set(ctx.from.id, { timestamp: Date.now(), video: false })
+    const userQueue = queue.get(ctx.from.id)
+
+    if (userQueue.video && !stickerSet?.boost) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
       })
-
-      if (fileUrl.error) {
-        return fileUrl
-      }
     }
 
-    if (inputFile.removeBg) {
-      let priority = 10
-      if (stickerSet?.boost) priority = 5
-      else if (ctx.i18n.locale() === 'ru') priority = 15
+    userQueue.video = true
 
-      const job = await removebgQueue.add({
-        fileUrl,
-      }, {
-        priority,
-        attempts: 1,
-        removeOnComplete: true
+    // Size check for new files (stickers from sets are already validated)
+    if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) {
+      userQueue.video = false
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
       })
-
-      const { content } = await job.finished()
-
-      const trimBuffer = await sharp(Buffer.from(content, 'base64'))
-        .trim()
-        .toBuffer()
-
-      fileData = trimBuffer
     }
 
-    if (
-      isVideo || isVideoNote
-      || (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
-    ) {
-      // For video stickers/emoji already in a Telegram set with matching type,
-      // download and use directly without size check or re-encoding
-      if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
-        stickerExtra.sticker = {
-          source: await downloadFileByUrl(fileUrl)
-        }
-        return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
-      }
-
-      if (!queue.has(ctx.from.id)) queue.set(ctx.from.id, { timestamp: Date.now(), video: false })
-      const userQueue = queue.get(ctx.from.id)
-
-      if (userQueue.video && !stickerSet?.boost) {
-        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
-          reply_to_message_id: ctx?.message?.message_id,
-          allow_sending_without_reply: true
-        })
-      }
-      userQueue.video = true
-      // Skip size check for stickers already in a Telegram set (they're already validated)
-      if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) { // 15 mb or 65 sec
-        userQueue.video = false
-        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
-          reply_to_message_id: ctx?.message?.message_id,
-          allow_sending_without_reply: true
-        })
-      }
-
-      if ((inputFile.is_video && inputFile.type === stickerSet.packType) || inputFile.skip_reencode) {
-        stickerExtra.sticker = {
-          source: await downloadFileByUrl(fileUrl)
-        }
-      } else {
-        if (stickerExtra.sticker_format === 'static') {
-          stickerExtra.sticker_format = 'video'
-        }
-
-        const stickerSetsCount = await ctx.db.StickerSet.countDocuments({
-          owner: ctx.session.userInfo._id,
-          video: true
-        })
-
-        let priority = Math.round(stickerSetsCount / 3)
-
-        if (ctx.i18n.locale() === 'ru') priority += 40
-
-        if (stickerSet?.boost) priority = 5
-
-        const maxDuration = (stickerSet?.boost) ? 35 : 4
-
-        const total = await convertQueue.getJobCounts()
-
-        if (total.waiting > 200 && priority > 50) {
-          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
-            reply_to_message_id: ctx?.message?.message_id,
-            allow_sending_without_reply: true
-          })
-        }
-
-        let convertingMessage
-
-        if (!stickerSet?.boost && total.waiting > 5) {
-          convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
-            progress: total.waiting + 1,
-            total: total.waiting + 1
-          }))
-        }
-
-        let frameType = (isVideoNote) ? "circle" : "rounded"
-        forceCrop = (inputFile.forceCrop || stickerSet.packType === 'custom_emoji') ? true : false
-
-        if (frameType === "rounded") {
-          frameType = stickerSet.frameType || "square"
-        }
-
-        await convertQueue.add({
-          input: {
-            botId: ctx.botInfo.id,
-            userId: ctx.from.id,
-            chatId: ctx.chat.id,
-            locale: ctx.i18n.locale(),
-            showResult,
-            convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
-            stickerExtra,
-            stickerSet,
-            stickerFile,
-          },
-          fileUrl,
-          fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
-          timestamp: Date.now(),
-          isEmoji: stickerSet.packType === 'custom_emoji',
-          frameType,
-          forceCrop,
-          maxDuration
-        }, {
-          priority,
-          attempts: 1,
-          removeOnComplete: true
-        })
-
-        return {
-          wait: true
-        }
+    // Skip re-encoding if explicitly requested
+    if (inputFile.skip_reencode) {
+      stickerExtra.sticker = {
+        source: await downloadFileByUrl(fileUrl)
       }
       userQueue.video = false
-    } else {
-      if (!fileData) {
-        fileData = await downloadFileByUrl(fileUrl)
-      }
+      return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
+    }
 
-      if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
-        stickerExtra.sticker = stickerFile.file_id
+    // Convert video through queue
+    if (stickerExtra.sticker_format === 'static') {
+      stickerExtra.sticker_format = 'video'
+    }
 
-        return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
+    const stickerSetsCount = await ctx.db.StickerSet.countDocuments({
+      owner: ctx.session.userInfo._id,
+      video: true
+    })
+
+    let priority = Math.round(stickerSetsCount / 3)
+    if (ctx.i18n.locale() === 'ru') priority += 40
+    if (stickerSet?.boost) priority = 5
+
+    const maxDuration = stickerSet?.boost ? 35 : 4
+    const total = await convertQueue.getJobCounts()
+
+    if (total.waiting > 200 && priority > 50) {
+      userQueue.video = false
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
+      })
+    }
+
+    let convertingMessage
+    if (!stickerSet?.boost && total.waiting > 5) {
+      convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
+        progress: total.waiting + 1,
+        total: total.waiting + 1
+      }))
+    }
+
+    let frameType = isVideoNote ? 'circle' : 'rounded'
+    const forceCrop = inputFile.forceCrop || stickerSet.packType === 'custom_emoji'
+
+    if (frameType === 'rounded') {
+      frameType = stickerSet.frameType || 'square'
+    }
+
+    await convertQueue.add({
+      input: {
+        botId: ctx.botInfo.id,
+        userId: ctx.from.id,
+        chatId: ctx.chat.id,
+        locale: ctx.i18n.locale(),
+        showResult,
+        convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
+        stickerExtra,
+        stickerSet,
+        stickerFile,
+      },
+      fileUrl,
+      fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
+      timestamp: Date.now(),
+      isEmoji: stickerSet.packType === 'custom_emoji',
+      frameType,
+      forceCrop,
+      maxDuration
+    }, {
+      priority,
+      attempts: 1,
+      removeOnComplete: true
+    })
+
+    return { wait: true }
+  }
+
+  // Static image processing
+  const currentTime = Date.now()
+  const lastTime = lastStickerTime[ctx.from.id] || 0
+
+  if (currentTime - lastTime < 1000 * 30 && !stickerSet?.boost) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
+      reply_to_message_id: ctx?.message?.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
+  lastStickerTime[ctx.from.id] = currentTime
+  setTimeout(() => {
+    delete lastStickerTime[ctx.from.id]
+  }, 1000 * 30)
+
+  if (!fileData) {
+    fileData = await downloadFileByUrl(fileUrl)
+  }
+
+  if (!fileData || fileData.length === 0) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
+      reply_to_message_id: ctx?.message?.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
+  const imageSharp = sharp(fileData, {
+    failOnError: false,
+    limitInputPixels: 268402689,
+    pages: 1
+  })
+
+  const imageMetadata = await imageSharp.metadata().catch((err) => {
+    console.error('Sharp metadata error:', err.message, 'Buffer size:', fileData?.length, 'First bytes:', fileData?.slice(0, 20)?.toString('hex'))
+    return null
+  })
+
+  if (!imageMetadata) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
+      reply_to_message_id: ctx?.message?.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
+  let pipeline = imageSharp.clone()
+
+  if (stickerSet.packType === 'custom_emoji') {
+    if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
+      pipeline = pipeline.resize(100, 100, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
+    }
+  } else {
+    let finalWidth = imageMetadata.width
+    let finalHeight = imageMetadata.height
+
+    if (imageMetadata.width > 512 || imageMetadata.height > 512) {
+      const scale = Math.min(512 / imageMetadata.width, 512 / imageMetadata.height)
+      finalWidth = Math.round(imageMetadata.width * scale)
+      finalHeight = Math.round(imageMetadata.height * scale)
+
+      pipeline = pipeline.resize(512, 512, {
+        fit: 'inside',
+        withoutEnlargement: true
+      })
+    }
+
+    if (finalWidth < 512 && finalHeight < 512) {
+      if (finalWidth >= finalHeight) {
+        const paddingLeft = Math.floor((512 - finalWidth) / 2)
+        const paddingRight = Math.ceil((512 - finalWidth) / 2)
+        pipeline = pipeline.extend({
+          left: paddingLeft,
+          right: paddingRight,
+          background: { r: 0, g: 0, b: 0, alpha: 0 }
+        })
       } else {
-        const currentTime = Date.now();
-        const lastTime = lastStickerTime[ctx.from.id] || 0;
-
-        if (
-          currentTime - lastTime < 1000 * 30
-          && !stickerSet?.boost
-        ) {
-          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
-            reply_to_message_id: ctx?.message?.message_id,
-            allow_sending_without_reply: true
-          })
-        }
-
-        lastStickerTime[ctx.from.id] = currentTime
-
-        setTimeout(() => {
-          delete lastStickerTime[ctx.from.id]
-        }, 1000 * 30);
-
-        if (!fileData || fileData.length === 0) {
-          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
-            reply_to_message_id: ctx?.message?.message_id,
-            allow_sending_without_reply: true
-          })
-        }
-
-        const imageSharp = sharp(fileData, {
-          failOnError: false,
-          limitInputPixels: 268402689, // ~500MB pixel buffer limit
-          pages: 1 // only first page for multi-page formats
+        const paddingTop = Math.floor((512 - finalHeight) / 2)
+        const paddingBottom = Math.ceil((512 - finalHeight) / 2)
+        pipeline = pipeline.extend({
+          top: paddingTop,
+          bottom: paddingBottom,
+          background: { r: 0, g: 0, b: 0, alpha: 0 }
         })
-        const imageMetadata = await imageSharp.metadata().catch((err) => {
-          console.error('Sharp metadata error:', err.message, 'Buffer size:', fileData?.length, 'First bytes:', fileData?.slice(0, 20)?.toString('hex'))
-          return null
-        })
-
-        if (!imageMetadata) {
-          return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
-            reply_to_message_id: ctx?.message?.message_id,
-            allow_sending_without_reply: true
-          })
-        }
-
-        let pipeline = imageSharp.clone()
-
-        if (stickerSet.packType === 'custom_emoji') {
-          if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
-            pipeline = pipeline.resize(100, 100, {
-              fit: 'contain',
-              background: { r: 0, g: 0, b: 0, alpha: 0 }
-            })
-          }
-        } else {
-          // Calculate final dimensions after resize
-          let finalWidth = imageMetadata.width
-          let finalHeight = imageMetadata.height
-
-          // For regular stickers, resize if larger than 512
-          if (imageMetadata.width > 512 || imageMetadata.height > 512) {
-            const scale = Math.min(512 / imageMetadata.width, 512 / imageMetadata.height)
-            finalWidth = Math.round(imageMetadata.width * scale)
-            finalHeight = Math.round(imageMetadata.height * scale)
-
-            pipeline = pipeline.resize(512, 512, {
-              fit: 'inside',
-              withoutEnlargement: true
-            })
-          }
-
-          // Only add padding if neither side is 512 (one side must be exactly 512)
-          if (finalWidth < 512 && finalHeight < 512) {
-            // Pad the larger dimension to 512
-            if (finalWidth >= finalHeight) {
-              // Landscape or square - pad width
-              const paddingLeft = Math.floor((512 - finalWidth) / 2)
-              const paddingRight = Math.ceil((512 - finalWidth) / 2)
-              pipeline = pipeline.extend({
-                left: paddingLeft,
-                right: paddingRight,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
-              })
-            } else {
-              // Portrait - pad height
-              const paddingTop = Math.floor((512 - finalHeight) / 2)
-              const paddingBottom = Math.ceil((512 - finalHeight) / 2)
-              pipeline = pipeline.extend({
-                top: paddingTop,
-                bottom: paddingBottom,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
-              })
-            }
-          }
-        }
-
-        stickerExtra.sticker = {
-          source: await pipeline.png({ compressionLevel: 6, effort: 3 }).toBuffer()
-        }
       }
     }
+  }
+
+  stickerExtra.sticker = {
+    source: await pipeline.png({ compressionLevel: 6, effort: 3 }).toBuffer()
   }
 
   if (lastStickerTime[ctx.from.id]) {
