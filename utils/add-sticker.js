@@ -316,22 +316,27 @@ const lastStickerTime = {}
 module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   let stickerFile = inputFile
 
-  const originalSticker = await ctx.db.Sticker.findOne({
-    fileUniqueId: stickerFile.file_unique_id
-  })
+  // If inputFile is already a sticker from a Telegram set, use it directly
+  // (it's already converted and validated by Telegram)
+  // Only look for original if it's a new file upload (no set_name)
+  if (!stickerFile.set_name) {
+    const originalSticker = await ctx.db.Sticker.findOne({
+      fileUniqueId: stickerFile.file_unique_id
+    })
 
-  // Use original file if available (supports both new and legacy schema)
-  // This preserves the chain: Pack A → Pack B → Pack C all point to original source
-  if (originalSticker && originalSticker.hasOriginal()) {
-    stickerFile = {
-      file_id: originalSticker.getOriginalFileId(),
-      file_unique_id: originalSticker.getOriginalFileUniqueId(),
-      stickerType: originalSticker.getOriginalStickerType() || stickerFile.stickerType,
-      // Preserve these fields for proper sticker type detection
-      set_name: stickerFile.set_name,
-      type: stickerFile.type,
-      is_animated: stickerFile.is_animated,
-      is_video: stickerFile.is_video
+    // Use original file if available (supports both new and legacy schema)
+    // This preserves the chain: Pack A → Pack B → Pack C all point to original source
+    if (originalSticker && originalSticker.hasOriginal()) {
+      stickerFile = {
+        file_id: originalSticker.getOriginalFileId(),
+        file_unique_id: originalSticker.getOriginalFileUniqueId(),
+        stickerType: originalSticker.getOriginalStickerType() || stickerFile.stickerType,
+        // Preserve these fields for proper sticker type detection
+        set_name: stickerFile.set_name,
+        type: stickerFile.type,
+        is_animated: stickerFile.is_animated,
+        is_video: stickerFile.is_video
+      }
     }
   }
 
@@ -468,15 +473,6 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     ) {
       // For video stickers/emoji already in a Telegram set with matching type,
       // download and use directly without size check or re-encoding
-      console.log('DEBUG video sticker check:', {
-        'stickerFile.set_name': stickerFile.set_name,
-        'stickerFile.type': stickerFile.type,
-        'stickerSet.packType': stickerSet.packType,
-        'inputFile.set_name': inputFile.set_name,
-        'inputFile.type': inputFile.type,
-        'inputFile.file_size': inputFile.file_size,
-        'inputFile.duration': inputFile.duration
-      })
       if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
         stickerExtra.sticker = {
           source: await downloadFileByUrl(fileUrl)
