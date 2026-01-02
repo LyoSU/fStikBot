@@ -467,9 +467,11 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       || (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
     ) {
       // For video stickers/emoji already in a Telegram set with matching type,
-      // use file_id directly without size check or re-encoding
+      // download and use directly without size check or re-encoding
       if (stickerFile.set_name && stickerFile.type === stickerSet.packType && stickerFile.is_video) {
-        stickerExtra.sticker = stickerFile.file_id
+        stickerExtra.sticker = {
+          source: await downloadFileByUrl(fileUrl)
+        }
         return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
       }
 
