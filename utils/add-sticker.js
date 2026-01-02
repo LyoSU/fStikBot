@@ -466,6 +466,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       isVideo || isVideoNote
       || (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
     ) {
+      // For video stickers/emoji already in a Telegram set with matching type,
+      // use file_id directly without size check or re-encoding
+      if (stickerFile.set_name && stickerFile.type === stickerSet.packType && stickerFile.is_video) {
+        stickerExtra.sticker = stickerFile.file_id
+        return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
+      }
+
       if (!queue.has(ctx.from.id)) queue.set(ctx.from.id, { timestamp: Date.now(), video: false })
       const userQueue = queue.get(ctx.from.id)
 
@@ -476,7 +483,8 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
         })
       }
       userQueue.video = true
-      if (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65) { // 15 mb or 65 sec
+      // Skip size check for stickers already in a Telegram set (they're already validated)
+      if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) { // 15 mb or 65 sec
         userQueue.video = false
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
           reply_to_message_id: ctx?.message?.message_id,
