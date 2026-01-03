@@ -26,6 +26,7 @@ adminMessagingName.enter(async (ctx) => {
 })
 
 adminMessagingName.on('text', async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   if (ctx.session.scene.edit) {
     const messaging = await ctx.db.Messaging.findById(ctx.session.scene.edit)
 
@@ -78,6 +79,7 @@ const parseUrlButton = (text) => {
 const adminMessagingMessageData = new Scene('adminMessagingMessageData')
 
 adminMessagingMessageData.enter(async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   if (ctx.session.scene.message) {
     const urlButton = parseUrlButton(ctx.session.scene.keyboard)
 
@@ -127,6 +129,7 @@ adminMessagingMessageData.enter(async (ctx) => {
 adminMessagingMessageData.action(/admin:messaging:add_url/, async (ctx) => ctx.scene.enter('adminMessagingMessageUrl'))
 
 adminMessagingMessageData.on('message', async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   const message = ctx.message
   const messageType = Object.keys(replicators.copyMethods).find((type) => message[type])
   const messageData = replicators[messageType](message)
@@ -139,6 +142,7 @@ adminMessagingMessageData.on('message', async (ctx) => {
 const adminMessagingMessageUrl = new Scene('adminMessagingMessageUrl')
 
 adminMessagingMessageUrl.enter(async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   const resultText = `Send URL buttons in format: Button name - URL
 You can add multiple buttons in one line with | separator
 You can add multiple lines for different rows
@@ -158,11 +162,13 @@ ${ctx.session.scene.keyboard ? 'Current buttons:\n' + ctx.session.scene.keyboard
 })
 
 adminMessagingMessageUrl.on('text', async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   ctx.session.scene.keyboard = ctx.message.text
   ctx.scene.enter('adminMessagingMessageData')
 })
 
 adminMessagingMessageData.action(/admin:messaging:continue/, async (ctx) => {
+  if (!ctx.session.scene) return ctx.scene.leave()
   if (ctx.session.scene.edit) ctx.scene.enter('adminMessagingMessageEdit')
   else ctx.scene.enter('adminMessagingMessageDate')
 })
@@ -185,6 +191,7 @@ adminMessagingSelectDate.enter(async (ctx) => {
 })
 
 adminMessagingSelectDate.on('text', async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   const date = moment(ctx.message.text, 'DD.MM HH:mm')
 
   let resultText = ''
@@ -243,6 +250,7 @@ adminMessagingSelectGroup.enter(async (ctx) => {
 })
 
 adminMessagingSelectGroup.action(/admin:messaging:group:(.*)/, async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   ctx.session.scene.type = ctx.match[1]
 
   ctx.scene.enter('adminMessagingСonfirmation')
@@ -251,6 +259,7 @@ adminMessagingSelectGroup.action(/admin:messaging:group:(.*)/, async (ctx) => {
 const adminMessagingСonfirmation = new Scene('adminMessagingСonfirmation')
 
 adminMessagingСonfirmation.enter(async (ctx) => {
+  if (!ctx.session.scene?.type) return ctx.scene.leave()
   let findUsers = {}
   const monthAgo = moment().subtract(1, 'month')
   const threeMonthsAgo = moment().subtract(3, 'months')
@@ -362,6 +371,7 @@ adminMessagingСonfirmation.enter(async (ctx) => {
 const adminMessagingMessageEdit = new Scene('adminMessagingMessageEdit')
 
 adminMessagingMessageEdit.enter(async (ctx) => {
+  if (!ctx.session.scene?.edit || !ctx.session.scene?.message) return ctx.scene.leave()
   const messaging = await ctx.db.Messaging.findById(ctx.session.scene.edit)
 
   if (ctx.session.scene.message.type === messaging.message.type) {
@@ -400,6 +410,7 @@ adminMessagingMessageEdit.enter(async (ctx) => {
 const adminMessagingPublish = new Scene('adminMessagingPublish')
 
 adminMessagingPublish.enter(async (ctx) => {
+  if (!ctx.session.scene?.message || !ctx.session.scene?.type) return ctx.scene.leave()
   const urlButton = parseUrlButton(ctx.session.scene.keyboard)
 
   let inlineKeyboard = []

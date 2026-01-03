@@ -70,6 +70,7 @@ catalogPublishNew.enter((ctx) => {
 })
 
 catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   ctx.session.scene.publish = {}
 
   let packName
@@ -160,6 +161,7 @@ catalogPublishOwnerProof.enter((ctx) => {
 })
 
 catalogPublishOwnerProof.on('text', async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) {
     if (!ctx.message.entities) {
       return ctx.scene.reenter()
@@ -187,11 +189,13 @@ catalogPublish.enter(async (ctx) => {
     return ctx.scene.leave()
   }
 
+  if (!ctx.session.scene) ctx.session.scene = {}
+
   let stickerSetId
 
   if (ctx.match && ctx.match[1]) {
     stickerSetId = ctx.match[1]
-  } else if (ctx.session.scene.publish) {
+  } else if (ctx.session.scene?.publish?.stickerSet) {
     stickerSetId = ctx.session.scene.publish.stickerSet._id
   } else {
     return ctx.scene.leave()
@@ -237,6 +241,7 @@ catalogEnterDescription.enter(async (ctx) => {
 })
 
 catalogEnterDescription.on('text', async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   const { entities, text } = ctx.message
 
   ctx.session.scene.publish.description = text.slice(0, 512)
@@ -279,6 +284,7 @@ catalogEnterDescription.on('text', async (ctx) => {
 const catalogSelectLanguage = new Scene('catalogSelectLanguage')
 
 catalogSelectLanguage.enter(async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   if (!ctx.session.scene.publish.languages) {
     ctx.session.scene.publish.languages = []
   }
@@ -331,6 +337,7 @@ catalogSelectLanguage.enter(async (ctx) => {
 })
 
 catalogSelectLanguage.action(/^catalog:set_language:(.*)$/, async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   if (ctx.match[1] === 'all') {
     ctx.session.scene.publish.languages = []
     return ctx.scene.enter('catalogPublishConfirm')
@@ -371,6 +378,7 @@ catalogSetSafe.enter(async (ctx) => {
 })
 
 catalogSetSafe.action(/^catalog:set_safe:(.*)$/, async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   ctx.session.scene.publish.safe = ctx.match[1] === 'true'
   return ctx.scene.enter('catalogPublishConfirm')
 })
@@ -378,6 +386,7 @@ catalogSetSafe.action(/^catalog:set_safe:(.*)$/, async (ctx) => {
 const catalogPublishConfirm = new Scene('catalogPublishConfirm')
 
 catalogPublishConfirm.enter(async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   const publish = ctx.session.scene.publish
 
   const languages = []
@@ -423,6 +432,7 @@ catalogPublishConfirm.enter(async (ctx) => {
 })
 
 catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), async (ctx) => {
+  if (!ctx.session.scene?.publish) return ctx.scene.leave()
   const publish = ctx.session.scene.publish
 
   publish.stickerSet.about = Object.assign(publish.stickerSet.about, {

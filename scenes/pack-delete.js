@@ -41,6 +41,7 @@ packDelete.enter(async (ctx) => {
 })
 
 packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
+  if (!ctx.session.scene?.data) return ctx.scene.leave()
   const result = await ctx.telegram.callApi('deleteStickerSet', {
     name: ctx.session.scene.data.name
   }).catch(error => { return { error } })
