@@ -97,6 +97,7 @@ const stegcloak = new StegCloak(false, false)
 const newPack = new Scene('newPack')
 
 newPack.enter(async (ctx, next) => {
+  if (!ctx.session.scene) ctx.session.scene = {}
   const existingNewPack = ctx.session.scene.newPack || {}
   ctx.session.scene.newPack = existingNewPack
 
@@ -129,6 +130,7 @@ newPack.enter(async (ctx, next) => {
 })
 
 newPack.on('message', async (ctx) => {
+  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   const { text } = ctx.message;
   const { newPack } = ctx.session.scene;
   if (text === ctx.i18n.t('scenes.new_pack.custom_emoji')) {
@@ -140,7 +142,7 @@ newPack.on('message', async (ctx) => {
   }
 
   if (
-    ctx.session.scene.copyPack
+    ctx.session.scene?.copyPack
     && ctx.session.scene.copyPack.sticker_type !== newPack.packType
   ) {
     return ctx.scene.enter('newPackCopyPay')
@@ -199,6 +201,7 @@ const сhoosePackFormat = new Scene('сhoosePackFormat')
 })
 
 сhoosePackFormat.on('message', async (ctx) => {
+  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   if (ctx.message.text === ctx.i18n.t('scenes.new_pack.animated')) {
     ctx.session.scene.newPack.animated = true
     return ctx.scene.enter('newPackTitle')
@@ -216,9 +219,10 @@ const сhoosePackFormat = new Scene('сhoosePackFormat')
 const newPackTitle = new Scene('newPackTitle')
 
 newPackTitle.enter(async (ctx) => {
+  if (!ctx.session.scene) return ctx.scene.leave()
   if (!ctx.session.scene.newPack) ctx.session.scene.newPack = {
-    animated: ctx.session.scene.copyPack.is_animated,
-    video: ctx.session.scene.copyPack.is_video,
+    animated: ctx.session.scene.copyPack?.is_animated,
+    video: ctx.session.scene.copyPack?.is_video,
   }
 
   const names = []
@@ -257,6 +261,7 @@ newPackTitle.enter(async (ctx) => {
   })
 })
 newPackTitle.on('text', async (ctx) => {
+  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   let charTitleMax = ctx.config.charTitleMax
 
   let title = ctx.message.text
@@ -293,14 +298,16 @@ newPackName.on('text', async (ctx) => {
 const newPackConfirm = new Scene('newPackConfirm')
 
 newPackConfirm.enter(async (ctx, next) => {
+  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  const inline = !!ctx.session.scene?.newPack?.inline
+  const copyPack = ctx.session.scene.copyPack
+  const inline = !!ctx.session.scene.newPack.inline
 
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` :: @${ctx.options.username}`
 
-  let { name, title, animated, video } = ctx.session.scene.newPack
+  let { name, title, animated, video, fillColor, packType } = ctx.session.scene.newPack
 
   // Для inline паку автоматично генеруємо name
   if (inline) {
@@ -328,7 +335,7 @@ newPackConfirm.enter(async (ctx, next) => {
   let alreadyUploadedStickers = 0
   let createNewStickerSet
 
-  const packType = ctx.session.scene.newPack.packType || 'regular'
+  packType = packType || 'regular'
 
   if (inline) {
     createNewStickerSet = true
@@ -343,14 +350,14 @@ newPackConfirm.enter(async (ctx, next) => {
       return ctx.scene.enter('newPackName')
     }
 
-    if (ctx.session.scene.copyPack) {
+    if (copyPack) {
       const waitMessage = await ctx.replyWithHTML(ctx.i18n.t('⏳'), {
         reply_markup: {
           remove_keyboard: true
         }
       })
 
-      const originalPackType = ctx.session.scene.copyPack.sticker_type
+      const originalPackType = copyPack.sticker_type
 
       console.log('originalPackType', originalPackType)
       console.log('packType', packType)
@@ -359,9 +366,9 @@ newPackConfirm.enter(async (ctx, next) => {
 
       if (
         originalPackType === packType
-        || ctx.session.scene.copyPack.stickers.every(sticker => sticker.is_animated)
+        || copyPack.stickers.every(sticker => sticker.is_animated)
       ) {
-        const stickers = ctx.session.scene.copyPack.stickers.slice(0, 50)
+        const stickers = copyPack.stickers.slice(0, 50)
 
         uploadedStickers = (await Promise.all(stickers.map(async (sticker) => {
           let stickerFormat
@@ -452,7 +459,7 @@ newPackConfirm.enter(async (ctx, next) => {
         title,
         stickers: uploadedStickers,
         sticker_type: packType,
-        needs_repainting: !!ctx.session.scene.newPack.fillColor
+        needs_repainting: !!fillColor
       }).catch((error) => {
         return { error }
       })
@@ -508,7 +515,7 @@ newPackConfirm.enter(async (ctx, next) => {
           }
         ],
         sticker_type: packType,
-        needs_repainting: !!ctx.session.scene.newPack.fillColor
+        needs_repainting: !!fillColor
       }).catch((error) => {
         return { error }
       })
@@ -563,7 +570,7 @@ newPackConfirm.enter(async (ctx, next) => {
       inline,
       video,
       packType,
-      boost: !!ctx.session.scene.copyPack,
+      boost: !!copyPack,
       emojiSuffix: '🌟',
       create: true
     })
@@ -617,7 +624,7 @@ newPackConfirm.enter(async (ctx, next) => {
     ctx.session.userInfo.stickerSet = userStickerSet
 
     // if different pack type, use atomic $inc to prevent race conditions
-    if (ctx.session.scene.copyPack && ctx.session.scene.copyPack.sticker_type !== packType) {
+    if (copyPack && copyPack.sticker_type !== packType) {
       await ctx.db.User.updateOne(
         { _id: ctx.session.userInfo._id },
         { $inc: { balance: -1 }, $set: { stickerSet: userStickerSet._id } }
@@ -630,7 +637,7 @@ newPackConfirm.enter(async (ctx, next) => {
       )
     }
 
-    if (!ctx.session.scene.copyPack) {
+    if (!copyPack) {
       await ctx.replyWithHTML('👌', {
         reply_markup: {
           remove_keyboard: true
@@ -640,7 +647,7 @@ newPackConfirm.enter(async (ctx, next) => {
       return ctx.scene.leave()
     }
 
-    const originalPack = ctx.session.scene.copyPack
+    const originalPack = copyPack
 
     if (originalPack.stickers.length > alreadyUploadedStickers) {
       const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
