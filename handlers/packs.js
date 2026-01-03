@@ -234,6 +234,13 @@ module.exports = async (ctx) => {
   if (totalCount === 0 && stickerSets.length > 0) {
     // Fallback for users without packsCount (lazy migration)
     totalCount = await ctx.db.StickerSet.countDocuments(query)
+    // Save for future requests (non-blocking)
+    if (!userInfo.packsCount) userInfo.packsCount = {}
+    userInfo.packsCount[packType] = totalCount
+    ctx.db.User.updateOne(
+      { _id: userInfo._id },
+      { $set: { [`packsCount.${packType}`]: totalCount } }
+    ).then(() => {})
   }
 
   if (packType === 'inline' && stickerSets.length <= 0) {

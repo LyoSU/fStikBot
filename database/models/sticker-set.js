@@ -148,8 +148,11 @@ stickerSetsSchema.index({
   }
 })
 
-// Compound indexes for inline query performance
-stickerSetsSchema.index({ owner: 1, inline: 1, hide: 1, updatedAt: -1 })
+// Compound indexes for /packs query performance
+// Covers: find({ owner, create, hide, inline/packType }).sort({ updatedAt: -1 })
+stickerSetsSchema.index({ owner: 1, create: 1, hide: 1, inline: 1, packType: 1, updatedAt: -1 })
+// For inline queries: find({ owner, inline }).sort({ updatedAt: -1 })
+stickerSetsSchema.index({ owner: 1, inline: 1, updatedAt: -1 })
 stickerSetsSchema.index({ owner: 1, hide: 1 })
 
 module.exports = stickerSetsSchema
