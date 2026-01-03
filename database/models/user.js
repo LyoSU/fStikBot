@@ -34,8 +34,8 @@ const userSchema = mongoose.Schema({
     default: 0
   },
   locale: {
-    type: String,
-    index: true
+    type: String
+    // Note: No separate index - covered by compound { locale: 1, blocked: 1 } below
   },
   blocked: {
     type: Boolean,

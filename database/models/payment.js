@@ -7,24 +7,24 @@ const paymentsSchema = mongoose.Schema({
     index: true
   },
   amount: {
-    type: Number,
-    index: true
+    type: Number
+    // Note: index removed - no queries filter by amount alone
   },
   price: {
-    type: Number,
-    index: true
+    type: Number
+    // Note: index removed - no queries filter by price alone
   },
   currency: {
-    type: String,
-    index: true
+    type: String
+    // Note: index removed - no queries filter by currency alone
   },
   paymentSystem: {
-    type: String,
-    index: true
+    type: String
+    // Note: index removed - no queries filter by paymentSystem alone
   },
   paymentId: {
-    type: String,
-    index: true
+    type: String
+    // Note: index removed - queries use resultData.telegram_payment_charge_id instead
   },
   status: {
     type: String,
@@ -36,5 +36,8 @@ const paymentsSchema = mongoose.Schema({
 }, {
   timestamps: true
 })
+
+// Index for admin refund lookups by Telegram charge ID
+paymentsSchema.index({ 'resultData.telegram_payment_charge_id': 1 })
 
 module.exports = paymentsSchema

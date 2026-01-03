@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const stickersSchema = mongoose.Schema({
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StickerSet',
-    index: true
+    ref: 'StickerSet'
+    // Note: No separate index - covered by compound { stickerSet: 1, deleted: 1 } below
   },
   fileUniqueId: {
     type: String,

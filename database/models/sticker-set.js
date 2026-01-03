@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const stickerSetsSchema = mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    index: true
+    ref: 'User'
+    // Note: No separate index needed - covered by compound indexes below
   },
   ownerTelegramId: {
     type: Number,
@@ -153,6 +153,6 @@ stickerSetsSchema.index({
 stickerSetsSchema.index({ owner: 1, create: 1, hide: 1, inline: 1, packType: 1, updatedAt: -1 })
 // For inline queries: find({ owner, inline }).sort({ updatedAt: -1 })
 stickerSetsSchema.index({ owner: 1, inline: 1, updatedAt: -1 })
-stickerSetsSchema.index({ owner: 1, hide: 1 })
+// Note: { owner: 1, hide: 1 } removed - covered by the main compound index above
 
 module.exports = stickerSetsSchema
