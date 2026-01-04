@@ -248,23 +248,16 @@ module.exports = async (ctx, next) => {
     if (message.caption && message.caption.includes('cropit')) stickerFile.forceCrop = true
     if (message.photo && message.caption && message.caption.includes('!')) stickerFile.removeBg = true
 
-    const originalSticker = await ctx.db.Sticker.findOne({
+    // Check for duplicates: by fileUniqueId, original.fileUniqueId, or legacy file.file_unique_id
+    const sticker = await ctx.db.Sticker.findOne({
       stickerSet,
-      fileUniqueId: stickerFile.file_unique_id,
-      deleted: false
+      deleted: false,
+      $or: [
+        { fileUniqueId: stickerFile.file_unique_id },
+        { 'original.fileUniqueId': stickerFile.file_unique_id },
+        { 'file.file_unique_id': stickerFile.file_unique_id }
+      ]
     })
-
-    let sticker
-
-    if (originalSticker) {
-      sticker = originalSticker
-    } else {
-      sticker = await ctx.db.Sticker.findOne({
-        stickerSet,
-        'file.file_unique_id': stickerFile.file_unique_id,
-        deleted: false
-      })
-    }
 
     if (sticker) {
       ctx.session.previousSticker = {

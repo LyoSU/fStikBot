@@ -98,6 +98,9 @@ stickersSchema.index({ stickerSet: 1, deleted: 1 })
 // Single field index - highly selective, covers most lookups
 stickersSchema.index({ fileUniqueId: 1 })
 
+// Index for duplicate detection on original files
+stickersSchema.index({ 'original.fileUniqueId': 1 }, { sparse: true })
+
 // TTL index - auto-delete documents 30 days after deletedAt is set
 // Note: Created manually in MongoDB, not via Mongoose to avoid recreation issues
 // db.stickers.createIndex({ deletedAt: 1 }, { expireAfterSeconds: 2592000, partialFilterExpression: { deletedAt: { $type: "date" } } })
