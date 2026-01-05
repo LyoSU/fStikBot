@@ -114,7 +114,7 @@ module.exports = async (ctx, next) => {
       custom_emoji_ids: [customEmoji.custom_emoji_id]
     })
 
-    if (!emojiStickers) return next()
+    if (!emojiStickers || !emojiStickers.length || !emojiStickers[0]?.file_unique_id) return next()
 
     stickerFile = emojiStickers[0]
   }

@@ -33,7 +33,16 @@ module.exports = (addStickerResult, lang) => {
       ])
     }
   } else if (addStickerResult.error) {
-    if (addStickerResult.error.telegram) {
+    if (addStickerResult.error.type === 'duplicate') {
+      messageText = i18n.t(lang, 'sticker.add.error.have_already')
+
+      if (addStickerResult.error.sticker) {
+        replyMarkup = Markup.inlineKeyboard([
+          Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.delete'), `delete_sticker:${addStickerResult.error.sticker.fileUniqueId}`),
+          Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.copy'), `restore_sticker:${addStickerResult.error.sticker.fileUniqueId}`)
+        ])
+      }
+    } else if (addStickerResult.error.telegram) {
       if (!addStickerResult.error.telegram.description) {
         throw new Error(addStickerResult.error)
       } else if (addStickerResult.error.telegram.description.includes('TOO_MUCH')) {

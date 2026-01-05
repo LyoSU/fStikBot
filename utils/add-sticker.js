@@ -343,6 +343,35 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   const stickerSet = toStickerSet
 
   if (stickerSet && stickerSet.inline) {
+    // Validate file_unique_id exists
+    if (!stickerFile?.file_unique_id) {
+      return {
+        error: {
+          message: 'Invalid sticker file: missing file_unique_id'
+        }
+      }
+    }
+
+    // Check for duplicates in inline pack (by fileUniqueId, original.fileUniqueId, or legacy file.file_unique_id)
+    const existingSticker = await ctx.db.Sticker.findOne({
+      stickerSet: stickerSet.id,
+      deleted: false,
+      $or: [
+        { fileUniqueId: stickerFile.file_unique_id },
+        { 'original.fileUniqueId': stickerFile.file_unique_id },
+        { 'file.file_unique_id': stickerFile.file_unique_id }
+      ]
+    })
+
+    if (existingSticker) {
+      return {
+        error: {
+          type: 'duplicate',
+          sticker: existingSticker
+        }
+      }
+    }
+
     const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, inputFile.emoji, stickerFile, null)
 
     return {
