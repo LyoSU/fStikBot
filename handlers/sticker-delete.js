@@ -106,7 +106,8 @@ module.exports = async (ctx) => {
     }
   }
 
-  if (ctx.session?.userInfo?.stickerSet?.inline) {
+  if (sticker?.stickerSet?.inline) {
+    // Inline stickers - just mark as deleted in DB (no Telegram API call needed)
     deleteStickerFromSet = true
   } else {
     deleteStickerFromSet = await ctx.deleteStickerFromSet(deleteSticker).catch((error) => {

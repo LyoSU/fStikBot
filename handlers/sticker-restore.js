@@ -53,7 +53,9 @@ module.exports = async (ctx) => {
     const result = await addSticker(ctx, fileForRestore, sticker.stickerSet)
 
     if (result.error) {
-      if (result.error.telegram && result.error.telegram.description.includes('STICKERSET_INVALID')) {
+      if (result.error.type === 'duplicate') {
+        return ctx.answerCbQuery(ctx.i18n.t('sticker.add.error.have_already'), true)
+      } else if (result.error.telegram && result.error.telegram.description.includes('STICKERSET_INVALID')) {
         return ctx.answerCbQuery(ctx.i18n.t('callback.pack.error.copy'), true)
       } else if (result.error.telegram) {
         return ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
