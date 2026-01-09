@@ -885,7 +885,7 @@ scenes:
 
       Send a video — I'll turn it into a circle (video note).
     not_video: |
-      Send a video file.
+      Send a video, GIF, video sticker, or animated image.
     error: |
       Couldn't convert. Try a different video.
     forbidden: |

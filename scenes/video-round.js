@@ -122,7 +122,15 @@ videoRound.on(['video', 'video_note', 'animation', 'sticker'], async (ctx) => {
 })
 
 videoRound.on('document', async (ctx) => {
-  if (!ctx.message.document.mime_type?.startsWith('video/')) {
+  const mime = ctx.message.document.mime_type || ''
+  // Support: video/*, image/gif, image/webp (animated), image/apng
+  const isSupported = mime.startsWith('video/') ||
+                      mime === 'image/gif' ||
+                      mime === 'image/webp' ||
+                      mime === 'image/apng' ||
+                      mime === 'image/png' // APNG often detected as png
+
+  if (!isSupported) {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.not_video'))
   }
 
