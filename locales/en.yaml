@@ -890,6 +890,10 @@ scenes:
       Couldn't convert. Try a different video.
     forbidden: |
       Can't send video circles to you. Check your privacy settings (voice messages must be allowed).
+    processing: |
+      ⏳ Converting: ${position}/${total}
+
+      <i>Boost = priority → /donate</i>
   search:
     enter: |
       <b>🔍 Search stickers</b>
