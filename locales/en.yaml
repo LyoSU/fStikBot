@@ -878,6 +878,15 @@ scenes:
     add_to_set_btn: '🌟 Add to pack'
     error: |
       Something went wrong. Try again.
+  videoRound:
+    enter: |
+      <b>⭕ Video to Circle</b>
+
+      Send a video — I'll turn it into a circle (video note).
+    not_video: |
+      Send a video file.
+    error: |
+      Couldn't convert. Try a different video.
   search:
     enter: |
       <b>🔍 Search stickers</b>

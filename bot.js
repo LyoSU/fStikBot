@@ -444,6 +444,7 @@ privateMessage.action(/^show_all_packs$/, async (ctx) => {
   }
 })
 privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
+privateMessage.command('round', (ctx) => ctx.scene.enter('videoRound'))
 privateMessage.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
 privateMessage.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
 privateMessage.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'))

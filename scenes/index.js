@@ -14,6 +14,7 @@ const packEdit = require('./admin-pack')
 const adminPackBulkDelete = require('./admin-pack-bulk-delete')
 const searchStickerSet = require('./pack-search')
 const photoClear = require('./photo-clear')
+const videoRound = require('./video-round')
 const packCatalog = require('./pack-catalog')
 const packFrame = require('./pack-frame')
 const packRename = require('./pack-rename')
@@ -30,6 +31,7 @@ const stage = new Stage([].concat(
   adminPackBulkDelete,
   searchStickerSet,
   photoClear,
+  videoRound,
   packCatalog,
   packFrame,
   packRename,
