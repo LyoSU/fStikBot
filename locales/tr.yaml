@@ -170,6 +170,7 @@ cmd:
 
       <b>Useful commands:</b>
       • /clear — remove background from photo
+      • /round — convert video to circle (video note)
       • /frame — set video sticker shape:
         └ lite, medium, rounded, square, circle
 
@@ -917,6 +918,8 @@ scenes:
       Send a video file.
     error: |
       Couldn't convert. Try a different video.
+    forbidden: |
+      Can't send video circles to you. Check your privacy settings (voice messages must be allowed).
   search:
     enter: |
       <b>🔍 Search stickers</b>
