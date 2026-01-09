@@ -892,6 +892,15 @@ scenes:
     error: |
       <b>エラー！</b>
       オペ、何か問題が発生しました。
+  videoRound:
+    enter: |
+      <b>⭕ Video to Circle</b>
+
+      Send a video — I'll turn it into a circle (video note).
+    not_video: |
+      Send a video file.
+    error: |
+      Couldn't convert. Try a different video.
   search:
     enter: |
       <b>🔍 Search stickers</b>
