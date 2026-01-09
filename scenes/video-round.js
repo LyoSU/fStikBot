@@ -49,8 +49,11 @@ videoRound.on(['video', 'video_note', 'animation'], async (ctx) => {
   })
 
   const result = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
+    console.error('videoRound job error:', err.message)
     return { error: err.message }
   })
+
+  console.log('videoRound result:', result ? { hasContent: !!result.content, error: result.error } : 'null')
 
   if (result.content) {
     await ctx.replyWithVideoNote({
@@ -58,9 +61,11 @@ videoRound.on(['video', 'video_note', 'animation'], async (ctx) => {
     }, {
       reply_to_message_id: ctx.message.message_id
     }).catch(async (err) => {
+      console.error('videoRound sendVideoNote error:', err.message)
       await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
     })
   } else {
+    console.error('videoRound no content, result:', JSON.stringify(result))
     await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
   }
 })
@@ -89,18 +94,23 @@ videoRound.on('document', async (ctx) => {
   })
 
   const result = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
+    console.error('videoRound job error:', err.message)
     return { error: err.message }
   })
+
+  console.log('videoRound result:', result ? { hasContent: !!result.content, error: result.error } : 'null')
 
   if (result.content) {
     await ctx.replyWithVideoNote({
       source: Buffer.from(result.content, 'base64')
     }, {
       reply_to_message_id: ctx.message.message_id
-    }).catch(async () => {
+    }).catch(async (err) => {
+      console.error('videoRound sendVideoNote error:', err.message)
       await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
     })
   } else {
+    console.error('videoRound no content, result:', JSON.stringify(result))
     await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
   }
 })
