@@ -48,12 +48,7 @@ videoRound.on(['video', 'video_note', 'animation'], async (ctx) => {
     removeOnComplete: true
   })
 
-  const result = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
-    console.error('videoRound job error:', err.message)
-    return { error: err.message }
-  })
-
-  console.log('videoRound result:', result ? { hasContent: !!result.content, error: result.error } : 'null')
+  const result = await Promise.race([job.finished(), timeoutPromise]).catch(() => ({}))
 
   if (result.content) {
     await ctx.replyWithVideoNote({
@@ -61,11 +56,13 @@ videoRound.on(['video', 'video_note', 'animation'], async (ctx) => {
     }, {
       reply_to_message_id: ctx.message.message_id
     }).catch(async (err) => {
-      console.error('videoRound sendVideoNote error:', err.message)
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
+      if (err.message?.includes('VOICE_MESSAGES_FORBIDDEN')) {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.forbidden'))
+      } else {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
+      }
     })
   } else {
-    console.error('videoRound no content, result:', JSON.stringify(result))
     await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
   }
 })
@@ -93,12 +90,7 @@ videoRound.on('document', async (ctx) => {
     removeOnComplete: true
   })
 
-  const result = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
-    console.error('videoRound job error:', err.message)
-    return { error: err.message }
-  })
-
-  console.log('videoRound result:', result ? { hasContent: !!result.content, error: result.error } : 'null')
+  const result = await Promise.race([job.finished(), timeoutPromise]).catch(() => ({}))
 
   if (result.content) {
     await ctx.replyWithVideoNote({
@@ -106,11 +98,13 @@ videoRound.on('document', async (ctx) => {
     }, {
       reply_to_message_id: ctx.message.message_id
     }).catch(async (err) => {
-      console.error('videoRound sendVideoNote error:', err.message)
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
+      if (err.message?.includes('VOICE_MESSAGES_FORBIDDEN')) {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.forbidden'))
+      } else {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
+      }
     })
   } else {
-    console.error('videoRound no content, result:', JSON.stringify(result))
     await ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
   }
 })

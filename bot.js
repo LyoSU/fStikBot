@@ -590,6 +590,7 @@ db.connection.once('open', async () => {
       { command: 'new', description: i18n.t(localeName, 'cmd.start.commands.new') },
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
+      { command: 'round', description: i18n.t(localeName, 'cmd.start.commands.round') },
       { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.info') },
       { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
       { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
