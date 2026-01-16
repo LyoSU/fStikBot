@@ -12,18 +12,9 @@ const addStickerText = require('../utils/add-sticker-text')
 
 EventEmitter.defaultMaxListeners = 100
 
-// Queue with TTL-based cleanup instead of full reset
-const queue = new Map()
-const QUEUE_TTL = 1000 * 60 * 5 // 5 minutes TTL
-
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, value] of queue) {
-    if (now - value.timestamp > QUEUE_TTL) {
-      queue.delete(key)
-    }
-  }
-}, 1000 * 30)
+// Track users with video currently processing (userId -> timestamp)
+const videoProcessing = new Map()
+const VIDEO_PROCESSING_TTL = 1000 * 60 * 2 // 2 minutes auto-unlock
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 let botInfo = null
@@ -82,7 +73,7 @@ updateConvertQueueMessages()
 convertQueue.on('global:completed', async (jobId, result) => {
   const { input, metadata, content } = JSON.parse(result)
 
-  queue.delete(input.userId)
+  videoProcessing.delete(input.userId)
 
   const stickerExtra = input.stickerExtra
 
@@ -124,8 +115,7 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
 
   const { input, metadata, content } = job.data
 
-  // Clean up queue on failure
-  if (input?.userId) queue.delete(input.userId)
+  if (input?.userId) videoProcessing.delete(input.userId)
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
@@ -538,22 +528,17 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
 
   if (needsVideoProcessing) {
-    // Video queue management
-    if (!queue.has(ctx.from.id)) queue.set(ctx.from.id, { timestamp: Date.now(), video: false })
-    const userQueue = queue.get(ctx.from.id)
-
-    if (userQueue.video && !stickerSet?.boost) {
+    // Check if user already has video processing (with auto-unlock after TTL)
+    const lastProcessing = videoProcessing.get(ctx.from.id)
+    if (lastProcessing && (Date.now() - lastProcessing < VIDEO_PROCESSING_TTL) && !stickerSet?.boost) {
       return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
         reply_to_message_id: ctx?.message?.message_id,
         allow_sending_without_reply: true
       })
     }
 
-    userQueue.video = true
-
     // Size check for new files (stickers from sets are already validated)
     if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) {
-      userQueue.video = false
       return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
         reply_to_message_id: ctx?.message?.message_id,
         allow_sending_without_reply: true
@@ -566,14 +551,12 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       try {
         skipData = await downloadFileByUrl(fileUrl)
       } catch (err) {
-        userQueue.video = false
         return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
           reply_to_message_id: ctx?.message?.message_id,
           allow_sending_without_reply: true
         })
       }
       stickerExtra.sticker = { source: skipData }
-      userQueue.video = false
       return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
     }
 
@@ -595,7 +578,6 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     const total = await convertQueue.getJobCounts()
 
     if (total.waiting > 200 && priority > 50) {
-      userQueue.video = false
       return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
         reply_to_message_id: ctx?.message?.message_id,
         allow_sending_without_reply: true
@@ -617,30 +599,39 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       frameType = stickerSet.frameType || 'square'
     }
 
-    await convertQueue.add({
-      input: {
-        botId: ctx.botInfo.id,
-        userId: ctx.from.id,
-        chatId: ctx.chat.id,
-        locale: ctx.i18n.locale(),
-        showResult,
-        convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
-        stickerExtra,
-        stickerSet,
-        stickerFile,
-      },
-      fileUrl,
-      fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
-      timestamp: Date.now(),
-      isEmoji: stickerSet.packType === 'custom_emoji',
-      frameType,
-      forceCrop,
-      maxDuration
-    }, {
-      priority,
-      attempts: 1,
-      removeOnComplete: true
-    })
+    try {
+      await convertQueue.add({
+        input: {
+          botId: ctx.botInfo.id,
+          userId: ctx.from.id,
+          chatId: ctx.chat.id,
+          locale: ctx.i18n.locale(),
+          showResult,
+          convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
+          stickerExtra,
+          stickerSet,
+          stickerFile,
+        },
+        fileUrl,
+        fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
+        timestamp: Date.now(),
+        isEmoji: stickerSet.packType === 'custom_emoji',
+        frameType,
+        forceCrop,
+        maxDuration
+      }, {
+        priority,
+        attempts: 1,
+        removeOnComplete: true
+      })
+      // Mark user as processing only after successful queue add
+      videoProcessing.set(ctx.from.id, Date.now())
+    } catch (err) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
+      })
+    }
 
     return { wait: true }
   }
