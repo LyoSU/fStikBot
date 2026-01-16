@@ -94,7 +94,7 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
     }),
     externalId: payment._id.toString(),
     customerTelegramUserId: ctx.from.id,
-  }).catch(() => {})
+  }).catch(err => console.error('WalletPay order creation failed:', err.message))
 
   if (walletPayOrder?.status === 'SUCCESS') {
     walletPayLink = walletPayOrder.data.payLink
@@ -113,7 +113,7 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
   let tonLink, usdtLink, btcLink, ethLink
   let tonPrice, usdtPrice, btcPrice, ethPrice
 
-  const cryptoPayMe = await cryptoPay.getMe().catch(() => {})
+  const cryptoPayMe = await cryptoPay.getMe().catch(err => console.error('CryptoPay API check failed:', err.message))
 
   if (cryptoPayMe) {
     const exchangeRate = await cryptoPay.getExchangeRates()

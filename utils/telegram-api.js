@@ -59,7 +59,7 @@ async function connect () {
 }
 
 // Auto-connect on module load (don't block)
-connect().catch(() => {})
+connect().catch(err => console.error('Telegram API connection failed:', err.message))
 
 module.exports = {
   get client () {

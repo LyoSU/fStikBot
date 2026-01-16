@@ -331,7 +331,16 @@ const handleBanUser = async (ctx, input) => {
 
 // Handle set premium credits
 const handleSetPremium = async (ctx, input) => {
-  const [userId, creditStr] = input.split(' ')
+  if (!input || !input.trim()) {
+    return ctx.replyWithHTML('❌ Invalid input. Please enter: <code>user_id amount</code>')
+  }
+
+  const parts = input.trim().split(/\s+/)
+  if (parts.length < 2) {
+    return ctx.replyWithHTML('❌ Invalid format. Please enter: <code>user_id amount</code>')
+  }
+
+  const [userId, creditStr] = parts
   const credit = parseInt(creditStr)
 
   if (isNaN(credit)) {
@@ -356,8 +365,12 @@ const handleSetPremium = async (ctx, input) => {
 
 // Handle refund payment
 const handleRefundPayment = async (ctx, paymentId) => {
+  if (!paymentId || !paymentId.trim()) {
+    return ctx.replyWithHTML('❌ Invalid payment ID. Please enter a valid payment ID.')
+  }
+
   const payment = await ctx.db.Payment.findOne({
-    "resultData.telegram_payment_charge_id": paymentId
+    "resultData.telegram_payment_charge_id": paymentId.trim()
   })
 
   if (!payment) return ctx.replyWithHTML('❌ Payment not found.')
@@ -386,8 +399,12 @@ const handleRefundPayment = async (ctx, paymentId) => {
 
 // Helper function to find user by ID or username
 const findUser = async (ctx, input) => {
+  if (!input || typeof input !== 'string' || !input.trim()) {
+    return null
+  }
+  const cleanInput = input.trim().replace(/^@/, '') // Remove @ prefix if present
   return await ctx.db.User.findOne({
-    $or: [{ telegram_id: parseInt(input) || 0 }, { username: input }]
+    $or: [{ telegram_id: parseInt(cleanInput) || 0 }, { username: cleanInput }]
   })
 }
 

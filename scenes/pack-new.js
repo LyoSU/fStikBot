@@ -179,9 +179,9 @@ newPackCopyPay.hears(match('scenes.copy.pay_btn'), async (ctx) => {
   return ctx.scene.enter('newPackTitle')
 })
 
-const сhoosePackFormat = new Scene('сhoosePackFormat')
+const choosePackFormat = new Scene('choosePackFormat')
 
-сhoosePackFormat.enter(async (ctx, next) => {
+choosePackFormat.enter(async (ctx, next) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_format'), {
     reply_markup: Markup.keyboard([
       [
@@ -200,7 +200,7 @@ const сhoosePackFormat = new Scene('сhoosePackFormat')
   })
 })
 
-сhoosePackFormat.on('message', async (ctx) => {
+choosePackFormat.on('message', async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   if (ctx.message.text === ctx.i18n.t('scenes.new_pack.animated')) {
     ctx.session.scene.newPack.animated = true
@@ -696,7 +696,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
 module.exports = [
   newPack,
-  сhoosePackFormat,
+  choosePackFormat,
   newPackTitle,
   newPackName,
   newPackConfirm,

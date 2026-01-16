@@ -20,7 +20,7 @@ module.exports = {
   handleGuide: require('./guide'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
-  handleStickerUpade: require('./sticker-update'),
+  handleStickerUpdate: require('./sticker-update'),
   handleInlineQuery: require('./inline-query'),
   handleBoostPack: require('./pack-boost'),
   handleGroupSettings: require('./group-settings')

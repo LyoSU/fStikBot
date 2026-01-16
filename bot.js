@@ -33,7 +33,7 @@ const {
   handleCoedit,
   handleLanguage,
   handleEmoji,
-  handleStickerUpade,
+  handleStickerUpdate,
   handleInlineQuery,
   handleGroupSettings
 } = require('./handlers')
@@ -43,7 +43,6 @@ const {
   updateGroup,
   stats,
   updateMonitor,
-  downloadFileByURL,
   retryMiddleware
 } = require('./utils')
 
@@ -196,7 +195,7 @@ bot.use((ctx, next) => {
     ctx.from.language_code === 'uk'
   ) {
     ctx.session.userInfo.locale = 'uk'
-    ctx.session.userInfo.save().catch(() => {})
+    ctx.session.userInfo.save().catch(err => console.error('Failed to save user locale:', err.message))
     ctx.i18n.locale('uk')
   }
   return next()
@@ -213,7 +212,7 @@ bot.use((ctx, next) => {
 bot.use(async (ctx, next) => {
   await updateUser(ctx)
   await next(ctx)
-  if (ctx.session.userInfo) await ctx.session.userInfo.save().catch(() => {})
+  if (ctx.session.userInfo) await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
 })
 
 bot.use((ctx, next) => {
@@ -246,29 +245,6 @@ bot.start(async (ctx, next) => {
     return handlePacks(ctx)
   }
 
-  if (ctx.startPayload.startsWith('removebg_')) {
-    const fileUrl = 'https://telegra.ph' + Buffer.from(ctx?.startPayload?.replace('removebg_', ''), 'base64').toString('utf-8')
-
-    const file = await downloadFileByURL(fileUrl)
-
-    const webp = await sharp(file).webp().toBuffer()
-
-    return ctx.replyWithDocument({
-      source: webp,
-      filename: 'removebg.webp'
-    }, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: ctx.i18n.t('scenes.photoClear.add_to_set_btn'),
-              callback_data: 'add_sticker'
-            }
-          ]
-        ]
-      }
-    })
-  }
   return next()
 })
 privateMessage.command('help', handleHelp)
@@ -492,7 +468,7 @@ privateMessage.action(/add_sticker/, handleSticker)
 
 bot.use(privateMessage)
 
-privateMessage.on('text', handleStickerUpade)
+privateMessage.on('text', handleStickerUpdate)
 privateMessage.on('message', handleStart)
 
 // start bot

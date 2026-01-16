@@ -69,7 +69,10 @@ const messaging = async (messagingData) => {
   const messagingSend = async () => {
     const state = parseInt(await redis.get(key + ':state')) || 0
 
-    const users = await redis.lrange(key + ':users', state, state + count - 1).catch(() => {})
+    const users = await redis.lrange(key + ':users', state, state + count - 1).catch(err => {
+      console.error('Redis lrange failed:', err.message)
+      return []
+    })
 
     if (users && users.length > 0) {
       for (const chatId of users) {
@@ -145,70 +148,74 @@ const messaging = async (messagingData) => {
   }
 }
 
-const messagingEdit = (messagingData) => new Promise(async (resolve) => {
+const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
   console.log(`messaging edit ${messagingData.name} start`)
 
-  messagingData.editStatus = 2
-  await messagingData.save()
+  const startEdit = async () => {
+    messagingData.editStatus = 2
+    await messagingData.save()
 
-  const config = getConfig()
+    const config = getConfig()
 
-  const key = `messaging:${messagingData.id}`
-  const count = config.messaging.limit.max || 10
+    const key = `messaging:${messagingData.id}`
+    const count = config.messaging.limit.max || 10
 
-  const interval = setInterval(async () => {
-    try {
-      console.log('messaging edit')
-      const state = parseInt(await redis.get(key + ':edit_state')) || 0
+    const interval = setInterval(async () => {
+      try {
+        console.log('messaging edit')
+        const state = parseInt(await redis.get(key + ':edit_state')) || 0
 
-      if (state >= messagingData.result.total) {
-        console.log(`messaging edit ${messagingData.name} end`)
-        messagingData.editStatus = 0
-        await messagingData.save()
+        if (state >= messagingData.result.total) {
+          console.log(`messaging edit ${messagingData.name} end`)
+          messagingData.editStatus = 0
+          await messagingData.save()
+          clearInterval(interval)
+          resolve()
+          return
+        }
+
+        const users = await redis.lrange(key, state, state + count).catch(() => {
+          clearInterval(interval)
+        })
+
+        if (users && users.length > 0) {
+          // Use for...of instead of forEach for proper async handling
+          for (const chatId of users) {
+            const messageId = await redis.get(key + ':messages:' + chatId)
+            if (messagingData.message.type === 'text') {
+              telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
+                parse_mode: messagingData.message.data.parse_mode,
+                disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
+                reply_markup: messagingData.message.data.reply_markup
+              }).catch((error) => {
+                console.error('Edit text error:', error.message)
+              })
+            } else {
+              telegram.editMessageMedia(chatId, messageId, null, {
+                type: messagingData.message.type,
+                media: messagingData.message.data[messagingData.message.type],
+                caption: messagingData.message.data.caption || '',
+                parse_mode: messagingData.message.data.parse_mode
+              }, {
+                parse_mode: messagingData.message.data.parse_mode,
+                disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
+                reply_markup: messagingData.message.data.reply_markup
+              }).catch((error) => {
+                console.error('Edit media error:', error.message)
+              })
+            }
+          }
+          await redis.set(key + ':edit_state', state + count)
+        }
+      } catch (error) {
+        console.error('Messaging edit interval error:', error.message)
         clearInterval(interval)
         resolve()
-        return
       }
+    }, config.messaging.limit.duration || 1000)
+  }
 
-      const users = await redis.lrange(key, state, state + count).catch(() => {
-        clearInterval(interval)
-      })
-
-      if (users && users.length > 0) {
-        // Use for...of instead of forEach for proper async handling
-        for (const chatId of users) {
-          const messageId = await redis.get(key + ':messages:' + chatId)
-          if (messagingData.message.type === 'text') {
-            telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
-              parse_mode: messagingData.message.data.parse_mode,
-              disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
-              reply_markup: messagingData.message.data.reply_markup
-            }).catch((error) => {
-              console.error('Edit text error:', error.message)
-            })
-          } else {
-            telegram.editMessageMedia(chatId, messageId, null, {
-              type: messagingData.message.type,
-              media: messagingData.message.data[messagingData.message.type],
-              caption: messagingData.message.data.caption || '',
-              parse_mode: messagingData.message.data.parse_mode
-            }, {
-              parse_mode: messagingData.message.data.parse_mode,
-              disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
-              reply_markup: messagingData.message.data.reply_markup
-            }).catch((error) => {
-              console.error('Edit media error:', error.message)
-            })
-          }
-        }
-        await redis.set(key + ':edit_state', state + count)
-      }
-    } catch (error) {
-      console.error('Messaging edit interval error:', error.message)
-      clearInterval(interval)
-      resolve()
-    }
-  }, config.messaging.limit.duration || 1000)
+  startEdit().catch(reject)
 })
 
 // Process messaging queues without cursor/listener leak
