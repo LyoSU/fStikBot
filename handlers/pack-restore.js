@@ -14,10 +14,13 @@ module.exports = async (ctx, next) => {
     return next()
   }
 
-  const getStickerSet = await ctx.getStickerSet(ctx.match[2]).catch(() => {})
+  const getStickerSet = await ctx.getStickerSet(ctx.match[2]).catch(() => null)
 
   if (!getStickerSet) {
-    return next()
+    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.restore'), {
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
   }
 
   if (getStickerSet.name.split('_').pop(-1) === ctx.options.username) {

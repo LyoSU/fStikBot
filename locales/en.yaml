@@ -894,6 +894,8 @@ scenes:
       ⏳ Converting: ${position}/${total}
 
       <i>Boost = priority → /donate</i>
+    file_too_big: |
+      File is too big (max 20 MB). Send a smaller video.
   search:
     enter: |
       <b>🔍 Search stickers</b>
@@ -909,6 +911,10 @@ error:
   answerCbQuery:
     telegram: |
       Error: ${error}
+  file_too_big: |
+    File is too big (max 20 MB).
+  download: |
+    Failed to download file. Try again.
   banned: |
     🚫 Access denied. Questions → @ly_oBot
   access_denied: Access denied

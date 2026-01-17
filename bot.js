@@ -329,7 +329,12 @@ privateMessage.action(/^download_original$/, async (ctx) => {
       caption: stickerInfo.emojis
     }).catch(async (stickerError) => {
       if (stickerError.description.match(/emoji/)) {
-        const fileLink = await ctx.telegram.getFileLink(originalFileId)
+        let fileLink
+        try {
+          fileLink = await ctx.telegram.getFileLink(originalFileId)
+        } catch (err) {
+          return ctx.replyWithHTML(ctx.i18n.t(err.message?.includes('file is too big') ? 'error.file_too_big' : 'error.download'))
+        }
         await ctx.replyWithDocument({
           url: fileLink,
           filename: `${originalFileUniqueId}.webp`
@@ -345,7 +350,12 @@ privateMessage.action(/^download_original$/, async (ctx) => {
       }
     })
   } else {
-    const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+    let fileLink
+    try {
+      fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+    } catch (err) {
+      return ctx.replyWithHTML(ctx.i18n.t(err.message?.includes('file is too big') ? 'error.file_too_big' : 'error.download'))
+    }
 
     if (fileLink.endsWith('.webp')) {
       const buffer = await got(fileLink).buffer()

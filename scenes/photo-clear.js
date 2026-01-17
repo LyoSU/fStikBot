@@ -98,7 +98,15 @@ photoClear.on('photo', async (ctx) => {
 
   const photo = ctx.message.photo[ctx.message.photo.length - 1]
 
-  const fileUrl = await ctx.telegram.getFileLink(photo.file_id)
+  let fileUrl
+  try {
+    fileUrl = await ctx.telegram.getFileLink(photo.file_id)
+  } catch (err) {
+    return ctx.replyWithHTML(ctx.i18n.t(err.message?.includes('file is too big') ? 'error.file_too_big' : 'error.download'), {
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
 
   let model = 'silueta'
 

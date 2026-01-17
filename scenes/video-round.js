@@ -116,7 +116,14 @@ videoRound.on(['video', 'video_note', 'animation', 'sticker'], async (ctx) => {
   }
 
   const video = ctx.message.video || ctx.message.video_note || ctx.message.animation || ctx.message.sticker
-  const fileUrl = await ctx.telegram.getFileLink(video.file_id)
+
+  let fileUrl
+  try {
+    fileUrl = await ctx.telegram.getFileLink(video.file_id)
+  } catch (err) {
+    const key = err.message?.includes('file is too big') ? 'file_too_big' : 'error'
+    return ctx.replyWithHTML(ctx.i18n.t(`scenes.videoRound.${key}`))
+  }
 
   await processVideo(ctx, fileUrl)
 })
@@ -134,7 +141,13 @@ videoRound.on('document', async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.not_video'))
   }
 
-  const fileUrl = await ctx.telegram.getFileLink(ctx.message.document.file_id)
+  let fileUrl
+  try {
+    fileUrl = await ctx.telegram.getFileLink(ctx.message.document.file_id)
+  } catch (err) {
+    const key = err.message?.includes('file is too big') ? 'file_too_big' : 'error'
+    return ctx.replyWithHTML(ctx.i18n.t(`scenes.videoRound.${key}`))
+  }
 
   await processVideo(ctx, fileUrl)
 })

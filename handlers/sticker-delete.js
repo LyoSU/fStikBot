@@ -99,9 +99,9 @@ module.exports = async (ctx) => {
 
   let deleteStickerFromSet
   if (ctx.session?.userInfo?.stickerSet?.passcode === 'public') {
-    const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name)
+    const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name).catch(() => null)
 
-    if (stickerSet.stickers[0].file_unique_id === sticker.fileUniqueId) {
+    if (stickerSet && stickerSet.stickers[0].file_unique_id === sticker.fileUniqueId) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
   }

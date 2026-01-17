@@ -34,7 +34,11 @@ const createStickerSet = async (packName, userInfo) => {
   })
 
   if (!stickerSet) {
-    const stickerSetInfo = await telegram.getStickerSet(packName)
+    const stickerSetInfo = await telegram.getStickerSet(packName).catch(() => null)
+
+    if (!stickerSetInfo) {
+      return null
+    }
 
     stickerSet = new db.StickerSet({
       _id: mongoose.Types.ObjectId(),
@@ -141,6 +145,10 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
 
   ctx.session.scene.publish.stickerSet = await createStickerSet(packName, ctx.session.userInfo)
 
+  if (!ctx.session.scene.publish.stickerSet) {
+    return ctx.scene.reenter()
+  }
+
   if (ctx.session.userInfo.moderator === true) {
     return ctx.scene.enter('catalogEnterDescription')
   } else {
@@ -174,6 +182,10 @@ catalogPublishOwnerProof.on('text', async (ctx) => {
     }
 
     ctx.session.scene.publish.stickerSet = await createStickerSet(ctx.session.scene.publish.packName, ctx.session.userInfo)
+
+    if (!ctx.session.scene.publish.stickerSet) {
+      return ctx.scene.reenter()
+    }
 
     return ctx.scene.enter('catalogPublish')
   } else {

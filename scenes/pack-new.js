@@ -381,11 +381,28 @@ newPackConfirm.enter(async (ctx, next) => {
             stickerFormat = 'static'
           }
 
-          const fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+          let fileLink
+          try {
+            fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+          } catch (err) {
+            return {
+              error: {
+                telegram: err
+              }
+            }
+          }
 
           const buffer = await got(fileLink, {
             responseType: 'buffer'
-          }).then((response) => response.body)
+          }).then((response) => response.body).catch((err) => null)
+
+          if (!buffer) {
+            return {
+              error: {
+                telegram: new Error('Failed to download sticker')
+              }
+            }
+          }
 
           const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
             user_id: ctx.from.id,
