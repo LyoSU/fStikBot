@@ -935,6 +935,8 @@ scenes:
       ⏳ Converting: ${position}/${total}
 
       <i>Boost = priority → /donate</i>
+    file_too_big: |
+      File is too big (max 20 MB). Send a smaller video.
   search:
     enter: |
       <b>🔍 Search stickers</b>
@@ -952,6 +954,10 @@ error:
     telegram: |
       Telegram 返回错误信息：
       ${error}
+  file_too_big: |
+    File is too big (max 20 MB).
+  download: |
+    Failed to download file. Try again.
   banned: |
     <b>错误！</b>
     您被禁止使用此功能。
