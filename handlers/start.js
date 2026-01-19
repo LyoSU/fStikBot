@@ -49,7 +49,7 @@ module.exports = async (ctx) => {
   // Discovery & Help row
   keyboard.push([
     Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'pack_about'),
-    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.guide'), 'guide:menu')
+    Markup.urlButton(ctx.i18n.t('cmd.start.commands.guide'), 'https://fstik.app/guides')
   ])
 
   // Add to group
