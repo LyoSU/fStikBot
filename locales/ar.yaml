@@ -156,6 +156,10 @@ cmd:
       catalog_app: '📱 تحميل تطبيق الاندرويد'
       catalog_app_mini: '📱 تطبيق الأندرويد'
   guide:
+    web: |
+      <b>📖 How to use fStikBot</b>
+
+      Full guides, tips, and FAQ on our website.
     menu: |
       <b>📖 How to use</b>
 
@@ -260,6 +264,7 @@ cmd:
 
       <b>Still stuck?</b> @fStikCommunity
     btn:
+      open: '📖 Open Guide'
       create: '🎨 Create stickers'
       manage: '📁 إدارة الحزم'
       catalog: '🔍 Find & share'
