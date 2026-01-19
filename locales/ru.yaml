@@ -153,6 +153,10 @@ cmd:
       catalog_app: '📱 Скачать Android приложение'
       catalog_app_mini: '📱 Android приложение'
   guide:
+    web: |
+      <b>📖 How to use fStikBot</b>
+
+      Full guides, tips, and FAQ on our website.
     menu: |
       <b>📖 Как пользоваться</b>
 
@@ -257,6 +261,7 @@ cmd:
 
       <b>Ещё вопросы?</b> @fStikCommunity
     btn:
+      open: '📖 Open Guide'
       create: '🎨 Создание стикеров'
       manage: '📁 Управление паками'
       catalog: '🔍 Поиск и публикация'
