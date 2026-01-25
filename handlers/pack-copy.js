@@ -7,10 +7,13 @@ module.exports = async (ctx) => {
 
   if (getStickerSet && getStickerSet.stickers.length > 0) {
     ctx.session.scene.copyPack = getStickerSet
+    // Determine pack format from stickers (StickerSet doesn't have is_video/is_animated)
+    const hasVideo = getStickerSet.stickers.some(s => s.is_video)
+    const hasAnimated = getStickerSet.stickers.some(s => s.is_animated)
     ctx.session.scene.newPack = {
       packType: getStickerSet.sticker_type,
-      video: getStickerSet.is_video,
-      animated: getStickerSet.is_animated,
+      video: hasVideo,
+      animated: hasAnimated,
       fillColor: getStickerSet.stickers[0].needs_repainting
     }
 

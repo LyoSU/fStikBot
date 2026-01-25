@@ -174,6 +174,8 @@ newPackCopyPay.hears(match('scenes.copy.pay_btn'), async (ctx) => {
       reply_markup: Markup.removeKeyboard()
     })
 
+    // Clean up all session state
+    ctx.session.scene = {}
     return ctx.scene.leave()
   }
   return ctx.scene.enter('newPackTitle')
@@ -220,9 +222,13 @@ const newPackTitle = new Scene('newPackTitle')
 
 newPackTitle.enter(async (ctx) => {
   if (!ctx.session.scene) return ctx.scene.leave()
-  if (!ctx.session.scene.newPack) ctx.session.scene.newPack = {
-    animated: ctx.session.scene.copyPack?.is_animated,
-    video: ctx.session.scene.copyPack?.is_video,
+  if (!ctx.session.scene.newPack) {
+    // Determine format from stickers if copyPack exists (StickerSet doesn't have is_video/is_animated)
+    const copyPack = ctx.session.scene.copyPack
+    ctx.session.scene.newPack = {
+      animated: copyPack?.stickers?.some(s => s.is_animated) || false,
+      video: copyPack?.stickers?.some(s => s.is_video) || false,
+    }
   }
 
   const names = []
@@ -334,6 +340,8 @@ newPackConfirm.enter(async (ctx, next) => {
 
   let alreadyUploadedStickers = 0
   let createNewStickerSet
+  let hasPlaceholder = false
+  let failedBatchIndices = [] // Track failed stickers from batch for retry
 
   packType = packType || 'regular'
 
@@ -364,13 +372,10 @@ newPackConfirm.enter(async (ctx, next) => {
 
       let uploadedStickers = []
 
-      if (
-        originalPackType === packType
-        || copyPack.stickers.every(sticker => sticker.is_animated)
-      ) {
+      if (originalPackType === packType) {
         const stickers = copyPack.stickers.slice(0, 50)
 
-        uploadedStickers = (await Promise.all(stickers.map(async (sticker) => {
+        const batchResults = await Promise.all(stickers.map(async (sticker, originalIndex) => {
           let stickerFormat
 
           if (sticker.is_animated) {
@@ -388,7 +393,8 @@ newPackConfirm.enter(async (ctx, next) => {
             return {
               error: {
                 telegram: err
-              }
+              },
+              originalIndex
             }
           }
 
@@ -400,7 +406,8 @@ newPackConfirm.enter(async (ctx, next) => {
             return {
               error: {
                 telegram: new Error('Failed to download sticker')
-              }
+              },
+              originalIndex
             }
           }
 
@@ -422,7 +429,8 @@ newPackConfirm.enter(async (ctx, next) => {
             return {
               error: {
                 telegram: uploadedSticker.error.telegram
-              }
+              },
+              originalIndex
             }
           }
 
@@ -430,15 +438,20 @@ newPackConfirm.enter(async (ctx, next) => {
             sticker: uploadedSticker.file_id,
             format: stickerFormat,
             emoji_list: sticker.emojis ? sticker.emojis : [sticker.emoji],
+            originalIndex
           }
-        }))).sort((a, b) => {
-          const aIndex = stickers.findIndex((sticker) => sticker.file_id === a.sticker)
-          const bIndex = stickers.findIndex((sticker) => sticker.file_id === b.sticker)
+        }))
 
-          return aIndex - bIndex
-        }).filter((sticker) => !sticker.error)
+        // Separate successful and failed stickers
+        failedBatchIndices = batchResults
+          .filter((result) => result.error)
+          .map((result) => result.originalIndex)
 
-        // if < 90% of stickers uploaded
+        uploadedStickers = batchResults
+          .filter((sticker) => !sticker.error)
+          .sort((a, b) => a.originalIndex - b.originalIndex)
+
+        // if < 90% of stickers uploaded in batch, fail completely
         if (uploadedStickers.length < stickers.length * 0.90) {
           await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
 
@@ -447,9 +460,12 @@ newPackConfirm.enter(async (ctx, next) => {
             allow_sending_without_reply: true
           })
 
+          // Clean up all session state
+          ctx.session.scene = {}
           return ctx.scene.leave()
         }
 
+        // Track how many were successfully uploaded in batch
         alreadyUploadedStickers = uploadedStickers.length
       } else {
         const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
@@ -470,28 +486,26 @@ newPackConfirm.enter(async (ctx, next) => {
         ]
       }
 
+      // Clean up internal fields before API call (originalIndex, placeholder are internal only)
+      const stickersForApi = uploadedStickers.map(({ sticker, format, emoji_list }) => ({
+        sticker,
+        format,
+        emoji_list
+      }))
+
       createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
         name,
         title,
-        stickers: uploadedStickers,
+        stickers: stickersForApi,
         sticker_type: packType,
         needs_repainting: !!fillColor
       }).catch((error) => {
         return { error }
       })
 
-      if (uploadedStickers[0].placeholder) {
-        setTimeout(async () => {
-          const getStickerSet = await ctx.telegram.getStickerSet(name)
-          const stickerInfo = getStickerSet.stickers[0]
-          if (!stickerInfo) return
-
-          await ctx.telegram.deleteStickerFromSet(stickerInfo.file_id).catch(error => {
-            console.error('Error while deleting sticker from set: ', error)
-          })
-        }, 1000 * 10)
-      }
+      // Track if we need to delete placeholder after copying is complete
+      hasPlaceholder = uploadedStickers[0]?.placeholder
 
       await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
 
@@ -666,7 +680,13 @@ newPackConfirm.enter(async (ctx, next) => {
 
     const originalPack = copyPack
 
-    if (originalPack.stickers.length > alreadyUploadedStickers) {
+    // Calculate how many stickers need to be added via addSticker
+    // For same type: stickers after batch (index >= 50) + failed batch stickers
+    // For different type (placeholder flow): ALL stickers need individual copy
+    const batchAttemptedCount = hasPlaceholder ? 0 : Math.min(50, originalPack.stickers.length)
+    const needsIndividualCopy = hasPlaceholder || originalPack.stickers.length > batchAttemptedCount || failedBatchIndices.length > 0
+
+    if (needsIndividualCopy) {
       const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
         originalTitle: escapeHTML(originalPack.title),
         originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
@@ -676,10 +696,26 @@ newPackConfirm.enter(async (ctx, next) => {
         total: originalPack.stickers.length
       }))
 
-      for (let index = alreadyUploadedStickers; index < originalPack.stickers.length; index++) {
-        await addSticker(ctx, originalPack.stickers[index], userStickerSet, false)
+      let successCount = alreadyUploadedStickers
+      let failedCount = 0
+      let pendingCount = 0 // Stickers queued for async processing (video conversion)
+      let processed = 0
 
-        if (index % 10 === 0) {
+      // First, retry failed batch stickers
+      for (const failedIndex of failedBatchIndices) {
+        const result = await addSticker(ctx, originalPack.stickers[failedIndex], userStickerSet, false)
+
+        if (result?.error) {
+          failedCount++
+        } else if (result?.wait) {
+          // Video stickers queued for async processing - don't count as success yet
+          pendingCount++
+        } else {
+          successCount++
+        }
+        processed++
+
+        if (processed % 10 === 0) {
           await ctx.telegram.editMessageText(
             message.chat.id, message.message_id, null,
             ctx.i18n.t('scenes.copy.progress', {
@@ -687,7 +723,37 @@ newPackConfirm.enter(async (ctx, next) => {
               originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
               title: escapeHTML(title),
               link: `${ctx.config.stickerLinkPrefix}${name}`,
-              current: index,
+              current: successCount + pendingCount,
+              total: originalPack.stickers.length
+            }),
+            { parse_mode: 'HTML' }
+          ).catch(() => {})
+        }
+      }
+
+      // Then, continue with stickers after batch (index >= 50)
+      for (let index = batchAttemptedCount; index < originalPack.stickers.length; index++) {
+        const result = await addSticker(ctx, originalPack.stickers[index], userStickerSet, false)
+
+        if (result?.error) {
+          failedCount++
+        } else if (result?.wait) {
+          // Video stickers queued for async processing - don't count as success yet
+          pendingCount++
+        } else {
+          successCount++
+        }
+        processed++
+
+        if (processed % 10 === 0) {
+          await ctx.telegram.editMessageText(
+            message.chat.id, message.message_id, null,
+            ctx.i18n.t('scenes.copy.progress', {
+              originalTitle: escapeHTML(originalPack.title),
+              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+              title: escapeHTML(title),
+              link: `${ctx.config.stickerLinkPrefix}${name}`,
+              current: successCount + pendingCount,
               total: originalPack.stickers.length
             }),
             { parse_mode: 'HTML' }
@@ -697,15 +763,82 @@ newPackConfirm.enter(async (ctx, next) => {
 
       await ctx.telegram.deleteMessage(message.chat.id, message.message_id)
 
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done', {
-          originalTitle: escapeHTML(originalPack.title),
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-          title: escapeHTML(title),
-          link: `${ctx.config.stickerLinkPrefix}${name}`
-        }),
-        { parse_mode: 'HTML' }
-      )
+      // Show result with appropriate message based on outcome
+      if (failedCount > 0 && pendingCount > 0) {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial_pending', {
+            originalTitle: escapeHTML(originalPack.title),
+            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+            title: escapeHTML(title),
+            link: `${ctx.config.stickerLinkPrefix}${name}`,
+            success: successCount,
+            failed: failedCount,
+            pending: pendingCount
+          }),
+          { parse_mode: 'HTML' }
+        )
+      } else if (failedCount > 0) {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial', {
+            originalTitle: escapeHTML(originalPack.title),
+            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+            title: escapeHTML(title),
+            link: `${ctx.config.stickerLinkPrefix}${name}`,
+            success: successCount,
+            failed: failedCount
+          }),
+          { parse_mode: 'HTML' }
+        )
+      } else if (pendingCount > 0) {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_pending', {
+            originalTitle: escapeHTML(originalPack.title),
+            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+            title: escapeHTML(title),
+            link: `${ctx.config.stickerLinkPrefix}${name}`,
+            success: successCount,
+            pending: pendingCount
+          }),
+          { parse_mode: 'HTML' }
+        )
+      } else {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done', {
+            originalTitle: escapeHTML(originalPack.title),
+            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+            title: escapeHTML(title),
+            link: `${ctx.config.stickerLinkPrefix}${name}`
+          }),
+          { parse_mode: 'HTML' }
+        )
+      }
     }
+
+    // Delete placeholder sticker after all stickers are copied
+    if (hasPlaceholder) {
+      const getStickerSet = await ctx.telegram.getStickerSet(name).catch(() => null)
+      if (getStickerSet?.stickers?.length > 1) {
+        // Delete placeholder only if there are other stickers
+        const placeholderSticker = getStickerSet.stickers[0]
+        if (placeholderSticker) {
+          await ctx.telegram.deleteStickerFromSet(placeholderSticker.file_id).catch(error => {
+            console.error('Error while deleting placeholder sticker: ', error)
+          })
+        }
+      } else if (getStickerSet?.stickers?.length === 1 && successCount === 0 && pendingCount === 0) {
+        // All stickers failed - pack only has placeholder
+        // Delete the entire pack since it's useless
+        await ctx.telegram.callApi('deleteStickerSet', { name }).catch(error => {
+          console.error('Error while deleting empty sticker set: ', error)
+        })
+        // Remove from database
+        await ctx.db.StickerSet.deleteOne({ name }).catch(() => {})
+        // Warn user
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.all_failed', {
+          originalTitle: escapeHTML(originalPack.title),
+          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`
+        }))
+      }
+    }
+
+    // Clean up session state
+    delete ctx.session.scene.copyPack
 
     await ctx.scene.leave()
   }
