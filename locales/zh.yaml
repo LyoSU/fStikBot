@@ -716,6 +716,18 @@ scenes:
       进度： ${current}/${total}
     done: |
       成功完成从 <a href="${originalLink}">${originalTitle}</a> 到 <a href="${link}">${title}</a> 的打包复制。
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>包转换</b>
 
@@ -726,6 +738,10 @@ scenes:
       购买信用点: /donate
     pay_btn: '✅ 确认'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>错误！</b>
         此功能仅用于捐赠成员。
