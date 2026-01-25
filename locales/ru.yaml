@@ -673,6 +673,18 @@ scenes:
       ⏳ Копирую: ${current}/${total}
     done: |
       ✅ Скопировано в <a href="${link}">${title}</a>
+    done_partial: |
+      ⚠️ Скопировано в <a href="${link}">${title}</a>
+
+      ${success} стикеров скопировано, ${failed} не удалось скопировать.
+    done_pending: |
+      ✅ Скопировано в <a href="${link}">${title}</a>
+
+      ${success} стикеров скопировано, ${pending} видео ещё обрабатываются.
+    done_partial_pending: |
+      ⚠️ Скопировано в <a href="${link}">${title}</a>
+
+      ${success} стикеров скопировано, ${failed} не удалось, ${pending} видео ещё обрабатываются.
     pay: |
       <b>Конвертация пака</b>
 
@@ -683,6 +695,10 @@ scenes:
       Купить Кредиты: /donate
     pay_btn: '✅ Подтвердить'
     error:
+      all_failed: |
+        ❌ Не удалось скопировать ни одного стикера из <a href="${originalLink}">${originalTitle}</a>.
+
+        Пак не создан.
       premium: |
         <b>Ошибка!</b>
         К сожалению, эта функция доступна только для тех, кто поддержал бота.
