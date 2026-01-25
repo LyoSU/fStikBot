@@ -687,6 +687,18 @@ scenes:
       進行状況: ${current}/${total}
     done: |
       <a href="${originalLink}">${originalTitle}</a> から <a href="${link}">${title}</a> へのパックのコピーが正常に完了しました。
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>パック変換</b>
 
@@ -697,6 +709,10 @@ scenes:
       クレジットを購入する: /donate
     pay_btn: '✅ 確認'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>エラー！</b>
         この機能は寄付メンバーのみが利用可能です。
