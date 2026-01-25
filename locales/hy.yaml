@@ -700,6 +700,18 @@ scenes:
       Արվել է: ${current} / ${total}
     done: |
       Փաթեթի պատճենումը <a href="${originalLink}">${originalTitle}</a> -ից մինչև <a href="${link}">${title}</a> հաջողությամբ ավարտվեց:
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>Փաթեթի փոխարկում</b>
 
@@ -710,6 +722,10 @@ scenes:
       Գնել կրեդիտներ: /donate
     pay_btn: '✅ Հաստատել'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>Սխալ.</b>
         Այս հատկությունը հասանելի է միայն անդամներին նվիրաբերելու համար:
