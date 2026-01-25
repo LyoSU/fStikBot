@@ -32,7 +32,7 @@ packAbout.enter(async (ctx) => {
           request_users: {
             request_id: 1,
             user_is_bot: false,
-            max_quantity: 1,
+            max_quantity: 1
           }
         }],
         [
@@ -44,11 +44,10 @@ packAbout.enter(async (ctx) => {
   })
 })
 
-
 // Handle user selection via users_shared
 packAbout.use((ctx, next) => {
   if (ctx?.message?.users_shared) {
-    let sharedUserId = ctx.message.users_shared.user_ids[0]
+    const sharedUserId = ctx.message.users_shared.user_ids[0]
 
     if (!sharedUserId) return next()
 
@@ -66,9 +65,9 @@ packAbout.use((ctx, next) => {
         chunkedPacks = (findPacks.map((pack) => {
           if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
             if (
-              ctx.from.id === sharedUserId
-              || ctx.from.id === ctx.config.mainAdminId
-              || ctx?.session?.userInfo?.adminRights.includes('pack')
+              ctx.from.id === sharedUserId ||
+              ctx.from.id === ctx.config.mainAdminId ||
+              ctx?.session?.userInfo?.adminRights.includes('pack')
             ) {
               return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
             } else {
@@ -129,7 +128,7 @@ packAbout.use((ctx, next) => {
 packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   // Handle forwarded message for user info
   if (ctx.message.forward_from) {
-    let sharedUserId = ctx.message.forward_from.id
+    const sharedUserId = ctx.message.forward_from.id
 
     if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
       showGramAds(ctx.chat.id)
@@ -146,9 +145,9 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
       chunkedPacks = (findPacks.map((pack) => {
         if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
           if (
-            ctx.from.id === sharedUserId
-            || ctx.from.id === ctx.config.mainAdminId
-            || ctx?.session?.userInfo?.adminRights.includes('pack')
+            ctx.from.id === sharedUserId ||
+            ctx.from.id === ctx.config.mainAdminId ||
+            ctx?.session?.userInfo?.adminRights.includes('pack')
           ) {
             return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
           } else {
@@ -267,7 +266,7 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
             animated: sticker.is_animated,
             video: sticker.is_video,
             packType: sticker.type,
-            thirdParty: true,
+            thirdParty: true
           })
         } else if (!stickerSet.ownerTelegramId) {
           // Update existing record with owner info
@@ -285,9 +284,9 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   // get all stickerset owners from database (only if we have owner info)
   const packs = actualOwnerId
     ? await db.StickerSet.find({
-        ownerTelegramId: actualOwnerId,
-        _id: { $ne: stickerSet?._id || null }
-      })
+      ownerTelegramId: actualOwnerId,
+      _id: { $ne: stickerSet?._id || null }
+    })
     : []
 
   let chunkedPacks = []
@@ -303,7 +302,7 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
         ) {
           return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
         } else {
-          return `<i>[hidden]</i>`
+          return '<i>[hidden]</i>'
         }
       }
       return `<a href="https://t.me/addstickers/${pack.name}">${pack.name}</a>`

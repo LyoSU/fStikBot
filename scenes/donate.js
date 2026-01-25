@@ -20,11 +20,11 @@ const TIER_MULTIPLIERS = {
 
 // Base star prices with volume discounts
 const CREDIT_PACKAGES = {
-  1: { stars: 25, discount: 0 },       // $0.33 base
-  3: { stars: 60, discount: 0.20 },    // $0.78 (20% off)
-  5: { stars: 100, discount: 0.20 },   // $1.30 (20% off)
-  10: { stars: 175, discount: 0.30 },  // $2.28 (30% off)
-  25: { stars: 375, discount: 0.40 }   // $4.88 (40% off)
+  1: { stars: 25, discount: 0 }, // $0.33 base
+  3: { stars: 60, discount: 0.20 }, // $0.78 (20% off)
+  5: { stars: 100, discount: 0.20 }, // $1.30 (20% off)
+  10: { stars: 175, discount: 0.30 }, // $2.28 (30% off)
+  25: { stars: 375, discount: 0.40 } // $4.88 (40% off)
 }
 
 const getPricingTier = (locale) => {

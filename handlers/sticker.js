@@ -58,8 +58,8 @@ module.exports = async (ctx, next) => {
     case 'document':
       if (
         (message?.document?.mime_type.match('image') ||
-        message?.document?.mime_type?.match('video'))
-        && !message.document.mime_type.match(/heic|heif/)
+        message?.document?.mime_type?.match('video')) &&
+        !message.document.mime_type.match(/heic|heif/)
       ) {
         stickerFile = message.document
         if (message.caption) stickerFile.emoji = message.caption
@@ -83,9 +83,9 @@ module.exports = async (ctx, next) => {
       break
 
     case 'video_note':
-        stickerFile = message?.video_note
-        if (message?.video_note) stickerFile.video_note = true
-    break
+      stickerFile = message?.video_note
+      if (message?.video_note) stickerFile.video_note = true
+      break
 
     case 'photo':
       // eslint-disable-next-line prefer-destructuring

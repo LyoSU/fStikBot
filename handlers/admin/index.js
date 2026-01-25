@@ -49,7 +49,7 @@ Welcome to the admin control center. Please select an option:
     [Markup.callbackButton('📊 Transaction History', 'admin:transactions')],
     ...adminType
       .filter(type => ctx.config.mainAdminId === ctx.from.id || ctx.session.userInfo.adminRights.includes(type))
-      .map(type => [Markup.callbackButton(`⚙️ Admin ${type}`, `admin:${type}`)]),
+      .map(type => [Markup.callbackButton(`⚙️ Admin ${type}`, `admin:${type}`)])
   ]
 
   const replyMarkup = Markup.inlineKeyboard(inlineKeyboard)
@@ -212,7 +212,7 @@ const getLastMonoTransactions = async (ctx) => {
 const getStarsTransactions = async (ctx) => {
   await ctx.answerCbQuery()
   try {
-    let transactions = []
+    const transactions = []
     let offset = 0
     const limit = 100
 
@@ -231,7 +231,7 @@ const getStarsTransactions = async (ctx) => {
       ...transactions.map(item =>
         `"${new Date(item.date * 1000).toLocaleString()}","${item.id}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.source?.user?.first_name?.replace(/"/g, '""') || ''}",${item.source?.user?.id || ''}`
       )
-    ].join('\n');
+    ].join('\n')
 
     await ctx.replyWithDocument({ source: Buffer.from(csvContent, 'utf-8'), filename: 'stars_transactions.csv' })
 
@@ -256,7 +256,7 @@ const getStarsTransactions = async (ctx) => {
 const getOutgoingTransactions = async (ctx) => {
   await ctx.answerCbQuery()
   try {
-    let transactions = []
+    const transactions = []
     let offset = 0
     const limit = 100
 
@@ -275,7 +275,7 @@ const getOutgoingTransactions = async (ctx) => {
       ...transactions.map(item =>
         `"${new Date(item.date * 1000).toLocaleString()}","${item.id}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.receiver?.user?.first_name?.replace(/"/g, '""') || ''}",${item.receiver?.user?.id || ''}`
       )
-    ].join('\n');
+    ].join('\n')
 
     await ctx.replyWithDocument({ source: Buffer.from(csvContent, 'utf-8'), filename: 'outgoing_transactions.csv' })
 
@@ -370,7 +370,7 @@ const handleRefundPayment = async (ctx, paymentId) => {
   }
 
   const payment = await ctx.db.Payment.findOne({
-    "resultData.telegram_payment_charge_id": paymentId.trim()
+    'resultData.telegram_payment_charge_id': paymentId.trim()
   })
 
   if (!payment) return ctx.replyWithHTML('❌ Payment not found.')
@@ -509,7 +509,7 @@ composer.action(/admin:.*:back/, async (ctx) => {
 adminType.forEach(type => {
   composer.use(Composer.optional(ctx =>
     ctx.config.mainAdminId === ctx?.from?.id || ctx?.session?.userInfo?.adminRights.includes(type),
-    require(`./${type}`)
+  require(`./${type}`)
   ))
 })
 

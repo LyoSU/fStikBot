@@ -23,7 +23,7 @@ Object.keys(collections).forEach((collectionName) => {
 // Truncate string to max length
 const truncate = (str, maxLength) => {
   if (!str) return null
-  return str.length > maxLength ? str.substr(0, maxLength) : str
+  return str.length > maxLength ? str.slice(0, maxLength) : str
 }
 
 db.User.getData = async (tgUser) => {
@@ -71,7 +71,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
       { stickerSet: oldStickerSet.id },
       { $set: { deleted: true, deletedAt: new Date() } }
     )
-    await oldStickerSet.remove()
+    await oldStickerSet.deleteOne()
   }
 
   const stickerSet = new db.StickerSet()

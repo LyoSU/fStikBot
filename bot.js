@@ -169,7 +169,6 @@ bot.use(async (ctx, next) => {
   if (ctx.session.chainActions.length > 15) ctx.session.chainActions.shift()
   ctx.session.chainActions.push(action)
 
-
   // const ms = new Date()
   if (ctx.inlineQuery) {
     await updateUser(ctx)
@@ -206,7 +205,6 @@ bot.use((ctx, next) => {
   }
   return next()
 })
-
 
 bot.use(async (ctx, next) => {
   await updateUser(ctx)
@@ -260,7 +258,6 @@ bot.start((ctx, next) => {
   if (ctx.startPayload === 'packs') return handlePacks(ctx)
   return next()
 })
-
 
 privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
 
@@ -473,7 +470,6 @@ privateMessage.on('message', (ctx, next) => {
 })
 privateMessage.action(/add_sticker/, handleSticker)
 
-
 bot.use(privateMessage)
 
 privateMessage.on('text', handleStickerUpdate)
@@ -498,73 +494,73 @@ db.connection.once('open', async () => {
     })
   }
 
-  const locales = fs.readdirSync(path.resolve(__dirname, 'locales'));
+  const locales = fs.readdirSync(path.resolve(__dirname, 'locales'))
 
-  const enDescriptionLong = i18n.t('en', 'description.long');
-  const enDescriptionShort = i18n.t('en', 'description.short');
+  const enDescriptionLong = i18n.t('en', 'description.long')
+  const enDescriptionShort = i18n.t('en', 'description.short')
 
   for (const locale of locales) {
-    const localeName = locale.split('.')[0];
+    const localeName = locale.split('.')[0]
 
     const myName = await bot.telegram.callApi('getMyName', {
-      language_code: localeName,
-    });
+      language_code: localeName
+    })
 
-    const name = i18n.t(localeName, 'name');
+    const name = i18n.t(localeName, 'name')
 
     if (myName.name !== name) {
       try {
         const response = await bot.telegram.callApi('setMyName', {
           name,
-          language_code: localeName,
-        });
-        console.log('setMyName', localeName, response);
+          language_code: localeName
+        })
+        console.log('setMyName', localeName, response)
       } catch (error) {
-        console.error('setMyName', localeName, error.description);
+        console.error('setMyName', localeName, error.description)
       }
     }
 
     const myDescription = await bot.telegram.callApi('getMyDescription', {
-      language_code: localeName,
-    });
+      language_code: localeName
+    })
 
-    const descriptionLong = i18n.t(localeName, 'description.long');
+    const descriptionLong = i18n.t(localeName, 'description.long')
     const newDescriptionLong = localeName === 'en' || descriptionLong !== enDescriptionLong
       ? descriptionLong.replace(/[\r\n]/gm, '')
-      : '';
+      : ''
 
     if (newDescriptionLong !== myDescription.description.replace(/[\r\n]/gm, '')) {
       try {
-        const description = newDescriptionLong ? i18n.t(localeName, 'description.long') : '';
+        const description = newDescriptionLong ? i18n.t(localeName, 'description.long') : ''
         const response = await bot.telegram.callApi('setMyDescription', {
           description,
-          language_code: localeName,
-        });
-        console.log('setMyDescription', localeName, response);
+          language_code: localeName
+        })
+        console.log('setMyDescription', localeName, response)
       } catch (error) {
-        console.error('setMyDescription', localeName, error.description);
+        console.error('setMyDescription', localeName, error.description)
       }
     }
 
     const myShortDescription = await bot.telegram.callApi('getMyShortDescription', {
-      language_code: localeName,
-    });
+      language_code: localeName
+    })
 
-    const descriptionShort = i18n.t(localeName, 'description.short');
+    const descriptionShort = i18n.t(localeName, 'description.short')
     const newDescriptionShort = localeName === 'en' || descriptionShort !== enDescriptionShort
       ? descriptionShort.replace(/[\r\n]/gm, '')
-      : '';
+      : ''
 
     if (newDescriptionShort !== myShortDescription.short_description.replace(/[\r\n]/gm, '')) {
       try {
-        const shortDescription = newDescriptionShort ? i18n.t(localeName, 'description.short') : '';
+        const shortDescription = newDescriptionShort ? i18n.t(localeName, 'description.short') : ''
         const response = await bot.telegram.callApi('setMyShortDescription', {
           short_description: shortDescription,
-          language_code: localeName,
-        });
-        console.log('setMyShortDescription', localeName, response);
+          language_code: localeName
+        })
+        console.log('setMyShortDescription', localeName, response)
       } catch (error) {
-        console.error('setMyShortDescription', localeName, error.description);
+        console.error('setMyShortDescription', localeName, error.description)
       }
     }
 
@@ -582,7 +578,7 @@ db.connection.once('open', async () => {
       { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
       { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') },
       { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') },
-      { command: 'privacy', description: i18n.t(localeName, 'cmd.start.commands.privacy') },
+      { command: 'privacy', description: i18n.t(localeName, 'cmd.start.commands.privacy') }
     ]
 
     const myCommandsInPrivate = await bot.telegram.callApi('getMyCommands', {
@@ -617,7 +613,7 @@ db.connection.once('open', async () => {
 
     const groupCommands = [
       { command: 'ss', description: i18n.t(localeName, 'cmd.start.commands.ss') },
-      { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
+      { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') }
     ]
 
     const myCommandsInGroup = await bot.telegram.callApi('getMyCommands', {
@@ -652,7 +648,6 @@ db.connection.once('open', async () => {
   }
 
   require('./utils/messaging')
-  // require('./utils/optimize-db')
 
   setInterval(() => {
     updateMonitor()

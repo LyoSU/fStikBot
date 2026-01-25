@@ -35,7 +35,7 @@ module.exports = async (ctx, next) => {
             findStickerSet.owner = ctx.session.userInfo.id
           }
         }
-        findStickerSet.save()
+        await findStickerSet.save()
         restored = true
       }
     }
@@ -94,7 +94,10 @@ module.exports = async (ctx, next) => {
 
       // Execute all operations in single batch
       if (bulkOps.length > 0) {
-        await ctx.db.Sticker.bulkWrite(bulkOps, { ordered: false })
+        const result = await ctx.db.Sticker.bulkWrite(bulkOps, { ordered: false })
+        if (result.hasWriteErrors && result.hasWriteErrors()) {
+          console.error('Partial bulk write failure:', result.getWriteErrors())
+        }
       }
 
       messageText = ctx.i18n.t('callback.pack.restored', {

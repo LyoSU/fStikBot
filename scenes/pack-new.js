@@ -4,13 +4,13 @@ const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
-const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator')
 
 const {
   escapeHTML,
   addSticker,
   countUncodeChars,
-  substrUnicode,
+  substrUnicode
 } = require('../utils')
 
 const { match } = I18n
@@ -29,68 +29,68 @@ const placeholder = {
 }
 
 const animalEmojis = {
-  Dog: "🐶",
-  Cat: "🐱",
-  Fox: "🦊",
-  Bear: "🐻",
-  Koala: "🐨",
-  Tiger: "🐯",
-  Lion: "🦁",
-  Cow: "🐮",
-  Pig: "🐷",
-  Frog: "🐸",
-  Octopus: "🐙",
-  Turtle: "🐢",
-  Squid: "🦑",
-  Dolphin: "🐬",
-  Whale: "🐋",
-  Bunny: "🐰",
-  Unicorn: "🦄",
-  Dragon: "🐉",
-  Lizard: "🦎",
-  Penguin: "🐧",
-  Bat: "🦇",
-  Shark: "🦈",
-  Owl: "🦉",
-  Bee: "🐝",
-  Ladybug: "🐞",
-  Butterfly: "🦋",
-  Ant: "🐜",
-  Mosquito: "🦟",
-  Spider: "🕷",
-  Scorpion: "🦂",
-  Crab: "🦀",
-  Snail: "🐌",
-  Worm: "🪱",
-  Mouse: "🐭",
-  Rat: "🐀",
-  Hamster: "🐹",
-  Chipmunk: "🐿",
-  Beaver: "🦫",
-  Hedgehog: "🦔",
-  Gorilla: "🦍",
-  Monkey: "🐒",
-  Chimp: "🦧",
-  Horse: "🐴",
-  Zebra: "🦓",
-  Deer: "🦌",
-  Giraffe: "🦒",
-  Elephant: "🐘",
-  Rhino: "🦏",
-  Hippo: "🦛",
-  Crocodile: "🐊",
-  Snake: "🐍",
-  Dino: "🦖",
-  Bird: "🐦",
-  Dodo: "🦤",
-  Swan: "🦢",
-  Parrot: "🦜",
-  Peacock: "🦚",
-  Seal: "🦭",
-  Fish: "🐡",
-  Shell: "🐚",
-  Beetle: "🪲"
-};
+  Dog: '🐶',
+  Cat: '🐱',
+  Fox: '🦊',
+  Bear: '🐻',
+  Koala: '🐨',
+  Tiger: '🐯',
+  Lion: '🦁',
+  Cow: '🐮',
+  Pig: '🐷',
+  Frog: '🐸',
+  Octopus: '🐙',
+  Turtle: '🐢',
+  Squid: '🦑',
+  Dolphin: '🐬',
+  Whale: '🐋',
+  Bunny: '🐰',
+  Unicorn: '🦄',
+  Dragon: '🐉',
+  Lizard: '🦎',
+  Penguin: '🐧',
+  Bat: '🦇',
+  Shark: '🦈',
+  Owl: '🦉',
+  Bee: '🐝',
+  Ladybug: '🐞',
+  Butterfly: '🦋',
+  Ant: '🐜',
+  Mosquito: '🦟',
+  Spider: '🕷',
+  Scorpion: '🦂',
+  Crab: '🦀',
+  Snail: '🐌',
+  Worm: '🪱',
+  Mouse: '🐭',
+  Rat: '🐀',
+  Hamster: '🐹',
+  Chipmunk: '🐿',
+  Beaver: '🦫',
+  Hedgehog: '🦔',
+  Gorilla: '🦍',
+  Monkey: '🐒',
+  Chimp: '🦧',
+  Horse: '🐴',
+  Zebra: '🦓',
+  Deer: '🦌',
+  Giraffe: '🦒',
+  Elephant: '🐘',
+  Rhino: '🦏',
+  Hippo: '🦛',
+  Crocodile: '🐊',
+  Snake: '🐍',
+  Dino: '🦖',
+  Bird: '🐦',
+  Dodo: '🦤',
+  Swan: '🦢',
+  Parrot: '🦜',
+  Peacock: '🦚',
+  Seal: '🦭',
+  Fish: '🐡',
+  Shell: '🐚',
+  Beetle: '🪲'
+}
 
 const stegcloak = new StegCloak(false, false)
 
@@ -131,31 +131,31 @@ newPack.enter(async (ctx, next) => {
 
 newPack.on('message', async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
-  const { text } = ctx.message;
-  const { newPack } = ctx.session.scene;
+  const { text } = ctx.message
+  const { newPack } = ctx.session.scene
   if (text === ctx.i18n.t('scenes.new_pack.custom_emoji')) {
-    newPack.packType = 'custom_emoji';
+    newPack.packType = 'custom_emoji'
   } else if (text === ctx.i18n.t('scenes.new_pack.regular')) {
-    newPack.packType = 'regular';
+    newPack.packType = 'regular'
   } else {
-    return ctx.scene.reenter();
+    return ctx.scene.reenter()
   }
 
   if (
-    ctx.session.scene?.copyPack
-    && ctx.session.scene.copyPack.sticker_type !== newPack.packType
+    ctx.session.scene?.copyPack &&
+    ctx.session.scene.copyPack.sticker_type !== newPack.packType
   ) {
     return ctx.scene.enter('newPackCopyPay')
   }
 
-  return ctx.scene.enter('newPackTitle');
-});
+  return ctx.scene.enter('newPackTitle')
+})
 
 const newPackCopyPay = new Scene('newPackCopyPay')
 
 newPackCopyPay.enter(async (ctx) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.pay', {
-    balance: ctx.session.userInfo.balance,
+    balance: ctx.session.userInfo.balance
   }), {
     reply_markup: Markup.keyboard([
       [
@@ -227,7 +227,7 @@ newPackTitle.enter(async (ctx) => {
     const copyPack = ctx.session.scene.copyPack
     ctx.session.scene.newPack = {
       animated: copyPack?.stickers?.some(s => s.is_animated) || false,
-      video: copyPack?.stickers?.some(s => s.is_video) || false,
+      video: copyPack?.stickers?.some(s => s.is_video) || false
     }
   }
 
@@ -268,7 +268,7 @@ newPackTitle.enter(async (ctx) => {
 })
 newPackTitle.on('text', async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
-  let charTitleMax = ctx.config.charTitleMax
+  const charTitleMax = ctx.config.charTitleMax
 
   let title = ctx.message.text
 
@@ -287,7 +287,7 @@ const newPackName = new Scene('newPackName')
 newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
   reply_to_message_id: ctx.message.message_id,
   allow_sending_without_reply: true,
-  disable_web_page_preview: true,
+  disable_web_page_preview: true
 }))
 
 newPackName.on('text', async (ctx) => {
@@ -472,7 +472,7 @@ newPackConfirm.enter(async (ctx, next) => {
           user_id: ctx.from.id,
           sticker_format: 'video',
           sticker: {
-            source: placeholder[packType]['video']
+            source: placeholder[packType].video
           }
         })
 
@@ -530,7 +530,7 @@ newPackConfirm.enter(async (ctx, next) => {
         user_id: ctx.from.id,
         sticker_format: 'video',
         sticker: {
-          source: placeholder[packType]['video']
+          source: placeholder[packType].video
         }
       })
 
@@ -542,7 +542,7 @@ newPackConfirm.enter(async (ctx, next) => {
           {
             sticker: uploadedSticker.file_id,
             format: 'video',
-            emoji_list: ['🌟'],
+            emoji_list: ['🌟']
           }
         ],
         sticker_type: packType,
@@ -646,7 +646,7 @@ newPackConfirm.enter(async (ctx, next) => {
           ],
           [
             Markup.callbackButton(ctx.i18n.t('callback.pack.btn.coedit'), `coedit:${userStickerSet.id}`)
-          ],
+          ]
         ]),
         parse_mode: 'HTML'
       })
@@ -766,46 +766,46 @@ newPackConfirm.enter(async (ctx, next) => {
       // Show result with appropriate message based on outcome
       if (failedCount > 0 && pendingCount > 0) {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial_pending', {
-            originalTitle: escapeHTML(originalPack.title),
-            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title: escapeHTML(title),
-            link: `${ctx.config.stickerLinkPrefix}${name}`,
-            success: successCount,
-            failed: failedCount,
-            pending: pendingCount
-          }),
-          { parse_mode: 'HTML' }
+          originalTitle: escapeHTML(originalPack.title),
+          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+          title: escapeHTML(title),
+          link: `${ctx.config.stickerLinkPrefix}${name}`,
+          success: successCount,
+          failed: failedCount,
+          pending: pendingCount
+        }),
+        { parse_mode: 'HTML' }
         )
       } else if (failedCount > 0) {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial', {
-            originalTitle: escapeHTML(originalPack.title),
-            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title: escapeHTML(title),
-            link: `${ctx.config.stickerLinkPrefix}${name}`,
-            success: successCount,
-            failed: failedCount
-          }),
-          { parse_mode: 'HTML' }
+          originalTitle: escapeHTML(originalPack.title),
+          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+          title: escapeHTML(title),
+          link: `${ctx.config.stickerLinkPrefix}${name}`,
+          success: successCount,
+          failed: failedCount
+        }),
+        { parse_mode: 'HTML' }
         )
       } else if (pendingCount > 0) {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_pending', {
-            originalTitle: escapeHTML(originalPack.title),
-            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title: escapeHTML(title),
-            link: `${ctx.config.stickerLinkPrefix}${name}`,
-            success: successCount,
-            pending: pendingCount
-          }),
-          { parse_mode: 'HTML' }
+          originalTitle: escapeHTML(originalPack.title),
+          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+          title: escapeHTML(title),
+          link: `${ctx.config.stickerLinkPrefix}${name}`,
+          success: successCount,
+          pending: pendingCount
+        }),
+        { parse_mode: 'HTML' }
         )
       } else {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done', {
-            originalTitle: escapeHTML(originalPack.title),
-            originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-            title: escapeHTML(title),
-            link: `${ctx.config.stickerLinkPrefix}${name}`
-          }),
-          { parse_mode: 'HTML' }
+          originalTitle: escapeHTML(originalPack.title),
+          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
+          title: escapeHTML(title),
+          link: `${ctx.config.stickerLinkPrefix}${name}`
+        }),
+        { parse_mode: 'HTML' }
         )
       }
     }

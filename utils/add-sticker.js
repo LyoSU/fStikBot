@@ -28,7 +28,7 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
-const redisConfig =  {
+const redisConfig = {
   port: process.env.REDIS_PORT,
   host: process.env.REDIS_HOST,
   password: process.env.REDIS_PASSWORD
@@ -184,7 +184,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
     }
   }
 
-  let { sticker } = stickerExtra
+  const { sticker } = stickerExtra
 
   if (sticker?.source) {
     const uploadedSticker = await telegram.callApi('uploadStickerFile', {
@@ -249,7 +249,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
       sticker: {
         format: stickerExtra.sticker_format,
         sticker: stickerExtra.sticker,
-        emoji_list: stickerExtra.emojis,
+        emoji_list: stickerExtra.emojis
       }
     }).catch((error) => {
       return {
@@ -385,7 +385,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     }
   }
 
-  let emojis = []
+  const emojis = []
 
   if (inputFile.emoji) {
     if (Array.isArray(inputFile.emoji)) {
@@ -519,7 +519,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     else if (ctx.i18n.locale() === 'ru') priority = 15
 
     const job = await removebgQueue.add({
-      fileUrl,
+      fileUrl
     }, {
       priority,
       attempts: 1,
@@ -622,7 +622,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
           convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
           stickerExtra,
           stickerSet,
-          stickerFile,
+          stickerFile
         },
         fileUrl,
         fileData: fileData ? Buffer.from(fileData).toString('base64') : null,

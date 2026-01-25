@@ -26,7 +26,7 @@ const i18n = new I18n({
 
 // Cache config at startup instead of reading on every call
 let cachedConfig = null
-function getConfig() {
+function getConfig () {
   if (!cachedConfig) {
     cachedConfig = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
   }
@@ -222,7 +222,7 @@ const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
 let isProcessingMessaging = false
 let isProcessingEdit = false
 
-async function processMessagingQueue() {
+async function processMessagingQueue () {
   if (isProcessingMessaging) return
   isProcessingMessaging = true
 
@@ -242,7 +242,7 @@ async function processMessagingQueue() {
   }
 }
 
-async function processEditQueue() {
+async function processEditQueue () {
   if (isProcessingEdit) return
   isProcessingEdit = true
 

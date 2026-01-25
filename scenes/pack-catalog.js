@@ -9,7 +9,7 @@ const { db } = require('../database')
 const { escapeHTML, telegramApi } = require('../utils')
 
 function stickerSetIdToOwnerId (u64) {
-  let u32 = u64 >> 32n
+  const u32 = u64 >> 32n
 
   if ((u64 >> 24n & 0xffn) === 0xffn) {
     return parseInt((u64 >> 32n) + 0x100000000n)
@@ -17,7 +17,7 @@ function stickerSetIdToOwnerId (u64) {
   return parseInt(u32)
 }
 
-const telegram = new Telegram(process.env.BOT_TOKEN);
+const telegram = new Telegram(process.env.BOT_TOKEN)
 
 const { match } = I18n
 const i18n = new I18n({
@@ -96,7 +96,7 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   } else {
     const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
 
-    if(!messageTextMatch || !messageTextMatch[2]) {
+    if (!messageTextMatch || !messageTextMatch[2]) {
       return ctx.scene.reenter()
     }
 
@@ -136,10 +136,10 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   const packOwner = stickerSetIdToOwnerId(getStickerSetInfo.set.id.value)
 
   if (
-    ctx.session.userInfo.moderator !== true
-    && packOwner !== ctx.from.id
-    ) {
-      ctx.session.scene.publish.packName = packName
+    ctx.session.userInfo.moderator !== true &&
+    packOwner !== ctx.from.id
+  ) {
+    ctx.session.scene.publish.packName = packName
     return ctx.scene.enter('catalogPublishOwnerProof')
   }
 
@@ -177,7 +177,7 @@ catalogPublishOwnerProof.on('text', async (ctx) => {
 
     if (
       !ctx.message.entities[0].url.match(ctx.session.scene.publish.packName)
-      ) {
+    ) {
       return ctx.scene.reenter()
     }
 
@@ -450,7 +450,7 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
   publish.stickerSet.about = Object.assign(publish.stickerSet.about, {
     description: publish.description,
     tags: publish.tags,
-    languages: publish.languages,
+    languages: publish.languages
   })
 
   if (!publish.stickerSet.public) {

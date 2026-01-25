@@ -22,8 +22,8 @@ const SCORE_THRESHOLDS = {
   'sexual/minors': 0.2,
   'violence/graphic': 0.5,
   'self-harm': 0.5,
-  'hate': 0.5,
-  'harassment': 0.5,
+  hate: 0.5,
+  harassment: 0.5,
   'illicit/violent': 0.5
 }
 
@@ -142,7 +142,7 @@ async function moderatePacks (skip = 0) {
   const packs = await db.StickerSet.find({
     thirdParty: false,
     inline: { $ne: true },
-    "aiModeration.checked": { $ne: true }
+    'aiModeration.checked': { $ne: true }
   }).sort({ createdAt: -1 }).skip(skip).limit(100).select('name').lean()
 
   const results = (await Promise.all(packs.map((pack) => moderatePack(pack.name)))).filter((result) => result !== null)

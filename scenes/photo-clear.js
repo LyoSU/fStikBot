@@ -52,7 +52,7 @@ photoClearSelect.enter(async (ctx) => {
           {
             text: ctx.i18n.t('scenes.photoClear.web_app'),
             web_app: {
-              url: 'https://bot.lyo.su/remove-background-web/',
+              url: 'https://bot.lyo.su/remove-background-web/'
             }
           }
         ]

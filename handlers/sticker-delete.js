@@ -13,7 +13,7 @@ module.exports = async (ctx) => {
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet', '_id name owner inline passcode')
 
-  if(!sticker) {
+  if (!sticker) {
     let setName
 
     const { reply_to_message } = message
@@ -55,7 +55,6 @@ module.exports = async (ctx) => {
     if (!stickerSet) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
-
   } else {
     if (!sticker.stickerSet) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
@@ -83,9 +82,9 @@ module.exports = async (ctx) => {
     }
 
     if (
-      sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString() // if sticker owner is the same as the user
-      || (ctx.session.userInfo?.stickerSet && sticker.stickerSet.id === ctx.session.userInfo?.stickerSet?.id) // if selected sticker pack by user is the same as the sticker pack
-      || canDelete // if user have rights to delete sticker
+      sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString() || // if sticker owner is the same as the user
+      (ctx.session.userInfo?.stickerSet && sticker.stickerSet.id === ctx.session.userInfo?.stickerSet?.id) || // if selected sticker pack by user is the same as the sticker pack
+      canDelete // if user have rights to delete sticker
     ) {
       deleteSticker = sticker.getFileId()
     } else {

@@ -9,7 +9,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
  * @param {number} options.maxWait - Maximum wait time in seconds (default: 60)
  * @returns {Promise} - Result of the function
  */
-async function withRetry(fn, options = {}) {
+async function withRetry (fn, options = {}) {
   const { maxRetries = 3, maxWait = 60 } = options
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -33,7 +33,7 @@ async function withRetry(fn, options = {}) {
 /**
  * Check if error is a 429 rate limit error
  */
-function isRateLimitError(error) {
+function isRateLimitError (error) {
   return error?.code === 429 ||
          error?.response?.error_code === 429 ||
          error?.description?.includes('Too Many Requests')
@@ -42,7 +42,7 @@ function isRateLimitError(error) {
 /**
  * Get retry_after value from error
  */
-function getRetryAfter(error) {
+function getRetryAfter (error) {
   return error?.parameters?.retry_after ||
          error?.response?.parameters?.retry_after ||
          null
@@ -51,7 +51,7 @@ function getRetryAfter(error) {
 /**
  * Middleware for Telegraf that adds retry capability to context
  */
-function retryMiddleware() {
+function retryMiddleware () {
   return async (ctx, next) => {
     // Add retry helper to context
     ctx.withRetry = (fn, options) => withRetry(fn, options)

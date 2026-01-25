@@ -33,7 +33,7 @@ composer.action(/coedit:reset:(.*)/, async (ctx) => {
   })
 
   return ctx.replyWithHTML(ctx.i18n.t('coedit.reset', {
-    colink:`t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
+    colink: `t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
     title: escapeHTML(stickerSet.title),
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
   }))
@@ -67,7 +67,7 @@ composer.action(/coedit:(.*)/, async (ctx) => {
   }).join(', ') || ctx.i18n.t('coedit.no_editors')
 
   return ctx.replyWithHTML(ctx.i18n.t('coedit.info', {
-    colink:`t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
+    colink: `t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
     title: escapeHTML(stickerSet.title),
     link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
     editors
@@ -91,7 +91,6 @@ composer.action(/coedit:(.*)/, async (ctx) => {
       ]
     }
   })
-
 })
 
 module.exports = composer

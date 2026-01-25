@@ -83,17 +83,17 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
 
   const walletPayOrder = await walletPay.createOrder({
     amount: {
-      currencyCode: "USD",
+      currencyCode: 'USD',
       amount: price
     },
     description: `Payment for ${amount} credits`,
     returnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
     failReturnUrl: `https://t.me/${ctx.botInfo.username}?start=wp=${payment._id.toString()}`,
     customData: JSON.stringify({
-      paymentId: payment._id.toString(),
+      paymentId: payment._id.toString()
     }),
     externalId: payment._id.toString(),
-    customerTelegramUserId: ctx.from.id,
+    customerTelegramUserId: ctx.from.id
   }).catch(err => console.error('WalletPay order creation failed:', err.message))
 
   if (walletPayOrder?.status === 'SUCCESS') {
@@ -148,7 +148,6 @@ composer.action(/donate:walletpay:(.*)/, async (ctx) => {
       }
     }
   }
-
 
   return ctx.replyWithHTML(ctx.i18n.t('donate.paymenu', {
     amount,

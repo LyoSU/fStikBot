@@ -70,7 +70,7 @@ module.exports = async (ctx) => {
   }
 
   let page = 0
-  let limit = 10
+  const limit = 10
 
   if (ctx.callbackQuery) {
     page = parseInt(ctx.match[1]) || 0
@@ -124,7 +124,7 @@ module.exports = async (ctx) => {
         } else {
           let searchGifButton = []
 
-          if(stickerSet.video) {
+          if (stickerSet.video) {
             let inlineData = ''
             if (ctx.session.userInfo.inlineType === 'packs') {
               inlineData = stegcloak.hide('{gif}', '', ' : ')
@@ -165,7 +165,7 @@ module.exports = async (ctx) => {
 
           const boostText = ctx.i18n.t('callback.pack.boost.info', {
             botUsername: ctx.options.username,
-            boostStatus: stickerSet.boost ? ctx.i18n.t('callback.pack.boost.status.on') : ctx.i18n.t('callback.pack.boost.status.off'),
+            boostStatus: stickerSet.boost ? ctx.i18n.t('callback.pack.boost.status.on') : ctx.i18n.t('callback.pack.boost.status.off')
           })
 
           await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
@@ -284,7 +284,7 @@ module.exports = async (ctx) => {
 
       if (
         userInfo.stickerSet?._id?.toString() === pack._id.toString()
-      ) title += ` ✅`
+      ) title += ' ✅'
 
       keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack._id}`)])
     })

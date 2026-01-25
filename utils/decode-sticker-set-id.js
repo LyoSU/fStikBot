@@ -16,7 +16,7 @@ function decodeStickerSetId (u64) {
   const lower32 = u64 & 0xffffffffn
   const byte24 = (u64 >> 24n) & 0xffn
 
-  let ownerId, setId, dcId = null, isExtended = false
+  let ownerId; let setId; let dcId = null; let isExtended = false
 
   if (byte24 === 0xffn) {
     // Extended format for 64-bit user IDs
