@@ -706,6 +706,18 @@ scenes:
       التقدم: ${current}/${total}
     done: |
       تم بنجاح نسخ الحزمة من <a href="${originalLink}">${originalTitle}</a> إلى <a href="${link}">${title}</a>
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>تحويل الحزمة</b>
 
@@ -716,6 +728,10 @@ scenes:
       شراء النقاط: /donate
     pay_btn: '✅ تأكيد'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>خطأ!</b>
         هذه الميزة متاحة فقط للأعضاء المتبرعين.
