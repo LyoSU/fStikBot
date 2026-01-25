@@ -701,6 +701,18 @@ scenes:
       Progression : ${current}/${total}
     done: |
       Copie du pack de <a href="${originalLink}">${originalTitle}</a> vers <a href="${link}">${title}</a> terminée avec succès.
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>Conversion de pack</b>
 
@@ -711,6 +723,10 @@ scenes:
       Acheter des crédits : /donate
     pay_btn: '✅ Confirmer'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>Erreur !</b>
         Cette fonctionnalité est uniquement disponible pour les membres donateurs.
