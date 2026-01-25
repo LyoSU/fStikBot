@@ -705,6 +705,18 @@ scenes:
       Durum: ${current}/${total}
     done: |
       Bu çıkartma paketini <a href="${originalLink}">${originalTitle}</a> bu çıkartma paketine <a href="${link}">${title}</a> kopyalama başarılı sonuçlandı.
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>Paket dönüştürme</b>
 
@@ -715,6 +727,10 @@ scenes:
       Kredi satın al: /donate
     pay_btn: '✅ Onayla'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>Hata!</b>
         Ne yazık ki, bu özellik yalnızca botu destekleyen kişiler tarafından kullanılabilir.
