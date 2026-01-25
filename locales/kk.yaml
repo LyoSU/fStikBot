@@ -707,6 +707,18 @@ scenes:
       Толықтару: ${current}/${total}
     done: |
       <a href="${originalLink}">${originalTitle}</a> бастап <a href="${link}">${title}</a> дейін буманы көшіру сәтті аяқталды.
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>Пакетті өзгерту</b>
 
@@ -717,6 +729,10 @@ scenes:
       Кредит сатып алу: /donate
     pay_btn: '✅ Растау'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>Қате!</b>
         Бұл мүмкіндік тек мүшелерді қайырымдылыққа беру үшін қолжетімді.
