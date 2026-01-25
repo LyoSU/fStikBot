@@ -707,6 +707,18 @@ scenes:
       Ход выканання: ${current}/${total}
     done: |
       Капіяванне пака з <a href="${originalLink}">${originalTitle}</a> у <a href="${link}">${title}</a> паспяхова завершана.
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>Канвертацыя пака</b>
 
@@ -717,6 +729,10 @@ scenes:
       Купіць крэдыты: /donate
     pay_btn: '✅ Пацвердзіць'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>Памылка!</b>
         Гэтая функцыя даступная толькі для данатараў.
