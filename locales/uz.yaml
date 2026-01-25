@@ -687,6 +687,18 @@ scenes:
       Бажарилмоқда: ${current}/${total}
     done: |
       <a href="${originalLink}">${originalTitle}</a> dan <a href="${link}">${title}</a> gacha toʻplamdan nusxalash muvaffaqiyatli yakunlandi.
+    done_partial: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed to copy.
+    done_pending: |
+      ✅ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${pending} videos still processing.
+    done_partial_pending: |
+      ⚠️ Copied to <a href="${link}">${title}</a>
+
+      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
     pay: |
       <b>O'ram konvertatsiyasi</b>
 
@@ -697,6 +709,10 @@ scenes:
       Kredit sotib olish: /donate
     pay_btn: '✅ Confirm'
     error:
+      all_failed: |
+        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+
+        Pack was not created.
       premium: |
         <b>Tizimda Xatolik! </b>
         Afsuski, bu funksiya faqat botni qo'llab-quvatlagan foydalanuvchilargagina mavjud.
