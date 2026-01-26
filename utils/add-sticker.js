@@ -463,11 +463,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       })
     }
 
-    stickerExtra.sticker = {
-      source: animatedData,
-      sticker_format: 'animated'
-    }
-
+    stickerExtra.sticker = { source: animatedData }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
   }
 
@@ -491,24 +487,57 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     }
   }
 
+  // Verify sticker_format matches actual file format (fallback check via URL extension)
+  // This catches cases where is_video/is_animated might be incorrectly set
+  const fileUrlStr = fileUrl?.href || fileUrl?.toString() || ''
+  // Extract pathname to handle URLs with query parameters
+  let urlPathname = fileUrlStr
+  try {
+    if (fileUrlStr.startsWith('http')) {
+      urlPathname = new URL(fileUrlStr).pathname
+    }
+  } catch (e) {
+    // Keep original string if URL parsing fails
+  }
+
+  if (urlPathname.endsWith('.webm') && stickerExtra.sticker_format !== 'video') {
+    stickerExtra.sticker_format = 'video'
+  } else if (urlPathname.endsWith('.tgs') && stickerExtra.sticker_format !== 'animated') {
+    stickerExtra.sticker_format = 'animated'
+  } else if ((urlPathname.endsWith('.webp') || urlPathname.endsWith('.png')) && stickerExtra.sticker_format !== 'static') {
+    stickerExtra.sticker_format = 'static'
+  }
+
+  // Handle animated stickers that weren't caught by is_animated check (fallback from URL detection)
+  if (stickerExtra.sticker_format === 'animated' && !stickerFile.is_animated) {
+    let animatedData
+    try {
+      animatedData = await downloadFileByUrl(fileUrl)
+    } catch (err) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
+      })
+    }
+    stickerExtra.sticker = { source: animatedData }
+    return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
+  }
+
   // For stickers already in a Telegram set with matching type - use directly
   if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
-    if (isVideo || isVideoNote) {
-      // Video stickers need to be downloaded and re-uploaded
-      let videoData
-      try {
-        videoData = await downloadFileByUrl(fileUrl)
-      } catch (err) {
-        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-          reply_to_message_id: ctx?.message?.message_id,
-          allow_sending_without_reply: true
-        })
-      }
-      stickerExtra.sticker = { source: videoData }
-    } else {
-      // Static stickers can use file_id directly
-      stickerExtra.sticker = stickerFile.file_id
+    // Always download and re-upload to ensure format consistency
+    // Using file_id directly can cause "wrong file type" errors when
+    // sticker_format doesn't match the actual file format
+    let stickerData
+    try {
+      stickerData = await downloadFileByUrl(fileUrl)
+    } catch (err) {
+      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
+        reply_to_message_id: ctx?.message?.message_id,
+        allow_sending_without_reply: true
+      })
     }
+    stickerExtra.sticker = { source: stickerData }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
   }
 
@@ -536,7 +565,9 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   }
 
   // Determine if video processing is needed
+  // Also check sticker_format === 'video' in case URL extension corrected the format
   const needsVideoProcessing = isVideo || isVideoNote ||
+    stickerExtra.sticker_format === 'video' ||
     (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
 
   if (needsVideoProcessing) {
