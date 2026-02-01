@@ -34,11 +34,11 @@
     "openai": "^4.65.0",
     "sharp": "^0.32.6",
     "stegcloak": "^0.0.1",
+    "sticker-pack-names": "^1.0.0",
     "telegraf": "^3.40.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-ratelimit": "^2.0.0",
     "telegram": "^2.15.15",
-    "unique-names-generator": "^4.7.1",
     "wallet-pay-sdk": "^1.0.5"
   },
   "devDependencies": {

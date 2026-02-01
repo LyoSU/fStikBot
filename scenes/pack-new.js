@@ -4,7 +4,7 @@ const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
-const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator')
+const { generateStrings } = require('sticker-pack-names')
 
 const {
   escapeHTML,
@@ -26,70 +26,6 @@ const placeholder = {
     animated: 'sticker_placeholder.tgs',
     static: 'emoji_placeholder.webp'
   }
-}
-
-const animalEmojis = {
-  Dog: '🐶',
-  Cat: '🐱',
-  Fox: '🦊',
-  Bear: '🐻',
-  Koala: '🐨',
-  Tiger: '🐯',
-  Lion: '🦁',
-  Cow: '🐮',
-  Pig: '🐷',
-  Frog: '🐸',
-  Octopus: '🐙',
-  Turtle: '🐢',
-  Squid: '🦑',
-  Dolphin: '🐬',
-  Whale: '🐋',
-  Bunny: '🐰',
-  Unicorn: '🦄',
-  Dragon: '🐉',
-  Lizard: '🦎',
-  Penguin: '🐧',
-  Bat: '🦇',
-  Shark: '🦈',
-  Owl: '🦉',
-  Bee: '🐝',
-  Ladybug: '🐞',
-  Butterfly: '🦋',
-  Ant: '🐜',
-  Mosquito: '🦟',
-  Spider: '🕷',
-  Scorpion: '🦂',
-  Crab: '🦀',
-  Snail: '🐌',
-  Worm: '🪱',
-  Mouse: '🐭',
-  Rat: '🐀',
-  Hamster: '🐹',
-  Chipmunk: '🐿',
-  Beaver: '🦫',
-  Hedgehog: '🦔',
-  Gorilla: '🦍',
-  Monkey: '🐒',
-  Chimp: '🦧',
-  Horse: '🐴',
-  Zebra: '🦓',
-  Deer: '🦌',
-  Giraffe: '🦒',
-  Elephant: '🐘',
-  Rhino: '🦏',
-  Hippo: '🦛',
-  Crocodile: '🐊',
-  Snake: '🐍',
-  Dino: '🦖',
-  Bird: '🐦',
-  Dodo: '🦤',
-  Swan: '🦢',
-  Parrot: '🦜',
-  Peacock: '🦚',
-  Seal: '🦭',
-  Fish: '🐡',
-  Shell: '🐚',
-  Beetle: '🪲'
 }
 
 const stegcloak = new StegCloak(false, false)
@@ -231,31 +167,7 @@ newPackTitle.enter(async (ctx) => {
     }
   }
 
-  const names = []
-
-  const namesWithEmoji = uniqueNamesGenerator({
-    dictionaries: [adjectives, Object.keys(animalEmojis)],
-    separator: ' ',
-    length: 2,
-    style: 'capital'
-  })
-
-  // add emoji based on animal name in beginning of the line
-  names.push(namesWithEmoji.replace(/(\w+)\s(\w+)/, (match, p1, p2) => `${animalEmojis[p2]} ${p1} ${p2}`))
-
-  names.push(uniqueNamesGenerator({
-    dictionaries: [adjectives, animals],
-    separator: ' ',
-    length: 2,
-    style: 'capital'
-  }))
-
-  names.push(uniqueNamesGenerator({
-    dictionaries: [adjectives, colors, animals],
-    separator: ' ',
-    length: 3,
-    style: 'capital'
-  }))
+  const names = generateStrings({ count: 3 })
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
     reply_markup: Markup.keyboard([
