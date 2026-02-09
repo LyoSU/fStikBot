@@ -39,33 +39,34 @@ module.exports = (addStickerResult, lang) => {
       if (addStickerResult.error.sticker) {
         replyMarkup = Markup.inlineKeyboard([
           { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.delete'), `delete_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'danger' },
-          Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.copy'), `restore_sticker:${addStickerResult.error.sticker.fileUniqueId}`)
+          { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.copy'), `restore_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'primary' }
         ])
       }
     } else if (addStickerResult.error.telegram) {
-      if (!addStickerResult.error.telegram.description) {
-        throw new Error(addStickerResult.error)
-      } else if (addStickerResult.error.telegram.description.includes('TOO_MUCH')) {
+      const errDescription = addStickerResult.error.telegram.description || addStickerResult.error.telegram.message || ''
+      if (!errDescription) {
+        throw new Error(JSON.stringify(addStickerResult.error))
+      } else if (errDescription.includes('TOO_MUCH')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickers_too_much')
-      } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
+      } else if (errDescription.includes('STICKERSET_INVALID')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
-      } else if (addStickerResult.error.telegram.description.includes('file is too big') || addStickerResult.error.telegram.description.includes('STICKER_VIDEO_BIG')) {
+      } else if (errDescription.includes('file is too big') || errDescription.includes('STICKER_VIDEO_BIG')) {
         messageText = i18n.t(lang, 'sticker.add.error.too_big')
-      } else if (addStickerResult.error.telegram.description.includes('STICKER_PNG_NOPNG')) {
+      } else if (errDescription.includes('STICKER_PNG_NOPNG')) {
         messageText = i18n.t(lang, 'sticker.add.error.invalid_png')
-      } else if (addStickerResult.error.telegram.description.includes('STICKER_PNG_DIMENSIONS')) {
+      } else if (errDescription.includes('STICKER_PNG_DIMENSIONS')) {
         messageText = i18n.t(lang, 'sticker.add.error.invalid_dimensions')
-      } else if (addStickerResult.error.telegram.description.includes('STICKER_TGS_NOTGS')) {
+      } else if (errDescription.includes('STICKER_TGS_NOTGS')) {
         messageText = i18n.t(lang, 'sticker.add.error.invalid_animated')
-      } else if (addStickerResult.error.telegram.description.includes('STICKER_VIDEO_NOWEBM')) {
+      } else if (errDescription.includes('STICKER_VIDEO_NOWEBM')) {
         messageText = i18n.t(lang, 'sticker.add.error.invalid_video')
-      } else if (addStickerResult.error.telegram.description.includes('sticker not found')) {
+      } else if (errDescription.includes('sticker not found')) {
         messageText = i18n.t(lang, 'sticker.add.error.sticker_not_found')
-      } else if (addStickerResult.error.telegram.description.includes('STICKERSET_INVALID')) {
+      } else if (errDescription.includes('STICKERSET_INVALID')) {
         messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
       } else {
         messageText = i18n.t(lang, 'error.telegram', {
-          error: addStickerResult.error.telegram.description
+          error: errDescription
         })
       }
     } else if (addStickerResult.error === 'ITS_ANIMATED') {

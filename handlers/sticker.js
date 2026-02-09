@@ -303,7 +303,7 @@ module.exports = async (ctx, next) => {
               link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
             }), {
               reply_markup: Markup.inlineKeyboard([
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)
+                { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`), style: 'primary' }
               ])
             })
           }, 1000 * 2)

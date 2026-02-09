@@ -121,7 +121,7 @@ module.exports = async (ctx) => {
 
     ctx.editMessageText(ctx.i18n.t('callback.sticker.delete'), {
       reply_markup: Markup.inlineKeyboard([
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker?.fileUniqueId}`, !sticker)
+        { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker?.fileUniqueId}`, !sticker), style: 'success' }
       ])
     }).catch(() => {})
 

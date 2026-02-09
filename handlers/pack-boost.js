@@ -62,8 +62,8 @@ composer.action(/boost:(.*)/, async (ctx) => {
 
   const replyMarkup = Markup.inlineKeyboard([
     [
-      Markup.callbackButton(ctx.i18n.t('scenes.boost.btn.yes'), `boost:yes:${stickerSet._id}`),
-      Markup.callbackButton(ctx.i18n.t('scenes.boost.btn.no'), `boost:no:${stickerSet._id}`)
+      { ...Markup.callbackButton(ctx.i18n.t('scenes.boost.btn.yes'), `boost:yes:${stickerSet._id}`), style: 'success' },
+      { ...Markup.callbackButton(ctx.i18n.t('scenes.boost.btn.no'), `boost:no:${stickerSet._id}`), style: 'danger' }
     ]
   ])
 
