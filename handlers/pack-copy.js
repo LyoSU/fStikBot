@@ -22,7 +22,7 @@ module.exports = async (ctx) => {
       allow_sending_without_reply: true,
       reply_markup: Markup.keyboard([
         [
-          ctx.i18n.t('scenes.btn.cancel')
+          { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
         ]
       ]).resize()
     })

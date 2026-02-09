@@ -50,7 +50,7 @@ module.exports = async (ctx) => {
 
   if (stickerSet.hide === true) {
     inlineKeyboard.push([
-      Markup.callbackButton(ctx.i18n.t('callback.pack.btn.delete'), `delete_pack:${ctx.match[2]}`)
+      { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.delete'), `delete_pack:${ctx.match[2]}`), style: 'danger' }
     ])
   }
 

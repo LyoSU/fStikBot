@@ -34,7 +34,7 @@ packDelete.enter(async (ctx) => {
   }), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -65,7 +65,7 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.error'), {
       reply_markup: Markup.keyboard([
         [
-          ctx.i18n.t('scenes.btn.cancel')
+          { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
         ]
       ]).resize()
     })

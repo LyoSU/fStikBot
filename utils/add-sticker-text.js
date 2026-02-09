@@ -38,7 +38,7 @@ module.exports = (addStickerResult, lang) => {
 
       if (addStickerResult.error.sticker) {
         replyMarkup = Markup.inlineKeyboard([
-          Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.delete'), `delete_sticker:${addStickerResult.error.sticker.fileUniqueId}`),
+          { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.delete'), `delete_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'danger' },
           Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.copy'), `restore_sticker:${addStickerResult.error.sticker.fileUniqueId}`)
         ])
       }

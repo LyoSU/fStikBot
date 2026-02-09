@@ -268,7 +268,7 @@ module.exports = async (ctx, next) => {
         reply_to_message_id: message.message_id,
         allow_sending_without_reply: true,
         reply_markup: Markup.inlineKeyboard([
-          Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.fileUniqueId}`),
+          { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.fileUniqueId}`), style: 'danger' },
           Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${sticker.fileUniqueId}`)
         ])
       })

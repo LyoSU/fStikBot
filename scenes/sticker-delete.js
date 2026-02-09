@@ -7,7 +7,7 @@ deleteSticker.enter(async (ctx) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.delete.enter'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -41,7 +41,7 @@ deleteSticker.on(['sticker', 'message'], async (ctx, next) => {
     allow_sending_without_reply: true,
     reply_markup: Markup.inlineKeyboard([
       [
-        Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.file_unique_id}`)
+        { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.file_unique_id}`), style: 'danger' }
       ]
     ])
   })

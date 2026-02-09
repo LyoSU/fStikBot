@@ -67,7 +67,7 @@ catalogPublishNew.enter((ctx) => {
   ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.publish_new'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -162,7 +162,7 @@ catalogPublishOwnerProof.enter((ctx) => {
   ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.owner_proof'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -223,10 +223,10 @@ catalogPublish.enter(async (ctx) => {
   }), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.catalog.publish.continue_button')
+        { text: ctx.i18n.t('scenes.catalog.publish.continue_button'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -246,7 +246,7 @@ catalogEnterDescription.enter(async (ctx) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.enter_description'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -434,10 +434,10 @@ catalogPublishConfirm.enter(async (ctx) => {
   await ctx.replyWithHTML(resultText, {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.catalog.publish.button_confirm')
+        { text: ctx.i18n.t('scenes.catalog.publish.button_confirm'), style: 'success' }
       ],
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })

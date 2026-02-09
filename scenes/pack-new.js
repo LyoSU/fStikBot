@@ -53,13 +53,13 @@ newPack.enter(async (ctx, next) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.new_pack.regular')
+        { text: ctx.i18n.t('scenes.new_pack.regular'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.new_pack.custom_emoji')
+        { text: ctx.i18n.t('scenes.new_pack.custom_emoji'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -95,10 +95,10 @@ newPackCopyPay.enter(async (ctx) => {
   }), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.copy.pay_btn')
+        { text: ctx.i18n.t('scenes.copy.pay_btn'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -123,16 +123,16 @@ choosePackFormat.enter(async (ctx, next) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_format'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.new_pack.static')
+        { text: ctx.i18n.t('scenes.new_pack.static'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.new_pack.video')
+        { text: ctx.i18n.t('scenes.new_pack.video'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.new_pack.animated')
+        { text: ctx.i18n.t('scenes.new_pack.animated'), style: 'primary' }
       ],
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
@@ -173,7 +173,7 @@ newPackTitle.enter(async (ctx) => {
     reply_markup: Markup.keyboard([
       ...names.map((name) => [name]),
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })

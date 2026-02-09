@@ -9,7 +9,7 @@ originalSticker.enter(async (ctx) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.original.enter'), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })

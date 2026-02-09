@@ -26,7 +26,7 @@ packRename.enter(async (ctx) => {
   }), {
     reply_markup: Markup.keyboard([
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })

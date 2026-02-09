@@ -30,7 +30,7 @@ packFrame.enter(async (ctx) => {
         ctx.i18n.t('scenes.frame.types.circle')
       ],
       [
-        ctx.i18n.t('scenes.btn.cancel')
+        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
   })
