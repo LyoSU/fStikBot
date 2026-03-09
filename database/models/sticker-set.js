@@ -16,7 +16,6 @@ const stickerSetsSchema = mongoose.Schema({
   },
   name: {
     type: String,
-    index: true,
     unique: true,
     required: true
   },
@@ -38,8 +37,7 @@ const stickerSetsSchema = mongoose.Schema({
   },
   packType: {
     type: String,
-    default: 'regular',
-    index: true
+    default: 'regular'
   },
   boost: {
     type: Boolean,
@@ -53,8 +51,7 @@ const stickerSetsSchema = mongoose.Schema({
   },
   thirdParty: {
     type: Boolean,
-    default: false,
-    index: true
+    default: false
   },
   hide: {
     type: Boolean,
@@ -119,8 +116,7 @@ const stickerSetsSchema = mongoose.Schema({
   aiModeration: {
     checked: {
       type: Boolean,
-      default: false,
-      index: true
+      default: false
     },
     isFlagged: {
       type: Boolean,
@@ -135,17 +131,6 @@ const stickerSetsSchema = mongoose.Schema({
   }
 }, {
   timestamps: true
-})
-
-stickerSetsSchema.index({
-  public: 1,
-  'about.description': 'text',
-  title: 'text'
-}, {
-  weights: {
-    'about.description': 5,
-    title: 1
-  }
 })
 
 // Compound indexes for /packs query performance

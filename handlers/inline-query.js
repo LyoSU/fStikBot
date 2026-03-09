@@ -309,7 +309,10 @@ composer.on('inline_query', async (ctx) => {
       const searchSet = await ctx.db.StickerSet.findOne({
         owner: ctx.session.userInfo.id,
         inline: true,
-        $text: { $search: query }
+        $or: [
+          { title: { $regex: query, $options: 'i' } },
+          { name: { $regex: query, $options: 'i' } }
+        ]
       }).maxTimeMS(2000)
 
       if (searchSet) {
@@ -324,7 +327,10 @@ composer.on('inline_query', async (ctx) => {
         searchStickers = await ctx.db.Sticker.find({
           deleted: false,
           stickerSet: { $in: userSetIds.map(s => s._id) },
-          $text: { $search: query }
+          $or: [
+            { caption: { $regex: query, $options: 'i' } },
+            { emojis: { $regex: query, $options: 'i' } }
+          ]
         })
           .select('_id fileId stickerType caption fileUniqueId emojis info')
           .limit(limit)

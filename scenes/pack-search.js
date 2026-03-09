@@ -15,10 +15,21 @@ searchStickerSet.enter(async (ctx) => {
 })
 
 searchStickerSet.on('text', async (ctx) => {
-  const stickerSets = await ctx.db.StickerSet.find({
-    public: true,
-    $text: { $search: ctx.message.text }
-  }).select('name title').limit(100).lean()
+  const stickerSets = await ctx.db.StickerSet.aggregate([
+    { $search: {
+      index: 'default',
+      compound: {
+        must: [
+          { text: { query: ctx.message.text, path: ['about.description', 'title', 'about.tags'] } }
+        ],
+        filter: [
+          { equals: { value: true, path: 'public' } }
+        ]
+      }
+    }},
+    { $project: { name: 1, title: 1 } },
+    { $limit: 100 }
+  ])
 
   if (stickerSets && stickerSets.length > 0) {
     // Batch verify packs with Telegram API (parallel with concurrency limit)
