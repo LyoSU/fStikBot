@@ -25,17 +25,24 @@ setInterval(() => {
 }, CACHE_CLEANUP_INTERVAL_MS)
 
 /**
- * Add to cache with size limit (true LRU eviction by access time)
+ * Add to cache with size limit (LRU via Map insertion order).
+ * Map iterates in insertion order, so least-recently-used entries
+ * are always at the front. Eviction is O(k) instead of O(n log n).
  */
 function cacheFileType (fileId, type) {
+  // Delete first so re-insert moves to end (most-recently-used position)
+  fileTypeCache.delete(fileId)
+
   // Evict least recently used entries if cache is full
   if (fileTypeCache.size >= FILE_TYPE_CACHE_MAX_SIZE) {
-    const entries = [...fileTypeCache.entries()].sort((a, b) => a[1].timestamp - b[1].timestamp)
-    const toRemove = Math.floor(FILE_TYPE_CACHE_MAX_SIZE * 0.1) // Remove oldest 10%
+    const toRemove = Math.floor(FILE_TYPE_CACHE_MAX_SIZE * 0.1)
+    const iterator = fileTypeCache.keys()
     for (let i = 0; i < toRemove; i++) {
-      fileTypeCache.delete(entries[i][0])
+      const key = iterator.next().value
+      if (key !== undefined) fileTypeCache.delete(key)
     }
   }
+
   fileTypeCache.set(fileId, { type, timestamp: Date.now() })
 }
 
@@ -88,7 +95,9 @@ async function detectStickerTypes (ctx, stickers) {
 
     const cached = fileTypeCache.get(fileId)
     if (cached) {
-      cached.timestamp = Date.now() // refresh on access for true LRU behavior
+      // Move to end of Map for LRU ordering (delete + re-insert)
+      fileTypeCache.delete(fileId)
+      fileTypeCache.set(fileId, { type: cached.type, timestamp: Date.now() })
       results.set(sticker._id.toString(), cached.type)
     } else {
       const existingType = getStickerType(sticker)

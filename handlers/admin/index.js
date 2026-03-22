@@ -358,6 +358,7 @@ const handleRefundPayment = async (ctx, paymentId) => {
   })
 
   if (!payment) return ctx.replyWithHTML('❌ Payment not found.')
+  if (payment.status === 'refunded') return ctx.replyWithHTML('❌ Payment already refunded.')
 
   const refundUser = await ctx.db.User.findOne({ _id: payment.user })
   if (!refundUser) return ctx.replyWithHTML('❌ User not found.')
@@ -368,14 +369,20 @@ const handleRefundPayment = async (ctx, paymentId) => {
       telegram_payment_charge_id: paymentId
     })
 
+    // Mark payment as refunded first (idempotency guard prevents double-refund)
+    const refunded = await ctx.db.Payment.findOneAndUpdate(
+      { _id: payment._id, status: { $ne: 'refunded' } },
+      { $set: { status: 'refunded' } },
+      { new: true }
+    )
+
+    if (!refunded) {
+      return ctx.replyWithHTML('❌ Payment was already refunded by another operation.')
+    }
+
     await ctx.db.User.findByIdAndUpdate(
       refundUser._id,
       { $inc: { balance: -payment.amount } }
-    )
-
-    await ctx.db.Payment.findByIdAndUpdate(
-      payment._id,
-      { $set: { status: 'refunded' } }
     )
 
     await ctx.replyWithHTML(`✅ Payment ${escape(paymentId)} refunded successfully.`)
