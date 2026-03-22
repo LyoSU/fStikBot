@@ -296,37 +296,18 @@ const getOutgoingTransactions = async (ctx) => {
   }
 }
 
-// Handle user input for various operations
-composer.on('text', async (ctx, next) => {
-  if (!ctx.session.awaitingInput) return next()
-
-  switch (ctx.session.awaitingInput) {
-    case 'ban_user':
-      await handleBanUser(ctx, ctx.message.text)
-      break
-    case 'set_premium':
-      await handleSetPremium(ctx, ctx.message.text)
-      break
-    case 'refund_payment':
-      await handleRefundPayment(ctx, ctx.message.text)
-      break
-    case 'view_user_info':
-      await handleViewUserInfo(ctx, ctx.message.text)
-      break
-  }
-
-  ctx.session.awaitingInput = null
-})
-
 // Handle ban/unban user
 const handleBanUser = async (ctx, input) => {
   const user = await findUser(ctx, input)
   if (!user) return ctx.replyWithHTML('❌ User not found. Please check the ID or username and try again.')
 
-  user.banned = !user.banned
-  await user.save()
+  const updatedUser = await ctx.db.User.findByIdAndUpdate(
+    user._id,
+    { $set: { banned: !user.banned } },
+    { new: true }
+  )
 
-  await ctx.replyWithHTML(`User ${escape(user.telegram_id)} (${escape(user.username)}) banned: ${user.banned ? 'yes' : 'no'}`)
+  await ctx.replyWithHTML(`User ${escape(updatedUser.telegram_id)} (${escape(updatedUser.username)}) banned: ${updatedUser.banned ? 'yes' : 'no'}`)
 }
 
 // Handle set premium credits
@@ -350,15 +331,18 @@ const handleSetPremium = async (ctx, input) => {
   const user = await findUser(ctx, userId)
   if (!user) return ctx.replyWithHTML('❌ User not found. Please check the ID or username and try again.')
 
-  user.balance += credit
-  await user.save()
+  const updatedUser = await ctx.db.User.findByIdAndUpdate(
+    user._id,
+    { $inc: { balance: credit } },
+    { new: true }
+  )
 
-  await ctx.replyWithHTML(`User ${escape(user.telegram_id)} (${escape(user.username)}) balance updated to ${user.balance} credits (added ${credit} credits)`)
+  await ctx.replyWithHTML(`User ${escape(updatedUser.telegram_id)} (${escape(updatedUser.username)}) balance updated to ${updatedUser.balance} credits (added ${credit} credits)`)
 
   if (credit !== 0) {
-    await ctx.telegram.sendMessage(user.telegram_id, i18n.t(user.locale, 'donate.update', {
+    await ctx.telegram.sendMessage(updatedUser.telegram_id, i18n.t(updatedUser.locale, 'donate.update', {
       amount: credit,
-      balance: user.balance
+      balance: updatedUser.balance
     }), { parse_mode: 'HTML' })
   }
 }
@@ -384,11 +368,15 @@ const handleRefundPayment = async (ctx, paymentId) => {
       telegram_payment_charge_id: paymentId
     })
 
-    refundUser.balance -= payment.amount
-    await refundUser.save()
+    await ctx.db.User.findByIdAndUpdate(
+      refundUser._id,
+      { $inc: { balance: -payment.amount } }
+    )
 
-    payment.status = 'refunded'
-    await payment.save()
+    await ctx.db.Payment.findByIdAndUpdate(
+      payment._id,
+      { $set: { status: 'refunded' } }
+    )
 
     await ctx.replyWithHTML(`✅ Payment ${escape(paymentId)} refunded successfully.`)
   } catch (error) {
@@ -513,14 +501,8 @@ adminType.forEach(type => {
   ))
 })
 
-// Handle unexpected callbacks
-composer.action(/admin:.*/, async (ctx) => {
-  await ctx.answerCbQuery('This action is not implemented yet.')
-  await displayAdminPanel(ctx)
-})
-
-// Update the text handler to include user info viewing
-composer.on('text', async (ctx, next) => {
+// Handle user input for various operations
+const handleAwaitingInput = async (ctx, next) => {
   if (!ctx.session.awaitingInput) return next()
 
   switch (ctx.session.awaitingInput) {
@@ -539,6 +521,14 @@ composer.on('text', async (ctx, next) => {
   }
 
   ctx.session.awaitingInput = null
+}
+
+composer.on('text', handleAwaitingInput)
+
+// Handle unexpected callbacks
+composer.action(/admin:.*/, async (ctx) => {
+  await ctx.answerCbQuery('This action is not implemented yet.')
+  await displayAdminPanel(ctx)
 })
 
 module.exports = composer

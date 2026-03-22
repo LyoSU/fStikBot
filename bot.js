@@ -47,12 +47,25 @@ const {
 
 global.startDate = new Date()
 
+// Named constants for configuration values
+const HANDLER_TIMEOUT_MS = 1000
+const MAX_CHAIN_ACTIONS = 15
+const SESSION_CLEANUP_INTERVAL_MS = 2 * 60 * 1000
+const MONITOR_INTERVAL_MS = 25 * 1000
+const MEMORY_THRESHOLD_BYTES = 2 * 1024 * 1024 * 1024
+const MEMORY_CHECK_INTERVAL_MS = 30 * 1000
+
+// Helper to reply with Telegram API errors without causing error loops
+function replyWithError (ctx, error) {
+  return ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description })).catch(() => {})
+}
+
 // init bot
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {
     webhookReply: false
   },
-  handlerTimeout: 1000
+  handlerTimeout: HANDLER_TIMEOUT_MS
 })
 
 bot.catch(handleError)
@@ -108,7 +121,7 @@ setInterval(() => {
   if (cleaned > 0) {
     console.log(`Session cleanup: removed ${cleaned} expired sessions, ${sessionStore.size} active`)
   }
-}, 1000 * 60 * 2)
+}, SESSION_CLEANUP_INTERVAL_MS)
 
 // Evict oldest sessions if limit reached
 function evictOldestSessions (count) {
@@ -166,7 +179,7 @@ bot.use(async (ctx, next) => {
 
   if (!action) action = 'undefined'
 
-  if (ctx.session.chainActions.length > 15) ctx.session.chainActions.shift()
+  if (ctx.session.chainActions.length > MAX_CHAIN_ACTIONS) ctx.session.chainActions.shift()
   ctx.session.chainActions.push(action)
 
   // const ms = new Date()
@@ -333,15 +346,11 @@ privateMessage.action(/^download_original$/, async (ctx) => {
         await ctx.replyWithDocument({
           url: fileLink,
           filename: `${originalFileUniqueId}.webp`
-        }).catch((error) => {
-          ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
-        })
+        }).catch((error) => replyWithError(ctx, error))
       } else {
         ctx.replyWithPhoto(originalFileId, {
           caption: stickerInfo.emojis
-        }).catch((photoError) => {
-          ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: photoError.description }))
-        })
+        }).catch((error) => replyWithError(ctx, error))
       }
     })
   } else {
@@ -358,23 +367,17 @@ privateMessage.action(/^download_original$/, async (ctx) => {
       await ctx.replyWithDocument({
         source: pngBuffer,
         filename: `${sticker.file_unique_id}.png`
-      }).catch((error) => {
-        ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
-      })
+      }).catch((error) => replyWithError(ctx, error))
     } else if (fileLink.endsWith('.webm')) {
       await ctx.replyWithDocument({
         url: fileLink,
         filename: `${sticker.file_unique_id}.webm`
-      }).catch((error) => {
-        ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
-      })
+      }).catch((error) => replyWithError(ctx, error))
     } else if (fileLink.endsWith('.tgs')) {
       await ctx.replyWithDocument({
         url: fileLink,
         filename: `${sticker.file_unique_id}.tgs`
-      }).catch((error) => {
-        ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description }))
-      })
+      }).catch((error) => replyWithError(ctx, error))
     } else {
       await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
     }
@@ -499,7 +502,7 @@ db.connection.once('open', async () => {
   const enDescriptionLong = i18n.t('en', 'description.long')
   const enDescriptionShort = i18n.t('en', 'description.short')
 
-  for (const locale of locales) {
+  const localePromises = locales.map(async (locale) => {
     const localeName = locale.split('.')[0]
 
     const myName = await bot.telegram.callApi('getMyName', {
@@ -645,20 +648,22 @@ db.connection.once('open', async () => {
         })
       })
     }
-  }
+  })
+
+  await Promise.allSettled(localePromises)
 
   require('./utils/messaging')
 
   setInterval(() => {
     updateMonitor()
-  }, 1000 * 25) // every 25 seconds
+  }, MONITOR_INTERVAL_MS)
 
   // Memory monitoring
   setInterval(() => {
     const usage = process.memoryUsage()
-    if (usage.heapUsed > 2048 * 1024 * 1024) { // 2GB threshold
+    if (usage.heapUsed > MEMORY_THRESHOLD_BYTES) {
       console.log('High memory usage:', Math.round(usage.heapUsed / 1024 / 1024) + 'MB')
       if (global.gc) global.gc()
     }
-  }, 1000 * 30) // every 30 seconds
+  }, MEMORY_CHECK_INTERVAL_MS)
 })

@@ -8,7 +8,7 @@ module.exports = async (ctx, next) => {
     return next()
   }
 
-  await ctx.deleteMessage().catch(() => {})
+  await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
 
   const { userInfo } = ctx.session
 

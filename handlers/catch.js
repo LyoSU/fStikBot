@@ -1,5 +1,5 @@
 const util = require('util')
-const exec = util.promisify(require('child_process').exec)
+const execFile = util.promisify(require('child_process').execFile)
 const errorStackParser = require('error-stack-parser')
 const { escapeHTML, isRateLimitError, getRetryAfter } = require('../utils')
 
@@ -9,7 +9,7 @@ async function errorLog (error, ctx) {
   let gitBlame
 
   for (const ei of errorInfo) {
-    if (!gitBlame) gitBlame = await exec(`git blame -L ${ei.lineNumber},${ei.lineNumber} -- ${ei.fileName}`).catch(() => {})
+    if (!gitBlame) gitBlame = await execFile('git', ['blame', '-L', `${ei.lineNumber},${ei.lineNumber}`, '--', ei.fileName]).catch(err => console.error('Failed to run git blame:', err.message))
   }
 
   let errorText = `<b>error for ${ctx.updateType}:</b>`
@@ -20,9 +20,11 @@ async function errorLog (error, ctx) {
   if (gitBlame && !gitBlame.stderr) {
     const parsedBlame = gitBlame.stdout.match(/^(?<SHA>[0-9a-f]+)\s+\((?<USER>.+)(?<DATE>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4}\s+)(?<line>\d+)\) ?(?<code>.*)$/m)
 
-    errorText += `\n\n<u>${parsedBlame.groups.USER.trim()}</u>`
-    errorText += `\n<i>commit:</i> ${parsedBlame.groups.SHA}`
-    errorText += `\n\n<code>${parsedBlame.groups.code}</code>`
+    if (parsedBlame?.groups) {
+      errorText += `\n\n<u>${parsedBlame.groups.USER.trim()}</u>`
+      errorText += `\n<i>commit:</i> ${parsedBlame.groups.SHA}`
+      errorText += `\n\n<code>${parsedBlame.groups.code}</code>`
+    }
   }
 
   errorText += `\n\n\n<code>${escapeHTML(error.stack)}</code>`

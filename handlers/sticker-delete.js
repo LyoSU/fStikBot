@@ -123,7 +123,7 @@ module.exports = async (ctx) => {
       reply_markup: Markup.inlineKeyboard([
         { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker?.fileUniqueId}`, !sticker), style: 'success' }
       ])
-    }).catch(() => {})
+    }).catch(err => console.error('Failed to edit delete confirmation:', err.message))
 
     if (sticker) {
       sticker.deleted = true

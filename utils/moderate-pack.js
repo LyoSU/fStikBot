@@ -138,12 +138,21 @@ async function moderatePack (packName) {
   }
 }
 
-async function moderatePacks (skip = 0) {
+async function moderatePacks (skip = 0, maxDepth = 100) {
+  if (maxDepth <= 0) {
+    console.log('moderatePacks: max recursion depth reached, stopping')
+    return
+  }
+
   const packs = await db.StickerSet.find({
     thirdParty: false,
     inline: { $ne: true },
     'aiModeration.checked': { $ne: true }
   }).sort({ createdAt: -1 }).skip(skip).limit(100).select('name').lean()
+
+  if (packs.length === 0) {
+    return
+  }
 
   const results = (await Promise.all(packs.map((pack) => moderatePack(pack.name)))).filter((result) => result !== null)
 
@@ -155,7 +164,7 @@ async function moderatePacks (skip = 0) {
     await db.StickerSet.updateOne({ name: result.name }, { $set: { aiModeration: { checked: true, isFlagged: result.isFlagged, categoryScores: result.categoryScores } } })
   }))
 
-  return moderatePacks(skip + 100 - results.length)
+  return moderatePacks(skip + 100 - results.length, maxDepth - 1)
 }
 
 // moderatePacks(50000)

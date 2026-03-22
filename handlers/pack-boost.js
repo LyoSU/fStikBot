@@ -46,7 +46,7 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
     await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.canceled'), true)
   }
 
-  await ctx.deleteMessage().catch(() => {})
+  await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
 })
 
 composer.action(/boost:(.*)/, async (ctx) => {
@@ -71,7 +71,7 @@ composer.action(/boost:(.*)/, async (ctx) => {
     await ctx.editMessageText(resultText, {
       parse_mode: 'HTML',
       reply_markup: replyMarkup
-    }).catch(() => {})
+    }).catch(err => console.error('Failed to edit boost message:', err.message))
   } else {
     await ctx.replyWithHTML(resultText, {
       reply_markup: replyMarkup

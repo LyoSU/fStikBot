@@ -35,7 +35,7 @@ module.exports = async (ctx, next) => {
   if (ctx.session.previousSticker) {
     sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id)
   } else if (ctx.session.userInfo.stickerSet) {
-    const stickerSetInfo = await ctx.tg.getStickerSet(ctx.session.userInfo.stickerSet.name).catch(() => {})
+    const stickerSetInfo = await ctx.tg.getStickerSet(ctx.session.userInfo.stickerSet.name).catch(err => console.error('Failed to get sticker set info:', err.message))
 
     if (!stickerSetInfo || stickerSetInfo.stickers.length < 1) {
       return next()

@@ -16,7 +16,7 @@ module.exports = async (ctx, next) => {
     })
   }
 
-  ctx.replyWithChatAction('upload_document').catch(() => {})
+  ctx.replyWithChatAction('upload_document').catch(err => console.error('Failed to send chat action:', err.message))
 
   let messageText = ''
   let replyMarkup = {}
@@ -139,7 +139,7 @@ module.exports = async (ctx, next) => {
   }
 
   if (!stickerSet?.inline) {
-    const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => {})
+    const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(err => console.error('Failed to get sticker set info:', err.message))
 
     if (stickerSetInfo) {
       // if user not premium and not boosed pack and title not have bot username

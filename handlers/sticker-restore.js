@@ -74,5 +74,5 @@ module.exports = async (ctx) => {
       { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${newFileUniqueId}`, !!newFileUniqueId), style: 'danger' },
       { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${newFileUniqueId}`, !!newFileUniqueId), style: 'primary' }
     ])
-  }).catch(() => {})
+  }).catch(err => console.error('Failed to edit restore confirmation:', err.message))
 }

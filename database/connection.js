@@ -7,6 +7,7 @@ const isSrvUri = (uri) => uri && uri.startsWith('mongodb+srv://')
 const mainUri = process.env.MONGODB_URI
 const connection = mongoose.createConnection(mainUri, {
   ...(isSrvUri(mainUri) ? {} : { directConnection: true }),
+  autoIndex: false,
   maxPoolSize: 10,
   minPoolSize: 2,
   serverSelectionTimeoutMS: 5000,

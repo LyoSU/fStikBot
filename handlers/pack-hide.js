@@ -16,8 +16,11 @@ module.exports = async (ctx) => {
 
   const wasHidden = stickerSet.hide === true
   const newHideValue = !wasHidden
-  await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { hide: newHideValue })
-  stickerSet.hide = newHideValue
+  const updatedSet = await ctx.db.StickerSet.findOneAndUpdate(
+    { _id: stickerSet._id },
+    { $set: { hide: newHideValue } },
+    { new: true }
+  )
 
   // Update user's pack count
   const countField = stickerSet.inline
@@ -28,7 +31,7 @@ module.exports = async (ctx) => {
     { $inc: { [countField]: wasHidden ? 1 : -1 } }
   )
 
-  if (stickerSet.hide === true) {
+  if (updatedSet.hide === true) {
     answerCbQuer = ctx.i18n.t('callback.pack.answerCbQuer.hidden')
 
     const userSet = await ctx.db.StickerSet.findOne({
@@ -48,15 +51,15 @@ module.exports = async (ctx) => {
 
   const inlineKeyboard = []
 
-  if (stickerSet.hide === true) {
+  if (updatedSet.hide === true) {
     inlineKeyboard.push([
       { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.delete'), `delete_pack:${ctx.match[2]}`), style: 'danger' }
     ])
   }
 
   inlineKeyboard.push([
-    Markup.callbackButton(ctx.i18n.t(stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`)
+    Markup.callbackButton(ctx.i18n.t(updatedSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`)
   ])
 
-  ctx.editMessageReplyMarkup(Markup.inlineKeyboard(inlineKeyboard)).catch(() => {})
+  ctx.editMessageReplyMarkup(Markup.inlineKeyboard(inlineKeyboard)).catch(err => console.error('Failed to update pack visibility markup:', err.message))
 }

@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const { escapeHTML } = require('../utils')
 
 const generatePasscode = () => {
-  return crypto.randomBytes(6).toString('hex')
+  return crypto.randomBytes(16).toString('hex')
 }
 
 const composer = new Composer()

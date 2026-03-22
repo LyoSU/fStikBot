@@ -15,9 +15,11 @@ const updateMonitor = require('./update-monitor')
 const showGramAds = require('./gramads')
 const downloadFileByURL = require('./download-file-by-url')
 const moderatePack = require('./moderate-pack')
+const escapeRegex = require('./escape-regex')
 const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware } = require('./retry-api')
 
 module.exports = {
+  escapeRegex,
   escapeHTML,
   userName,
   addSticker,

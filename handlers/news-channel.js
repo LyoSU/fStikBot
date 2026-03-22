@@ -74,7 +74,7 @@ composer.action('start', async (ctx, next) => {
     return ctx.answerCbQuery(ctx.i18n.t('news.not_joined'), true)
   } else {
     ctx.session.userInfo.newsSubscribedDate = new Date()
-    await ctx.deleteMessage().catch(() => {})
+    await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
     return handleStart(ctx)
   }
 })

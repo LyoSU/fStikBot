@@ -106,5 +106,5 @@ module.exports = async (ctx) => {
       type: 'chat',
       chat_id: ctx.chat.id
     }
-  }).catch(() => {})
+  }).catch(err => console.error('Failed to delete chat commands:', err.message))
 }

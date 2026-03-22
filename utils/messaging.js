@@ -92,22 +92,25 @@ const messaging = async (messagingData) => {
           }
         }
 
-        telegram.callApi(method, opts).then((result) => {
-          redis.set(key + ':messages:' + chatId, result.message_id)
-        }).catch((error) => {
-          redis.incr(key + ':error')
+        try {
+          const result = await telegram.callApi(method, opts)
+          await redis.set(key + ':messages:' + chatId, result.message_id)
+        } catch (error) {
+          await redis.incr(key + ':error')
           console.log(`messaging error ${messagingData.name}`, chatId, error.description)
           if (error?.parameters?.retry_after) {
-            return new Error(error)
+            // Rate limited, will retry on next cycle
           } else if (['blocked by the user', 'user is deactivated', 'chat not found'].some(e => new RegExp(e).test(error.description))) {
             // Use updateOne to avoid race conditions and fire-and-forget issues
-            db.User.updateOne({ telegram_id: chatId }, { blocked: true }).catch((err) => {
+            await db.User.updateOne({ telegram_id: chatId }, { blocked: true }).catch((err) => {
               console.error('Failed to mark user as blocked:', err.message)
             })
           } else {
             if (messagingCreator) {
-              telegram.sendMessage(messagingCreator.telegram_id, `Error sending message "${messagingData.name}" to user ${chatId}: ${error.message}`, {
+              await telegram.sendMessage(messagingCreator.telegram_id, `Error sending message "${messagingData.name}" to user ${chatId}: ${error.message}`, {
                 parse_mode: 'HTML'
+              }).catch((err) => {
+                console.error('Failed to notify creator:', err.message)
               })
             }
 
@@ -115,10 +118,8 @@ const messaging = async (messagingData) => {
               telegram_id: chatId,
               errorMessage: error.message
             })
-
-            return new Error(error)
           }
-        })
+        }
       }
 
       const errorCount = parseInt(await redis.get(key + ':error')) || 0
@@ -183,7 +184,7 @@ const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
           for (const chatId of users) {
             const messageId = await redis.get(key + ':messages:' + chatId)
             if (messagingData.message.type === 'text') {
-              telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
+              await telegram.editMessageText(chatId, messageId, null, messagingData.message.data.text, {
                 parse_mode: messagingData.message.data.parse_mode,
                 disable_web_page_preview: messagingData.message.data.disable_web_page_preview,
                 reply_markup: messagingData.message.data.reply_markup
@@ -191,7 +192,7 @@ const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
                 console.error('Edit text error:', error.message)
               })
             } else {
-              telegram.editMessageMedia(chatId, messageId, null, {
+              await telegram.editMessageMedia(chatId, messageId, null, {
                 type: messagingData.message.type,
                 media: messagingData.message.data[messagingData.message.type],
                 caption: messagingData.message.data.caption || '',

@@ -338,6 +338,6 @@ module.exports = async (ctx) => {
     await ctx.editMessageText(messageText, {
       reply_markup: Markup.inlineKeyboard(keyboardMarkup),
       parse_mode: 'HTML'
-    }).catch(() => {})
+    }).catch(err => console.error('Failed to edit packs message:', err.message))
   }
 }

@@ -1,6 +1,6 @@
 const StegCloak = require('stegcloak')
 const Composer = require('telegraf/composer')
-const { tenor } = require('../utils')
+const { tenor, escapeRegex } = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
 
@@ -8,9 +8,11 @@ const stegcloak = new StegCloak(false, false)
 // CACHE CONFIGURATION
 // ===================
 
+const INLINE_QUERY_LIMIT = 50
 const fileTypeCache = new Map()
 const FILE_TYPE_CACHE_TTL = 1000 * 60 * 60 // 1 hour
 const FILE_TYPE_CACHE_MAX_SIZE = 50000 // Max entries to prevent memory bloat
+const CACHE_CLEANUP_INTERVAL_MS = 10 * 60 * 1000
 
 // Cleanup old cache entries periodically
 setInterval(() => {
@@ -20,19 +22,18 @@ setInterval(() => {
       fileTypeCache.delete(key)
     }
   }
-}, 1000 * 60 * 10)
+}, CACHE_CLEANUP_INTERVAL_MS)
 
 /**
- * Add to cache with size limit (LRU-like eviction)
+ * Add to cache with size limit (true LRU eviction by access time)
  */
 function cacheFileType (fileId, type) {
-  // Evict oldest entries if cache is full
+  // Evict least recently used entries if cache is full
   if (fileTypeCache.size >= FILE_TYPE_CACHE_MAX_SIZE) {
-    const entriesToDelete = Math.floor(FILE_TYPE_CACHE_MAX_SIZE * 0.1) // Remove 10%
-    const iterator = fileTypeCache.keys()
-    for (let i = 0; i < entriesToDelete; i++) {
-      const key = iterator.next().value
-      if (key) fileTypeCache.delete(key)
+    const entries = [...fileTypeCache.entries()].sort((a, b) => a[1].timestamp - b[1].timestamp)
+    const toRemove = Math.floor(FILE_TYPE_CACHE_MAX_SIZE * 0.1) // Remove oldest 10%
+    for (let i = 0; i < toRemove; i++) {
+      fileTypeCache.delete(entries[i][0])
     }
   }
   fileTypeCache.set(fileId, { type, timestamp: Date.now() })
@@ -87,6 +88,7 @@ async function detectStickerTypes (ctx, stickers) {
 
     const cached = fileTypeCache.get(fileId)
     if (cached) {
+      cached.timestamp = Date.now() // refresh on access for true LRU behavior
       results.set(sticker._id.toString(), cached.type)
     } else {
       const existingType = getStickerType(sticker)
@@ -121,7 +123,7 @@ async function detectStickerTypes (ctx, stickers) {
           ctx.db.Sticker.updateOne(
             { _id: sticker._id },
             { $set: { stickerType: type } }
-          ).catch(() => {})
+          ).catch(err => console.error('Failed to update sticker type:', err.message))
 
           return { id: sticker._id.toString(), type }
         } catch (err) {
@@ -190,7 +192,7 @@ composer.on('inline_query', async (ctx, next) => {
   if (!query || !query.includes('select_group_pack')) return next()
 
   const offset = parseInt(rawOffset) || 0
-  const limit = 50
+  const limit = INLINE_QUERY_LIMIT
 
   const stickerSets = await ctx.db.StickerSet.find({
     owner: ctx.session.userInfo.id,
@@ -273,7 +275,7 @@ composer.on('inline_query', async (ctx, next) => {
 composer.on('inline_query', async (ctx) => {
   const { query, offset: rawOffset } = ctx.inlineQuery
   const offset = parseInt(rawOffset) || 0
-  const limit = 50
+  const limit = INLINE_QUERY_LIMIT
 
   let nextOffset = offset + limit
   const results = []
@@ -310,8 +312,8 @@ composer.on('inline_query', async (ctx) => {
         owner: ctx.session.userInfo.id,
         inline: true,
         $or: [
-          { title: { $regex: query, $options: 'i' } },
-          { name: { $regex: query, $options: 'i' } }
+          { title: { $regex: escapeRegex(query), $options: 'i' } },
+          { name: { $regex: escapeRegex(query), $options: 'i' } }
         ]
       }).maxTimeMS(2000)
 
@@ -328,8 +330,8 @@ composer.on('inline_query', async (ctx) => {
           deleted: false,
           stickerSet: { $in: userSetIds.map(s => s._id) },
           $or: [
-            { caption: { $regex: query, $options: 'i' } },
-            { emojis: { $regex: query, $options: 'i' } }
+            { caption: { $regex: escapeRegex(query), $options: 'i' } },
+            { emojis: { $regex: escapeRegex(query), $options: 'i' } }
           ]
         })
           .select('_id fileId stickerType caption fileUniqueId emojis info')
@@ -401,10 +403,9 @@ composer.on('inline_query', async (ctx) => {
     // ===================
 
     let queryText = query
-    try {
-      queryText = query.match(/:(.*)/)[1]
-    } catch (err) {
-      // Use original query
+    const match = query.match(/:(.*)/)
+    if (match) {
+      queryText = match[1]
     }
 
     let tenorResult

@@ -64,14 +64,13 @@ db.User.updateData = async (tgUser) => {
 }
 
 db.StickerSet.newSet = async (stickerSetInfo) => {
-  const oldStickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
+  const oldStickerSet = await db.StickerSet.findOneAndDelete({ name: stickerSetInfo.name })
 
   if (oldStickerSet) {
     await db.Sticker.updateMany(
-      { stickerSet: oldStickerSet.id },
+      { stickerSet: oldStickerSet._id },
       { $set: { deleted: true, deletedAt: new Date() } }
     )
-    await oldStickerSet.deleteOne()
   }
 
   const stickerSet = new db.StickerSet()

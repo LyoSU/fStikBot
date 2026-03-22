@@ -38,14 +38,19 @@ composer.on('successful_payment', async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
   }
 
-  telegramPayment.status = 'paid'
-  telegramPayment.resultData = ctx.message.successful_payment
-  await telegramPayment.save()
+  const updated = await ctx.db.Payment.findOneAndUpdate(
+    { _id: telegramPayment._id, status: 'pending' },
+    { $set: { status: 'paid', resultData: ctx.message.successful_payment } },
+    { new: true }
+  )
+  if (!updated) {
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
+  }
 
   // Use atomic $inc to prevent race conditions
   const updatedUser = await ctx.db.User.findByIdAndUpdate(
     ctx.session.userInfo._id,
-    { $inc: { balance: telegramPayment.amount } },
+    { $inc: { balance: updated.amount } },
     { new: true }
   )
 
@@ -57,7 +62,7 @@ composer.on('successful_payment', async (ctx) => {
   ctx.session.userInfo.balance = updatedUser.balance
 
   return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
-    amount: telegramPayment.amount,
+    amount: updated.amount,
     balance: updatedUser.balance
   }))
 })
@@ -185,13 +190,19 @@ composer.start(async (ctx, next) => {
       const paymentInfo = await walletPay.getPreviewOrder(payment.paymentId)
 
       if (paymentInfo.data.status === 'PAID') {
-        payment.status = 'paid'
-        await payment.save()
+        const updated = await ctx.db.Payment.findOneAndUpdate(
+          { _id: payment._id, status: 'pending' },
+          { $set: { status: 'paid', resultData: paymentInfo.data } },
+          { new: true }
+        )
+        if (!updated) {
+          return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_paid'))
+        }
 
         // Use atomic $inc to prevent race conditions
         const updatedUser = await ctx.db.User.findByIdAndUpdate(
           ctx.session.userInfo._id,
-          { $inc: { balance: payment.amount } },
+          { $inc: { balance: updated.amount } },
           { new: true }
         )
 
@@ -203,7 +214,7 @@ composer.start(async (ctx, next) => {
         ctx.session.userInfo.balance = updatedUser.balance
 
         return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
-          amount: payment.amount,
+          amount: updated.amount,
           balance: updatedUser.balance
         }))
       }
