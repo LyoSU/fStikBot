@@ -711,7 +711,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
 
   const imageSharp = sharp(fileData, {
     failOnError: false,
-    limitInputPixels: 2048 * 2048,
+    limitInputPixels: false,
     pages: 1
   })
 
