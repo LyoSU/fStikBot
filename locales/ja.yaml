@@ -327,6 +327,42 @@ cmd:
 
     <b>連絡先:</b>
     🧑‍💻 開発者: @ly_oBot
+  mosaic:
+    enter: |
+      🔲 Mosaic mode for <b>${packTitle}</b>
+
+      Send a photo to split into custom emoji grid.
+    no_pack: |
+      You need a custom emoji pack first.
+      Use /new to create one and select "Custom Emoji" type.
+    choose_grid: |
+      📐 Choose grid size:
+    btn:
+      recommended: "✅ ${rows}×${cols}"
+      option: "${rows}×${cols} · ${total}pcs"
+      custom: "✏️ Custom size"
+      cancel: "❌ Cancel"
+      exit: "🚪 Exit mosaic"
+      undo: "🗑 Remove this mosaic"
+    custom_prompt: |
+      Enter grid size (e.g. 3x4):
+    custom_invalid: |
+      Invalid format. Use e.g. 3x4 (rows from 1 to 10, cols from 1 to 10, max 50 total).
+    no_space: |
+      Not enough space in pack. ${freeSlots} slots left, but ${total} needed.
+      Choose a smaller grid or create a new pack with /new.
+    blurry_warning: |
+      ⚠️ Source image is small — result may be blurry at this grid size.
+    uploading: "⏳ Uploading ${current}/${total}..."
+    done: |
+      ✅ Mosaic ${rows}×${cols} added to pack!
+    done_link: "📦 パックを使う"
+    undo_done: |
+      🗑 Mosaic removed (${count} emoji deleted from pack).
+    undo_failed: |
+      ❌ Could not remove some emoji. Try deleting manually.
+    wait_photo: |
+      Send another photo or tap Exit.
 donate:
   menu: |
     <b>☕️ Bot開発支援</b>\nBotの開発を支援することにより、クレジットを受け取ることができます\n\n<b>残高:</b> <code>${balance}</code> クレジット\n1クレジットで1パックをブーストすることができます。\n\n<b>ブーストの利点:</b>\n➖ パック名から "<code>${titleSuffix}</code>" を無効にする <i>(リンク内では無効になりません)</i>\n➖ タイトルを最大64文字まで (35文字の代わりに)\n➖ 動画を最大35秒まで\n➖ 優先変換キュー\n➖ 複数のステッカーを同時に\n➖ 広告なし\n\n<b>購入したいクレジットの金額を選択してください:</b>
@@ -430,6 +466,7 @@ callback:
       catalog_delete: '🗑 カタログから削除'
       catalog_share: '🔗 共有'
       catalog_open: '📂 カタログで開く'
+      mosaic: Mosaic
     error:
       not_found: |
         エラー！
