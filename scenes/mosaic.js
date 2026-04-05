@@ -294,13 +294,16 @@ const processMosaic = async (ctx, rows, cols) => {
       if (r < rows - 1) text += '\n'
     }
 
-    const packLink = `${ctx.config.emojiLinkPrefix}${stickerSet.name}`
-    text += '\n\n' + ctx.i18n.t('cmd.mosaic.done', { rows, cols })
-
+    // Send mosaic as pure-emoji message (no text!) for correct Telegram rendering
     await ctx.telegram.callApi('sendMessage', {
       chat_id: ctx.chat.id,
       text,
-      entities,
+      entities
+    })
+
+    // Send pack link + undo as separate message
+    const packLink = `${ctx.config.emojiLinkPrefix}${stickerSet.name}`
+    await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.done', { rows, cols }), {
       reply_markup: Markup.inlineKeyboard([
         [Markup.urlButton(ctx.i18n.t('cmd.mosaic.done_link'), packLink)],
         [Markup.callbackButton(ctx.i18n.t('cmd.mosaic.btn.undo'), 'mosaic:undo')]
