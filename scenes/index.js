@@ -21,6 +21,7 @@ const packRename = require('./pack-rename')
 const packDelete = require('./pack-delete')
 const packAbout = require('./pack-about')
 const donate = require('./donate')
+const mosaic = require('./mosaic')
 
 const stage = new Stage([].concat(
   sceneNewPack,
@@ -37,7 +38,8 @@ const stage = new Stage([].concat(
   packRename,
   packDelete,
   packAbout,
-  donate
+  donate,
+  mosaic
 ))
 
 stage.use((ctx, next) => {
@@ -74,7 +76,8 @@ stage.hears(([
   '/delete',
   '/frame',
   '/rename',
-  '/catalog'
+  '/catalog',
+  '/mosaic'
 ]), async (ctx, next) => {
   await ctx.scene.leave()
   ctx.session.scene = null
