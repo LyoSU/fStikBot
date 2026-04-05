@@ -67,3 +67,4 @@ session
 
 .DS_Store
 config.json
+.superpowers/
