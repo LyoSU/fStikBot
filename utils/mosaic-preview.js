@@ -41,8 +41,8 @@ const generatePreview = async (imageBuffer, rows, cols) => {
   // Grid size label in center
   const label = `${rows}×${cols}`
   const fontSize = Math.max(24, Math.round(previewWidth / 10))
-  lines.push(`<rect x="${previewWidth / 2 - fontSize * 1.5}" y="${previewHeight / 2 - fontSize * 0.7}" width="${fontSize * 3}" height="${fontSize * 1.4}" rx="8" fill="rgba(0,0,0,0.6)"/>`)
-  lines.push(`<text x="${previewWidth / 2}" y="${previewHeight / 2 + fontSize * 0.3}" text-anchor="middle" font-size="${fontSize}" font-family="Arial,sans-serif" font-weight="bold" fill="white">${label}</text>`)
+  lines.push(`<rect x="${cropWidth / 2 - fontSize * 1.5}" y="${cropHeight / 2 - fontSize * 0.7}" width="${fontSize * 3}" height="${fontSize * 1.4}" rx="8" fill="rgba(0,0,0,0.6)"/>`)
+  lines.push(`<text x="${cropWidth / 2}" y="${cropHeight / 2 + fontSize * 0.3}" text-anchor="middle" font-size="${fontSize}" font-family="Arial,sans-serif" font-weight="bold" fill="white">${label}</text>`)
 
   const svgOverlay = Buffer.from(
     `<svg width="${cropWidth}" height="${cropHeight}">${lines.join('')}</svg>`

@@ -333,7 +333,7 @@ mosaic.action(/^mosaic:grid:(\d+):(\d+)$/, async (ctx) => {
   const total = rows * cols
   const state = ctx.session.scene.mosaic
 
-  if (!state.photoFileId) {
+  if (!state.photoFileId || rows < 1 || rows > 10 || cols < 1 || cols > 10 || total < 2 || total > 50) {
     return ctx.answerCbQuery(ctx.i18n.t('cmd.mosaic.custom_invalid'), true)
   }
 
