@@ -186,6 +186,9 @@ module.exports = async (ctx) => {
               [
                 Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
               ],
+              ...(stickerSet.packType === 'custom_emoji' ? [[
+                Markup.callbackButton('🔲 ' + ctx.i18n.t('callback.pack.btn.mosaic'), 'mosaic:enter')
+              ]] : []),
               searchGifButton,
               coeditButton,
               ...catalogButton,

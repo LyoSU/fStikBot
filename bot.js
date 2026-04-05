@@ -441,6 +441,11 @@ bot.command('error', ctx => ctx.replyWithHTML(error))
 
 privateMessage.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
 
+bot.action('mosaic:enter', (ctx) => {
+  ctx.answerCbQuery()
+  return ctx.scene.enter('mosaic')
+})
+
 bot.use(handleDonate)
 privateMessage.use(handleBoostPack)
 privateMessage.use(handleCoedit)
