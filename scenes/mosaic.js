@@ -112,7 +112,7 @@ mosaic.on('photo', async (ctx) => {
 
   // Block new photos while uploading
   if (ctx.session.scene.mosaic.uploading) {
-    return ctx.replyWithHTML('⏳ Please wait, upload in progress...')
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.uploading', { current: '...', total: '...' }))
   }
 
   const photo = ctx.message.photo
@@ -174,9 +174,14 @@ const processMosaic = async (ctx, rows, cols) => {
 
   // Lock: prevent concurrent processing
   if (state.uploading) {
-    await ctx.replyWithHTML('⏳ Please wait, upload in progress...')
     return
   }
+
+  if (!state.photoFileId) {
+    await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.wait_photo'))
+    return
+  }
+
   state.uploading = true
 
   try {
@@ -196,6 +201,7 @@ const processMosaic = async (ctx, rows, cols) => {
     const stickerSet = await ctx.db.StickerSet.findById(state.packId)
     const uploadedIds = []
     const uploadedFileIds = []
+    let uploadedCount = 0
 
     for (let i = 0; i < cells.length; i++) {
       const r = Math.floor(i / cols) + 1
@@ -223,28 +229,20 @@ const processMosaic = async (ctx, rows, cols) => {
             }
           })
         )
-
-        const setInfo = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name })
-        const lastSticker = setInfo.stickers[setInfo.stickers.length - 1]
-        uploadedIds.push(lastSticker.custom_emoji_id)
-        uploadedFileIds.push(lastSticker.file_id)
-
-        await ctx.db.Sticker.addSticker(stickerSet.id, fallbackEmoji, {
-          file_id: lastSticker.file_id,
-          file_unique_id: lastSticker.file_unique_id,
-          stickerType: 'custom_emoji'
-        })
+        uploadedCount++
       } catch (err) {
-        // Upload failed after retries — rollback all uploaded stickers
-        for (const fileId of uploadedFileIds) {
-          await ctx.telegram.callApi('deleteStickerFromSet', { sticker: fileId }).catch(() => {})
-          await ctx.db.Sticker.updateOne(
-            { fileId, stickerSet: stickerSet.id },
-            { $set: { deleted: true, deletedAt: new Date() } }
-          ).catch(() => {})
+        // Upload failed after retries — rollback via getStickerSet
+        if (uploadedCount > 0) {
+          const partialSet = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name }).catch(() => null)
+          if (partialSet) {
+            const toRollback = partialSet.stickers.slice(-uploadedCount)
+            for (const s of toRollback) {
+              await ctx.telegram.callApi('deleteStickerFromSet', { sticker: s.file_id }).catch(() => {})
+            }
+          }
         }
         await ctx.telegram.deleteMessage(ctx.chat.id, progressMsg.message_id).catch(() => {})
-        await ctx.replyWithHTML(`❌ Upload failed at piece ${i + 1}/${total}. All uploaded pieces rolled back. Try again.`)
+        await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.undo_failed'))
         return
       }
 
@@ -258,6 +256,19 @@ const processMosaic = async (ctx, rows, cols) => {
           chat_id: ctx.chat.id, action: 'choose_sticker'
         }).catch(() => {})
       }
+    }
+
+    // Get all sticker IDs in one API call (instead of N calls during upload)
+    const setInfo = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name })
+    const addedStickers = setInfo.stickers.slice(-total)
+    for (const sticker of addedStickers) {
+      uploadedIds.push(sticker.custom_emoji_id)
+      uploadedFileIds.push(sticker.file_id)
+      await ctx.db.Sticker.addSticker(stickerSet.id, '🔲', {
+        file_id: sticker.file_id,
+        file_unique_id: sticker.file_unique_id,
+        stickerType: 'custom_emoji'
+      })
     }
 
     // Delete progress message
@@ -313,12 +324,15 @@ const processMosaic = async (ctx, rows, cols) => {
 // Grid selection callback
 mosaic.action(/^mosaic:grid:(\d+):(\d+)$/, async (ctx) => {
   if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
-  await ctx.answerCbQuery()
 
   const rows = parseInt(ctx.match[1])
   const cols = parseInt(ctx.match[2])
   const total = rows * cols
   const state = ctx.session.scene.mosaic
+
+  if (!state.photoFileId) {
+    return ctx.answerCbQuery(ctx.i18n.t('cmd.mosaic.custom_invalid'), true)
+  }
 
   if (total > state.freeSlots) {
     return ctx.answerCbQuery(ctx.i18n.t('cmd.mosaic.no_space', {
@@ -326,6 +340,7 @@ mosaic.action(/^mosaic:grid:(\d+):(\d+)$/, async (ctx) => {
     }), true)
   }
 
+  await ctx.answerCbQuery()
   return processMosaic(ctx, rows, cols)
 })
 
@@ -349,12 +364,13 @@ mosaic.action('mosaic:cancel', async (ctx) => {
 // Undo: remove last mosaic from pack
 mosaic.action('mosaic:undo', async (ctx) => {
   if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
-  await ctx.answerCbQuery()
 
   const state = ctx.session.scene.mosaic
   if (!state.lastMosaicIds || state.lastMosaicIds.length === 0) {
-    return ctx.answerCbQuery('Nothing to undo', true)
+    return ctx.answerCbQuery()
   }
+
+  await ctx.answerCbQuery()
 
   let deleted = 0
   for (const fileId of state.lastMosaicIds) {
@@ -405,7 +421,7 @@ mosaic.on('text', async (ctx) => {
   const cols = parseInt(match[2])
   const total = rows * cols
 
-  if (rows < 1 || rows > 10 || cols < 1 || cols > 10 || total > 50) {
+  if (rows < 1 || rows > 10 || cols < 1 || cols > 10 || total < 2 || total > 50) {
     return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.custom_invalid'))
   }
 
