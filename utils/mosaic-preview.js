@@ -8,16 +8,29 @@ const generatePreview = async (imageBuffer, rows, cols) => {
 
   const metadata = await image.metadata()
 
-  // Resize to max 512px on longest side for preview
-  const scale = Math.min(512 / metadata.width, 512 / metadata.height, 1)
-  const previewWidth = Math.round(metadata.width * scale)
-  const previewHeight = Math.round(metadata.height * scale)
+  // Crop to target ratio first (same logic as splitImage)
+  const targetRatio = cols / rows
+  const sourceRatio = metadata.width / metadata.height
+  let srcCropW = metadata.width
+  let srcCropH = metadata.height
+  let srcCropLeft = 0
+  let srcCropTop = 0
 
-  // Use floor-based coordinates to match actual split boundaries
-  // (same math as splitImage uses on the original)
+  if (sourceRatio > targetRatio) {
+    srcCropW = Math.round(metadata.height * targetRatio)
+    srcCropLeft = Math.floor((metadata.width - srcCropW) / 2)
+  } else if (sourceRatio < targetRatio) {
+    srcCropH = Math.round(metadata.width / targetRatio)
+    srcCropTop = Math.floor((metadata.height - srcCropH) / 2)
+  }
+
+  // Resize cropped area to max 512px on longest side
+  const scale = Math.min(512 / srcCropW, 512 / srcCropH, 1)
+  const previewWidth = Math.round(srcCropW * scale)
+  const previewHeight = Math.round(srcCropH * scale)
+
   const cellW = Math.floor(previewWidth / cols)
   const cellH = Math.floor(previewHeight / rows)
-  // Crop preview to exact grid area (discard remainder pixels)
   const cropWidth = cellW * cols
   const cropHeight = cellH * rows
 
@@ -50,7 +63,8 @@ const generatePreview = async (imageBuffer, rows, cols) => {
 
   const result = await image
     .clone()
-    .resize(previewWidth, previewHeight, { fit: 'fill' })
+    .extract({ left: srcCropLeft, top: srcCropTop, width: srcCropW, height: srcCropH })
+    .resize(previewWidth, previewHeight)
     .extract({ left: 0, top: 0, width: cropWidth, height: cropHeight })
     .composite([{ input: svgOverlay, top: 0, left: 0 }])
     .webp({ quality: 80 })

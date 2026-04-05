@@ -7,14 +7,41 @@ const splitImage = async (imageBuffer, rows, cols) => {
   })
 
   const metadata = await image.metadata()
-  const cellWidth = Math.floor(metadata.width / cols)
-  const cellHeight = Math.floor(metadata.height / rows)
+
+  // Crop source image so cells are square
+  // Target aspect ratio: cols/rows
+  // Crop whichever dimension is too large (center crop)
+  const targetRatio = cols / rows
+  const sourceRatio = metadata.width / metadata.height
+  let cropWidth = metadata.width
+  let cropHeight = metadata.height
+  let cropLeft = 0
+  let cropTop = 0
+
+  if (sourceRatio > targetRatio) {
+    // Image too wide — crop sides
+    cropWidth = Math.round(metadata.height * targetRatio)
+    cropLeft = Math.floor((metadata.width - cropWidth) / 2)
+  } else if (sourceRatio < targetRatio) {
+    // Image too tall — crop top/bottom
+    cropHeight = Math.round(metadata.width / targetRatio)
+    cropTop = Math.floor((metadata.height - cropHeight) / 2)
+  }
+
+  // Crop to target ratio first
+  const croppedBuf = await image.clone().extract({
+    left: cropLeft, top: cropTop, width: cropWidth, height: cropHeight
+  }).toBuffer()
+
+  const croppedImg = sharp(croppedBuf, { failOnError: false, limitInputPixels: false })
+  const cellWidth = Math.floor(cropWidth / cols)
+  const cellHeight = Math.floor(cropHeight / rows)
 
   const cells = []
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      const cell = await image
+      const cell = await croppedImg
         .clone()
         .extract({
           left: c * cellWidth,
@@ -22,7 +49,7 @@ const splitImage = async (imageBuffer, rows, cols) => {
           width: cellWidth,
           height: cellHeight
         })
-        .resize(100, 100, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize(100, 100)
         .webp({ quality: 90 })
         .toBuffer()
 
