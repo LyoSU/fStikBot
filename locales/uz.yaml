@@ -363,6 +363,12 @@ cmd:
       ❌ Could not remove some emoji. Try deleting manually.
     wait_photo: |
       Send another photo or tap Exit.
+    reject_animated: |
+      Animated/video stickers aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+    reject_document: |
+      Only images are supported (JPEG/PNG/WebP). Please send a file in one of these formats.
+    reject_media: |
+      Animations and videos aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
 donate:
   menu: |
     <b>☕️ Bot ishlab chiqishni qo'llab-quvvatlash</b>\nBotning rivojlanishini qo'llab-quvvatlab, siz Kreditlar olasiz\n\n<b>Balans:</b> <code>${balance}</code> Kreditlar\n1 Kredit bilan, siz bir quti boost qilish imkoniyatiga egasiz.\n\n<b>Boost quyidagi foydalarni beradi:</b>\n➖ Paket nomida "<code>${titleSuffix}</code>" yo'q <i>(havolada emas)</i>\n➖ Sarlavha 64 belgigacha (35 o'rniga)\n➖ Videolar 35 soniyagacha\n➖ Ustuvor konvertatsiya navbati\n➖ Bir vaqtning o'zida bir nechta stikerlar\n➖ Reklamasiz\n\n<b>Xarid qilish uchun Kreditlar miqdorini tanlang:</b>
