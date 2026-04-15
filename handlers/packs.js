@@ -183,12 +183,14 @@ module.exports = async (ctx) => {
               [
                 Markup.callbackButton(ctx.i18n.t('callback.pack.btn.rename'), `rename_pack:${stickerSet.id}`)
               ],
-              [
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
-              ],
-              ...(stickerSet.packType === 'custom_emoji' ? [[
-                Markup.callbackButton('🔲 ' + ctx.i18n.t('callback.pack.btn.mosaic'), 'mosaic:enter')
-              ]] : []),
+              ...(stickerSet.video
+                ? [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')]]
+                : []
+              ),
+              ...(stickerSet.packType === 'custom_emoji'
+                ? [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.mosaic'), 'mosaic:enter')]]
+                : []
+              ),
               searchGifButton,
               coeditButton,
               ...catalogButton,
@@ -303,10 +305,10 @@ module.exports = async (ctx) => {
   const paginationKeyboard = []
 
   if (page > 0) {
-    paginationKeyboard.push(Markup.callbackButton('◀️', `packs:${page - 1}`))
+    paginationKeyboard.push(Markup.callbackButton(`‹ ${page}`, `packs:${page - 1}`))
   }
   if (hasNextPage) {
-    paginationKeyboard.push(Markup.callbackButton('▶️', `packs:${page + 1}`))
+    paginationKeyboard.push(Markup.callbackButton(`${page + 2} ›`, `packs:${page + 1}`))
   }
 
   keyboardMarkup.push(paginationKeyboard)

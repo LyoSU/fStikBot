@@ -40,15 +40,14 @@ module.exports = async (ctx) => {
     ])
   }
 
-  // Tools row
+  // Discovery row — find packs & identify stickers
   keyboard.push([
     Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog'),
-    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.clear'), 'clear')
+    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'pack_about')
   ])
 
-  // Discovery & Help row
+  // Help row
   keyboard.push([
-    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'pack_about'),
     Markup.urlButton(ctx.i18n.t('cmd.start.commands.guide'), 'https://fstik.app/guides')
   ])
 

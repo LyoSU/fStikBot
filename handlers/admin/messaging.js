@@ -101,8 +101,8 @@ composer.action(/admin:messaging:list:(.*):(.*)/, async (ctx, next) => {
 
   const keyboardNavigation = []
 
-  if (prevPage > 0) keyboardNavigation.push(Markup.callbackButton('◀️', `admin:messaging:list:${ctx.match[1]}:${prevPage}`))
-  if (pageCount * page < messagingTotal) keyboardNavigation.push(Markup.callbackButton('▶️', `admin:messaging:list:${ctx.match[1]}:${nextPage}`))
+  if (prevPage > 0) keyboardNavigation.push(Markup.callbackButton(`‹ ${prevPage}`, `admin:messaging:list:${ctx.match[1]}:${prevPage}`))
+  if (pageCount * page < messagingTotal) keyboardNavigation.push(Markup.callbackButton(`${nextPage} ›`, `admin:messaging:list:${ctx.match[1]}:${nextPage}`))
 
   inlineKeyboard = inlineKeyboard.concat(messagingKeyboard)
   inlineKeyboard = inlineKeyboard.concat([keyboardNavigation])
