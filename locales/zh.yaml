@@ -373,6 +373,12 @@ cmd:
       ❌ Could not remove some emoji. Try deleting manually.
     wait_photo: |
       Send another photo or tap Exit.
+    reject_animated: |
+      Animated/video stickers aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+    reject_document: |
+      Only images are supported (JPEG/PNG/WebP). Please send a file in one of these formats.
+    reject_media: |
+      Animations and videos aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
 donate:
   menu: |
     <b>☕️ 机器人开发支持</b>
