@@ -486,7 +486,7 @@ callback:
       catalog_delete: '🗑️ Eliminar del catálogo'
       catalog_share: '🔗 Compartir'
       catalog_open: '📂 Abrir en catálogo'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         ¡Error!\nNo se pudo encontrar el pack de stickers.
