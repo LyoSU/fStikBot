@@ -29,90 +29,6 @@ cmd:
       🧙 Hallo, ${groupTitle}! Ich bin der Emoji- und Stickerpack-Zauberer.
 
       Um einen Sticker zu einem Gruppenset hinzuzufügen, verwende den /ss-Befehl als Antwort auf ein Foto, Video, Gif oder Sticker.
-    help: |
-      <b>🧙 Willkommen! Ich bin dein Sticker- und Emoji-Zauberer</b>
-
-      <b>🎨 Sticker und Pakete erstellen</b>
-
-      /new - Erstelle ein neues Paket
-      • Wählen Sie den Pakettyp: Sticker oder Emoji
-      • Setzen Sie einen Namen für Ihr Paket
-      • Fügen Sie Sticker hinzu, indem Sie Mediendateien senden
-      • Unterstützt Fotos, Videos, GIFs in jedem Format
-      • Der Bot optimiert automatisch die Größe und konvertiert Dateien
-
-      <b>📱 Sticker-Verwaltung</b>
-
-      /delete - Sticker aus dem Paket entfernen
-      • Leiten Sie den Sticker weiter, den Sie löschen möchten
-      • Oder senden Sie einen Sticker aus dem Paket, um ihn zu löschen
-
-      /original - Originalsticker finden
-      • Finden Sie den Originalsticker, der von diesem Bot erstellt wurde
-      • Nützlich, um ähnliche Pakete zu finden
-
-      /emoji - Sticker-Emoji konfigurieren
-      • Ändern Sie Emoji-Vorschläge für Sticker
-      • Fügen Sie einem einzelnen Sticker mehrere Emojis hinzu
-      • Format: 😀,😊,🙂
-
-      /frame - Video-Frames konfigurieren
-      • Nur für Videosticker verfügbar
-      • Rahmentypen: leicht, mittel, abgerundet, quadratisch, kreisförmig
-      • Kann für das gesamte Paket geändert werden
-
-      <b>📁 Paketverwaltung</b>
-
-      /packs - Verwalten Sie Ihre Pakete
-      • Liste aller Ihrer Pakete
-      • Bearbeiten, löschen, konfigurieren von Paketen
-
-      /restore - Verstecktes Paket wiederherstellen
-      • Wiederherstellen von Paketen, die aus Ihrer Liste versteckt waren
-      • Dauerhaft gelöschte Pakete können nicht wiederhergestellt werden
-      • Paket wird in Ihrer /packs-Liste wieder angezeigt
-
-      /copy - Pakete kopieren
-      • Erstellen Sie eine Kopie eines beliebigen Pakets
-      • Möglichkeit, die Kopie zu bearbeiten
-      • Alle Sticker werden in das neue Paket kopiert
-
-      <b>📢 Katalogfunktionen</b>
-
-      /catalog - Stickerpaketkatalog
-      • Neue und beliebte Pakete durchstöbern
-      • Suchen nach Schlüsselwörtern oder Tags
-      • Pakete bewerten, um das Ranking zu erhöhen oder zu senken
-
-      /publish - Paket im Katalog veröffentlichen
-      • Teilen Sie Ihr Paket mit anderen Benutzern
-      • Beschreibung, Tags und Sprachen hinzufügen
-      • Paket-Sichtbarkeit erhöhen
-
-      <b>🛠 Zusätzliche Funktionen</b>
-
-      /lang - Bot-Sprache ändern
-
-      /donate - Entwicklung unterstützen
-      • Zusätzliche Funktionen für Spender
-      • Vorrang bei der Dateiverarbeitung
-      • Erhöhte Limits
-
-      <b>💡 Pro-Tipps:</b>
-      • Der Bot konvertiert Dateien automatisch in das erforderliche Format
-      • Wenn ein Sticker nach dem Hinzufügen nicht angezeigt wird - bitte warten
-      • Lesen Sie Bot-Nachrichten - sie enthalten Fehlererklärungen
-      • Verwenden Sie kurze Clips für Videosticker
-      • PNG-Dateien funktionieren am besten für statische Sticker
-
-      <b>📮 Unterstützung und Community:</b>
-
-      💬 Support-Chat: @fStikCommunity (nur Englisch)
-      🧑‍🔧 Entwicklerkontakt: @ly_oBot
-      👨🏻‍💻 Entwicklerkanal: @LyBlog
-
-      <b>🔗 Open-Source:</b>
-      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Du kannst neue Stickerpacks in unserem Katalog finden</b>
 
@@ -129,7 +45,6 @@ cmd:
       help: '📖 Hilfe'
       packs: '📁 Packs verwalten'
       new: '🌝 Stickerpack erstellen'
-      new_emoji: '😊 Emoji-Pack erstellen'
       search_catalog: '🌐 Catalog'
       catalog: '📖 Katalog'
       publish: '📤 Pack veröffentlichen'
@@ -817,13 +732,13 @@ scenes:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
+      <b>📦 Paket:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Eindeutige Nummer für die Pakete des Besitzers, pro Paket erhöht)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Besitzer-ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Andere Pakete von diesem Besitzer:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Wir haben keine Informationen über andere Sticker dieses Besitzers</i>
