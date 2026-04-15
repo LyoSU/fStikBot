@@ -29,90 +29,6 @@ cmd:
       🧙 Salam, ${groupTitle}! Mən emoji və stiker paketləri sehrbazıyam.
 
       Bir stikerı qrup paketinə əlavə etmək üçün, foto, video, gif və ya stikerə cavab olaraq /ss əmrdən istifadə edin.
-    help: |
-      <b>🧙 Xoş gəldiniz! Mən sizin Stiker və Emojinizin Sehrbazıyam</b>
-
-      <b>🎨 Stikerlər və Paketlər Yaratmaq</b>
-
-      /new - Yeni bir paket yaradın
-      • Paket növünü seçin: stikerlər və ya emoji
-      • Paketinizə bir ad verin
-      • Mediya faylları göndərməklə stiker əlavə edin
-      • Fotoşəkillər, videolar, GIF-ləri hər formatda dəstəkləyir
-      • Bot avtomatik olaraq ölçünü optimallaşdırır və faylları çevirir
-
-      <b>📱 Stiker İdarəsi</b>
-
-      /delete - Paketdən stiker silin
-      • Silmək istədiyiniz stikerləri yönləndirin
-      • Və ya silmək üçün paketdən bir stiker göndərin
-
-      /original - Orijinal stiker tapın
-      • Bu bot tərəfindən yaradılan orijinal stikerin yerləşməyini tapın
-      • Oxşar paketləri tapmaq üçün faydalıdır
-
-      /emoji - Stiker emoji konfiqurasiyası
-      • Stikerlər üçün emoji təkliflərini dəyişdirin
-      • Tək bir stikerə bir çox emoji əlavə edin
-      • Format: 😀,😊,🙂
-
-      /frame - Video kadrlərinin konfiqurasiyası
-      • Yalnız video stikerlər üçün mövcuddur
-      • Kadr növləri: yüngül, orta, yuvarlaq, kvadrat, dairəvi
-      • Bütün paket üçün dəyişdirilə bilər
-
-      <b>📁 Paket İdarəsi</b>
-
-      /packs - Paketlərinizi idarə edin
-      • Bütün paketlərinizin siyahısı
-      • Redaktə, silmə, paketləri konfiqurasiya edin
-
-      /restore - Gizli paketi bərpa edin
-      • Siyahınızdan gizlənmiş paketləri bərpa edin
-      • Daimi silinmiş paketlər bərpa olunmur
-      • Paket /packs siyahınıza yenidən görünəcək
-
-      /copy - Paketləri kopyalayın
-      • Hər hansı bir paketin surətini yaradın
-      • Surəti dəyişmək imkanı
-      • Bütün stikerlər yeni paketin içərisinə kopyalanacaq
-
-      <b>📢 Kataloq Xüsusiyyətləri</b>
-
-      /catalog - Stiker paket kataloqu
-      • Yeni və məşhur paketləri gəzin
-      • Açar sözlər və ya etiketlərdə axtarın
-      • Paketləri reytinq verməklə yüksəltmək və ya aşağı salmaq
-
-      /publish - Paketi kataloqda yayımlayın
-      • Paketinizi digər istifadəçilərlə paylaşın
-      • Təsvir, etiketlər və dillər əlavə edin
-      • Paket görünürlüğünü artırın
-
-      <b>🛠 Əlavə Xüsusiyyətlər</b>
-
-      /lang - Bot dilini dəyişdir
-
-      /donate - İnkişafı dəstəkləyin
-      • Donorlara əlavə xüsusiyyətlər
-      • Prioritet fayl emalı
-      • Artırılmış limitlər
-
-      <b>💡 Pro Məlumatlar:</b>
-      • Bot faylları tələb olunan formata avtomatik çevirir
-      • Əgər stiker əlavə etdikdən sonra görünməsə - xahiş edirik gözləyin
-      • Bot mesajlarını oxuyun - onlar xəta izahlarını ehtiva edir
-      • Video stikerlər üçün qısa kliplərdən istifadə edin
-      • Statik stikerlər üçün PNG fayllar daha yaxşı işləyir
-
-      <b>📮 Dəstək və İcma:</b>
-
-      💬 Dəstək söhbəti: @fStikCommunity (Yalnız ingilis dilində)
-      🧑‍🔧 İnkişafçı ilə əlaqə: @ly_oBot
-      👨🏻‍💻 İnkişafçı kanalı: @LyBlog
-
-      <b>🔗 Açıq Mənbə:</b>
-      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Siz yeni stiker paketlərini kataloqumuzda tapa bilərsiniz</b>
 
@@ -129,7 +45,6 @@ cmd:
       help: '📖 Istinad'
       packs: '📁 Paketləri idarə edin'
       new: '🌝 Etiket paketi yaradın'
-      new_emoji: '😊 Emoji paketi yaradın'
       search_catalog: '🌐 Catalog'
       catalog: '📖 Kataloq'
       publish: '📤 Paketi dərc edin'
@@ -815,13 +730,13 @@ scenes:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
+      <b>📦 Paket:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Sahibin paketləri üçün unikal nömrə, hər paket üçün artır)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Sahibin ID-i: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Sahibin digər paketləri:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Bu sahibin digər stikerləri haqqında məlumatımız yoxdur</i>
