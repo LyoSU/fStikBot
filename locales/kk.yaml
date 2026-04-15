@@ -486,7 +486,7 @@ callback:
       catalog_delete: '🗑 Каталогтан жою'
       catalog_share: '🔗️️ Бөлісіңіз'
       catalog_open: '📂 Каталогта ашыңыз'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         Қате!
