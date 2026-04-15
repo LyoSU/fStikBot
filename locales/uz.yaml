@@ -471,7 +471,7 @@ callback:
       catalog_delete: '🗑 Katalogdan oʻchirish'
       catalog_share: '🔗️️ Ulashish'
       catalog_open: '📂 Katalogda ochish'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         Tizimda xatolik!
