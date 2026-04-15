@@ -487,7 +487,7 @@ callback:
       catalog_delete: '🗑 Ջնջել կատալոգից'
       catalog_share: '🔗️️ Կիսվել'
       catalog_open: '📂 Բացեք կատալոգում'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         ՍԽԱԼ\nՉհաջողվեց գտնել կպչուն։
