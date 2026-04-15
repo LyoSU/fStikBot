@@ -20,7 +20,7 @@
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
     "@foile/crypto-pay-api": "^1.0.4",
-    "@pm2/io": "^5.0.0",
+    "@pm2/io": "^6.1.0",
     "bull": "^4.7.0",
     "dotenv": "^16.4.7",
     "emoji-regex": "^10.2.1",
@@ -28,7 +28,7 @@
     "got": "^11.8.6",
     "ioredis": "^4.28.5",
     "limax": "^4.1.0",
-    "moment": "^2.29.2",
+    "moment": "^2.30.1",
     "mongoose": "^5.13.22",
     "node-cron": "^3.0.2",
     "openai": "^4.65.0",
