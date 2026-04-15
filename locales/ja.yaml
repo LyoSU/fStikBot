@@ -363,6 +363,12 @@ cmd:
       ❌ Could not remove some emoji. Try deleting manually.
     wait_photo: |
       Send another photo or tap Exit.
+    reject_animated: |
+      Animated/video stickers aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+    reject_document: |
+      Only images are supported (JPEG/PNG/WebP). Please send a file in one of these formats.
+    reject_media: |
+      Animations and videos aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
 donate:
   menu: |
     <b>☕️ Bot開発支援</b>\nBotの開発を支援することにより、クレジットを受け取ることができます\n\n<b>残高:</b> <code>${balance}</code> クレジット\n1クレジットで1パックをブーストすることができます。\n\n<b>ブーストの利点:</b>\n➖ パック名から "<code>${titleSuffix}</code>" を無効にする <i>(リンク内では無効になりません)</i>\n➖ タイトルを最大64文字まで (35文字の代わりに)\n➖ 動画を最大35秒まで\n➖ 優先変換キュー\n➖ 複数のステッカーを同時に\n➖ 広告なし\n\n<b>購入したいクレジットの金額を選択してください:</b>
