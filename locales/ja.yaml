@@ -472,7 +472,7 @@ callback:
       catalog_delete: '🗑 カタログから削除'
       catalog_share: '🔗 共有'
       catalog_open: '📂 カタログで開く'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         エラー！
