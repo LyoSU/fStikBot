@@ -486,7 +486,7 @@ callback:
       catalog_delete: '🗑 Excluir do catálogo'
       catalog_share: '🔗 Compartilhar'
       catalog_open: '📂 Abrir no catálogo'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         Erro!
