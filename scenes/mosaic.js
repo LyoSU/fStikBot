@@ -211,6 +211,14 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
   ctx.session.scene.mosaic.previewMessageId = msg.message_id
 })
 
+// --- Reject animated/video inputs ---
+
+mosaic.on(['animation', 'video', 'video_note'], async (ctx) => {
+  if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
+  if (ctx.session.scene.mosaic.uploading) return
+  await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.reject_media'))
+})
+
 // --- Shared processMosaic function ---
 
 const processMosaic = async (ctx, rows, cols) => {
