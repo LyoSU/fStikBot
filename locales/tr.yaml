@@ -29,90 +29,6 @@ cmd:
       🧙 Merhaba, ${groupTitle}! Ben emoji ve çıkartma paketi sihirbazıyım.
 
       Bir çıkartmayı grup paketine eklemek için, bir fotoğraf, video, gif veya çıkartmaya yanıt olarak /ss komutunu kullanın.
-    help: |
-      <b>🧙 Hoş geldiniz! Ben çıkartma ve emoji sihirbazınızım</b>
-
-      <b>🎨 Çıkartma ve Paket Oluşturma</b>
-
-      /yeni - Yeni bir paket oluştur
-      • Paket türünü seçin: çıkartmalar veya emoji
-      • Paketinize bir isim verin
-      • Medya dosyaları göndererek çıkartmalar ekleyin
-      • Fotoğraflar, videolar, GIF'ler her formatta desteklenir
-      • Bot otomatik olarak boyutu optimize eder ve dosyaları dönüştürür
-
-      <b>📱 Çıkartma Yönetimi</b>
-
-      /sil - Paketten çıkartma kaldırma
-      • Silmek istediğiniz çıkartmayı yönlendirin
-      • Veya paketten bir çıkartma gönderin ve silin
-
-      /orijinal - Orijinal çıkartmayı bul
-      • Bu bot tarafından oluşturulmuş orijinal çıkartmayı bul
-      • Benzer paketleri bulmak için faydalıdır
-
-      /emoji - Çıkartma emojilerini yapılandır
-      • Çıkartmalara emoji önerilerini değiştir
-      • Tek bir çıkartmaya birden fazla emoji ekleyin
-      • Format: 😀,😊,🙂
-
-      /kare - Video karelerini yapılandırın
-      • Sadece video çıkartmalar için mevcut
-      • Kare türleri: hafif, orta, yuvarlak, kare, daire
-      • Tüm paket için değiştirilebilir
-
-      <b>📁 Paket Yönetimi</b>
-
-      /paket - Paketlerinizi yönetin
-      • Tüm paketlerinizin listesi
-      • Paketleri düzenleme, silme, yapılandırma
-
-      /geri yükle - Gizli paketi geri yükle
-      • Listenizden gizlenmiş paketleri geri yükleyin
-      • Kalıcı olarak silinen paketler geri yüklenemez
-      • Paketiniz /paket listesinde tekrar görünecek
-
-      /kopyala - Paketleri kopyala
-      • Herhangi bir paketin kopyasını oluştur
-      • Kopyayı değiştirme yeteneği
-      • Tüm çıkartmalar yeni pakete kopyalanacak
-
-      <b>📢 Katalog Özellikleri</b>
-
-      /katalog - Çıkartma paketi kataloğu
-      • Yeni ve popüler paketleri gözden geçirin
-      • Anahtar kelimeler veya etiketlerle arama yapın
-      • Paketleri yükseltmek veya sıralamada düşürmek için puan verin
-
-      /yayınla - Paketi kataloğa yayınla
-      • Paketinizi diğer kullanıcılarla paylaşın
-      • Açıklama, etiketler ve diller ekleyin
-      • Paket görünürlüğünü artırın
-
-      <b>🛠 Ek Özellikler</b>
-
-      /dil - Bot dilini değiştir
-
-      /bağış - Geliştirmeyi destekleyin
-      • Bağış yapanlar için ek özellikler
-      • Öncelikli dosya işleme
-      • Artırılmış sınırlar
-
-      <b>💡 Profesyonel İpuçları:</b>
-      • Bot, dosyaları otomatik olarak gerekli formata dönüştürür
-      • Eklendikten sonra çıkartma görünmüyorsa - lütfen bekleyin
-      • Bot mesajlarını okuyun - hata açıklamaları içeriyorlar
-      • Video çıkartmaları için kısa klipler kullanın
-      • Statik çıkartmalar için PNG dosyaları en iyi sonucu verir
-
-      <b>📮 Destek ve Topluluk:</b>
-
-      💬 Destek sohbeti: @fStikCommunity (Sadece İngilizce)
-      🧑‍🔧 Geliştirici ile iletişim: @ly_oBot
-      👨🏻‍💻 Geliştirici kanalı: @LyBlog
-
-      <b>🔗 Açık Kaynak:</b>
-      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Yeni çıkartma paketlerini kataloğumuzda bulabilirsiniz</b>
 
@@ -129,7 +45,6 @@ cmd:
       help: '📖 Yardım'
       packs: '📁 Paketleri yönet'
       new: '🌝 Çıkartma paketi oluştur'
-      new_emoji: '😊 Emoji paketi oluştur'
       search_catalog: '🌐 Catalog'
       catalog: '📖 Katalog'
       publish: '📤 Paketi yayınla'
@@ -813,13 +728,13 @@ scenes:
       download: '📎 Download file'
       show_all_packs: '📦 All packs (${count})'
     result: |
-      <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
+      <b>📦 Paket:</b> <a href="${link}">${name}</a>
+      🆔 <code>${setId}</code> <i>(Sahibin paketlerine benzersiz numara, her paket başına arttırılır)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 Sahip ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Bu sahibin diğer paketleri:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
