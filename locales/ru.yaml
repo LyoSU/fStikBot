@@ -473,7 +473,7 @@ callback:
       catalog_delete: '🗑 Удалить из каталога'
       catalog_share: '🔗 Поделиться'
       catalog_open: '📂 Открыть в каталоге'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         Ошибка!
