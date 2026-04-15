@@ -573,6 +573,8 @@ db.connection.once('open', async () => {
       }
     }
 
+    // Slim menu — contextual commands (delete/copy/publish/about/privacy) are available
+    // through pack buttons or direct typing, not surfaced in Telegram's command picker.
     const privateCommands = [
       { command: 'start', description: i18n.t(localeName, 'cmd.start.commands.start') },
       { command: 'packs', description: i18n.t(localeName, 'cmd.start.commands.packs') },
@@ -580,14 +582,9 @@ db.connection.once('open', async () => {
       { command: 'catalog', description: i18n.t(localeName, 'cmd.start.commands.catalog') },
       { command: 'clear', description: i18n.t(localeName, 'cmd.start.commands.clear') },
       { command: 'round', description: i18n.t(localeName, 'cmd.start.commands.round') },
-      { command: 'about', description: i18n.t(localeName, 'cmd.start.commands.info') },
       { command: 'original', description: i18n.t(localeName, 'cmd.start.commands.original') },
-      { command: 'delete', description: i18n.t(localeName, 'cmd.start.commands.delete') },
-      { command: 'copy', description: i18n.t(localeName, 'cmd.start.commands.copy') },
-      { command: 'publish', description: i18n.t(localeName, 'cmd.start.commands.publish') },
       { command: 'donate', description: i18n.t(localeName, 'cmd.start.commands.donate') },
-      { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') },
-      { command: 'privacy', description: i18n.t(localeName, 'cmd.start.commands.privacy') }
+      { command: 'lang', description: i18n.t(localeName, 'cmd.start.commands.lang') }
     ]
 
     const myCommandsInPrivate = await bot.telegram.callApi('getMyCommands', {

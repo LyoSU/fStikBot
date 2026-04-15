@@ -69,15 +69,24 @@ stage.hears(([
   '/start',
   '/help',
   '/packs',
+  '/new',
   '/emoji',
   '/lang',
   '/donate',
   '/publish',
   '/delete',
   '/frame',
-  '/rename',
   '/catalog',
-  '/mosaic'
+  '/mosaic',
+  '/round',
+  '/clear',
+  '/copy',
+  '/restore',
+  '/original',
+  '/about',
+  '/report',
+  '/privacy',
+  '/paysupport'
 ]), async (ctx, next) => {
   await ctx.scene.leave()
   ctx.session.scene = null

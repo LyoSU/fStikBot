@@ -29,90 +29,6 @@ cmd:
       🧙 Bonjour, ${groupTitle} ! Je suis le sorcier des packs d'emojis et de stickers.
 
       Pour ajouter un sticker à un pack de groupe, utilisez la commande /ss en réponse à une photo, une vidéo, un gif ou un sticker.
-    help: |
-      <b>🧙 Bienvenue ! Je suis votre Assistant d'Autocollants et Émojis</b>
-
-      <b>🎨 Création d'Autocollants et de Packs</b>
-
-      /new - Créer un nouveau pack
-      • Choisissez le type de pack : autocollants ou émoji
-      • Nommez votre pack
-      • Ajoutez des autocollants en envoyant des fichiers média
-      • Prend en charge les photos, vidéos, GIFs dans tout format
-      • Le bot optimise automatiquement la taille et convertit les fichiers
-
-      <b>📱 Gestion des Autocollants</b>
-
-      /delete - Supprimer un autocollant du pack
-      • Transférez l'autocollant que vous souhaitez supprimer
-      • Ou envoyez un autocollant du pack pour le supprimer
-
-      /original - Trouver l'autocollant original
-      • Localiser l'autocollant original créé par ce bot
-      • Utile pour trouver des packs similaires
-
-      /emoji - Configurer l'émoji de l'autocollant
-      • Modifier les suggestions d'émoji pour les autocollants
-      • Ajouter plusieurs émojis à un seul autocollant
-      • Format : 😀,😊,🙂
-
-      /frame - Configurer les cadres vidéo
-      • Disponible uniquement pour les autocollants vidéo
-      • Types de cadres : léger, moyen, arrondi, carré, cercle
-      • Peut être changé pour l'ensemble du pack
-
-      <b>📁 Gestion des Packs</b>
-
-      /packs - Gérer vos packs
-      • Liste de tous vos packs
-      • Modifier, supprimer, configurer les packs
-
-      /restore - Restaurer un pack masqué
-      • Restaurer les packs qui étaient masqués de votre liste
-      • Les packs supprimés de façon permanente ne peuvent pas être restaurés
-      • Le pack réapparaîtra dans votre liste /packs
-
-      /copy - Copier des packs
-      • Créer une copie de n'importe quel pack
-      • Possibilité de modifier la copie
-      • Tous les autocollants seront copiés dans le nouveau pack
-
-      <b>📢 Caractéristiques du Catalogue</b>
-
-      /catalog - Catalogue de packs d'autocollants
-      • Parcourir les nouveaux packs et les populaires
-      • Recherche par mots-clés ou tags
-      • Évaluer les packs pour les promouvoir ou les abaisser dans les classements
-
-      /publish - Publier un pack dans le catalogue
-      • Partagez votre pack avec d'autres utilisateurs
-      • Ajouter une description, des tags et des langues
-      • Augmenter la visibilité du pack
-
-      <b>🛠 Fonctionnalités Supplémentaires</b>
-
-      /lang - Changer la langue du bot
-
-      /donate - Soutenir le développement
-      • Fonctionnalités supplémentaires pour les donateurs
-      • Traitement de fichiers prioritaire
-      • Limites augmentées
-
-      <b>💡 Conseils Pro :</b>
-      • Le bot convertit automatiquement les fichiers au format requis
-      • Si un autocollant n'apparaît pas après l'ajout - veuillez attendre
-      • Lisez les messages du bot - ils contiennent les explications des erreurs
-      • Utilisez des clips courts pour les autocollants vidéo
-      • Les fichiers PNG fonctionnent mieux pour les autocollants statiques
-
-      <b>📮 Support et Communauté :</b>
-
-      💬 Chat de support : @fStikCommunity (en anglais seulement)
-      🧑‍🔧 Contact du développeur: @ly_oBot
-      👨🏻‍💻 Canal du développeur: @LyBlog
-
-      <b>🔗 Open Source :</b>
-      GitHub : https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Vous pouvez trouver de nouveaux packs d'autocollants dans notre catalogue</b>
 
@@ -125,7 +41,6 @@ cmd:
       help: '📖 Aide'
       packs: '📁 Gérer les packs'
       new: '🌝 Créer un pack d''autocollants'
-      new_emoji: '😊 Créer un pack d''émoji'
       catalog: '📖 Catalogue'
       publish: '📤 Publier le pack'
       delete: '❌ Supprimer l''autocollant'

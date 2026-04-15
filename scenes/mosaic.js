@@ -1,10 +1,13 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
+const I18n = require('telegraf-i18n')
 const { getGridSuggestions } = require('../utils/mosaic-grid')
 const { generatePreview } = require('../utils/mosaic-preview')
 const { splitImage, checkMinCellSize } = require('../utils/mosaic-split')
 const https = require('https')
 const sharp = require('sharp')
+
+const { match } = I18n
 
 const mosaic = new Scene('mosaic')
 
@@ -493,7 +496,7 @@ mosaic.on('text', async (ctx) => {
 
 // --- Exit via keyboard button ---
 
-mosaic.hears(/🚪/, async (ctx) => {
+mosaic.hears(match('cmd.mosaic.btn.exit'), async (ctx) => {
   delete ctx.session.scene.mosaic
   await ctx.scene.leave()
 })

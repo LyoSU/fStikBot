@@ -29,90 +29,6 @@ cmd:
       🧙 ¡Hola, ${groupTitle}! Soy el mago de los paquetes de emojis y stickers.
 
       Para agregar un sticker a un paquete de grupo, utiliza el comando /ss en respuesta a una foto, video, gif o sticker.
-    help: |
-      <b>🧙 ¡Bienvenido! Soy tu Asistente de Stickers y Emojis</b>
-
-      <b>🎨 Creación de Stickers y Packs</b>
-
-      /new - Crear un nuevo pack
-      • Elige tipo de pack: stickers o emoji
-      • Establece un nombre para tu pack
-      • Añade stickers enviando archivos multimedia
-      • Soporta fotos, videos, GIFs en cualquier formato
-      • El bot optimiza automáticamente el tamaño y convierte los archivos
-
-      <b>📱 Gestión de Stickers</b>
-
-      /delete - Eliminar un sticker del pack
-      • Reenvía el sticker que deseas eliminar
-      • O envía un sticker del pack para eliminarlo
-
-      /original - Encontrar sticker original
-      • Localiza el sticker original creado por este bot
-      • Útil para encontrar packs similares
-
-      /emoji - Configurar emoji de sticker
-      • Cambia sugerencias de emoji para los stickers
-      • Añade múltiples emojis a un solo sticker
-      • Formato: 😀,😊,🙂
-
-      /frame - Configurar marcos de video
-      • Disponible solo para stickers de video
-      • Tipos de marcos: ligero, medio, redondeado, cuadrado, círculo
-      • Se puede cambiar para el pack completo
-
-      <b>📁 Gestión de Packs</b>
-
-      /packs - Gestiona tus packs
-      • Lista de todos tus packs
-      • Editar, eliminar, configurar packs
-
-      /restore - Restaurar pack oculto
-      • Restaura packs que estaban ocultos de tu lista
-      • Los packs eliminados permanentemente no pueden restaurarse
-      • El pack reaparecerá en tu lista de /packs
-
-      /copy - Copiar packs
-      • Crea una copia de cualquier pack
-      • Capacidad de modificar la copia
-      • Todos los stickers serán copiados al nuevo pack
-
-      <b>📢 Funciones de Catálogo</b>
-
-      /catalog - Catálogo de packs de stickers
-      • Explora nuevos y populares packs
-      • Busca por palabras clave o etiquetas
-      • Califica packs para promover o bajar en los rankings
-
-      /publish - Publicar pack en el catálogo
-      • Comparte tu pack con otros usuarios
-      • Añade descripción, etiquetas y idiomas
-      • Aumenta la visibilidad del pack
-
-      <b>🛠 Características Adicionales</b>
-
-      /lang - Cambiar idioma del bot
-
-      /donate - Apoyar el desarrollo
-      • Características adicionales para donantes
-      • Prioridad en el procesamiento de archivos
-      • Límites aumentados
-
-      <b>💡 Consejos Pro:</b>
-      • El bot convierte automáticamente los archivos al formato requerido
-      • Si un sticker no aparece después de añadirlo - por favor, espera
-      • Lee los mensajes del bot - contienen explicaciones de errores
-      • Usa clips cortos para los stickers de video
-      • Los archivos PNG funcionan mejor para los stickers estáticos
-
-      <b>📮 Soporte y Comunidad:</b>
-
-      💬 Chat de soporte: @fStikCommunity (solo inglés)
-      🧑‍🔧 Contacto del desarrollador: @ly_oBot
-      👨🏻‍💻 Canal del desarrollador: @LyBlog
-
-      <b>🔗 Código Abierto:</b>
-      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>😻 Puede encontrar nuevos paquetes de sticker en nuestro catálogo</b>
 
@@ -125,7 +41,6 @@ cmd:
       help: '📖 Ayuda'
       packs: '📁 Administrar paquetes'
       new: '🌝 Crear paquete de sticker'
-      new_emoji: '😊 Crear paquete emoji'
       catalog: '📖 Catálogo'
       publish: '📤 Publicar paquete'
       delete: '❌ Eliminar sticker'

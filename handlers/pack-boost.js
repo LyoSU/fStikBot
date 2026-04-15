@@ -37,16 +37,25 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
     )
     ctx.session.userInfo.balance -= 1
 
-    await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.success', {
-      title: stickerSet.title
-    }), true)
+    const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
+    const titleSuffix = ` :: @${ctx.options.username}`
+
+    await ctx.answerCbQuery()
+    await ctx.editMessageText(ctx.i18n.t('scenes.boost.success', {
+      title: escapeHTML(stickerSet.title),
+      link: `${linkPrefix}${stickerSet.name}`,
+      titleSuffix: escapeHTML(titleSuffix)
+    }), {
+      parse_mode: 'HTML',
+      disable_web_page_preview: true
+    }).catch(err => console.error('Failed to edit boost message:', err.message))
+    return
   }
 
   if (ctx.match[1] === 'no') {
     await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.canceled'), true)
+    await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
   }
-
-  await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
 })
 
 composer.action(/boost:(.*)/, async (ctx) => {

@@ -16,7 +16,7 @@ module.exports = async (ctx) => {
         allow_sending_without_reply: true
       })
     } else {
-      await ctx.replyWithHTML(ctx.i18n.t('cmd.packs.empty'), {
+      await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.no_pack_selected'), {
         reply_to_message_id: ctx.message.message_id,
         allow_sending_without_reply: true
       })

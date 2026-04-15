@@ -149,8 +149,8 @@ module.exports = async (ctx) => {
           if (stickerSet.public) {
             catalogButton = [
               [
-                // Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:unpublish:${stickerSet.id}`),
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`)
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`),
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:unpublish:${stickerSet.id}`)
               ],
               [
                 Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_share'), `https://t.me/share/url?url=https://t.me/${ctx.options.username}/catalog?startapp=set=${stickerSet.name}`),
