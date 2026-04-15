@@ -495,7 +495,7 @@ callback:
       catalog_delete: '🗑 从目录中删除'
       catalog_share: '🔗️️ 分享'
       catalog_open: '📂 在目录中打开'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         错误！
