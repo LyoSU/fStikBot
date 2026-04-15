@@ -29,90 +29,6 @@ cmd:
       🧙 Halo, ${groupTitle}! Aku adalah penyihir paket emoji dan stiker.
 
       Untuk menambahkan stiker ke paket grup, gunakan perintah /ss dalam membalas foto, video, gif, atau stiker.
-    help: |
-      <b>🧙 Selamat datang! Saya adalah Penyihir Stiker dan Emoji Anda</b>
-
-      <b>🎨 Membuat Stiker dan Paket</b>
-
-      /new - Buat paket baru
-      • Pilih jenis paket: stiker atau emoji
-      • Tetapkan nama untuk paket Anda
-      • Tambahkan stiker dengan mengirimkan file media
-      • Mendukung foto, video, GIF dalam format apapun
-      • Bot secara otomatis mengoptimalkan ukuran dan mengonversi file
-
-      <b>📱 Manajemen Stiker</b>
-
-      /delete - Hapus stiker dari paket
-      • Teruskan stiker yang ingin Anda hapus
-      • Atau kirim stiker dari paket untuk menghapusnya
-
-      /original - Temukan stiker asli
-      • Temukan stiker asli yang dibuat oleh bot ini
-      • Berguna untuk menemukan paket serupa
-
-      /emoji - Konfigurasi emoji stiker
-      • Ubah saran emoji untuk stiker
-      • Tambahkan banyak emoji ke satu stiker
-      • Format: 😀,😊,🙂
-
-      /frame - Konfigurasi bingkai video
-      • Tersedia hanya untuk stiker video
-      • Jenis bingkai: ringan, sedang, bulat, persegi, lingkaran
-      • Dapat diubah untuk seluruh paket
-
-      <b>📁 Manajemen Paket</b>
-
-      /packs - Kelola paket Anda
-      • Daftar semua paket Anda
-      • Edit, hapus, konfigurasi paket
-
-      /restore - Pulihkan paket tersembunyi
-      • Pulihkan paket yang disembunyikan dari daftar Anda
-      • Paket yang dihapus secara permanen tidak dapat dipulihkan
-      • Paket akan muncul kembali di daftar /packs Anda
-
-      /copy - Salin paket
-      • Buat salinan dari paket apapun
-      • Kemampuan untuk memodifikasi salinan
-      • Semua stiker akan disalin ke paket baru
-
-      <b>📢 Fitur Katalog</b>
-
-      /catalog - Katalog paket stiker
-      • Jelajahi paket baru dan populer
-      • Cari berdasarkan kata kunci atau tag
-      • Beri peringkat paket untuk mempromosikan atau menurunkan peringkat
-
-      /publish - Terbitkan paket ke katalog
-      • Bagikan paket Anda dengan pengguna lain
-      • Tambahkan deskripsi, tag, dan bahasa
-      • Tingkatkan visibilitas paket
-
-      <b>🛠 Fitur Tambahan</b>
-
-      /lang - Ubah bahasa bot
-
-      /donate - Dukung pengembangan
-      • Fitur tambahan untuk donatur
-      • Pemrosesan file prioritas
-      • Batasan yang ditingkatkan
-
-      <b>💡 Tips Pro:</b>
-      • Bot secara otomatis mengonversi file ke format yang diperlukan
-      • Jika stiker tidak muncul setelah ditambahkan - mohon tunggu
-      • Baca pesan bot - mereka mengandung penjelasan kesalahan
-      • Gunakan klip pendek untuk stiker video
-      • File PNG bekerja paling baik untuk stiker statis
-
-      <b>📮 Dukungan dan Komunitas:</b>
-
-      💬 Obrolan dukungan: @fStikCommunity (Hanya bahasa Inggris)
-      🧑‍🔧 Kontak pengembang: @ly_oBot
-      👨🏻‍💻 Kanal pengembang: @LyBlog
-
-      <b>🔗 Sumber Terbuka:</b>
-      GitHub: https://github.com/LyoSU/fStikBot
     catalog: |
       <b>Anda dapat menemukan paket stiker baru di katalog kami</b>
 
@@ -129,7 +45,6 @@ cmd:
       help: '📖 Bantuan'
       packs: '📁 Kelola paket'
       new: '🌝 Create a new sticker pack'
-      new_emoji: '😊 Buat paket emoji'
       search_catalog: '🌐 Catalog'
       catalog: '📖 Katalog'
       publish: '📤 Publikasikan paket'
@@ -817,12 +732,12 @@ scenes:
       show_all_packs: '📦 All packs (${count})'
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
-      🔢 Stickers: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
+      🆔 <code>${setId}</code> <i>(Nomor unik untuk pack pemilik, bertambah per pack)</i>
 
-      🧑‍🎨 Owner ID: <code>${ownerId}</code>
+      🧑‍🎨 ID Pemilik: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Other packs from this owner:</b>
+      <b>🎨 Pack lain dari pemilik ini:</b>
       ${otherPacks}
     no_other_packs: |
       <i>Kami tidak memiliki informasi tentang stiker lain dari pemilik ini</i>
