@@ -485,7 +485,7 @@ callback:
       catalog_delete: '🗑 Выдаліць з каталога'
       catalog_share: '🔗️️Абагуліць'
       catalog_open: '📂 Адкрыць у каталозе'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         Памылка!
