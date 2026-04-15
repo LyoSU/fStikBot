@@ -4,6 +4,7 @@ const { getGridSuggestions } = require('../utils/mosaic-grid')
 const { generatePreview } = require('../utils/mosaic-preview')
 const { splitImage, checkMinCellSize } = require('../utils/mosaic-split')
 const https = require('https')
+const sharp = require('sharp')
 
 const mosaic = new Scene('mosaic')
 
@@ -144,23 +145,30 @@ const getMosaicSource = (message) => {
 
 // --- Photo handler ---
 
-mosaic.on('photo', async (ctx) => {
+mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
   if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
 
-  // Block new photos while uploading
+  // Block new input while uploading
   if (ctx.session.scene.mosaic.uploading) {
     return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.uploading', { current: '...', total: '...' }))
   }
 
-  const photo = ctx.message.photo
-  const largest = photo[photo.length - 1]
+  const source = getMosaicSource(ctx.message)
+  if (source.error) {
+    return ctx.replyWithHTML(ctx.i18n.t(source.error))
+  }
 
-  // Download the photo
-  const fileUrl = await ctx.telegram.getFileLink(largest.file_id)
+  // Download the source
+  const fileUrl = await ctx.telegram.getFileLink(source.fileId)
   const imageBuffer = await downloadFile(fileUrl.href || fileUrl)
 
-  const width = largest.width
-  const height = largest.height
+  // Documents don't carry width/height on the message itself — read from buffer.
+  let { width, height } = source
+  if (!width || !height) {
+    const meta = await sharp(imageBuffer).metadata()
+    width = meta.width
+    height = meta.height
+  }
 
   // Count existing stickers in pack
   const stickerSet = await ctx.db.StickerSet.findById(ctx.session.scene.mosaic.packId)
@@ -178,7 +186,7 @@ mosaic.on('photo', async (ctx) => {
   }
 
   // Store in scene state
-  ctx.session.scene.mosaic.photoFileId = largest.file_id
+  ctx.session.scene.mosaic.photoFileId = source.fileId
   ctx.session.scene.mosaic.photoWidth = width
   ctx.session.scene.mosaic.photoHeight = height
   ctx.session.scene.mosaic.freeSlots = freeSlots
