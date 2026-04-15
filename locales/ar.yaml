@@ -485,7 +485,7 @@ callback:
       catalog_delete: '🗑️ حذف من الكتالوج'
       catalog_share: '🔗 المشاركة'
       catalog_open: '📂 فتح في الكتالوج'
-      mosaic: Mosaic
+      mosaic: '🧩 Mosaic'
     error:
       not_found: |
         خطأ!
