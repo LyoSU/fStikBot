@@ -105,6 +105,43 @@ mosaic.enter(async (ctx) => {
   })
 })
 
+// Normalize any accepted message into { fileId, width, height } or { error: <i18n-key> }.
+// For documents, width/height come from the optional thumb — may be null, caller reads from buffer.
+const IMAGE_DOCUMENT_MIMES = new Set(['image/jpeg', 'image/png', 'image/webp'])
+
+const getMosaicSource = (message) => {
+  if (message.photo && message.photo.length > 0) {
+    const largest = message.photo[message.photo.length - 1]
+    return { fileId: largest.file_id, width: largest.width, height: largest.height }
+  }
+
+  if (message.sticker) {
+    if (message.sticker.is_animated || message.sticker.is_video) {
+      return { error: 'cmd.mosaic.reject_animated' }
+    }
+    return {
+      fileId: message.sticker.file_id,
+      width: message.sticker.width,
+      height: message.sticker.height
+    }
+  }
+
+  if (message.document) {
+    const mime = message.document.mime_type
+    if (!mime || !IMAGE_DOCUMENT_MIMES.has(mime)) {
+      return { error: 'cmd.mosaic.reject_document' }
+    }
+    return {
+      fileId: message.document.file_id,
+      width: message.document.thumb ? message.document.thumb.width : null,
+      height: message.document.thumb ? message.document.thumb.height : null
+    }
+  }
+
+  // Should not be reachable — handler only binds to photo/document/sticker.
+  return { error: 'cmd.mosaic.reject_media' }
+}
+
 // --- Photo handler ---
 
 mosaic.on('photo', async (ctx) => {
