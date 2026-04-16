@@ -144,6 +144,40 @@ async function test (name, fn) {
     assert.ok(elapsed < 3000, `expected < 3000ms, got ${elapsed}ms (jitter upper bound)`)
   })
 
+  await test('429 with retry_after > maxWait throws immediately (no retry)', async () => {
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.description = 'Too Many Requests: retry after 40'
+      err.parameters = { retry_after: 40 }
+      return Promise.reject(err)
+    }
+    const start = Date.now()
+    await assert.rejects(tg.callApi('sendMessage', { chat_id: 888, text: 'x' }))
+    const elapsed = Date.now() - start
+    assert.strictEqual(attempts, 1, 'must NOT retry when retry_after exceeds maxWait')
+    assert.ok(elapsed < 200, `must fail fast — got ${elapsed}ms`)
+  })
+
+  await test('429 on NO_RETRY_METHODS (addStickerToSet) throws immediately', async () => {
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.description = 'Too Many Requests: retry after 2'
+      err.parameters = { retry_after: 2 }
+      return Promise.reject(err)
+    }
+    const start = Date.now()
+    await assert.rejects(tg.callApi('addStickerToSet', { user_id: 999, name: 'pack' }))
+    const elapsed = Date.now() - start
+    assert.strictEqual(attempts, 1, 'heavy sticker methods must NOT retry even on short retry_after')
+    assert.ok(elapsed < 200, `must fail fast — got ${elapsed}ms`)
+  })
+
   await test('retryMiddleware clears cache for incoming user', async () => {
     stubResponder = () => {
       const err = new Error('Forbidden: bot was blocked by the user')

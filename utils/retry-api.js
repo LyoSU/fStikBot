@@ -92,18 +92,52 @@ function buildBlockedError (chatId, method) {
 // RETRY
 // ===================
 
+// Methods with heavy per-resource rate limits (per sticker-pack, per-user
+// pack quota, etc.) that don't recover in seconds — retrying just blocks
+// the handler slot without helping. Fail fast so the caller can surface
+// an error to the user and the polling queue keeps draining.
+const NO_RETRY_METHODS = new Set([
+  'addStickerToSet',
+  'createNewStickerSet',
+  'deleteStickerFromSet',
+  'replaceStickerInSet',
+  'setStickerPositionInSet',
+  'setStickerSetTitle',
+  'setStickerSetThumbnail',
+  'setCustomEmojiStickerSetThumbnail',
+  'setStickerEmojiList',
+  'setStickerKeywords',
+  'setStickerMaskPosition',
+  'uploadStickerFile'
+])
+
+// Default maxWait is short on purpose. If Telegram tells us to wait
+// longer than this, we throw 429 immediately and let the caller decide
+// (usually bot.catch replies with a localized rate-limit message). The
+// previous 60s cap meant one bursty user's flood could park a handler
+// slot for up to 3×60=180s, which at polling-batch scale grew the
+// pending-update queue to 29k+ updates.
+const DEFAULT_MAX_WAIT_S = 5
+
 /**
- * Wraps a Telegram API call with automatic retry on 429 rate limit errors.
+ * Wraps a Telegram API call with retry on 429 rate limit errors.
+ *
+ * Retry policy:
+ *   - If method is in NO_RETRY_METHODS → throw immediately on 429
+ *   - If retry_after > maxWait → throw immediately (Telegram is telling
+ *     us to wait longer than we're willing to block for)
+ *   - Else retry up to maxRetries times with jitter
  *
  * @param {Function} fn - The async function to execute
  * @param {Object} options
- * @param {number} options.maxRetries - Maximum retry attempts (default: 3)
- * @param {number} options.maxWait - Maximum wait time in seconds (default: 60)
+ * @param {number} options.maxRetries - Max retry attempts (default: 3)
+ * @param {number} options.maxWait - Max seconds to wait between retries
+ *                                   (default: 5). Above this, fail fast.
  * @param {string} options.method - Telegram method name (for logs)
  * @returns {Promise}
  */
 async function withRetry (fn, options = {}) {
-  const { maxRetries = 3, maxWait = 60, method = 'unknown' } = options
+  const { maxRetries = 3, maxWait = DEFAULT_MAX_WAIT_S, method = 'unknown' } = options
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -111,13 +145,25 @@ async function withRetry (fn, options = {}) {
     } catch (error) {
       const retryAfter = error?.parameters?.retry_after
 
+      // Heavy per-resource methods: don't retry, ever. Fail fast.
+      if (retryAfter && NO_RETRY_METHODS.has(method)) {
+        console.log(`[Retry] 429 on ${method} (no-retry method), retry_after=${retryAfter}s → failing fast`)
+        throw error
+      }
+
+      // Telegram says wait longer than we'll tolerate: fail fast.
+      if (retryAfter && retryAfter > maxWait) {
+        console.log(`[Retry] 429 on ${method}, retry_after=${retryAfter}s exceeds maxWait=${maxWait}s → failing fast`)
+        throw error
+      }
+
       if (retryAfter && attempt < maxRetries) {
-        const baseMs = Math.min(retryAfter, maxWait) * 1000
         // Jitter breaks the thundering herd: when many handlers hit 429
         // together, Telegram tells them all to wait the same amount.
         // Without jitter they'd all retry simultaneously and likely
         // trip the limit again. 0–1500ms spread is enough to fan out
         // the retry wave without adding meaningful latency.
+        const baseMs = retryAfter * 1000
         const jitterMs = Math.floor(Math.random() * 1500)
         const waitMs = baseMs + jitterMs
         console.log(
