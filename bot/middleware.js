@@ -3,6 +3,8 @@
 const Composer = require('telegraf/composer')
 const rateLimit = require('telegraf-ratelimit')
 
+const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
+
 const MAX_CHAIN_ACTIONS = 15
 
 module.exports = (bot, {
@@ -37,7 +39,7 @@ module.exports = (bot, {
   bot.use(stats)
 
   // Session (Redis-backed — see bot/session-store.js)
-  bot.use(sessionMiddleware)
+  bot.use(perfStage('session', sessionMiddleware))
 
   // Chain-actions logger: records the last N actions per session to help
   // reproduce error traces. Also prepares answerCbQuery/answerInlineQuery
@@ -83,10 +85,10 @@ module.exports = (bot, {
   // from the DB. Runs BEFORE locale auto-switch and banned guard because
   // those read userInfo; without this ordering they'd see stale
   // Redis-hydrated plain objects (no save() method, stale flags).
-  bot.use(async (ctx, next) => {
+  bot.use(perfStage('updateUser', async (ctx, next) => {
     await updateUser(ctx)
     return next()
-  })
+  }))
 
   // Лагідна українізація — auto-switch ru → uk when Telegram reports uk.
   // Now runs after updateUser so userInfo is a live Mongoose doc and
@@ -116,11 +118,34 @@ module.exports = (bot, {
   // Persist userInfo after the handler runs. Split from the updateUser
   // middleware above so locale/banned middlewares can sit between
   // hydration and handler execution.
+  //
+  // Perf instrumentation is inlined (not via perfStage) because we want
+  // to split the measurement: 'handler' captures the full downstream
+  // next() — i.e. the rest of the middleware chain + handler body —
+  // and 'userSave' captures just the post-next save() duration.
   bot.use(async (ctx, next) => {
-    await next(ctx)
-    if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
-      await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
+    if (!PERF_TIMING_ENABLED) {
+      await next(ctx)
+      if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
+        await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
+      }
+      return
     }
+    const handlerStart = Date.now()
+    try {
+      await next(ctx)
+    } finally {
+      perfRecord('handler', Date.now() - handlerStart)
+    }
+    if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
+      const saveStart = Date.now()
+      try {
+        await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
+      } finally {
+        perfRecord('userSave', Date.now() - saveStart)
+      }
+    }
+    perfTick()
   })
 
   // my_chat_member updates are noisy — ignore them after user-update above
