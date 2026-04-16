@@ -1,5 +1,13 @@
 const mongoose = require('mongoose')
 
+// NOTE on schema coexistence:
+// The collection holds ~488M docs, of which ~94% still use the nested
+// info.* / file.* shape from 2019-2022. A bulk rewrite is not viable
+// at that scale (~weeks of writes on a single-node setup), so the
+// legacy shape is treated as a FIRST-CLASS format, not tech debt.
+// Every read path uses $or against both shapes; getter methods below
+// normalize reads transparently. Writes go to the new shape only.
+// See scripts/README.md for the full rationale.
 const stickersSchema = mongoose.Schema({
   stickerSet: {
     type: mongoose.Schema.Types.ObjectId,

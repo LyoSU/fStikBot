@@ -8,41 +8,39 @@ node scripts/<name>.js
 
 Each one loads `.env` from the parent directory, so no extra setup is needed.
 
-## `migrate-sticker-schema.js`
+## `inspect-db.js`
 
-Rewrites legacy `Sticker` docs (nested `info.*` / `file.*`) into the flat
-`fileId`/`stickerType`/`caption` + `original.*` schema the code expects.
-
-```bash
-node scripts/migrate-sticker-schema.js --dry-run   # inspect only
-node scripts/migrate-sticker-schema.js             # apply
-```
-
-**Idempotent** — safe to re-run. Once it reports `done: migrated X, skipped Y`
-with no remaining legacy docs, the `$or` fallback queries across
-`handlers/sticker.js`, `sticker-delete.js`, `sticker-restore.js`,
-`pack-restore.js`, `inline-query.js`, `utils/add-sticker.js` can be
-simplified and the `info.*` / `file.*` fields removed from
-`database/models/sticker.js`.
-
-## `backfill-sticker-types.js`
-
-Populates `stickerType` for existing `Sticker` docs that don't have it set,
-by calling `telegram.getFile(fileId)` once per doc and classifying from
-the returned `file_path`. Rate-limited to ~10 req/s.
+Read-only diagnostic of the `Sticker` and `StickerSet` collections. Dumps
+counts, index list, a 1000-doc schema-shape sample, collection storage
+stats, and oldest/newest `_id` timestamps.
 
 ```bash
-node scripts/backfill-sticker-types.js
+node scripts/inspect-db.js
 ```
 
-After this runs, `handlers/inline-query.js` can drop its per-request
-`detectStickerTypes` fetch path entirely.
+Doesn't modify any docs. Useful when sizing ops work.
+
+To run against a different DB, override inline:
+
+```bash
+MONGODB_URI='mongodb://.../fStikBot?...' node scripts/inspect-db.js
+```
 
 ## `top-sets.js`
 
-Cron-style helper that lists popular public packs — separate concern, unrelated
-to migrations.
+Cron-style helper that lists popular public packs — unrelated to DB
+maintenance.
 
 ## `update-packs.js` / `update-sticker.js`
 
 Legacy one-offs for repairing corrupted records. Kept for reference.
+
+## A note on schema migration
+
+At 488M Sticker docs (94% in the legacy `info.*` shape) and ~138GB
+collection size, a bulk rewrite is not viable on a single-node setup — it
+would take weeks of sustained writes and hammer the live DB. So instead
+of migrating, the codebase treats the legacy shape as a **first-class
+format**, not tech debt. Every read path already uses `$or` against
+both the flat `fileId` and nested `info.file_id` fields, each served by
+its own index.

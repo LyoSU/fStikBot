@@ -4,55 +4,15 @@ const { tenor, escapeRegex } = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
 
-// ===================
-// CACHE CONFIGURATION
-// ===================
-
 const INLINE_QUERY_LIMIT = 50
-const fileTypeCache = new Map()
-const FILE_TYPE_CACHE_TTL = 1000 * 60 * 60 // 1 hour
-const FILE_TYPE_CACHE_MAX_SIZE = 50000 // Max entries to prevent memory bloat
-const CACHE_CLEANUP_INTERVAL_MS = 10 * 60 * 1000
-
-// Cleanup old cache entries periodically
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, value] of fileTypeCache) {
-    if (now - value.timestamp > FILE_TYPE_CACHE_TTL) {
-      fileTypeCache.delete(key)
-    }
-  }
-}, CACHE_CLEANUP_INTERVAL_MS)
-
-/**
- * Add to cache with size limit (LRU via Map insertion order).
- * Map iterates in insertion order, so least-recently-used entries
- * are always at the front. Eviction is O(k) instead of O(n log n).
- */
-function cacheFileType (fileId, type) {
-  // Delete first so re-insert moves to end (most-recently-used position)
-  fileTypeCache.delete(fileId)
-
-  // Evict least recently used entries if cache is full
-  if (fileTypeCache.size >= FILE_TYPE_CACHE_MAX_SIZE) {
-    const toRemove = Math.floor(FILE_TYPE_CACHE_MAX_SIZE * 0.1)
-    const iterator = fileTypeCache.keys()
-    for (let i = 0; i < toRemove; i++) {
-      const key = iterator.next().value
-      if (key !== undefined) fileTypeCache.delete(key)
-    }
-  }
-
-  fileTypeCache.set(fileId, { type, timestamp: Date.now() })
-}
 
 // ===================
 // HELPER FUNCTIONS
 // ===================
 
 /**
- * Get file ID from sticker (supports both old and new schema)
- * Works with both Mongoose documents and lean objects
+ * Get file ID from sticker (supports both old and new schema).
+ * Works with both Mongoose documents and lean objects.
  */
 function getStickerFileId (sticker) {
   if (typeof sticker.getFileId === 'function') {
@@ -62,7 +22,15 @@ function getStickerFileId (sticker) {
 }
 
 /**
- * Get sticker type (supports both old and new schema)
+ * Get sticker type (supports both old and new schema).
+ *
+ * At 488M docs (94% legacy, 100% missing top-level stickerType in our
+ * sample), per-request Telegram getFile detection used to burn through
+ * the API rate limit to "upgrade" the default. Now we trust the stored
+ * value (new docs have it set) or fall back to 'sticker'. Non-sticker
+ * media that never had its type stored will be answered as 'sticker' —
+ * Telegram accepts it for most cases, and the worst outcome is a skipped
+ * result, not a crash.
  */
 function getStickerType (sticker) {
   if (typeof sticker.getStickerType === 'function') {
@@ -72,7 +40,7 @@ function getStickerType (sticker) {
 }
 
 /**
- * Get caption (supports both old and new schema)
+ * Get caption (supports both old and new schema).
  */
 function getStickerCaption (sticker) {
   if (typeof sticker.getCaption === 'function') {
@@ -82,71 +50,21 @@ function getStickerCaption (sticker) {
 }
 
 /**
- * Batch detect sticker types with caching
- * Minimizes Telegram API calls by caching results
+ * Resolve sticker type for every doc in the input list.
+ *
+ * Previously this would call telegram.getFile() for any doc whose
+ * stickerType wasn't stored — at 488M docs with ~0% stickerType set,
+ * that turned inline queries into Telegram rate-limit bombs.
+ * Simplified to a synchronous lookup: trust the stored value or
+ * default to 'sticker'. No API calls, no cache, no DB writes.
  */
-async function detectStickerTypes (ctx, stickers) {
+function detectStickerTypes (stickers) {
   const results = new Map()
-  const toFetch = []
-
   for (const sticker of stickers) {
     const fileId = getStickerFileId(sticker)
     if (!fileId) continue
-
-    const cached = fileTypeCache.get(fileId)
-    if (cached) {
-      // Move to end of Map for LRU ordering (delete + re-insert)
-      fileTypeCache.delete(fileId)
-      fileTypeCache.set(fileId, { type: cached.type, timestamp: Date.now() })
-      results.set(sticker._id.toString(), cached.type)
-    } else {
-      const existingType = getStickerType(sticker)
-      if (existingType && existingType !== 'sticker') {
-        results.set(sticker._id.toString(), existingType)
-      } else {
-        toFetch.push(sticker)
-      }
-    }
+    results.set(sticker._id.toString(), getStickerType(sticker))
   }
-
-  // Batch fetch uncached items with concurrency limit
-  if (toFetch.length > 0) {
-    const BATCH_SIZE = 10
-
-    for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
-      const batch = toFetch.slice(i, i + BATCH_SIZE)
-
-      const promises = batch.map(async (sticker) => {
-        const fileId = getStickerFileId(sticker)
-        try {
-          const fileInfo = await ctx.tg.getFile(fileId)
-          let type = 'sticker'
-
-          if (/document/.test(fileInfo.file_path)) type = 'document'
-          else if (/photo/.test(fileInfo.file_path)) type = 'photo'
-
-          // Cache the result (with size limit)
-          cacheFileType(fileId, type)
-
-          // Update sticker in DB (fire and forget for performance)
-          ctx.db.Sticker.updateOne(
-            { _id: sticker._id },
-            { $set: { stickerType: type } }
-          ).catch(err => console.error('Failed to update sticker type:', err.message))
-
-          return { id: sticker._id.toString(), type }
-        } catch (err) {
-          return { id: sticker._id.toString(), type: 'sticker' }
-        }
-      })
-
-      const batchResults = await Promise.all(promises)
-      for (const { id, type } of batchResults) {
-        results.set(id, type)
-      }
-    }
-  }
-
   return results
 }
 
@@ -363,8 +281,8 @@ composer.on('inline_query', async (ctx) => {
         .lean()
     }
 
-    // Batch detect sticker types
-    const stickerTypes = await detectStickerTypes(ctx, searchStickers)
+    // Resolve sticker type for every result (synchronous — no API calls)
+    const stickerTypes = detectStickerTypes(searchStickers)
 
     // Build results
     for (const sticker of searchStickers) {
