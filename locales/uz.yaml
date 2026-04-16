@@ -589,22 +589,6 @@ scenes:
       <b><u>Paket turini tanlang</u></b>
     regular: '😊 Stiker'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Static'
-    animated: '✨ Vektor'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Paket turini tanlang</u></b>
-
-      <b>Umumiy</b> - statik (harakat qilmang), rastr, fayl format - PNG qo'shishdan oldin (bot qayta ishlanmoqda), qo'shgandan keyin - WEBP.
-      Oddiy to'plamga misol - t.me/addstickers/Animals
-
-      <b>Video</b> - animatsion video to'plami. Siz har qanday video, gif va fotosuratni qo'shishingiz mumkin.
-      Namuna video to'plami - t.me/addstickers/TheMascot
-
-      <b>Animatsiyalangan</b> - animatsiyali, vektor (ular fayl ichidagi ob'ektlarning aniq tavsifiga ega bo'lishi kerak. ular har qanday miqyosda aniq ko'rsatiladi), fayl formati - TGS, Lottie formatining o'zgarishi.
-      Animatsion to'plamga misol - t.me/addstickers/IsabelleShizue
-
-      <i>Animatsion va video stikerlar to'plamida 50 tagacha stiker bo'lishi mumkin. Statik stikerlar to‘plamida 120 tagacha stiker bo‘lishi mumkin.</i>
     pack_title: |
       <b>Yangi stikerlar to'plami uchun nomni kiriting</b>
       <i>Shuningdek pastda tasodifiy hosil bo'lgan nomni ham tanlashingiz mumkin</i>
