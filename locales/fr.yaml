@@ -603,22 +603,6 @@ scenes:
       <b><u>Choisissez le type de pack</u></b>
     regular: '😊 Autocollant'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Statique'
-    animated: '✨ Vecteur'
-    video: '📹 Vidéo'
-    pack_format: |
-      <b><u>Choisissez le type de pack</u></b>
-
-      <b>Commun</b> - statique (ne pas déplacer), raster, fichier format - avant d'ajouter PNG (le bot est en cours de traitement), après avoir ajouté - WEBP.
-      Un exemple de pack régulier - t.me/addstickers/Animals
-
-      <b>Vidéo</b> - pack vidéo d'animation. Vous pouvez ajouter n'importe quelle vidéo, gif et photo.
-      Exemple de pack vidéo - t.me/addstickers/TheMascot
-
-      <b>Animé</b> - animé, vectoriel (ils ont une description exacte des objets à l'intérieur du fichier, en raison auquel ils sont affichés clairement à n'importe quelle échelle), format de fichier - TGS, une variante du format Lottie.
-      Un exemple de pack animé - t.me/addstickers/IsabelleShizue
-
-      <i>Les ensembles d'autocollants animés et vidéo peuvent contenir jusqu'à 50 autocollants. Les jeux d'autocollants statiques peuvent contenir jusqu'à 120 autocollants.</i>
     pack_title: |
       <b>Entrez le nouveau nom du pack d'autocollants:</b>
       <i>Vous pouvez choisir un nom aléatoire sur le bouton.</i>
