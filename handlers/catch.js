@@ -110,10 +110,10 @@ module.exports = async (error, ctx) => {
 
   console.error(error)
 
-  // Handle 429 rate limit errors gracefully
+  // Handle 429 rate limit errors gracefully.
+  // Note: withRetry already logs `[Retry] 429 on <method>` — no dup here.
   if (isRateLimitError(error)) {
     const retryAfter = getRetryAfter(error)
-    console.log(`[RateLimit] 429 error, retry_after: ${retryAfter}s`)
 
     if (ctx?.chat?.type === 'private') {
       const waitText = retryAfter

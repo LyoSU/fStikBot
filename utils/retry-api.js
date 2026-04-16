@@ -123,7 +123,7 @@ async function withRetry (fn, options = {}) {
     try {
       return await fn()
     } catch (error) {
-      const retryAfter = error?.parameters?.retry_after
+      const retryAfter = getRetryAfter(error)
 
       if (!retryAfter) throw error
 
@@ -144,6 +144,9 @@ async function withRetry (fn, options = {}) {
       await delay(waitMs)
     }
   }
+  // Unreachable — the loop either returns or throws. Explicit throw
+  // makes control flow obvious to readers and linters.
+  throw new Error('withRetry: exhausted retries without result')
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -186,11 +189,12 @@ function patchTelegramPrototype () {
       () => originalCallApi.call(this, method, data, ...rest),
       { method }
     ).catch((error) => {
-      // Any 403 to a targeted chat → cache briefly. Covers "blocked by
-      // user", "user is deactivated", "chat not found", "not enough
-      // rights" — all of them mean "can't reach this chat right now",
-      // which is exactly what the cache short-circuits protect against.
-      if (error?.code === 403 && chatId) cacheBlocked(chatId)
+      // 403 on a private chat (positive id = user_id / DM chat_id) →
+      // cache briefly: "blocked by user", "user deactivated", "chat not
+      // found". Groups/supergroups have negative ids and 403 there is
+      // usually "not enough rights" (bot demoted) — caching would
+      // silently skip all sends for TTL, so we skip groups entirely.
+      if (error?.code === 403 && chatId > 0) cacheBlocked(chatId)
       throw error
     })
   }

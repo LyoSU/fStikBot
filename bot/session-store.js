@@ -83,12 +83,21 @@ if (cleanupInterval.unref) cleanupInterval.unref()
 
 async function redisGet (key) {
   if (redisHealthy) {
+    let raw
     try {
-      const raw = await redis.get(SESSION_PREFIX + key)
-      if (raw == null) return undefined
-      return JSON.parse(raw)
+      raw = await redis.get(SESSION_PREFIX + key)
     } catch (err) {
       console.warn('[session-store] get failed, memory fallback:', err.message)
+      return memoryFallback.get(key)
+    }
+    if (raw == null) return undefined
+    try {
+      return JSON.parse(raw)
+    } catch (err) {
+      // Corrupted Redis value — treat as empty session (fresh start)
+      // rather than silently falling through to stale memory fallback.
+      console.warn('[session-store] corrupt JSON for key', key, '-', err.message)
+      return undefined
     }
   }
   memoryTimestamps.set(key, Date.now())

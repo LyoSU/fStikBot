@@ -240,6 +240,34 @@ async function test (name, fn) {
     assert.strictEqual(secondErr.code, 403)
   })
 
+  await test('group 403 (negative chat_id) is NOT cached — permission errors ≠ blocked', async () => {
+    stubResponder = () => {
+      const err = new Error('Forbidden: not enough rights')
+      err.code = 403
+      err.description = 'Forbidden: not enough rights to send text messages'
+      return Promise.reject(err)
+    }
+    await assert.rejects(tg.callApi('sendMessage', { chat_id: -1001234, text: 'x' }))
+    assert.strictEqual(_blockedCacheSize(), 0, 'negative chat_id (group) must not populate cache')
+  })
+
+  await test('429 retry_after on error.response.parameters path also triggers retry', async () => {
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      if (attempts === 1) {
+        const err = new Error('Too Many Requests')
+        err.code = 429
+        err.response = { parameters: { retry_after: 1 } }
+        return Promise.reject(err)
+      }
+      return Promise.resolve({ ok: true })
+    }
+    const result = await tg.callApi('sendMessage', { chat_id: 1234, text: 'x' })
+    assert.strictEqual(result.ok, true)
+    assert.strictEqual(attempts, 2, 'should retry using response.parameters.retry_after')
+  })
+
   await test('retryMiddleware ignores kick events', async () => {
     const mw = retryMiddleware()
     const ctx = {

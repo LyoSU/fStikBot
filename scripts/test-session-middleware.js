@@ -165,6 +165,17 @@ async function test (name, fn) {
     assert.deepStrictEqual(seen, { session: 'not-a-wrapper', foo: 'bar' })
   })
 
+  await test('corrupt redis value → get returns undefined, middleware uses empty session', async () => {
+    // Simulates post-fix redisGet: a JSON.parse throw yields undefined
+    // rather than silently falling through to memoryFallback.
+    _internal.setImpl({ get: async () => undefined, set: async () => {}, del: async () => {} })
+    const mw = sessionMiddleware()
+    const ctx = { from: { id: 99 }, chat: { id: 99 } }
+    let ran = false
+    await mw(ctx, async () => { ran = true; assert.deepStrictEqual(ctx.session, {}) })
+    assert.strictEqual(ran, true)
+  })
+
   await test('serializeWithoutUserInfo drops userInfo only', () => {
     const s = _internal.serializeWithoutUserInfo({
       scene: 'x',
