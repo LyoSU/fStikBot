@@ -64,7 +64,13 @@ module.exports = (bot, {
     if (ctx.callbackQuery) ctx.state.answerCbQuery = []
 
     return next(ctx).then(() => {
-      if (ctx.callbackQuery) return ctx.answerCbQuery(...ctx.state.answerCbQuery)
+      // Auto-answer the callback. Silently swallow failures: with
+      // handlerTimeout=60s, a long-running handler can outlive Telegram's
+      // ~5-10 min callback_query_id TTL. Propagating that would spam the
+      // global error handler with "query is too old" noise.
+      if (ctx.callbackQuery) {
+        return ctx.answerCbQuery(...ctx.state.answerCbQuery).catch(() => {})
+      }
     })
   })
 

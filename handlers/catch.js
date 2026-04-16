@@ -8,26 +8,46 @@ const { escapeHTML, isRateLimitError, getRetryAfter } = require('../utils')
 // Probe once at module load: is .git available at project root?
 // Skip git blame entirely in environments without .git (e.g. Docker deploys)
 // to avoid spawning a failing git process on every error.
+const PROJECT_ROOT = path.resolve(__dirname, '..')
 const HAS_GIT_DIR = (() => {
   try {
-    return fs.existsSync(path.resolve(__dirname, '..', '.git'))
+    return fs.existsSync(path.join(PROJECT_ROOT, '.git'))
   } catch (e) {
     return false
   }
 })()
 
+/**
+ * Pick the first stack frame that's inside the project AND not in
+ * node_modules — git blame against node_modules always fails with
+ * "no such path in HEAD" and spams the logs.
+ */
+function pickBlameFrame (errorInfo) {
+  for (const frame of errorInfo) {
+    const file = frame.fileName
+    if (!file || typeof file !== 'string') continue
+    if (!file.startsWith(PROJECT_ROOT)) continue
+    if (file.includes(`${path.sep}node_modules${path.sep}`)) continue
+    if (!frame.lineNumber) continue
+    return frame
+  }
+  return null
+}
+
 async function errorLog (error, ctx) {
   const errorInfo = errorStackParser.parse(error)
 
   let gitBlame
+  const frame = HAS_GIT_DIR ? pickBlameFrame(errorInfo) : null
 
-  if (HAS_GIT_DIR && errorInfo.length > 0) {
-    const ei = errorInfo[0]
+  if (frame) {
+    // Silent on failure — any noise here would fire on every caught
+    // error in prod and drown out real signals.
     gitBlame = await execFile(
       'git',
-      ['blame', '-L', `${ei.lineNumber},${ei.lineNumber}`, '--', ei.fileName],
-      { timeout: 2000 }
-    ).catch(err => console.error('Failed to run git blame:', err.message))
+      ['blame', '-L', `${frame.lineNumber},${frame.lineNumber}`, '--', frame.fileName],
+      { timeout: 2000, cwd: PROJECT_ROOT }
+    ).catch(() => null)
   }
 
   let errorText = `<b>error for ${ctx.updateType}:</b>`
