@@ -375,7 +375,7 @@ callback:
     set_inline_pack: |
       Seçilen <u>${title}</u> paket
 
-      Kullanmak için herhangi bir sohbete <code>@${botKullanıcıAdı}</code> yazın ve boşluk bırakın
+      Kullanmak için herhangi bir sohbete <code>@${botUsername}</code> yazın ve boşluk bırakın
       Ayrıca, aşağıdaki düğmeye basarak da kullanabilirsiniz
     boost:
       info: |
@@ -739,6 +739,7 @@ scenes:
     no_other_packs: |
       <i>Bu sahibin diğer çıkartmaları hakkında hiçbir bilgimiz yok</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b><a href="${link}">${title}</a> artırmak istediğinizden emin misiniz?</b>
