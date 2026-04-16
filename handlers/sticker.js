@@ -139,7 +139,7 @@ module.exports = async (ctx, next) => {
   }
 
   if (!stickerSet?.inline) {
-    const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(err => console.error('Failed to get sticker set info:', err.message))
+    const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => null) // STICKERSET_INVALID / deleted pack → caller handles null below
 
     if (stickerSetInfo) {
       // if user not premium and not boosed pack and title not have bot username

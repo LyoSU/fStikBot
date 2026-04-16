@@ -52,7 +52,7 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
     }), {
       parse_mode: 'HTML',
       disable_web_page_preview: true
-    }).catch(err => console.error('Failed to edit boost message:', err.message))
+    }).catch(() => {}) // benign: message-not-modified / best-effort UI refresh
     return
   }
 
@@ -84,7 +84,7 @@ composer.action(/boost:(.*)/, async (ctx) => {
     await ctx.editMessageText(resultText, {
       parse_mode: 'HTML',
       reply_markup: replyMarkup
-    }).catch(err => console.error('Failed to edit boost message:', err.message))
+    }).catch(() => {}) // benign: message-not-modified / best-effort UI refresh
   } else {
     await ctx.replyWithHTML(resultText, {
       reply_markup: replyMarkup
