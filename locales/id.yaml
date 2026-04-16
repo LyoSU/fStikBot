@@ -610,22 +610,6 @@ scenes:
       <b><u>Pilih jenis paket</u></b>
     regular: '😊 Stiker'
     custom_emoji: '🌟Emoji (premium)'
-    static: '🌟 Statis'
-    animated: '✨ Vektor'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Pilih jenis paket</u></b>
-
-      <b>Umum</b> - statis (tidak bergerak), raster, file format - sebelum menambahkan PNG (bot sedang memproses), setelah menambahkan - WEBP.
-      Contoh paket reguler - t.me/addstickers/Animals
-
-      <b>Video</b> - paket video animasi. Anda dapat menambahkan video, gif, dan foto apa pun.
-      Contoh paket video - t.me/addstickers/TheMascot
-
-      <b>Animasi</b> - animasi, vektor (mereka memiliki deskripsi yang tepat tentang objek di dalam file, karena yang ditampilkan dengan jelas pada skala apa pun), format file - TGS, variasi dari format Lottie.
-      Contoh paket animasi - t.me/addstickers/IsabelleShizue
-
-      <i>Kumpulan stiker animasi dan video dapat berisi hingga 50 stiker. Set stiker statis dapat memiliki hingga 120 stiker.</i>
     pack_title: |
       <b>Masukkan nama paket stiker baru:</b>
       <i>Anda dapat memilih nama acak pada tombol.</i>
