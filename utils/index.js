@@ -15,7 +15,7 @@ const showGramAds = require('./gramads')
 const downloadFileByURL = require('./download-file-by-url')
 const moderatePack = require('./moderate-pack')
 const escapeRegex = require('./escape-regex')
-const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware } = require('./retry-api')
+const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware, clearBlockedChat } = require('./retry-api')
 
 module.exports = {
   escapeRegex,
@@ -38,5 +38,6 @@ module.exports = {
   withRetry,
   isRateLimitError,
   getRetryAfter,
-  retryMiddleware
+  retryMiddleware,
+  clearBlockedChat
 }

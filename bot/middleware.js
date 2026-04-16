@@ -17,7 +17,9 @@ module.exports = (bot, {
   bot.use(i18n)
 
   // Retry 429s at the ctx level (prototype-level patch already handles the
-  // underlying Telegram.callApi; this just exposes ctx.withRetry helper).
+  // underlying Telegram.callApi; this just exposes ctx.withRetry helper)
+  // AND clears the blocked-chat cache for the current chat_id so a user
+  // who unblocked us can receive replies immediately.
   bot.use(retryMiddleware())
 
   // Rate-limit writes to public packs (1 sticker per minute) to prevent
