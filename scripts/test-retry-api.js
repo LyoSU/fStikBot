@@ -160,6 +160,28 @@ async function test (name, fn) {
     assert.strictEqual(_blockedCacheSize(), 0, 'middleware should clear cache')
   })
 
+  await test('synthetic 403 carries __cachedBlock flag for catch.js to skip', async () => {
+    stubResponder = () => {
+      const err = new Error('Forbidden: bot was blocked by the user')
+      err.code = 403
+      err.description = 'Forbidden: bot was blocked by the user'
+      return Promise.reject(err)
+    }
+    // First call: real network 403, populates cache, error has no flag
+    let firstErr
+    try { await tg.callApi('sendMessage', { chat_id: touch(777), text: 'x' }) } catch (e) { firstErr = e }
+    assert.strictEqual(firstErr.__cachedBlock, undefined,
+      'real 403 must NOT be marked as cached — catch.js should still log it')
+
+    // Second call: short-circuited, must carry the flag so catch.js
+    // can silently drop it instead of spamming the admin log channel
+    let secondErr
+    try { await tg.callApi('sendMessage', { chat_id: 777, text: 'y' }) } catch (e) { secondErr = e }
+    assert.strictEqual(secondErr.__cachedBlock, true,
+      'cached short-circuit must set __cachedBlock = true')
+    assert.strictEqual(secondErr.code, 403)
+  })
+
   await test('retryMiddleware ignores kick events', async () => {
     const mw = retryMiddleware()
     const ctx = {

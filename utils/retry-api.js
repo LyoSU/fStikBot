@@ -170,6 +170,11 @@ function patchTelegramPrototype () {
   const originalCallApi = Telegram.prototype.callApi
 
   Telegram.prototype.callApi = function patchedCallApi (method, data = {}, ...rest) {
+    // For private chats, chat_id === user_id (same integer), so caching
+    // a user_id from e.g. createNewStickerSet correctly short-circuits
+    // a follow-up sendMessage to the same person. This identity doesn't
+    // hold for groups/channels, but no Telegram send-method takes a
+    // bare `user_id` in those contexts — so the collision is impossible.
     const chatId = data && (data.chat_id || data.user_id)
 
     if (chatId && SEND_METHODS.has(method) && isBlockedCached(chatId)) {

@@ -83,6 +83,12 @@ async function errorLog (error, ctx) {
 }
 
 module.exports = async (error, ctx) => {
+  // Synthetic 403 from the retry-api short-circuit (user already known
+  // to be blocked). The original send was already aborted, so there's
+  // nothing new to log — surfacing it here would just spam the admin
+  // log channel once per short-circuited reply in a cascade.
+  if (error?.__cachedBlock) return
+
   console.error(error)
 
   // Handle 429 rate limit errors gracefully
