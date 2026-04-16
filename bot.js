@@ -8,7 +8,6 @@
 const fs = require('fs')
 const path = require('path')
 const Telegraf = require('telegraf')
-const session = require('telegraf/session')
 const I18n = require('telegraf-i18n')
 
 const { db } = require('./database')
@@ -22,7 +21,7 @@ const {
   retryMiddleware
 } = require('./utils')
 
-const { store: sessionStore, getSessionKey } = require('./bot/session-store')
+const { sessionMiddleware } = require('./bot/session-store')
 const registerMiddleware = require('./bot/middleware')
 const registerCommands = require('./bot/commands')
 const launch = require('./bot/launch')
@@ -56,7 +55,7 @@ const privacyHtml = fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'ut
 
 const { privateMessage, limitPublicPack } = registerMiddleware(bot, {
   i18n,
-  sessionMiddleware: session({ store: sessionStore, getSessionKey }),
+  sessionMiddleware: sessionMiddleware(),
   updateUser,
   updateGroup,
   stats,

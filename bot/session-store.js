@@ -1,4 +1,4 @@
-// Redis-backed Telegraf session store with automatic in-memory fallback.
+// Redis-backed Telegraf session middleware with automatic in-memory fallback.
 //
 // Why Redis: PM2 restarts the process every 6h (ecosystem.config.js) which
 // wiped in-memory sessions and kicked users out of scenes mid-flow. Redis
@@ -7,6 +7,14 @@
 // Why fallback: Redis outages should not take the whole bot down — sessions
 // degrade to per-process memory until Redis recovers. Warned once on first
 // failure, once on recovery.
+//
+// Why custom middleware instead of telegraf/session: two perf wins.
+//   1. Dirty-check — telegraf/session always SETs on every update. We
+//      serialize the session before/after the handler and skip the write
+//      if nothing changed.
+//   2. Strip userInfo — ctx.session.userInfo is a full Mongoose doc with
+//      populated refs. updateUser rehydrates it fresh every request anyway,
+//      so persisting it is pure waste (fat JSON, expensive stringify).
 const Redis = require('ioredis')
 const { redisConfig } = require('../utils/queues')
 
@@ -73,7 +81,7 @@ const cleanupInterval = setInterval(() => {
 }, MEM_CLEANUP_MS)
 if (cleanupInterval.unref) cleanupInterval.unref()
 
-async function get (key) {
+async function redisGet (key) {
   if (redisHealthy) {
     try {
       const raw = await redis.get(SESSION_PREFIX + key)
@@ -87,8 +95,8 @@ async function get (key) {
   return memoryFallback.get(key)
 }
 
-async function set (key, value) {
-  if (value == null) return del(key)
+async function redisSet (key, value) {
+  if (value == null) return redisDel(key)
   if (redisHealthy) {
     try {
       const raw = JSON.stringify(value)
@@ -102,7 +110,7 @@ async function set (key, value) {
   memoryFallback.set(key, value)
 }
 
-async function del (key) {
+async function redisDel (key) {
   if (redisHealthy) {
     try {
       await redis.del(SESSION_PREFIX + key)
@@ -114,10 +122,19 @@ async function del (key) {
   memoryFallback.delete(key)
 }
 
+// Indirection so tests can swap the storage layer without touching Redis.
+// Production just points these at the real implementations above. Tests
+// override via _internal.setImpl.
+const storage = {
+  get: redisGet,
+  set: redisSet,
+  del: redisDel
+}
+
 // Session-key helper. Private chat → user-scoped; group → user+chat-scoped.
-// Anonymous updates (no `from`) return undefined so Telegraf skips session
-// entirely — previously these stored orphan entries keyed by update_id that
-// never expired.
+// Anonymous updates (no `from`) return undefined so the middleware skips
+// session entirely — previously these stored orphan entries keyed by
+// update_id that never expired.
 function getSessionKey (ctx) {
   if ((ctx.from && ctx.chat && ctx.chat.id === ctx.from.id) || (!ctx.chat && ctx.from)) {
     return `user:${ctx.from.id}`
@@ -128,7 +145,82 @@ function getSessionKey (ctx) {
   return undefined
 }
 
+// Serialize the session minus userInfo. Used both for the dirty-check and
+// for the actual persisted payload. Returning the string directly means we
+// can compare it literally (no crypto needed) and reuse it for writes.
+function serializeWithoutUserInfo (session) {
+  if (!session || typeof session !== 'object') return JSON.stringify(session)
+  // Shallow copy, drop userInfo. userInfo is a Mongoose doc + populated refs
+  // so stringifying it is expensive and pointless — updateUser rehydrates it
+  // fresh on every request.
+  const { userInfo, ...rest } = session // eslint-disable-line no-unused-vars
+  return JSON.stringify(rest)
+}
+
+// Legacy telegraf/session stored values as `{ session: {...}, expires: ts|null }`.
+// New format is the raw session object. If the parsed value looks like the
+// legacy wrapper (has `session` + only session/expires top-level keys),
+// unwrap it. Otherwise return as-is. Conservative check to avoid
+// mis-unwrapping an actual session that happens to contain a `session` field.
+function unwrapLegacy (parsed) {
+  if (!parsed || typeof parsed !== 'object') return parsed
+  if (!Object.prototype.hasOwnProperty.call(parsed, 'session')) return parsed
+  const keys = Object.keys(parsed)
+  const onlyLegacyKeys = keys.every((k) => k === 'session' || k === 'expires')
+  if (!onlyLegacyKeys) return parsed
+  return parsed.session || {}
+}
+
+function sessionMiddleware () {
+  return (ctx, next) => {
+    const key = getSessionKey(ctx)
+    if (!key) {
+      // Anonymous update — no session work, don't even touch storage.
+      return next(ctx)
+    }
+    return Promise.resolve(storage.get(key))
+      .then((stored) => {
+        let session = unwrapLegacy(stored) || {}
+        // Snapshot for the dirty-check. Exclude userInfo — it's rehydrated
+        // by updateUser every request and we deliberately never persist it.
+        const originalSerialized = serializeWithoutUserInfo(session)
+
+        Object.defineProperty(ctx, 'session', {
+          configurable: true,
+          get: function () { return session },
+          set: function (newValue) { session = { ...newValue } }
+        })
+
+        return Promise.resolve(next(ctx)).then(() => {
+          const nextSerialized = serializeWithoutUserInfo(session)
+          if (nextSerialized === originalSerialized) return
+          // nextSerialized is already JSON of the session sans userInfo.
+          // Parse it back so storage.set stringifies consistently with how
+          // storage.get parses, and so the memory fallback holds an object.
+          const payload = nextSerialized === 'undefined' ? undefined : JSON.parse(nextSerialized)
+          return storage.set(key, payload)
+        })
+      })
+  }
+}
+
 module.exports = {
-  store: { get, set, delete: del },
-  getSessionKey
+  sessionMiddleware,
+  getSessionKey,
+  _internal: {
+    // Test hatch — swap the storage backend to avoid Redis in unit tests.
+    setImpl (impl) {
+      if (impl.get) storage.get = impl.get
+      if (impl.set) storage.set = impl.set
+      if (impl.del) storage.del = impl.del
+    },
+    resetImpl () {
+      storage.get = redisGet
+      storage.set = redisSet
+      storage.del = redisDel
+    },
+    serializeWithoutUserInfo,
+    unwrapLegacy,
+    storage
+  }
 }
