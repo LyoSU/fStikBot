@@ -16,7 +16,7 @@ module.exports = async (ctx, next) => {
     })
   }
 
-  ctx.replyWithChatAction('upload_document').catch(err => console.error('Failed to send chat action:', err.message))
+  ctx.replyWithChatAction('upload_document').catch(() => {}) // UX only — 429/blocked noise silenced
 
   let messageText = ''
   let replyMarkup = {}

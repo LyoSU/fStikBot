@@ -90,6 +90,11 @@ function isExpectedNoise (error) {
   // retry-api short-circuited a send to a blocked user — already handled
   if (error.__cachedBlock) return true
 
+  // retry-api short-circuited a 429 cooldown — already logged once when
+  // Telegram first told us retry_after > maxWait, every subsequent call
+  // in the same window is the same story.
+  if (error.__cachedRateLimit) return true
+
   const method = error?.on?.method
   const description = error?.description || ''
 

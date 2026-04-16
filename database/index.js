@@ -36,7 +36,7 @@ db.User.getData = async (tgUser) => {
   let user = await db.User.findOne({ telegram_id: telegramId })
     .populate({
       path: 'stickerSet',
-      select: '_id name title packType animated video inline create emojiSuffix frameType boost hide owner passcode'
+      select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode'
     })
     .populate({
       path: 'inlineStickerSet',

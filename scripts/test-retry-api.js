@@ -25,7 +25,8 @@ Telegram.prototype.callApi = function (method, data) {
 const {
   clearBlockedChat,
   retryMiddleware,
-  _blockedCacheSize
+  _blockedCacheSize,
+  _rateLimitCacheSize
 } = require('../utils/retry-api')
 
 const tg = new Telegram('fake-token')
@@ -266,6 +267,58 @@ async function test (name, fn) {
     const result = await tg.callApi('sendMessage', { chat_id: 1234, text: 'x' })
     assert.strictEqual(result.ok, true)
     assert.strictEqual(attempts, 2, 'should retry using response.parameters.retry_after')
+  })
+
+  await test('429 with retry_after > maxWait caches (method, chat) — siblings short-circuit', async () => {
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.description = 'Too Many Requests: retry after 7'
+      err.parameters = { retry_after: 7 }
+      return Promise.reject(err)
+    }
+    // First call: real network 429, fails fast, populates rate-limit cache
+    let firstErr
+    try { await tg.callApi('sendChatAction', { chat_id: 1001, action: 'upload_document' }) } catch (e) { firstErr = e }
+    assert.strictEqual(attempts, 1, 'first call must hit the network')
+    assert.strictEqual(firstErr.__cachedRateLimit, undefined, 'real 429 not marked as cached')
+    assert.ok(_rateLimitCacheSize() >= 1, 'cache must populate after fail-fast 429')
+
+    // Second call same (method, chat): short-circuits, zero network
+    let secondErr
+    try { await tg.callApi('sendChatAction', { chat_id: 1001, action: 'upload_document' }) } catch (e) { secondErr = e }
+    assert.strictEqual(attempts, 1, 'cached short-circuit must not hit network')
+    assert.strictEqual(secondErr.__cachedRateLimit, true, 'synthetic error carries flag for catch.js')
+    assert.strictEqual(secondErr.code, 429)
+
+    // Different chat_id for same method: not in cache — must hit network
+    let thirdErr
+    try { await tg.callApi('sendChatAction', { chat_id: 1002, action: 'upload_document' }) } catch (e) { thirdErr = e }
+    assert.strictEqual(attempts, 2, 'different chat must not inherit cooldown')
+    assert.strictEqual(thirdErr.__cachedRateLimit, undefined, 'different chat gets real 429')
+  })
+
+  await test('429 cache only triggers when retry_after > maxWait (not for retriable 429s)', async () => {
+    // retry_after=2s is ≤ default maxWait=5s → withRetry retries and succeeds.
+    // We must NOT cache a transient 429 that retry already solved, otherwise
+    // every subsequent legit call would synthetically 429.
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      if (attempts === 1) {
+        const err = new Error('Too Many Requests')
+        err.code = 429
+        err.parameters = { retry_after: 2 }
+        return Promise.reject(err)
+      }
+      return Promise.resolve({ ok: true })
+    }
+    const sizeBefore = _rateLimitCacheSize()
+    const result = await tg.callApi('sendMessage', { chat_id: 2001, text: 'x' })
+    assert.strictEqual(result.ok, true)
+    assert.strictEqual(_rateLimitCacheSize(), sizeBefore, 'retriable 429 must not populate cache')
   })
 
   await test('retryMiddleware ignores kick events', async () => {

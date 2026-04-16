@@ -30,6 +30,7 @@ const RETRY_MAX_ATTEMPTS = parseInt(process.env.RETRY_MAX_ATTEMPTS, 10) || 3
 const BLOCKED_CACHE_TTL_MS = parseInt(process.env.BLOCKED_CACHE_TTL_MS, 10) || 60 * 1000
 const BLOCKED_CACHE_MAX = parseInt(process.env.BLOCKED_CACHE_MAX, 10) || 10000
 const RETRY_JITTER_MAX_MS = parseInt(process.env.RETRY_JITTER_MAX_MS, 10) || 1500
+const RATE_LIMIT_CACHE_MAX = parseInt(process.env.RATE_LIMIT_CACHE_MAX, 10) || 5000
 
 // ────────────────────────────────────────────────────────────────
 // Blocked-chat cache
@@ -80,6 +81,55 @@ function buildBlockedError (chatId, method) {
   err.description = 'Forbidden: bot was blocked by the user'
   err.on = { method }
   err.__cachedBlock = true
+  return err
+}
+
+// ────────────────────────────────────────────────────────────────
+// Rate-limit cooldown cache (method + optional chat_id)
+// ────────────────────────────────────────────────────────────────
+// Symmetric to blockedChats: when a call returns 429 with retry_after
+// larger than we can wait, we cache (method, chatId?) for retry_after
+// seconds. Subsequent identical calls short-circuit with a synthetic
+// 429 instead of hitting the network and producing another log line.
+// This kills the classic post-restart "sendChatAction retry_after=7s"
+// spam without a hardcoded method list — Telegram itself tells us
+// which (method, chat) pair is in cooldown.
+const rateLimitedCalls = new Map()
+
+function rateLimitKey (method, chatId) {
+  return chatId ? `${method}:${chatId}` : method
+}
+
+function cacheRateLimit (method, chatId, retryAfterS) {
+  if (rateLimitedCalls.size >= RATE_LIMIT_CACHE_MAX) {
+    const toRemove = Math.floor(RATE_LIMIT_CACHE_MAX * 0.1)
+    const it = rateLimitedCalls.keys()
+    for (let i = 0; i < toRemove; i++) {
+      const key = it.next().value
+      if (key === undefined) break
+      rateLimitedCalls.delete(key)
+    }
+  }
+  rateLimitedCalls.set(rateLimitKey(method, chatId), Date.now() + retryAfterS * 1000)
+}
+
+function isRateLimitCached (method, chatId) {
+  const key = rateLimitKey(method, chatId)
+  const expiresAt = rateLimitedCalls.get(key)
+  if (!expiresAt) return false
+  if (expiresAt < Date.now()) {
+    rateLimitedCalls.delete(key)
+    return false
+  }
+  return true
+}
+
+function buildRateLimitError (method, chatId) {
+  const err = new Error(`Too Many Requests: cached 429 for ${method}${chatId ? `@${chatId}` : ''}`)
+  err.code = 429
+  err.description = 'Too Many Requests: cached'
+  err.on = { method }
+  err.__cachedRateLimit = true
   return err
 }
 
@@ -185,6 +235,12 @@ function patchTelegramPrototype () {
       return Promise.reject(buildBlockedError(chatId, method))
     }
 
+    // Short-circuit: server-confirmed 429 cooldown for (method, chat?)
+    // still in its retry_after window — skip the network and the log.
+    if (isRateLimitCached(method, chatId)) {
+      return Promise.reject(buildRateLimitError(method, chatId))
+    }
+
     return withRetry(
       () => originalCallApi.call(this, method, data, ...rest),
       { method }
@@ -195,6 +251,16 @@ function patchTelegramPrototype () {
       // usually "not enough rights" (bot demoted) — caching would
       // silently skip all sends for TTL, so we skip groups entirely.
       if (error?.code === 403 && chatId > 0) cacheBlocked(chatId)
+
+      // 429 that withRetry already decided to fail-fast on (retry_after
+      // exceeds maxWait) → cache so siblings don't each re-hit the wall.
+      if (error?.code === 429) {
+        const retryAfter = getRetryAfter(error)
+        if (retryAfter && retryAfter > RETRY_MAX_WAIT_S) {
+          cacheRateLimit(method, chatId, retryAfter)
+        }
+      }
+
       throw error
     })
   }
@@ -239,5 +305,6 @@ module.exports = {
   getRetryAfter,
   retryMiddleware,
   clearBlockedChat,
-  _blockedCacheSize: () => blockedChats.size
+  _blockedCacheSize: () => blockedChats.size,
+  _rateLimitCacheSize: () => rateLimitedCalls.size
 }
