@@ -225,9 +225,9 @@ cmd:
     select_group_pack: Ընտրեք փաթեթ
   emoji:
     info: |
-      Համարը փոխելու համար ընթացիկ փաթեթի emoji-ները, ուղարկեք <code> /emoji </ code> հրամանը emoji դաշտից հետո բացով
+      Համարը փոխելու համար ընթացիկ փաթեթի emoji-ները, ուղարկեք <code>/emoji</code> հրամանը emoji դաշտից հետո բացով
 
-      Օրինակ - <code> /emoji 🌟 </code>
+      Օրինակ - <code>/emoji 🌟</code>
     done: 'Emoji-ն հաջողությամբ փոխվեց:'
     error: 'Սխալ առաջացավ զմայլիկները փոխելիս:'
   round_video:
@@ -734,6 +734,7 @@ scenes:
     no_other_packs: |
       <i>Մենք տեղեկություններ չունենք այս սեփականատիրոջ այլ կպչուն պիտակների մասին</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b>Վստահ ե՞ք, որ ցանկանում եք խթանել <a href="${link}">${title}</a>?</b>
