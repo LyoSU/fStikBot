@@ -79,7 +79,18 @@ module.exports = (bot, {
   // Group chat commands upsert the group record
   bot.use(Composer.groupChat(Composer.command(updateGroup)))
 
-  // Лагідна українізація — auto-switch ru → uk when Telegram reports uk
+  // User upsert — hydrates ctx.session.userInfo with a fresh Mongoose doc
+  // from the DB. Runs BEFORE locale auto-switch and banned guard because
+  // those read userInfo; without this ordering they'd see stale
+  // Redis-hydrated plain objects (no save() method, stale flags).
+  bot.use(async (ctx, next) => {
+    await updateUser(ctx)
+    return next()
+  })
+
+  // Лагідна українізація — auto-switch ru → uk when Telegram reports uk.
+  // Now runs after updateUser so userInfo is a live Mongoose doc and
+  // its .save() actually fires.
   bot.use((ctx, next) => {
     if (
       ctx?.session?.userInfo?.locale === 'ru' &&
@@ -94,7 +105,7 @@ module.exports = (bot, {
     return next()
   })
 
-  // Banned user guard
+  // Banned user guard — runs after updateUser so the flag is fresh.
   bot.use((ctx, next) => {
     if (ctx?.session?.userInfo?.banned) {
       return ctx.replyWithHTML(ctx.i18n.t('error.banned'))
@@ -102,9 +113,10 @@ module.exports = (bot, {
     return next()
   })
 
-  // User upsert + persist after handler runs
+  // Persist userInfo after the handler runs. Split from the updateUser
+  // middleware above so locale/banned middlewares can sit between
+  // hydration and handler execution.
   bot.use(async (ctx, next) => {
-    await updateUser(ctx)
     await next(ctx)
     if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
       await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
