@@ -558,15 +558,9 @@ sticker:
 
           <i>Buat (/baru) atau pilih (/paket) paket lain</i>
       wait_load: |
-        <b>Tunggu!</b>
-
-        Bot masih memproses file sebelumnya...
-        Anda dapat mendukung pengembangan bot (\/donasi) untuk meningkatkan prioritas pemrosesan dan kemampuan untuk menambahkan lebih dari satu stiker ke antrian.
+        ⏳ Still processing previous file...
       timeout: |
-        <b>Saat ini, bot sedang mengalami beban yang sangat besar</b>
-        Oleh karena itu, konversi video hanya tersedia untuk paket dengan peningkatan aktif
-
-        Untuk lebih jelasnya, ikuti / menyumbangkan
+        ⚠️ High load right now. Please try again in a few minutes.
       convert: |
         <b>Kesalahan!</b>
         Sayangnya, bot tidak dapat mengonversi video Anda.
@@ -742,6 +736,7 @@ scenes:
     no_other_packs: |
       <i>Kami tidak memiliki informasi tentang stiker lain dari pemilik ini</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b>Apakah Anda yakin ingin meningkatkan <a href="${link}">${title}</a>?</b>
