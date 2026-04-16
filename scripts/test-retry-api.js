@@ -144,7 +144,7 @@ async function test (name, fn) {
     assert.ok(elapsed < 3000, `expected < 3000ms, got ${elapsed}ms (jitter upper bound)`)
   })
 
-  await test('429 with retry_after > maxWait throws immediately (no retry)', async () => {
+  await test('429 with retry_after > maxWait throws immediately (uniform fail-fast)', async () => {
     let attempts = 0
     stubResponder = () => {
       attempts++
@@ -161,21 +161,45 @@ async function test (name, fn) {
     assert.ok(elapsed < 200, `must fail fast — got ${elapsed}ms`)
   })
 
-  await test('429 on NO_RETRY_METHODS (addStickerToSet) throws immediately', async () => {
+  await test('429 with retry_after <= maxWait retries regardless of method', async () => {
     let attempts = 0
     stubResponder = () => {
+      attempts++
+      if (attempts < 2) {
+        const err = new Error('Too Many Requests')
+        err.code = 429
+        err.description = 'Too Many Requests: retry after 1'
+        err.parameters = { retry_after: 1 }
+        return Promise.reject(err)
+      }
+      return Promise.resolve({ ok: true })
+    }
+    const result = await tg.callApi('addStickerToSet', { user_id: 999, name: 'pack' })
+    assert.strictEqual(result.ok, true, 'short retry_after should retry and succeed for any method')
+    assert.strictEqual(attempts, 2, 'should retry once then succeed')
+  })
+
+  await test('withRetry honors custom maxWait for direct (non-patched) calls', async () => {
+    // Background workers can pass their own maxWait to withRetry when
+    // they wrap non-Telegram async work. This validates the options
+    // override path — we don't go through tg.callApi here because the
+    // prototype patch applies its own withRetry and we'd nest them.
+    const { withRetry } = require('../utils/retry-api')
+    let attempts = 0
+    const start = Date.now()
+    await assert.rejects(withRetry(async () => {
       attempts++
       const err = new Error('Too Many Requests')
       err.code = 429
       err.description = 'Too Many Requests: retry after 2'
       err.parameters = { retry_after: 2 }
-      return Promise.reject(err)
-    }
-    const start = Date.now()
-    await assert.rejects(tg.callApi('addStickerToSet', { user_id: 999, name: 'pack' }))
+      throw err
+    }, { method: 'addStickerToSet', maxRetries: 1, maxWait: 10 }))
     const elapsed = Date.now() - start
-    assert.strictEqual(attempts, 1, 'heavy sticker methods must NOT retry even on short retry_after')
-    assert.ok(elapsed < 200, `must fail fast — got ${elapsed}ms`)
+    // maxRetries=1 → 2 total attempts; retry_after=2s ≤ maxWait=10 → 1 wait
+    assert.strictEqual(attempts, 2, 'should retry exactly once')
+    assert.ok(elapsed >= 2000, `should wait ~2s between attempts — got ${elapsed}ms`)
+    assert.ok(elapsed < 5000, `but not unreasonably long — got ${elapsed}ms`)
   })
 
   await test('retryMiddleware clears cache for incoming user', async () => {
