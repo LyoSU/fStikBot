@@ -615,22 +615,6 @@ scenes:
       <b><u>Escolher tipo de pacote</u></b>
     regular: '😊 Adesivo'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Estático'
-    animated: '✨ Vetor'
-    video: '📹 Vídeo'
-    pack_format: |
-      <b><u>Escolha o tipo de pacote</u></b>
-
-      <b>Comum</b> - estático (não mover), raster, arquivo formato - antes de adicionar PNG (o bot está processando), após adicionar - WEBP.
-      Um exemplo de pacote normal - t.me/addstickers/Animals
-
-      <b>Vídeo</b> - pacote de vídeo de animação. Você pode adicionar qualquer vídeo, gif e foto.
-      Exemplo de pacote de vídeos - t.me/addstickers/TheMascot
-
-      <b>Animado</b> - animado, vetorial (possuem uma descrição exata dos objetos dentro do arquivo, devido para o qual são exibidos claramente em qualquer escala), formato de arquivo - TGS, uma variação do formato Lottie.
-      Um exemplo de pacote animado - t.me/addstickers/IsabelleShizue
-
-      <i>Conjuntos de adesivos animados e de vídeo podem ter até 50 adesivos. Os conjuntos de adesivos estáticos podem ter até 120 adesivos.</i>
     pack_title: |
       <b>Digite o nome do novo pacote de sticker:</b>
       <i>Você pode escolher um nome aleatório no botão.</i>
