@@ -348,7 +348,7 @@ coedit:
     <b>Editores:</b>
     ${editors}
 
-    <i>Para remover editores, você precisa redefinir o link</i>${editors}
+    <i>Para remover editores, você precisa redefinir o link</i>
   no_editors: |
     Nenhum editor ainda
   btn:
@@ -741,6 +741,7 @@ scenes:
     no_other_packs: |
       <i>Não temos informações sobre outros adesivos deste proprietário</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b>Tem certeza de que deseja impulsionar <a href="${link}">${title}</a>?</b>
