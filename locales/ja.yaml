@@ -538,15 +538,9 @@ sticker:
 
           <i>作成（/new）するか、別のパック</i> を選択してください。
       wait_load: |
-        <b>待ってください！</b>
-
-        ボットはまだ前のファイルを処理中です...
-        処理の優先順位を上げたり、キューに複数のステッカーを追加できるように、ボットの開発を支援することができます (／donate)。
+        ⏳ Still processing previous file...
       timeout: |
-        <b>現在、ボットに大きな負荷がかかっています</b>
-        そのため、ビデオ変換はブーストが有効になっているパックでのみ利用可能です
-
-        詳細については、/donateをフォローしてください
+        ⚠️ High load right now. Please try again in a few minutes.
       convert: |
         <b>エラー!</b>
         残念ながら、ボットはビデオを変換できませんでした。
@@ -721,6 +715,7 @@ scenes:
     no_other_packs: |
       <i>この所有者の他のステッカーに関する情報はありません</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b><a href="${link}">${title}</a> を本当にブーストしますか?</b>
