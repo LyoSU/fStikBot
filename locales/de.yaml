@@ -611,22 +611,6 @@ scenes:
       <b><u>Pack-Typ wählen</u></b>
     regular: '😊 Sticker'
     custom_emoji: '🌟 Emoji (Premium)'
-    static: '🌟 Statisch'
-    animated: '✨ Vektor'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Pack-Typ wählen</u></b>
-
-      <b>Allgemein</b> - statisch (nicht beweglich), Raster, Dateiformat - vor dem Hinzufügen PNG (der Bot verarbeitet), nach dem Hinzufügen - WEBP.
-      Ein Beispiel für ein reguläres Pack - t.me/addstickers/Animals
-
-      <b>Video</b> - animiertes Video-Pack. Du kannst beliebige Videos, GIFs und Fotos hinzufügen.
-      Beispielvideo-Pack - t.me/addstickers/TheMascot
-
-      <b>Animiert</b> - animiert, Vektor (sie haben eine genaue Beschreibung der Objekte innerhalb der Datei, wodurch sie bei jeder Skalierung klar dargestellt werden), Dateiformat - TGS, eine Variation des Lottie-Formats.
-      Ein Beispiel für ein animiertes Pack - t.me/addstickers/IsabelleShizue
-
-      <i>Animierte und Video-Sticker-Sets können bis zu 50 Sticker enthalten. Statische Sticker-Sets können bis zu 120 Sticker enthalten.</i>
     pack_title: |
       <b>Gebe einen neuen Stickernamen ein:</b>
       <i>Du kannst durch den Knopf einen zufälligen Namen wählen.</i>
