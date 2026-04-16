@@ -122,16 +122,12 @@ module.exports = async (ctx) => {
             parse_mode: 'HTML'
           })
         } else {
-          let searchGifButton = []
-
-          if (stickerSet.video) {
-            let inlineData = ''
-            if (ctx.session.userInfo.inlineType === 'packs') {
-              inlineData = stegcloak.hide('{gif}', '', ' : ')
-            }
-
-            searchGifButton = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
+          let inlineData = ''
+          if (ctx.session.userInfo.inlineType === 'packs') {
+            inlineData = stegcloak.hide('{gif}', '', ' : ')
           }
+
+          const searchGifButton = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
 
           let coeditButton = []
 
@@ -183,10 +179,9 @@ module.exports = async (ctx) => {
               [
                 Markup.callbackButton(ctx.i18n.t('callback.pack.btn.rename'), `rename_pack:${stickerSet.id}`)
               ],
-              ...(stickerSet.video
-                ? [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')]]
-                : []
-              ),
+              [
+                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
+              ],
               ...(stickerSet.packType === 'custom_emoji'
                 ? [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.mosaic'), 'mosaic:enter')]]
                 : []
@@ -200,10 +195,6 @@ module.exports = async (ctx) => {
             ]),
             parse_mode: 'HTML'
           })
-
-          if (stickerSet.video && !stickerSet.frameType) {
-            return ctx.scene.enter('packFrame')
-          }
         }
       } else {
         await ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)

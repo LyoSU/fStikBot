@@ -570,14 +570,12 @@ newPackConfirm.enter(async (ctx, next) => {
           [
             Markup.callbackButton(ctx.i18n.t('callback.pack.btn.boost'), `boost:${userStickerSet.id}`, userStickerSet.boost)
           ],
-          ...(video
-            ? [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')]]
-            : []
-          ),
-          ...(video
-            ? [[Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]]
-            : []
-          ),
+          [
+            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
+          ],
+          [
+            Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)
+          ],
           [
             Markup.callbackButton(ctx.i18n.t('callback.pack.btn.coedit'), `coedit:${userStickerSet.id}`)
           ]
