@@ -609,22 +609,6 @@ scenes:
       <b><u>Paket növünü seçin</u></b>
     regular: '😊 Etiket'
     custom_emoji: '🌟 Emoji (mükafat)'
-    static: '🌟 Statik'
-    animated: '✨ Vektor'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Paket növünü seçin</u></b>
-
-      <b>Ümumi</b> - statik (hərəkət etməyin), rastr, fayl format - PNG əlavə etməzdən əvvəl (bot emal olunur), əlavə etdikdən sonra - WEBP.
-      Adi paketin nümunəsi - t.me/addstickers/Animals
-
-      <b>Video</b> - animasiya video paketi. İstənilən video, gif və foto əlavə edə bilərsiniz.
-      Nümunə video paketi - t.me/addstickers/TheMascot
-
-      <b>Animasiyalı</b> - animasiyalı, vektor (onlarda faylın daxilində olan obyektlərin dəqiq təsviri var. hər hansı bir miqyasda aydın şəkildə göstərildiyi), fayl formatı - TGS, Lottie formatının bir variasiyası.
-      Animasiya paketinə nümunə - t.me/addstickers/IsabelleShizue
-
-      <i>Animasiyalı və video stiker dəstlərində 50-yə qədər stiker ola bilər. Statik stiker dəstlərində 120-yə qədər stiker ola bilər.</i>
     pack_title: |
       <b>Yeni stiker paketi üçün bir ad daxil edin:</b>
       <i>Aşağıda təsadüfi olaraq yaradılan bir ad da seçə bilərsiniz.</i>
