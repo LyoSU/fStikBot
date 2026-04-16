@@ -1,17 +1,9 @@
 const Scene = require('telegraf/scenes/base')
 const sharp = require('sharp')
-const Queue = require('bull')
 const {
   showGramAds
 } = require('../utils')
-
-const removebgQueue = new Queue('removebg', {
-  redis: {
-    port: process.env.REDIS_PORT,
-    host: process.env.REDIS_HOST,
-    password: process.env.REDIS_PASSWORD
-  }
-})
+const { removebgQueue } = require('../utils/queues')
 
 const photoClearSelect = new Scene('photoClearSelect')
 

@@ -1,9 +1,9 @@
-const { telegramApi } = require('./utils')
+const { telegramApi } = require('../utils')
 const Telegram = require('telegraf/telegram')
 const {
   db
-} = require('./database')
-const decodeStickerSetId = require('./utils/decode-sticker-set-id')
+} = require('../database')
+const decodeStickerSetId = require('../utils/decode-sticker-set-id')
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 

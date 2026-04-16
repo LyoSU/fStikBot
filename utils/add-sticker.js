@@ -1,19 +1,18 @@
 const path = require('path')
-const https = require('https')
 const sharp = require('sharp')
-const Queue = require('bull')
-const Telegram = require('telegraf/telegram')
 const I18n = require('telegraf-i18n')
 const emojiRegex = require('emoji-regex')
 const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('../utils/add-sticker-text')
+const telegram = require('./telegram')
+const { convertQueue, removebgQueue } = require('./queues')
+const downloadFileByUrl = require('./download-file-by-url')
 
 // Track users with video currently processing (userId -> timestamp)
 const videoProcessing = new Map()
 const VIDEO_PROCESSING_TTL = 1000 * 60 * 2 // 2 minutes auto-unlock
 
-const telegram = new Telegram(process.env.BOT_TOKEN)
 let botInfo = null
 telegram.getMe().then((info) => {
   botInfo = info
@@ -23,20 +22,6 @@ const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
   defaultLanguage: 'uk',
   defaultLanguageOnMissing: true
-})
-
-const redisConfig = {
-  port: process.env.REDIS_PORT,
-  host: process.env.REDIS_HOST,
-  password: process.env.REDIS_PASSWORD
-}
-
-const removebgQueue = new Queue('removebg', {
-  redis: redisConfig
-})
-
-const convertQueue = new Queue('convert', {
-  redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST, password: process.env.REDIS_PASSWORD }
 })
 
 // Update queue position messages when jobs complete (event-driven, not polling)
@@ -62,10 +47,9 @@ async function updateConvertQueueMessages () {
   }
 }
 
-// Trigger queue position updates on meaningful events instead of polling every second
+// Trigger queue position updates only when a slot frees (completion shifts remaining waiting jobs).
+// global:failed/global:active previously duplicated this work and hammered Telegram with edits.
 convertQueue.on('global:completed', updateConvertQueueMessages)
-convertQueue.on('global:failed', updateConvertQueueMessages)
-convertQueue.on('global:active', updateConvertQueueMessages)
 
 convertQueue.on('global:completed', async (jobId, result) => {
   const { input, metadata, content } = JSON.parse(result)
@@ -131,42 +115,6 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
   }
 
   job.remove()
-})
-
-const downloadFileByUrl = (fileUrl, timeout = 30000) => new Promise((resolve, reject) => {
-  const data = []
-  let totalSize = 0
-  const MAX_SIZE = 20 * 1024 * 1024 // 20MB limit
-
-  const req = https.get(fileUrl, (response) => {
-    // Check for successful response status
-    if (response.statusCode !== 200) {
-      req.destroy()
-      reject(new Error(`Download failed with status ${response.statusCode}`))
-      return
-    }
-
-    response.on('data', (chunk) => {
-      totalSize += chunk.length
-      if (totalSize > MAX_SIZE) {
-        req.destroy()
-        reject(new Error('File too large'))
-        return
-      }
-      data.push(chunk)
-    })
-
-    response.on('end', () => {
-      resolve(Buffer.concat(data))
-    })
-  })
-
-  req.on('error', reject)
-
-  req.setTimeout(timeout, () => {
-    req.destroy()
-    reject(new Error('Download timeout'))
-  })
 })
 
 const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {

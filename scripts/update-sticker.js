@@ -1,8 +1,8 @@
-require('dotenv').config({ path: './.env' })
+require('dotenv').config({ path: '../.env' })
 const Telegram = require('telegraf/telegram')
 const {
   db
-} = require('./database')
+} = require('../database')
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
 

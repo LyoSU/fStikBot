@@ -1,14 +1,6 @@
 const Scene = require('telegraf/scenes/base')
-const Queue = require('bull')
 const { showGramAds } = require('../utils')
-
-const videoNoteQueue = new Queue('videoNote', {
-  redis: {
-    port: process.env.REDIS_PORT,
-    host: process.env.REDIS_HOST,
-    password: process.env.REDIS_PASSWORD
-  }
-})
+const { videoNoteQueue } = require('../utils/queues')
 
 const videoRound = new Scene('videoRound')
 

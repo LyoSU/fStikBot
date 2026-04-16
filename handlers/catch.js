@@ -1,15 +1,33 @@
+const fs = require('fs')
+const path = require('path')
 const util = require('util')
 const execFile = util.promisify(require('child_process').execFile)
 const errorStackParser = require('error-stack-parser')
 const { escapeHTML, isRateLimitError, getRetryAfter } = require('../utils')
+
+// Probe once at module load: is .git available at project root?
+// Skip git blame entirely in environments without .git (e.g. Docker deploys)
+// to avoid spawning a failing git process on every error.
+const HAS_GIT_DIR = (() => {
+  try {
+    return fs.existsSync(path.resolve(__dirname, '..', '.git'))
+  } catch (e) {
+    return false
+  }
+})()
 
 async function errorLog (error, ctx) {
   const errorInfo = errorStackParser.parse(error)
 
   let gitBlame
 
-  for (const ei of errorInfo) {
-    if (!gitBlame) gitBlame = await execFile('git', ['blame', '-L', `${ei.lineNumber},${ei.lineNumber}`, '--', ei.fileName]).catch(err => console.error('Failed to run git blame:', err.message))
+  if (HAS_GIT_DIR && errorInfo.length > 0) {
+    const ei = errorInfo[0]
+    gitBlame = await execFile(
+      'git',
+      ['blame', '-L', `${ei.lineNumber},${ei.lineNumber}`, '--', ei.fileName],
+      { timeout: 2000 }
+    ).catch(err => console.error('Failed to run git blame:', err.message))
   }
 
   let errorText = `<b>error for ${ctx.updateType}:</b>`

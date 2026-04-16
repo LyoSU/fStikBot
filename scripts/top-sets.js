@@ -1,10 +1,10 @@
 const Telegram = require('telegraf/telegram')
 const cron = require('node-cron')
-const { atlasDb } = require('./database')
-const { escapeHTML } = require('./utils')
+const { atlasDb } = require('../database')
+const { escapeHTML } = require('../utils')
 
 const telegram = new Telegram(process.env.BOT_TOKEN)
-const config = require('./config')
+const config = require('../config')
 
 // Define a function to get the most popular sticker packs in a week
 async function getPopularStickerPacks () {

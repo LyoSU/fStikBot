@@ -1,6 +1,6 @@
 const fs = require('fs')
 const Redis = require('ioredis')
-const Telegram = require('telegraf/telegram')
+const getTelegram = require('./telegram').get
 const replicators = require('telegraf/core/replicators')
 const {
   db
@@ -14,7 +14,7 @@ const redis = new Redis({
   maxRetriesPerRequest: 3
 })
 
-const telegram = new Telegram(process.env.MAIN_BOT_TOKEN)
+const telegram = getTelegram(process.env.MAIN_BOT_TOKEN)
 
 // Cache config at startup instead of reading on every call
 let cachedConfig = null

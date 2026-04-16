@@ -7,7 +7,6 @@ const updateUser = require('./user-update')
 const updateGroup = require('./group-update')
 const stats = require('./stats')
 const tenor = require('./tenor')
-const telegramEmojiText = require('./telegram-emoji-text')
 const countUncodeChars = require('./unicode-chars-count')
 const substrUnicode = require('./unicode-substr')
 const telegramApi = require('./telegram-api')
@@ -29,7 +28,6 @@ module.exports = {
   updateGroup,
   stats,
   tenor,
-  telegramEmojiText,
   countUncodeChars,
   substrUnicode,
   telegramApi,

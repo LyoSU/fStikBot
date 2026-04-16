@@ -17,21 +17,52 @@ const adminType = ['messaging', 'pack']
 
 const composer = new Composer()
 
-// Middleware to check admin rights (any admin role)
+// Shared pagination helper for getStarTransactions.
+// Caps total transactions to avoid unbounded admin flow on high-traffic bots.
+// filterKey: 'source' (incoming) or 'receiver' (outgoing).
+// Returns { transactions, truncated } — truncated=true if the cap was hit.
+const fetchTransactions = async (tg, filterKey, maxTransactions = 10000) => {
+  const transactions = []
+  const limit = 100
+  let offset = 0
+  let truncated = false
+
+  while (true) {
+    const result = await tg.callApi('getStarTransactions', { limit, offset })
+    if (!result.transactions || result.transactions.length === 0) break
+    transactions.push(...result.transactions.filter(item => item[filterKey]))
+    if (result.transactions.length < limit) break
+    offset += limit
+    if (transactions.length >= maxTransactions) {
+      truncated = true
+      break
+    }
+  }
+
+  if (transactions.length > maxTransactions) {
+    transactions.length = maxTransactions
+  }
+
+  return { transactions, truncated }
+}
+
+// Middleware to check admin rights (any admin role).
+// Silent no-op for non-admins so the admin panel's existence isn't confirmed to outsiders.
 const checkAdminRight = (ctx, next) => {
   if (ctx.config.mainAdminId === ctx.from.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.length > 0)) {
     return next()
   }
-  return ctx.replyWithHTML('🚫 You are not authorized to access the admin panel.')
+  // Silent: no reply, no callback answer — act as if the command doesn't exist.
 }
 
-// Middleware for sensitive operations (main admin only)
+// Middleware for sensitive operations (main admin only).
+// Non-admins get a generic callback answer with no message leak.
 const checkMainAdmin = (ctx, next) => {
   if (ctx.config.mainAdminId === ctx.from.id) {
     return next()
   }
-  if (ctx.callbackQuery) return ctx.answerCbQuery('🚫 Only the main admin can perform this action.', true)
-  return ctx.replyWithHTML('🚫 Only the main admin can perform this action.')
+  if (ctx.callbackQuery) return ctx.answerCbQuery('Action not available.')
+  // Silent for non-callback triggers: no message sent.
 }
 
 // Main admin panel menu
@@ -169,22 +200,16 @@ const initiateRefund = async (ctx) => {
 const getStarsTransactions = async (ctx) => {
   await ctx.answerCbQuery()
   try {
-    const transactions = []
-    let offset = 0
-    const limit = 100
-
-    while (true) {
-      const result = await ctx.tg.callApi('getStarTransactions', { limit, offset })
-      if (!result.transactions || result.transactions.length === 0) break
-      transactions.push(...result.transactions.filter(item => item.source))
-      if (result.transactions.length < limit) break
-      offset += limit
-    }
+    const { transactions, truncated } = await fetchTransactions(ctx.tg, 'source')
 
     transactions.sort((a, b) => b.date - a.date)
 
+    const csvHeader = truncated
+      ? `# NOTE: results truncated to first ${transactions.length} transactions\nDate,Transaction ID,Amount,USD Amount,User Name,User ID`
+      : 'Date,Transaction ID,Amount,USD Amount,User Name,User ID'
+
     const csvContent = [
-      'Date,Transaction ID,Amount,USD Amount,User Name,User ID',
+      csvHeader,
       ...transactions.map(item =>
         `"${new Date(item.date * 1000).toLocaleString()}","${item.id}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.source?.user?.first_name?.replace(/"/g, '""') || ''}",${item.source?.user?.id || ''}`
       )
@@ -198,7 +223,11 @@ const getStarsTransactions = async (ctx) => {
       `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   🆔 ID: <code>${item.id}</code>\n   👤 From: <a href="tg://user?id=${item.source.user.id}">${escape(item.source.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
     ).join('\n')
 
-    await ctx.editMessageText(`<b>📊 Last 20 Stars Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.`, {
+    const truncatedNote = truncated
+      ? `\n\n⚠️ <i>List truncated to first ${transactions.length} transactions.</i>`
+      : ''
+
+    await ctx.editMessageText(`<b>📊 Last 20 Stars Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.${truncatedNote}`, {
       parse_mode: 'HTML',
       disable_web_page_preview: true,
       reply_markup: Markup.inlineKeyboard([[Markup.callbackButton('🔙 Back', 'admin:transactions')]])
@@ -213,22 +242,16 @@ const getStarsTransactions = async (ctx) => {
 const getOutgoingTransactions = async (ctx) => {
   await ctx.answerCbQuery()
   try {
-    const transactions = []
-    let offset = 0
-    const limit = 100
-
-    while (true) {
-      const result = await ctx.tg.callApi('getStarTransactions', { limit, offset })
-      if (!result.transactions || result.transactions.length === 0) break
-      transactions.push(...result.transactions.filter(item => item.receiver))
-      if (result.transactions.length < limit) break
-      offset += limit
-    }
+    const { transactions, truncated } = await fetchTransactions(ctx.tg, 'receiver')
 
     transactions.sort((a, b) => b.date - a.date)
 
+    const csvHeader = truncated
+      ? `# NOTE: results truncated to first ${transactions.length} transactions\nDate,Transaction ID,Amount,USD Amount,Receiver Name,Receiver ID`
+      : 'Date,Transaction ID,Amount,USD Amount,Receiver Name,Receiver ID'
+
     const csvContent = [
-      'Date,Transaction ID,Amount,USD Amount,Receiver Name,Receiver ID',
+      csvHeader,
       ...transactions.map(item =>
         `"${new Date(item.date * 1000).toLocaleString()}","${item.id}",${item.amount},${(item.amount * 0.013).toFixed(2)},"${item?.receiver?.user?.first_name?.replace(/"/g, '""') || ''}",${item.receiver?.user?.id || ''}`
       )
@@ -242,7 +265,11 @@ const getOutgoingTransactions = async (ctx) => {
       `${index + 1}. <b>${item.amount} stars</b> ($${(item.amount * 0.013).toFixed(2)})\n   🆔 ID: <code>${item.id}</code>\n   👤 To: <a href="tg://user?id=${item.receiver.user.id}">${escape(item.receiver.user.first_name)}</a>\n   🕒 ${new Date(item.date * 1000).toLocaleString()}\n`
     ).join('\n')
 
-    await ctx.editMessageText(`<b>📊 Last 20 Outgoing Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.`, {
+    const truncatedNote = truncated
+      ? `\n\n⚠️ <i>List truncated to first ${transactions.length} transactions.</i>`
+      : ''
+
+    await ctx.editMessageText(`<b>📊 Last 20 Outgoing Transactions</b>\n\n${resultText}\n\nA CSV file with all transactions has been sent.${truncatedNote}`, {
       parse_mode: 'HTML',
       disable_web_page_preview: true,
       reply_markup: Markup.inlineKeyboard([[Markup.callbackButton('🔙 Back', 'admin:transactions')]])
@@ -355,9 +382,16 @@ const findUser = async (ctx, input) => {
     return null
   }
   const cleanInput = input.trim().replace(/^@/, '') // Remove @ prefix if present
-  return await ctx.db.User.findOne({
-    $or: [{ telegram_id: parseInt(cleanInput) || 0 }, { username: cleanInput }]
-  })
+  const numeric = Number(cleanInput)
+  const isNumeric = !Number.isNaN(numeric) && Number.isInteger(numeric) && cleanInput !== ''
+
+  // If input is non-numeric, only query by username (avoids accidental telegram_id:0 match).
+  // If numeric, query both (a username could legitimately be all digits).
+  const orClauses = isNumeric
+    ? [{ telegram_id: parseInt(cleanInput, 10) }, { username: cleanInput }]
+    : [{ username: cleanInput }]
+
+  return await ctx.db.User.findOne({ $or: orClauses })
 }
 
 // View user info

@@ -1,3 +1,5 @@
+const Telegram = require('telegraf/telegram')
+
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 /**
@@ -36,7 +38,8 @@ async function withRetry (fn, options = {}) {
 function isRateLimitError (error) {
   return error?.code === 429 ||
          error?.response?.error_code === 429 ||
-         error?.description?.includes('Too Many Requests')
+         /too many requests/i.test(error?.description || '') ||
+         /too many requests/i.test(error?.response?.description || '')
 }
 
 /**
@@ -49,54 +52,42 @@ function getRetryAfter (error) {
 }
 
 /**
- * Middleware for Telegraf that adds retry capability to context
+ * Patch Telegram.prototype.callApi once so every Telegram instance
+ * (including ones created via `new Telegram()` outside of Telegraf) gets
+ * automatic 429 retry handling. All ctx.reply*, ctx.editMessage*,
+ * ctx.answerCbQuery, ctx.telegram.* calls funnel through callApi, so
+ * wrapping it at the prototype level covers the entire surface.
+ */
+function patchTelegramPrototype () {
+  if (!Telegram || !Telegram.prototype) return
+  if (Telegram.prototype.__retryPatched) return
+
+  const originalCallApi = Telegram.prototype.callApi
+
+  Telegram.prototype.callApi = function patchedCallApi (...args) {
+    return withRetry(() => originalCallApi.apply(this, args))
+  }
+
+  Object.defineProperty(Telegram.prototype, '__retryPatched', {
+    value: true,
+    writable: false,
+    enumerable: false,
+    configurable: false
+  })
+}
+
+patchTelegramPrototype()
+
+/**
+ * Middleware for Telegraf that exposes `ctx.withRetry` for manual use.
+ *
+ * Note: explicit wrapping of ctx.reply, ctx.editMessageText,
+ * ctx.answerCbQuery, etc. is no longer needed — every one of those routes
+ * through `ctx.telegram.callApi` which is now patched at the prototype level.
  */
 function retryMiddleware () {
   return async (ctx, next) => {
-    // Add retry helper to context
     ctx.withRetry = (fn, options) => withRetry(fn, options)
-
-    // Wrap common reply methods with retry
-    const originalReplyWithHTML = ctx.replyWithHTML?.bind(ctx)
-    if (originalReplyWithHTML) {
-      ctx.replyWithHTML = (...args) => withRetry(() => originalReplyWithHTML(...args))
-    }
-
-    const originalReply = ctx.reply?.bind(ctx)
-    if (originalReply) {
-      ctx.reply = (...args) => withRetry(() => originalReply(...args))
-    }
-
-    const originalReplyWithPhoto = ctx.replyWithPhoto?.bind(ctx)
-    if (originalReplyWithPhoto) {
-      ctx.replyWithPhoto = (...args) => withRetry(() => originalReplyWithPhoto(...args))
-    }
-
-    const originalReplyWithDocument = ctx.replyWithDocument?.bind(ctx)
-    if (originalReplyWithDocument) {
-      ctx.replyWithDocument = (...args) => withRetry(() => originalReplyWithDocument(...args))
-    }
-
-    const originalReplyWithSticker = ctx.replyWithSticker?.bind(ctx)
-    if (originalReplyWithSticker) {
-      ctx.replyWithSticker = (...args) => withRetry(() => originalReplyWithSticker(...args))
-    }
-
-    const originalEditMessageText = ctx.editMessageText?.bind(ctx)
-    if (originalEditMessageText) {
-      ctx.editMessageText = (...args) => withRetry(() => originalEditMessageText(...args))
-    }
-
-    const originalEditMessageReplyMarkup = ctx.editMessageReplyMarkup?.bind(ctx)
-    if (originalEditMessageReplyMarkup) {
-      ctx.editMessageReplyMarkup = (...args) => withRetry(() => originalEditMessageReplyMarkup(...args))
-    }
-
-    const originalAnswerCbQuery = ctx.answerCbQuery?.bind(ctx)
-    if (originalAnswerCbQuery) {
-      ctx.answerCbQuery = (...args) => withRetry(() => originalAnswerCbQuery(...args), { maxRetries: 1 })
-    }
-
     return next()
   }
 }

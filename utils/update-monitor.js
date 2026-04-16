@@ -1,8 +1,6 @@
 /* eslint-disable camelcase */
 const config = require('../config.json')
-const Telegram = require('telegraf/telegram')
-
-const telegram = new Telegram(process.env.BOT_TOKEN)
+const telegram = require('./telegram')
 
 const updateMonitor = async () => {
   // check the number of updates to hang unmodified. we received a notification that a lot of updates were not completed. For example, for the duration of 1 update more than 10 updates were not processed

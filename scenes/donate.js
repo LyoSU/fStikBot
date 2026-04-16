@@ -50,7 +50,7 @@ const calculateStarPrice = (credits, locale) => {
 // Create invoice link for a specific credit amount
 const createInvoiceForAmount = async (ctx, amount, starPrice) => {
   const payment = new ctx.db.Payment({
-    _id: mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     user: ctx.session.userInfo._id,
     amount,
     price: starPrice,

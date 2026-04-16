@@ -30,6 +30,29 @@ const placeholder = {
 
 const stegcloak = new StegCloak(false, false)
 
+// Run `worker(item, index)` over `items` with at most `limit` concurrent tasks.
+// Results are returned in the original order. Errors thrown by the worker
+// are captured as { error } so one failure doesn't abort the pool.
+const runConcurrent = async (items, limit, worker) => {
+  const results = new Array(items.length)
+  let cursor = 0
+
+  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (true) {
+      const current = cursor++
+      if (current >= items.length) return
+      try {
+        results[current] = await worker(items[current], current)
+      } catch (err) {
+        results[current] = { error: err }
+      }
+    }
+  })
+
+  await Promise.all(runners)
+  return results
+}
+
 const newPack = new Scene('newPack')
 
 newPack.enter(async (ctx, next) => {
@@ -271,16 +294,13 @@ newPackConfirm.enter(async (ctx, next) => {
     }
 
     if (copyPack) {
-      const waitMessage = await ctx.replyWithHTML(ctx.i18n.t('⏳'), {
+      const waitMessage = await ctx.replyWithHTML('⏳', {
         reply_markup: {
           remove_keyboard: true
         }
       })
 
       const originalPackType = copyPack.sticker_type
-
-      console.log('originalPackType', originalPackType)
-      console.log('packType', packType)
 
       let uploadedStickers = []
 
@@ -600,6 +620,13 @@ newPackConfirm.enter(async (ctx, next) => {
     const batchAttemptedCount = hasPlaceholder ? 0 : Math.min(50, originalPack.stickers.length)
     const needsIndividualCopy = hasPlaceholder || originalPack.stickers.length > batchAttemptedCount || failedBatchIndices.length > 0
 
+    // Hoisted so the hasPlaceholder cleanup branch (line ~737) can reference
+    // them safely when runtime skips the needsIndividualCopy block.
+    let successCount = alreadyUploadedStickers
+    let failedCount = 0
+    let pendingCount = 0
+    let processed = 0
+
     if (needsIndividualCopy) {
       const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
         originalTitle: escapeHTML(originalPack.title),
@@ -610,14 +637,10 @@ newPackConfirm.enter(async (ctx, next) => {
         total: originalPack.stickers.length
       }))
 
-      let successCount = alreadyUploadedStickers
-      let failedCount = 0
-      let pendingCount = 0 // Stickers queued for async processing (video conversion)
-      let processed = 0
+      const COPY_CONCURRENCY = 5
 
-      // First, retry failed batch stickers
-      for (const failedIndex of failedBatchIndices) {
-        const result = await addSticker(ctx, originalPack.stickers[failedIndex], userStickerSet, false)
+      const processCopyItem = async (sticker) => {
+        const result = await addSticker(ctx, sticker, userStickerSet, false)
 
         if (result?.error) {
           failedCount++
@@ -644,36 +667,14 @@ newPackConfirm.enter(async (ctx, next) => {
           ).catch(() => {})
         }
       }
+
+      // First, retry failed batch stickers (in parallel, preserving order isn't needed)
+      const retryItems = failedBatchIndices.map((failedIndex) => originalPack.stickers[failedIndex])
+      await runConcurrent(retryItems, COPY_CONCURRENCY, (sticker) => processCopyItem(sticker))
 
       // Then, continue with stickers after batch (index >= 50)
-      for (let index = batchAttemptedCount; index < originalPack.stickers.length; index++) {
-        const result = await addSticker(ctx, originalPack.stickers[index], userStickerSet, false)
-
-        if (result?.error) {
-          failedCount++
-        } else if (result?.wait) {
-          // Video stickers queued for async processing - don't count as success yet
-          pendingCount++
-        } else {
-          successCount++
-        }
-        processed++
-
-        if (processed % 10 === 0) {
-          await ctx.telegram.editMessageText(
-            message.chat.id, message.message_id, null,
-            ctx.i18n.t('scenes.copy.progress', {
-              originalTitle: escapeHTML(originalPack.title),
-              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-              title: escapeHTML(title),
-              link: `${ctx.config.stickerLinkPrefix}${name}`,
-              current: successCount + pendingCount,
-              total: originalPack.stickers.length
-            }),
-            { parse_mode: 'HTML' }
-          ).catch(() => {})
-        }
-      }
+      const tailItems = originalPack.stickers.slice(batchAttemptedCount)
+      await runConcurrent(tailItems, COPY_CONCURRENCY, (sticker) => processCopyItem(sticker))
 
       await ctx.telegram.deleteMessage(message.chat.id, message.message_id)
 

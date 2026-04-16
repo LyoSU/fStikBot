@@ -2,13 +2,11 @@ const { db } = require('../database')
 const OpenAI = require('openai')
 const got = require('got')
 const sharp = require('sharp')
-const Telegram = require('telegraf/telegram')
+const telegram = require('./telegram')
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
-
-const telegram = new Telegram(process.env.BOT_TOKEN)
 const RELEVANT_CATEGORIES = [
   'sexual/minors',
   'violence/graphic',

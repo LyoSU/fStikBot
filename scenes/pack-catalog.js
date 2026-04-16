@@ -1,12 +1,12 @@
 const fs = require('fs')
 const path = require('path')
-const Telegram = require('telegraf/telegram')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const mongoose = require('mongoose')
 const { db } = require('../database')
 const { escapeHTML, telegramApi } = require('../utils')
+const telegram = require('../utils/telegram')
 
 function stickerSetIdToOwnerId (u64) {
   const u32 = u64 >> 32n
@@ -16,8 +16,6 @@ function stickerSetIdToOwnerId (u64) {
   }
   return parseInt(u32)
 }
-
-const telegram = new Telegram(process.env.BOT_TOKEN)
 
 const { match } = I18n
 const i18n = new I18n({

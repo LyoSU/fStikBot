@@ -41,7 +41,7 @@ module.exports = async (ctx) => {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
 
-    packBotUsername = setName.split('_').pop(-1)
+    packBotUsername = setName.split('_').pop()
 
     if (!message?.reply_to_message || !packBotUsername || packBotUsername !== ctx?.options?.username) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
