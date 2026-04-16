@@ -61,10 +61,7 @@ module.exports = (bot, {
       ctx.session.chainActions.push(action)
     }
 
-    if (ctx.inlineQuery) {
-      await updateUser(ctx)
-      ctx.state.answerIQ = []
-    }
+    if (ctx.inlineQuery) ctx.state.answerIQ = []
     if (ctx.callbackQuery) ctx.state.answerCbQuery = []
 
     return next(ctx).then(() => {
@@ -133,19 +130,28 @@ module.exports = (bot, {
     }
     const handlerStart = Date.now()
     try {
-      await next(ctx)
-    } finally {
-      perfRecord('handler', Date.now() - handlerStart)
-    }
-    if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
-      const saveStart = Date.now()
       try {
-        await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
+        await next(ctx)
       } finally {
-        perfRecord('userSave', Date.now() - saveStart)
+        // Wall-clock handler duration — recorded on success and on error
+        // so perf samples reflect real load even when handlers throw.
+        perfRecord('handler', Date.now() - handlerStart)
       }
+      // save() only runs on normal completion (preserves original behavior:
+      // don't persist userInfo after a handler error).
+      if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
+        const saveStart = Date.now()
+        try {
+          await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
+        } finally {
+          perfRecord('userSave', Date.now() - saveStart)
+        }
+      }
+    } finally {
+      // perfTick fires regardless of handler outcome so log cadence stays
+      // stable under error load.
+      perfTick()
     }
-    perfTick()
   })
 
   // my_chat_member updates are noisy — ignore them after user-update above
