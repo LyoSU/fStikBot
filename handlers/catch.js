@@ -82,12 +82,31 @@ async function errorLog (error, ctx) {
   }
 }
 
+// Errors that aren't actionable — we expect them in normal operation
+// and logging each one just drowns out real signals.
+function isExpectedNoise (error) {
+  if (!error) return false
+
+  // retry-api short-circuited a send to a blocked user — already handled
+  if (error.__cachedBlock) return true
+
+  const method = error?.on?.method
+  const description = error?.description || ''
+
+  // answerCallbackQuery expiry: callback_query_id has a ~5–10 min TTL
+  // at Telegram. Handlers with handlerTimeout=60s rarely overrun this
+  // directly, but a handler that sleeps on a 429 retry + does slow I/O
+  // can. When it eventually answers, Telegram replies 400 "query is
+  // too old". Not actionable — user already saw the button press.
+  if (method === 'answerCallbackQuery' && /query is too old|query ID is invalid/i.test(description)) {
+    return true
+  }
+
+  return false
+}
+
 module.exports = async (error, ctx) => {
-  // Synthetic 403 from the retry-api short-circuit (user already known
-  // to be blocked). The original send was already aborted, so there's
-  // nothing new to log — surfacing it here would just spam the admin
-  // log channel once per short-circuited reply in a cascade.
-  if (error?.__cachedBlock) return
+  if (isExpectedNoise(error)) return
 
   console.error(error)
 
