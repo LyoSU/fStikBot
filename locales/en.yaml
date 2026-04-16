@@ -538,12 +538,8 @@ sticker:
           <i>Create (/new) or choose (/packs) another pack</i>
       wait_load: |
         ⏳ Still processing previous file...
-
-        Boost = multiple files at once → /donate
       timeout: |
-        ⚠️ High load. Video conversion only for boosted packs.
-
-        /donate
+        ⚠️ High load right now. Please try again in a few minutes.
       convert: |
         Couldn't convert video.
 
@@ -720,6 +716,7 @@ scenes:
     no_other_packs: |
       <i>We have no information about other stickers of this owner</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       Boost <a href="${link}">${title}</a>?

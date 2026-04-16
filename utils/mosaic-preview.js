@@ -3,7 +3,7 @@ const sharp = require('sharp')
 const generatePreview = async (imageBuffer, rows, cols) => {
   const image = sharp(imageBuffer, {
     failOnError: false,
-    limitInputPixels: false
+    limitInputPixels: 268402689
   })
 
   const metadata = await image.metadata()

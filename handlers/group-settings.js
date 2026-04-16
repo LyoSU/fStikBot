@@ -29,7 +29,8 @@ composer.command('group_settings', onlyGroupAdmin, async (ctx) => {
   const type = ctx.message.text.split(' ')[1]
   const rights = ctx.message.text.split(' ')[2]
 
-  if (!type || !rights) {
+  const allowedTypes = ['add', 'delete']
+  if (!type || !rights || !allowedTypes.includes(type)) {
     return
   }
 

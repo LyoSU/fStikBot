@@ -14,7 +14,7 @@ module.exports = async (ctx, next) => {
     return next()
   }
 
-  const getStickerSet = await ctx.getStickerSet(ctx.match[2]).catch(() => null)
+  const getStickerSet = await ctx.telegram.getStickerSet(ctx.match[2]).catch(() => null)
 
   if (!getStickerSet) {
     return ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.restore'), {

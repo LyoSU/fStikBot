@@ -12,6 +12,10 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 
+  if (sticker.stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
+  }
+
   let newFileUniqueId
 
   if (sticker.stickerSet.inline === true) {

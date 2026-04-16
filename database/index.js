@@ -106,7 +106,7 @@ db.StickerSet.getSet = async (stickerSetInfo) => {
   let stickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
 
   if (!stickerSet) {
-    stickerSet = db.StickerSet.newSet(stickerSetInfo)
+    stickerSet = await db.StickerSet.newSet(stickerSetInfo)
   }
 
   return stickerSet

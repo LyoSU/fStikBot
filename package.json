@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/LyoSU/fStikBot#readme",
   "dependencies": {
-    "@foile/crypto-pay-api": "^1.0.4",
     "@pm2/io": "^6.1.0",
     "bull": "^4.7.0",
     "dotenv": "^16.4.7",
@@ -38,8 +37,7 @@
     "telegraf": "^3.40.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-ratelimit": "^2.0.0",
-    "telegram": "^2.15.15",
-    "wallet-pay-sdk": "^1.0.5"
+    "telegram": "^2.15.15"
   },
   "devDependencies": {
     "eslint": "^8.57.0",

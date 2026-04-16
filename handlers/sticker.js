@@ -279,6 +279,8 @@ module.exports = async (ctx, next) => {
 
       ctx.session.previousSticker = null
 
+      ctx.telegram.sendChatAction(ctx.chat.id, 'choose_sticker').catch(() => {})
+
       const stickerInfo = await addSticker(ctx, stickerFile, stickerSet)
 
       if (stickerInfo.wait) {
@@ -291,7 +293,7 @@ module.exports = async (ctx, next) => {
       replyMarkup = result.replyMarkup
 
       if (typeof stickerSet?.publishDate === 'undefined' && stickerSet?.packType === 'regular') {
-        const countStickers = await ctx.db.Sticker.count({
+        const countStickers = await ctx.db.Sticker.countDocuments({
           stickerSet,
           deleted: false
         })

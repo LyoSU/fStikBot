@@ -203,7 +203,7 @@ callback:
     set_inline_pack: |
       Seçilen <u>${title}</u> paket
 
-      Kullanmak için herhangi bir sohbete <code>@${botKullanıcıAdı}</code> yazın ve boşluk bırakın
+      Kullanmak için herhangi bir sohbete <code>@${botUsername}</code> yazın ve boşluk bırakın
       Ayrıca, aşağıdaki düğmeye basarak da kullanabilirsiniz
     boost:
       info: |

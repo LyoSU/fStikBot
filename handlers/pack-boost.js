@@ -16,6 +16,10 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
 
   if (!stickerSet) return ctx.answerCbQuery(ctx.i18n.t('scenes.error.notFound'))
 
+  if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
+  }
+
   if (ctx.match[1] === 'yes') {
     if (ctx.session.userInfo.balance < 1) return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.not_enough_credits'), true)
 

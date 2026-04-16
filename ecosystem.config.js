@@ -3,7 +3,7 @@ module.exports = {
     name: 'fStikBot',
     script: './index.js',
     max_memory_restart: '2000M',
-    watch: true,
+    watch: false,
     cron_restart: '0 */6 * * *', // restart every 6 hours
     env: {
       NODE_ENV: 'development'

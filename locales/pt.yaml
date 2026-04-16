@@ -176,7 +176,7 @@ coedit:
     <b>Editores:</b>
     ${editors}
 
-    <i>Para remover editores, você precisa redefinir o link</i>${editors}
+    <i>Para remover editores, você precisa redefinir o link</i>
   no_editors: |
     Nenhum editor ainda
   btn:

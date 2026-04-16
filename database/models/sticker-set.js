@@ -57,6 +57,10 @@ const stickerSetsSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   public: {
     type: Boolean,
     default: false

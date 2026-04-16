@@ -29,7 +29,7 @@ module.exports = async (ctx) => {
     if (ctx.match[2] === 'inline') {
       const findStickerSet = await ctx.db.StickerSet.findOne({
         owner: userInfo.id,
-        delete: { $ne: true },
+        deleted: { $ne: true },
         inline: true
       }).sort({
         updatedAt: -1
@@ -47,7 +47,7 @@ module.exports = async (ctx) => {
     } else {
       const findStickerSet = await ctx.db.StickerSet.findOne({
         owner: userInfo.id,
-        delete: { $ne: true },
+        deleted: { $ne: true },
         packType: ctx.match[2]
       }).sort({
         updatedAt: -1

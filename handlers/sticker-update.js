@@ -71,7 +71,7 @@ module.exports = async (ctx, next) => {
   })
 
   if (updateResult) {
-    sticker.emoji = emojis.join(' ')
+    sticker.emojis = emojis.join(' ')
     await sticker.save()
 
     await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.done'), {

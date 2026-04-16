@@ -94,7 +94,7 @@ const messaging = async (messagingData) => {
 
         try {
           const result = await telegram.callApi(method, opts)
-          await redis.set(key + ':messages:' + chatId, result.message_id)
+          await redis.set(key + ':messages:' + chatId, result.message_id, 'EX', 604800)
         } catch (error) {
           await redis.incr(key + ':error')
           console.log(`messaging error ${messagingData.name}`, chatId, error.description)
@@ -126,7 +126,7 @@ const messaging = async (messagingData) => {
       messagingData.result.error = errorCount
       messagingData.result.state = state + users.length
 
-      await redis.set(key + ':state', state + users.length)
+      await redis.set(key + ':state', state + users.length, 'EX', 604800)
     }
 
     if (state + users.length >= messagingData.result.total) {
@@ -206,7 +206,7 @@ const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
               })
             }
           }
-          await redis.set(key + ':edit_state', state + count)
+          await redis.set(key + ':edit_state', state + count, 'EX', 604800)
         }
       } catch (error) {
         console.error('Messaging edit interval error:', error.message)
@@ -230,7 +230,7 @@ async function processMessagingQueue () {
   try {
     const pendingMessages = await db.Messaging.find({
       status: { $lte: 0 },
-      date: { $lte: new Date() }
+      date: { $ne: null, $lte: new Date() }
     }).limit(10)
 
     for (const msg of pendingMessages) {
@@ -250,7 +250,7 @@ async function processEditQueue () {
   try {
     const pendingEdits = await db.Messaging.find({
       editStatus: 1,
-      date: { $lte: new Date() }
+      date: { $ne: null, $lte: new Date() }
     }).limit(10)
 
     for (const msg of pendingEdits) {

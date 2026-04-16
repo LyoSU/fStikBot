@@ -1,13 +1,7 @@
-const fs = require('fs')
-const path = require('path')
-const got = require('got')
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
-const CryptoPay = require('@foile/crypto-pay-api')
 const { escapeHTML: escape } = require('../../utils')
-
-const cryptoPay = new CryptoPay.CryptoPay(process.env.CRYPTOPAY_API_KEY)
 
 const i18n = new I18n({
   directory: `${__dirname}/../../locales`,
@@ -22,12 +16,21 @@ const adminType = ['messaging', 'pack']
 
 const composer = new Composer()
 
-// Middleware to check admin rights
+// Middleware to check admin rights (any admin role)
 const checkAdminRight = (ctx, next) => {
   if (ctx.config.mainAdminId === ctx.from.id || (ctx.session.userInfo.adminRights && ctx.session.userInfo.adminRights.length > 0)) {
     return next()
   }
   return ctx.replyWithHTML('🚫 You are not authorized to access the admin panel.')
+}
+
+// Middleware for sensitive operations (main admin only)
+const checkMainAdmin = (ctx, next) => {
+  if (ctx.config.mainAdminId === ctx.from.id) {
+    return next()
+  }
+  if (ctx.callbackQuery) return ctx.answerCbQuery('🚫 Only the main admin can perform this action.', true)
+  return ctx.replyWithHTML('🚫 Only the main admin can perform this action.')
 }
 
 // Main admin panel menu
@@ -122,15 +125,11 @@ const displayTransactionHistory = async (ctx) => {
 
 View transaction history:
 
-🔹 Crypto Transactions
-🔹 MonoBank Transactions
 🔹 Stars Transactions
 🔹 Outgoing Transactions
 `
 
   const inlineKeyboard = [
-    [Markup.callbackButton('🪙 Crypto Transactions', 'admin:history:crypto')],
-    [Markup.callbackButton('🏦 MonoBank Transactions', 'admin:history:mono')],
     [Markup.callbackButton('⭐️ Stars Transactions', 'admin:history:stars')],
     [Markup.callbackButton('📤 Outgoing Transactions', 'admin:history:out')],
     [Markup.callbackButton('🔙 Back to Admin Panel', 'admin:main')]
@@ -163,49 +162,6 @@ const initiateRefund = async (ctx) => {
   await ctx.answerCbQuery()
   await ctx.replyWithHTML('Please enter the payment ID to refund:')
   ctx.session.awaitingInput = 'refund_payment'
-}
-
-// Get last crypto transactions
-const getLastCryptoTransactions = async (ctx) => {
-  await ctx.answerCbQuery()
-  try {
-    const result = await cryptoPay.getInvoices({ status: 'paid', count: 10 })
-    const resultText = result.items.map((item, index) =>
-      `${index + 1}. <b>${escape(item.description)}</b>\n   💰 ${item.amount} ${item.asset}\n   🕒 ${new Date(item.paid_at).toLocaleString()}\n`
-    ).join('\n')
-
-    await ctx.editMessageText(`<b>📊 Last 10 Crypto Transactions</b>\n\n${resultText}`, {
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-      reply_markup: Markup.inlineKeyboard([[Markup.callbackButton('🔙 Back', 'admin:transactions')]])
-    })
-  } catch (error) {
-    console.error('Error fetching crypto transactions:', error)
-    await ctx.answerCbQuery('Failed to fetch crypto transactions. Please try again later.', true)
-  }
-}
-
-// Get last MonoBank transactions
-const getLastMonoTransactions = async (ctx) => {
-  await ctx.answerCbQuery()
-  try {
-    const result = await got(`https://api.monobank.ua/personal/statement/${process.env.MONO_ACCOUNT}/${Math.floor(Date.now() / 1000) - 86400 * 3}`, {
-      headers: { 'X-Token': process.env.MONO_TOKEN }
-    }).json()
-
-    const resultText = result.slice(0, 10).map((item, index) =>
-      `${index + 1}. <b>${escape(item.description)}</b>\n   💰 ${item.amount / 100} ${item.currencyCode}\n   💬 <code>${escape(item.comment)}</code>\n   🕒 ${new Date(item.time * 1000).toLocaleString()}\n`
-    ).join('\n')
-
-    await ctx.editMessageText(`<b>📊 Last 10 MonoBank Transactions</b>\n\n${resultText}`, {
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-      reply_markup: Markup.inlineKeyboard([[Markup.callbackButton('🔙 Back', 'admin:transactions')]])
-    })
-  } catch (error) {
-    console.error('Error fetching MonoBank transactions:', error)
-    await ctx.answerCbQuery('Failed to fetch MonoBank transactions. Please try again later.', true)
-  }
 }
 
 // Get stars transactions
@@ -450,7 +406,7 @@ const handleViewUserInfo = async (ctx, input) => {
 
 // Register command handlers
 composer.command('admin', checkAdminRight, displayAdminPanel)
-composer.command('ban', checkAdminRight, async (ctx) => {
+composer.command('ban', checkMainAdmin, async (ctx) => {
   const userId = ctx.message.text.split(' ')[1]
   if (userId) {
     await handleBanUser(ctx, userId)
@@ -458,33 +414,29 @@ composer.command('ban', checkAdminRight, async (ctx) => {
     await ctx.replyWithHTML('Please provide a user ID or username. Usage: /ban <user_id or @username>')
   }
 })
-composer.hears(/^\/credit\s+(\S+)\s+(-?\d+)$/, checkAdminRight, async (ctx) => {
+composer.hears(/^\/credit\s+(\S+)\s+(-?\d+)$/, checkMainAdmin, async (ctx) => {
   const [, userId, amount] = ctx.match
   await handleSetPremium(ctx, `${userId} ${amount}`)
 })
-composer.hears(/^\/refund\s+(.+)$/, checkAdminRight, async (ctx) => {
+composer.hears(/^\/refund\s+(.+)$/, checkMainAdmin, async (ctx) => {
   const [, paymentId] = ctx.match
   await handleRefundPayment(ctx, paymentId)
 })
-composer.command('crypto', checkAdminRight, getLastCryptoTransactions)
-composer.command('mono', checkAdminRight, getLastMonoTransactions)
 composer.command('stars', checkAdminRight, getStarsTransactions)
 
 // Register menu handlers
 composer.hears([I18n.match('start.menu.admin')], checkAdminRight, displayAdminPanel)
 composer.action('admin:main', checkAdminRight, displayAdminPanel)
-composer.action('admin:user_management', checkAdminRight, displayUserManagement)
-composer.action('admin:financial_ops', checkAdminRight, displayFinancialOps)
-composer.action('admin:transactions', checkAdminRight, displayTransactionHistory)
-composer.action('admin:user:ban', checkAdminRight, toggleUserBan)
-composer.action('admin:user:premium', checkAdminRight, setPremiumCredits)
-composer.action('admin:user:info', checkAdminRight, viewUserInfo)
-composer.action('admin:finance:refund', checkAdminRight, initiateRefund)
-composer.action('admin:finance:credits', checkAdminRight, setPremiumCredits)
-composer.action('admin:history:crypto', checkAdminRight, getLastCryptoTransactions)
-composer.action('admin:history:mono', checkAdminRight, getLastMonoTransactions)
-composer.action('admin:history:stars', checkAdminRight, getStarsTransactions)
-composer.action('admin:history:out', checkAdminRight, getOutgoingTransactions)
+composer.action('admin:user_management', checkMainAdmin, displayUserManagement)
+composer.action('admin:financial_ops', checkMainAdmin, displayFinancialOps)
+composer.action('admin:transactions', checkMainAdmin, displayTransactionHistory)
+composer.action('admin:user:ban', checkMainAdmin, toggleUserBan)
+composer.action('admin:user:premium', checkMainAdmin, setPremiumCredits)
+composer.action('admin:user:info', checkMainAdmin, viewUserInfo)
+composer.action('admin:finance:refund', checkMainAdmin, initiateRefund)
+composer.action('admin:finance:credits', checkMainAdmin, setPremiumCredits)
+composer.action('admin:history:stars', checkMainAdmin, getStarsTransactions)
+composer.action('admin:history:out', checkMainAdmin, getOutgoingTransactions)
 
 // Handle "Back" actions
 composer.action(/admin:.*:back/, async (ctx) => {
@@ -511,6 +463,13 @@ adminType.forEach(type => {
 // Handle user input for various operations
 const handleAwaitingInput = async (ctx, next) => {
   if (!ctx.session.awaitingInput) return next()
+
+  // Sensitive operations require main admin
+  const sensitiveOps = ['ban_user', 'set_premium', 'refund_payment']
+  if (sensitiveOps.includes(ctx.session.awaitingInput) && ctx.config.mainAdminId !== ctx.from.id) {
+    ctx.session.awaitingInput = null
+    return ctx.replyWithHTML('🚫 Only the main admin can perform this action.')
+  }
 
   switch (ctx.session.awaitingInput) {
     case 'ban_user':

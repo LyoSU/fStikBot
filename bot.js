@@ -195,9 +195,9 @@ bot.use(async (ctx, next) => {
 
 bot.use(Composer.groupChat(Composer.command(updateGroup)))
 
-bot.command('json', ({ replyWithHTML, message }) =>
+bot.command('json', Composer.privateChat(({ replyWithHTML, message }) =>
   replyWithHTML('<code>' + JSON.stringify(message, null, 2) + '</code>')
-)
+))
 
 bot.use((ctx, next) => {
   // лагідна українізація
@@ -394,7 +394,7 @@ privateMessage.action(/^show_all_packs$/, async (ctx) => {
   const packs = await db.StickerSet.find({
     ownerTelegramId: data.ownerId,
     _id: { $ne: data.excludeSetId }
-  })
+  }).limit(500)
 
   if (packs.length === 0) {
     return
@@ -410,7 +410,7 @@ privateMessage.action(/^show_all_packs$/, async (ctx) => {
       ) {
         return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
       } else {
-        return '<i>[hidden]</i>'
+        return ctx.i18n.t('scenes.packAbout.hidden')
       }
     }
     return `<a href="https://t.me/addstickers/${pack.name}">${pack.name}</a>`
@@ -437,7 +437,7 @@ privateMessage.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalo
 bot.command('lang', handleLanguage)
 bot.action(/set_language:(.*)/, handleLanguage)
 
-bot.command('error', ctx => ctx.replyWithHTML(error))
+// /error command removed — referenced undefined variable
 
 privateMessage.action(/delete_pack:(.*)/, async (ctx) => ctx.scene.enter('packDelete'))
 
@@ -491,7 +491,7 @@ db.connection.once('open', async () => {
     bot.launch({
       webhook: {
         domain: process.env.BOT_DOMAIN,
-        hookPath: `/fStikBot:${process.env.BOT_TOKEN}`,
+        hookPath: `/fStikBot/${require('crypto').createHash('sha256').update(process.env.BOT_TOKEN).digest('hex')}`,
         port: process.env.WEBHOOK_PORT || 2500
       }
     }).then(() => {
@@ -670,3 +670,12 @@ db.connection.once('open', async () => {
     }
   }, MEMORY_CHECK_INTERVAL_MS)
 })
+
+// Graceful shutdown — PM2 sends SIGTERM before killing
+const gracefulShutdown = (signal) => {
+  console.log(`${signal} received, shutting down gracefully...`)
+  bot.stop(signal)
+  process.exit(0)
+}
+process.on('SIGTERM', gracefulShutdown)
+process.on('SIGINT', gracefulShutdown)

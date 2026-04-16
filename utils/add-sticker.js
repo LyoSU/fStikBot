@@ -2,15 +2,12 @@ const path = require('path')
 const https = require('https')
 const sharp = require('sharp')
 const Queue = require('bull')
-const EventEmitter = require('events')
 const Telegram = require('telegraf/telegram')
 const I18n = require('telegraf-i18n')
 const emojiRegex = require('emoji-regex')
 const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('../utils/add-sticker-text')
-
-EventEmitter.defaultMaxListeners = 100
 
 // Track users with video currently processing (userId -> timestamp)
 const videoProcessing = new Map()
@@ -42,33 +39,33 @@ const convertQueue = new Queue('convert', {
   redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST, password: process.env.REDIS_PASSWORD }
 })
 
+// Update queue position messages when jobs complete (event-driven, not polling)
 async function updateConvertQueueMessages () {
-  const jobs = await convertQueue.getJobs()
-  const waiting = (await convertQueue.getWaiting()).map((job) => job.id)
+  try {
+    const waiting = await convertQueue.getWaiting()
 
-  for (const job of jobs) {
-    if (job?.data?.input?.convertingMessageId) {
-      const { input, metadata, content, error } = job.data
+    for (let i = 0; i < waiting.length; i++) {
+      const job = waiting[i]
+      if (job?.data?.input?.convertingMessageId) {
+        const { input } = job.data
 
-      const progress = waiting.findIndex((id) => id === job.id)
-
-      await telegram.editMessageText(input.chatId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
-        progress: progress + 1,
-        total: jobs.length
-      }), {
-        parse_mode: 'HTML'
-      }).catch(() => {})
+        await telegram.editMessageText(input.chatId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
+          progress: i + 1,
+          total: waiting.length
+        }), {
+          parse_mode: 'HTML'
+        }).catch(() => {})
+      }
     }
-
-    if (job?.failedReason) {
-      job.remove()
-    }
+  } catch (err) {
+    console.error('updateConvertQueueMessages error:', err.message)
   }
-
-  setTimeout(updateConvertQueueMessages, 1000)
 }
 
-updateConvertQueueMessages()
+// Trigger queue position updates on meaningful events instead of polling every second
+convertQueue.on('global:completed', updateConvertQueueMessages)
+convertQueue.on('global:failed', updateConvertQueueMessages)
+convertQueue.on('global:active', updateConvertQueueMessages)
 
 convertQueue.on('global:completed', async (jobId, result) => {
   const { input, metadata, content } = JSON.parse(result)
@@ -711,7 +708,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
 
   const imageSharp = sharp(fileData, {
     failOnError: false,
-    limitInputPixels: false,
+    limitInputPixels: 268402689,
     pages: 1
   })
 
