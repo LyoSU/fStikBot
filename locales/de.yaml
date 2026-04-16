@@ -559,15 +559,9 @@ sticker:
 
           <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
       wait_load: |
-        <b>Warten!</b>
-
-        Der Bot verarbeitet noch die vorherige Datei...
-        Du kannst die Bot-Entwicklung unterstützen (/donate), um die Priorität bei der Bearbeitung zu erhöhen und die Möglichkeit zu erhalten, mehr als einen Sticker in die Warteschlange zu stellen.
+        ⏳ Still processing previous file...
       timeout: |
-        <b>Zur Zeit erlebt der Bot eine enorme Belastung</b>
-        Daher ist die Videokonvertierung nur für Packs mit aktivem Boost verfügbar
-
-        Für weitere Informationen folge dem Befehl /donate
+        ⚠️ High load right now. Please try again in a few minutes.
       convert: |
         <b>Fehler!</b>
         Leider konnte der Bot dein Video nicht konvertieren.
@@ -743,6 +737,7 @@ scenes:
     no_other_packs: |
       <i>Wir haben keine Informationen über andere Sticker dieses Besitzers</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b>Sind Sie sicher, dass Sie <a href="${link}">${title}</a> boosten möchten?</b>
