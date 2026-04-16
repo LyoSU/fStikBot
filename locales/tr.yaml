@@ -614,22 +614,6 @@ scenes:
       <b><u>Paket türünü seçin</u></b>
     regular: '😊 Çıkartmalar'
     custom_emoji: '🌟 Emoji (premium)'
-    static: '🌟 Statik'
-    animated: '✨ vektör'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Çıkartma paketi türünü seçin</u></b>
-
-      <b>Ortak</b> - statik (hareket etmeyin), raster, dosya formatı - PNG eklemeden önce (bot işliyor), ekledikten sonra - WEBP.
-      Normal çıkartma paketi örneği - t.me/addstickers/Animals
-
-      <b>Video</b> - animasyon video paketi. Herhangi bir video, gif ve fotoğraf ekleyebilirsiniz.
-      Örnek video çıkartma paketi - t.me/addstickers/TheMascot
-
-      <b>Animasyonlu</b> - animasyonlu, vektör (dosyanın içindeki nesnelerin tam bir açıklaması vardır, bu nedenle her ölçekte net bir şekilde görüntülenirler), dosya formatı - TGS, Lottie biçiminin bir varyasyonu.
-      Animasyonlu çıkartma paketi örneği - t.me/addstickers/IsabelleShizue
-
-      <i>Animasyonlu ve video çıkartma setlerinde en fazla 50 çıkartma bulunabilir. Statik çıkartma setlerinde en fazla 120 çıkartma bulunabilir.</i>
     pack_title: |
       <b>Çıkartma paketine yeni bir isim gir:</b>
     pack_name: |
