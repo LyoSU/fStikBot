@@ -1,8 +1,6 @@
 const fs = require('fs')
-const path = require('path')
 const Redis = require('ioredis')
 const Telegram = require('telegraf/telegram')
-const I18n = require('telegraf-i18n')
 const replicators = require('telegraf/core/replicators')
 const {
   db
@@ -17,12 +15,6 @@ const redis = new Redis({
 })
 
 const telegram = new Telegram(process.env.MAIN_BOT_TOKEN)
-
-const i18n = new I18n({
-  directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'uk',
-  defaultLanguageOnMissing: true
-})
 
 // Cache config at startup instead of reading on every call
 let cachedConfig = null

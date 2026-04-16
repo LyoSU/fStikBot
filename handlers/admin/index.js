@@ -1,10 +1,11 @@
+const path = require('path')
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const { escapeHTML: escape } = require('../../utils')
 
 const i18n = new I18n({
-  directory: `${__dirname}/../../locales`,
+  directory: path.resolve(__dirname, '../../locales'),
   defaultLanguage: 'en',
   sessionName: 'session',
   useSession: true,

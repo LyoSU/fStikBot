@@ -110,7 +110,7 @@ convertQueue.on('global:failed', async (jobId, errorData) => {
   const job = await convertQueue.getJob(jobId)
   if (!job) return
 
-  const { input, metadata, content } = job.data
+  const { input } = job.data
 
   if (input?.userId) videoProcessing.delete(input.userId)
 
