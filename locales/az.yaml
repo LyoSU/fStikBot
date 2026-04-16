@@ -557,15 +557,9 @@ sticker:
 
           <i>Yaradın (/yeni) və ya başqa paket seçin (/paketlər)</i>
       wait_load: |
-        <b>Gözləyin!</b>
-
-        Bot hələ də əvvəlki faylı emal edir...
-        Emalın prioritetini artırmaq və növbəyə bir dəfədən artıq stikeri əlavə etmək üçün botun inkişafına dəstək ola bilərsiniz (/donate).
+        ⏳ Still processing previous file...
       timeout: |
-        <b>Hazırda bot böyük yüklə üzləşir</b>
-        Buna görə də, video çevrilmə yalnız aktiv gücləndirici paketlər üçün mövcuddur
-
-        Ətraflı məlumat üçün / bağışla
+        ⚠️ High load right now. Please try again in a few minutes.
       convert: |
         <b>Xəta!</b>
         Təəssüf ki, bot videonuzu çevirə bilmədi.
@@ -741,6 +735,7 @@ scenes:
     no_other_packs: |
       <i>Bu sahibin digər stikerləri haqqında məlumatımız yoxdur</i>
     unknown_owner: '<i>Unknown</i>'
+    hidden: '<i>[hidden]</i>'
   boost:
     sure: |
       <b>Əminsiniz ki, <a href="${link}">${title}</a> paketini yüksəltmək istəyirsiniz?</b>
