@@ -536,22 +536,6 @@ scenes:
       <b>Тип пака:</b>
     regular: '🖼 Стикеры'
     custom_emoji: '✨ Эмодзи'
-    static: '🖼 Обычный'
-    animated: '✨ Анимированный'
-    video: '📹 Видео'
-    pack_format: |
-      <b><u>Выбери тип пака</u></b>
-
-      <b>Обычный</b> — статичные стикеры из картинок. PNG, JPG, WEBP.
-      Пример: t.me/addstickers/Animals
-
-      <b>Анимированный</b> — плавная анимация. Нужны специальные .TGS файлы.
-      Пример: t.me/addstickers/IsabelleShizue
-
-      <b>Видео</b> — из видео, GIF или фото. Самый популярный.
-      Пример: t.me/addstickers/TheMascot
-
-      <i>Видео и анимированные — до 50 стикеров. Обычные — до 120.</i>
     pack_title: |
       <b>Название пака:</b>
     pack_name: |

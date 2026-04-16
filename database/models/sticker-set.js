@@ -23,14 +23,6 @@ const stickerSetsSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  animated: {
-    type: Boolean,
-    default: false
-  },
-  video: {
-    type: Boolean,
-    default: false
-  },
   inline: {
     type: Boolean,
     default: false

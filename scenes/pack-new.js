@@ -17,14 +17,10 @@ const { match } = I18n
 
 const placeholder = {
   regular: {
-    video: 'sticker_placeholder.webm',
-    animated: 'sticker_placeholder.tgs',
-    static: 'sticker_placeholder.webp'
+    video: 'sticker_placeholder.webm'
   },
   custom_emoji: {
-    video: 'emoji_placeholder.webm',
-    animated: 'sticker_placeholder.tgs',
-    static: 'emoji_placeholder.webp'
+    video: 'emoji_placeholder.webm'
   }
 }
 
@@ -140,54 +136,12 @@ newPackCopyPay.hears(match('scenes.copy.pay_btn'), async (ctx) => {
   return ctx.scene.enter('newPackTitle')
 })
 
-const choosePackFormat = new Scene('choosePackFormat')
-
-choosePackFormat.enter(async (ctx, next) => {
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_format'), {
-    reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.new_pack.static'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.new_pack.video'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.new_pack.animated'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
-    ]).resize()
-  })
-})
-
-choosePackFormat.on('message', async (ctx) => {
-  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
-  if (ctx.message.text === ctx.i18n.t('scenes.new_pack.animated')) {
-    ctx.session.scene.newPack.animated = true
-    return ctx.scene.enter('newPackTitle')
-  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.video')) {
-    ctx.session.scene.newPack.video = true
-    return ctx.scene.enter('newPackTitle')
-  } else if (ctx.message.text === ctx.i18n.t('scenes.new_pack.static')) {
-    ctx.session.scene.newPack.animated = false
-    return ctx.scene.enter('newPackTitle')
-  } else {
-    return ctx.scene.reenter()
-  }
-})
-
 const newPackTitle = new Scene('newPackTitle')
 
 newPackTitle.enter(async (ctx) => {
   if (!ctx.session.scene) return ctx.scene.leave()
   if (!ctx.session.scene.newPack) {
-    // Determine format from stickers if copyPack exists (StickerSet doesn't have is_video/is_animated)
-    const copyPack = ctx.session.scene.copyPack
-    ctx.session.scene.newPack = {
-      animated: copyPack?.stickers?.some(s => s.is_animated) || false,
-      video: copyPack?.stickers?.some(s => s.is_video) || false
-    }
+    ctx.session.scene.newPack = {}
   }
 
   const names = generateStrings({ count: 3 })
@@ -248,7 +202,7 @@ newPackConfirm.enter(async (ctx, next) => {
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` :: @${ctx.options.username}`
 
-  let { name, title, animated, video, fillColor, packType } = ctx.session.scene.newPack
+  let { name, title, fillColor, packType } = ctx.session.scene.newPack
 
   // Для inline паку автоматично генеруємо name
   if (inline) {
@@ -529,9 +483,7 @@ newPackConfirm.enter(async (ctx, next) => {
       ownerTelegramId: ctx.from.id,
       name,
       title,
-      animated,
       inline,
-      video,
       packType,
       boost: !!copyPack,
       emojiSuffix: '🌟',
@@ -759,7 +711,6 @@ newPackConfirm.enter(async (ctx, next) => {
 
 module.exports = [
   newPack,
-  choosePackFormat,
   newPackTitle,
   newPackName,
   newPackConfirm,

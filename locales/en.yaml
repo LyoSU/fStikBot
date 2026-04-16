@@ -592,22 +592,6 @@ scenes:
       <b>Pack type:</b>
     regular: '🖼 Stickers'
     custom_emoji: '✨ Emoji'
-    static: '🖼 Regular'
-    animated: '✨ Animated'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Choose pack type</u></b>
-
-      <b>Regular</b> — static stickers from images. PNG, JPG, WEBP.
-      Example: t.me/addstickers/Animals
-
-      <b>Animated</b> — smooth animation. Requires special .TGS files.
-      Example: t.me/addstickers/IsabelleShizue
-
-      <b>Video</b> — from videos, GIFs, or photos. Most popular.
-      Example: t.me/addstickers/TheMascot
-
-      <i>Video and animated — up to 50 stickers. Regular — up to 120.</i>
     pack_title: |
       <b>Pack name:</b>
     pack_name: |
