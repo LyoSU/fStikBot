@@ -839,6 +839,10 @@ scenes:
     add_to_set_btn: '🌟 Add to pack'
     error: |
       Something went wrong. Try again.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Notify the admin — /report
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>

@@ -115,26 +115,44 @@ photoClear.on('photo', async (ctx) => {
   let priority = 10
   if (ctx.i18n.locale() === 'ru') priority = 15
 
-  const timeoutPromise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('Timeout'))
-    }, 1000 * 30)
-  })
-
-  const job = await removebgQueue.add({
-    fileUrl,
-    model
-  }, {
-    priority,
-    attempts: 1,
-    removeOnComplete: true
-  })
-
-  const finish = await Promise.race([job.finished(), timeoutPromise]).catch(err => {
-    return {
-      error: err.message
+  let job
+  try {
+    job = await removebgQueue.add({
+      fileUrl,
+      model
+    }, {
+      priority,
+      attempts: 1,
+      removeOnComplete: true
+    })
+  } catch (err) {
+    // Queue stub (REDIS_HOST unset) rejects with QUEUE_DISABLED; surface
+    // that to the user as "feature temporarily unavailable" instead of a
+    // generic error.
+    if (err.code === 'QUEUE_DISABLED') {
+      return ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.error_queue_disabled'))
     }
+    console.error('removebg enqueue failed:', err.message)
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.error'))
+  }
+
+  // Resolve-with-sentinel timeout instead of reject: Promise.race losers
+  // live on until they settle, and a rejecting loser becomes an unhandled
+  // rejection once the race has a winner. Returning a marker object keeps
+  // the promise harmless and lets the caller branch on it explicitly.
+  const TIMEOUT = Symbol('timeout')
+  let timer
+  const timeoutPromise = new Promise((resolve) => {
+    timer = setTimeout(() => resolve(TIMEOUT), 1000 * 30)
   })
+
+  // Attach the .catch BEFORE racing — otherwise if job.finished() rejects
+  // after the timeout has already won, the rejection is unhandled.
+  const jobPromise = job.finished().catch(err => ({ error: err.message }))
+  const raceResult = await Promise.race([jobPromise, timeoutPromise])
+  clearTimeout(timer)
+
+  const finish = raceResult === TIMEOUT ? { error: 'Timeout' } : raceResult
 
   if (finish.content) {
     const trimBuffer = await sharp(Buffer.from(finish.content, 'base64'))
@@ -159,8 +177,11 @@ photoClear.on('photo', async (ctx) => {
       }
     })
   } else {
-    console.error(finish.error)
-    ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.error'))
+    console.error('photoClear job error:', finish.error)
+    const i18nKey = finish.error === 'Timeout'
+      ? 'scenes.photoClear.error_timeout'
+      : 'scenes.photoClear.error'
+    ctx.replyWithHTML(ctx.i18n.t(i18nKey))
   }
 })
 
