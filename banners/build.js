@@ -29,20 +29,23 @@ const DIST = path.join(__dirname, 'dist')
 
 // Banners to build. Add a new entry when you create a new template.
 // `name` becomes the output filename (dist/<name>.png).
+// `width`/`height` override the defaults for banners that ship at different
+// aspect ratios (e.g. Telegram's description picture is 640×360, not 960×360).
 const BANNERS = [
-  { name: 'welcome',  file: 'welcome.html' },
-  { name: 'packs',    file: 'packs.html' },
-  { name: 'catalog',  file: 'catalog.html' },
-  { name: 'new-pack', file: 'new-pack.html' },
-  { name: 'boost',    file: 'boost.html' },
-  { name: 'help',     file: 'help.html' },
-  { name: 'donate',   file: 'donate.html' },
-  { name: 'origin',   file: 'origin.html' },
-  { name: 'publish',  file: 'publish.html' },
-  { name: 'language', file: 'language.html' },
-  { name: 'emoji',    file: 'emoji.html' },
-  { name: 'group',    file: 'group.html' },
-  { name: 'mosaic',   file: 'mosaic.html' }
+  { name: 'welcome',     file: 'welcome.html' },
+  { name: 'packs',       file: 'packs.html' },
+  { name: 'catalog',     file: 'catalog.html' },
+  { name: 'new-pack',    file: 'new-pack.html' },
+  { name: 'boost',       file: 'boost.html' },
+  { name: 'help',        file: 'help.html' },
+  { name: 'donate',      file: 'donate.html' },
+  { name: 'origin',      file: 'origin.html' },
+  { name: 'publish',     file: 'publish.html' },
+  { name: 'language',    file: 'language.html' },
+  { name: 'emoji',       file: 'emoji.html' },
+  { name: 'group',       file: 'group.html' },
+  { name: 'mosaic',      file: 'mosaic.html' },
+  { name: 'description', file: 'description.html', width: 640, height: 360 }
 ]
 
 async function main () {
@@ -53,14 +56,16 @@ async function main () {
   })
 
   try {
-    for (const { name, file } of BANNERS) {
+    for (const { name, file, width, height } of BANNERS) {
       const src = path.join(SRC, file)
       if (!fs.existsSync(src)) {
         console.warn(`[banners] skip ${name}: ${file} not found`)
         continue
       }
+      const w = width || WIDTH
+      const h = height || HEIGHT
       const page = await browser.newPage()
-      await page.setViewport({ width: WIDTH, height: HEIGHT, deviceScaleFactor: SCALE })
+      await page.setViewport({ width: w, height: h, deviceScaleFactor: SCALE })
 
       const url = 'file://' + src
       const missing = []
@@ -82,7 +87,7 @@ async function main () {
       const out = path.join(DIST, `${name}.png`)
       await page.screenshot({
         path: out,
-        clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+        clip: { x: 0, y: 0, width: w, height: h },
         omitBackground: false
       })
       await page.close()
