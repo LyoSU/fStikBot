@@ -9,6 +9,21 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
+// Known Telegram API error description substrings → i18n key.
+// Order matters only when substrings overlap — currently disjoint.
+// Add a new known error = add a row. No branching in the rendering code.
+const TELEGRAM_ERROR_MAP = [
+  ['TOO_MUCH', 'sticker.add.error.stickers_too_much'],
+  ['STICKERSET_INVALID', 'sticker.add.error.stickerset_invalid'],
+  ['file is too big', 'sticker.add.error.too_big'],
+  ['STICKER_VIDEO_BIG', 'sticker.add.error.too_big'],
+  ['STICKER_PNG_NOPNG', 'sticker.add.error.invalid_png'],
+  ['STICKER_PNG_DIMENSIONS', 'sticker.add.error.invalid_dimensions'],
+  ['STICKER_TGS_NOTGS', 'sticker.add.error.invalid_animated'],
+  ['STICKER_VIDEO_NOWEBM', 'sticker.add.error.invalid_video'],
+  ['sticker not found', 'sticker.add.error.sticker_not_found']
+]
+
 module.exports = (addStickerResult, lang) => {
   let messageText = ''
   let replyMarkup = {}
@@ -51,29 +66,11 @@ module.exports = (addStickerResult, lang) => {
       const errDescription = addStickerResult.error.telegram.description || addStickerResult.error.telegram.message || ''
       if (!errDescription) {
         throw new Error(JSON.stringify(addStickerResult.error))
-      } else if (errDescription.includes('TOO_MUCH')) {
-        messageText = i18n.t(lang, 'sticker.add.error.stickers_too_much')
-      } else if (errDescription.includes('STICKERSET_INVALID')) {
-        messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
-      } else if (errDescription.includes('file is too big') || errDescription.includes('STICKER_VIDEO_BIG')) {
-        messageText = i18n.t(lang, 'sticker.add.error.too_big')
-      } else if (errDescription.includes('STICKER_PNG_NOPNG')) {
-        messageText = i18n.t(lang, 'sticker.add.error.invalid_png')
-      } else if (errDescription.includes('STICKER_PNG_DIMENSIONS')) {
-        messageText = i18n.t(lang, 'sticker.add.error.invalid_dimensions')
-      } else if (errDescription.includes('STICKER_TGS_NOTGS')) {
-        messageText = i18n.t(lang, 'sticker.add.error.invalid_animated')
-      } else if (errDescription.includes('STICKER_VIDEO_NOWEBM')) {
-        messageText = i18n.t(lang, 'sticker.add.error.invalid_video')
-      } else if (errDescription.includes('sticker not found')) {
-        messageText = i18n.t(lang, 'sticker.add.error.sticker_not_found')
-      } else if (errDescription.includes('STICKERSET_INVALID')) {
-        messageText = i18n.t(lang, 'sticker.add.error.stickerset_invalid')
-      } else {
-        messageText = i18n.t(lang, 'error.telegram', {
-          error: errDescription
-        })
       }
+      const hit = TELEGRAM_ERROR_MAP.find(([needle]) => errDescription.includes(needle))
+      messageText = hit
+        ? i18n.t(lang, hit[1])
+        : i18n.t(lang, 'error.telegram', { error: errDescription })
     } else if (addStickerResult.error === 'ITS_ANIMATED') {
       messageText = i18n.t(lang, 'sticker.add.error.file_type')
     } else {

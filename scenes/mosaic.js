@@ -4,6 +4,7 @@ const I18n = require('telegraf-i18n')
 const { getGridSuggestions } = require('../utils/mosaic-grid')
 const { generatePreview } = require('../utils/mosaic-preview')
 const { splitImage, checkMinCellSize } = require('../utils/mosaic-split')
+const { getRateLimitRemaining } = require('../utils/retry-api')
 const https = require('https')
 const sharp = require('sharp')
 
@@ -28,16 +29,6 @@ const downloadFile = (fileUrl, timeout = 30000) => new Promise((resolve, reject)
   req.on('error', reject)
   req.setTimeout(timeout, () => { req.destroy(); reject(new Error('Timeout')) })
 })
-
-// Retry with exponential backoff
-const retry = async (fn, maxRetries = 3) => {
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try { return await fn() } catch (err) {
-      if (attempt === maxRetries) throw err
-      await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000))
-    }
-  }
-}
 
 const FALLBACK_EMOJI = ['🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '🟫', '⬛', '⬜', '🔲']
 
@@ -161,31 +152,45 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t(source.error))
   }
 
-  // Download the source
-  const fileUrl = await ctx.telegram.getFileLink(source.fileId)
-  const imageBuffer = await downloadFile(fileUrl.href || fileUrl)
+  // Download + decode + preview. Wrap in try/catch so the user gets a
+  // specific "download/decode failed" message instead of the generic
+  // bot.catch "unknown error" fallback when a Telegram file times out
+  // or sharp fails to parse the input.
+  let imageBuffer, width, height, previewBuffer, suggestions
+  let stickerSet, freeSlots
+  try {
+    const fileUrl = await ctx.telegram.getFileLink(source.fileId)
+    imageBuffer = await downloadFile(fileUrl.href || fileUrl)
 
-  // Documents don't carry width/height on the message itself — read from buffer.
-  let { width, height } = source
-  if (!width || !height) {
-    const meta = await sharp(imageBuffer).metadata()
-    width = meta.width
-    height = meta.height
-  }
+    // Documents don't carry width/height on the message itself — read from buffer.
+    ;({ width, height } = source)
+    if (!width || !height) {
+      const meta = await sharp(imageBuffer).metadata()
+      width = meta.width
+      height = meta.height
+    }
 
-  // Count existing stickers in pack
-  const stickerSet = await ctx.db.StickerSet.findById(ctx.session.scene.mosaic.packId)
-  const currentCount = await ctx.db.Sticker.countDocuments({
-    stickerSet: stickerSet.id,
-    deleted: false
-  })
-  const freeSlots = 200 - currentCount
+    stickerSet = await ctx.db.StickerSet.findById(ctx.session.scene.mosaic.packId)
+    const currentCount = await ctx.db.Sticker.countDocuments({
+      stickerSet: stickerSet.id,
+      deleted: false
+    })
+    freeSlots = 200 - currentCount
 
-  const suggestions = getGridSuggestions(width, height, freeSlots)
+    suggestions = getGridSuggestions(width, height, freeSlots)
 
-  if (suggestions.type === 'no_space') {
-    await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.no_space', { freeSlots, total: 4 }))
-    return
+    if (suggestions.type === 'no_space') {
+      await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.no_space', { freeSlots, total: 4 }))
+      return
+    }
+
+    previewBuffer = await generatePreview(imageBuffer, suggestions.recommended.rows, suggestions.recommended.cols)
+  } catch (err) {
+    console.error('[mosaic] preview prep failed:', err.message)
+    const key = /Too large|Timeout|Download/.test(err.message)
+      ? 'sticker.add.error.convert'
+      : 'sticker.add.error.invalid_image'
+    return ctx.replyWithHTML(ctx.i18n.t(key))
   }
 
   // Store in scene state
@@ -194,9 +199,7 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
   ctx.session.scene.mosaic.photoHeight = height
   ctx.session.scene.mosaic.freeSlots = freeSlots
 
-  // Generate preview with recommended grid
   const { recommended } = suggestions
-  const previewBuffer = await generatePreview(imageBuffer, recommended.rows, recommended.cols)
 
   // Check for blurry warning
   const isBlurry = !checkMinCellSize(width, height, recommended.rows, recommended.cols)
@@ -238,6 +241,15 @@ const processMosaic = async (ctx, rows, cols) => {
     return
   }
 
+  // Pre-check: if the user's addStickerToSet is in a 429 cooldown we'd
+  // get synthetic 429 on every single cell. Better to bail here with a
+  // clear "wait N seconds" than half-upload and roll back.
+  const cooldown = getRateLimitRemaining('addStickerToSet', ctx.from.id)
+  if (cooldown > 0) {
+    await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: cooldown }))
+    return
+  }
+
   state.uploading = true
 
   try {
@@ -265,29 +277,30 @@ const processMosaic = async (ctx, rows, cols) => {
       const fallbackEmoji = FALLBACK_EMOJI[i % FALLBACK_EMOJI.length]
 
       try {
-        const uploaded = await retry(() =>
-          ctx.telegram.callApi('uploadStickerFile', {
-            user_id: ctx.from.id,
-            sticker_format: 'static',
-            sticker: { source: cells[i] }
-          })
-        )
+        // No outer retry: ctx.telegram.callApi is already wrapped by
+        // utils/retry-api (auto-retries 429 with retry_after ≤ 5s, caches
+        // method+user cooldowns). A second exponential-backoff layer here
+        // just re-tried synthetic 429s 25× and burned ~3min of waits per
+        // partial-failed mosaic.
+        const uploaded = await ctx.telegram.callApi('uploadStickerFile', {
+          user_id: ctx.from.id,
+          sticker_format: 'static',
+          sticker: { source: cells[i] }
+        })
 
-        await retry(() =>
-          ctx.telegram.callApi('addStickerToSet', {
-            user_id: ctx.from.id,
-            name: stickerSet.name,
-            sticker: {
-              sticker: uploaded.file_id,
-              format: 'static',
-              emoji_list: [fallbackEmoji],
-              keywords: ['mosaic', `r${r}c${c}`]
-            }
-          })
-        )
+        await ctx.telegram.callApi('addStickerToSet', {
+          user_id: ctx.from.id,
+          name: stickerSet.name,
+          sticker: {
+            sticker: uploaded.file_id,
+            format: 'static',
+            emoji_list: [fallbackEmoji],
+            keywords: ['mosaic', `r${r}c${c}`]
+          }
+        })
         uploadedCount++
       } catch (err) {
-        // Upload failed after retries — rollback via getStickerSet
+        // Upload failed — rollback what succeeded via getStickerSet.
         if (uploadedCount > 0) {
           const partialSet = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name }).catch(() => null)
           if (partialSet) {
@@ -298,7 +311,21 @@ const processMosaic = async (ctx, rows, cols) => {
           }
         }
         await ctx.telegram.deleteMessage(ctx.chat.id, progressMsg.message_id).catch(() => {})
-        await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.undo_failed'))
+
+        // Pick a message that actually tells the user WHY it failed,
+        // instead of the generic "undo_failed" for every kind of error.
+        const description = err?.description || err?.message || ''
+        let replyKey = 'cmd.mosaic.undo_failed'
+        if (err?.code === 429) {
+          const retryAfter = err?.parameters?.retry_after || getRateLimitRemaining('addStickerToSet', ctx.from.id)
+          await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: retryAfter || 30 }))
+          return
+        } else if (description.includes('STICKERSET_INVALID')) {
+          replyKey = 'sticker.add.error.stickerset_invalid'
+        } else if (description.includes('TOO_MUCH')) {
+          replyKey = 'sticker.add.error.stickers_too_much'
+        }
+        await ctx.replyWithHTML(ctx.i18n.t(replyKey))
         return
       }
 
