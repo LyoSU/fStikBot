@@ -671,6 +671,8 @@ scenes:
   original:
     enter: |
       Envoyez l'autocollant qui a été ajouté via ce bot et je vous montrerai son autocollant d'origine.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>Erreur!</b>
@@ -863,6 +865,10 @@ scenes:
     error: |
       <b>Erreur !</b>
       Oups, quelque chose s'est mal passé.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
