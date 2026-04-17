@@ -17,11 +17,14 @@ async function sendStickerAsDocument (ctx, fileId, fileUniqueId, extra = {}) {
   let fileLink
   try {
     fileLink = await ctx.telegram.getFileLink(fileId)
+    console.log('[sendStickerAsDocument] got file link', { fileUniqueId, fileLink: String(fileLink) })
   } catch (err) {
+    console.log('[sendStickerAsDocument] getFileLink failed', { fileUniqueId, message: err.message })
     const key = err.message && err.message.includes('file is too big')
       ? 'error.file_too_big'
       : 'error.download'
-    await ctx.replyWithHTML(ctx.i18n.t(key), extra).catch(() => {})
+    await ctx.replyWithHTML(ctx.i18n.t(key), extra).catch((e) =>
+      console.log('[sendStickerAsDocument] replyWithHTML(error.download) failed', e.message))
     return false
   }
 
@@ -29,25 +32,33 @@ async function sendStickerAsDocument (ctx, fileId, fileUniqueId, extra = {}) {
     ctx.replyWithHTML(
       ctx.i18n.t('error.telegram', { error: error.description || error.message }),
       extra
-    ).catch(() => {})
+    ).catch((e) => console.log('[sendStickerAsDocument] replyWithHTML(error.telegram) failed', e.message))
 
   try {
     if (fileLink.endsWith('.webp')) {
       const buffer = await got(fileLink).buffer()
       const pngBuffer = await sharp(buffer, { failOnError: false }).png().toBuffer()
       await ctx.replyWithDocument({ source: pngBuffer, filename: `${fileUniqueId}.png` }, extra)
+      console.log('[sendStickerAsDocument] sent webp→png document', { fileUniqueId })
       return true
     }
     if (fileLink.endsWith('.webm')) {
       await ctx.replyWithDocument({ url: fileLink, filename: `${fileUniqueId}.webm` }, extra)
+      console.log('[sendStickerAsDocument] sent webm document', { fileUniqueId })
       return true
     }
     if (fileLink.endsWith('.tgs')) {
       await ctx.replyWithDocument({ url: fileLink, filename: `${fileUniqueId}.tgs` }, extra)
+      console.log('[sendStickerAsDocument] sent tgs document', { fileUniqueId })
       return true
     }
+    console.log('[sendStickerAsDocument] unsupported extension', { fileUniqueId, fileLink: String(fileLink) })
     return 'unsupported'
   } catch (error) {
+    console.log('[sendStickerAsDocument] send failed', {
+      fileUniqueId,
+      description: error.description || error.message
+    })
     await replyTelegramError(error)
     return false
   }

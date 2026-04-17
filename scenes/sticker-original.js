@@ -49,6 +49,13 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
     ]
   })
 
+  console.log('[/original] received', {
+    fileUniqueId: sticker.file_unique_id,
+    setName: sticker.set_name,
+    dbHit: !!stickerInfo,
+    hasOriginal: stickerInfo ? stickerInfo.hasOriginal() : false
+  })
+
   if (stickerInfo && stickerInfo.hasOriginal()) {
     const originalFileId = stickerInfo.getOriginalFileId()
     const originalFileUniqueId = stickerInfo.getOriginalFileUniqueId()
@@ -61,14 +68,22 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
         ...replyExtra,
         caption: stickerInfo.emojis
       })
+      console.log('[/original] sent original as sticker', { originalFileUniqueId })
       return
-    } catch (_) { /* fall through to document fallback */ }
+    } catch (stickerError) {
+      console.log('[/original] replyWithSticker failed, trying document fallback', {
+        originalFileUniqueId,
+        description: stickerError.description || stickerError.message
+      })
+    }
 
-    await sendStickerAsDocument(ctx, originalFileId, originalFileUniqueId, replyExtra)
+    const fallback = await sendStickerAsDocument(ctx, originalFileId, originalFileUniqueId, replyExtra)
+    console.log('[/original] document fallback (hasOriginal) result', { fallback })
     return
   }
 
   const result = await sendStickerAsDocument(ctx, sticker.file_id, sticker.file_unique_id, replyExtra)
+  console.log('[/original] document fallback (no source) result', { result })
   if (result === 'unsupported') {
     await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), replyExtra)
   }
