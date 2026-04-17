@@ -4,10 +4,7 @@ const Scene = require('telegraf/scenes/base')
 const replicators = require('telegraf/core/replicators')
 const moment = require('moment')
 
-const { getBroadcastClient } = require('../utils/redis')
-
-// Shared with utils/messaging.js (same keyspace, same connection).
-const redis = getBroadcastClient()
+const redis = require('../utils/redis')
 
 // Keep in sync with utils/messaging.js — same constant, same Redis keys.
 const MESSAGING_TTL_SECONDS = 7 * 24 * 60 * 60

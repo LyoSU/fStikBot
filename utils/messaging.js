@@ -1,21 +1,16 @@
 const fs = require('fs')
 const getTelegram = require('./telegram').get
 const replicators = require('telegraf/core/replicators')
-const { getBroadcastClient } = require('./redis')
+const redis = require('./redis')
 const {
   db
 } = require('../database')
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-// Single source of truth for all broadcast-related Redis keys.
 // Broadcasts typically finish within hours; 7 days gives plenty of
 // headroom for slow/paused campaigns while guaranteeing cleanup.
 const MESSAGING_TTL_SECONDS = 7 * 24 * 60 * 60
-
-// Shared with scenes/messaging.js — one client, one quota slot.
-// null when REDIS_HOST isn't set; callers below check for that.
-const redis = getBroadcastClient()
 
 const telegram = getTelegram(process.env.MAIN_BOT_TOKEN)
 
