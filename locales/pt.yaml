@@ -683,6 +683,8 @@ scenes:
   original:
     enter: |
       Envie o sticker que foi adicionado através deste bot e mostrarei o original.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>Erro!</b>
@@ -875,6 +877,10 @@ scenes:
     error: |
       <b>Erro!</b>
       Opps, algo deu errado.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
