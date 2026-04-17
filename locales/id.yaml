@@ -678,6 +678,8 @@ scenes:
   original:
     enter: |
       Kirim stiker yang ditambahkan melalui bot ini dan saya akan menunjukkan stiker aslinya.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>Kesalahan!</b>
@@ -869,6 +871,10 @@ scenes:
     error: |
       <b>Kesalahan!</b>
       Ups, ada yang tidak beres.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
