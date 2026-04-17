@@ -79,7 +79,7 @@ module.exports = (bot, {
   // Response-time stats
   bot.use(stats)
 
-  // Session (Redis-backed — see bot/session-store.js)
+  // Session (in-memory telegraf/session — see bot/session-store.js)
   bot.use(perfStage('session', sessionMiddleware))
 
   // Chain-actions logger: records the last N actions per session to help

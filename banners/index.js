@@ -8,9 +8,8 @@
 // any manual bust.
 //
 // Why RAM not Redis: banners are a tiny number (~3–10), file_ids are short
-// strings, losing cache on restart costs one re-upload per banner. Redis
-// complexity isn't worth it here — session-store already uses Redis for
-// things that actually need persistence.
+// strings, losing cache on restart costs one re-upload per banner — Redis
+// complexity isn't worth it here.
 //
 // Navigation note: Telegram allows editing a text message INTO a media
 // message via editMessageMedia, but NOT the reverse. So once /start sends

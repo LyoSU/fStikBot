@@ -1,6 +1,6 @@
 // Entrypoint — thin orchestrator. The old 681-line monolith was split into
 // focused modules under bot/:
-//   - bot/session-store.js  Redis-backed session (was in-memory Map)
+//   - bot/session-store.js  in-memory telegraf/session with bounded Map
 //   - bot/middleware.js     all bot.use(...) middleware
 //   - bot/commands.js       all commands / actions / hears registrations
 //   - bot/locale-sync.js    mtime-cached locale push to Telegram
