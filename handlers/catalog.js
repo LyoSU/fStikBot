@@ -1,5 +1,8 @@
+const { replyOrEditBanner } = require('../banners')
+
 module.exports = async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {
+  const caption = ctx.i18n.t('cmd.start.catalog')
+  const extra = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
         [
@@ -20,16 +23,9 @@ module.exports = async (ctx) => {
             callback_data: 'publish'
           }
         ]
-        // [
-        //   {
-        //     text: ctx.i18n.t('cmd.start.btn.catalog_browser'),
-        //     login_url: {
-        //       url: ctx.config.catalogUrl,
-        //       request_write_access: true
-        //     }
-        //   }
-        // ]
       ]
     })
-  })
+  }
+
+  await replyOrEditBanner(ctx, 'catalog', caption, extra)
 }

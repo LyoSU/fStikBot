@@ -1,5 +1,6 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
+const { sendBanner } = require('../banners')
 const {
   escapeHTML,
   telegramApi,
@@ -24,7 +25,7 @@ const DC_REGIONS = {
 const packAbout = new Scene('packAbout')
 
 packAbout.enter(async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.enter'), {
+  await sendBanner(ctx, 'origin', ctx.i18n.t('scenes.packAbout.enter'), {
     reply_markup: {
       keyboard: [
         [{

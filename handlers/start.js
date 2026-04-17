@@ -71,7 +71,7 @@ module.exports = async (ctx) => {
   })
 
   if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {
-    await ctx.replyWithHTML(ctx.i18n.t('cmd.start.catalog'), {
+    await sendBanner(ctx, 'catalog', ctx.i18n.t('cmd.start.catalog'), {
       reply_markup: JSON.stringify({
         inline_keyboard: [
           [

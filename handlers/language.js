@@ -3,6 +3,7 @@ const path = require('path')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const handleStart = require('./start')
+const { sendBanner } = require('../banners')
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -39,11 +40,8 @@ module.exports = async (ctx) => {
       button.push(Markup.callbackButton(locales[key].flag, `set_language:${key}`))
     })
 
-    ctx.reply(ctx.i18n.t('cmd.lang.choose'), {
-      disable_web_page_preview: true,
-      reply_markup: Markup.inlineKeyboard(button, {
-        columns: 2
-      })
+    await sendBanner(ctx, 'language', ctx.i18n.t('cmd.lang.choose'), {
+      reply_markup: Markup.inlineKeyboard(button, { columns: 2 })
     })
   }
 }

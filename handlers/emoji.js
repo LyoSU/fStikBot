@@ -1,4 +1,5 @@
 const emojiRegex = require('emoji-regex')
+const { sendBanner } = require('../banners')
 
 module.exports = async (ctx) => {
   const uncleanUserInput = ctx.message.text.substring(0, 15)
@@ -22,7 +23,7 @@ module.exports = async (ctx) => {
       })
     }
   } else {
-    await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.info'), {
+    await sendBanner(ctx, 'emoji', ctx.i18n.t('cmd.emoji.info'), {
       reply_to_message_id: ctx.message.message_id,
       allow_sending_without_reply: true
     })
