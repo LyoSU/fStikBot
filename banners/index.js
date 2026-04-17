@@ -65,18 +65,31 @@ async function sendBanner (ctx, name, caption = '', extra = {}) {
 // Swap the current message's banner (use when navigating between *different*
 // banners: e.g. /start welcome → catalog). Works whether the prior message
 // was text (upgrades it) or already a photo (replaces the media).
+//
+// Implementation note: Telegraf 3.40's ctx.editMessageMedia(media, extra)
+// merges `extra` INTO the InputMedia object instead of sending it at the API
+// top level. That buries `reply_markup` where the Telegram API never sees it
+// — keyboard doesn't update, and on multipart uploads the caption can get
+// stripped too. So we do it in two calls:
+//   1. editMessageMedia — swap the photo only
+//   2. editMessageCaption — set caption + inline keyboard
+// Each call does one thing cleanly; no silent drops.
 async function editBanner (ctx, name, caption = '', extra = {}) {
   const banner = assertBanner(name)
   const source = photoInput(banner)
   const media = {
     type: 'photo',
-    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) },
-    caption,
-    parse_mode: 'HTML'
+    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) }
   }
   try {
-    const edited = await ctx.editMessageMedia(media, { reply_markup: extra.reply_markup })
+    const edited = await ctx.editMessageMedia(media)
     if (edited && typeof edited === 'object') rememberFileId(banner, edited)
+
+    await ctx.editMessageCaption(caption, {
+      parse_mode: 'HTML',
+      reply_markup: extra.reply_markup
+    }).catch(() => {}) // benign: MESSAGE_NOT_MODIFIED if nothing actually changed
+
     return edited
   } catch (err) {
     // Message too old / not editable — fall back to a fresh send so the user
