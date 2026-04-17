@@ -9,11 +9,21 @@ const Queue = require('bull')
 
 const REDIS_ENABLED = !!process.env.REDIS_HOST
 
+// keepAlive sends TCP keepalive probes at the OS level so the provider
+// doesn't consider an idle socket dead and RST it. Without this, hosted
+// Redis (Redis Cloud / Upstash free tiers) closes connections after ~5
+// min of idleness, surfacing as "AbortError: Command aborted due to
+// connection close" on the first pipeline command after the gap.
+// retryStrategy caps backoff so reconnects don't stall the queue for
+// long; enableReadyCheck keeps Bull's bclient happy.
 const redisConfig = REDIS_ENABLED
   ? {
       host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
-      password: process.env.REDIS_PASSWORD || undefined
+      password: process.env.REDIS_PASSWORD || undefined,
+      keepAlive: 30000,
+      retryStrategy: (times) => Math.min(times * 200, 3000),
+      maxRetriesPerRequest: null // Bull requires null for bclient
     }
   : null
 

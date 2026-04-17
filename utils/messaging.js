@@ -24,7 +24,8 @@ const redis = REDIS_ENABLED
       host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
       password: process.env.REDIS_PASSWORD || undefined,
-      retryStrategy: (times) => Math.min(times * 50, 2000),
+      keepAlive: 30000,
+      retryStrategy: (times) => Math.min(times * 200, 3000),
       maxRetriesPerRequest: 3
     })
   : null
