@@ -657,6 +657,8 @@ scenes:
 
       Send a sticker — I'll show which pack it was copied from.
       If no source found — you'll get the file (PNG/WEBM).
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         Source not found. Here's the sticker file:

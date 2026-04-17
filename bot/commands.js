@@ -171,10 +171,7 @@ module.exports = (bot, privateMessage, {
       return
     }
 
-    const result = await sendStickerAsDocument(ctx, sticker.file_id, sticker.file_unique_id)
-    if (result === 'unsupported') {
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
-    }
+    await sendStickerAsDocument(ctx, sticker.file_id, sticker.file_unique_id)
   })
 
   // Show-all-packs — companion to /about scene. Chunks responses to 70 packs

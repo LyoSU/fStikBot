@@ -1,5 +1,6 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
+const escapeHTML = require('../utils/html-escape')
 const sendStickerAsDocument = require('../utils/send-sticker-as-document')
 
 const originalSticker = new Scene('originalSticker')
@@ -49,44 +50,56 @@ originalSticker.on(['sticker', 'text'], async (ctx, next) => {
     ]
   })
 
-  console.log('[/original] received', {
-    fileUniqueId: sticker.file_unique_id,
-    setName: sticker.set_name,
-    dbHit: !!stickerInfo,
-    hasOriginal: stickerInfo ? stickerInfo.hasOriginal() : false
-  })
-
   if (stickerInfo && stickerInfo.hasOriginal()) {
     const originalFileId = stickerInfo.getOriginalFileId()
     const originalFileUniqueId = stickerInfo.getOriginalFileUniqueId()
 
-    // Optimistic path: try echoing the original as a sticker (cheap, preserves
-    // animation/emoji). Falls through to the document fallback on any failure
-    // — e.g. expired file_id, custom_emoji vs. regular mismatch, deleted pack.
+    // Primary goal of /original: show which pack the sticker was copied
+    // FROM. The copy record has the source's file_unique_id; if fStikBot
+    // has ever indexed the source pack, the source sticker's record will
+    // resolve to a StickerSet with name+title.
+    if (originalFileUniqueId) {
+      const sourceSticker = await ctx.db.Sticker.findOne({
+        fileUniqueId: originalFileUniqueId,
+        stickerSet: { $ne: stickerInfo.stickerSet }
+      }).populate('stickerSet')
+
+      const sourcePack = sourceSticker && sourceSticker.stickerSet
+      if (sourcePack && !sourcePack.deleted && sourcePack.name && sourcePack.title) {
+        const linkPrefix = sourcePack.packType === 'custom_emoji'
+          ? 'https://t.me/addemoji/'
+          : 'https://t.me/addstickers/'
+        await ctx.replyWithHTML(
+          ctx.i18n.t('scenes.original.source_found', {
+            link: `${linkPrefix}${sourcePack.name}`,
+            title: escapeHTML(sourcePack.title)
+          }),
+          replyExtra
+        )
+        return
+      }
+    }
+
+    // Source pack isn't in our DB — give the user the original file instead.
+    // Optimistic: try echoing as a sticker (cheap, preserves animation). On
+    // any failure — expired file_id, DOCUMENT_INVALID, emoji/regular mismatch
+    // — fall through to downloading and re-uploading as a document. NEVER
+    // sendPhoto/sendVideo: Telegram rejects sticker file_ids there.
     try {
       await ctx.replyWithSticker(originalFileId, {
         ...replyExtra,
         caption: stickerInfo.emojis
       })
-      console.log('[/original] sent original as sticker', { originalFileUniqueId })
       return
-    } catch (stickerError) {
-      console.log('[/original] replyWithSticker failed, trying document fallback', {
-        originalFileUniqueId,
-        description: stickerError.description || stickerError.message
-      })
-    }
+    } catch (_) { /* fall through to document fallback */ }
 
-    const fallback = await sendStickerAsDocument(ctx, originalFileId, originalFileUniqueId, replyExtra)
-    console.log('[/original] document fallback (hasOriginal) result', { fallback })
+    await sendStickerAsDocument(ctx, originalFileId, originalFileUniqueId, replyExtra)
     return
   }
 
-  const result = await sendStickerAsDocument(ctx, sticker.file_id, sticker.file_unique_id, replyExtra)
-  console.log('[/original] document fallback (no source) result', { result })
-  if (result === 'unsupported') {
-    await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'), replyExtra)
-  }
+  // No copy record — this is either an untracked sticker or the user sent
+  // the original itself. Give them the file back.
+  await sendStickerAsDocument(ctx, sticker.file_id, sticker.file_unique_id, replyExtra)
 })
 
 module.exports = [originalSticker]
