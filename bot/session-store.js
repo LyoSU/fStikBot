@@ -20,6 +20,19 @@ const { redisConfig } = require('../utils/queues')
 
 const SESSION_PREFIX = 'session:'
 const SESSION_TTL_SECONDS = 60 * 60 // 1 hour
+// Redis can be "connected" yet stop responding to commands (stuck socket,
+// server OOM, network black-hole). Without a timeout every session lookup
+// hangs forever, and the detach middleware hides the hang. 500ms is well
+// above normal Redis latency (<5ms) so it only trips on real stalls.
+const REDIS_OP_TIMEOUT_MS = parseInt(process.env.REDIS_OP_TIMEOUT_MS, 10) || 500
+
+function withTimeout (promise, ms, label) {
+  let t
+  const timer = new Promise((_, reject) => {
+    t = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+  })
+  return Promise.race([promise, timer]).finally(() => clearTimeout(t))
+}
 
 // Fallback cache — only used while Redis is unreachable
 const memoryFallback = new Map()
@@ -42,15 +55,12 @@ try {
   redis.on('ready', () => {
     const wasDown = !redisHealthy
     redisHealthy = true
-    console.log('[DEBUG session-store] Redis READY')
     if (wasDown && warnedDown) {
       console.log('[session-store] Redis back online')
       warnedDown = false
     }
   })
-  redis.on('connect', () => console.log('[DEBUG session-store] Redis CONNECT'))
   redis.on('error', (err) => {
-    console.log('[DEBUG session-store] Redis ERROR:', err.code || err.message)
     if (redisHealthy || !warnedDown) {
       console.warn('[session-store] Redis unhealthy, falling back to memory:', err.message)
       warnedDown = true
@@ -58,7 +68,6 @@ try {
     redisHealthy = false
   })
   redis.on('end', () => {
-    console.log('[DEBUG session-store] Redis END')
     redisHealthy = false
   })
 } catch (err) {
@@ -86,14 +95,21 @@ const cleanupInterval = setInterval(() => {
 if (cleanupInterval.unref) cleanupInterval.unref()
 
 async function redisGet (key) {
-  console.log(`[DEBUG session] get start key=${key} healthy=${redisHealthy}`)
   if (redisHealthy) {
     let raw
     try {
-      raw = await redis.get(SESSION_PREFIX + key)
-      console.log(`[DEBUG session] get done  key=${key} raw=${raw == null ? 'null' : 'len:' + raw.length}`)
+      raw = await withTimeout(redis.get(SESSION_PREFIX + key), REDIS_OP_TIMEOUT_MS, `redis.get ${key}`)
     } catch (err) {
-      console.warn('[session-store] get failed, memory fallback:', err.message)
+      // On timeout: mark Redis unhealthy so subsequent calls skip the
+      // network immediately instead of each waiting 500ms. The 'ready'
+      // handler will flip healthy back on when the socket recovers.
+      if (err.message.includes('timed out')) {
+        redisHealthy = false
+        console.warn('[session-store] get TIMEOUT — marking Redis unhealthy, memory fallback:', err.message)
+      } else {
+        console.warn('[session-store] get failed, memory fallback:', err.message)
+      }
+      memoryTimestamps.set(key, Date.now())
       return memoryFallback.get(key)
     }
     if (raw == null) return undefined
@@ -106,7 +122,6 @@ async function redisGet (key) {
       return undefined
     }
   }
-  console.log(`[DEBUG session] memfallback key=${key}`)
   memoryTimestamps.set(key, Date.now())
   return memoryFallback.get(key)
 }
@@ -116,10 +131,19 @@ async function redisSet (key, value) {
   if (redisHealthy) {
     try {
       const raw = JSON.stringify(value)
-      await redis.set(SESSION_PREFIX + key, raw, 'EX', SESSION_TTL_SECONDS)
+      await withTimeout(
+        redis.set(SESSION_PREFIX + key, raw, 'EX', SESSION_TTL_SECONDS),
+        REDIS_OP_TIMEOUT_MS,
+        `redis.set ${key}`
+      )
       return
     } catch (err) {
-      console.warn('[session-store] set failed, memory fallback:', err.message)
+      if (err.message.includes('timed out')) {
+        redisHealthy = false
+        console.warn('[session-store] set TIMEOUT — marking Redis unhealthy, memory fallback:', err.message)
+      } else {
+        console.warn('[session-store] set failed, memory fallback:', err.message)
+      }
     }
   }
   memoryTimestamps.set(key, Date.now())

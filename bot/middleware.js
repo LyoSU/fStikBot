@@ -47,20 +47,6 @@ module.exports = (bot, {
   //   - Errors don't reach bot.catch. We route them through handleError
   //     manually so the log channel still gets git blame + stack +
   //     chainActions.
-  // TEMP DEBUG: trace every incoming update through the middleware chain.
-  // Remove once the silent-handler bug is localized.
-  bot.use((ctx, next) => {
-    const uid = ctx.from?.id
-    const type = ctx.updateType
-    const sub = ctx.updateSubTypes?.join(',')
-    const text = ctx.message?.text || ctx.callbackQuery?.data || ctx.inlineQuery?.query
-    console.log(`[DEBUG 0:entry] update=${ctx.update.update_id} type=${type}${sub ? '/' + sub : ''} from=${uid} text=${text?.slice(0, 40)}`)
-    return next().then(
-      () => console.log(`[DEBUG 0:done ] update=${ctx.update.update_id}`),
-      (err) => console.log(`[DEBUG 0:throw] update=${ctx.update.update_id} err=${err?.message}`)
-    )
-  })
-
   if (POLLING_DETACH) {
     bot.use((ctx, next) => {
       next().catch((err) => handleError(err, ctx).catch((e) => {
@@ -72,7 +58,6 @@ module.exports = (bot, {
 
   // i18n
   bot.use(i18n)
-  bot.use((ctx, next) => { console.log(`[DEBUG 1:i18n ] ${ctx.update.update_id}`); return next() })
 
   // Retry 429s at the ctx level (prototype-level patch already handles the
   // underlying Telegram.callApi; this just exposes ctx.withRetry helper)
@@ -94,11 +79,8 @@ module.exports = (bot, {
   // Response-time stats
   bot.use(stats)
 
-  bot.use((ctx, next) => { console.log(`[DEBUG 2:stats] ${ctx.update.update_id}`); return next() })
-
   // Session (Redis-backed — see bot/session-store.js)
   bot.use(perfStage('session', sessionMiddleware))
-  bot.use((ctx, next) => { console.log(`[DEBUG 3:sess ] ${ctx.update.update_id} hasSession=${!!ctx.session}`); return next() })
 
   // Chain-actions logger: records the last N actions per session to help
   // reproduce error traces. Also prepares answerCbQuery/answerInlineQuery
@@ -142,9 +124,7 @@ module.exports = (bot, {
   // those read userInfo; without this ordering they'd see stale
   // Redis-hydrated plain objects (no save() method, stale flags).
   bot.use(perfStage('updateUser', async (ctx, next) => {
-    console.log(`[DEBUG 4:uu-in ] ${ctx.update.update_id}`)
     await updateUser(ctx)
-    console.log(`[DEBUG 4:uu-out] ${ctx.update.update_id}`)
     return next()
   }))
 
@@ -228,8 +208,6 @@ module.exports = (bot, {
     }
   })
 
-  bot.use((ctx, next) => { console.log(`[DEBUG 5:saveW] ${ctx.update.update_id}`); return next() })
-
   // my_chat_member updates are noisy — ignore them after user-update above
   // (which handles the blocked-flag flip).
   bot.use((ctx, next) => {
@@ -237,12 +215,9 @@ module.exports = (bot, {
     return next()
   })
 
-  bot.use((ctx, next) => { console.log(`[DEBUG 6:mcm  ] ${ctx.update.update_id} → commands`); return next() })
-
   // privateMessage composer — only runs for 1:1 chats
   const privateMessage = new Composer()
   privateMessage.use((ctx, next) => {
-    console.log(`[DEBUG 7:priv ] ${ctx.update.update_id} chatType=${ctx.chat?.type}`)
     if (ctx.chat && ctx.chat.type === 'private') return next()
     return false
   })
