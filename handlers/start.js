@@ -1,5 +1,6 @@
 const Markup = require('telegraf/markup')
 const { userName } = require('../utils')
+const { sendBanner } = require('../banners')
 
 module.exports = async (ctx) => {
   if (ctx.chat.type === 'private' && ctx.from.is_bot) {
@@ -65,9 +66,8 @@ module.exports = async (ctx) => {
     messageText += `\n\n<a href="${ctx.config.advertising.link}">${ctx.config.advertising.text}</a>`
   }
 
-  await ctx.replyWithHTML(messageText, {
-    disable_web_page_preview: true,
-    ...Markup.inlineKeyboard(keyboard).extra()
+  await sendBanner(ctx, 'welcome', messageText, {
+    reply_markup: Markup.inlineKeyboard(keyboard)
   })
 
   if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {

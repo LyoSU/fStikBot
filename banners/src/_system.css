@@ -1,0 +1,146 @@
+/* ==========================================================================
+   fStikBot · Banner design system
+   Shared base across every banner. Each banner overrides only the palette
+   (--sky-0/1/2) and its title text. Composition, typography, pattern, and
+   mascot treatment stay consistent so the series reads as one family.
+   Aesthetic matches the App Store marketplace promos:
+     - bold italic condensed white wordmark on coloured gradient
+     - hand-drawn doodle pattern wallpaper
+     - mascot as a rounded-square app-icon tile, tilted, soft-shadowed
+   ========================================================================== */
+
+:root {
+  --w: 1200px;
+  --h: 400px;
+
+  /* Default palette — overridden per banner */
+  --sky-0: #5BAEEF;
+  --sky-1: #4693DA;
+  --sky-2: #2E7BC8;
+
+  --fg: #FFFFFF;
+  --fg-dim: rgba(255, 255, 255, 0.88);
+
+  /* Ink colour used for shadows. Auto-derived per palette in each banner. */
+  --ink-shadow: rgba(10, 45, 95, 0.22);
+  --ink-shadow-deep: rgba(10, 45, 95, 0.32);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: var(--w);
+  height: var(--h);
+  font-family: 'Barlow Condensed', -apple-system, system-ui, sans-serif;
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.page {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden;
+  background:
+    radial-gradient(900px 500px at 20% 120%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
+    radial-gradient(700px 400px at 90% 0%, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
+    linear-gradient(165deg, var(--sky-0) 0%, var(--sky-1) 50%, var(--sky-2) 100%);
+}
+
+/* Doodle pattern overlay — 480×480 SVG tile, Tabler Icons stroked white.
+   Soft-light blend lets the underlying gradient shade through, so the same
+   white-stroke asset reads differently against each palette without re-export. */
+.pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("./assets/pattern.svg");
+  background-size: 380px 380px;
+  background-repeat: repeat;
+  opacity: 0.42;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* ---- Wordmark block ------------------------------------------------- */
+
+.brand {
+  position: absolute;
+  left: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 620px;
+}
+.brand__name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 158px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-shadow:
+    0 4px 0 var(--ink-shadow),
+    0 14px 28px var(--ink-shadow);
+  margin-left: -4px;
+}
+.brand__tag {
+  margin-top: 22px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-shadow: 0 2px 0 var(--ink-shadow);
+}
+
+/* ---- Tile (right-side hero element) --------------------------------
+   Two variants share the same position/size/tilt so the banner family
+   feels cohesive:
+     .tile--mascot   → the actual fStikBot app icon (welcome only)
+     .tile--icon     → a white app-icon-style tile with a section glyph
+                       inside, coloured in the banner's spot ink
+   -------------------------------------------------------------------- */
+
+.tile {
+  position: absolute;
+  right: 60px;
+  top: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translateY(-50%) rotate(8deg);
+  border-radius: 56px;
+  overflow: hidden;
+  box-shadow:
+    0 28px 40px var(--ink-shadow-deep),
+    0 10px 18px var(--ink-shadow),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.06);
+}
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tile--icon {
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tile--icon svg {
+  width: 150px;
+  height: 150px;
+  stroke: var(--sky-2);
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* subtle drop so the glyph reads lifted, not printed-flat */
+  filter: drop-shadow(0 4px 0 rgba(10, 45, 95, 0.08));
+}

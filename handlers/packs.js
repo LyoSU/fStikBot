@@ -1,6 +1,7 @@
 const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
 const { escapeHTML } = require('../utils')
+const { editMenu } = require('../banners')
 
 const stegcloak = new StegCloak(false, false)
 
@@ -331,9 +332,11 @@ module.exports = async (ctx) => {
       reply_markup: Markup.inlineKeyboard(keyboardMarkup)
     })
   } else if (ctx.updateType === 'callback_query') {
-    await ctx.editMessageText(messageText, {
-      reply_markup: Markup.inlineKeyboard(keyboardMarkup),
-      parse_mode: 'HTML'
-    }).catch(() => {}) // benign: message-not-modified / message-to-edit-not-found / best-effort UI refresh
+    // editMenu auto-picks editMessageCaption (if parent msg is a banner photo)
+    // vs editMessageText (if plain text). Avoids the silent failure we had
+    // when /start became a photo but packs still used editMessageText.
+    await editMenu(ctx, messageText, {
+      reply_markup: Markup.inlineKeyboard(keyboardMarkup)
+    })
   }
 }

@@ -1,5 +1,8 @@
+const { editBanner, sendBanner } = require('../banners')
+
 module.exports = async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('cmd.start.search_catalog'), {
+  const caption = ctx.i18n.t('cmd.start.search_catalog')
+  const extra = {
     reply_markup: JSON.stringify({
       inline_keyboard: [
         [
@@ -22,5 +25,13 @@ module.exports = async (ctx) => {
         ]
       ]
     })
-  })
+  }
+
+  // From /start callback → swap welcome banner to catalog banner in place.
+  // From a standalone trigger → send fresh.
+  if (ctx.callbackQuery) {
+    await editBanner(ctx, 'catalog', caption, extra)
+  } else {
+    await sendBanner(ctx, 'catalog', caption, extra)
+  }
 }
