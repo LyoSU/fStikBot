@@ -4,8 +4,6 @@
 // allowedUpdates cuts channel_post, edited_channel_post, and poll updates
 // at the Telegram side — the bot doesn't handle them, and previously there
 // was a no-op bot.on([...]) catcher that still consumed network + CPU.
-const crypto = require('crypto')
-
 const ALLOWED_UPDATES = [
   'message',
   'edited_message',
@@ -17,7 +15,10 @@ const ALLOWED_UPDATES = [
 
 module.exports = async function launch (bot) {
   if (process.env.BOT_DOMAIN) {
-    const hookPath = `/fStikBot/${crypto.createHash('sha256').update(process.env.BOT_TOKEN).digest('hex')}`
+    // Keep the original raw-token path — server nginx is configured to
+    // proxy exactly this route to the bot port. Changing to sha256(token)
+    // requires a coordinated nginx update; revisit as a separate change.
+    const hookPath = `/fStikBot:${process.env.BOT_TOKEN}`
     await bot.launch({
       webhook: {
         domain: process.env.BOT_DOMAIN,
