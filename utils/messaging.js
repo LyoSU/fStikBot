@@ -8,11 +8,21 @@ const {
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-// Redis connection with retry strategy
-const redis = new Redis({
-  retryStrategy: (times) => Math.min(times * 50, 2000),
-  maxRetriesPerRequest: 3
-})
+// Broadcast messaging is a Redis-dependent feature. When REDIS_HOST isn't
+// set, we don't open a connection at all (previously `new Redis()` would
+// pin to localhost:6379 and stall forever if something wrong answered).
+// Admin messaging commands will surface the disabled state at call time.
+const REDIS_ENABLED = !!process.env.REDIS_HOST
+
+const redis = REDIS_ENABLED
+  ? new Redis({
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
+      password: process.env.REDIS_PASSWORD || undefined,
+      retryStrategy: (times) => Math.min(times * 50, 2000),
+      maxRetriesPerRequest: 3
+    })
+  : null
 
 const telegram = getTelegram(process.env.MAIN_BOT_TOKEN)
 
@@ -35,6 +45,10 @@ setInterval(() => {
 }, 1000 * 60 * 5)
 
 const messaging = async (messagingData) => {
+  if (!redis) {
+    console.warn('[messaging] REDIS_HOST not set — broadcast disabled')
+    return {}
+  }
   console.log(messagingData.id, `messaging ${messagingData.name} start`)
 
   const key = `messaging:${messagingData.id}`
@@ -142,6 +156,10 @@ const messaging = async (messagingData) => {
 }
 
 const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
+  if (!redis) {
+    console.warn('[messaging] REDIS_HOST not set — edit broadcast disabled')
+    return resolve()
+  }
   console.log(`messaging edit ${messagingData.name} start`)
 
   const startEdit = async () => {

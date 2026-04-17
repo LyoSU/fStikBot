@@ -5,7 +5,18 @@ const Scene = require('telegraf/scenes/base')
 const replicators = require('telegraf/core/replicators')
 const moment = require('moment')
 
-const redis = new Redis()
+// Broadcast-campaign state lives in Redis. Redis opt-in via env — see
+// bot/session-store.js and utils/queues.js for the same pattern.
+function createRedis () {
+  if (!process.env.REDIS_HOST) return null
+  return new Redis({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
+    password: process.env.REDIS_PASSWORD || undefined
+  })
+}
+
+const redis = createRedis()
 
 const adminMessagingName = new Scene('adminMessagingName')
 
@@ -379,7 +390,7 @@ adminMessagingMessageEdit.enter(async (ctx) => {
     messaging.editStatus = 1
     await messaging.save()
 
-    redis.set(`messaging:${messaging.id}:edit_state`, 0)
+    if (redis) redis.set(`messaging:${messaging.id}:edit_state`, 0)
 
     const resultText = `Editing for messaging "${messaging.name}" started`
 
@@ -411,6 +422,10 @@ const adminMessagingPublish = new Scene('adminMessagingPublish')
 
 adminMessagingPublish.enter(async (ctx) => {
   if (!ctx.session.scene?.message || !ctx.session.scene?.type) return ctx.scene.leave()
+  if (!redis) {
+    await ctx.replyWithHTML('Broadcast disabled: REDIS_HOST not set').catch(() => {})
+    return ctx.scene.leave()
+  }
   const urlButton = parseUrlButton(ctx.session.scene.keyboard)
 
   let inlineKeyboard = []
