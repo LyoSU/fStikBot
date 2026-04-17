@@ -40,6 +40,7 @@ module.exports = async (ctx) => {
     })
 
     ctx.reply(ctx.i18n.t('cmd.lang.choose'), {
+      disable_web_page_preview: true,
       reply_markup: Markup.inlineKeyboard(button, {
         columns: 2
       })
