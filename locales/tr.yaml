@@ -681,6 +681,8 @@ scenes:
   original:
     enter: |
       Bu botla eklenen çıkartmayı gönderin, size orijinal çıkartmasını göstereceğim.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>Hata!</b>
@@ -873,6 +875,10 @@ scenes:
     error: |
       <b>Hata!</b>
       Maalesef bir şeyler ters gitti.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
