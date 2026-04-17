@@ -2,8 +2,7 @@
 // order from the original bot.js — order matters for the
 // addstickers/addemoji restore→copy chain and for /start payload routing.
 const Composer = require('telegraf/composer')
-const got = require('got')
-const sharp = require('sharp')
+const sendStickerAsDocument = require('../utils/send-sticker-as-document')
 
 module.exports = (bot, privateMessage, {
   handlers,
@@ -37,11 +36,6 @@ module.exports = (bot, privateMessage, {
     handleInlineQuery,
     handleGroupSettings
   } = handlers
-
-  // Helper for downstream handlers that want to forward a Telegram API
-  // error back to the user without triggering the global error handler.
-  const replyWithError = (ctx, error) =>
-    ctx.replyWithHTML(ctx.i18n.t('error.telegram', { error: error.description })).catch(() => {})
 
   // --- Admin-only /json dump ---
   // Used to be public; now gated to the main admin to avoid leaking arbitrary
@@ -142,9 +136,11 @@ module.exports = (bot, privateMessage, {
   privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
   privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
 
-  // Download-original — large callback handler kept inline because it
-  // branches on sticker type and owns its own fallback logic for emoji
-  // packs, webp/webm/tgs, and PNG conversion via sharp.
+  // Download-original — used by the /about scene's "Download original" button.
+  // Tries to resend the stored original sticker directly; on any failure
+  // (expired file_id, emoji/regular mismatch, etc.) re-uploads via URL as a
+  // document. Never falls back to sendPhoto/sendVideo — Telegram rejects
+  // sticker file_ids there with "can't use file of type Sticker as Photo".
   privateMessage.action(/^download_original$/, async (ctx) => {
     await ctx.answerCbQuery()
 
@@ -166,54 +162,18 @@ module.exports = (bot, privateMessage, {
       const originalFileId = stickerInfo.getOriginalFileId()
       const originalFileUniqueId = stickerInfo.getOriginalFileUniqueId()
 
-      await ctx.replyWithSticker(originalFileId, {
-        caption: stickerInfo.emojis
-      }).catch(async (stickerError) => {
-        if (stickerError.description.match(/emoji/)) {
-          let fileLink
-          try {
-            fileLink = await ctx.telegram.getFileLink(originalFileId)
-          } catch (err) {
-            return ctx.replyWithHTML(ctx.i18n.t(err.message?.includes('file is too big') ? 'error.file_too_big' : 'error.download'))
-          }
-          await ctx.replyWithDocument({
-            url: fileLink,
-            filename: `${originalFileUniqueId}.webp`
-          }).catch((error) => replyWithError(ctx, error))
-        } else {
-          ctx.replyWithPhoto(originalFileId, {
-            caption: stickerInfo.emojis
-          }).catch((error) => replyWithError(ctx, error))
-        }
-      })
-    } else {
-      let fileLink
       try {
-        fileLink = await ctx.telegram.getFileLink(sticker.file_id)
-      } catch (err) {
-        return ctx.replyWithHTML(ctx.i18n.t(err.message?.includes('file is too big') ? 'error.file_too_big' : 'error.download'))
-      }
+        await ctx.replyWithSticker(originalFileId, { caption: stickerInfo.emojis })
+        return
+      } catch (_) { /* fall through to document fallback */ }
 
-      if (fileLink.endsWith('.webp')) {
-        const buffer = await got(fileLink).buffer()
-        const pngBuffer = await sharp(buffer, { failOnError: false }).png().toBuffer()
-        await ctx.replyWithDocument({
-          source: pngBuffer,
-          filename: `${sticker.file_unique_id}.png`
-        }).catch((error) => replyWithError(ctx, error))
-      } else if (fileLink.endsWith('.webm')) {
-        await ctx.replyWithDocument({
-          url: fileLink,
-          filename: `${sticker.file_unique_id}.webm`
-        }).catch((error) => replyWithError(ctx, error))
-      } else if (fileLink.endsWith('.tgs')) {
-        await ctx.replyWithDocument({
-          url: fileLink,
-          filename: `${sticker.file_unique_id}.tgs`
-        }).catch((error) => replyWithError(ctx, error))
-      } else {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
-      }
+      await sendStickerAsDocument(ctx, originalFileId, originalFileUniqueId)
+      return
+    }
+
+    const result = await sendStickerAsDocument(ctx, sticker.file_id, sticker.file_unique_id)
+    if (result === 'unsupported') {
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.original.error.not_found'))
     }
   })
 
