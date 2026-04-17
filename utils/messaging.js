@@ -1,7 +1,7 @@
 const fs = require('fs')
-const Redis = require('ioredis')
 const getTelegram = require('./telegram').get
 const replicators = require('telegraf/core/replicators')
+const { getBroadcastClient } = require('./redis')
 const {
   db
 } = require('../database')
@@ -13,22 +13,9 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 // headroom for slow/paused campaigns while guaranteeing cleanup.
 const MESSAGING_TTL_SECONDS = 7 * 24 * 60 * 60
 
-// Broadcast messaging is a Redis-dependent feature. When REDIS_HOST isn't
-// set, we don't open a connection at all (previously `new Redis()` would
-// pin to localhost:6379 and stall forever if something wrong answered).
-// Admin messaging commands will surface the disabled state at call time.
-const REDIS_ENABLED = !!process.env.REDIS_HOST
-
-const redis = REDIS_ENABLED
-  ? new Redis({
-      host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
-      password: process.env.REDIS_PASSWORD || undefined,
-      keepAlive: 30000,
-      retryStrategy: (times) => Math.min(times * 200, 3000),
-      maxRetriesPerRequest: 3
-    })
-  : null
+// Shared with scenes/messaging.js — one client, one quota slot.
+// null when REDIS_HOST isn't set; callers below check for that.
+const redis = getBroadcastClient()
 
 const telegram = getTelegram(process.env.MAIN_BOT_TOKEN)
 

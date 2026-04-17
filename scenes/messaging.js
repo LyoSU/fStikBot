@@ -1,24 +1,13 @@
 const mongoose = require('mongoose')
-const Redis = require('ioredis')
 const Markup = require('telegraf/markup')
 const Scene = require('telegraf/scenes/base')
 const replicators = require('telegraf/core/replicators')
 const moment = require('moment')
 
-// Broadcast-campaign state lives in Redis. Redis opt-in via env — see
-// bot/session-store.js and utils/queues.js for the same pattern.
-function createRedis () {
-  if (!process.env.REDIS_HOST) return null
-  return new Redis({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379,
-    password: process.env.REDIS_PASSWORD || undefined,
-    keepAlive: 30000,
-    retryStrategy: (times) => Math.min(times * 200, 3000)
-  })
-}
+const { getBroadcastClient } = require('../utils/redis')
 
-const redis = createRedis()
+// Shared with utils/messaging.js (same keyspace, same connection).
+const redis = getBroadcastClient()
 
 // Keep in sync with utils/messaging.js — same constant, same Redis keys.
 const MESSAGING_TTL_SECONDS = 7 * 24 * 60 * 60
