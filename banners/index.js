@@ -104,4 +104,11 @@ async function editMenu (ctx, text, extra = {}) {
   }
 }
 
-module.exports = { sendBanner, editBanner, editMenu }
+// Convenience: pick sendBanner vs editBanner by trigger type. Use in handlers
+// that can be reached both as a command and as a callback from another menu.
+async function replyOrEditBanner (ctx, name, caption = '', extra = {}) {
+  if (ctx.callbackQuery) return editBanner(ctx, name, caption, extra)
+  return sendBanner(ctx, name, caption, extra)
+}
+
+module.exports = { sendBanner, editBanner, editMenu, replyOrEditBanner }

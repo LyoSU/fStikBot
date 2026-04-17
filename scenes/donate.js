@@ -1,6 +1,7 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const mongoose = require('mongoose')
+const { replyOrEditBanner } = require('../banners')
 
 // Regional pricing tiers
 const PRICING_TIERS = {
@@ -100,7 +101,7 @@ donateScene.enter(async (ctx) => {
     return [Markup.urlButton(`${label} — ${prices[amount]} ⭐${discounts[amount]}`, invoiceLinks[amount])]
   })
 
-  await ctx.replyWithHTML(ctx.i18n.t('donate.menu', {
+  await replyOrEditBanner(ctx, 'donate', ctx.i18n.t('donate.menu', {
     titleSuffix: ` :: @${ctx.options.username}`,
     balance: ctx.session.userInfo.balance
   }), {

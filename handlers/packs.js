@@ -1,7 +1,7 @@
 const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
 const { escapeHTML } = require('../utils')
-const { editMenu } = require('../banners')
+const { sendBanner, editBanner } = require('../banners')
 
 const stegcloak = new StegCloak(false, false)
 
@@ -325,18 +325,18 @@ module.exports = async (ctx) => {
 
   keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), `new_pack:${packType}`)])
 
+  const replyMarkup = Markup.inlineKeyboard(keyboardMarkup)
+
   if (ctx.updateType === 'message') {
-    await ctx.replyWithHTML(messageText, {
+    await sendBanner(ctx, 'packs', messageText, {
       reply_to_message_id: ctx.message.message_id,
       allow_sending_without_reply: true,
-      reply_markup: Markup.inlineKeyboard(keyboardMarkup)
+      reply_markup: replyMarkup
     })
   } else if (ctx.updateType === 'callback_query') {
-    // editMenu auto-picks editMessageCaption (if parent msg is a banner photo)
-    // vs editMessageText (if plain text). Avoids the silent failure we had
-    // when /start became a photo but packs still used editMessageText.
-    await editMenu(ctx, messageText, {
-      reply_markup: Markup.inlineKeyboard(keyboardMarkup)
-    })
+    // Swap whatever banner was shown (welcome, or packs from a prior nav) to
+    // the packs banner + updated caption/keyboard. editBanner internally uses
+    // editMessageMedia, which works whether the prior message is text or photo.
+    await editBanner(ctx, 'packs', messageText, { reply_markup: replyMarkup })
   }
 }

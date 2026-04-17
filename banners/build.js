@@ -20,9 +20,9 @@ try {
   process.exit(1)
 }
 
-const WIDTH = 1200
+const WIDTH = 960
 const HEIGHT = 400
-const SCALE = 2 // retina output → 2400×800, looks crisp on high-DPI devices
+const SCALE = 2 // retina output → 1920×800, looks crisp on high-DPI devices
 
 const SRC = path.join(__dirname, 'src')
 const DIST = path.join(__dirname, 'dist')
