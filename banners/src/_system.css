@@ -165,3 +165,36 @@ html, body {
   position: relative;
   z-index: 1;
 }
+
+/* ---- Stats footer (optional, used on welcome) ---------------------
+   Factual numbers baked into the PNG. Update copy + rebuild on
+   milestones (every few months). Subtle tracking + small size so it
+   doesn't compete with the wordmark. */
+
+.stats {
+  position: absolute;
+  left: 56px;
+  right: 48px;
+  bottom: 22px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  text-shadow: 0 1px 0 var(--ink-shadow);
+}
+.stats b {
+  font-weight: 900;
+  color: var(--fg);
+}
+.stats__dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--fg);
+  opacity: 0.5;
+}

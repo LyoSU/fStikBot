@@ -36,7 +36,13 @@ const BANNERS = [
   { name: 'new-pack', file: 'new-pack.html' },
   { name: 'boost',    file: 'boost.html' },
   { name: 'help',     file: 'help.html' },
-  { name: 'donate',   file: 'donate.html' }
+  { name: 'donate',   file: 'donate.html' },
+  { name: 'origin',   file: 'origin.html' },
+  { name: 'publish',  file: 'publish.html' },
+  { name: 'language', file: 'language.html' },
+  { name: 'emoji',    file: 'emoji.html' },
+  { name: 'group',    file: 'group.html' },
+  { name: 'mosaic',   file: 'mosaic.html' }
 ]
 
 async function main () {
