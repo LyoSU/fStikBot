@@ -116,10 +116,10 @@ module.exports = (bot, privateMessage, {
         packType: 'regular'
       }
     }
-    // The scene uses reply keyboards, which can't attach to editMessageMedia.
-    // Delete the /start banner so the scene's first message (with its own
-    // new-pack banner + reply keyboard) is the only one visible.
-    await ctx.deleteMessage().catch(() => {})
+    // Scene sends its own new-pack banner below (reply keyboards can't
+    // attach via editMessageMedia, so we don't swap the /start message —
+    // user keeps their welcome banner in history + sees the scene flow
+    // as the next message).
     return ctx.scene.enter('newPack')
   })
   privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleCopyPack)
