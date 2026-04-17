@@ -677,6 +677,8 @@ scenes:
   original:
     enter: |
       Bu bot vasitəsilə əlavə olunan stikeri göndərin, sizə orijinalını göstərim.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>səhv!</b>
@@ -869,6 +871,10 @@ scenes:
     error: |
       <b>Xəta!</b>
       Təəssüf, nəsə xəta baş verdi.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
