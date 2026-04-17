@@ -42,12 +42,15 @@ try {
   redis.on('ready', () => {
     const wasDown = !redisHealthy
     redisHealthy = true
+    console.log('[DEBUG session-store] Redis READY')
     if (wasDown && warnedDown) {
       console.log('[session-store] Redis back online')
       warnedDown = false
     }
   })
+  redis.on('connect', () => console.log('[DEBUG session-store] Redis CONNECT'))
   redis.on('error', (err) => {
+    console.log('[DEBUG session-store] Redis ERROR:', err.code || err.message)
     if (redisHealthy || !warnedDown) {
       console.warn('[session-store] Redis unhealthy, falling back to memory:', err.message)
       warnedDown = true
@@ -55,6 +58,7 @@ try {
     redisHealthy = false
   })
   redis.on('end', () => {
+    console.log('[DEBUG session-store] Redis END')
     redisHealthy = false
   })
 } catch (err) {
@@ -82,10 +86,12 @@ const cleanupInterval = setInterval(() => {
 if (cleanupInterval.unref) cleanupInterval.unref()
 
 async function redisGet (key) {
+  console.log(`[DEBUG session] get start key=${key} healthy=${redisHealthy}`)
   if (redisHealthy) {
     let raw
     try {
       raw = await redis.get(SESSION_PREFIX + key)
+      console.log(`[DEBUG session] get done  key=${key} raw=${raw == null ? 'null' : 'len:' + raw.length}`)
     } catch (err) {
       console.warn('[session-store] get failed, memory fallback:', err.message)
       return memoryFallback.get(key)
@@ -100,6 +106,7 @@ async function redisGet (key) {
       return undefined
     }
   }
+  console.log(`[DEBUG session] memfallback key=${key}`)
   memoryTimestamps.set(key, Date.now())
   return memoryFallback.get(key)
 }
