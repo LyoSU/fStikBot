@@ -124,6 +124,30 @@ function isRateLimitCached (method, chatId) {
   return true
 }
 
+/**
+ * Returns remaining cooldown in seconds for a (method, chatId) pair, or 0
+ * if not cooled down. Intended for callers that want to SHORT-CIRCUIT
+ * before starting expensive prep work (file download, sharp processing,
+ * uploadStickerFile) that would only lead to another 429 on the real
+ * action (addStickerToSet). Example: add-sticker.js checks this before
+ * downloading a Telegram file that it would just re-upload anyway.
+ *
+ * @param {string} method
+ * @param {number|string} [chatId]
+ * @returns {number} seconds remaining (0 if none)
+ */
+function getRateLimitRemaining (method, chatId) {
+  const key = rateLimitKey(method, chatId)
+  const expiresAt = rateLimitedCalls.get(key)
+  if (!expiresAt) return 0
+  const remainingMs = expiresAt - Date.now()
+  if (remainingMs <= 0) {
+    rateLimitedCalls.delete(key)
+    return 0
+  }
+  return Math.ceil(remainingMs / 1000)
+}
+
 function buildRateLimitError (method, chatId) {
   const err = new Error(`Too Many Requests: cached 429 for ${method}${chatId ? `@${chatId}` : ''}`)
   err.code = 429
@@ -305,6 +329,7 @@ module.exports = {
   getRetryAfter,
   retryMiddleware,
   clearBlockedChat,
+  getRateLimitRemaining,
   _blockedCacheSize: () => blockedChats.size,
   _rateLimitCacheSize: () => rateLimitedCalls.size
 }

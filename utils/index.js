@@ -15,7 +15,7 @@ const showGramAds = require('./gramads')
 const downloadFileByURL = require('./download-file-by-url')
 const moderatePack = require('./moderate-pack')
 const escapeRegex = require('./escape-regex')
-const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware, clearBlockedChat } = require('./retry-api')
+const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware, clearBlockedChat, getRateLimitRemaining } = require('./retry-api')
 const { perfStage, perfRecord, perfTick, perfSnapshot, ENABLED: PERF_TIMING_ENABLED } = require('./perf-timing')
 
 module.exports = {
@@ -41,6 +41,7 @@ module.exports = {
   getRetryAfter,
   retryMiddleware,
   clearBlockedChat,
+  getRateLimitRemaining,
   perfStage,
   perfRecord,
   perfTick,

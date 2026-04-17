@@ -5,8 +5,10 @@ const {
   countUncodeChars,
   substrUnicode,
   addSticker,
-  addStickerText
+  addStickerText,
+  getRateLimitRemaining
 } = require('../utils')
+const stickerInflight = require('../utils/sticker-inflight')
 
 module.exports = async (ctx, next) => {
   if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
@@ -19,7 +21,7 @@ module.exports = async (ctx, next) => {
   ctx.replyWithChatAction('upload_document').catch(() => {}) // UX only — 429/blocked noise silenced
 
   let messageText = ''
-  let replyMarkup = {}
+  const replyMarkup = {}
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -273,6 +275,28 @@ module.exports = async (ctx, next) => {
         ])
       })
     } else {
+      // Pre-check: if the user's addStickerToSet is in a 429 cooldown from
+      // a recent attempt on the same pack, bail BEFORE downloading and
+      // re-uploading a file that would only trip the same limit again.
+      // Saves 1-3s of wasted Telegram bandwidth per attempt.
+      const cooldown = getRateLimitRemaining('addStickerToSet', ctx.from.id)
+      if (cooldown > 0) {
+        return ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: cooldown }), {
+          reply_to_message_id: message.message_id,
+          allow_sending_without_reply: true
+        })
+      }
+
+      // Per-user cap on in-flight sticker adds. Without it, one user
+      // spamming 20 stickers launches 20 concurrent uploads that all 429
+      // each other anyway. The cap mirrors Telegram's practical tolerance.
+      if (!stickerInflight.acquire(ctx.from.id)) {
+        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
+          reply_to_message_id: message.message_id,
+          allow_sending_without_reply: true
+        })
+      }
+
       if (ctx.session.userInfo.locale === 'ru' && !stickerSet?.boost) {
         showGramAds(ctx.chat.id)
       }
@@ -281,36 +305,68 @@ module.exports = async (ctx, next) => {
 
       ctx.telegram.sendChatAction(ctx.chat.id, 'choose_sticker').catch(() => {})
 
-      const stickerInfo = await addSticker(ctx, stickerFile, stickerSet)
+      // Fire-and-forget: the Telegraf handler returns now, freeing the
+      // polling-batch slot and letting the user see the chat_action
+      // feedback instantly. The actual upload + reply happens in this
+      // detached chain. Errors are caught locally — bot.catch won't see
+      // them because the handler has already resolved.
+      ;(async () => {
+        try {
+          const stickerInfo = await addSticker(ctx, stickerFile, stickerSet)
 
-      if (stickerInfo.wait) {
-        return
-      }
+          // Video path: addSticker enqueued to convertQueue; the
+          // worker's global:completed handler in utils/add-sticker.js
+          // will send the result. Nothing for us to do.
+          if (!stickerInfo || stickerInfo.wait) return
 
-      const result = addStickerText(stickerInfo, ctx.i18n.locale())
+          // Inline errors from addSticker return a Message object (from
+          // inline ctx.reply*). Those already notified the user — the
+          // result has no ok/error and addStickerText returns empty.
+          if (!stickerInfo.ok && !stickerInfo.error) return
 
-      messageText = result.messageText
-      replyMarkup = result.replyMarkup
+          const result = addStickerText(stickerInfo, ctx.i18n.locale())
 
-      if (typeof stickerSet?.publishDate === 'undefined' && stickerSet?.packType === 'regular') {
-        const countStickers = await ctx.db.Sticker.countDocuments({
-          stickerSet,
-          deleted: false
-        })
+          if (result.messageText) {
+            await ctx.replyWithHTML(result.messageText, {
+              reply_to_message_id: message.message_id,
+              allow_sending_without_reply: true,
+              reply_markup: result.replyMarkup
+            }).catch(err => console.error('[sticker.bg] reply failed:', err.message))
+          }
 
-        if ([50, 90].includes(countStickers)) {
-          setTimeout(async () => {
-            await ctx.replyWithHTML(ctx.i18n.t('sticker.add.catalog_offer', {
-              title: escapeHTML(stickerSet.title),
-              link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
-            }), {
-              reply_markup: Markup.inlineKeyboard([
-                { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`), style: 'primary' }
-              ])
+          if (
+            stickerInfo.ok &&
+            typeof stickerSet?.publishDate === 'undefined' &&
+            stickerSet?.packType === 'regular'
+          ) {
+            const countStickers = await ctx.db.Sticker.countDocuments({
+              stickerSet,
+              deleted: false
             })
-          }, 1000 * 2)
+
+            if ([50, 90].includes(countStickers)) {
+              setTimeout(async () => {
+                await ctx.replyWithHTML(ctx.i18n.t('sticker.add.catalog_offer', {
+                  title: escapeHTML(stickerSet.title),
+                  link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+                }), {
+                  reply_markup: Markup.inlineKeyboard([
+                    { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`), style: 'primary' }
+                  ])
+                }).catch(() => {})
+              }, 1000 * 2)
+            }
+          }
+        } catch (err) {
+          console.error('[sticker.bg] addSticker failed:', err)
+          await ctx.replyWithHTML(ctx.i18n.t('error.unknown'), {
+            reply_to_message_id: message.message_id,
+            allow_sending_without_reply: true
+          }).catch(() => {})
+        } finally {
+          stickerInflight.release(ctx.from.id)
         }
-      }
+      })()
     }
   } else {
     if (ctx.chat.type === 'private') {
