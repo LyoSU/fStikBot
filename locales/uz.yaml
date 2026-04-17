@@ -657,6 +657,8 @@ scenes:
   original:
     enter: |
       Ushbu bot orqali qo'shilgan stikerni yuboring va men sizga asl nusxasini ko'rsataman.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>Tizimda xatolik!</b>
@@ -847,6 +849,10 @@ scenes:
     error: |
       <b>Xato!</b>
       Op, nimadir xato ketdi.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
