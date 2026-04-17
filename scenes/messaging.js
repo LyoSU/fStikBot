@@ -18,6 +18,9 @@ function createRedis () {
 
 const redis = createRedis()
 
+// Keep in sync with utils/messaging.js — same constant, same Redis keys.
+const MESSAGING_TTL_SECONDS = 7 * 24 * 60 * 60
+
 const adminMessagingName = new Scene('adminMessagingName')
 
 adminMessagingName.enter(async (ctx) => {
@@ -390,7 +393,7 @@ adminMessagingMessageEdit.enter(async (ctx) => {
     messaging.editStatus = 1
     await messaging.save()
 
-    if (redis) redis.set(`messaging:${messaging.id}:edit_state`, 0)
+    if (redis) redis.set(`messaging:${messaging.id}:edit_state`, 0, 'EX', MESSAGING_TTL_SECONDS)
 
     const resultText = `Editing for messaging "${messaging.name}" started`
 
@@ -548,6 +551,12 @@ adminMessagingPublish.enter(async (ctx) => {
   // Push remaining users
   if (batch.length > 0) {
     await redis.rpush(key + ':users', batch)
+  }
+
+  // rpush doesn't support inline TTL — apply one now so the list (and any
+  // sibling state keys created later) disappears if the campaign stalls.
+  if (usersCount > 0) {
+    await redis.expire(key + ':users', MESSAGING_TTL_SECONDS)
   }
 
   const messaging = new ctx.db.Messaging()

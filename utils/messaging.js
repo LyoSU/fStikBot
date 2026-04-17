@@ -8,6 +8,11 @@ const {
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+// Single source of truth for all broadcast-related Redis keys.
+// Broadcasts typically finish within hours; 7 days gives plenty of
+// headroom for slow/paused campaigns while guaranteeing cleanup.
+const MESSAGING_TTL_SECONDS = 7 * 24 * 60 * 60
+
 // Broadcast messaging is a Redis-dependent feature. When REDIS_HOST isn't
 // set, we don't open a connection at all (previously `new Redis()` would
 // pin to localhost:6379 and stall forever if something wrong answered).
@@ -100,9 +105,13 @@ const messaging = async (messagingData) => {
 
         try {
           const result = await telegram.callApi(method, opts)
-          await redis.set(key + ':messages:' + chatId, result.message_id, 'EX', 604800)
+          await redis.set(key + ':messages:' + chatId, result.message_id, 'EX', MESSAGING_TTL_SECONDS)
         } catch (error) {
-          await redis.incr(key + ':error')
+          // INCR creates the key without TTL on first use; re-apply EXPIRE
+          // alongside so the counter doesn't outlive the campaign.
+          const errKey = key + ':error'
+          await redis.incr(errKey)
+          await redis.expire(errKey, MESSAGING_TTL_SECONDS)
           console.log(`messaging error ${messagingData.name}`, chatId, error.description)
           if (error?.parameters?.retry_after) {
             // Rate limited, will retry on next cycle
@@ -132,7 +141,7 @@ const messaging = async (messagingData) => {
       messagingData.result.error = errorCount
       messagingData.result.state = state + users.length
 
-      await redis.set(key + ':state', state + users.length, 'EX', 604800)
+      await redis.set(key + ':state', state + users.length, 'EX', MESSAGING_TTL_SECONDS)
     }
 
     if (state + users.length >= messagingData.result.total) {
@@ -216,7 +225,7 @@ const messagingEdit = (messagingData) => new Promise((resolve, reject) => {
               })
             }
           }
-          await redis.set(key + ':edit_state', state + count, 'EX', 604800)
+          await redis.set(key + ':edit_state', state + count, 'EX', MESSAGING_TTL_SECONDS)
         }
       } catch (error) {
         console.error('Messaging edit interval error:', error.message)
