@@ -24,6 +24,22 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
+// addSticker return contract (single shape — caller always renders via
+// addStickerText, addSticker never calls ctx.reply directly):
+//
+//   { ok: {...} }       — success
+//   { wait: true }      — queued to convertQueue; worker will reply later
+//   { error: {...} }    — any of:
+//     { type: 'duplicate', sticker }   — dup in inline pack (caller renders
+//                                         inline buttons to delete/copy)
+//     { telegram: <err> }              — Telegram API error (caller inspects
+//                                         description for known codes)
+//     { i18nKey: '<key>' }             — simple inline error; caller
+//                                         renders i18n.t(key) verbatim.
+//                                         Data-driven: adding a new inline
+//                                         error = add an i18n key, no code
+//                                         change in addStickerText.
+
 // Update queue position messages when jobs complete (event-driven, not polling)
 async function updateConvertQueueMessages () {
   try {
@@ -402,10 +418,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     try {
       animatedData = await downloadFileByUrl(fileUrl)
     } catch (err) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
 
     stickerExtra.sticker = { source: animatedData }
@@ -459,10 +472,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     try {
       animatedData = await downloadFileByUrl(fileUrl)
     } catch (err) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
     stickerExtra.sticker = { source: animatedData }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
@@ -477,10 +487,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     try {
       stickerData = await downloadFileByUrl(fileUrl)
     } catch (err) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
     stickerExtra.sticker = { source: stickerData }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
@@ -519,18 +526,12 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     // Check if user already has video processing (with auto-unlock after TTL)
     const lastProcessing = videoProcessing.get(ctx.from.id)
     if (lastProcessing && (Date.now() - lastProcessing < VIDEO_PROCESSING_TTL) && !stickerSet?.boost) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.wait_load' } }
     }
 
     // Size check for new files (stickers from sets are already validated)
     if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.too_big'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.too_big' } }
     }
 
     // Skip re-encoding if explicitly requested
@@ -539,10 +540,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       try {
         skipData = await downloadFileByUrl(fileUrl)
       } catch (err) {
-        return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-          reply_to_message_id: ctx?.message?.message_id,
-          allow_sending_without_reply: true
-        })
+        return { error: { i18nKey: 'sticker.add.error.convert' } }
       }
       stickerExtra.sticker = { source: skipData }
       return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra)
@@ -566,10 +564,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     const total = await convertQueue.getJobCounts()
 
     if (total.waiting > 200 && priority > 50) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.timeout'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.timeout' } }
     }
 
     let convertingMessage
@@ -615,10 +610,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       // Mark user as processing only after successful queue add
       videoProcessing.set(ctx.from.id, Date.now())
     } catch (err) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
 
     return { wait: true }
@@ -628,10 +620,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   const lastTime = lastStickerTime.get(ctx.from.id) || 0
 
   if (Date.now() - lastTime < STICKER_COOLDOWN && !stickerSet?.boost) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.wait_load'), {
-      reply_to_message_id: ctx?.message?.message_id,
-      allow_sending_without_reply: true
-    })
+    return { error: { i18nKey: 'sticker.add.error.wait_load' } }
   }
 
   lastStickerTime.set(ctx.from.id, Date.now())
@@ -640,18 +629,12 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     try {
       fileData = await downloadFileByUrl(fileUrl)
     } catch (err) {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.convert'), {
-        reply_to_message_id: ctx?.message?.message_id,
-        allow_sending_without_reply: true
-      })
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
   }
 
   if (!fileData || fileData.length === 0) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
-      reply_to_message_id: ctx?.message?.message_id,
-      allow_sending_without_reply: true
-    })
+    return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
   }
 
   const imageSharp = sharp(fileData, {
@@ -666,10 +649,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   })
 
   if (!imageMetadata) {
-    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.invalid_image'), {
-      reply_to_message_id: ctx?.message?.message_id,
-      allow_sending_without_reply: true
-    })
+    return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
   }
 
   let pipeline = imageSharp.clone()

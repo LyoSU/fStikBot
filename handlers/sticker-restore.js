@@ -65,6 +65,8 @@ module.exports = async (ctx) => {
         return ctx.answerCbQuery(ctx.i18n.t('error.answerCbQuery.telegram', {
           error: result.error.telegram.description
         }), true)
+      } else if (result.error.i18nKey) {
+        return ctx.answerCbQuery(ctx.i18n.t(result.error.i18nKey), true)
       }
     }
 

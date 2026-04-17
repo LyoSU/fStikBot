@@ -8,12 +8,11 @@
 // user rate limit on addStickerToSet, duplicating Telegram bandwidth
 // and amplifying load for no benefit (Telegram will 429 anyway).
 //
-// Small cap (default 2) mirrors Telegram's own tolerance: two in flight
-// is enough to overlap network latency; more just queues up 429s.
-// Boosted packs are wired through the same cap — if they ever need a
-// higher limit we can differentiate via the isBoost arg.
+// Small cap (default 3) mirrors Telegram's own tolerance: up to three
+// in flight overlaps network latency without saturating Telegram's
+// per-user addStickerToSet limit. More just queues up 429s.
 
-const MAX_PER_USER = parseInt(process.env.STICKER_INFLIGHT_PER_USER, 10) || 2
+const MAX_PER_USER = parseInt(process.env.STICKER_INFLIGHT_PER_USER, 10) || 3
 
 const counts = new Map()
 

@@ -9,6 +9,7 @@ const {
   getRateLimitRemaining
 } = require('../utils')
 const stickerInflight = require('../utils/sticker-inflight')
+const handleError = require('./catch')
 
 module.exports = async (ctx, next) => {
   if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
@@ -305,32 +306,27 @@ module.exports = async (ctx, next) => {
 
       ctx.telegram.sendChatAction(ctx.chat.id, 'choose_sticker').catch(() => {})
 
-      // Fire-and-forget: the Telegraf handler returns now, freeing the
-      // polling-batch slot and letting the user see the chat_action
-      // feedback instantly. The actual upload + reply happens in this
-      // detached chain. Errors are caught locally — bot.catch won't see
-      // them because the handler has already resolved.
+      // Fire-and-forget: handler returns now so the polling-batch slot
+      // frees immediately and the user sees chat_action feedback. The
+      // upload + reply happens in this detached chain. Because addSticker
+      // never calls ctx.reply directly (see its return contract), we
+      // always render via addStickerText — one code path, no special
+      // cases.
       ;(async () => {
         try {
           const stickerInfo = await addSticker(ctx, stickerFile, stickerSet)
 
-          // Video path: addSticker enqueued to convertQueue; the
-          // worker's global:completed handler in utils/add-sticker.js
-          // will send the result. Nothing for us to do.
-          if (!stickerInfo || stickerInfo.wait) return
+          // Video path: enqueued to convertQueue. The worker's
+          // global:completed handler (utils/add-sticker.js) will reply.
+          if (stickerInfo.wait) return
 
-          // Inline errors from addSticker return a Message object (from
-          // inline ctx.reply*). Those already notified the user — the
-          // result has no ok/error and addStickerText returns empty.
-          if (!stickerInfo.ok && !stickerInfo.error) return
+          const { messageText, replyMarkup } = addStickerText(stickerInfo, ctx.i18n.locale())
 
-          const result = addStickerText(stickerInfo, ctx.i18n.locale())
-
-          if (result.messageText) {
-            await ctx.replyWithHTML(result.messageText, {
+          if (messageText) {
+            await ctx.replyWithHTML(messageText, {
               reply_to_message_id: message.message_id,
               allow_sending_without_reply: true,
-              reply_markup: result.replyMarkup
+              reply_markup: replyMarkup
             }).catch(err => console.error('[sticker.bg] reply failed:', err.message))
           }
 
@@ -358,11 +354,10 @@ module.exports = async (ctx, next) => {
             }
           }
         } catch (err) {
-          console.error('[sticker.bg] addSticker failed:', err)
-          await ctx.replyWithHTML(ctx.i18n.t('error.unknown'), {
-            reply_to_message_id: message.message_id,
-            allow_sending_without_reply: true
-          }).catch(() => {})
+          // Unexpected throw inside the detached chain. Route through
+          // the normal error pipeline so the log channel gets git blame
+          // + stack + chainActions, same as any sync handler error.
+          handleError(err, ctx).catch(e => console.error('[sticker.bg] handleError itself failed:', e))
         } finally {
           stickerInflight.release(ctx.from.id)
         }

@@ -42,6 +42,11 @@ module.exports = (addStickerResult, lang) => {
           { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.copy'), `restore_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'primary' }
         ])
       }
+    } else if (addStickerResult.error.i18nKey) {
+      // Data-driven inline-error path: addSticker short-circuited with a
+      // known i18n key (download failed, too big, queue full, etc.).
+      // Adding a new inline error = add an i18n key, no code change here.
+      messageText = i18n.t(lang, addStickerResult.error.i18nKey)
     } else if (addStickerResult.error.telegram) {
       const errDescription = addStickerResult.error.telegram.description || addStickerResult.error.telegram.message || ''
       if (!errDescription) {
