@@ -108,6 +108,36 @@ async function test (name, fn) {
     assert.deepStrictEqual(fake.calls.lastSet.value, { scene: 'new' })
   })
 
+  await test('chainActions-only mutation does NOT trigger store.set', async () => {
+    // chainActions is pushed to on every update for error-trail context.
+    // Without the dirty-check excluding it, every single update would write
+    // to Redis — defeating the whole optimization.
+    const fake = makeFakeStore(new Map([['user:50', { scene: 'x', chainActions: ['/start'] }]]))
+    _internal.setImpl(fake.impl)
+    const mw = sessionMiddleware()
+    const ctx = { from: { id: 50 }, chat: { id: 50 } }
+    await mw(ctx, async () => {
+      ctx.session.chainActions.push('/packs')
+    })
+    assert.strictEqual(fake.calls.set, 0, 'chainActions-only push must not write')
+  })
+
+  await test('chainActions persisted alongside real mutation', async () => {
+    const fake = makeFakeStore(new Map([['user:51', { scene: 'x', chainActions: ['/start'] }]]))
+    _internal.setImpl(fake.impl)
+    const mw = sessionMiddleware()
+    const ctx = { from: { id: 51 }, chat: { id: 51 } }
+    await mw(ctx, async () => {
+      ctx.session.chainActions.push('/packs')
+      ctx.session.scene = 'packs'
+    })
+    assert.strictEqual(fake.calls.set, 1, 'real change triggers a single write')
+    assert.deepStrictEqual(fake.calls.lastSet.value, {
+      scene: 'packs',
+      chainActions: ['/start', '/packs']
+    })
+  })
+
   await test('anonymous update (no ctx.from) → next() runs, no store touched', async () => {
     const fake = makeFakeStore()
     _internal.setImpl(fake.impl)

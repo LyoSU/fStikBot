@@ -154,15 +154,25 @@ function getSessionKey (ctx) {
   return undefined
 }
 
-// Serialize the session minus userInfo. Used both for the dirty-check and
-// for the actual persisted payload. Returning the string directly means we
-// can compare it literally (no crypto needed) and reuse it for writes.
+// Serialize the session for the WRITE payload. Strips userInfo because it's
+// a Mongoose doc with populated refs — expensive to stringify, and
+// updateUser rehydrates it fresh on every request anyway.
 function serializeWithoutUserInfo (session) {
   if (!session || typeof session !== 'object') return JSON.stringify(session)
-  // Shallow copy, drop userInfo. userInfo is a Mongoose doc + populated refs
-  // so stringifying it is expensive and pointless — updateUser rehydrates it
-  // fresh on every request.
   const { userInfo, ...rest } = session // eslint-disable-line no-unused-vars
+  return JSON.stringify(rest)
+}
+
+// Serialize for the DIRTY CHECK. Additionally strips chainActions — that
+// array is mutated on every single update (append + shift), so including
+// it guarantees the dirty check always trips and we SET to Redis on every
+// update. Excluding it means SET only fires when REAL session state
+// changes (scene, userInfo flags set by handlers, etc.). chainActions
+// still persists whenever a real write happens, so error-log context is
+// only slightly stale instead of totally absent.
+function serializeForDirtyCheck (session) {
+  if (!session || typeof session !== 'object') return JSON.stringify(session)
+  const { userInfo, chainActions, ...rest } = session // eslint-disable-line no-unused-vars
   return JSON.stringify(rest)
 }
 
@@ -190,9 +200,10 @@ function sessionMiddleware () {
     return Promise.resolve(storage.get(key))
       .then((stored) => {
         let session = unwrapLegacy(stored) || {}
-        // Snapshot for the dirty-check. Exclude userInfo — it's rehydrated
-        // by updateUser every request and we deliberately never persist it.
-        const originalSerialized = serializeWithoutUserInfo(session)
+        // Snapshot for the dirty-check (strips chainActions + userInfo —
+        // see serializeForDirtyCheck). Comparing this prevents the
+        // chainActions push from triggering a write on every update.
+        const originalDirty = serializeForDirtyCheck(session)
 
         Object.defineProperty(ctx, 'session', {
           configurable: true,
@@ -201,11 +212,11 @@ function sessionMiddleware () {
         })
 
         return Promise.resolve(next(ctx)).then(() => {
+          const nextDirty = serializeForDirtyCheck(session)
+          if (nextDirty === originalDirty) return
+          // Dirty — write the FULL payload (with chainActions, sans userInfo)
+          // so persisted error context stays in sync with real state changes.
           const nextSerialized = serializeWithoutUserInfo(session)
-          if (nextSerialized === originalSerialized) return
-          // nextSerialized is already JSON of the session sans userInfo.
-          // Parse it back so storage.set stringifies consistently with how
-          // storage.get parses, and so the memory fallback holds an object.
           const payload = nextSerialized === 'undefined' ? undefined : JSON.parse(nextSerialized)
           return storage.set(key, payload)
         })

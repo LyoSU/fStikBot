@@ -23,7 +23,9 @@ module.exports = async (ctx) => {
   user.last_name = ctx.from.last_name
   user.full_name = `${ctx.from.first_name}${ctx.from.last_name ? ` ${ctx.from.last_name}` : ''}`
   user.username = ctx.from.username
-  user.updatedAt = new Date()
+  // No manual updatedAt — see save-wrap in bot/middleware.js. We bump it
+  // via a throttled fire-and-forget updateOne instead, so unchanged-user
+  // updates don't trigger a full .save() on every request.
 
   ctx.session.userInfo = user
   if (ctx.session.userInfo.locale) ctx.i18n.locale(ctx.session.userInfo.locale)

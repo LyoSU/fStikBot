@@ -4,6 +4,7 @@ const Composer = require('telegraf/composer')
 const rateLimit = require('telegraf-ratelimit')
 
 const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
+const { touchLastSeen } = require('../utils/last-seen')
 
 const MAX_CHAIN_ACTIONS = 15
 
@@ -120,12 +121,26 @@ module.exports = (bot, {
   // to split the measurement: 'handler' captures the full downstream
   // next() — i.e. the rest of the middleware chain + handler body —
   // and 'userSave' captures just the post-next save() duration.
+  // Persist the user doc only if a handler actually modified it. Unmodified
+  // requests just throttle-bump updatedAt via a fire-and-forget updateOne
+  // (see utils/last-seen.js). This turns ~every-update saves into ~once-
+  // per-hour-per-user cheap updates + real saves only on real changes.
+  const persistUserIfDirty = (ctx) => {
+    const user = ctx.session?.userInfo
+    if (!user || typeof user.save !== 'function') return null
+    if (user.isModified && user.isModified()) {
+      return user.save().catch(err => console.error('Failed to save user:', err.message))
+    }
+    // Not dirty — no save, just bump last-seen (throttled, async).
+    touchLastSeen(ctx.db.User, user._id)
+    return null
+  }
+
   bot.use(async (ctx, next) => {
     if (!PERF_TIMING_ENABLED) {
       await next(ctx)
-      if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
-        await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
-      }
+      const maybeSave = persistUserIfDirty(ctx)
+      if (maybeSave) await maybeSave
       return
     }
     const handlerStart = Date.now()
@@ -137,15 +152,14 @@ module.exports = (bot, {
         // so perf samples reflect real load even when handlers throw.
         perfRecord('handler', Date.now() - handlerStart)
       }
-      // save() only runs on normal completion (preserves original behavior:
-      // don't persist userInfo after a handler error).
-      if (ctx.session?.userInfo && typeof ctx.session.userInfo.save === 'function') {
-        const saveStart = Date.now()
-        try {
-          await ctx.session.userInfo.save().catch(err => console.error('Failed to save user:', err.message))
-        } finally {
-          perfRecord('userSave', Date.now() - saveStart)
-        }
+      // Persist only on normal completion (preserves original behavior:
+      // don't write userInfo after a handler error).
+      const saveStart = Date.now()
+      const maybeSave = persistUserIfDirty(ctx)
+      try {
+        if (maybeSave) await maybeSave
+      } finally {
+        perfRecord('userSave', Date.now() - saveStart)
       }
     } finally {
       // perfTick fires regardless of handler outcome so log cadence stays
