@@ -677,6 +677,8 @@ scenes:
   original:
     enter: |
       Адпраўце стыкер, які быў дададзены праз гэтага бота, і я пакажу арыгінальны стыкер.
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>Памылка!</b>
@@ -868,6 +870,10 @@ scenes:
     error: |
       <b>Памылка!</b>
       Ой, нешта пайшло не так.
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
