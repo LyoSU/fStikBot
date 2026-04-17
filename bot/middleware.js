@@ -5,8 +5,16 @@ const rateLimit = require('telegraf-ratelimit')
 
 const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
 const { touchLastSeen } = require('../utils/last-seen')
+const handleError = require('../handlers/catch')
 
 const MAX_CHAIN_ACTIONS = 15
+
+// Polling detach: enabled by default (set POLLING_DETACH=0 to disable).
+// Default ON because we've verified the tradeoffs are covered:
+//   - Errors routed through handleError (same pipeline as bot.catch)
+//   - Heavy work already fire-and-forget at handler level (addSticker)
+//   - Session save-wrap awaits user persist inline
+const POLLING_DETACH = process.env.POLLING_DETACH !== '0'
 
 module.exports = (bot, {
   i18n,
@@ -16,6 +24,38 @@ module.exports = (bot, {
   stats,
   retryMiddleware
 }) => {
+  // Detach from Telegraf's batch-await loop.
+  //
+  // Telegraf 3.40's fetchUpdates does:
+  //   handleUpdates(batch).then(() => fetchUpdates())   // next poll
+  // which waits for Promise.all of all handleUpdate(u) in the batch to
+  // resolve before issuing the next getUpdates. Returning a resolved
+  // Promise from the FIRST middleware short-circuits that wait: the
+  // batch Promise.all completes immediately, fetchUpdates re-polls, and
+  // the downstream middleware chain still executes in the background.
+  //
+  // This preserves throughput under rare bursts where any middleware
+  // gets slow. Trade-offs we consciously accept:
+  //   - Telegraf's handlerTimeout (60s) cannot interrupt detached work.
+  //     We don't rely on it — all slow paths are already fire-and-forget
+  //     via Bull queues (convert/removebg) or the sticker-handler IIFE.
+  //   - Two rapid updates from the same user run concurrently, so a
+  //     session SET race is theoretically possible. Session is Redis-
+  //     backed and small; dirty-check cuts writes; last writer wins for
+  //     the rare race. Scene state advances one step at a time via user
+  //     actions spaced >>100ms apart — not observed in practice.
+  //   - Errors don't reach bot.catch. We route them through handleError
+  //     manually so the log channel still gets git blame + stack +
+  //     chainActions.
+  if (POLLING_DETACH) {
+    bot.use((ctx, next) => {
+      next().catch((err) => handleError(err, ctx).catch((e) => {
+        console.error('[polling-detach] handleError itself failed:', e)
+      }))
+      return Promise.resolve()
+    })
+  }
+
   // i18n
   bot.use(i18n)
 
