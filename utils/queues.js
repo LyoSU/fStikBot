@@ -6,13 +6,21 @@
 // forever — features that need queues (video convert, remove-bg, video
 // notes) degrade visibly to users instead of hanging their updates.
 const Queue = require('bull')
-const { REDIS_ENABLED, redisConfig } = require('./redis')
 
-// Bull's bclient uses BRPOPLPUSH with long blocks; the ioredis default
-// of 20 max retries aborts those. `null` disables the per-request limit
-// — this is the setting Bull documents for its blocking client.
-const bullRedisConfig = redisConfig
-  ? { ...redisConfig, maxRetriesPerRequest: null }
+const REDIS_ENABLED = !!process.env.REDIS_HOST
+
+// Keep this config deliberately minimal — this is exactly the shape that
+// worked before the refactor. Bull manages its own three clients (cmd,
+// subscriber, bclient) with their own retry/blocking behaviour; piling
+// extra ioredis options on top (maxRetriesPerRequest, retryStrategy,
+// keepAlive) interfered with Bull's internal pub/sub path and broke
+// job.finished() event delivery.
+const bullRedisConfig = REDIS_ENABLED
+  ? {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD
+    }
   : null
 
 // Stub that mimics the Bull queue surface we actually use:
