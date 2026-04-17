@@ -686,6 +686,8 @@ scenes:
   original:
     enter: |
       发送一个通过该机器人添加的贴纸，我会给你看原件。
+    source_found: |
+      🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
         <b>错误！</b>
@@ -878,6 +880,10 @@ scenes:
     error: |
       <b>错误！</b>
       哎呀，出错了。
+    error_timeout: |
+      ⏱ Processing took too long. Try again later or with a smaller photo.
+    error_queue_disabled: |
+      This feature is temporarily unavailable. Please try again later.
   videoRound:
     enter: |
       <b>⭕ Video to Circle</b>
