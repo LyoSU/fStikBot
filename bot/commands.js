@@ -107,7 +107,7 @@ module.exports = (bot, privateMessage, {
 
   privateMessage.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
   privateMessage.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
-  privateMessage.action(/new_pack:(.*)/, (ctx) => {
+  privateMessage.action(/new_pack:(.*)/, async (ctx) => {
     const packType = ctx.match[1]
     if (packType === 'inline') {
       ctx.session.scene = ctx.session.scene || {}
@@ -116,6 +116,10 @@ module.exports = (bot, privateMessage, {
         packType: 'regular'
       }
     }
+    // The scene uses reply keyboards, which can't attach to editMessageMedia.
+    // Delete the /start banner so the scene's first message (with its own
+    // new-pack banner + reply keyboard) is the only one visible.
+    await ctx.deleteMessage().catch(() => {})
     return ctx.scene.enter('newPack')
   })
   privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleCopyPack)

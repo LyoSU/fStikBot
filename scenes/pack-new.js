@@ -6,6 +6,7 @@ const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const { generateStrings } = require('sticker-pack-names')
 
+const { sendBanner } = require('../banners')
 const {
   escapeHTML,
   addSticker,
@@ -69,7 +70,7 @@ newPack.enter(async (ctx, next) => {
     return ctx.scene.enter('newPackTitle')
   }
 
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_type'), {
+  await sendBanner(ctx, 'new-pack', ctx.i18n.t('scenes.new_pack.pack_type'), {
     reply_markup: Markup.keyboard([
       [
         { text: ctx.i18n.t('scenes.new_pack.regular'), style: 'primary' }
