@@ -65,30 +65,46 @@ async function sendBanner (ctx, name, caption = '', extra = {}) {
 // banners: e.g. /start welcome → catalog). Works whether the prior message
 // was text (upgrades it) or already a photo (replaces the media).
 //
-// Implementation note: Telegraf 3.40's ctx.editMessageMedia(media, extra)
-// merges `extra` INTO the InputMedia object instead of sending it at the API
-// top level. That buries `reply_markup` where the Telegram API never sees it
-// — keyboard doesn't update, and on multipart uploads the caption can get
-// stripped too. So we do it in two calls:
-//   1. editMessageMedia — swap the photo only
-//   2. editMessageCaption — set caption + inline keyboard
-// Each call does one thing cleanly; no silent drops.
+// Single-edit guarantee: we send photo + caption + keyboard in ONE API call.
+// Telegraf 3.40 serializes `ctx.editMessageMedia(media, extra)` correctly —
+// `caption`/`parse_mode` ride inside the InputMedia JSON, `reply_markup` is
+// top-level (see node_modules/telegraf/telegram.js:316). So no keyboard-less
+// flash between calls, which used to cause visible flicker on navigation.
+//
+// Same-banner fast path: if the message already shows this exact banner
+// (cached file_id matches the largest PhotoSize), skip the media swap and
+// do a caption-only edit. That's the pagination case (e.g. packs:N → N+1)
+// where Telegram would otherwise re-render the identical photo and briefly
+// drop the keyboard.
 async function editBanner (ctx, name, caption = '', extra = {}) {
   const banner = assertBanner(name)
+  const msg = ctx.callbackQuery?.message
+  const currentFileId = msg?.photo?.[msg.photo.length - 1]?.file_id
+  const cachedFileId = cache.get(banner.cacheKey)
+
+  if (currentFileId && cachedFileId && currentFileId === cachedFileId) {
+    try {
+      return await ctx.editMessageCaption(caption, {
+        parse_mode: 'HTML',
+        reply_markup: extra.reply_markup
+      })
+    } catch (err) {
+      // MESSAGE_NOT_MODIFIED is benign; anything else falls through to a
+      // full media edit (and ultimately sendBanner) below.
+      if (err?.description?.includes('message is not modified')) return
+    }
+  }
+
   const source = photoInput(banner)
   const media = {
     type: 'photo',
-    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) }
+    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) },
+    caption,
+    parse_mode: 'HTML'
   }
   try {
-    const edited = await ctx.editMessageMedia(media)
+    const edited = await ctx.editMessageMedia(media, { reply_markup: extra.reply_markup })
     if (edited && typeof edited === 'object') rememberFileId(banner, edited)
-
-    await ctx.editMessageCaption(caption, {
-      parse_mode: 'HTML',
-      reply_markup: extra.reply_markup
-    }).catch(() => {}) // benign: MESSAGE_NOT_MODIFIED if nothing actually changed
-
     return edited
   } catch (err) {
     // Message too old / not editable — fall back to a fresh send so the user
