@@ -517,7 +517,7 @@ sticker:
         <b>错误！</b>
         您没有权限添加贴纸到此包。
       stickers_too_much: |
-        该包中的贴纸数量最多。
+        该包中的贴纸数量过多。
 
         您可以使用 /new 命令创建新包
       have_already: |
@@ -615,7 +615,7 @@ userAbout:
 scenes:
   new_pack:
     pack_type: |
-      <b><u>选择包装类型</u></b>
+      <b><u>选择包类型</u></b>
     regular: '😊 贴纸'
     custom_emoji: '🌟 表情符号（高级）'
     pack_title: |
