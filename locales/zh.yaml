@@ -400,7 +400,7 @@ callback:
       delete: '🗑删除包'
       restore: '✅ 恢复'
       use_pack: '📦 使用包'
-      boost: '⚡ 提升'
+      boost: '⚡ 加速'
       frame: '🖼 边框'
       rename: '✏️重命名'
       search_gif: '🔎 搜索 GIF'
@@ -733,7 +733,7 @@ scenes:
     hidden: '<i>[hidden]</i>'
   boost:
     sure: |
-      <b>您确定要提升 <a href="${link}">${title}</a> 吗？</b>
+      <b>您确定要加速 <a href="${link}">${title}</a> 吗？</b>
 
       提升将增加处理优先级并且能够将多个贴纸添加到队列中
       您可以通过访问菜单中的 /donate 获取更多有关提升的详细信息
@@ -744,7 +744,7 @@ scenes:
       yes: '是，提升！'
       no: 否，取消
     canceled: |
-      提升已取消
+      加速已取消
     success: |
       提升成功完成！
 
@@ -755,7 +755,7 @@ scenes:
 
         您可以通过发送 /donate 命令来充值余额。
       already_boosted: |
-        这个包已经提升.
+        这个包已经的得到提升。
   catalog:
     publish:
       publish_new: |
