@@ -914,6 +914,27 @@ error:
   telegram: |
     <b>电报返回错误！</b>
     <code>${error}</code>
+  telegram_reasons:
+    sticker_not_in_set: |
+      This sticker is no longer in the pack — it may have been removed already.
+    pack_invalid: |
+      The sticker pack is unavailable. It may have been deleted in Telegram.
+    pack_full: |
+      The pack is full (Telegram limit reached). Remove a few stickers and try again.
+    not_pack_owner: |
+      This pack belongs to another user — you can't modify it.
+    pack_name_taken: |
+      That pack address is already taken. Pick another name.
+    pack_name_invalid: |
+      The pack address has an invalid format. Use Latin letters, digits, and underscores.
+    invalid_sticker_format: |
+      The file is not a valid sticker: wrong format or dimensions.
+    invalid_emoji: |
+      The emoji is invalid. Send a standard Unicode emoji.
+    rate_limited: |
+      Telegram is asking to wait — please try again in a few seconds.
+    cannot_reach_user: |
+      Can't message this user: the bot is blocked or the chat is unavailable.
   answerCbQuery:
     telegram: |
       Telegram 返回错误信息：
