@@ -4,10 +4,10 @@
 
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const replicators = require('telegraf/core/replicators')
 const moment = require('moment')
 
 const broadcast = require('../broadcast')
+const capture = require('../broadcast/capture')
 const escapeHTML = require('../utils/html-escape')
 const log = require('../utils/logger').scope('broadcast:wizard')
 
@@ -34,42 +34,30 @@ const confirmKeyboard = Markup.inlineKeyboard([
   ]
 ])
 
-// Anything `replicators.copyMethods` can replicate counts as a valid post.
-const detectMessageType = (message) => {
-  if (!message) return null
-  return Object.keys(replicators.copyMethods).find((type) => message[type] !== undefined) || null
-}
-
 // Telegram message envelope keys that are NEVER the "content" type. Listing
 // them lets us log the actually-interesting top-level keys when we can't
 // detect a supported payload type.
 const MESSAGE_META_KEYS = new Set([
   'message_id', 'from', 'sender_chat', 'date', 'chat', 'forward_from',
   'forward_from_chat', 'forward_from_message_id', 'forward_signature',
-  'forward_sender_name', 'forward_date', 'is_automatic_forward',
-  'reply_to_message', 'via_bot', 'edit_date', 'has_protected_content',
-  'media_group_id', 'author_signature', 'entities', 'caption_entities',
-  'caption', 'reply_markup', 'has_media_spoiler', 'is_topic_message',
-  'message_thread_id', 'link_preview_options', 'effect_id', 'show_caption_above_media'
+  'forward_sender_name', 'forward_date', 'is_automatic_forward', 'forward_origin',
+  'reply_to_message', 'external_reply', 'quote', 'via_bot', 'edit_date',
+  'has_protected_content', 'media_group_id', 'author_signature', 'entities',
+  'caption_entities', 'caption', 'reply_markup', 'has_media_spoiler',
+  'is_topic_message', 'message_thread_id', 'link_preview_options',
+  'effect_id', 'show_caption_above_media', 'business_connection_id'
 ])
 
-// Capture the operator's post into a portable payload (see broadcast/send.js
-// for how it's later replayed verbatim).
+// Thin wrapper around broadcast/capture.captureMessage that logs unrecognised
+// content keys (paid_media, story, gift, …) so we know when Bot API ships
+// something we should support.
 const captureMessage = (message) => {
-  const type = detectMessageType(message)
-  if (!type) {
-    // Log the unfamiliar top-level keys so we know when a new Bot API type
-    // (paid_media, story, gift, …) appears in the wild and we should extend
-    // telegraf or write a custom replicator.
+  const captured = capture.captureMessage(message)
+  if (!captured) {
     const novelKeys = Object.keys(message || {}).filter((k) => !MESSAGE_META_KEYS.has(k))
     log.warn('unsupported message type — unknown content keys:', novelKeys.join(', ') || '(none)')
-    return null
   }
-  return {
-    type,
-    data: replicators[type](message),
-    replyMarkup: message.reply_markup || null
-  }
+  return captured
 }
 
 const exitScene = async (ctx, message) => {
