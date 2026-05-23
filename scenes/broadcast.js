@@ -191,14 +191,22 @@ broadcastNewAudience.action(/^broadcast:new:audience:(.+)$/, async (ctx) => {
   if (!audience) {
     return ctx.answerCbQuery('Unknown audience', true).catch(() => {})
   }
-  await ctx.answerCbQuery().catch(() => {})
+  await ctx.answerCbQuery('Counting…').catch(() => {})
 
-  let count
+  // Count is cached for 5 min in broadcast/audiences.js; the first pick may
+  // still take several seconds on big collections. If it times out (mongo
+  // maxTimeMS), proceed with null — materialization at dispatch time
+  // computes the real total, and the wizard makes it clear the figure is
+  // unknown.
+  let count = null
   try {
     count = await audience.count()
   } catch (err) {
-    log.error('audience count failed:', err.message)
-    return ctx.replyWithHTML('❌ Failed to count audience. Try again.')
+    log.warn(`audience count failed (${key}): ${err.message}`)
+    await ctx.replyWithHTML(
+      '⚠️ Could not count audience right now (DB busy or query timed out).\n' +
+      'You can still publish — actual count is computed at dispatch time.'
+    ).catch(() => {})
   }
 
   ctx.session.scene.audience = key
@@ -236,12 +244,16 @@ broadcastNewConfirm.enter(async (ctx) => {
     )
   }
 
+  const audienceLine = audienceCount === null || audienceCount === undefined
+    ? `<b>Audience:</b> ${escapeHTML(audienceLabel)} — <i>count unavailable, will be computed at dispatch</i>`
+    : `<b>Audience:</b> ${escapeHTML(audienceLabel)} — <b>${audienceCount.toLocaleString()}</b> users`
+
   const lines = [
     '☝️ <i>Preview above — what users will receive.</i>',
     '',
     '<b>📋 Confirm broadcast</b>',
     `<b>Name:</b> ${escapeHTML(name)}`,
-    `<b>Audience:</b> ${escapeHTML(audienceLabel)} — <b>${audienceCount.toLocaleString()}</b> users`,
+    audienceLine,
     `<b>Scheduled:</b> <code>${moment(scheduledAt).format('DD MMM YYYY HH:mm')}</code>`,
     '',
     audienceCount === 0

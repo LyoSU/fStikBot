@@ -22,6 +22,8 @@ module.exports = {
   cleanupRecipients,
   renderPreview,
   audiences,
+  warmupAudienceCounts: audiences.warmupCounts,
+  invalidateAudienceCache: audiences.invalidateCache,
   STATUS,
   isTerminal
 }
