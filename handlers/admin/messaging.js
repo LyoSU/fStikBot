@@ -1,248 +1,253 @@
+// Admin UI for broadcasts. Filename is kept as `messaging.js` because
+// `handlers/admin/index.js` resolves it dynamically from the `messaging`
+// admin right name; renaming the file would also force migrating that
+// right key for every existing admin. Everything inside is new.
+
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
-const replicators = require('telegraf/core/replicators')
 const moment = require('moment')
+
 const escapeHTML = require('../../utils/html-escape')
 const { tolerantEditMessage } = require('../../utils/safe-edit')
+const broadcast = require('../../broadcast')
+const { STATUS } = broadcast
 
 const composer = new Composer()
 
-composer.action(/admin:messaging:select_group/, async (ctx) => ctx.scene.enter('adminMessagingSelectGroup'))
-composer.action(/admin:messaging:publish/, async (ctx) => ctx.scene.enter('adminMessagingPublish'))
+const STATUS_BADGES = {
+  [STATUS.DRAFT]: '📝 Draft',
+  [STATUS.QUEUED]: '⏳ Queued',
+  [STATUS.SENDING]: '🚀 Sending',
+  [STATUS.PAUSED]: '⏸ Paused',
+  [STATUS.COMPLETED]: '✅ Completed',
+  [STATUS.CANCELLED]: '❌ Cancelled',
+  [STATUS.FAILED]: '💥 Failed'
+}
 
-composer.action(/admin:messaging:view:(.*)/, async (ctx, next) => {
-  await ctx.answerCbQuery()
+const renderProgressBar = (sent, total, width = 12) => {
+  if (!total) return '░'.repeat(width)
+  const filled = Math.round((sent / total) * width)
+  return '▓'.repeat(filled) + '░'.repeat(width - filled)
+}
 
-  const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] })
+const renderStatusText = (b) => {
+  const total = b.progress.total || 0
+  const sent = b.progress.sent || 0
+  const failed = b.progress.failed || 0
+  const completionPct = total ? Math.round((sent / total) * 100) : 0
 
-  if (messaging) {
-    const method = replicators.copyMethods[messaging.message.type]
-    const opts = Object.assign(messaging.message.data, {
-      chat_id: ctx.chat.id
-    })
+  const lines = [
+    '<b>📊 Broadcast status</b>',
+    '',
+    `<b>Name:</b> ${escapeHTML(b.name)}`,
+    `<b>Status:</b> ${STATUS_BADGES[b.status] || b.status}`,
+    `<b>Audience:</b> ${escapeHTML(b.audience.type)}`,
+    `<b>Scheduled:</b> <code>${moment(b.scheduledAt).format('DD MMM YYYY HH:mm')}</code>`,
+    `<b>Created:</b> <code>${moment(b.createdAt).format('DD MMM YYYY HH:mm')}</code>`,
+    '',
+    `<b>Progress:</b> ${completionPct}% ${renderProgressBar(sent, total)}`,
+    `<b>Sent:</b> ${sent.toLocaleString()} / ${total.toLocaleString()}`,
+    `<b>Failed:</b> ${failed.toLocaleString()}`
+  ]
 
-    await ctx.telegram.callApi(method, opts).catch((error) => {
-      console.error('Failed to send messaging preview:', error.message)
-    })
-  }
-})
-
-composer.action(/admin:messaging:edit:(.*)/, async (ctx, next) => {
-  ctx.session.scene.edit = ctx.match[1]
-  ctx.scene.enter('adminMessagingMessageData')
-})
-
-composer.action(/admin:messaging:change_name:(.*)/, async (ctx, next) => {
-  ctx.session.scene.edit = ctx.match[1]
-  ctx.scene.enter('adminMessagingName')
-})
-
-composer.action(/admin:messaging:cancel:(.*)/, async (ctx, next) => {
-  const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] })
-
-  if (!messaging) {
-    return ctx.answerCbQuery('Messaging not found', true)
-  }
-
-  messaging.status = 2
-  messaging.result = {
-    waiting: 0
-  }
-  await messaging.save()
-
-  const resultText = `Message ${messaging.name} canceled`
-
-  const replyMarkup = Markup.inlineKeyboard([
-    [
-      Markup.callbackButton('Show message status', `admin:messaging:status:${ctx.match[1]}`)
-    ],
-    [
-      Markup.callbackButton('Back', 'admin:messaging'),
-      Markup.callbackButton('Admin', 'admin:back')
-    ]
-  ])
-
-  await tolerantEditMessage(ctx, resultText, {
-    parse_mode: 'HTML',
-    reply_markup: replyMarkup
-  })
-})
-
-composer.action(/admin:messaging:list:(.*):(.*)/, async (ctx, next) => {
-  const resultText = 'Messaging campaigns list'
-
-  let messagingQuery
-
-  if (ctx.match[1] === 'archive') messagingQuery = { status: 2 }
-  else messagingQuery = { status: { $lt: 2 } }
-
-  const messagingTotal = await ctx.db.Messaging.countDocuments(messagingQuery)
-
-  const pageCount = 10
-  let page = parseInt(ctx.match[2], 10) || 1
-
-  if (page <= 0 || !Number.isFinite(page)) page = 1
-  if (pageCount * page > messagingTotal) page = Math.ceil(messagingTotal / pageCount)
-
-  const prevPage = page - 1
-  const nextPage = page + 1
-
-  let pageSkip = pageCount * (page - 1)
-  if (pageSkip < 0) pageSkip = 0
-
-  const messagingList = await ctx.db.Messaging.find(messagingQuery).sort({ createdAt: -1 }).skip(pageSkip).limit(pageCount)
-
-  const messagingKeyboard = []
-
-  Object.keys(messagingList).forEach((key) => {
-    const messaging = messagingList[key]
-    messagingKeyboard.push([Markup.callbackButton(messaging.name, `admin:messaging:status:${messaging.id}`)])
-  })
-
-  let inlineKeyboard = []
-
-  const keyboardNavigation = []
-
-  if (prevPage > 0) keyboardNavigation.push(Markup.callbackButton(`‹ ${prevPage}`, `admin:messaging:list:${ctx.match[1]}:${prevPage}`))
-  if (pageCount * page < messagingTotal) keyboardNavigation.push(Markup.callbackButton(`${nextPage} ›`, `admin:messaging:list:${ctx.match[1]}:${nextPage}`))
-
-  inlineKeyboard = inlineKeyboard.concat(messagingKeyboard)
-  inlineKeyboard = inlineKeyboard.concat([keyboardNavigation])
-  inlineKeyboard = inlineKeyboard.concat([
-    [
-      Markup.callbackButton('Messaging', 'admin:messaging'),
-      Markup.callbackButton('Admin', 'admin:back')
-    ]
-  ])
-
-  const replyMarkup = Markup.inlineKeyboard(inlineKeyboard)
-
-  await tolerantEditMessage(ctx, resultText, {
-    parse_mode: 'HTML',
-    reply_markup: replyMarkup
-  })
-})
-
-composer.action(/admin:messaging:status:(.*)/, async (ctx, next) => {
-  const messaging = await ctx.db.Messaging.findOne({ _id: ctx.match[1] }).populate('creator', '_id telegram_id first_name').lean()
-
-  let resultText, replyMarkup
-
-  const statusTypes = ['📝 Draft', '⏳ In progress', '✅ Completed', '❌ Failed']
-  const statusColors = ['🔵', '🟡', '🟢', '🔴']
-
-  if (messaging) {
-    // Calculate percentages for progress indicators
-    const totalMessages = messaging.result.total || 0
-    const sentMessages = messaging.result.state || 0
-    const deliveredMessages = sentMessages - (messaging.result.error || 0)
-    const errorMessages = messaging.result.error || 0
-
-    const completionPercent = totalMessages > 0 ? Math.round((sentMessages / totalMessages) * 100) : 0
-    const deliveryPercent = sentMessages > 0 ? Math.round((deliveredMessages / sentMessages) * 100) : 0
-    const errorPercent = sentMessages > 0 ? Math.round((errorMessages / sentMessages) * 100) : 0
-
-    // Create progress bar
-    const progressBarLength = 10
-    const filledBars = Math.round((completionPercent / 100) * progressBarLength)
-    const progressBar = '▓'.repeat(filledBars) + '░'.repeat(progressBarLength - filledBars)
-
-    // Format date nicely
-    const scheduledDate = moment(messaging.date)
-    const createdDate = moment(messaging.createdAt)
-    const now = moment()
-
-    const scheduledFormatted = scheduledDate.format('DD MMM YYYY [at] HH:mm')
-    const scheduledRelative = scheduledDate.isAfter(now) ? `(${scheduledDate.fromNow()})` : ''
-    const createdFormatted = createdDate.format('DD MMM YYYY [at] HH:mm')
-
-    // Collect user errors in a cleaner way
-    let userErrors = ''
-    if (messaging.sendErrors && messaging.sendErrors.length > 0) {
-      userErrors = '\n<b>📋 Last Error Details:</b>\n'
-      const errorLimit = Math.min(5, messaging.sendErrors.length)
-
-      for (let i = 0; i < errorLimit; i++) {
-        const error = messaging.sendErrors[i]
-        if (error && error.telegram_id) {
-          userErrors += `• <a href="tg://user?id=${error.telegram_id}">User ${error.telegram_id}</a>: ${error.errorMessage || 'Unknown error'}\n`
-        }
-      }
-
-      if (messaging.sendErrors.length > errorLimit) {
-        userErrors += `<i>...and ${messaging.sendErrors.length - errorLimit} more errors</i>\n`
+  if (b.errorCounts && typeof b.errorCounts === 'object') {
+    const entries = Object.entries(b.errorCounts)
+    if (entries.length) {
+      lines.push('', '<b>Errors by category:</b>')
+      for (const [code, count] of entries) {
+        lines.push(`  • ${code}: ${count}`)
       }
     }
-
-    resultText = '<b>📊 Message Campaign Status</b>\n\n'
-    resultText += `<b>🏷 Name:</b> ${escapeHTML(messaging.name)}\n`
-    resultText += `<b>⏰ Scheduled for:</b> ${scheduledFormatted} ${scheduledRelative}\n`
-    resultText += `<b>🗓 Created on:</b> ${createdFormatted}\n`
-    resultText += `<b>📊 Status:</b> ${statusColors[messaging.status] || '⚪️'} ${statusTypes[messaging.status] || 'Unknown'}\n\n`
-
-    resultText += `<b>📈 Progress:</b> ${completionPercent}% ${progressBar}\n`
-    resultText += `<b>📨 Total Recipients:</b> ${totalMessages.toLocaleString()}\n`
-    resultText += `<b>✓ Processed:</b> ${sentMessages.toLocaleString()} (${completionPercent}%)\n`
-    resultText += `<b>📬 Delivered:</b> ${deliveredMessages.toLocaleString()} (${deliveryPercent}%)\n`
-    resultText += `<b>📭 Remaining:</b> ${(totalMessages - sentMessages).toLocaleString()}\n`
-    resultText += `<b>⚠️ Errors:</b> ${errorMessages.toLocaleString()} (${errorPercent}%)\n`
-
-    resultText += userErrors
-
-    let cancelButton = []
-    if (messaging.status < 2) {
-      cancelButton = [Markup.callbackButton('❌ Cancel messaging', `admin:messaging:cancel:${ctx.match[1]}`)]
-    }
-
-    replyMarkup = Markup.inlineKeyboard([
-      [
-        Markup.callbackButton('🔄 Refresh', `admin:messaging:status:${ctx.match[1]}`),
-        Markup.callbackButton('👁 View message', `admin:messaging:view:${ctx.match[1]}`)
-      ],
-      [
-        Markup.callbackButton('✏️ Edit message', `admin:messaging:edit:${ctx.match[1]}`),
-        Markup.callbackButton('📝 Change name', `admin:messaging:change_name:${ctx.match[1]}`)
-      ],
-      cancelButton,
-      [
-        Markup.callbackButton('← Messaging', 'admin:messaging'),
-        Markup.callbackButton('⚙️ Admin', 'admin:back')
-      ]
-    ])
-  } else {
-    resultText = '⚠️ Message not found'
-    replyMarkup = Markup.inlineKeyboard([
-      [
-        Markup.callbackButton('← Messaging', 'admin:messaging'),
-        Markup.callbackButton('⚙️ Admin', 'admin:back')
-      ]
-    ])
   }
 
-  await tolerantEditMessage(ctx, resultText, {
+  if (b.pausedReason) {
+    lines.push('', `<b>⚠️ Pause reason:</b> ${escapeHTML(b.pausedReason)}`)
+  }
+
+  if (b.errorSamples && b.errorSamples.length) {
+    lines.push('', '<b>Recent error samples:</b>')
+    for (const s of b.errorSamples.slice(-5)) {
+      lines.push(`  • <code>${s.telegram_id}</code> [${s.code}]: ${escapeHTML(s.message || '')}`)
+    }
+  }
+
+  return lines.join('\n')
+}
+
+const statusKeyboard = (b) => {
+  const rows = [
+    [
+      Markup.callbackButton('🔄 Refresh', `admin:messaging:status:${b._id}`),
+      Markup.callbackButton('👁 View post', `admin:messaging:view:${b._id}`)
+    ]
+  ]
+  if (!broadcast.isTerminal(b.status)) {
+    rows.push([Markup.callbackButton('❌ Cancel broadcast', `admin:messaging:cancel:${b._id}`)])
+  }
+  if (b.status === STATUS.PAUSED) {
+    rows.push([Markup.callbackButton('▶️ Resume', `admin:messaging:resume:${b._id}`)])
+  }
+  rows.push([
+    Markup.callbackButton('← Broadcasts', 'admin:messaging'),
+    Markup.callbackButton('⚙️ Admin', 'admin:back')
+  ])
+  return Markup.inlineKeyboard(rows)
+}
+
+// ───────────────────────────────────────────────────────────────────────
+// Main menu
+// ───────────────────────────────────────────────────────────────────────
+composer.action(/^admin:messaging$/, async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  await tolerantEditMessage(ctx, '📣 <b>Broadcasts</b>\n\nPick an action:', {
     parse_mode: 'HTML',
-    reply_markup: replyMarkup,
-    disable_web_page_preview: true
+    reply_markup: Markup.inlineKeyboard([
+      [Markup.callbackButton('➕ New broadcast', 'admin:messaging:create')],
+      [Markup.callbackButton('📋 Active', 'admin:messaging:list:active:1')],
+      [Markup.callbackButton('📁 Archive', 'admin:messaging:list:archive:1')],
+      [Markup.callbackButton('« Admin', 'admin:back')]
+    ])
   })
 })
 
-composer.action(/admin:messaging:create/, async (ctx, next) => {
-  ctx.scene.enter('adminMessagingName')
+composer.action('admin:messaging:create', async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  return ctx.scene.enter('broadcastNewName')
 })
 
-composer.action(/admin:messaging/, async (ctx, next) => {
-  const resultText = 'Messaging administration panel'
+// ───────────────────────────────────────────────────────────────────────
+// List (active vs archive)
+// ───────────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 10
 
-  const replyMarkup = Markup.inlineKeyboard([
-    [Markup.callbackButton('Create new messaging', 'admin:messaging:create')],
-    [Markup.callbackButton('Scheduled messagings', 'admin:messaging:list:scheduled:1')],
-    [Markup.callbackButton('Messaging archive', 'admin:messaging:list:archive:1')],
-    [Markup.callbackButton('Back to admin', 'admin:back')]
+composer.action(/^admin:messaging:list:(active|archive):(\d+)$/, async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  const kind = ctx.match[1]
+  const page = Math.max(1, parseInt(ctx.match[2], 10) || 1)
+
+  const filter = kind === 'archive'
+    ? { status: { $in: [STATUS.COMPLETED, STATUS.CANCELLED, STATUS.FAILED] } }
+    : { status: { $nin: [STATUS.COMPLETED, STATUS.CANCELLED, STATUS.FAILED] } }
+
+  const total = await ctx.db.Broadcast.countDocuments(filter)
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const safePage = Math.min(page, pages)
+
+  const items = await ctx.db.Broadcast
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .skip((safePage - 1) * PAGE_SIZE)
+    .limit(PAGE_SIZE)
+    .select('name status progress.total progress.sent createdAt')
+    .lean()
+
+  const rows = items.map((b) => {
+    const label = `${STATUS_BADGES[b.status] || b.status} ${b.name}`.slice(0, 60)
+    return [Markup.callbackButton(label, `admin:messaging:status:${b._id}`)]
+  })
+
+  const nav = []
+  if (safePage > 1) nav.push(Markup.callbackButton(`‹ ${safePage - 1}`, `admin:messaging:list:${kind}:${safePage - 1}`))
+  if (safePage < pages) nav.push(Markup.callbackButton(`${safePage + 1} ›`, `admin:messaging:list:${kind}:${safePage + 1}`))
+  if (nav.length) rows.push(nav)
+
+  rows.push([
+    Markup.callbackButton('← Broadcasts', 'admin:messaging'),
+    Markup.callbackButton('⚙️ Admin', 'admin:back')
   ])
 
-  await tolerantEditMessage(ctx, resultText, {
+  const headline = kind === 'archive' ? '📁 <b>Archive</b>' : '📋 <b>Active broadcasts</b>'
+  const body = total === 0
+    ? `${headline}\n\n<i>Nothing here.</i>`
+    : `${headline}\n\nPage ${safePage}/${pages} · ${total} total`
+
+  await tolerantEditMessage(ctx, body, {
     parse_mode: 'HTML',
-    reply_markup: replyMarkup
+    reply_markup: Markup.inlineKeyboard(rows)
+  })
+})
+
+// ───────────────────────────────────────────────────────────────────────
+// Status / Refresh
+// ───────────────────────────────────────────────────────────────────────
+composer.action(/^admin:messaging:status:([a-f0-9]{24})$/, async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  const b = await ctx.db.Broadcast.findById(ctx.match[1]).lean()
+  if (!b) {
+    return tolerantEditMessage(ctx, '⚠️ Broadcast not found.', {
+      parse_mode: 'HTML',
+      reply_markup: Markup.inlineKeyboard([[
+        Markup.callbackButton('← Broadcasts', 'admin:messaging')
+      ]])
+    })
+  }
+
+  await tolerantEditMessage(ctx, renderStatusText(b), {
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+    reply_markup: statusKeyboard(b)
+  })
+})
+
+// ───────────────────────────────────────────────────────────────────────
+// View captured post (re-send to operator for verification)
+// ───────────────────────────────────────────────────────────────────────
+composer.action(/^admin:messaging:view:([a-f0-9]{24})$/, async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  const b = await ctx.db.Broadcast.findById(ctx.match[1]).lean()
+  if (!b) return ctx.replyWithHTML('⚠️ Broadcast not found.')
+
+  await broadcast.renderPreview(ctx.telegram, ctx.chat.id, b.message).catch((err) => {
+    ctx.replyWithHTML(`❌ Preview failed: <code>${escapeHTML(err.message || err.description || 'unknown')}</code>`)
+  })
+})
+
+// ───────────────────────────────────────────────────────────────────────
+// Cancel
+// ───────────────────────────────────────────────────────────────────────
+composer.action(/^admin:messaging:cancel:([a-f0-9]{24})$/, async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  const id = ctx.match[1]
+
+  // Only flip status if it's currently non-terminal. The runner's per-batch
+  // status poll will notice on its next checkpoint and exit cleanly.
+  const updated = await ctx.db.Broadcast.findOneAndUpdate(
+    { _id: id, status: { $nin: [STATUS.COMPLETED, STATUS.CANCELLED, STATUS.FAILED] } },
+    { $set: { status: STATUS.CANCELLED, completedAt: new Date() } },
+    { new: true }
+  )
+
+  if (!updated) {
+    return ctx.replyWithHTML('⚠️ Cannot cancel — broadcast already finished.')
+  }
+
+  // Drop materialized recipients so we don't carry the queue around forever.
+  broadcast.cleanupRecipients(id).catch(() => {})
+
+  await tolerantEditMessage(ctx, renderStatusText(updated), {
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+    reply_markup: statusKeyboard(updated)
+  })
+})
+
+// ───────────────────────────────────────────────────────────────────────
+// Resume (from paused → queued, runner picks up on next tick)
+// ───────────────────────────────────────────────────────────────────────
+composer.action(/^admin:messaging:resume:([a-f0-9]{24})$/, async (ctx) => {
+  await ctx.answerCbQuery().catch(() => {})
+  const updated = await ctx.db.Broadcast.findOneAndUpdate(
+    { _id: ctx.match[1], status: STATUS.PAUSED },
+    { $set: { status: STATUS.QUEUED, pausedReason: null } },
+    { new: true }
+  )
+  if (!updated) {
+    return ctx.replyWithHTML('⚠️ Cannot resume — broadcast is not paused.')
+  }
+  await tolerantEditMessage(ctx, renderStatusText(updated), {
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+    reply_markup: statusKeyboard(updated)
   })
 })
 

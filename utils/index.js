@@ -2,7 +2,6 @@ const escapeHTML = require('./html-escape')
 const userName = require('./user-name')
 const addSticker = require('./add-sticker')
 const addStickerText = require('./add-sticker-text')
-const messaging = require('./messaging')
 const updateUser = require('./user-update')
 const updateGroup = require('./group-update')
 const stats = require('./stats')
@@ -24,7 +23,6 @@ module.exports = {
   userName,
   addSticker,
   addStickerText,
-  messaging,
   updateUser,
   updateGroup,
   stats,

@@ -6,7 +6,7 @@ const {
 
 const { match } = I18n
 
-const messaging = require('./messaging')
+const broadcast = require('./broadcast')
 const sceneNewPack = require('./pack-new')
 const originalSticker = require('./sticker-original')
 const deleteSticker = require('./sticker-delete')
@@ -27,7 +27,7 @@ const stage = new Stage([].concat(
   sceneNewPack,
   originalSticker,
   deleteSticker,
-  messaging,
+  broadcast,
   packEdit,
   adminPackBulkDelete,
   searchStickerSet,
@@ -67,6 +67,7 @@ stage.hears(([
 
 stage.hears(([
   '/start',
+  '/admin',
   '/help',
   '/packs',
   '/new',

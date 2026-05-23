@@ -84,8 +84,9 @@ registerCommands(bot, privateMessage, {
   // Don't block startup on the locale sync — it's eventually consistent.
   syncLocales(bot, i18n).catch((err) => log.error('[locale-sync] failed:', err.message))
 
-  // Side-effect import: starts messaging queue polling
-  require('./utils/messaging')
+  // Boot the broadcast worker — polls Broadcast collection for queued/stalled
+  // campaigns and runs them in-process. Releases lock + drains on SIGTERM.
+  require('./broadcast').startWorker()
 
   const monitorInterval = setInterval(() => updateMonitor(), MONITOR_INTERVAL_MS)
   if (monitorInterval.unref) monitorInterval.unref()
