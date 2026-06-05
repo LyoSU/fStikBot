@@ -42,7 +42,10 @@ module.exports = (bot, privateMessage, {
   // message payloads (forwarded chats can carry sensitive content).
   bot.command('json', Composer.privateChat((ctx) => {
     if (ctx.config.mainAdminId !== ctx.from.id) return
-    return ctx.replyWithHTML('<code>' + JSON.stringify(ctx.message, null, 2) + '</code>')
+    // Reply to any message with /json to dump THAT message — debug aid for
+    // "why didn't the bot accept this file" reports (mime_type, subtypes).
+    const target = ctx.message.reply_to_message || ctx.message
+    return ctx.replyWithHTML('<code>' + JSON.stringify(target, null, 2) + '</code>')
   }))
 
   // Scenes (Stage) mount — must come before any composer that uses ctx.scene.enter
