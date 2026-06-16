@@ -27,6 +27,18 @@ const stickerSetsSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // Sticker format flags. Source of truth is per-sticker Telegram data
+  // (sticker.is_animated / is_video) — the top-level StickerSet.is_animated /
+  // is_video were removed in Bot API 7.2. Without these fields mongoose would
+  // silently strip them on save.
+  animated: {
+    type: Boolean,
+    default: false
+  },
+  video: {
+    type: Boolean,
+    default: false
+  },
   packType: {
     type: String,
     default: 'regular'

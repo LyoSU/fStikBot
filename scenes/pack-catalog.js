@@ -5,7 +5,7 @@ const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const mongoose = require('mongoose')
 const { db } = require('../database')
-const { escapeHTML, telegramApi } = require('../utils')
+const { escapeHTML, telegramApi, deriveStickerFlags } = require('../utils')
 const telegram = require('../utils/telegram')
 
 function stickerSetIdToOwnerId (u64) {
@@ -38,13 +38,16 @@ const createStickerSet = async (packName, userInfo) => {
       return null
     }
 
+    // Bot API 7.2 removed top-level is_animated / is_video; read per-sticker.
+    const flags = deriveStickerFlags(stickerSetInfo.stickers)
+
     stickerSet = new db.StickerSet({
       _id: mongoose.Types.ObjectId(),
       owner: userInfo,
       name: stickerSetInfo.name,
       title: stickerSetInfo.title,
-      animated: stickerSetInfo.is_animated,
-      video: stickerSetInfo.is_video,
+      animated: flags.animated,
+      video: flags.video,
       create: false,
       thirdParty: true
     })
