@@ -87,6 +87,7 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.emojiSuffix = stickerSetInfo.emojiSuffix
   stickerSet.create = stickerSetInfo.create || false
   stickerSet.boost = stickerSetInfo.boost || false
+  stickerSet.placeholderFileUniqueId = stickerSetInfo.placeholderFileUniqueId
   await stickerSet.save()
 
   // Increment user's pack count

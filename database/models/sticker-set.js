@@ -49,6 +49,11 @@ const stickerSetsSchema = mongoose.Schema({
   },
   frameType: String,
   emojiSuffix: String,
+  // file_unique_id of the bootstrap placeholder sticker Telegram forces us to
+  // create a set with. Kept until the first real sticker is added (Telegram
+  // forbids deleting the last sticker of a set); cleared once the placeholder
+  // is actually removed. Absent/null means "no pending placeholder".
+  placeholderFileUniqueId: String,
   create: {
     type: Boolean,
     default: false

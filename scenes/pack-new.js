@@ -259,6 +259,11 @@ newPackConfirm.enter(async (ctx, next) => {
   let alreadyUploadedStickers = 0
   let createNewStickerSet
   let hasPlaceholder = false
+  // file_unique_id of the bootstrap placeholder, if this create used one.
+  // Persisted on the StickerSet so the placeholder is removed the moment the
+  // first real sticker is added (see uploadSticker in utils/add-sticker.js),
+  // instead of a blind timer that fails when the user is slow.
+  let placeholderFileUniqueId = null
 
   packType = packType || 'regular'
 
@@ -346,6 +351,7 @@ newPackConfirm.enter(async (ctx, next) => {
 
         seedStickers = [{ sticker: placeholderSticker.file_id, format: 'video', emoji_list: ['🌟'] }]
         hasPlaceholder = true
+        placeholderFileUniqueId = placeholderSticker.file_unique_id
       }
 
       createNewStickerSet = await runInCopyScope(() => ctx.telegram.callApi('createNewStickerSet', {
@@ -428,28 +434,17 @@ newPackConfirm.enter(async (ctx, next) => {
         })
         return ctx.scene.enter('newPackName')
       }
+
+      placeholderFileUniqueId = uploadedSticker.file_unique_id
     }
   }
 
   if (createNewStickerSet) {
-    if (!inline && !ctx?.session?.scene?.copyPack) {
-      // Delayed cleanup of the bootstrap placeholder Telegram requires for
-      // createNewStickerSet. Runs outside any handler timeline, so a
-      // single top-level try/catch is mandatory — an unhandled rejection
-      // here (e.g. getStickerSet 404 if the user nuked the pack first)
-      // would crash the process.
-      setTimeout(async () => {
-        try {
-          const set = await ctx.telegram.getStickerSet(name)
-          const placeholder = set.stickers[0]
-          if (!placeholder) return
-          await ctx.telegram.deleteStickerFromSet(placeholder.file_id)
-        } catch (error) {
-          log.error('placeholder cleanup failed:', error)
-        }
-      }, 1000 * 10)
-    }
-
+    // The bootstrap placeholder is removed the moment the first real sticker
+    // is added (uploadSticker in utils/add-sticker.js reads placeholderFileUniqueId
+    // and deletes it once the set has ≥2 stickers). No blind timer: Telegram
+    // forbids deleting the last sticker, so a timer racing a slow user would
+    // just fail and leave the placeholder behind forever.
     const userStickerSet = await ctx.db.StickerSet.newSet({
       owner: ctx.session.userInfo.id,
       ownerTelegramId: ctx.from.id,
@@ -459,7 +454,8 @@ newPackConfirm.enter(async (ctx, next) => {
       packType,
       boost: !!copyPack,
       emojiSuffix: '🌟',
-      create: true
+      create: true,
+      placeholderFileUniqueId
     })
 
     if (inline) {
@@ -655,28 +651,20 @@ newPackConfirm.enter(async (ctx, next) => {
       }
     }
 
-    // Delete placeholder sticker after all stickers are copied
+    // Placeholder handling for a different-type copy. The normal removal now
+    // happens inside uploadSticker on the first successfully copied sticker
+    // (utils/add-sticker.js) — so by here it's usually already gone. Two cases
+    // remain: nothing copied at all, or a transient failure left it behind.
     if (hasPlaceholder) {
-      const getStickerSet = await ctx.telegram.getStickerSet(name).catch(() => null)
-      if (getStickerSet?.stickers?.length > 1) {
-        // Delete placeholder only if there are other stickers
-        const placeholderSticker = getStickerSet.stickers[0]
-        if (placeholderSticker) {
-          await ctx.telegram.deleteStickerFromSet(placeholderSticker.file_id).catch(error => {
-            log.error('failed to delete placeholder sticker:', error)
-          })
-        }
-      } else if (getStickerSet?.stickers?.length === 1 && successCount === 0 && pendingCount === 0) {
-        // All stickers failed - pack only has placeholder
-        // Delete the entire pack since it's useless
+      if (successCount === 0 && pendingCount === 0) {
+        // Nothing was copied — the set holds only the placeholder, so it's
+        // useless. Delete the whole pack and refund the conversion credit.
         await ctx.telegram.callApi('deleteStickerSet', { name }).catch(error => {
           log.error('failed to delete empty sticker set:', error)
         })
-        // Remove from database
         await ctx.db.StickerSet.deleteOne({ name }).catch(() => {})
-        // Refund the conversion credit — a different-type copy is charged 1
-        // credit up front, but nothing was actually copied (Telegram rate
-        // limit / all stickers failed), so give it back.
+        // A different-type copy is charged 1 credit up front, but nothing was
+        // actually copied (rate limit / all stickers failed), so give it back.
         if (copyPack.sticker_type !== packType) {
           await ctx.db.User.updateOne(
             { _id: ctx.session.userInfo._id },
@@ -684,11 +672,23 @@ newPackConfirm.enter(async (ctx, next) => {
           ).catch((error) => log.error('failed to refund copy credit:', error))
           ctx.session.userInfo.balance += 1
         }
-        // Warn user
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.all_failed', {
           originalTitle: escapeHTML(originalPack.title),
           originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`
         }))
+      } else if (userStickerSet.placeholderFileUniqueId) {
+        // Real stickers were copied but the in-loop removal didn't stick.
+        // Retry here, matching by unique id so a real sticker is never deleted.
+        const set = await ctx.telegram.getStickerSet(name).catch(() => null)
+        const placeholder = set?.stickers?.find(s => s.file_unique_id === userStickerSet.placeholderFileUniqueId)
+        if (placeholder && set.stickers.length > 1) {
+          await ctx.telegram.deleteStickerFromSet(placeholder.file_id).catch(error => {
+            log.error('failed to delete placeholder sticker:', error)
+          })
+          // Drop the marker so it doesn't linger in the DB (→ $unset on save).
+          userStickerSet.placeholderFileUniqueId = undefined
+          await userStickerSet.save().catch(() => {})
+        }
       }
     }
 

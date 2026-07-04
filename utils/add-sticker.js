@@ -8,6 +8,7 @@ const addStickerText = require('../utils/add-sticker-text')
 const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const downloadFileByUrl = require('./download-file-by-url')
+const { removePlaceholderIfPending } = require('./placeholder')
 
 // Track users with video currently processing (userId -> timestamp)
 const videoProcessing = new Map()
@@ -244,6 +245,9 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra) => {
         }
       }
     }
+
+    // A real sticker just landed — safe to drop the bootstrap placeholder now.
+    await removePlaceholderIfPending(telegram, stickerSet, getStickerSet)
 
     const stickerInfo = getStickerSet.stickers.slice(-1)[0]
 
