@@ -14,7 +14,7 @@ const {
   substrUnicode
 } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
-const { runInCopyScope, isRateLimitError } = require('../utils/retry-api')
+const { runInCopyScope } = require('../utils/retry-api')
 const log = require('../utils/logger').scope('pack-new')
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -22,13 +22,10 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 // A copy is done strictly one sticker at a time, in original order: that's
 // the only way the copy mirrors the source ordering (a parallel/bulk pass
 // reorders any sticker that has to be re-added) and it keeps us under
-// Telegram's ~1/s per-user sticker limit. COPY_PACE_MS is the gap between
-// stickers; the copy-scope retry policy waits out the rare 429 on top.
+// Telegram's per-user sticker limit. COPY_PACE_MS is the gap between
+// stickers; on a 429 the copy-scope policy simply waits out Telegram's
+// retry_after and continues, so the copy completes instead of erroring out.
 const COPY_PACE_MS = parseInt(process.env.COPY_PACE_MS, 10) || 1000
-// Circuit breaker: if this many stickers in a row fail with a rate-limit
-// error we couldn't wait out, Telegram is hard-limiting us — stop and
-// report honestly instead of grinding through the rest to the same end.
-const COPY_ABORT_STREAK = parseInt(process.env.COPY_ABORT_STREAK, 10) || 3
 
 const { match } = I18n
 
@@ -48,7 +45,7 @@ const stegcloak = new StegCloak(false, false)
 // or null if it couldn't be fetched/uploaded. Runs in copy scope, so a 429
 // is waited out rather than failed fast. Used to seed a same-type copy's
 // createNewStickerSet with its first (ordered) batch of stickers.
-const uploadSourceSticker = async (ctx, sticker) => {
+const uploadSourceSticker = async (ctx, sticker, onWait) => {
   let stickerFormat = 'static'
   if (sticker.is_animated) stickerFormat = 'animated'
   else if (sticker.is_video) stickerFormat = 'video'
@@ -70,7 +67,7 @@ const uploadSourceSticker = async (ctx, sticker) => {
     user_id: ctx.from.id,
     sticker_format: stickerFormat,
     sticker: { source: buffer }
-  })).catch((error) => ({ error }))
+  }), { onWait }).catch((error) => ({ error }))
 
   if (!uploaded || uploaded.error) return null
 
@@ -295,11 +292,18 @@ newPackConfirm.enter(async (ctx, next) => {
         // never burst the per-user limit. A sticker that still fails to
         // upload is skipped (never re-inserted later — that scrambles order)
         // and reported as failed below.
+        // While Telegram makes us wait out a rate limit, show it on the ⏳
+        // message so the copy doesn't look frozen.
+        const seedOnWait = (seconds) => ctx.telegram.editMessageText(
+          waitMessage.chat.id, waitMessage.message_id, null,
+          ctx.i18n.t('error.rate_limit_seconds', { seconds })
+        ).catch(() => {})
+
         const firstBatch = copyPack.stickers.slice(0, 50)
         const uploaded = []
         let seedProcessed = 0
         for (const sticker of firstBatch) {
-          const entry = await uploadSourceSticker(ctx, sticker)
+          const entry = await uploadSourceSticker(ctx, sticker, seedOnWait)
           if (entry) uploaded.push(entry)
           seedProcessed++
           // Keep the ⏳ message alive with a counter — the seed upload can
@@ -558,29 +562,25 @@ newPackConfirm.enter(async (ctx, next) => {
       }))
 
       // Copy the rest strictly one at a time, in original order, paced ~1/s.
-      // Each add waits out a per-user 429 (copy scope). If Telegram keeps
-      // hard-limiting us for COPY_ABORT_STREAK stickers in a row, stop and
-      // report honestly rather than grinding through the rest to no effect.
-      let rateLimitStreak = 0
-      let aborted = false
+      // On a 429 the copy-scope policy waits out Telegram's retry_after and
+      // then continues (the handler survives past handlerTimeout), so we copy
+      // everything rather than erroring out. A sticker that still fails after
+      // that (a genuinely broken file) is simply skipped and counted.
+      const copyOnWait = (seconds) => ctx.telegram.editMessageText(
+        message.chat.id, message.message_id, null,
+        ctx.i18n.t('error.rate_limit_seconds', { seconds })
+      ).catch(() => {})
 
       for (const sticker of remainingItems) {
-        const result = await runInCopyScope(() => addSticker(ctx, sticker, userStickerSet, false))
+        const result = await runInCopyScope(() => addSticker(ctx, sticker, userStickerSet, false), { onWait: copyOnWait })
 
         if (result?.error) {
           failedCount++
-          if (isRateLimitError(result.error.telegram)) {
-            if (++rateLimitStreak >= COPY_ABORT_STREAK) aborted = true
-          } else {
-            rateLimitStreak = 0
-          }
         } else if (result?.wait) {
           // Video stickers queued for async processing - don't count as success yet
           pendingCount++
-          rateLimitStreak = 0
         } else {
           successCount++
-          rateLimitStreak = 0
         }
         processed++
 
@@ -597,12 +597,6 @@ newPackConfirm.enter(async (ctx, next) => {
             }),
             { parse_mode: 'HTML' }
           ).catch(() => {})
-        }
-
-        if (aborted) {
-          // Everything we won't attempt counts as failed so the summary adds up.
-          failedCount += remainingItems.length - processed
-          break
         }
 
         await delay(COPY_PACE_MS)
@@ -680,6 +674,16 @@ newPackConfirm.enter(async (ctx, next) => {
         })
         // Remove from database
         await ctx.db.StickerSet.deleteOne({ name }).catch(() => {})
+        // Refund the conversion credit — a different-type copy is charged 1
+        // credit up front, but nothing was actually copied (Telegram rate
+        // limit / all stickers failed), so give it back.
+        if (copyPack.sticker_type !== packType) {
+          await ctx.db.User.updateOne(
+            { _id: ctx.session.userInfo._id },
+            { $inc: { balance: 1 } }
+          ).catch((error) => log.error('failed to refund copy credit:', error))
+          ctx.session.userInfo.balance += 1
+        }
         // Warn user
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.all_failed', {
           originalTitle: escapeHTML(originalPack.title),

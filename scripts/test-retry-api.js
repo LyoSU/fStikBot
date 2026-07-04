@@ -405,8 +405,8 @@ async function test (name, fn) {
     stubResponder = () => {
       const err = new Error('Too Many Requests')
       err.code = 429
-      err.description = 'Too Many Requests: retry after 120'
-      err.parameters = { retry_after: 120 } // > COPY_RETRY_MAX_WAIT_S (90)
+      err.description = 'Too Many Requests: retry after 400'
+      err.parameters = { retry_after: 400 } // > COPY_RETRY_MAX_WAIT_S (90)
       return Promise.reject(err)
     }
     const sizeBefore = _rateLimitCacheSize()
@@ -426,8 +426,8 @@ async function test (name, fn) {
       attempts++
       const err = new Error('Too Many Requests')
       err.code = 429
-      err.description = 'Too Many Requests: retry after 120'
-      err.parameters = { retry_after: 120 }
+      err.description = 'Too Many Requests: retry after 400'
+      err.parameters = { retry_after: 400 }
       return Promise.reject(err)
     }
     // Non-copy call populates the cache.
@@ -446,9 +446,10 @@ async function test (name, fn) {
     // and every test here uses a unique id, so it can't leak sideways.
   })
 
-  await test('copy scope: retries a 429 that exceeds default maxWait but is within COPY_RETRY_MAX_WAIT_S', async () => {
+  await test('copy scope: retries a 429 within COPY_RETRY_MAX_WAIT_S and fires onWait', async () => {
     // retry_after=6s > default maxWait (5s) → a normal call would fail fast.
-    // Inside a copy scope, maxWait is 90s, so it must wait and succeed.
+    // Inside a copy scope, maxWait is 300s, so it must wait and succeed — and
+    // it must invoke onWait(retryAfter) so the caller can show a countdown.
     let attempts = 0
     stubResponder = () => {
       attempts++
@@ -460,13 +461,17 @@ async function test (name, fn) {
       }
       return Promise.resolve({ ok: true })
     }
+    const waits = []
     const start = Date.now()
-    const result = await runInCopyScope(() =>
-      tg.callApi('addStickerToSet', { user_id: 3003, name: 'pack' }))
+    const result = await runInCopyScope(
+      () => tg.callApi('addStickerToSet', { user_id: 3003, name: 'pack' }),
+      { onWait: (seconds) => waits.push(seconds) }
+    )
     const elapsed = Date.now() - start
     assert.strictEqual(result.ok, true, 'copy-scope should retry a 6s 429 and succeed')
     assert.strictEqual(attempts, 2, 'should retry exactly once')
     assert.ok(elapsed >= 6000, `should wait ~6s before retry — got ${elapsed}ms`)
+    assert.deepStrictEqual(waits, [6], 'onWait must fire once with retry_after seconds')
   })
 
   await test('copy scope does NOT leak: after it returns, default fail-fast policy resumes', async () => {

@@ -32,13 +32,13 @@ const RETRY_MAX_ATTEMPTS = parseInt(process.env.RETRY_MAX_ATTEMPTS, 10) || 3
 // Copy-scope tunables — a bulk pack copy is inherently long (a 60-sticker
 // pack is ~120 rate-limited calls) and runs to completion even past the
 // 60s handlerTimeout: telegraf races the batch against the timeout only to
-// advance polling, it never aborts the handler promise. So the copy can
-// AFFORD to wait out a real per-user cooldown instead of failing fast —
-// that's what makes it reliable. maxWait is high enough to sit on the
-// 30-90s cooldowns Telegram hands out; a couple of retries covers the case
-// where the first wait wasn't quite long enough. pack-new still paces
-// (1 op at a time) so we rarely hit these at all.
-const COPY_RETRY_MAX_WAIT_S = parseInt(process.env.COPY_RETRY_MAX_WAIT_S, 10) || 90
+// advance polling, it never aborts the handler promise. So the copy simply
+// WAITS OUT whatever cooldown Telegram asks for and then continues, instead
+// of failing a sticker — that's what makes a copy complete rather than
+// leaving "5 copied, 55 failed". maxWait is a generous safety cap (a per-user
+// sticker-creation cooldown is minutes, not hours); anything beyond it is
+// treated as a genuine failure and that one sticker is skipped.
+const COPY_RETRY_MAX_WAIT_S = parseInt(process.env.COPY_RETRY_MAX_WAIT_S, 10) || 300
 const COPY_RETRY_MAX_ATTEMPTS = parseInt(process.env.COPY_RETRY_MAX_ATTEMPTS, 10) || 2
 const BLOCKED_CACHE_TTL_MS = parseInt(process.env.BLOCKED_CACHE_TTL_MS, 10) || 60 * 1000
 const BLOCKED_CACHE_MAX = parseInt(process.env.BLOCKED_CACHE_MAX, 10) || 10000
@@ -236,12 +236,16 @@ function targetScopeId (data) {
  * @param {number}   [options.maxRetries=3]
  * @param {number}   [options.maxWait=5]   seconds
  * @param {string}   [options.method]      for logs
+ * @param {Function} [options.onWait]      called with (retryAfterSeconds)
+ *   right before each wait — lets a long-running caller (e.g. a pack copy)
+ *   surface "waiting Ns for Telegram" to the user instead of a frozen UI.
  */
 async function withRetry (fn, options = {}) {
   const {
     maxRetries = RETRY_MAX_ATTEMPTS,
     maxWait = RETRY_MAX_WAIT_S,
-    method = 'unknown'
+    method = 'unknown',
+    onWait
   } = options
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -266,6 +270,9 @@ async function withRetry (fn, options = {}) {
         `429 on ${method}, waiting ${(waitMs / 1000).toFixed(1)}s ` +
         `(attempt ${attempt + 1}/${maxRetries})`
       )
+      if (typeof onWait === 'function') {
+        try { await onWait(retryAfter) } catch (_) { /* indicator is best-effort */ }
+      }
       await delay(waitMs)
     }
   }
@@ -304,7 +311,8 @@ function patchTelegramPrototype () {
 
   Telegram.prototype.callApi = function patchedCallApi (method, data = {}, ...rest) {
     const scopeId = targetScopeId(data)
-    const inCopyScope = !!copyScope.getStore()
+    const copyStore = copyScope.getStore()
+    const inCopyScope = !!copyStore
 
     // Short-circuit: recently-seen 403 for this chat_id/user_id.
     if (scopeId && isBlockedCached(scopeId)) {
@@ -320,7 +328,7 @@ function patchTelegramPrototype () {
     }
 
     const retryOptions = inCopyScope
-      ? { method, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS }
+      ? { method, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS, onWait: copyStore.onWait }
       : { method }
 
     return withRetry(
@@ -394,10 +402,13 @@ function retryMiddleware () {
  * doesn't cascade-fail every remaining sticker.
  *
  * @param {Function} fn async function to run in scope
+ * @param {Object}   [options]
+ * @param {Function} [options.onWait] called with (retryAfterSeconds) before
+ *   each 429 wait, so the caller can show a "waiting Ns" indicator.
  * @returns {*} whatever `fn` returns (its promise, forwarded)
  */
-function runInCopyScope (fn) {
-  return copyScope.run({ copy: true }, fn)
+function runInCopyScope (fn, options = {}) {
+  return copyScope.run({ copy: true, onWait: options.onWait }, fn)
 }
 
 module.exports = {
