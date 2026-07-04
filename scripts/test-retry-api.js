@@ -25,6 +25,7 @@ Telegram.prototype.callApi = function (method, data) {
 const {
   clearBlockedChat,
   retryMiddleware,
+  runInCopyScope,
   _blockedCacheSize,
   _rateLimitCacheSize
 } = require('../utils/retry-api')
@@ -395,6 +396,92 @@ async function test (name, fn) {
     const sizeBefore = _blockedCacheSize()
     await mw(ctx, async () => {})
     assert.strictEqual(_blockedCacheSize(), sizeBefore, 'kick must not clear cache')
+  })
+
+  await test('copy scope: 429 does NOT write the cooldown cache (no cascade poison)', async () => {
+    // Inside a copy, a fail-fast 429 must not populate the cache — otherwise
+    // one long 429 would cascade-fail every remaining sticker of the copy.
+    stubResponder = () => {
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.description = 'Too Many Requests: retry after 90'
+      err.parameters = { retry_after: 90 } // > COPY_RETRY_MAX_WAIT_S
+      return Promise.reject(err)
+    }
+    const sizeBefore = _rateLimitCacheSize()
+    await assert.rejects(runInCopyScope(() =>
+      tg.callApi('uploadStickerFile', { user_id: 3001, sticker_format: 'static' })))
+    assert.strictEqual(_rateLimitCacheSize(), sizeBefore, 'copy-scope 429 must not populate cache')
+  })
+
+  await test('copy scope: does NOT read a pre-existing cooldown (not short-circuited)', async () => {
+    // Prime a real cooldown for (uploadStickerFile, user 3002) via a normal
+    // (non-copy) fail-fast 429, then a copy-scope call to the same pair must
+    // still hit the network instead of getting a synthetic cached 429.
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.description = 'Too Many Requests: retry after 40'
+      err.parameters = { retry_after: 40 }
+      return Promise.reject(err)
+    }
+    // Non-copy call populates the cache.
+    await assert.rejects(tg.callApi('uploadStickerFile', { user_id: 3002, sticker_format: 'static' }))
+    assert.strictEqual(attempts, 1, 'priming call hits network')
+
+    // Copy-scope call to same (method, user) must bypass the cache read.
+    let copyErr
+    try {
+      await runInCopyScope(() =>
+        tg.callApi('uploadStickerFile', { user_id: 3002, sticker_format: 'static' }))
+    } catch (e) { copyErr = e }
+    assert.strictEqual(attempts, 2, 'copy-scope call must hit network, not short-circuit')
+    assert.strictEqual(copyErr.__cachedRateLimit, undefined, 'copy-scope must not get synthetic cached 429')
+    // No cleanup needed: the rate-limit cooldown is keyed by (method, id)
+    // and every test here uses a unique id, so it can't leak sideways.
+  })
+
+  await test('copy scope: retries a 429 that exceeds default maxWait but is within COPY_RETRY_MAX_WAIT_S', async () => {
+    // retry_after=6s > default maxWait (5s) → a normal call would fail fast.
+    // Inside a copy scope, maxWait is 30s, so it must wait and succeed.
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      if (attempts === 1) {
+        const err = new Error('Too Many Requests')
+        err.code = 429
+        err.parameters = { retry_after: 6 }
+        return Promise.reject(err)
+      }
+      return Promise.resolve({ ok: true })
+    }
+    const start = Date.now()
+    const result = await runInCopyScope(() =>
+      tg.callApi('addStickerToSet', { user_id: 3003, name: 'pack' }))
+    const elapsed = Date.now() - start
+    assert.strictEqual(result.ok, true, 'copy-scope should retry a 6s 429 and succeed')
+    assert.strictEqual(attempts, 2, 'should retry exactly once')
+    assert.ok(elapsed >= 6000, `should wait ~6s before retry — got ${elapsed}ms`)
+  })
+
+  await test('copy scope does NOT leak: after it returns, default fail-fast policy resumes', async () => {
+    // A call made outside any copy scope must keep the strict 5s maxWait —
+    // AsyncLocalStorage must not bleed the copy policy into later calls.
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.parameters = { retry_after: 6 } // > default maxWait, ≤ copy maxWait
+      return Promise.reject(err)
+    }
+    const start = Date.now()
+    await assert.rejects(tg.callApi('sendMessage', { chat_id: 3004, text: 'x' }))
+    const elapsed = Date.now() - start
+    assert.strictEqual(attempts, 1, 'outside copy scope must fail fast on a 6s 429')
+    assert.ok(elapsed < 500, `must not wait — got ${elapsed}ms`)
   })
 
   if (process.exitCode) {

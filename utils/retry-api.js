@@ -17,6 +17,7 @@
 //
 // Design principle: no hardcoded method names or error-description
 // strings. Uniform rules driven by payload shape and HTTP semantics.
+const { AsyncLocalStorage } = require('async_hooks')
 const Telegram = require('telegraf/telegram')
 const log = require('./logger').scope('retry-api')
 
@@ -28,10 +29,29 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 // ────────────────────────────────────────────────────────────────
 const RETRY_MAX_WAIT_S = parseInt(process.env.RETRY_MAX_WAIT_S, 10) || 5
 const RETRY_MAX_ATTEMPTS = parseInt(process.env.RETRY_MAX_ATTEMPTS, 10) || 3
+// Copy-scope tunables — a bulk pack copy owns its own pacing (see
+// scenes/pack-new.js), so it can afford to sit on a small 429 instead of
+// failing fast. Bigger than the handler defaults, but bounded so a single
+// sticker still can't park the copy for a Telegram-escalated 95s wait.
+const COPY_RETRY_MAX_WAIT_S = parseInt(process.env.COPY_RETRY_MAX_WAIT_S, 10) || 30
+const COPY_RETRY_MAX_ATTEMPTS = parseInt(process.env.COPY_RETRY_MAX_ATTEMPTS, 10) || 5
 const BLOCKED_CACHE_TTL_MS = parseInt(process.env.BLOCKED_CACHE_TTL_MS, 10) || 60 * 1000
 const BLOCKED_CACHE_MAX = parseInt(process.env.BLOCKED_CACHE_MAX, 10) || 10000
 const RETRY_JITTER_MAX_MS = parseInt(process.env.RETRY_JITTER_MAX_MS, 10) || 1500
 const RATE_LIMIT_CACHE_MAX = parseInt(process.env.RATE_LIMIT_CACHE_MAX, 10) || 5000
+
+// ────────────────────────────────────────────────────────────────
+// Copy scope
+// ────────────────────────────────────────────────────────────────
+// A bulk pack copy (scenes/pack-new.js) makes many sequential sticker
+// calls under one user_id. Under the default fail-fast policy, a single
+// long 429 caches that (method, user_id) cooldown and every remaining
+// call short-circuits with a synthetic 429 — turning one stall into a
+// wholesale "58 failed to copy". Calls made inside runInCopyScope() opt
+// out of that cache (neither read nor write) and get a longer retry
+// budget, so the copy paces itself instead of poisoning — or being
+// poisoned by — the shared cooldown cache.
+const copyScope = new AsyncLocalStorage()
 
 // ────────────────────────────────────────────────────────────────
 // Blocked-chat cache
@@ -279,6 +299,7 @@ function patchTelegramPrototype () {
 
   Telegram.prototype.callApi = function patchedCallApi (method, data = {}, ...rest) {
     const scopeId = targetScopeId(data)
+    const inCopyScope = !!copyScope.getStore()
 
     // Short-circuit: recently-seen 403 for this chat_id/user_id.
     if (scopeId && isBlockedCached(scopeId)) {
@@ -287,13 +308,19 @@ function patchTelegramPrototype () {
 
     // Short-circuit: server-confirmed 429 cooldown for (method, scope)
     // still in its retry_after window — skip the network and the log.
-    if (isRateLimitCached(method, scopeId)) {
+    // Bypassed inside a copy scope: the copy owns its retry budget and
+    // must not be short-circuited by a cooldown a sibling call left.
+    if (!inCopyScope && isRateLimitCached(method, scopeId)) {
       return Promise.reject(buildRateLimitError(method, scopeId))
     }
 
+    const retryOptions = inCopyScope
+      ? { method, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS }
+      : { method }
+
     return withRetry(
       () => originalCallApi.call(this, method, data, ...rest),
-      { method }
+      retryOptions
     ).catch((error) => {
       // 403 on a private chat (positive id = user_id / DM chat_id) →
       // cache briefly: "blocked by user", "user deactivated", "chat not
@@ -305,8 +332,10 @@ function patchTelegramPrototype () {
       // 429 that withRetry already decided to fail-fast on (retry_after
       // exceeds maxWait) → cache so siblings don't each re-hit the wall.
       // cacheRateLimit() refuses to cache scopeless calls (see comment
-      // there) so we don't need to gate on scopeId here.
-      if (error?.code === 429) {
+      // there) so we don't need to gate on scopeId here. Skipped inside a
+      // copy scope so one long 429 can't poison the shared cooldown cache
+      // and cascade-fail the rest of the copy.
+      if (!inCopyScope && error?.code === 429) {
         const retryAfter = getRetryAfter(error)
         if (retryAfter && retryAfter > RETRY_MAX_WAIT_S) {
           cacheRateLimit(method, scopeId, retryAfter)
@@ -351,8 +380,24 @@ function retryMiddleware () {
   }
 }
 
+/**
+ * Run `fn` inside a copy scope. Every Telegram call made during `fn` and
+ * its awaited descendants (AsyncLocalStorage propagates across awaits)
+ * uses bulk-copy retry semantics: longer maxWait, more attempts, and it
+ * neither reads nor writes the rate-limit cooldown cache. Use it to wrap
+ * the individual sticker uploads/adds of a pack copy so one long 429
+ * doesn't cascade-fail every remaining sticker.
+ *
+ * @param {Function} fn async function to run in scope
+ * @returns {*} whatever `fn` returns (its promise, forwarded)
+ */
+function runInCopyScope (fn) {
+  return copyScope.run({ copy: true }, fn)
+}
+
 module.exports = {
   withRetry,
+  runInCopyScope,
   isRateLimitError,
   getRetryAfter,
   retryMiddleware,

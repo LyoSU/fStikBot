@@ -14,7 +14,15 @@ const {
   substrUnicode
 } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
+const { runInCopyScope } = require('../utils/retry-api')
 const log = require('../utils/logger').scope('pack-new')
+
+// Copy concurrency — deliberately low. Telegram rate-limits sticker ops
+// per-user, so a wide fan-out (the old 50-wide batch / 5-wide loop) is
+// what triggered the escalating 429s that cascade-failed a copy. Two at a
+// time keeps us under the sustained limit while staying reasonably fast.
+const COPY_CONCURRENCY = parseInt(process.env.COPY_CONCURRENCY, 10) || 2
+const COPY_BATCH_CONCURRENCY = parseInt(process.env.COPY_BATCH_CONCURRENCY, 10) || 2
 
 const { match } = I18n
 
@@ -264,7 +272,7 @@ newPackConfirm.enter(async (ctx, next) => {
       if (originalPackType === packType) {
         const stickers = copyPack.stickers.slice(0, 50)
 
-        const batchResults = await Promise.all(stickers.map(async (sticker, originalIndex) => {
+        const batchResults = await runConcurrent(stickers, COPY_BATCH_CONCURRENCY, async (sticker, originalIndex) => {
           let stickerFormat
 
           if (sticker.is_animated) {
@@ -300,13 +308,13 @@ newPackConfirm.enter(async (ctx, next) => {
             }
           }
 
-          const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
+          const uploadedSticker = await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
             user_id: ctx.from.id,
             sticker_format: stickerFormat,
             sticker: {
               source: buffer
             }
-          }).catch((error) => {
+          })).catch((error) => {
             return {
               error: {
                 telegram: error
@@ -329,7 +337,7 @@ newPackConfirm.enter(async (ctx, next) => {
             emoji_list: sticker.emojis ? sticker.emojis : [sticker.emoji],
             originalIndex
           }
-        }))
+        })
 
         // Separate successful and failed stickers
         failedBatchIndices = batchResults
@@ -382,14 +390,14 @@ newPackConfirm.enter(async (ctx, next) => {
         emoji_list
       }))
 
-      createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
+      createNewStickerSet = await runInCopyScope(() => ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
         name,
         title,
         stickers: stickersForApi,
         sticker_type: packType,
         needs_repainting: !!fillColor
-      }).catch((error) => {
+      })).catch((error) => {
         return { error }
       })
 
@@ -596,10 +604,8 @@ newPackConfirm.enter(async (ctx, next) => {
         total: originalPack.stickers.length
       }))
 
-      const COPY_CONCURRENCY = 5
-
       const processCopyItem = async (sticker) => {
-        const result = await addSticker(ctx, sticker, userStickerSet, false)
+        const result = await runInCopyScope(() => addSticker(ctx, sticker, userStickerSet, false))
 
         if (result?.error) {
           failedCount++
