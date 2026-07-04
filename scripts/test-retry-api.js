@@ -399,13 +399,14 @@ async function test (name, fn) {
   })
 
   await test('copy scope: 429 does NOT write the cooldown cache (no cascade poison)', async () => {
-    // Inside a copy, a fail-fast 429 must not populate the cache — otherwise
-    // one long 429 would cascade-fail every remaining sticker of the copy.
+    // Inside a copy, a fail-fast 429 (retry_after beyond even the copy
+    // maxWait) must not populate the cache — otherwise one long 429 would
+    // cascade-fail every remaining sticker of the copy.
     stubResponder = () => {
       const err = new Error('Too Many Requests')
       err.code = 429
-      err.description = 'Too Many Requests: retry after 90'
-      err.parameters = { retry_after: 90 } // > COPY_RETRY_MAX_WAIT_S
+      err.description = 'Too Many Requests: retry after 120'
+      err.parameters = { retry_after: 120 } // > COPY_RETRY_MAX_WAIT_S (90)
       return Promise.reject(err)
     }
     const sizeBefore = _rateLimitCacheSize()
@@ -418,13 +419,15 @@ async function test (name, fn) {
     // Prime a real cooldown for (uploadStickerFile, user 3002) via a normal
     // (non-copy) fail-fast 429, then a copy-scope call to the same pair must
     // still hit the network instead of getting a synthetic cached 429.
+    // retry_after is beyond the copy maxWait so the copy call fails fast too
+    // (no long real wait in the test) while still proving it hit the network.
     let attempts = 0
     stubResponder = () => {
       attempts++
       const err = new Error('Too Many Requests')
       err.code = 429
-      err.description = 'Too Many Requests: retry after 40'
-      err.parameters = { retry_after: 40 }
+      err.description = 'Too Many Requests: retry after 120'
+      err.parameters = { retry_after: 120 }
       return Promise.reject(err)
     }
     // Non-copy call populates the cache.
@@ -445,7 +448,7 @@ async function test (name, fn) {
 
   await test('copy scope: retries a 429 that exceeds default maxWait but is within COPY_RETRY_MAX_WAIT_S', async () => {
     // retry_after=6s > default maxWait (5s) → a normal call would fail fast.
-    // Inside a copy scope, maxWait is 30s, so it must wait and succeed.
+    // Inside a copy scope, maxWait is 90s, so it must wait and succeed.
     let attempts = 0
     stubResponder = () => {
       attempts++

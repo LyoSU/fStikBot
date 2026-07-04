@@ -29,12 +29,17 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 // ────────────────────────────────────────────────────────────────
 const RETRY_MAX_WAIT_S = parseInt(process.env.RETRY_MAX_WAIT_S, 10) || 5
 const RETRY_MAX_ATTEMPTS = parseInt(process.env.RETRY_MAX_ATTEMPTS, 10) || 3
-// Copy-scope tunables — a bulk pack copy owns its own pacing (see
-// scenes/pack-new.js), so it can afford to sit on a small 429 instead of
-// failing fast. Bigger than the handler defaults, but bounded so a single
-// sticker still can't park the copy for a Telegram-escalated 95s wait.
-const COPY_RETRY_MAX_WAIT_S = parseInt(process.env.COPY_RETRY_MAX_WAIT_S, 10) || 30
-const COPY_RETRY_MAX_ATTEMPTS = parseInt(process.env.COPY_RETRY_MAX_ATTEMPTS, 10) || 5
+// Copy-scope tunables — a bulk pack copy is inherently long (a 60-sticker
+// pack is ~120 rate-limited calls) and runs to completion even past the
+// 60s handlerTimeout: telegraf races the batch against the timeout only to
+// advance polling, it never aborts the handler promise. So the copy can
+// AFFORD to wait out a real per-user cooldown instead of failing fast —
+// that's what makes it reliable. maxWait is high enough to sit on the
+// 30-90s cooldowns Telegram hands out; a couple of retries covers the case
+// where the first wait wasn't quite long enough. pack-new still paces
+// (1 op at a time) so we rarely hit these at all.
+const COPY_RETRY_MAX_WAIT_S = parseInt(process.env.COPY_RETRY_MAX_WAIT_S, 10) || 90
+const COPY_RETRY_MAX_ATTEMPTS = parseInt(process.env.COPY_RETRY_MAX_ATTEMPTS, 10) || 2
 const BLOCKED_CACHE_TTL_MS = parseInt(process.env.BLOCKED_CACHE_TTL_MS, 10) || 60 * 1000
 const BLOCKED_CACHE_MAX = parseInt(process.env.BLOCKED_CACHE_MAX, 10) || 10000
 const RETRY_JITTER_MAX_MS = parseInt(process.env.RETRY_JITTER_MAX_MS, 10) || 1500

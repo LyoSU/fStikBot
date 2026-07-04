@@ -14,15 +14,21 @@ const {
   substrUnicode
 } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
-const { runInCopyScope } = require('../utils/retry-api')
+const { runInCopyScope, isRateLimitError } = require('../utils/retry-api')
 const log = require('../utils/logger').scope('pack-new')
 
-// Copy concurrency — deliberately low. Telegram rate-limits sticker ops
-// per-user, so a wide fan-out (the old 50-wide batch / 5-wide loop) is
-// what triggered the escalating 429s that cascade-failed a copy. Two at a
-// time keeps us under the sustained limit while staying reasonably fast.
-const COPY_CONCURRENCY = parseInt(process.env.COPY_CONCURRENCY, 10) || 2
-const COPY_BATCH_CONCURRENCY = parseInt(process.env.COPY_BATCH_CONCURRENCY, 10) || 2
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+// A copy is done strictly one sticker at a time, in original order: that's
+// the only way the copy mirrors the source ordering (a parallel/bulk pass
+// reorders any sticker that has to be re-added) and it keeps us under
+// Telegram's ~1/s per-user sticker limit. COPY_PACE_MS is the gap between
+// stickers; the copy-scope retry policy waits out the rare 429 on top.
+const COPY_PACE_MS = parseInt(process.env.COPY_PACE_MS, 10) || 1000
+// Circuit breaker: if this many stickers in a row fail with a rate-limit
+// error we couldn't wait out, Telegram is hard-limiting us — stop and
+// report honestly instead of grinding through the rest to the same end.
+const COPY_ABORT_STREAK = parseInt(process.env.COPY_ABORT_STREAK, 10) || 3
 
 const { match } = I18n
 
@@ -37,27 +43,42 @@ const placeholder = {
 
 const stegcloak = new StegCloak(false, false)
 
-// Run `worker(item, index)` over `items` with at most `limit` concurrent tasks.
-// Results are returned in the original order. Errors thrown by the worker
-// are captured as { error } so one failure doesn't abort the pool.
-const runConcurrent = async (items, limit, worker) => {
-  const results = new Array(items.length)
-  let cursor = 0
+// Download a source sticker and re-upload it via uploadStickerFile,
+// returning the InputSticker entry ({ sticker: file_id, format, emoji_list })
+// or null if it couldn't be fetched/uploaded. Runs in copy scope, so a 429
+// is waited out rather than failed fast. Used to seed a same-type copy's
+// createNewStickerSet with its first (ordered) batch of stickers.
+const uploadSourceSticker = async (ctx, sticker) => {
+  let stickerFormat = 'static'
+  if (sticker.is_animated) stickerFormat = 'animated'
+  else if (sticker.is_video) stickerFormat = 'video'
 
-  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
-    while (true) {
-      const current = cursor++
-      if (current >= items.length) return
-      try {
-        results[current] = await worker(items[current], current)
-      } catch (err) {
-        results[current] = { error: err }
-      }
-    }
-  })
+  let fileLink
+  try {
+    fileLink = await ctx.telegram.getFileLink(sticker.file_id)
+  } catch (err) {
+    log.error('copy: getFileLink failed:', err.message)
+    return null
+  }
 
-  await Promise.all(runners)
-  return results
+  const buffer = await got(fileLink, { responseType: 'buffer' })
+    .then((response) => response.body)
+    .catch(() => null)
+  if (!buffer) return null
+
+  const uploaded = await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
+    user_id: ctx.from.id,
+    sticker_format: stickerFormat,
+    sticker: { source: buffer }
+  })).catch((error) => ({ error }))
+
+  if (!uploaded || uploaded.error) return null
+
+  return {
+    sticker: uploaded.file_id,
+    format: stickerFormat,
+    emoji_list: sticker.emojis ? sticker.emojis : [sticker.emoji]
+  }
 }
 
 const newPack = new Scene('newPack')
@@ -241,7 +262,6 @@ newPackConfirm.enter(async (ctx, next) => {
   let alreadyUploadedStickers = 0
   let createNewStickerSet
   let hasPlaceholder = false
-  let failedBatchIndices = [] // Track failed stickers from batch for retry
 
   packType = packType || 'regular'
 
@@ -265,144 +285,75 @@ newPackConfirm.enter(async (ctx, next) => {
         }
       })
 
-      const originalPackType = copyPack.sticker_type
+      const sameType = copyPack.sticker_type === packType
+      let seedStickers
 
-      let uploadedStickers = []
-
-      if (originalPackType === packType) {
-        const stickers = copyPack.stickers.slice(0, 50)
-
-        const batchResults = await runConcurrent(stickers, COPY_BATCH_CONCURRENCY, async (sticker, originalIndex) => {
-          let stickerFormat
-
-          if (sticker.is_animated) {
-            stickerFormat = 'animated'
-          } else if (sticker.is_video) {
-            stickerFormat = 'video'
-          } else {
-            stickerFormat = 'static'
+      if (sameType) {
+        // Same type → seed the set with the first ≤50 source stickers in a
+        // single ordered createNewStickerSet call (Telegram preserves the
+        // array order). Uploads run strictly sequentially with pacing so we
+        // never burst the per-user limit. A sticker that still fails to
+        // upload is skipped (never re-inserted later — that scrambles order)
+        // and reported as failed below.
+        const firstBatch = copyPack.stickers.slice(0, 50)
+        const uploaded = []
+        let seedProcessed = 0
+        for (const sticker of firstBatch) {
+          const entry = await uploadSourceSticker(ctx, sticker)
+          if (entry) uploaded.push(entry)
+          seedProcessed++
+          // Keep the ⏳ message alive with a counter — the seed upload can
+          // take ~50s (one per second) before the set link exists.
+          if (seedProcessed % 10 === 0) {
+            await ctx.telegram.editMessageText(
+              waitMessage.chat.id, waitMessage.message_id, null,
+              `⏳ ${seedProcessed}/${copyPack.stickers.length}`
+            ).catch(() => {})
           }
+          await delay(COPY_PACE_MS)
+        }
 
-          let fileLink
-          try {
-            fileLink = await ctx.telegram.getFileLink(sticker.file_id)
-          } catch (err) {
-            return {
-              error: {
-                telegram: err
-              },
-              originalIndex
-            }
-          }
-
-          const buffer = await got(fileLink, {
-            responseType: 'buffer'
-          }).then((response) => response.body).catch((err) => null)
-
-          if (!buffer) {
-            return {
-              error: {
-                telegram: new Error('Failed to download sticker')
-              },
-              originalIndex
-            }
-          }
-
-          const uploadedSticker = await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
-            user_id: ctx.from.id,
-            sticker_format: stickerFormat,
-            sticker: {
-              source: buffer
-            }
-          })).catch((error) => {
-            return {
-              error: {
-                telegram: error
-              }
-            }
-          })
-
-          if (uploadedSticker.error) {
-            return {
-              error: {
-                telegram: uploadedSticker.error.telegram
-              },
-              originalIndex
-            }
-          }
-
-          return {
-            sticker: uploadedSticker.file_id,
-            format: stickerFormat,
-            emoji_list: sticker.emojis ? sticker.emojis : [sticker.emoji],
-            originalIndex
-          }
-        })
-
-        // Separate successful and failed stickers
-        failedBatchIndices = batchResults
-          .filter((result) => result.error)
-          .map((result) => result.originalIndex)
-
-        uploadedStickers = batchResults
-          .filter((sticker) => !sticker.error)
-          .sort((a, b) => a.originalIndex - b.originalIndex)
-
-        // if < 90% of stickers uploaded in batch, fail completely
-        if (uploadedStickers.length < stickers.length * 0.90) {
-          await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
-
+        if (uploaded.length === 0) {
+          // Whole first batch failed → Telegram is hard-limiting us; abort
+          // cleanly rather than create an empty/broken pack.
+          await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id).catch(() => {})
           await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), {
             reply_to_message_id: ctx.message.message_id,
             allow_sending_without_reply: true
           })
-
-          // Clean up all session state
           ctx.session.scene = {}
           return ctx.scene.leave()
         }
 
-        // Track how many were successfully uploaded in batch
-        alreadyUploadedStickers = uploadedStickers.length
+        seedStickers = uploaded
+        alreadyUploadedStickers = uploaded.length
       } else {
-        const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
+        // Different type → each sticker needs per-sticker conversion
+        // (addSticker), so we can't bulk-upload raw files. Seed with a
+        // placeholder and copy everything individually below; the
+        // placeholder is removed once copying finishes.
+        const placeholderSticker = await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
           user_id: ctx.from.id,
           sticker_format: 'video',
           sticker: {
             source: placeholder[packType].video
           }
-        })
+        }))
 
-        uploadedStickers = [
-          {
-            sticker: uploadedSticker.file_id,
-            format: 'video',
-            emoji_list: ['🌟'],
-            placeholder: true
-          }
-        ]
+        seedStickers = [{ sticker: placeholderSticker.file_id, format: 'video', emoji_list: ['🌟'] }]
+        hasPlaceholder = true
       }
-
-      // Clean up internal fields before API call (originalIndex, placeholder are internal only)
-      const stickersForApi = uploadedStickers.map(({ sticker, format, emoji_list }) => ({
-        sticker,
-        format,
-        emoji_list
-      }))
 
       createNewStickerSet = await runInCopyScope(() => ctx.telegram.callApi('createNewStickerSet', {
         user_id: ctx.from.id,
         name,
         title,
-        stickers: stickersForApi,
+        stickers: seedStickers,
         sticker_type: packType,
         needs_repainting: !!fillColor
       })).catch((error) => {
         return { error }
       })
-
-      // Track if we need to delete placeholder after copying is complete
-      hasPlaceholder = uploadedStickers[0]?.placeholder
 
       await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
 
@@ -581,39 +532,55 @@ newPackConfirm.enter(async (ctx, next) => {
 
     const originalPack = copyPack
 
-    // Calculate how many stickers need to be added via addSticker
-    // For same type: stickers after batch (index >= 50) + failed batch stickers
-    // For different type (placeholder flow): ALL stickers need individual copy
+    // Same-type copies already seeded the first ≤50 stickers via
+    // createNewStickerSet; any of those that failed to upload are counted as
+    // failed here (never re-added — re-adding would break the order). What's
+    // left to copy one-by-one is everything past that seed batch (or, for a
+    // different-type copy, every sticker).
     const batchAttemptedCount = hasPlaceholder ? 0 : Math.min(50, originalPack.stickers.length)
-    const needsIndividualCopy = hasPlaceholder || originalPack.stickers.length > batchAttemptedCount || failedBatchIndices.length > 0
+    const remainingItems = originalPack.stickers.slice(batchAttemptedCount)
 
-    // Hoisted so the hasPlaceholder cleanup branch (line ~737) can reference
-    // them safely when runtime skips the needsIndividualCopy block.
+    // Hoisted so the hasPlaceholder cleanup and result-message branches below
+    // can reference them even when there's nothing left to copy individually.
     let successCount = alreadyUploadedStickers
-    let failedCount = 0
+    let failedCount = batchAttemptedCount - alreadyUploadedStickers // stickers skipped during the seed batch
     let pendingCount = 0
     let processed = 0
 
-    if (needsIndividualCopy) {
+    if (remainingItems.length > 0) {
       const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
         originalTitle: escapeHTML(originalPack.title),
         originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
         title: escapeHTML(title),
         link: `${ctx.config.stickerLinkPrefix}${name}`,
-        current: alreadyUploadedStickers,
+        current: successCount + pendingCount,
         total: originalPack.stickers.length
       }))
 
-      const processCopyItem = async (sticker) => {
+      // Copy the rest strictly one at a time, in original order, paced ~1/s.
+      // Each add waits out a per-user 429 (copy scope). If Telegram keeps
+      // hard-limiting us for COPY_ABORT_STREAK stickers in a row, stop and
+      // report honestly rather than grinding through the rest to no effect.
+      let rateLimitStreak = 0
+      let aborted = false
+
+      for (const sticker of remainingItems) {
         const result = await runInCopyScope(() => addSticker(ctx, sticker, userStickerSet, false))
 
         if (result?.error) {
           failedCount++
+          if (isRateLimitError(result.error.telegram)) {
+            if (++rateLimitStreak >= COPY_ABORT_STREAK) aborted = true
+          } else {
+            rateLimitStreak = 0
+          }
         } else if (result?.wait) {
           // Video stickers queued for async processing - don't count as success yet
           pendingCount++
+          rateLimitStreak = 0
         } else {
           successCount++
+          rateLimitStreak = 0
         }
         processed++
 
@@ -631,19 +598,23 @@ newPackConfirm.enter(async (ctx, next) => {
             { parse_mode: 'HTML' }
           ).catch(() => {})
         }
+
+        if (aborted) {
+          // Everything we won't attempt counts as failed so the summary adds up.
+          failedCount += remainingItems.length - processed
+          break
+        }
+
+        await delay(COPY_PACE_MS)
       }
 
-      // First, retry failed batch stickers (in parallel, preserving order isn't needed)
-      const retryItems = failedBatchIndices.map((failedIndex) => originalPack.stickers[failedIndex])
-      await runConcurrent(retryItems, COPY_CONCURRENCY, (sticker) => processCopyItem(sticker))
-
-      // Then, continue with stickers after batch (index >= 50)
-      const tailItems = originalPack.stickers.slice(batchAttemptedCount)
-      await runConcurrent(tailItems, COPY_CONCURRENCY, (sticker) => processCopyItem(sticker))
-
       await ctx.telegram.deleteMessage(message.chat.id, message.message_id)
+    }
 
-      // Show result with appropriate message based on outcome
+    // Show result with appropriate message based on outcome. Skipped only
+    // when a copy completed fully within the seed batch (nothing processed
+    // individually, nothing failed) — the pack link reply already covers it.
+    if (processed > 0 || failedCount > 0) {
       if (failedCount > 0 && pendingCount > 0) {
         await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial_pending', {
           originalTitle: escapeHTML(originalPack.title),
