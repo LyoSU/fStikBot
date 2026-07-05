@@ -91,7 +91,21 @@ convertQueue.on('global:completed', async (jobId, result) => {
     source: Buffer.from(content, 'base64')
   }
 
-  const uploadResult = await uploadSticker(input.userId, input.stickerSet, input.stickerFile, stickerExtra)
+  // input.stickerSet is a plain object here — Bull serialized the job to JSON
+  // in Redis, so it lost its Mongoose document methods (e.g. .save()) that
+  // uploadSticker relies on. Re-fetch the live document before calling it.
+  const stickerSet = await db.StickerSet.findById(input.stickerSet._id)
+
+  if (!stickerSet) {
+    if (input?.botId === botInfo?.id) {
+      await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
+        parse_mode: 'HTML'
+      }).catch(() => {})
+    }
+    return
+  }
+
+  const uploadResult = await uploadSticker(input.userId, stickerSet, input.stickerFile, stickerExtra)
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
