@@ -2,9 +2,13 @@
 //
 // Every new sticker set must be created with at least one sticker, so the bot
 // seeds each set with a throwaway placeholder (see scenes/pack-new.js). That
-// placeholder has to be removed once the set holds real content — but Telegram
-// refuses to delete the *last* sticker of a set, so removal can only happen
-// after a real sticker has been added.
+// placeholder has to be removed once the set holds real content.
+//
+// Telegram *does* allow deleting the last sticker (verified — it just leaves a
+// 0-sticker set, which stays valid and can be re-populated). We still defer
+// removal until a real sticker exists, on purpose: it keeps the pack from ever
+// being momentarily empty, so we never depend on how long Telegram keeps an
+// empty set around.
 //
 // This lives in its own module (telegram injected, no DB import) so the logic
 // is unit-testable in isolation.
@@ -36,8 +40,8 @@ const getRetryAfter = (error) =>
 // Reliability by design:
 //   • matched by the stored file_unique_id, never by index — a real sticker can
 //     never be deleted by mistake;
-//   • only ever attempted when the set has ≥2 stickers — Telegram never sees a
-//     "can't delete the last sticker" error (the old blind-timer failure mode);
+//   • only ever attempted when the set has ≥2 stickers — so removing the
+//     placeholder never leaves the pack momentarily empty;
 //   • waits out a 429 cooldown (bounded) before giving up;
 //   • best-effort — a failure here never fails the user's sticker add;
 //   • self-healing — the marker (stickerSet.placeholderFileUniqueId) is cleared
@@ -48,7 +52,7 @@ const getRetryAfter = (error) =>
 // false when it should be retried later.
 async function removePlaceholderIfPending (telegram, stickerSet, currentSet) {
   if (!stickerSet.placeholderFileUniqueId) return true
-  // Telegram forbids deleting the last sticker — wait until a real one exists.
+  // Wait until a real sticker exists so removal never leaves the pack empty.
   if (!currentSet || !currentSet.stickers || currentSet.stickers.length < 2) return false
 
   const placeholder = currentSet.stickers.find(

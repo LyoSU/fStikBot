@@ -474,9 +474,10 @@ newPackConfirm.enter(async (ctx, next) => {
   if (createNewStickerSet) {
     // The bootstrap placeholder is removed the moment the first real sticker
     // is added (uploadSticker in utils/add-sticker.js reads placeholderFileUniqueId
-    // and deletes it once the set has ≥2 stickers). No blind timer: Telegram
-    // forbids deleting the last sticker, so a timer racing a slow user would
-    // just fail and leave the placeholder behind forever.
+    // and deletes it once the set has ≥2 stickers). Deferring to the first real
+    // sticker — rather than a blind timer — keeps the pack from ever being
+    // momentarily empty and avoids racing a slow user (the old timer would fire
+    // before any real sticker existed and leave the placeholder behind forever).
     const userStickerSet = await ctx.db.StickerSet.newSet({
       owner: ctx.session.userInfo.id,
       ownerTelegramId: ctx.from.id,
