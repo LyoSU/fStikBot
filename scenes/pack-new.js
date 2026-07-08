@@ -38,6 +38,32 @@ const placeholder = {
   }
 }
 
+// Resolve the placeholder's *canonical* file_unique_id — the one Telegram
+// reports via getStickerSet, NOT the one uploadStickerFile returns.
+//
+// These two are DIFFERENT strings for the same sticker (an uploaded file and
+// the sticker it becomes inside a set are distinct objects). removePlaceholder-
+// IfPending matches the marker against getStickerSet's stickers, so the marker
+// must hold the getStickerSet value or it never matches — the bug that left the
+// placeholder in every new pack forever. Right after createNewStickerSet the
+// set holds exactly the placeholder at index 0.
+//
+// A freshly created set isn't always visible to getStickerSet on the very first
+// read (Telegram-side propagation lag), so retry a few times with a short
+// backoff. Returns null only if the set never materialises in time — in which
+// case the placeholder just isn't auto-removed (same as the pre-fix state, no
+// worse). The removal itself is deferred to the first real sticker add, so
+// there's no "delete right after create" race to worry about here.
+const resolvePlaceholderUniqueId = async (ctx, name) => {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const set = await ctx.telegram.getStickerSet(name).catch(() => null)
+    const uniqueId = set?.stickers?.[0]?.file_unique_id
+    if (uniqueId) return uniqueId
+    await delay(500)
+  }
+  return null
+}
+
 const stegcloak = new StegCloak(false, false)
 
 // Download a source sticker and re-upload it via uploadStickerFile,
@@ -351,7 +377,9 @@ newPackConfirm.enter(async (ctx, next) => {
 
         seedStickers = [{ sticker: placeholderSticker.file_id, format: 'video', emoji_list: ['🌟'] }]
         hasPlaceholder = true
-        placeholderFileUniqueId = placeholderSticker.file_unique_id
+        // The canonical file_unique_id is resolved from getStickerSet after the
+        // set exists (see below) — the one uploadStickerFile returns here does
+        // not match what getStickerSet reports.
       }
 
       createNewStickerSet = await runInCopyScope(() => ctx.telegram.callApi('createNewStickerSet', {
@@ -385,6 +413,10 @@ newPackConfirm.enter(async (ctx, next) => {
           allow_sending_without_reply: true
         })
         return ctx.scene.enter('newPackName')
+      }
+
+      if (hasPlaceholder) {
+        placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, name)
       }
     } else {
       const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
@@ -435,7 +467,7 @@ newPackConfirm.enter(async (ctx, next) => {
         return ctx.scene.enter('newPackName')
       }
 
-      placeholderFileUniqueId = uploadedSticker.file_unique_id
+      placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, name)
     }
   }
 
