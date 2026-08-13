@@ -26,6 +26,41 @@ To run against a different DB, override inline:
 MONGODB_URI='mongodb://.../fStikBot?...' node scripts/inspect-db.js
 ```
 
+## `prune-stickers.js`
+
+Reclaims space in `stickers` in one pass, doing two unrelated cleanups per
+`_id` range:
+
+1. Hard-deletes soft-deleted docs past a 30-day restore window. `deletedAt`
+   was added late, so ~89% of `deleted: true` docs carry no date — those fall
+   back to `updatedAt`, which keeps the same 30-day guarantee.
+2. `$unset`s the 14 sub-fields that live in the DB but not in `stickersSchema`
+   (`info.width`, `file.mime_type`, …). The collection stores whole Telegram
+   sticker objects while the schema declares only four keys per sub-document,
+   so the rest is invisible to the app — ~74 bytes per doc, ~16 GiB overall.
+
+```bash
+node scripts/prune-stickers.js --dry-run    # count what would change
+node scripts/prune-stickers.js              # 5000-doc batches, 50ms apart
+node scripts/prune-stickers.js --batch=2000 --throttle=200   # gentler
+node scripts/prune-stickers.js --reset      # forget the checkpoint
+```
+
+Safe to interrupt: progress is checkpointed to `scripts/.prune-stickers-state.json`
+after every 20 batches, and re-running resumes from there. Both operations run
+server-side per range, so documents never travel to the Node process.
+
+Two things worth knowing before running it:
+
+- It deliberately uses `.collection` (raw driver) rather than the mongoose
+  model. Under `strict: true` mongoose drops unknown paths from an update, so
+  a model-level `$unset` of `info.width` would succeed and change nothing.
+- WiredTiger does not return freed space to the OS on its own. After the run,
+  `compact` (with `force: true` on a single-node replica set) is what actually
+  shrinks the file. Dropping an index, by contrast, frees space right away —
+  though even then the ident sits in `drop-pending` for a few minutes until
+  `oldest_timestamp` passes it.
+
 ## `top-sets.js`
 
 Cron-style helper that lists popular public packs — unrelated to DB
@@ -37,10 +72,21 @@ Legacy one-offs for repairing corrupted records. Kept for reference.
 
 ## A note on schema migration
 
-At 488M Sticker docs (94% in the legacy `info.*` shape) and ~138GB
-collection size, a bulk rewrite is not viable on a single-node setup — it
-would take weeks of sustained writes and hammer the live DB. So instead
-of migrating, the codebase treats the legacy shape as a **first-class
-format**, not tech debt. Every read path already uses `$or` against
-both the flat `fileId` and nested `info.file_id` fields, each served by
-its own index.
+At 513M Sticker docs (94% in the legacy `info.*` shape) and ~101 GiB of data
+plus ~30 GiB of indexes, the codebase treats the legacy shape as a
+**first-class format**, not tech debt: every read path uses `$or` across both
+the flat `fileId` and the nested `info.file_id`, and the getters on
+`stickersSchema` normalize the difference away.
+
+Two caveats to earlier versions of this note:
+
+- Only some of those paths are index-backed. `fileUniqueId`,
+  `file.file_unique_id` and `original.fileUniqueId` each have an index;
+  `fileId` and `info.file_id` have none, and are only ever read off a document
+  already fetched by another key.
+- A bulk rewrite is heavy but not the "weeks of sustained writes" this note
+  used to claim — batched server-side updates move ~5k docs/s, i.e. tens of
+  hours end to end. The real reasons to avoid a full rewrite are oplog churn
+  and the fact that rewriting every doc buys nothing the getters don't already
+  provide. Removing the *undeclared* sub-fields is a different matter, and
+  that is what `prune-stickers.js` does.
