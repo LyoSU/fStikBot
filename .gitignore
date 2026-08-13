@@ -69,4 +69,4 @@ session
 .DS_Store
 config.json
 .superpowers/
-scripts/.prune-stickers-state.json
+scripts/.prune-stickers-*-state.json

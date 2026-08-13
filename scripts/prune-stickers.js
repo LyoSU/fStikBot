@@ -26,17 +26,31 @@
 //   node scripts/prune-stickers.js --batch=5000 --throttle=50
 //   node scripts/prune-stickers.js --dry-run --max-batches=200   # sample first
 //   node scripts/prune-stickers.js --from=2023-01-01 --max-batches=50
+//   node scripts/prune-stickers.js --skip-delete --until=2022-01-01   # strip only
 //   node scripts/prune-stickers.js --reset         # forget the checkpoint
 //
-// --from seeks by _id timestamp, so a dry run can measure a representative
-// epoch instead of the oldest 2019 docs the checkpoint would start from.
+// --from and --until seek by _id timestamp, so a run can measure a
+// representative epoch instead of the oldest 2019 docs the checkpoint would
+// start from, or confine itself to the slice that actually holds dead fields.
+//
+// --skip-delete does the $unset half only. It needs no fresh backup, because
+// the fields it removes are unreadable through the schema either way, whereas
+// the hard delete destroys records users can still restore. The two modes keep
+// separate checkpoints so a strip pass cannot make a later full pass skip
+// documents it never actually deleted from.
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') })
 const fs = require('fs')
 const path = require('path')
 const { db } = require('../database')
 
-const STATE_FILE = path.join(__dirname, '.prune-stickers-state.json')
 const RESTORE_WINDOW_DAYS = 30
+
+// Each mode keeps its own checkpoint. Sharing one would be a silent data bug:
+// a --skip-delete pass that walks to the 2021 boundary would leave the cursor
+// there, and the next full run would resume past it - never hard-deleting the
+// expired soft-deletes among the oldest 37M docs, with nothing in the output
+// to suggest anything was missed.
+const stateFile = (mode) => path.join(__dirname, `.prune-stickers-${mode}-state.json`)
 
 // Sub-fields present in the DB but absent from stickersSchema.
 const DEAD_FIELDS = [
@@ -68,12 +82,23 @@ function objectIdAt (date) {
 }
 
 const dryRun = flag('dry-run')
+// Strip-only. The $unset touches fields the app cannot read at all, so it is
+// safe to run without a fresh backup; the hard delete is not, and waits.
+const skipDelete = flag('skip-delete')
+const MODE = skipDelete ? 'strip' : 'full'
+const STATE_FILE = stateFile(MODE)
 const batchSize = value('batch', 5000)
 const throttleMs = value('throttle', 50)
 // Stop after N batches. A full dry run costs two countDocuments per batch over
 // 100k+ batches, so sampling a few hundred and extrapolating is the sane way
 // to size the job.
 const maxBatches = value('max-batches', Infinity)
+
+// Upper _id bound. The dead sub-fields only exist in docs written before
+// ~2021-12, so a strip pass that stops there scans 37M docs instead of 511M.
+const untilRaw = raw('until')
+if (untilRaw && isNaN(new Date(untilRaw))) throw new Error(`--until is not a date: ${untilRaw}`)
+const untilId = untilRaw ? objectIdAt(new Date(untilRaw)) : null
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -117,10 +142,12 @@ async function run () {
   const state = loadState()
 
   console.log('=== prune-stickers ===')
-  console.log(`mode:      ${dryRun ? 'DRY RUN (no writes)' : 'LIVE'}`)
+  console.log(`mode:      ${dryRun ? 'DRY RUN (no writes)' : 'LIVE'} / ${MODE}${skipDelete ? ' ($unset only, no hard deletes)' : ''}`)
   console.log(`batch:     ${batchSize} docs, throttle ${throttleMs}ms`)
   console.log(`collection: ${total.toLocaleString()} docs`)
-  console.log(`restore window: ${RESTORE_WINDOW_DAYS}d — nothing updated after ${cutoff.toISOString()} is touched`)
+  if (untilId) console.log(`until:     ${untilRaw} (_id <= ${untilId})`)
+  if (!skipDelete) console.log(`restore window: ${RESTORE_WINDOW_DAYS}d — nothing updated after ${cutoff.toISOString()} is touched`)
+  console.log(`checkpoint: ${path.basename(STATE_FILE)}`)
   console.log(`resuming at: ${state.cursor || 'start'}\n`)
 
   // Wrapped in an object so the loop condition is a property lookup — a bare
@@ -138,7 +165,12 @@ async function run () {
   let batches = 0
 
   while (!control.stopping) {
-    const query = state.cursor ? { _id: { $gt: state.cursor } } : {}
+    // The bound goes into the query rather than into a post-fetch check, so
+    // the last batch needs no special case: the cursor simply runs dry.
+    const bound = {}
+    if (state.cursor) bound.$gt = state.cursor
+    if (untilId) bound.$lte = untilId
+    const query = Object.keys(bound).length ? { _id: bound } : {}
     const ids = await coll
       .find(query, { projection: { _id: 1 } })
       .sort({ _id: 1 })
@@ -153,11 +185,13 @@ async function run () {
     const range = { _id: { $gte: ids[0]._id, $lte: ids[ids.length - 1]._id } }
 
     if (dryRun) {
-      state.removed += await coll.countDocuments({ ...range, ...expiredSoftDelete(cutoff) })
+      if (!skipDelete) state.removed += await coll.countDocuments({ ...range, ...expiredSoftDelete(cutoff) })
       state.stripped += await coll.countDocuments({ ...range, $or: DEAD_FIELD_PROBES })
     } else {
-      const deleted = await coll.deleteMany({ ...range, ...expiredSoftDelete(cutoff) })
-      state.removed += deleted.deletedCount
+      if (!skipDelete) {
+        const deleted = await coll.deleteMany({ ...range, ...expiredSoftDelete(cutoff) })
+        state.removed += deleted.deletedCount
+      }
       // Survivors only — the deleteMany above already took the expired ones.
       const updated = await coll.updateMany({ ...range, $or: DEAD_FIELD_PROBES }, { $unset: UNSET_SPEC })
       state.stripped += updated.modifiedCount
@@ -199,7 +233,9 @@ async function run () {
 
   // A sampled run says little on its own — scale it up so the numbers mean
   // something. Only honest if the sample is representative, hence --from.
-  if (state.scanned && state.scanned < total) {
+  // Meaningless with --until: the run covers a deliberate slice, not a sample
+  // of the whole collection, so scaling by total/scanned would invent numbers.
+  if (state.scanned && state.scanned < total && !untilId) {
     const factor = total / state.scanned
     const rate = state.scanned / ((Date.now() - startedAt) / 1000)
     console.log('\nextrapolated to the full collection:')

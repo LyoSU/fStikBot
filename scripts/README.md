@@ -44,8 +44,23 @@ node scripts/prune-stickers.js --dry-run --max-batches=200    # size the job
 node scripts/prune-stickers.js --from=2023-01-01 --dry-run --max-batches=50
 node scripts/prune-stickers.js              # 5000-doc batches, 50ms apart
 node scripts/prune-stickers.js --batch=2000 --throttle=200    # gentler
+node scripts/prune-stickers.js --skip-delete --until=2022-01-01   # strip only
 node scripts/prune-stickers.js --reset      # forget the checkpoint
 ```
+
+`--skip-delete` runs the `$unset` half alone. That half needs no fresh backup —
+the fields are unreadable through the schema whether they are there or not —
+while the hard delete removes records a user can still restore, so the two are
+worth separating in time. Paired with `--until`, which bounds `_id` from above,
+a strip pass covers the ~37M pre-2022 documents that actually carry dead
+fields instead of walking all 511M.
+
+The two modes keep **separate checkpoints** (`.prune-stickers-strip-state.json`
+vs `.prune-stickers-full-state.json`). Sharing one would be a silent
+correctness bug: a strip pass leaves the cursor at the 2022 boundary, and a
+later full run would resume past it, never hard-deleting the expired
+soft-deletes among the oldest documents — with nothing in the output to hint
+that anything was skipped.
 
 A full dry run costs two `countDocuments` per batch across 100k+ batches, so
 sample a few hundred batches and read the extrapolation the summary prints.
