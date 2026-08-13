@@ -137,14 +137,20 @@ function expiredSoftDelete (cutoff) {
 
 async function run () {
   const coll = db.Sticker.collection
-  const total = await db.Sticker.estimatedDocumentCount()
+  // With --until the run has a smaller target than the collection, and
+  // measuring it keeps the progress line honest — reporting percent and ETA
+  // against 511M during a 37M pass understates progress by more than 10x.
+  // The count is an _id index scan, so it costs seconds, not a collection walk.
+  const total = untilId
+    ? await coll.countDocuments({ _id: { $lte: untilId } })
+    : await db.Sticker.estimatedDocumentCount()
   const cutoff = new Date(Date.now() - RESTORE_WINDOW_DAYS * 86400000)
   const state = loadState()
 
   console.log('=== prune-stickers ===')
   console.log(`mode:      ${dryRun ? 'DRY RUN (no writes)' : 'LIVE'} / ${MODE}${skipDelete ? ' ($unset only, no hard deletes)' : ''}`)
   console.log(`batch:     ${batchSize} docs, throttle ${throttleMs}ms`)
-  console.log(`collection: ${total.toLocaleString()} docs`)
+  console.log(`${untilId ? 'in range: ' : 'collection:'} ${total.toLocaleString()} docs`)
   if (untilId) console.log(`until:     ${untilRaw} (_id <= ${untilId})`)
   if (!skipDelete) console.log(`restore window: ${RESTORE_WINDOW_DAYS}d — nothing updated after ${cutoff.toISOString()} is touched`)
   console.log(`checkpoint: ${path.basename(STATE_FILE)}`)
