@@ -40,11 +40,18 @@ Reclaims space in `stickers` in one pass, doing two unrelated cleanups per
    so the rest is invisible to the app — ~74 bytes per doc, ~16 GiB overall.
 
 ```bash
-node scripts/prune-stickers.js --dry-run    # count what would change
+node scripts/prune-stickers.js --dry-run --max-batches=200    # size the job
+node scripts/prune-stickers.js --from=2023-01-01 --dry-run --max-batches=50
 node scripts/prune-stickers.js              # 5000-doc batches, 50ms apart
-node scripts/prune-stickers.js --batch=2000 --throttle=200   # gentler
+node scripts/prune-stickers.js --batch=2000 --throttle=200    # gentler
 node scripts/prune-stickers.js --reset      # forget the checkpoint
 ```
+
+A full dry run costs two `countDocuments` per batch across 100k+ batches, so
+sample a few hundred batches and read the extrapolation the summary prints.
+Use `--from` for that: the checkpoint starts at the oldest docs, and 2019-2021
+records have a different shape from everything after, which would skew the
+estimate.
 
 Safe to interrupt: progress is checkpointed to `scripts/.prune-stickers-state.json`
 after every 20 batches, and re-running resumes from there. Both operations run
