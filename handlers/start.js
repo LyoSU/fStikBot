@@ -21,14 +21,13 @@ module.exports = async (ctx) => {
     })
   }
 
-  // Only "has at least one pack" matters here — limit 1 lets Mongo stop at the
+  // Only "has at least one pack" matters here. Model.exists() stops at the
   // first match instead of counting every pack the user ever made.
-  const countStickerSets = await ctx.db.StickerSet.countDocuments(
-    { owner: ctx.session.userInfo.id },
-    { limit: 1 }
-  )
+  // (Mongoose 5: countDocuments(filter, <2nd arg>) treats the 2nd arg as a
+  // callback — passing { limit: 1 } there threw on every /start.)
+  const hasStickerSets = await ctx.db.StickerSet.exists({ owner: ctx.session.userInfo.id })
 
-  const isNewUser = countStickerSets <= 0
+  const isNewUser = !hasStickerSets
 
   const keyboard = []
 
