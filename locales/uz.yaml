@@ -228,6 +228,8 @@ cmd:
       Жорий гуруҳ учун эмоджиларни қайта йўналтириш учун <code>/emoji</code> жўнатинг, кейинги эмоджиларни бўш майдон билан ажратинг
 
       Масалан - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji muvaffaqiyatli oʻzgartirildi.
     error: There was an error changing emoji!
   round_video:
@@ -606,6 +608,11 @@ scenes:
     error:
       title_long: Ism ${max} belgidan oshmasligi kerak.
       name_long: Manzil ${max} belgidan oshmasligi kerak.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Ushbu manzilni ishlatib bo'lmaydi.
         name_occupied: Ushbu manzil band.
@@ -721,6 +728,7 @@ scenes:
 
       ${title} endi kuchaytirildi
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Bu o'ram uchun kuchaytirish yetarli Kreditlarga ega emassiz.
 
@@ -808,6 +816,8 @@ scenes:
     error:
       - <b>Xato!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Xato!</b>
       Siz faqat video paketlarga ramkalar qo'shishingiz mumkin.
@@ -871,15 +881,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Paket topilmadi
   leave: |
     Harakat bekor qilindi.
   btn:
     cancel: '❌ Bekor qilish'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram xatolikni qaytardi!</b>
     <code>${error}</code>
