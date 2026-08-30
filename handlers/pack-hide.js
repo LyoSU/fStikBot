@@ -49,20 +49,36 @@ module.exports = async (ctx) => {
   }
   await ctx.answerCbQuery(answerCbQuer)
 
-  const inlineKeyboard = []
+  const hideData = `hide_pack:${ctx.match[2]}`
+  const deleteData = `delete_pack:${ctx.match[2]}`
+  const hideText = ctx.i18n.t(updatedSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide')
+
+  const existingRows = ctx.callbackQuery?.message?.reply_markup?.inline_keyboard
+
+  let inlineKeyboard = []
+
+  if (Array.isArray(existingRows) && existingRows.length > 0) {
+    // Keep the pack menu as it is and only swap the hide/restore button. The
+    // old code rebuilt the keyboard from scratch, so one tap on "Hide" reduced
+    // the whole pack menu (use pack / boost / rename / frame / catalog / …) to
+    // one or two buttons.
+    inlineKeyboard = existingRows
+      .map((row) => row
+        .filter((btn) => btn.callback_data !== deleteData)
+        .map((btn) => (btn.callback_data === hideData ? { ...btn, text: hideText } : btn)))
+      .filter((row) => row.length > 0)
+  } else {
+    inlineKeyboard.push([Markup.callbackButton(hideText, hideData)])
+  }
 
   if (updatedSet.hide === true) {
-    inlineKeyboard.push([
-      { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.delete'), `delete_pack:${ctx.match[2]}`), style: 'danger' }
+    inlineKeyboard.unshift([
+      { ...Markup.callbackButton(ctx.i18n.t('callback.pack.btn.delete'), deleteData), style: 'danger' }
     ])
   }
 
-  inlineKeyboard.push([
-    Markup.callbackButton(ctx.i18n.t(updatedSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'), `hide_pack:${ctx.match[2]}`)
-  ])
-
   try {
-    await ctx.editMessageReplyMarkup(Markup.inlineKeyboard(inlineKeyboard))
+    await ctx.editMessageReplyMarkup({ inline_keyboard: inlineKeyboard })
   } catch (err) {
     // Updating reply markup is best-effort UI sync. The DB state is already
     // committed and the user got a toast, so silent log is fine here.

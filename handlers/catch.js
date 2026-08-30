@@ -52,7 +52,7 @@ async function errorLog (error, ctx) {
   }
 
   let errorText = `<b>error for ${ctx.updateType}:</b>`
-  if (ctx.match) errorText += `\n<code>${ctx.match[0]}</code>`
+  if (ctx.match) errorText += `\n<code>${escapeHTML(ctx.match[0])}</code>`
   if (ctx.from && ctx.from.id) errorText += `\n\nuser: <a href="tg://user?id=${ctx.from.id}">${escapeHTML(ctx.from.first_name)}</a> #user_${ctx.from.id}`
   if (ctx?.session?.chainActions && ctx?.session.chainActions.length > 0) errorText += '\n\n🔗 ' + ctx?.session.chainActions.map(v => `<code>${v}</code>`).join(' ➜ ')
 

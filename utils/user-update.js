@@ -5,9 +5,17 @@ module.exports = async (ctx) => {
   // inline queries hit it hard, regular message/callback flows never do.
   // Saves one findById per regular update (~3ms steady, ~30-100ms under
   // pool pressure) for the ~95% of updates that aren't inline queries.
-  let query = ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate('stickerSet')
+  // Same projection User.getData uses — without a select this pulled the full
+  // StickerSet document into the session on every single update.
+  let query = ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate({
+    path: 'stickerSet',
+    select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate'
+  })
   if (ctx.inlineQuery) {
-    query = query.populate('inlineStickerSet')
+    query = query.populate({
+      path: 'inlineStickerSet',
+      select: '_id name title inline'
+    })
   }
 
   let user = await query
@@ -41,10 +49,13 @@ module.exports = async (ctx) => {
     )
   }
 
-  if (ctx?.update?.my_chat_member?.new_chat_member?.status === 'kicked') {
-    user.blocked = true
-  } else {
-    user.blocked = false
+  // my_chat_member fires for groups too, and there ctx.from is the person who
+  // removed the bot — flagging them as blocked dropped a real user out of every
+  // broadcast. Only a private chat means "this user blocked the bot".
+  const myChatMember = ctx?.update?.my_chat_member
+
+  if (!myChatMember || myChatMember.chat?.type === 'private') {
+    user.blocked = myChatMember?.new_chat_member?.status === 'kicked'
   }
 
   user.first_name = firstName

@@ -1,5 +1,5 @@
 const Markup = require('telegraf/markup')
-const { userName } = require('../utils')
+const { escapeHTML, userName } = require('../utils')
 const { sendBanner } = require('../banners')
 
 module.exports = async (ctx) => {
@@ -9,7 +9,9 @@ module.exports = async (ctx) => {
 
   if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
     return ctx.replyWithHTML(ctx.i18n.t('cmd.start.group', {
-      groupTitle: ctx.chat.title
+      // A group called "Tom & Jerry" broke entity parsing and the bot stayed
+      // silent after being added.
+      groupTitle: escapeHTML(ctx.chat.title)
     }), {
       reply_markup: Markup.inlineKeyboard([
         [
@@ -19,9 +21,12 @@ module.exports = async (ctx) => {
     })
   }
 
-  const countStickerSets = await ctx.db.StickerSet.countDocuments({
-    owner: ctx.session.userInfo.id
-  })
+  // Only "has at least one pack" matters here — limit 1 lets Mongo stop at the
+  // first match instead of counting every pack the user ever made.
+  const countStickerSets = await ctx.db.StickerSet.countDocuments(
+    { owner: ctx.session.userInfo.id },
+    { limit: 1 }
+  )
 
   const isNewUser = countStickerSets <= 0
 

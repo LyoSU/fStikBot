@@ -8,13 +8,18 @@ module.exports = async (ctx, next) => {
     return next()
   }
 
+  // /pack is a group command. In private it used to delete the user's message
+  // and reply nothing at all.
+  if (ctx.chat.type !== 'group' && ctx.chat.type !== 'supergroup') {
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.packs.select_group_pack_info'), {
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
   await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
 
   const { userInfo } = ctx.session
-
-  if (ctx.chat.type !== 'group' && ctx.chat.type !== 'supergroup') {
-    return
-  }
 
   if (!ctx.message.from || !ctx.message.from.id) {
     return

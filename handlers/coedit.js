@@ -26,8 +26,11 @@ composer.action(/coedit:reset:(.*)/, async (ctx) => {
 
   await stickerSet.save()
 
+  // Reset revokes the co-editors' access. Without the _id guard it also
+  // unselected the pack for the owner, whose next photo went nowhere.
   await ctx.db.User.updateMany({
-    stickerSet: stickerSet._id
+    stickerSet: stickerSet._id,
+    _id: { $ne: stickerSet.owner }
   }, {
     stickerSet: null
   })
@@ -77,9 +80,11 @@ composer.action(/coedit:(.*)/, async (ctx) => {
         [{
           text: ctx.i18n.t('coedit.btn.send'),
           url: `https://t.me/share/url?url=t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}&text=${
+            // The share text is a URL parameter, not HTML — escapeHTML here
+            // put literal &amp; into the message Telegram pre-fills.
             encodeURIComponent(
               ctx.i18n.t('coedit.share', {
-                title: escapeHTML(stickerSet.title)
+                title: stickerSet.title
               })
             )
           }`
