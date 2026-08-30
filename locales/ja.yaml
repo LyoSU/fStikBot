@@ -228,6 +228,8 @@ cmd:
       現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> の後にスペースを空けて絵文字を送信してください。
 
       例 - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: 絵文字が正常に変更されました。
     error: 絵文字の変更中にエラーが発生しました！
   round_video:
@@ -606,6 +608,11 @@ scenes:
     error:
       title_long: 名前は${max}文字を超えることはできません。
       name_long: アドレスは${max}文字を超えることはできません。
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: そのアドレスは使用できません。
         name_occupied: このアドレスはすでに使用されています。
@@ -721,6 +728,7 @@ scenes:
 
       ${title} がブーストされました
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         このパックをブーストするためのクレジットが不足しています。
 
@@ -810,6 +818,8 @@ scenes:
     error:
       - <b>エラー!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>エラー!</b>
       ビデオパックにのみフレームを追加できます。
@@ -875,15 +885,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: パックが見つかりません
   leave: |
     アクションがキャンセルされました。
   btn:
     cancel: '❌ キャンセル'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegramでエラーが発生しました！</b>
     <code>${error}</code>
