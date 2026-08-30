@@ -228,6 +228,8 @@ cmd:
       لتغيير الرموز التعبيرية الافتراضية للحزمة الحالية، أرسل <code>/emoji</code> متبوعة بالرموز التعبيرية مفصولة بمسافة
 
       على سبيل المثال - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: تم تغيير الإيموجي بنجاح.
     error: حدث خطأ أثناء تغيير الإيموجي!
   round_video:
@@ -625,6 +627,11 @@ scenes:
     error:
       title_long: لا يمكن أن يتجاوز الاسم ${max} رمزًا.
       name_long: لا يمكن أن يتجاوز العنوان ${max} رمزًا.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: لا يمكن استخدام هذا العنوان.
         name_occupied: تم استخدام هذا العنوان بالفعل.
@@ -740,6 +747,7 @@ scenes:
 
       ${title} تم تعزيزه الآن
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         ليس لديك نقاط كافية لتعزيز هذه الحزمة.
 
@@ -827,6 +835,8 @@ scenes:
     error:
       - <b>خطأ!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>خطأ!</b>
       يمكنك فقط إضافة إطارات إلى حزم الفيديو.
@@ -892,15 +902,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: الحزمة غير موجودة
   leave: |
     تم إلغاء العملية.
   btn:
     cancel: '❌ إلغاء'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>أعاد تيليجرام خطأ!</b>
     <code>${error}</code>
