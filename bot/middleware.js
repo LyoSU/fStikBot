@@ -5,6 +5,7 @@ const rateLimit = require('telegraf-ratelimit')
 
 const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
 const { touchLastSeen } = require('../utils/last-seen')
+const { wrapAnswerCbQuery } = require('../utils/callback-text')
 const handleError = require('../handlers/catch')
 const log = require('../utils/logger').scope('middleware')
 
@@ -52,6 +53,14 @@ module.exports = (bot, {
   //   - Errors don't reach bot.catch. We route them through handleError
   //     manually so the log channel still gets git blame + stack +
   //     chainActions.
+  // answerCbQuery text is capped at 200 chars by Telegram and rendered as
+  // plain text; our i18n strings are HTML written for replyWithHTML and a
+  // dozen locales exceed the cap. Clamp centrally (utils/callback-text.js).
+  bot.use((ctx, next) => {
+    wrapAnswerCbQuery(ctx)
+    return next()
+  })
+
   if (POLLING_DETACH) {
     bot.use((ctx, next) => {
       next().catch((err) => handleError(err, ctx).catch((e) => {

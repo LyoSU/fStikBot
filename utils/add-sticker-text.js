@@ -2,7 +2,7 @@ const path = require('path')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const escapeHTML = require('./html-escape')
-const { truncateDescription } = require('./telegram-error')
+const { truncateDescription, matchTelegramErrorReason, extractRetryAfterSeconds } = require('./telegram-error')
 
 // add-sticker-text feeds telegram.sendMessage (4096-char hard limit).
 // Truncate raw API descriptions well below that so a Telegram dump can't
@@ -77,7 +77,14 @@ module.exports = (addStickerResult, lang) => {
       messageText = i18n.t(lang, addStickerResult.error.i18nKey)
     } else if (addStickerResult.error.telegram) {
       const errDescription = addStickerResult.error.telegram.description || addStickerResult.error.telegram.message || ''
-      if (!errDescription) {
+      if (matchTelegramErrorReason(addStickerResult.error.telegram) === 'rate_limited') {
+        // addStickerToSet 429 with retry_after > maxWait fails fast; the user
+        // used to read the raw "Too Many Requests: retry after 10".
+        const seconds = extractRetryAfterSeconds(addStickerResult.error.telegram)
+        messageText = seconds
+          ? i18n.t(lang, 'error.rate_limit_seconds', { seconds })
+          : i18n.t(lang, 'error.telegram_reasons.rate_limited')
+      } else if (!errDescription) {
         messageText = i18n.t(lang, 'error.unknown')
       } else {
         const hit = TELEGRAM_ERROR_MAP.find(([needle]) => errDescription.includes(needle))

@@ -34,7 +34,17 @@ module.exports = async (ctx, next) => {
 
   if (ctx.session.previousSticker) {
     sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id)
-  } else if (ctx.session.userInfo.stickerSet) {
+
+    // The delete button doesn't touch session.previousSticker, so after
+    // "add → delete → send emoji" we used to hit Telegram with a dead file_id
+    // (STICKER_ALREADY_DELETED). Fall through to the last sticker in the set.
+    if (sticker?.deleted) {
+      sticker = null
+      ctx.session.previousSticker = null
+    }
+  }
+
+  if (!sticker && ctx.session.userInfo.stickerSet) {
     const stickerSetInfo = await ctx.tg.getStickerSet(ctx.session.userInfo.stickerSet.name).catch(() => null) // STICKERSET_INVALID / deleted pack → caller handles null below
 
     if (!stickerSetInfo || stickerSetInfo.stickers.length < 1) {
@@ -52,7 +62,7 @@ module.exports = async (ctx, next) => {
     if (!sticker) {
       return next()
     }
-  } else {
+  } else if (!sticker) {
     return next()
   }
 
@@ -70,8 +80,19 @@ module.exports = async (ctx, next) => {
   const updateResult = await ctx.tg.callApi('setStickerEmojiList', {
     sticker: sticker.getFileId(),
     emoji_list: emojis
-  }).catch((error) => {
-    console.error('setStickerEmojiList failed:', error?.description || error?.message)
+  }).catch(async (error) => {
+    const description = error?.description || error?.message || ''
+    console.error('setStickerEmojiList failed:', description)
+
+    // Telegram says the sticker is gone (removed via a client / @Stickers)
+    // while our row still says deleted:false — sync so the next attempt
+    // doesn't retarget the same ghost.
+    if (/STICKER_ALREADY_DELETED|STICKER_INVALID/i.test(description)) {
+      sticker.deleted = true
+      sticker.deletedAt = new Date()
+      await sticker.save().catch(() => {})
+      ctx.session.previousSticker = null
+    }
   })
 
   if (updateResult) {

@@ -59,6 +59,17 @@ test('animated_too_big i18n error renders a real message, not the key', () => {
   assert.ok(messageText.length > 10)
 })
 
+test('429 from addStickerToSet renders "wait N seconds", not the raw Telegram dump', () => {
+  const err = new Error('429: Too Many Requests: retry after 10')
+  err.code = 429
+  err.description = 'Too Many Requests: retry after 10'
+  err.parameters = { retry_after: 10 }
+  const { messageText } = addStickerText({ error: { telegram: err } }, 'en')
+  const expected = i18n.t('en', 'error.rate_limit_seconds', { seconds: 10 })
+  assert.strictEqual(messageText, expected)
+  assert.ok(!messageText.includes('Too Many Requests'))
+})
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)
 console.log('add-sticker-text test OK')

@@ -118,7 +118,19 @@ for t in scripts/test-*.js; do node "$t" || break; done
   (`utils/sticker-geometry.js`): longer side exactly 512, other side
   proportional, small sources scaled up instead of padded.
 - `test-add-sticker-text.js` — the success/error text built from an
-  `addSticker` result, incl. the monochrome-emoji notice.
+  `addSticker` result, incl. the monochrome-emoji notice and the humanized
+  429 ("wait N seconds" instead of the raw Telegram dump).
+- `test-sniff-media.js` — magic-byte container detection
+  (`utils/sniff-media.js`): mp4/webm/gif originals that arrive with no
+  mime_type or extension must be routed to the video converter, not sharp.
+- `test-callback-text.js` — the 200-char / no-HTML clamp every
+  `ctx.answerCbQuery` text goes through (`utils/callback-text.js`).
+- `test-catch-noise.js` — which Telegram errors stay out of the admin log
+  channel (`utils/expected-noise.js`): demoted/kicked bot, blocked user,
+  expired callback query.
+- `test-sticker-update.js` — emoji change by text against a fake ctx: a
+  deleted `previousSticker` falls through to the last sticker in the set;
+  `STICKER_ALREADY_DELETED` syncs the DB row.
 - `test-placeholder.js` — bootstrap-placeholder removal.
 - `test-retry-api.js` — 429 retry / cooldown policy.
 - `test-perf-timing.js` — perf-stage instrumentation.

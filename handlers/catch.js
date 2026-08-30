@@ -5,6 +5,7 @@ const execFile = util.promisify(require('child_process').execFile)
 const errorStackParser = require('error-stack-parser')
 const { escapeHTML, isRateLimitError, getRetryAfter } = require('../utils')
 const log = require('../utils/logger').scope('error-handler')
+const { isExpectedNoise } = require('../utils/expected-noise')
 
 // Probe once at module load: is .git available at project root?
 // Skip git blame entirely in environments without .git (e.g. Docker deploys)
@@ -81,34 +82,6 @@ async function errorLog (error, ctx) {
   if (ctx?.chat?.type === 'private') {
     await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
   }
-}
-
-// Errors that aren't actionable — we expect them in normal operation
-// and logging each one just drowns out real signals.
-function isExpectedNoise (error) {
-  if (!error) return false
-
-  // retry-api short-circuited a send to a blocked user — already handled
-  if (error.__cachedBlock) return true
-
-  // retry-api short-circuited a 429 cooldown — already logged once when
-  // Telegram first told us retry_after > maxWait, every subsequent call
-  // in the same window is the same story.
-  if (error.__cachedRateLimit) return true
-
-  const method = error?.on?.method
-  const description = error?.description || ''
-
-  // answerCallbackQuery expiry: callback_query_id has a ~5–10 min TTL
-  // at Telegram. Handlers with handlerTimeout=60s rarely overrun this
-  // directly, but a handler that sleeps on a 429 retry + does slow I/O
-  // can. When it eventually answers, Telegram replies 400 "query is
-  // too old". Not actionable — user already saw the button press.
-  if (method === 'answerCallbackQuery' && /query is too old|query ID is invalid/i.test(description)) {
-    return true
-  }
-
-  return false
 }
 
 module.exports = async (error, ctx) => {

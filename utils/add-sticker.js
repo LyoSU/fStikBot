@@ -12,6 +12,7 @@ const { removePlaceholderIfPending } = require('./placeholder')
 const escapeHTML = require('./html-escape')
 const { rescaleTgs } = require('./lottie-rescale')
 const { fitStickerSize } = require('./sticker-geometry')
+const { isVideoContainer } = require('./sniff-media')
 
 // Telegram pins the Lottie canvas per pack type. A TGS taken from a pack of
 // the other type has to be retargeted or Telegram rejects it.
@@ -476,7 +477,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
 
   // Unified video detection - check all possible sources
   const stickerType = stickerFile.stickerType
-  const isVideo =
+  let isVideo =
     stickerFile.is_video ||
     stickerType === 'video' ||
     stickerType === 'video_note' ||
@@ -650,6 +651,29 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     fileData = await sharp(Buffer.from(raceResult.content, 'base64'))
       .trim()
       .toBuffer()
+  }
+
+  // A file that comes through a stored original (restore / copy) has no
+  // mime_type, duration or is_video, and legacy file_paths carry no extension
+  // — so an mp4 original used to reach the static branch and die in
+  // sharp.metadata as "invalid image". When nothing above identified the
+  // type, look at the bytes; the static branch reuses the download.
+  const urlHasImageExt = /\.(webp|png|jpe?g)$/i.test(urlPathname)
+  if (!isVideo && !isVideoNote && !fileData && !inputFile.mime_type &&
+      stickerExtra.sticker_format === 'static' && !urlHasImageExt) {
+    try {
+      fileData = await downloadFileByUrl(fileUrl)
+    } catch (err) {
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
+    }
+
+    if (isVideoContainer(fileData)) {
+      isVideo = true
+      stickerExtra.sticker_format = 'video'
+      // The converter downloads by fileUrl itself; don't ship megabytes of
+      // base64 through Redis.
+      fileData = null
+    }
   }
 
   // Determine if video processing is needed
