@@ -228,6 +228,8 @@ cmd:
       Cari paket üçün default emojini dəyişdirmək üçün, <code>/emoji</code> yazın və sonra emojiyi bir boşluqla ayıraraq göndərin
 
       Məsələn - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji uğurla dəyişdirildi.
     error: Emoji dəyişdirilməsi zamanı xəta baş verdi!
   round_video:
@@ -626,6 +628,11 @@ scenes:
     error:
       title_long: Ad ${max} simvoldan çox olmamalıdır
       name_long: Ünvan ${max} simvoldan çox olmamalıdır.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Bu ünvan istifadə edilə bilməz.
         name_occupied: Bu ünvan artıq alınmışdır.
@@ -741,6 +748,7 @@ scenes:
 
       ${title} indi gücləndirilib
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Bu paketi yüksəltmək üçün kifayət qədər Kreditiniz yoxdur.
 
@@ -828,6 +836,8 @@ scenes:
     error:
       - <b>Xəta!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Xəta!</b>
       Siz yalnız video paketlərə çərçivələr əlavə edə bilərsiniz.
@@ -893,15 +903,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Paket tapılmadı
   leave: |
     Fəaliyyət uğurla ləğv edildi.
   btn:
     cancel: '❌ Ləğv et'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram xəta!</b>
     <code>${error}</code>
