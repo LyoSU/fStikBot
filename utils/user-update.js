@@ -9,7 +9,10 @@ module.exports = async (ctx) => {
   // StickerSet document into the session on every single update.
   let query = ctx.db.User.findOne({ telegram_id: ctx.from.id }).populate({
     path: 'stickerSet',
-    select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate'
+    // placeholderFileUniqueId must survive this projection: uploadSticker's
+    // placeholder cleanup reads it off the session doc, and without it the
+    // guard sees "no placeholder" and silently skips the removal.
+    select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate placeholderFileUniqueId'
   })
   if (ctx.inlineQuery) {
     query = query.populate({

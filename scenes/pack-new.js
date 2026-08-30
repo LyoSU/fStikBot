@@ -15,6 +15,7 @@ const {
 } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { runInCopyScope } = require('../utils/retry-api')
+const { removePlaceholderIfPending } = require('../utils/placeholder')
 const log = require('../utils/logger').scope('pack-new')
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -61,6 +62,9 @@ const resolvePlaceholderUniqueId = async (ctx, name) => {
     if (uniqueId) return uniqueId
     await delay(500)
   }
+  // Without the marker nothing will ever auto-remove this placeholder — make
+  // the failure visible instead of silently orphaning it.
+  log.error(`placeholder unique id unresolved for ${name}; placeholder will not be auto-removed`)
   return null
 }
 
@@ -773,17 +777,13 @@ newPackConfirm.enter(async (ctx, next) => {
         }))
       } else if (userStickerSet.placeholderFileUniqueId) {
         // Real stickers were copied but the in-loop removal didn't stick.
-        // Retry here, matching by unique id so a real sticker is never deleted.
+        // Retry via the shared helper: it clears the marker only once the
+        // placeholder is truly gone, so a failed delete here stays retryable
+        // on the next sticker add. (The old hand-rolled version dropped the
+        // marker even when deleteStickerFromSet failed — losing the marker
+        // forever and with it any chance of self-healing.)
         const set = await ctx.telegram.getStickerSet(name).catch(() => null)
-        const placeholder = set?.stickers?.find(s => s.file_unique_id === userStickerSet.placeholderFileUniqueId)
-        if (placeholder && set.stickers.length > 1) {
-          await ctx.telegram.deleteStickerFromSet(placeholder.file_id).catch(error => {
-            log.error('failed to delete placeholder sticker:', error)
-          })
-          // Drop the marker so it doesn't linger in the DB (→ $unset on save).
-          userStickerSet.placeholderFileUniqueId = undefined
-          await userStickerSet.save().catch(() => {})
-        }
+        await removePlaceholderIfPending(ctx.telegram, userStickerSet, set)
       }
     }
 

@@ -5,6 +5,7 @@ const { getGridSuggestions } = require('../utils/mosaic-grid')
 const { generatePreview } = require('../utils/mosaic-preview')
 const { splitImage, checkMinCellSize } = require('../utils/mosaic-split')
 const { getRateLimitRemaining } = require('../utils/retry-api')
+const { removePlaceholderIfPending } = require('../utils/placeholder')
 const escapeHTML = require('../utils/html-escape')
 const https = require('https')
 const sharp = require('sharp')
@@ -362,6 +363,12 @@ const processMosaic = async (ctx, rows, cols) => {
         stickerType: 'custom_emoji'
       })
     }))
+
+    // A brand-new pack still holds its bootstrap placeholder — the mosaic
+    // cells are real content now, so drop it (the raw addStickerToSet calls
+    // above bypass uploadSticker's cleanup). setInfo predates any deletion,
+    // so the slice(-total) above is unaffected.
+    await removePlaceholderIfPending(ctx.telegram, stickerSet, setInfo)
 
     // Delete progress message
     await ctx.telegram.deleteMessage(ctx.chat.id, progressMsg.message_id).catch(() => {})

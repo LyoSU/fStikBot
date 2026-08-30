@@ -8,7 +8,7 @@ const { safeEditMessage } = require('../utils/safe-edit')
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
-  }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner')
+  }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner placeholderFileUniqueId')
 
   if (!sticker || !sticker.stickerSet) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)

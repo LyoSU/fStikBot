@@ -39,7 +39,10 @@ db.User.getData = async (tgUser) => {
       // publishDate/public are read by handlers/sticker.js to decide whether to
       // offer "add to catalog"; without them the check saw undefined and offered
       // it for packs that were already published.
-      select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate'
+      // placeholderFileUniqueId must survive this projection: uploadSticker's
+      // placeholder cleanup reads it off the session doc, and without it the
+      // guard sees "no placeholder" and silently skips the removal.
+      select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate placeholderFileUniqueId'
     })
     .populate({
       path: 'inlineStickerSet',

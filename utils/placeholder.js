@@ -28,12 +28,39 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 // caught by the self-healing retry on the next add.
 const MAX_ATTEMPTS = 3
 const MAX_WAIT_MS = 30 * 1000
+const TRANSIENT_RETRY_MS = 1000
 
 // Telegram surfaces the cooldown as parameters.retry_after (seconds).
 const getRetryAfter = (error) =>
   error?.parameters?.retry_after ||
   error?.response?.parameters?.retry_after ||
   null
+
+// Besides a 429 cooldown, a quick in-call retry is worth it for what's plainly
+// transient: a Telegram 5xx, or a bare network failure (no Telegram description
+// at all — e.g. a socket error). A 400 is deterministic; retrying can't help.
+const isTransientError = (error) => {
+  const code = error?.code ?? error?.response?.error_code
+  if (typeof code === 'number' && code >= 500) return true
+  return !(error?.description || error?.response?.description)
+}
+
+// A doc hydrated through a projection that omits placeholderFileUniqueId is
+// indistinguishable from one whose placeholder is already removed — exactly
+// that confusion once disabled cleanup on the whole session-doc add path
+// (user-update.js selects a fixed field list). When the field wasn't selected,
+// re-read just the marker through the doc's own model, so this module still
+// needs no direct DB import. Full docs and plain test objects pass through.
+const withMarkerLoaded = async (stickerSet) => {
+  if (typeof stickerSet.isSelected !== 'function') return stickerSet
+  if (stickerSet.isSelected('placeholderFileUniqueId')) return stickerSet
+  if (typeof stickerSet.constructor?.findById !== 'function') return stickerSet
+  const fresh = await stickerSet.constructor
+    .findById(stickerSet._id)
+    .select('placeholderFileUniqueId')
+    .catch(() => null)
+  return fresh || stickerSet
+}
 
 // Remove the placeholder now that a real sticker exists in the set.
 //
@@ -51,6 +78,7 @@ const getRetryAfter = (error) =>
 // Returns true when the marker was resolved (deleted or confirmed absent),
 // false when it should be retried later.
 async function removePlaceholderIfPending (telegram, stickerSet, currentSet) {
+  stickerSet = await withMarkerLoaded(stickerSet)
   if (!stickerSet.placeholderFileUniqueId) return true
   // Wait until a real sticker exists so removal never leaves the pack empty.
   if (!currentSet || !currentSet.stickers || currentSet.stickers.length < 2) return false
@@ -74,13 +102,13 @@ async function removePlaceholderIfPending (telegram, stickerSet, currentSet) {
       return true
     } catch (error) {
       const retryAfter = getRetryAfter(error)
-      const canRetry = attempt < MAX_ATTEMPTS && retryAfter
+      const canRetry = attempt < MAX_ATTEMPTS && (retryAfter || isTransientError(error))
       if (!canRetry) {
         // Keep the marker so the next added sticker retries the removal.
         console.error('[placeholder] cleanup failed, will retry on next add:', error?.description || error?.message || error)
         return false
       }
-      await delay(Math.min(retryAfter * 1000, MAX_WAIT_MS))
+      await delay(retryAfter ? Math.min(retryAfter * 1000, MAX_WAIT_MS) : TRANSIENT_RETRY_MS)
     }
   }
 
