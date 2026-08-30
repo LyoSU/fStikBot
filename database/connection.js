@@ -38,6 +38,12 @@ connection.on('reconnected', () => {
 const atlasUri = process.env.ATLAS_MONGODB_URI || process.env.MONGODB_URI
 const atlasConnection = mongoose.createConnection(atlasUri, {
   ...(isSrvUri(atlasUri) ? {} : { directConnection: true }),
+  // Same as the main connection: every model is registered on this connection
+  // at boot, so without this Mongoose fires createIndex for every schema on
+  // every restart. And since ATLAS_MONGODB_URI falls back to MONGODB_URI, that
+  // ran against the production cluster. Index management is an ops task, not a
+  // boot-time side effect.
+  autoIndex: false,
   maxPoolSize: 5,
   minPoolSize: 1,
   serverSelectionTimeoutMS: 5000,

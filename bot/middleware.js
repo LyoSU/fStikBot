@@ -37,14 +37,18 @@ module.exports = (bot, {
   //
   // This preserves throughput under rare bursts where any middleware
   // gets slow. Trade-offs we consciously accept:
-  //   - Telegraf's handlerTimeout (60s) cannot interrupt detached work.
+  //   - Telegraf's handlerTimeout (60s) only bounds how long the polling
+  //     batch is awaited; it never interrupts a handler, detached or not.
   //     We don't rely on it — all slow paths are already fire-and-forget
   //     via Bull queues (convert/removebg) or the sticker-handler IIFE.
+  //   - getUpdates advances the offset before the handler finishes, so a
+  //     crash/restart mid-batch loses those updates. Conscious trade-off.
   //   - Two rapid updates from the same user run concurrently, so a
-  //     session SET race is theoretically possible. Session is Redis-
-  //     backed and small; dirty-check cuts writes; last writer wins for
-  //     the rare race. Scene state advances one step at a time via user
-  //     actions spaced >>100ms apart — not observed in practice.
+  //     session SET race is theoretically possible. The session store is
+  //     IN-MEMORY (bot/session-store.js — it is NOT Redis-backed, and it
+  //     does not survive a restart); dirty-check cuts writes; last writer
+  //     wins for the rare race. Scene state advances one step at a time via
+  //     user actions spaced >>100ms apart — not observed in practice.
   //   - Errors don't reach bot.catch. We route them through handleError
   //     manually so the log channel still gets git blame + stack +
   //     chainActions.
@@ -107,10 +111,10 @@ module.exports = (bot, {
     if (ctx.callbackQuery) ctx.state.answerCbQuery = []
 
     return next(ctx).then(() => {
-      // Auto-answer the callback. Silently swallow failures: with
-      // handlerTimeout=60s, a long-running handler can outlive Telegram's
-      // ~5-10 min callback_query_id TTL. Propagating that would spam the
-      // global error handler with "query is too old" noise.
+      // Auto-answer the callback. Silently swallow failures: a long-running
+      // handler can outlive Telegram's ~5-10 min callback_query_id TTL.
+      // Propagating that would spam the global error handler with
+      // "query is too old" noise.
       if (ctx.callbackQuery) {
         return ctx.answerCbQuery(...ctx.state.answerCbQuery).catch(() => {})
       }
@@ -149,6 +153,15 @@ module.exports = (bot, {
   // Banned user guard — runs after updateUser so the flag is fresh.
   bot.use((ctx, next) => {
     if (ctx?.session?.userInfo?.banned) {
+      // An inline_query has no chat to reply into: replyWithHTML threw on
+      // every request from a banned user and filled the log channel. Telegram
+      // wants answerInlineQuery here.
+      if (ctx.inlineQuery) {
+        return ctx.answerInlineQuery([], {
+          is_personal: true,
+          cache_time: 300
+        }).catch(() => {})
+      }
       return ctx.replyWithHTML(ctx.i18n.t('error.banned'))
     }
     return next()

@@ -31,14 +31,13 @@ const log = require('./utils/logger').scope('bot')
 
 global.startDate = new Date()
 
-// Was 1000ms — aborted any handler that touched Bull or a slow Telegram call.
-// 60s is generous but bounded; PM2 will kill the process on true hangs.
-const HANDLER_TIMEOUT_MS = 60_000
 const MONITOR_INTERVAL_MS = 25 * 1000
 
+// NOTE: telegraf 3.40 has no `handlerTimeout` option at all (it was added in
+// v4) — the one that used to be passed here was silently ignored. Polling
+// throughput is handled by the POLLING_DETACH middleware in bot/middleware.js.
 const bot = new Telegraf(process.env.BOT_TOKEN, {
-  telegram: { webhookReply: false },
-  handlerTimeout: HANDLER_TIMEOUT_MS
+  telegram: { webhookReply: false }
 })
 
 bot.catch(handlers.handleError)
@@ -95,14 +94,60 @@ registerCommands(bot, privateMessage, {
   process.exit(1)
 })
 
-// Graceful shutdown — PM2 sends SIGTERM before killing
-const gracefulShutdown = (signal) => {
+// Graceful shutdown — PM2 sends SIGTERM before killing.
+//
+// bot.stop() and the broadcast worker's drain are both async; the old version
+// called process.exit(0) on the very next line, so in-flight updates were cut
+// and the broadcast worker never got to release its lock or checkpoint. With
+// cron_restart every 6h that happened four times a day.
+//
+// The worker registers its own SIGTERM/SIGINT listeners too; its stop() returns
+// the same shared promise on every call, so awaiting it here really does wait
+// for the drain no matter which listener ran first. This is the only path that
+// calls process.exit.
+//
+// Two telegraf-3 specifics:
+//   - bot.stop(cb) takes a CALLBACK, not a signal name — passing the string
+//     made `cb()` throw inside telegraf and short-circuited the drain.
+//   - In polling mode stop() only resolves once the in-flight getUpdates
+//     long-poll returns (up to its 30s timeout), so it runs in PARALLEL with
+//     the broadcast drain rather than in front of it — otherwise the worker
+//     never got its turn inside the shutdown window.
+// PM2 must give us that window: ecosystem.config.js sets kill_timeout above
+// SHUTDOWN_TIMEOUT_MS (PM2's default is 1.6s, which would SIGKILL us first).
+const SHUTDOWN_TIMEOUT_MS = 15_000
+let shuttingDown = false
+
+const gracefulShutdown = async (signal) => {
+  if (shuttingDown) return
+  shuttingDown = true
+
   log.info(`${signal} received, shutting down gracefully…`)
-  bot.stop(signal)
+
+  const drain = Promise.allSettled([
+    bot.stop(),
+    require('./broadcast').stopWorker()
+  ]).then((results) => {
+    for (const r of results) {
+      if (r.status === 'rejected') log.error('shutdown error:', r.reason?.stack || r.reason)
+    }
+  })
+
+  const timeout = new Promise((resolve) => {
+    const t = setTimeout(() => {
+      log.warn(`shutdown timed out after ${SHUTDOWN_TIMEOUT_MS}ms, exiting anyway`)
+      resolve()
+    }, SHUTDOWN_TIMEOUT_MS)
+    if (t.unref) t.unref()
+  })
+
+  await Promise.race([drain.catch((err) => log.error('shutdown error:', err?.stack || err)), timeout])
+
   process.exit(0)
 }
-process.on('SIGTERM', gracefulShutdown)
-process.on('SIGINT', gracefulShutdown)
+
+process.on('SIGTERM', (signal) => { gracefulShutdown(signal || 'SIGTERM') })
+process.on('SIGINT', (signal) => { gracefulShutdown(signal || 'SIGINT') })
 
 // Postmortem logging for crashes. We don't suppress the default Node
 // behavior (it exits the process), we just make sure the cause is in

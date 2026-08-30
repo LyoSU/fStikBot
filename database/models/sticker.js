@@ -97,7 +97,14 @@ stickersSchema.methods.getOriginalStickerType = function () {
 // INDEXES
 // ===================
 
-// Text index for search (supports both old and new caption fields)
+// Text index for search (supports both old and new caption fields).
+//
+// UNUSED as of this writing: there is no $text query anywhere in the codebase
+// (inline search uses $regex on caption/emojis). On a collection this size the
+// index is expensive to keep. Left in place deliberately — dropping it is an
+// ops decision, to be made against `db.stickers.getIndexes()`, not a code
+// change. autoIndex is off on both connections, so this declaration no longer
+// triggers a createIndex at boot.
 stickersSchema.index({ caption: 'text', 'info.caption': 'text' })
 
 // Compound index for inline queries (stickerSet + deleted)
