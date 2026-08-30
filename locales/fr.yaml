@@ -147,7 +147,7 @@ cmd:
       • Add multiple stickers at once
 
       <b>Hidden feature:</b>
-      /new fill — create adaptive emoji (changes color with text).
+      <b>Adaptive emoji</b> — a separate button in /new (changes color with text).
 
       Get boost → /donate
     problems: |
@@ -473,6 +473,8 @@ sticker:
     ok_inline: |
       <b>Ajouté au pack avec succès :</b>
       <u>${title}</u>
+    ok_repainting_notice: |
+      ⚠️ This is a monochrome emoji: in a regular sticker pack it stays white and is barely visible on a light background.
     send_emoji: Super, maintenant envoyez l'emoji correspondant à l'autocollant
     converting_process: |
       <b>Attendez...</b>
@@ -525,6 +527,9 @@ sticker:
       invalid_animated: |
         <b>Erreur !</b>
         Le fichier d'autocollant animé n'est pas au format TGS correct.
+      animated_too_big: |
+        <b>Error!</b>
+        After fitting the pack canvas this animated sticker exceeds Telegram's 64 KB limit and cannot be transferred.
       invalid_video: |
         <b>Erreur !</b>
         Le fichier vidéo n'est pas au format WEBM correct.
@@ -605,6 +610,7 @@ scenes:
       <b><u>Choisissez le type de pack</u></b>
     regular: '😊 Autocollant'
     custom_emoji: '🌟 Emoji (premium)'
+    custom_emoji_adaptive: '🎨 Adaptive emoji'
     pack_title: |
       <b>Entrez le nouveau nom du pack d'autocollants:</b>
       <i>Vous pouvez choisir un nom aléatoire sur le bouton.</i>
