@@ -228,6 +228,8 @@ cmd:
       Um das Standard-Emoji für das aktuelle Pack zu ändern, sende <code>/emoji</code> gefolgt von dem Emoji, getrennt durch ein Leerzeichen
 
       Zum Beispiel - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji erfolgreich geändert.
     error: Beim Ändern von Emoji ist ein Fehler aufgetreten!
   round_video:
@@ -628,6 +630,11 @@ scenes:
     error:
       title_long: Name kann nicht mehr als ${max} Zeichen enthalten.
       name_long: Adresse kann nicht mehr als ${max} Zeichen enthalten.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Diese Adresse kann nicht verwendet werden.
         name_occupied: Diese Adresse ist bereits vergeben.
@@ -743,6 +750,7 @@ scenes:
 
       ${title} ist jetzt geboostet
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Sie haben nicht genug Credits, um dieses Paket zu boosten.
 
@@ -830,6 +838,8 @@ scenes:
     error:
       - <b>Fehler!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Fehler!</b>
       Du kannst nur Frames zu Videopaketen hinzufügen.
@@ -895,15 +905,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Pack nicht gefunden
   leave: |
     Aktion abgebrochen.
   btn:
     cancel: '❌ Abbrechen'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram hat einen Fehler zurückgegeben!</b>
     <code>${error}</code>
