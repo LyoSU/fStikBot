@@ -228,6 +228,8 @@ cmd:
       Pour changer l'émoji par défaut pour le pack actuel, envoyer <code>/emoji</code> suivi par les émojis séparés par un espace
 
       Par exemple - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji modifié avec succès.
     error: Une erreur est survenue lors du changement d'emoji !
   round_video:
@@ -620,6 +622,11 @@ scenes:
     error:
       title_long: Le nom ne peut pas dépasser ${max} symboles.
       name_long: L'adresse ne peut pas dépasser ${max} symboles.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Cette adresse ne peut pas être utilisée.
         name_occupied: Cette adresse est déjà prise.
@@ -735,6 +742,7 @@ scenes:
 
       ${title} est maintenant boosté
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Tu n'as pas assez de Crédits pour booster ce pack.
 
@@ -822,6 +830,8 @@ scenes:
     error:
       - <b>Erreur!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Erreur!</b>
       Vous ne pouvez ajouter que des images aux packs vidéo.
@@ -887,15 +897,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Pack introuvable
   leave: |
     Action annulée.
   btn:
     cancel: '❌ Annuler'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Télégramme a renvoyé une erreur!</b>
     <code>${error}</code>
