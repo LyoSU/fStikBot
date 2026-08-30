@@ -223,6 +223,8 @@ cmd:
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji separated by a space
 
       For example - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji successfully changed.
     error: There was an error changing emoji!
   round_video:
@@ -605,6 +607,11 @@ scenes:
     error:
       title_long: Name cannot be greater than ${max} symbols.
       name_long: Address cannot be greater than ${max} symbols.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: That address cannot be used.
         name_occupied: This address is already taken.
@@ -717,6 +724,7 @@ scenes:
     success: |
       ⚡ ${title} boosted!
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Not enough credits. /donate
       already_boosted: |
@@ -797,6 +805,8 @@ scenes:
     error:
       - Something went wrong.
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Error!</b>
       You can only add frames to video packs.
@@ -863,15 +873,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Pack not found
   leave: |
     Canceled
   btn:
     cancel: '← Cancel'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     Telegram error: <code>${error}</code>
   telegram_reasons:

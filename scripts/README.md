@@ -92,6 +92,28 @@ maintenance.
 
 Legacy one-offs for repairing corrupted records. Kept for reference.
 
+## `test-*.js`
+
+Dependency-free unit/smoke tests. No DB, no Redis, no Telegram connection —
+run them all with:
+
+```bash
+for t in scripts/test-*.js; do node "$t" || break; done
+```
+
+- `test-callback-routing.js` — the `action(...)` / `hears(...)` regexes in
+  `bot/commands.js` and the scene exit-command list. Guards against the
+  unanchored-regex class of bug (`/publish/` swallowing `catalog:publish:<id>`).
+- `test-i18n-keys.js` — every `i18n.t('literal')` in the source resolves in
+  `en.yaml`. A missing key is not an error at runtime (`allowMissing`); it is
+  shown to the user as the raw key.
+- `test-tenor-mapping.js` — Tenor v2 URL building (key, `client_key=gboard`,
+  `media_filter`) and the `media_formats` → inline-result mapping, against a
+  hardcoded v2 fixture. Also pins that 400/401/403 degrade to `TENOR_DISABLED`.
+- `test-placeholder.js` — bootstrap-placeholder removal.
+- `test-retry-api.js` — 429 retry / cooldown policy.
+- `test-perf-timing.js` — perf-stage instrumentation.
+
 ## A note on schema migration
 
 At 513M Sticker docs (94% in the legacy `info.*` shape) and ~101 GiB of data
