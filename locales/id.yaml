@@ -228,6 +228,8 @@ cmd:
       Untuk mengubah emoji default untuk pack saat ini, kirim <code>/emoji</code> diikuti dengan emoji yang dipisah dengan spasi
 
       Contoh - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji berhasil diubah.
     error: Ada kesalahan saat mengubah emoji!
   round_video:
@@ -627,6 +629,11 @@ scenes:
     error:
       title_long: Nama tidak boleh lebih dari ${max} simbol.
       name_long: Alamat tidak boleh lebih dari ${max} simbol.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Alamat itu tidak dapat digunakan.
         name_occupied: Alamat ini sudah dipakai.
@@ -742,6 +749,7 @@ scenes:
 
       ${title} kini ditingkatkan
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Anda tidak memiliki cukup Kredit untuk meningkatkan paket ini.
 
@@ -829,6 +837,8 @@ scenes:
     error:
       - <b>Kesalahan!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Kesalahan!</b>
       Anda hanya dapat menambahkan bingkai ke paket video.
@@ -893,15 +903,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Paket tidak ada
   leave: |
     Aksi dibatalkan.
   btn:
     cancel: '❌ Batal'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram mengembalikan kesalahan!</b>
     <code>${error}</code>
