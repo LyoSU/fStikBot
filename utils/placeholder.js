@@ -68,7 +68,10 @@ const withMarkerLoaded = async (stickerSet) => {
 //   • matched by the stored file_unique_id, never by index — a real sticker can
 //     never be deleted by mistake;
 //   • only ever attempted when the set has ≥2 stickers — so removing the
-//     placeholder never leaves the pack momentarily empty;
+//     placeholder never leaves the pack momentarily empty. The exception is
+//     options.allowEmpty (used when the user deletes their last real sticker):
+//     a lone placeholder is then removed too — a 0-sticker set is valid
+//     (verified live) and truer than a pack whose only content is a throwaway;
 //   • waits out a 429 cooldown (bounded) before giving up;
 //   • best-effort — a failure here never fails the user's sticker add;
 //   • self-healing — the marker (stickerSet.placeholderFileUniqueId) is cleared
@@ -77,11 +80,13 @@ const withMarkerLoaded = async (stickerSet) => {
 //
 // Returns true when the marker was resolved (deleted or confirmed absent),
 // false when it should be retried later.
-async function removePlaceholderIfPending (telegram, stickerSet, currentSet) {
+async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { allowEmpty = false } = {}) {
   stickerSet = await withMarkerLoaded(stickerSet)
   if (!stickerSet.placeholderFileUniqueId) return true
-  // Wait until a real sticker exists so removal never leaves the pack empty.
-  if (!currentSet || !currentSet.stickers || currentSet.stickers.length < 2) return false
+  if (!currentSet || !currentSet.stickers) return false
+  // Wait until a real sticker exists so removal never leaves the pack empty —
+  // unless the caller explicitly allows emptying the set (allowEmpty).
+  if (currentSet.stickers.length < 2 && !allowEmpty) return false
 
   const placeholder = currentSet.stickers.find(
     (s) => s.file_unique_id === stickerSet.placeholderFileUniqueId

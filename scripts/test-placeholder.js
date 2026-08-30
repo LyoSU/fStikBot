@@ -94,6 +94,27 @@ async function main () {
     assert.strictEqual(set.placeholderFileUniqueId, 'ph', 'marker kept for retry')
   })
 
+  await test('allowEmpty: lone placeholder → deleted, set may become empty', async () => {
+    const tg = makeTelegram()
+    const set = makeSet('ph')
+    const result = await removePlaceholderIfPending(tg, set, {
+      stickers: [{ file_unique_id: 'ph', file_id: 'PH_FILE_ID' }]
+    }, { allowEmpty: true })
+    assert.strictEqual(result, true)
+    assert.strictEqual(tg.calls.length, 1)
+    assert.strictEqual(tg.calls[0].payload.sticker, 'PH_FILE_ID')
+    assert.strictEqual(set.placeholderFileUniqueId, undefined, 'marker cleared')
+  })
+
+  await test('allowEmpty: set already empty → stale marker cleared, no API call', async () => {
+    const tg = makeTelegram()
+    const set = makeSet('ph')
+    const result = await removePlaceholderIfPending(tg, set, { stickers: [] }, { allowEmpty: true })
+    assert.strictEqual(result, true, 'nothing left to delete — resolved')
+    assert.strictEqual(tg.calls.length, 0)
+    assert.strictEqual(set.placeholderFileUniqueId, undefined, 'stale marker cleared')
+  })
+
   await test('placeholder + real sticker → deletes by file_id, clears marker, saves', async () => {
     const tg = makeTelegram()
     const set = makeSet('ph')

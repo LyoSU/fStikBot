@@ -2,11 +2,13 @@ const Markup = require('telegraf/markup')
 const escapeHTML = require('../utils/html-escape')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
+const { removePlaceholderIfPending } = require('../utils/placeholder')
 
 module.exports = async (ctx) => {
   let packBotUsername
   let deleteSticker
   let sticker
+  let dbStickerSet
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -14,7 +16,7 @@ module.exports = async (ctx) => {
 
   sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
-  }).populate('stickerSet', '_id name title owner inline passcode')
+  }).populate('stickerSet', '_id name title owner inline passcode placeholderFileUniqueId')
 
   if (!sticker) {
     let setName
@@ -58,6 +60,8 @@ module.exports = async (ctx) => {
     if (!stickerSet) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
+
+    dbStickerSet = stickerSet
   } else {
     if (!sticker.stickerSet) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
@@ -120,6 +124,15 @@ module.exports = async (ctx) => {
       if (!description.includes('STICKER_INVALID')) {
         return ctx.answerCbQuery(humanizeTelegramError(ctx, error), true)
       }
+    }
+
+    // The user may have just deleted their last real sticker, leaving only the
+    // bootstrap placeholder behind — drop it too (allowEmpty: a 0-sticker set
+    // is valid, verified live; a pack whose only content is a throwaway isn't).
+    if (!dbStickerSet) dbStickerSet = sticker?.stickerSet
+    if (dbStickerSet?.placeholderFileUniqueId) {
+      const currentSet = await ctx.tg.getStickerSet(dbStickerSet.name).catch(() => null)
+      await removePlaceholderIfPending(ctx.telegram, dbStickerSet, currentSet, { allowEmpty: true })
     }
   }
 
