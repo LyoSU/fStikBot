@@ -3,6 +3,7 @@
 // addstickers/addemoji restore→copy chain and for /start payload routing.
 const Composer = require('telegraf/composer')
 const sendStickerAsDocument = require('../utils/send-sticker-as-document')
+const { escapeHTML } = require('../utils')
 
 module.exports = (bot, privateMessage, {
   handlers,
@@ -45,7 +46,10 @@ module.exports = (bot, privateMessage, {
     // Reply to any message with /json to dump THAT message — debug aid for
     // "why didn't the bot accept this file" reports (mime_type, subtypes).
     const target = ctx.message.reply_to_message || ctx.message
-    return ctx.replyWithHTML('<code>' + JSON.stringify(target, null, 2) + '</code>')
+    // The dump goes inside <code> with parse_mode HTML — any '<' or '&' in the
+    // payload (a forwarded chat title, a caption) would break entity parsing and
+    // the admin would get nothing at all.
+    return ctx.replyWithHTML('<code>' + escapeHTML(JSON.stringify(target, null, 2)) + '</code>')
   }))
 
   // Scenes (Stage) mount — must come before any composer that uses ctx.scene.enter
@@ -103,32 +107,37 @@ module.exports = (bot, privateMessage, {
   privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleRestorePack)
 
   privateMessage.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
-  privateMessage.hears(/\/new/, (ctx) => ctx.scene.enter('newPack'))
+  // Anchored: an unanchored /\/new/ also matched pack links that merely contain
+  // "/new" (t.me/addstickers/newyear_by_X) and hijacked the copy flow.
+  // The optional tail keeps `/new fill` / `/new adaptive` working.
+  privateMessage.hears(/^\/new(@\w+)?(?:\s+.*)?$/, (ctx) => ctx.scene.enter('newPack'))
   privateMessage.action(/new_pack:(.*)/, async (ctx) => {
     const packType = ctx.match[1]
-    if (packType === 'inline') {
-      ctx.session.scene = ctx.session.scene || {}
-      ctx.session.scene.newPack = {
-        inline: true,
-        packType: 'regular'
-      }
-    }
+    // Pass the seed through scene state instead of pre-writing session.scene:
+    // newPack.enter rebuilds its state from ctx.scene.state on every enter, so
+    // an abandoned wizard can't leak `inline: true` into the next /new.
+    const state = packType === 'inline'
+      ? { newPack: { inline: true, packType: 'regular' } }
+      : {}
     // Scene sends its own new-pack banner below (reply keyboards can't
     // attach via editMessageMedia, so we don't swap the /start message —
     // user keeps their welcome banner in history + sees the scene flow
     // as the next message).
-    return ctx.scene.enter('newPack')
+    return ctx.scene.enter('newPack', state)
   })
   privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleCopyPack)
 
   privateMessage.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
-  privateMessage.action(/publish/, (ctx) => ctx.scene.enter('catalogPublishNew'))
+  // Anchored — an unanchored /publish/ swallowed catalog:publish:<id> and
+  // catalog:unpublish:<id> (registered further down), so the pack-menu catalog
+  // buttons never reached their scenes.
+  privateMessage.action(/^publish$/, (ctx) => ctx.scene.enter('catalogPublishNew'))
   privateMessage.command('frame', (ctx) => ctx.scene.enter('packFrame'))
-  privateMessage.action(/frame/, (ctx) => ctx.scene.enter('packFrame'))
+  privateMessage.action(/^(frame|set_frame)$/, (ctx) => ctx.scene.enter('packFrame'))
   privateMessage.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
   privateMessage.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticker'))
   privateMessage.command('catalog', handleCatalog)
-  privateMessage.action(/search_catalog/, handleSearchCatalog)
+  privateMessage.action(/^search_catalog$/, handleSearchCatalog)
   privateMessage.action(/^catalog$/, handleCatalog)
   privateMessage.command('public', handleSelectPack)
   privateMessage.command('emoji', handleEmoji)
@@ -137,7 +146,7 @@ module.exports = (bot, privateMessage, {
   privateMessage.command('original', (ctx) => ctx.scene.enter('originalSticker'))
   privateMessage.action(/^original$/, (ctx) => ctx.scene.enter('originalSticker'))
   privateMessage.command('about', (ctx) => ctx.scene.enter('packAbout'))
-  privateMessage.action(/about/, (ctx) => ctx.scene.enter('packAbout'))
+  privateMessage.action(/^(about|pack_about)$/, (ctx) => ctx.scene.enter('packAbout'))
 
   // Download-original — used by the /about scene's "Download original" button.
   // Tries to resend the stored original sticker directly; on any failure
@@ -224,13 +233,14 @@ module.exports = (bot, privateMessage, {
   privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
   privateMessage.command('round', (ctx) => ctx.scene.enter('videoRound'))
   privateMessage.command('mosaic', (ctx) => ctx.scene.enter('mosaic'))
-  privateMessage.action(/clear/, (ctx) => ctx.scene.enter('photoClearSelect'))
-  privateMessage.action(/catalog:publish:(.*)/, (ctx) => ctx.scene.enter('catalogPublish'))
-  privateMessage.action(/catalog:unpublish:(.*)/, (ctx) => ctx.scene.enter('catalogUnpublish'))
+  privateMessage.action(/^clear$/, (ctx) => ctx.scene.enter('photoClearSelect'))
+  privateMessage.action(/^catalog:publish:(.*)$/, (ctx) => ctx.scene.enter('catalogPublish'))
+  privateMessage.action(/^catalog:unpublish:(.*)$/, (ctx) => ctx.scene.enter('catalogUnpublish'))
 
-  // Language picker
-  bot.command('lang', handleLanguage)
-  bot.action(/set_language:(.*)/, handleLanguage)
+  // Language picker — private only. In a group every tap used to re-post the
+  // group welcome banner, and the locale is a per-user setting anyway.
+  bot.command('lang', Composer.privateChat(handleLanguage))
+  bot.action(/^set_language:(.*)$/, Composer.privateChat(handleLanguage))
 
   privateMessage.action(/delete_pack:(.*)/, (ctx) => ctx.scene.enter('packDelete'))
 
@@ -269,7 +279,7 @@ module.exports = (bot, privateMessage, {
     }
     return next()
   })
-  privateMessage.action(/add_sticker/, handleSticker)
+  privateMessage.action(/^add_sticker$/, handleSticker)
 
   // Sticker metadata updates (emoji suffix edit). These listen for free-form
   // text and must be registered BEFORE bot.use(privateMessage) so the

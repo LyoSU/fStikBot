@@ -5,7 +5,7 @@ const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const mongoose = require('mongoose')
 const { db } = require('../database')
-const { escapeHTML, telegramApi, deriveStickerFlags } = require('../utils')
+const { escapeHTML, escapeRegex, telegramApi, deriveStickerFlags } = require('../utils')
 const telegram = require('../utils/telegram')
 
 function stickerSetIdToOwnerId (u64) {
@@ -95,9 +95,12 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
       return ctx.scene.reenter()
     }
   } else {
-    const messageTextMatch = ctx.message.text.match(/(addstickers)\/(.*)/)
+    // addemoji/ links point at a custom-emoji set and are just as publishable —
+    // silently rejecting them looked like the bot ignored the message.
+    const messageTextMatch = ctx.message.text.match(/(addstickers|addemoji)\/([^\s/?#]+)/)
 
     if (!messageTextMatch || !messageTextMatch[2]) {
+      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'))
       return ctx.scene.reenter()
     }
 
@@ -105,7 +108,15 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   }
 
   if (!packName) {
+    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'))
     return ctx.scene.reenter()
+  }
+
+  // MTProto is optional (pack-about guards it the same way). Without a client
+  // there's no way to read the set owner, so say so instead of re-prompting.
+  if (!telegramApi.client) {
+    await ctx.replyWithHTML(ctx.i18n.t('error.unknown'))
+    return ctx.scene.leave()
   }
 
   const getStickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
@@ -113,9 +124,10 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
       shortName: packName
     }),
     hash: 0
-  })).catch(() => {})
+  })).catch(() => null)
 
   if (!getStickerSetInfo) {
+    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'))
     return ctx.scene.reenter()
   }
 
@@ -147,6 +159,7 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   ctx.session.scene.publish.stickerSet = await createStickerSet(packName, ctx.session.userInfo)
 
   if (!ctx.session.scene.publish.stickerSet) {
+    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.error.copy'))
     return ctx.scene.reenter()
   }
 
@@ -176,8 +189,13 @@ catalogPublishOwnerProof.on('text', async (ctx) => {
       return ctx.scene.reenter()
     }
 
+    // Anchored on the end of the URL: an unanchored substring match let a
+    // forward for "MyCats" prove ownership of "Cats".
+    const proofUrl = ctx.message.entities[0] && ctx.message.entities[0].url
+
     if (
-      !ctx.message.entities[0].url.match(ctx.session.scene.publish.packName)
+      !proofUrl ||
+      !new RegExp('(addstickers|addemoji)/' + escapeRegex(ctx.session.scene.publish.packName) + '$').test(proofUrl)
     ) {
       return ctx.scene.reenter()
     }
@@ -205,16 +223,37 @@ catalogPublish.enter(async (ctx) => {
   if (!ctx.session.scene) ctx.session.scene = {}
 
   let stickerSetId
+  // Only the callback path carries a user-controlled id. The in-session path
+  // got here through catalogPublishNew / catalogPublishOwnerProof, which
+  // already proved ownership against Telegram itself.
+  let fromCallbackData = false
 
   if (ctx.match && ctx.match[1]) {
     stickerSetId = ctx.match[1]
+    fromCallbackData = true
   } else if (ctx.session.scene?.publish?.stickerSet) {
     stickerSetId = ctx.session.scene.publish.stickerSet._id
   } else {
     return ctx.scene.leave()
   }
 
-  const stickerSet = await ctx.db.StickerSet.findById(stickerSetId)
+  // A forged catalog:publish:<foreign id> used to publish somebody else's pack:
+  // there was no existence check and no owner check at all. findById throws
+  // CastError on a malformed id — treat that as "not found".
+  const stickerSet = await ctx.db.StickerSet.findById(stickerSetId).catch(() => null)
+
+  if (!stickerSet) {
+    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
+    return ctx.scene.leave()
+  }
+
+  if (
+    fromCallbackData &&
+    stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()
+  ) {
+    await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.publish_new_access_denied'))
+    return ctx.scene.leave()
+  }
 
   const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
@@ -477,24 +516,33 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
 
 const catalogUnpublish = new Scene('catalogUnpublish')
 
-catalogUnpublish.action(/^catalog:unpublish:(.*)$/, async (ctx) => {
-  const stickerSetId = ctx.match[1]
+// The unpublish is done by the very callback that enters the scene, so it has
+// to run from .enter — the .action below only ever fired on a *second* tap.
+const unpublish = async (ctx) => {
+  const stickerSetId = ctx.match && ctx.match[1]
+
+  if (!stickerSetId) return ctx.scene.leave()
 
   const stickerSet = await ctx.db.StickerSet.findOne({
     _id: stickerSetId,
     owner: ctx.session.userInfo._id
-  })
+  }).catch(() => null)
 
   if (!stickerSet) {
-    return ctx.answerCbQuery(`Sticker set ${stickerSetId} not found`)
+    await ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
+    return ctx.scene.leave()
   }
 
   stickerSet.public = false
 
   await stickerSet.save()
 
-  await ctx.answerCbQuery(ctx.i18n.t('scenes.catalog.unpublish.success'))
-})
+  await ctx.answerCbQuery(ctx.i18n.t('scenes.catalog.unpublish.success'), true)
+  return ctx.scene.leave()
+}
+
+catalogUnpublish.enter(unpublish)
+catalogUnpublish.action(/^catalog:unpublish:(.*)$/, unpublish)
 
 module.exports = [
   catalogPublishNew,
