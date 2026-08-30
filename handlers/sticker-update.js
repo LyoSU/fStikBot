@@ -63,6 +63,10 @@ module.exports = async (ctx, next) => {
     return next()
   }
 
+  // Bot API allows 1–20 emoji per sticker; more came back as a raw Telegram
+  // error instead of just working.
+  if (emojis.length > 20) emojis.length = 20
+
   const updateResult = await ctx.tg.callApi('setStickerEmojiList', {
     sticker: sticker.getFileId(),
     emoji_list: emojis

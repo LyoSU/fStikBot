@@ -99,10 +99,10 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 
-  if (ctx.session?.userInfo?.stickerSet?.passcode === 'public') {
+  if (ctx.session?.userInfo?.stickerSet?.passcode === 'public' && sticker?.stickerSet?.name) {
     const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name).catch(() => null)
 
-    if (stickerSet && stickerSet.stickers[0].file_unique_id === sticker.fileUniqueId) {
+    if (stickerSet?.stickers?.[0]?.file_unique_id === sticker.fileUniqueId) {
       return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
     }
   }
@@ -111,7 +111,15 @@ module.exports = async (ctx) => {
     try {
       await ctx.deleteStickerFromSet(deleteSticker)
     } catch (error) {
-      return ctx.answerCbQuery(humanizeTelegramError(ctx, error), true)
+      const description = error?.description || error?.message || ''
+
+      // STICKER_INVALID means the sticker is already gone from the set (removed
+      // via a Telegram client or @Stickers). Our row said deleted:false, so the
+      // same file kept coming back as "already in the pack" with a button that
+      // could never work. Sync the DB and report success.
+      if (!description.includes('STICKER_INVALID')) {
+        return ctx.answerCbQuery(humanizeTelegramError(ctx, error), true)
+      }
     }
   }
 

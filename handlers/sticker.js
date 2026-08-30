@@ -60,7 +60,7 @@ module.exports = async (ctx, next) => {
 
     case 'document':
       if (
-        (message?.document?.mime_type.match('image') ||
+        (message?.document?.mime_type?.match('image') ||
         message?.document?.mime_type?.match('video')) &&
         !message.document.mime_type.match(/heic|heif/)
       ) {
@@ -120,28 +120,27 @@ module.exports = async (ctx, next) => {
     if (!emojiStickers || !emojiStickers.length || !emojiStickers[0]?.file_unique_id) return next()
 
     stickerFile = emojiStickers[0]
+    // A custom emoji arrives as a text message, but the file itself is a
+    // sticker. Keep 'text' out of stickerType — it ends up in the DB and in
+    // inline results, where "text_file_id" is not a thing.
+    stickerType = 'sticker'
   }
 
   let { stickerSet } = ctx.session.userInfo
 
-  if (!stickerSet) {
-    if (ctx.chat.type === 'private') {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
-        reply_to_message_id: message.message_id,
-        allow_sending_without_reply: true
-      })
-    } else {
-      return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
-        reply_markup: Markup.inlineKeyboard([
-          Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_pack'), 'select_pack')
-        ]),
-        reply_to_message_id: message.message_id,
-        allow_sending_without_reply: true
-      })
-    }
+  const isGroupChat = ctx.chat.type === 'group' || ctx.chat.type === 'supergroup'
+
+  // In a group the target is the group's pack — the member's own selected pack
+  // is irrelevant. Demanding it here locked every member without a personal
+  // pack out of the group pack (and the button used a non-existent i18n key).
+  if (!isGroupChat && !stickerSet) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.no_selected_pack'), {
+      reply_to_message_id: message.message_id,
+      allow_sending_without_reply: true
+    })
   }
 
-  if (!stickerSet?.inline) {
+  if (!isGroupChat && !stickerSet?.inline) {
     const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => null) // STICKERSET_INVALID / deleted pack → caller handles null below
 
     if (stickerSetInfo) {
@@ -158,23 +157,33 @@ module.exports = async (ctx, next) => {
 
         newTitle += titleSuffix
 
-        await ctx.telegram.callApi('setStickerSetTitle', {
+        const renamed = await ctx.telegram.callApi('setStickerSetTitle', {
           name: stickerSet.name,
           title: newTitle
-        }).catch((err) => {
+        }).then(() => true).catch((err) => {
           console.log('setStickerSetTitle', err)
+          return false
         })
 
-        const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
+        if (renamed) {
+          // Both the reply and the DB used to carry the title from BEFORE the
+          // rename, so the user was told "Renamed: <old name>" and the row kept
+          // the stale value until the next getStickerSet.
+          stickerSet.title = newTitle
+          stickerSetInfo.title = newTitle
+          await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { title: newTitle })
 
-        const text = ctx.i18n.t('scenes.rename.success', {
-          title: escapeHTML(stickerSet.title),
-          link: `${linkPrefix}${stickerSet.name}`
-        }) + '\n' + ctx.i18n.t('scenes.rename.boost_notice', {
-          titleSuffix: escapeHTML(titleSuffix)
-        })
+          const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
 
-        await ctx.replyWithHTML(text)
+          const text = ctx.i18n.t('scenes.rename.success', {
+            title: escapeHTML(newTitle),
+            link: `${linkPrefix}${stickerSet.name}`
+          }) + '\n' + ctx.i18n.t('scenes.rename.boost_notice', {
+            titleSuffix: escapeHTML(titleSuffix)
+          })
+
+          await ctx.replyWithHTML(text)
+        }
       }
 
       if (stickerSet.title !== stickerSetInfo.title) {
@@ -184,7 +193,7 @@ module.exports = async (ctx, next) => {
     }
   }
 
-  if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
+  if (isGroupChat) {
     const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id }).populate('stickerSet')
 
     if (!group || !group.stickerSet) {
@@ -222,15 +231,23 @@ module.exports = async (ctx, next) => {
   }
 
   if (stickerSet.inline) {
-    // Use slice(-1)[0] instead of pop() to avoid mutating the original array
-    if (stickerType === 'photo') stickerFile = message[stickerType].slice(-1)[0]
-    else stickerFile = message[stickerType]
+    // Re-read the media off the message, but only when there IS media of that
+    // type. message.text is a string, and assigning fields to a primitive is
+    // silently dropped — which is how "Telegram error: [object Object]"
+    // happened. Same for any type the message doesn't actually carry (e.g.
+    // /ss on a reply, where the media lives on reply_to_message).
+    if (stickerType && message[stickerType]) {
+      // Use slice(-1)[0] instead of pop() to avoid mutating the original array
+      if (stickerType === 'photo') stickerFile = message[stickerType].slice(-1)[0]
+      else stickerFile = message[stickerType]
+    }
 
-    // Always set stickerType for inline packs based on detected type
-    if (stickerFile) stickerFile.stickerType = stickerType
-
-    if (message.caption) stickerFile.caption = message.caption
-    stickerFile.file_unique_id = stickerSet.id + '_' + stickerFile.file_unique_id
+    if (stickerFile && typeof stickerFile === 'object') {
+      // Always set stickerType for inline packs based on detected type
+      if (stickerType) stickerFile.stickerType = stickerType
+      if (message.caption) stickerFile.caption = message.caption
+      stickerFile.file_unique_id = stickerSet.id + '_' + stickerFile.file_unique_id
+    }
   }
 
   if (ctx.callbackQuery) {

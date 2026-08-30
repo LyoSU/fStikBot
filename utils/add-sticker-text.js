@@ -71,19 +71,26 @@ module.exports = (addStickerResult, lang) => {
     } else if (addStickerResult.error.telegram) {
       const errDescription = addStickerResult.error.telegram.description || addStickerResult.error.telegram.message || ''
       if (!errDescription) {
-        throw new Error(JSON.stringify(addStickerResult.error))
+        messageText = i18n.t(lang, 'error.unknown')
+      } else {
+        const hit = TELEGRAM_ERROR_MAP.find(([needle]) => errDescription.includes(needle))
+        messageText = hit
+          ? i18n.t(lang, hit[1])
+          : i18n.t(lang, 'error.telegram', {
+            error: escapeHTML(truncateDescription(errDescription, SEND_MESSAGE_DESCRIPTION_MAX))
+          })
       }
-      const hit = TELEGRAM_ERROR_MAP.find(([needle]) => errDescription.includes(needle))
-      messageText = hit
-        ? i18n.t(lang, hit[1])
-        : i18n.t(lang, 'error.telegram', {
-          error: truncateDescription(errDescription, SEND_MESSAGE_DESCRIPTION_MAX)
-        })
+    } else if (addStickerResult.error.message) {
+      // uploadSticker's internal { error: { message } } shape. It used to fall
+      // into the String(error) branch below and render as "[object Object]".
+      messageText = i18n.t(lang, 'error.telegram', {
+        error: escapeHTML(truncateDescription(String(addStickerResult.error.message), SEND_MESSAGE_DESCRIPTION_MAX))
+      })
     } else if (addStickerResult.error === 'ITS_ANIMATED') {
       messageText = i18n.t(lang, 'sticker.add.error.file_type')
     } else {
       messageText = i18n.t(lang, 'error.telegram', {
-        error: truncateDescription(String(addStickerResult.error), SEND_MESSAGE_DESCRIPTION_MAX)
+        error: escapeHTML(truncateDescription(String(addStickerResult.error), SEND_MESSAGE_DESCRIPTION_MAX))
       })
     }
   }

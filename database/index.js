@@ -36,7 +36,10 @@ db.User.getData = async (tgUser) => {
   let user = await db.User.findOne({ telegram_id: telegramId })
     .populate({
       path: 'stickerSet',
-      select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode'
+      // publishDate/public are read by handlers/sticker.js to decide whether to
+      // offer "add to catalog"; without them the check saw undefined and offered
+      // it for packs that were already published.
+      select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate'
     })
     .populate({
       path: 'inlineStickerSet',

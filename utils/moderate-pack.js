@@ -95,7 +95,13 @@ async function moderatePack (packName) {
     return null
   }
 
-  const stickerFiles = stickers.stickers.map((sticker) => sticker?.thumb?.file_id).filter((f) => f).slice(0, 200)
+  // Bot API 6.6 renamed thumb → thumbnail without keeping an alias, so this
+  // list was always empty and moderatePack always returned null. thumb kept as
+  // a fallback for anything still serving the old field.
+  const stickerFiles = stickers.stickers
+    .map((sticker) => (sticker?.thumbnail ?? sticker?.thumb)?.file_id)
+    .filter((f) => f)
+    .slice(0, 200)
 
   const stickerImages = await Promise.all(stickerFiles.map(async (fileId) => {
     const fileLink = await telegram.getFileLink(fileId).catch(() => null)
