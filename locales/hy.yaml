@@ -228,6 +228,8 @@ cmd:
       Համարը փոխելու համար ընթացիկ փաթեթի emoji-ները, ուղարկեք <code>/emoji</code> հրամանը emoji դաշտից հետո բացով
 
       Օրինակ - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: 'Emoji-ն հաջողությամբ փոխվեց:'
     error: 'Սխալ առաջացավ զմայլիկները փոխելիս:'
   round_video:
@@ -625,6 +627,11 @@ scenes:
     error:
       title_long: 'Անունը չի կարող ավելի մեծ լինել, քան ${max} խորհրդանիշները:'
       name_long: 'Հասցեն չի կարող ավելի մեծ լինել, քան ${max} խորհրդանիշները:'
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Այդ հասցեն չի կարող օգտագործվել։
         name_occupied: 'Այս հասցեն արդեն վերցված է:'
@@ -739,6 +746,7 @@ scenes:
 
       ${title} -ն այժմ ուժեղացված է
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Դուք չունեք բավարար Կրեդիտներ այս փաթեթը խթանելու համար:
 
@@ -826,6 +834,8 @@ scenes:
     error:
       - <b>Սխալ.</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Սխալ.</b>
       Դուք կարող եք միայն շրջանակներ ավելացնել վիդեո փաթեթներին:
@@ -891,15 +901,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Փաթեթը չի գտնվել
   leave: |
     Գործողությունը չեղարկվել է:
   btn:
     cancel: '❌ Չեղարկել'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram-ը սխալ է վերադարձրել:</b>
     <code>${error}</code>
