@@ -4,6 +4,22 @@ const { match } = require('telegraf-i18n')
 const { escapeHTML } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 
+// If the pack we just deleted was the selected one, drop it — otherwise the
+// next sticker is uploaded into a set that no longer exists and the user only
+// finds out via a raw Telegram error.
+const clearSelectedPack = (ctx, deletedId) => {
+  const selected = ctx.session?.userInfo?.stickerSet
+  if (!selected) return
+  const selectedId = selected._id || selected
+  if (selectedId.toString() !== deletedId.toString()) return
+
+  ctx.session.userInfo.stickerSet = null
+  if (ctx.session.userInfo.inlineStickerSet) {
+    const inlineId = ctx.session.userInfo.inlineStickerSet._id || ctx.session.userInfo.inlineStickerSet
+    if (inlineId.toString() === deletedId.toString()) ctx.session.userInfo.inlineStickerSet = null
+  }
+}
+
 const packDelete = new Scene('packDelete')
 
 packDelete.enter(async (ctx) => {
@@ -58,9 +74,11 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     if (description.includes('STICKERSET_INVALID')) {
       // Pack already gone in Telegram — clean DB and treat as success.
       await ctx.db.StickerSet.deleteOne({ _id: id })
-      return ctx.replyWithHTML(successText, {
+      clearSelectedPack(ctx, id)
+      await ctx.replyWithHTML(successText, {
         reply_markup: Markup.removeKeyboard()
       })
+      return ctx.scene.leave()
     }
 
     return ctx.replyWithHTML(humanizeTelegramError(ctx, error), {
@@ -79,9 +97,15 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     $set: { deleted: true, deletedAt: new Date() }
   })
 
+  clearSelectedPack(ctx, id)
+
   await ctx.replyWithHTML(successText, {
     reply_markup: Markup.removeKeyboard()
   })
+
+  // Without this the scene stayed active after a successful delete, so the
+  // next message was still read as a delete confirmation.
+  return ctx.scene.leave()
 })
 
 module.exports = packDelete

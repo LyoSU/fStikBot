@@ -65,30 +65,16 @@ stage.hears(([
   return handleStart(ctx)
 })
 
-stage.hears(([
-  '/start',
-  '/admin',
-  '/help',
-  '/packs',
-  '/new',
-  '/emoji',
-  '/lang',
-  '/donate',
-  '/publish',
-  '/delete',
-  '/frame',
-  '/catalog',
-  '/mosaic',
-  '/round',
-  '/clear',
-  '/copy',
-  '/restore',
-  '/original',
-  '/about',
-  '/report',
-  '/privacy',
-  '/paysupport'
-]), async (ctx, next) => {
+// Commands that abandon whatever scene is running.
+//
+// Was a list of exact strings, so anything with an argument or a @botname
+// suffix ("/start s_<passcode>", "/new fill", "/packs@fStikBot") fell through
+// and became scene input — a /boost typed at the "pack name" step literally
+// became the pack title. A single anchored regex covers the arguments and adds
+// the three commands that were missing: /boost, /public, /ss.
+const EXIT_COMMANDS = /^\/(start|admin|help|packs|new|emoji|lang|donate|publish|delete|frame|catalog|mosaic|round|clear|copy|restore|original|about|report|privacy|paysupport|boost|public|ss)(@\w+)?(\s|$)/
+
+stage.hears(EXIT_COMMANDS, async (ctx, next) => {
   await ctx.scene.leave()
   ctx.session.scene = null
   await next()

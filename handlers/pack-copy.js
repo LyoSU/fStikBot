@@ -14,15 +14,19 @@ module.exports = async (ctx) => {
   }
 
   if (getStickerSet && getStickerSet.stickers.length > 0) {
-    ctx.session.scene.copyPack = getStickerSet
     // Determine pack format from stickers (StickerSet doesn't have is_video/is_animated)
     const hasVideo = getStickerSet.stickers.some(s => s.is_video)
     const hasAnimated = getStickerSet.stickers.some(s => s.is_animated)
-    ctx.session.scene.newPack = {
-      packType: getStickerSet.sticker_type,
-      video: hasVideo,
-      animated: hasAnimated,
-      fillColor: getStickerSet.stickers[0].needs_repainting
+    // Handed to the scene as enter-state: newPack.enter rebuilds session.scene
+    // from it, so nothing left over from an abandoned wizard survives.
+    const sceneState = {
+      copyPack: getStickerSet,
+      newPack: {
+        packType: getStickerSet.sticker_type,
+        video: hasVideo,
+        animated: hasAnimated,
+        fillColor: getStickerSet.stickers[0].needs_repainting
+      }
     }
 
     await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.enter'), {
@@ -35,7 +39,7 @@ module.exports = async (ctx) => {
       ]).resize()
     })
 
-    return ctx.scene.enter('newPack')
+    return ctx.scene.enter('newPack', sceneState)
   }
 
   // Surface the specific cause (rate-limited, pack deleted, etc.) when we

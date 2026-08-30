@@ -108,8 +108,17 @@ const newPack = new Scene('newPack')
 
 newPack.enter(async (ctx, next) => {
   if (!ctx.session.scene) ctx.session.scene = {}
-  const existingNewPack = ctx.session.scene.newPack || {}
-  ctx.session.scene.newPack = existingNewPack
+
+  // Start from a clean slate every time. Leftovers from an abandoned wizard
+  // (session.scene lives for an hour and callback buttons fall straight
+  // through the scene) used to bleed into the next run: "new inline pack"
+  // abandoned mid-flow turned the next /new into an inline pack, and a
+  // stale copyPack turned it into a copy of a stranger's pack with boost.
+  // Everything this run needs is passed explicitly via ctx.scene.state.
+  const enterState = ctx.scene.state || {}
+  ctx.session.scene.newPack = { ...(enterState.newPack || {}) }
+  if (enterState.copyPack) ctx.session.scene.copyPack = enterState.copyPack
+  else delete ctx.session.scene.copyPack
 
   if (ctx?.message?.text) {
     const args = ctx.message.text.split(' ')
@@ -267,6 +276,9 @@ newPackConfirm.enter(async (ctx, next) => {
     name = name.replace(/t.me\/addstickers\//, '')
     name = slug(name, { separator: '_', maintainCase: true })
     name = name.replace(/[^0-9a-z_]/gi, '')
+    // Telegram requires the short name to start with a letter; collapse the
+    // double underscores transliteration leaves behind while we're here.
+    name = name.replace(/_{2,}/g, '_').replace(/^[^a-z]+/i, '').replace(/_+$/, '')
   }
 
   if (!name) {
@@ -276,7 +288,11 @@ newPackConfirm.enter(async (ctx, next) => {
   const maxNameLength = 64 - nameSuffix.length
 
   if (name.length >= maxNameLength) {
-    name = name.slice(0, maxNameLength)
+    name = name.slice(0, maxNameLength).replace(/_+$/, '')
+  }
+
+  if (!name) {
+    return ctx.scene.enter('newPackName')
   }
 
   if (!inline) name += nameSuffix
@@ -294,6 +310,44 @@ newPackConfirm.enter(async (ctx, next) => {
   packType = packType || 'regular'
 
   if (inline) {
+    // The inline pack name is fixed (inline_<userId>) and StickerSet.newSet
+    // does findOneAndDelete({ name }) + soft-deletes every sticker of the old
+    // set — so creating a second one silently destroyed the first. Select the
+    // existing pack instead and say why.
+    const existingInline = await ctx.db.StickerSet.findOne({
+      owner: ctx.session.userInfo.id,
+      inline: true,
+      deleted: { $ne: true }
+    })
+
+    if (existingInline) {
+      ctx.session.userInfo.stickerSet = existingInline
+      ctx.session.userInfo.inlineStickerSet = existingInline
+      ctx.session.userInfo.inlineType = 'packs'
+
+      await ctx.db.User.updateOne(
+        { _id: ctx.session.userInfo._id },
+        { $set: { stickerSet: existingInline._id, inlineStickerSet: existingInline._id, inlineType: 'packs' } }
+      )
+
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.inline_exists', {
+        title: escapeHTML(existingInline.title)
+      }), {
+        reply_markup: Markup.inlineKeyboard([
+          Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
+        ])
+      })
+
+      await ctx.replyWithHTML('👌', {
+        reply_markup: {
+          remove_keyboard: true
+        }
+      })
+
+      ctx.session.scene = {}
+      return ctx.scene.leave()
+    }
+
     createNewStickerSet = true
   } else {
     const stickerSetByName = await ctx.db.StickerSet.findOne({ name })
@@ -393,7 +447,7 @@ newPackConfirm.enter(async (ctx, next) => {
         return { error }
       })
 
-      await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id)
+      await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id).catch(() => {})
 
       if (createNewStickerSet.error) {
         // In create-flow, STICKERSET_INVALID actually means "name not
@@ -631,7 +685,7 @@ newPackConfirm.enter(async (ctx, next) => {
         await delay(COPY_PACE_MS)
       }
 
-      await ctx.telegram.deleteMessage(message.chat.id, message.message_id)
+      await ctx.telegram.deleteMessage(message.chat.id, message.message_id).catch(() => {})
     }
 
     // Show result with appropriate message based on outcome. Skipped only
