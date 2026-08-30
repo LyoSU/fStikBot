@@ -136,7 +136,6 @@ composer.on('inline_query', async (ctx, next) => {
     return ctx.answerInlineQuery([], {
       is_personal: true,
       cache_time: 30,
-      next_offset: offset + limit,
       switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
       switch_pm_parameter: 'pack'
     })
@@ -156,7 +155,9 @@ composer.on('inline_query', async (ctx, next) => {
   await ctx.answerInlineQuery(results, {
     is_personal: true,
     cache_time: 30,
-    next_offset: offset + limit
+    // Only promise another page when this one was full — otherwise the client
+    // fires a pointless follow-up query for every short page.
+    next_offset: stickerSets.length >= limit ? String(offset + limit) : ''
   })
 })
 
@@ -305,7 +306,7 @@ composer.on('inline_query', async (ctx) => {
       await ctx.answerInlineQuery(results, {
         is_personal: true,
         cache_time: 30,
-        next_offset: offset + limit,
+        next_offset: searchStickers.length >= limit ? String(offset + limit) : '',
         switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
         switch_pm_parameter: 'inline_pack'
       })
@@ -335,29 +336,70 @@ composer.on('inline_query', async (ctx) => {
       queryText = match[1]
     }
 
+    // A missing key or a Tenor outage used to throw straight out of the
+    // handler: answerInlineQuery was never called and the user stared at a
+    // spinner. Always answer — with the "open the bot" button so there's a
+    // way forward.
     let tenorResult
-    if (queryText.length >= 1) {
-      tenorResult = await tenor.search(queryText, limit, offset)
-    } else {
-      tenorResult = await tenor.trending(offset || false, ctx.session.userInfo.locale)
+    try {
+      if (queryText.length >= 1) {
+        tenorResult = await tenor.search(queryText, limit, offset)
+      } else {
+        tenorResult = await tenor.trending(offset || false, ctx.session.userInfo.locale)
+      }
+    } catch (error) {
+      // TENOR_DISABLED (no key, or a 400/401/403 from Tenor) is an expected
+      // state, not a bug — log it quietly. Everything else keeps the stack.
+      if (error.code === 'TENOR_DISABLED') {
+        console.warn('Tenor unavailable:', error.message)
+      } else {
+        console.error('Tenor request failed:', {
+          error: error.message,
+          statusCode: error?.response?.statusCode,
+          user: ctx.from.id
+        })
+      }
+
+      return ctx.answerInlineQuery([], {
+        is_personal: true,
+        cache_time: 30,
+        switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+        switch_pm_parameter: 'inline_pack'
+      }).catch(() => {})
     }
 
-    nextOffset = tenorResult.next
+    nextOffset = tenorResult.next || ''
 
-    for (const item of tenorResult.results) {
-      results.push({
+    for (const item of tenorResult.results || []) {
+      const mapped = tenor.mapResult(item)
+      if (!mapped) continue
+
+      const result = {
         type: 'mpeg4_gif',
-        id: item.id,
-        thumb_url: item.media[0].gif.url,
-        mpeg4_url: item.media[0].mp4.url,
-        caption: item.media[0].gif_transparent.url
-      })
+        id: mapped.id,
+        thumb_url: mapped.thumbUrl,
+        mpeg4_url: mapped.mp4Url,
+        caption: mapped.gifUrl
+      }
+
+      // Telegram renders the placeholder at the right aspect ratio when it
+      // knows the dimensions up front.
+      if (mapped.mp4Width && mapped.mp4Height) {
+        result.mpeg4_width = mapped.mp4Width
+        result.mpeg4_height = mapped.mp4Height
+      }
+
+      results.push(result)
     }
 
     await ctx.answerInlineQuery(results, {
       is_personal: true,
       cache_time: 30,
-      next_offset: nextOffset
+      next_offset: results.length > 0 ? String(nextOffset) : '',
+      switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+      switch_pm_parameter: 'inline_pack'
+    }).catch((error) => {
+      console.error('Error answering GIF inline query:', error.message)
     })
   }
 })
