@@ -81,18 +81,43 @@ photoClear.enter(async (ctx) => {
   })
 })
 
-photoClear.on('photo', async (ctx) => {
+// A PNG sent "as a file" is the common way to keep transparency, and it used
+// to fall straight through the scene into the global sticker handler — the
+// image landed in the user's pack instead of getting its background removed.
+const resolveSource = (message) => {
+  if (message.photo && message.photo.length > 0) {
+    const largest = message.photo[message.photo.length - 1]
+    return { fileId: largest.file_id, fileUniqueId: largest.file_unique_id }
+  }
+
+  if (message.document) {
+    const mime = message.document.mime_type || ''
+    if (!mime.startsWith('image/') || /heic|heif/.test(mime)) return null
+    return { fileId: message.document.file_id, fileUniqueId: message.document.file_unique_id }
+  }
+
+  return null
+}
+
+photoClear.on(['photo', 'document'], async (ctx) => {
+  const source = resolveSource(ctx.message)
+
+  if (!source) {
+    return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.file_type.unknown'), {
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
   ctx.replyWithChatAction('upload_document').catch(() => {}) // chat action is best-effort UI, fire-and-forget OK
 
   if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
     showGramAds(ctx.chat.id)
   }
 
-  const photo = ctx.message.photo[ctx.message.photo.length - 1]
-
   let fileUrl
   try {
-    fileUrl = await ctx.telegram.getFileLink(photo.file_id)
+    fileUrl = await ctx.telegram.getFileLink(source.fileId)
   } catch (err) {
     return ctx.replyWithHTML(ctx.i18n.t(err.message?.includes('file is too big') ? 'error.file_too_big' : 'error.download'), {
       reply_to_message_id: ctx.message.message_id,
@@ -123,7 +148,9 @@ photoClear.on('photo', async (ctx) => {
     }, {
       priority,
       attempts: 1,
-      removeOnComplete: true
+      removeOnComplete: true,
+      // Failed jobs otherwise accumulate in Redis forever.
+      removeOnFail: true
     })
   } catch (err) {
     // Queue stub (REDIS_HOST unset) rejects with QUEUE_DISABLED; surface
@@ -162,7 +189,7 @@ photoClear.on('photo', async (ctx) => {
 
     await ctx.replyWithDocument({
       source: trimBuffer,
-      filename: `${model}_${photo.file_unique_id}.webp`
+      filename: `${model}_${source.fileUniqueId}.webp`
     }, {
       reply_to_message_id: ctx.message.message_id,
       reply_markup: {

@@ -90,10 +90,14 @@ adminPackBulkDelete.action('admin:pack:bulk_delete:confirm', async (ctx) => {
   for (const setName of stickerSetNames) {
     try {
       const stickerSet = await ctx.telegram.getStickerSet(setName)
+      let removed = 0
       for (const sticker of stickerSet.stickers) {
-        await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
+        const ok = await ctx.telegram.deleteStickerFromSet(sticker.file_id).then(() => true).catch(() => false)
+        if (ok) removed++
       }
-      deletedCount++
+      // Every deleteStickerFromSet failing used to still count as a success.
+      if (removed > 0 || stickerSet.stickers.length === 0) deletedCount++
+      else errorCount++
     } catch (error) {
       console.error(`Error deleting sticker set ${setName}:`, error)
       errorCount++

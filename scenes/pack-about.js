@@ -133,9 +133,11 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
       showGramAds(ctx.chat.id)
     }
 
+    // Only the first ~500 are ever rendered (chunked at 70 per message), so
+    // there is no reason to hydrate every pack a prolific user ever made.
     const findPacks = await ctx.db.StickerSet.find({
       ownerTelegramId: sharedUserId
-    })
+    }).limit(500).lean()
 
     let chunkedPacks = []
     const chunkSize = 70
@@ -285,7 +287,7 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     ? await db.StickerSet.find({
       ownerTelegramId: actualOwnerId,
       _id: { $ne: stickerSet?._id || null }
-    })
+    }).limit(500).lean()
     : []
 
   let chunkedPacks = []

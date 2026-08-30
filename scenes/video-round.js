@@ -39,14 +39,27 @@ async function processVideo (ctx, fileUrl) {
   let priority = 10
   if (ctx.i18n.locale() === 'ru') priority = 15
 
-  const job = await videoNoteQueue.add({
-    fileUrl: typeof fileUrl === 'string' ? fileUrl : fileUrl.href,
-    maxDuration: 60
-  }, {
-    priority,
-    attempts: 1,
-    removeOnComplete: true
-  })
+  let job
+  try {
+    job = await videoNoteQueue.add({
+      fileUrl: typeof fileUrl === 'string' ? fileUrl : fileUrl.href,
+      maxDuration: 60
+    }, {
+      priority,
+      attempts: 1,
+      removeOnComplete: true,
+      // Failed jobs otherwise accumulate in Redis forever.
+      removeOnFail: true
+    })
+  } catch (err) {
+    // Queue stub (REDIS_HOST unset) rejects with QUEUE_DISABLED — same
+    // handling as scenes/photo-clear.js instead of a generic error.
+    if (err.code === 'QUEUE_DISABLED') {
+      return ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.error_queue_disabled'))
+    }
+    console.error('videoNote enqueue failed:', err.message)
+    return ctx.replyWithHTML(ctx.i18n.t('scenes.videoRound.error'))
+  }
 
   // Show initial processing message with queue position
   const { position, total } = await getQueuePosition(job.id)

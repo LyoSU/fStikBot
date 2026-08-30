@@ -5,6 +5,7 @@ const { getGridSuggestions } = require('../utils/mosaic-grid')
 const { generatePreview } = require('../utils/mosaic-preview')
 const { splitImage, checkMinCellSize } = require('../utils/mosaic-split')
 const { getRateLimitRemaining } = require('../utils/retry-api')
+const escapeHTML = require('../utils/html-escape')
 const https = require('https')
 const sharp = require('sharp')
 
@@ -92,7 +93,9 @@ mosaic.enter(async (ctx) => {
   ctx.session.scene.mosaic.packName = stickerSet.name
 
   await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.enter', {
-    packTitle: stickerSet.title
+    // Unescaped, a pack title with < or & broke entity parsing: the user got
+    // nothing while the scene was already active, with no exit keyboard.
+    packTitle: escapeHTML(stickerSet.title)
   }), {
     reply_markup: Markup.keyboard([
       [{ text: ctx.i18n.t('cmd.mosaic.btn.exit') }]
@@ -126,10 +129,13 @@ const getMosaicSource = (message) => {
     if (!mime || !IMAGE_DOCUMENT_MIMES.has(mime)) {
       return { error: 'cmd.mosaic.reject_document' }
     }
+    // Bot API 6.6 renamed thumb → thumbnail; thumb kept as a fallback.
+    const thumb = message.document.thumbnail ?? message.document.thumb
+
     return {
       fileId: message.document.file_id,
-      width: message.document.thumb ? message.document.thumb.width : null,
-      height: message.document.thumb ? message.document.thumb.height : null
+      width: thumb ? thumb.width : null,
+      height: thumb ? thumb.height : null
     }
   }
 
