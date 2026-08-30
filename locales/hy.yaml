@@ -147,7 +147,7 @@ cmd:
       • Add multiple stickers at once
 
       <b>Hidden feature:</b>
-      /new fill — create adaptive emoji (changes color with text).
+      <b>Adaptive emoji</b> — a separate button in /new (changes color with text).
 
       Get boost → /donate
     problems: |
@@ -472,6 +472,8 @@ sticker:
     ok_inline: |
       <b>Հաջողությամբ ավելացվել է փաթեթում՝</b>
       <u>${title}</u>
+    ok_repainting_notice: |
+      ⚠️ This is a monochrome emoji: in a regular sticker pack it stays white and is barely visible on a light background.
     send_emoji: Հիանալի է, հիմա ուղարկեք էմոջիին, որը համապատասխանում է դրան
     converting_process: |
       <b>Սպասեք...</b>
@@ -524,6 +526,9 @@ sticker:
       invalid_animated: |
         <b>Սխալ!</b>
         Անիմացված կպչուն պատկերի ֆայլը վավեր TGS ձևաչափով չէ։
+      animated_too_big: |
+        <b>Error!</b>
+        After fitting the pack canvas this animated sticker exceeds Telegram's 64 KB limit and cannot be transferred.
       invalid_video: |
         <b>Սխալ!</b>
         Տեսագրության ֆայլը վավեր WEBM ձևաչափով չէ։
@@ -610,6 +615,7 @@ scenes:
       <b><u>Ընտրեք փաթեթի տեսակը</u></b>
     regular: '😊 Կպչուկ'
     custom_emoji: '🌟 Էմոջի (պրեմիում)'
+    custom_emoji_adaptive: '🎨 Adaptive emoji'
     pack_title: |
       <b>Մուտքագրեք նոր կպչուն պիտակների փաթեթի անունը.</b>
       <i>Դուք կարող եք ընտրել պատահական անուն կոճակի վրա:</i>
