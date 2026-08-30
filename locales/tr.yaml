@@ -227,6 +227,8 @@ cmd:
     info: |
       Geçerli çıkartma paketi için varsayılan emojiyi değiştirmek için <code>/emoji</code> ve ardından boşlukla ayrılmış bir emoji yazın.
       Örneğin - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Emoji başarıyla güncellendi.
     error: Emoji değiştirilirken bir hata oluştu!
   round_video:
@@ -630,6 +632,11 @@ scenes:
     error:
       title_long: İsim ${max}  değerinden büyük olamaz.
       name_long: Kısa link ${max} değerinden büyük olamaz.
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Bu adres kullanılamaz.
         name_occupied: Bu adres zaten alınmış.
@@ -745,6 +752,7 @@ scenes:
 
       ${title} artık güçlendirildi
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         Bu paketi artırmak için yeterli Krediniz yok.
 
@@ -832,6 +840,8 @@ scenes:
     error:
       - <b>Hata!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Hata!</b>
       Video paketlerine yalnızca çerçeve ekleyebilirsiniz.
@@ -897,15 +907,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Paket bulunamadı
   leave: |
     Eylem iptal edildi!
   btn:
     cancel: '❌ İptal'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram hatası!</b>
     <code>${error}</code>
