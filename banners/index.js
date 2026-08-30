@@ -65,11 +65,17 @@ async function sendBanner (ctx, name, caption = '', extra = {}) {
 // banners: e.g. /start welcome → catalog). Works whether the prior message
 // was text (upgrades it) or already a photo (replaces the media).
 //
-// Single-edit guarantee: we send photo + caption + keyboard in ONE API call.
-// Telegraf 3.40 serializes `ctx.editMessageMedia(media, extra)` correctly —
-// `caption`/`parse_mode` ride inside the InputMedia JSON, `reply_markup` is
-// top-level (see node_modules/telegraf/telegram.js:316). So no keyboard-less
-// flash between calls, which used to cause visible flicker on navigation.
+// Single-edit guarantee: we send photo + caption + keyboard in ONE API call,
+// so no keyboard-less flash between calls (which used to cause visible
+// flicker on navigation).
+//
+// Telegraf 3.40 gotcha (node_modules/telegraf/telegram.js:316): it builds the
+// InputMedia as `{ ...media, caption: extra.caption, parse_mode: extra.parse_mode }`,
+// i.e. whatever we put into `media.caption` is OVERWRITTEN by `extra.caption`
+// — and `undefined` is dropped by JSON.stringify. So caption/parse_mode MUST
+// be passed via `extra`, not inside `media`, or the photo is edited with no
+// caption at all. Only the full-media path is affected; the caption-only fast
+// path below never had this problem, which is why the bug looked intermittent.
 //
 // Same-banner fast path: if the message already shows this exact banner
 // (cached file_id matches the largest PhotoSize), skip the media swap and
@@ -98,12 +104,14 @@ async function editBanner (ctx, name, caption = '', extra = {}) {
   const source = photoInput(banner)
   const media = {
     type: 'photo',
-    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) },
-    caption,
-    parse_mode: 'HTML'
+    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) }
   }
   try {
-    const edited = await ctx.editMessageMedia(media, { reply_markup: extra.reply_markup })
+    const edited = await ctx.editMessageMedia(media, {
+      caption,
+      parse_mode: 'HTML',
+      reply_markup: extra.reply_markup
+    })
     if (edited && typeof edited === 'object') rememberFileId(banner, edited)
     return edited
   } catch (err) {
