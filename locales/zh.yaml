@@ -238,6 +238,8 @@ cmd:
       要更改当前包的默认表情符号，请发送 <code>/emoji</code> 并用空格分隔表情符号。
 
       例如 - <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: 表情已成功更改。
     error: 更改表情时发生错误！
   round_video:
@@ -635,6 +637,11 @@ scenes:
     error:
       title_long: 名称字符数不得超过 ${max} 字符
       name_long: 地址长度不得超过 ${max} 字符。
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: 您不能使用这样的地址。
         name_occupied: 该地址已被占用。
@@ -750,6 +757,7 @@ scenes:
 
       ${title} 现在得到提升
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         您的信用点不足以提升此包。
 
@@ -837,6 +845,8 @@ scenes:
     error:
       - <b>错误！</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>错误！</b>
       您只能为视频包添加帧。
@@ -902,15 +912,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: 未找到包
   leave: |
     行动取消。
   btn:
     cancel: '❌ 取消'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>电报返回错误！</b>
     <code>${error}</code>
