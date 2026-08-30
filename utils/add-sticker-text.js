@@ -49,6 +49,13 @@ module.exports = (addStickerResult, lang) => {
         link: addStickerResult.ok.link
       })
 
+      // Monochrome (needs_repainting) emoji added to a regular pack stays
+      // white-on-transparent — say so, or a light-theme user sees a "blank"
+      // sticker and assumes the bot broke it.
+      if (addStickerResult.ok.repainting) {
+        messageText += '\n' + i18n.t(lang, 'sticker.add.ok_repainting_notice')
+      }
+
       replyMarkup = Markup.inlineKeyboard([
         Markup.urlButton(i18n.t(lang, 'callback.pack.btn.use_pack'), addStickerResult.ok.link)
       ])

@@ -110,6 +110,15 @@ for t in scripts/test-*.js; do node "$t" || break; done
 - `test-tenor-mapping.js` — Tenor v2 URL building (key, `client_key=gboard`,
   `media_filter`) and the `media_formats` → inline-result mapping, against a
   hardcoded v2 fixture. Also pins that 400/401/403 degrade to `TENOR_DISABLED`.
+- `test-lottie-rescale.js` — retargeting a TGS between the 512×512 sticker
+  canvas and the 100×100 custom-emoji canvas (`utils/lottie-rescale.js`):
+  precomp wrapper + scale, untouched when the canvas already matches, the
+  64 KB cap, and malformed input → `invalid_animated`.
+- `test-sticker-geometry.js` — output size of a static sticker
+  (`utils/sticker-geometry.js`): longer side exactly 512, other side
+  proportional, small sources scaled up instead of padded.
+- `test-add-sticker-text.js` — the success/error text built from an
+  `addSticker` result, incl. the monochrome-emoji notice.
 - `test-placeholder.js` — bootstrap-placeholder removal.
 - `test-retry-api.js` — 429 retry / cooldown policy.
 - `test-perf-timing.js` — perf-stage instrumentation.

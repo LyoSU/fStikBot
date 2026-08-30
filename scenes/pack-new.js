@@ -142,6 +142,9 @@ newPack.enter(async (ctx, next) => {
         { text: ctx.i18n.t('scenes.new_pack.custom_emoji'), style: 'primary' }
       ],
       [
+        { text: ctx.i18n.t('scenes.new_pack.custom_emoji_adaptive'), style: 'primary' }
+      ],
+      [
         { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
       ]
     ]).resize()
@@ -152,7 +155,12 @@ newPack.on('message', async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   const { text } = ctx.message
   const { newPack } = ctx.session.scene
-  if (text === ctx.i18n.t('scenes.new_pack.custom_emoji')) {
+  if (text === ctx.i18n.t('scenes.new_pack.custom_emoji_adaptive')) {
+    // Adaptive (needs_repainting) emoji used to be reachable only through the
+    // undocumented `/new fill`. Same pack type, plus the repaint flag.
+    newPack.packType = 'custom_emoji'
+    newPack.fillColor = true
+  } else if (text === ctx.i18n.t('scenes.new_pack.custom_emoji')) {
     newPack.packType = 'custom_emoji'
   } else if (text === ctx.i18n.t('scenes.new_pack.regular')) {
     newPack.packType = 'regular'

@@ -10,6 +10,17 @@ const { convertQueue, removebgQueue } = require('./queues')
 const downloadFileByUrl = require('./download-file-by-url')
 const { removePlaceholderIfPending } = require('./placeholder')
 const escapeHTML = require('./html-escape')
+const { rescaleTgs } = require('./lottie-rescale')
+const { fitStickerSize } = require('./sticker-geometry')
+
+// Telegram pins the Lottie canvas per pack type. A TGS taken from a pack of
+// the other type has to be retargeted or Telegram rejects it.
+const TGS_CANVAS = { custom_emoji: 100, regular: 512 }
+
+const retargetTgs = (buffer, stickerSet) => {
+  const target = TGS_CANVAS[stickerSet.packType] || TGS_CANVAS.regular
+  return rescaleTgs(buffer, target)
+}
 
 // Track users with video currently processing (userId -> timestamp)
 const videoProcessing = new Map()
@@ -345,7 +356,12 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
         title: stickerSet.title,
         link: `${linkPrefix}${stickerSet.name}`,
         stickerInfo,
-        sticker
+        sticker,
+        // A monochrome (needs_repainting) emoji dropped into a regular sticker
+        // pack stays white-on-transparent — nothing repaints it there. Surface
+        // that in the success text so the user isn't puzzled by a "blank"
+        // sticker on a light background.
+        repainting: !!stickerFile?.needs_repainting && stickerSet.packType !== 'custom_emoji'
       }
     }
   }
@@ -515,7 +531,10 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
       return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
 
-    stickerExtra.sticker = { source: animatedData }
+    const retargeted = retargetTgs(animatedData, stickerSet)
+    if (retargeted.error) return retargeted
+
+    stickerExtra.sticker = { source: retargeted.buffer }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
   }
 
@@ -568,7 +587,11 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
     } catch (err) {
       return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
-    stickerExtra.sticker = { source: animatedData }
+
+    const retargeted = retargetTgs(animatedData, stickerSet)
+    if (retargeted.error) return retargeted
+
+    stickerExtra.sticker = { source: retargeted.buffer }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
   }
 
@@ -797,38 +820,17 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
         })
       }
     } else {
-      let finalWidth = imageMetadata.width
-      let finalHeight = imageMetadata.height
+      // Longer side exactly 512, the other proportional. Small sources are
+      // scaled UP — the old code centred them on a transparent 512×512
+      // canvas, so a 100×100 custom emoji became a thumbnail-sized sticker.
+      // See utils/sticker-geometry.js.
+      const { width, height } = fitStickerSize(imageMetadata.width, imageMetadata.height)
 
-      if (imageMetadata.width > 512 || imageMetadata.height > 512) {
-        const scale = Math.min(512 / imageMetadata.width, 512 / imageMetadata.height)
-        finalWidth = Math.round(imageMetadata.width * scale)
-        finalHeight = Math.round(imageMetadata.height * scale)
-
-        pipeline = pipeline.resize(512, 512, {
-          fit: 'inside',
-          withoutEnlargement: true
+      if (width !== imageMetadata.width || height !== imageMetadata.height) {
+        pipeline = pipeline.resize(width, height, {
+          fit: 'fill',
+          kernel: sharp.kernel.lanczos3
         })
-      }
-
-      if (finalWidth < 512 && finalHeight < 512) {
-        if (finalWidth >= finalHeight) {
-          const paddingLeft = Math.floor((512 - finalWidth) / 2)
-          const paddingRight = Math.ceil((512 - finalWidth) / 2)
-          pipeline = pipeline.extend({
-            left: paddingLeft,
-            right: paddingRight,
-            background: { r: 0, g: 0, b: 0, alpha: 0 }
-          })
-        } else {
-          const paddingTop = Math.floor((512 - finalHeight) / 2)
-          const paddingBottom = Math.ceil((512 - finalHeight) / 2)
-          pipeline = pipeline.extend({
-            top: paddingTop,
-            bottom: paddingBottom,
-            background: { r: 0, g: 0, b: 0, alpha: 0 }
-          })
-        }
       }
     }
 
