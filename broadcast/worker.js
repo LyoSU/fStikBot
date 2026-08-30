@@ -19,6 +19,7 @@ const PROCESS_ID = `${os.hostname()}#${process.pid}`
 
 let tickTimer = null
 let activeRun = null // Promise of the in-flight runBroadcast, if any
+let claiming = false // synchronous guard around the awaited claim
 let shuttingDown = false
 
 // ───────────────────────────────────────────────────────────────────────
@@ -84,13 +85,19 @@ const releaseLock = (broadcastId) =>
 // Tick
 // ───────────────────────────────────────────────────────────────────────
 const tick = async () => {
-  if (activeRun || shuttingDown) return
+  if (activeRun || claiming || shuttingDown) return
+
+  // claimNext() awaits, so without a synchronous guard two ticks could both
+  // pass the activeRun check and claim two campaigns in parallel.
+  claiming = true
   let broadcast
   try {
     broadcast = await claimNext()
   } catch (err) {
     log.error('claim failed:', err.message)
     return
+  } finally {
+    claiming = false
   }
   if (!broadcast) return
 
@@ -133,18 +140,31 @@ const start = () => {
 
 // Graceful drain: stop accepting new claims, wait for the in-flight run to
 // reach a checkpoint, release its lock. Called from SIGTERM/SIGINT.
-const stop = async () => {
-  if (shuttingDown) return
+//
+// Idempotent AND awaitable: bot.js awaits stop() from its own signal handler,
+// and the handlers below fire for the same signal. Returning the shared promise
+// means whoever calls second still waits for the same drain instead of
+// short-circuiting on a `shuttingDown` flag and letting the process exit early.
+let stopPromise = null
+
+const stop = () => {
+  if (stopPromise) return stopPromise
+
   shuttingDown = true
   if (tickTimer) {
     clearInterval(tickTimer)
     tickTimer = null
   }
-  if (activeRun) {
-    log.info('waiting for in-flight broadcast to drain...')
-    await activeRun.catch(() => {})
-  }
-  log.info('worker stopped')
+
+  stopPromise = (async () => {
+    if (activeRun) {
+      log.info('waiting for in-flight broadcast to drain...')
+      await activeRun.catch(() => {})
+    }
+    log.info('worker stopped')
+  })()
+
+  return stopPromise
 }
 
 process.on('SIGTERM', () => { stop().catch(() => {}) })

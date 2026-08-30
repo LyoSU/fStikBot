@@ -39,4 +39,4 @@ const sendToRecipient = async (broadcast, chatId) => {
   }
 }
 
-module.exports = { sendToRecipient }
+module.exports = { sendToRecipient, SHORT_RETRY_AFTER_S }

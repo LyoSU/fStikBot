@@ -1,7 +1,7 @@
 const { db } = require('../database')
 const log = require('../utils/logger').scope('broadcast:runner')
 const audiences = require('./audiences')
-const { sendToRecipient } = require('./send')
+const { sendToRecipient, SHORT_RETRY_AFTER_S } = require('./send')
 const { shared: rateLimiter } = require('./rate-limiter')
 const { classify, isSoftBan, isPauseTrigger, describe, CODE } = require('./errors')
 const { STATUS } = require('./status')
@@ -26,6 +26,15 @@ const materialize = async (broadcast) => {
   const audience = audiences.get(broadcast.audience.type)
   if (!audience) throw new Error(`Unknown audience: ${broadcast.audience.type}`)
 
+  // Re-read the flag: another replica may have finished materializing between
+  // the claim and this call. Re-walking the audience would duplicate rows.
+  const current = await db.Broadcast.findById(broadcast._id).select('progress.materialized').lean()
+  if (current?.progress?.materialized) {
+    broadcast.progress.materialized = true
+    log.info(`broadcast ${broadcast._id} already materialized, skipping`)
+    return broadcast.progress.total
+  }
+
   log.info(`materializing broadcast ${broadcast._id} (audience=${broadcast.audience.type})`)
 
   // Quick count first → admins see "0 / N" immediately instead of "0 / 0"
@@ -49,7 +58,17 @@ const materialize = async (broadcast) => {
 
   const flush = async () => {
     if (!buffer.length) return
-    await db.BroadcastRecipient.insertMany(buffer, { ordered: false })
+    try {
+      await db.BroadcastRecipient.insertMany(buffer, { ordered: false })
+    } catch (err) {
+      // A retried materialization re-inserts rows the previous attempt already
+      // wrote. With the unique (broadcastId, telegram_id) index those come back
+      // as duplicate-key errors and are exactly what we want to ignore —
+      // ordered:false means every non-duplicate row still landed.
+      const isDuplicateOnly = err.code === 11000 ||
+        (Array.isArray(err.writeErrors) && err.writeErrors.every((e) => e.code === 11000 || e.err?.code === 11000))
+      if (!isDuplicateOnly) throw err
+    }
     buffer = []
   }
 
@@ -107,8 +126,14 @@ const findPauseTriggerIdx = (results) => {
     if (r.ok) continue
     const code = classify(r.err)
     if (isPauseTrigger(code)) return i
+    // Anything send.js could not absorb has to pause the campaign, not be
+    // written off as a failure. With SHORT_RETRY_AFTER_S=30 and
+    // PAUSE_RETRY_AFTER_S=60 the 31–60s window used to fall between the two and
+    // those recipients were lost for good; on a pause they are retried on
+    // resume because the checkpoint does not advance past them.
     const retryAfter = r.err && r.err.parameters && r.err.parameters.retry_after
-    if (code === CODE.RATE_LIMIT && retryAfter > PAUSE_RETRY_AFTER_S) return i
+    const pauseAbove = Math.min(PAUSE_RETRY_AFTER_S, SHORT_RETRY_AFTER_S)
+    if (code === CODE.RATE_LIMIT && (!retryAfter || retryAfter > pauseAbove)) return i
   }
   return -1
 }
