@@ -9,7 +9,12 @@ const {
 const packRename = new Scene('packRename')
 
 packRename.enter(async (ctx) => {
-  const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
+  const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2]).catch(() => null)
+
+  if (!stickerSet) {
+    await ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
+    return ctx.scene.leave()
+  }
 
   if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
     await ctx.answerCbQuery(ctx.i18n.t('error.access_denied'), true)

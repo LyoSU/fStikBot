@@ -9,15 +9,34 @@ module.exports = async (ctx) => {
   if (ctx.startPayload) passcode = ctx.startPayload.match(/s_(.*)/)?.[1]
   if (ctx?.message?.text === '/public') passcode = 'public'
 
+  // Without this guard `/public xyz` (or /public@bot) left passcode undefined,
+  // the driver serialised it to null, and findOne({ passcode: null }) returned
+  // the first pack that has no passcode at all — a stranger's pack, selected
+  // and persisted for the caller.
+  if (!passcode) {
+    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
+  }
+
   const stickerSet = await ctx.db.StickerSet.findOne({
-    passcode
+    passcode,
+    deleted: { $ne: true }
   })
 
   if (!stickerSet) {
     return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
   }
 
-  if (stickerSet.owner.toString() === userInfo.id.toString() || stickerSet.passcode === passcode) {
+  const isOwner = stickerSet.owner.toString() === userInfo.id.toString()
+
+  // A hidden pack is only reachable by its owner — a co-edit link shouldn't
+  // resurrect a pack the owner deliberately took out of the list.
+  if (stickerSet.hide === true && !isOwner) {
+    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
+  }
+
+  // Knowing the passcode IS the co-edit grant — that's the whole point of the
+  // /coedit link. The owner gets in regardless.
+  if (isOwner || stickerSet.passcode === passcode) {
     if (stickerSet.inline) {
       userInfo.inlineStickerSet = stickerSet
     }

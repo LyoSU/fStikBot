@@ -12,7 +12,7 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
     await ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.too_fast'), true)
   }
 }), async (ctx) => {
-  const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
+  const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2]).catch(() => null)
 
   if (!stickerSet) return ctx.answerCbQuery(ctx.i18n.t('scenes.error.notFound'))
 
@@ -63,9 +63,15 @@ composer.action(/boost:(yes|no):(.*)/, rateLimit({
 })
 
 composer.action(/boost:(.*)/, async (ctx) => {
-  const stickerSet = await ctx.db.StickerSet.findById(ctx.match[1])
+  const stickerSet = await ctx.db.StickerSet.findById(ctx.match[1]).catch(() => null)
 
   if (!stickerSet) return ctx.answerCbQuery(ctx.i18n.t('scenes.error.notFound'))
+
+  // The confirmation text embeds the pack title and link, so a forged
+  // boost:<id> was a read primitive for any pack, hidden ones included.
+  if (stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
+  }
 
   const resultText = ctx.i18n.t('scenes.boost.sure', {
     title: escapeHTML(stickerSet.title),

@@ -92,10 +92,12 @@ module.exports = async (ctx) => {
 
       packType = stickerSet.inline ? 'inline' : stickerSet.packType
 
-      stickerSet.updatedAt = new Date()
-      await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
-
       if (stickerSet?.owner.toString() === userInfo.id.toString()) {
+        // Bump only after the owner check — otherwise a forged set_pack:<id>
+        // reordered a stranger's pack list.
+        stickerSet.updatedAt = new Date()
+        await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
+
         await ctx.answerCbQuery()
 
         if (stickerSet.inline) {
@@ -240,10 +242,18 @@ module.exports = async (ctx) => {
     ).then(() => {})
   }
 
-  if (packType === 'inline' && stickerSets.length <= 0) {
+  // Whether the user already owns an inline pack — the "new pack" button is
+  // hidden on the inline tab when they do, because the inline pack name is
+  // fixed (inline_<userId>) and newSet() would wipe the existing one.
+  let hasInlinePack = packType === 'inline' && stickerSets.length > 0
+
+  // Auto-create only on the first page: on page 2+ an empty result just means
+  // "no more packs", and unshifting a pack there duplicated it in the list.
+  if (packType === 'inline' && page === 0 && stickerSets.length <= 0) {
     let inlineSet = await ctx.db.StickerSet.findOne({
       owner: userInfo.id,
-      inline: true
+      inline: true,
+      deleted: { $ne: true }
     })
 
     if (!inlineSet) {
@@ -258,7 +268,11 @@ module.exports = async (ctx) => {
       })
     }
 
-    stickerSets.unshift(inlineSet)
+    hasInlinePack = true
+
+    // The list query already filters out hidden packs; don't smuggle one back
+    // in through this fallback.
+    if (inlineSet.hide !== true) stickerSets.unshift(inlineSet)
   }
 
   let messageText = ''
@@ -323,7 +337,7 @@ module.exports = async (ctx) => {
     )
   ])
 
-  keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), `new_pack:${packType}`)])
+  keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), `new_pack:${packType}`, hasInlinePack)])
 
   const replyMarkup = Markup.inlineKeyboard(keyboardMarkup)
 
