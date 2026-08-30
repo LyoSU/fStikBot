@@ -228,6 +228,8 @@ cmd:
       Каб змяніць стандартнае эмодзі для бягучага пака, адпраўце каманду <code>/emoji</code>, дадаўшы праз прабел патрэбнае эмодзі
 
       Напрыклад: <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Select a pack with /packs first — then /emoji 🌟
     done: Эмодзі паспяхова зменена.
     error: Пры змяненні эмодзі ўзнікла памылка!
   round_video:
@@ -626,6 +628,11 @@ scenes:
     error:
       title_long: 'Максімальная колькасць сімвалаў у назве: ${max}.'
       name_long: 'Максімальная колькасць сімвалаў у адрасе: ${max}.'
+      inline_exists: |
+        You already have an inline pack — <b>${title}</b>.
+
+        One inline pack per account: creating another would wipe this one.
+        It is selected now, so just keep adding stickers to it.
       telegram:
         name_invalid: Такі адрас выкарыстаць не атрымаецца.
         name_occupied: Такі адрас ужо заняты.
@@ -741,6 +748,7 @@ scenes:
 
       Пак ${title} цяпер забушчаны
     error:
+      too_fast: Not so fast — try again in a second.
       not_enough_credits: |
         У вас недастатковая колькасць крэдытаў для бусту.
 
@@ -827,6 +835,8 @@ scenes:
     error:
       - <b>Памылка!</b>
   frame:
+    no_sticker_set: |
+      You haven't selected a pack yet. Pick one with /packs and run the command again.
     no_video: |
       <b>Памылка!</b>
       Дадаць рамкі можна толькі да відэапакаў.
@@ -892,15 +902,22 @@ scenes:
     file_too_big: |
       File is too big (max 20 MB). Send a smaller video.
   search:
+    error:
+      not_found: |
+        Nothing found. Try other keywords.
     enter: |
       <b>🔍 Search stickers</b>
 
       Enter keywords — I'll find packs in the catalog.
+  error:
+    notFound: Пак не знойдзены
   leave: |
     Дзеянне скасавана.
   btn:
     cancel: '❌ Скасаваць'
 error:
+  stickerset_invalid: |
+    The sticker pack is unavailable. It may have been deleted in Telegram.
   telegram: |
     <b>Telegram вярнуў памылку!</b>
     <code>${error}</code>
