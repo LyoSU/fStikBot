@@ -22,7 +22,7 @@ cmd:
       Salom, ${name}!
       Rasm, video va GIF-lardan stikerlar hamda emoji yarataman.
 
-      💬 @StickLyUA
+      💬 @fStikCommunity
     group: |
       Salom, ${groupTitle}! Men stikerlar va emoji yarataman.
 
@@ -37,7 +37,7 @@ cmd:
 
       Boshqalarning toʻplamlarini koʻring yoki oʻzingiznikini eʼlon qiling:
     commands:
-      ss: '🌟 Stikerni saqlash'
+      ss: '➕ Guruh toʻplamiga qoʻshish'
       start: '📜 Menyu'
       help: '❓ Yordam'
       packs: '📁 Toʻplamlarim'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Yangi toʻplam'
       catalog: '🔍 Katalog'
       catalog_mini: '🔍 Katalog'
-      catalog_browser: 'Brauzerda ochish'
+      catalog_browser: '🌐 Brauzerda ochish'
       catalog_browser_mini: '🌐 Brauzerda'
       catalog_app: 'Android uchun yuklab olish'
       catalog_app_mini: '📱 Android ilovasi'
@@ -114,8 +114,8 @@ cmd:
       /ss (mediaga javoban) — guruh toʻplamiga tez qoʻshish.
 
       <b>Inline toʻplamlar:</b>
-      Istalgan chatda @bot_nomi orqali tez foydalanish uchun alohida toʻplam turi.
-      • Haqiqiy Telegram toʻplami emas — faqat botda saqlanadi
+      Shaxsiy kolleksiyangiz: saqlangan stiker, GIF, rasm va videolarni istalgan chatda yuboring — @bot_nomi deb yozing va keraklisini tanlang.
+      • Telegram stikerlaringizga hech narsa qoʻshilmaydi — hammasi botda saqlanadi
       • Stiker, rasm, GIF va video saqlashi mumkin
       • /packs → «Inline» boʻlimida yarating
       • GIF qidiruv rejimi ham bor (Tenor orqali)
@@ -138,10 +138,10 @@ cmd:
 
       • Nomda "${titleSuffix}" boʻlmaydi
       • Videolar navbatsiz qayta ishlanadi
-      • 30 soniyagacha videolar
-      • Navbatga bir nechta stiker
+      • 35 soniyagacha videolar
+      • Bir vaqtda bir nechta stiker
 
-      <b>Adaptiv emoji</b> — /new ichida alohida tugma (rangi matnga moslashadi)
+      <b>🎨 Adaptiv emoji</b> — /new ichidagi alohida toʻplam turi: emojilar rangi matnga moslashadi
 
       Olish → /donate
     problems: |
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Xayriya'
   topup: |
     <b>Sotib olmoqchi boʻlgan kreditlar sonini kiriting:</b>
-  invalid_amount: |
-    <b>Notoʻgʻri miqdor</b>
-
-    Eng kam miqdor — 1 kredit
-  paymenu: |
-    Siz <b>${amount} kredit</b>ni <b>${price}$</b> ga sotib olmoqchisiz
-
-    ⚠️ Kreditlar administrator tomonidan qoʻlda beriladi.
-    Kutish vaqti — 5 daqiqadan 1 soatgacha
-
-    <u>Toʻlov usulini tanlang:</u>
   description: |
     Kredit sotib olib, siz bot rivojini qoʻllab-quvvatlaysiz va qoʻshimcha imkoniyatlardan foydalana olasiz
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https:\/\/t.me\/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Faol
-        off: Nofaol
+        on: 'faol'
+        off: 'nofaol'
     hidden: Toʻplam <a href="${link}">${title}</a> roʻyxatingizdan yashirildi.
     restored: Toʻplam <a href="${link}">${title}</a> roʻyxatingizga qaytarildi.
     btn:
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Stiker oʻlchamlari notoʻgʻri. Stikerlar 512x512 piksel boʻlishi kerak.
       invalid_animated: |
-        Animatsiyali stiker fayli toʻgʻri TGS formatida emas.
+        Telegram animatsiyali stikerlarni faqat TGS formatida qabul qiladi. GIF yoki MP4 fayllarni video sifatida yuboring — bot ulardan video stiker yasaydi.
       invalid_video: |
-        Video fayl toʻgʻri WEBM formatida emas.
+        Video fayl formati notoʻgʻri (WEBM kerak).
       restore: |
         Toʻplamni tiklab boʻlmadi.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Stiker oʻlchamlari notoʻgʻri. Stikerlar 512x512 piksel boʻlishi kerak.
       invalid_animated: |
-        Animatsiyali stiker fayli toʻgʻri TGS formatida emas.
+        Telegram animatsiyali stikerlarni faqat TGS formatida qabul qiladi. GIF yoki MP4 fayllarni video sifatida yuboring — bot ulardan video stiker yasaydi.
       invalid_video: |
-        Video fayl toʻgʻri WEBM formatida emas.
+        Video fayl formati notoʻgʻri (WEBM kerak).
   group_settings:
     success: |
       Guruh sozlamalari muvaffaqiyatli yangilandi.
@@ -444,6 +433,7 @@ sticker:
       ✅ <u>${title}</u> toʻplamiga qoʻshildi
     ok_repainting_notice: |
       ⚠️ Bu monoxrom emoji: oddiy toʻplamda u oq rangda qoladi va yorugʻ fonda deyarli koʻrinmaydi.
+      U matn rangiga moslashishi uchun /new orqali alohida «🎨 Adaptiv emoji» toʻplamini yarating.
     send_emoji: Bu stiker uchun emoji yuboring
     converting_process: |
       ⏳ Konvertatsiya: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Stiker oʻlchamlari notoʻgʻri. Stikerlar 512x512 piksel boʻlishi kerak.
       invalid_animated: |
-        Animatsiyali stiker fayli toʻgʻri TGS formatida emas.
+        Telegram animatsiyali stikerlarni faqat TGS formatida qabul qiladi. GIF yoki MP4 fayllarni video sifatida yuboring — bot ulardan video stiker yasaydi.
       animated_too_big: |
         Toʻplam oʻlchamiga moslashtirilgandan soʻng animatsiyali stiker Telegramning 64 KB chegarasidan oshib ketadi — uni koʻchirib boʻlmaydi.
       invalid_video: |
-        Video fayl toʻgʻri WEBM formatida emas.
+        Video fayl formati notoʻgʻri (WEBM kerak).
       file_type:
-        static: |
-          Bu fayl turi qoʻllab-quvvatlanmaydi
-          Bu rasm yoki statik stikerni statik stikerlar toʻplamiga qoʻshishingiz mumkin
-
-          <i>Boshqa toʻplam yarating (/new) yoki tanlang (/packs)</i>
-        video: |
-          Bu fayl turi qoʻllab-quvvatlanmaydi
-          Bu video faylni video stikerlar toʻplamiga qoʻshishingiz mumkin
-
-          <i>Boshqa toʻplam yarating (/new) yoki tanlang (/packs)</i>
-        animated: |
-          Bu fayl turi qoʻllab-quvvatlanmaydi
-          Bu animatsiyali fayllarni vektor stikerlar toʻplamiga qoʻshishingiz mumkin
-
-          <i>Boshqa toʻplam yarating (/new) yoki tanlang (/packs)</i>
         unknown: |
           Bu fayl turi qoʻllab-quvvatlanmaydi
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Stikerni oʻchirish</b>
 
-      Toʻplamdan oʻchirmoqchi boʻlgan stikerni yuboring.
+      Oʻchirmoqchi boʻlgan stikerni yuboring. Toʻplamni tanlash shart emas — uning qayerdaligini oʻzim topaman.
     confirm: |
       Bu stiker toʻplamdan oʻchirilsinmi?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Istalgan til
       button_confirm_language: Tasdiqlash
       set_safe: |
-        <b>Toʻplamingiz foydalanuvchilar uchun xavfsizmi?</b>
-        <i>Yaʼni unda erotika va boshqa shok qiluvchi kontent yoʻq</i>
+        <b>Toʻplamingiz hamma uchun xavfsizmi?</b>
+        <i>Yaʼni unda erotika, zoʻravonlik yoki boshqa 18+ kontent yoʻq</i>
       button_safe:
-        safe: Ha, xavfsiz
-        not_safe: Yoʻq, xavfsiz emas
+        safe: '✅ Ha, 18+ yoʻq'
+        not_safe: '🔞 Yoʻq, 18+ kontent bor'
       no_tags: koʻrsatilmagan
       confirm: |
         <b>«<a href="${link}">${title}</a>» stikerlar toʻplamini eʼlon qilishni tasdiqlang</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> butunlay oʻchirilsinmi?
 
-      Tasdiqlash uchun <code>${confirm}</code> deb yuboring.
+      Tasdiqlash uchun <code>${confirm}</code> deb yuboring yoki «Bekor qilish» tugmasini bosing.
     confirm: Ha, oʻchirilsin
     success: |
       🗑 Toʻplam oʻchirildi
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Bu toʻplam manzili band. Boshqa nom tanlang.
     pack_name_invalid: |
-      Toʻplam manzili notoʻgʻri formatda. Lotin harflari, raqamlar va pastki chiziqdan foydalaning.
+      Toʻplam manzili notoʻgʻri formatda. Faqat lotin harflari, raqamlar va pastki chiziq (_) ruxsat etiladi.
     invalid_sticker_format: |
       Fayl stiker sifatida mos emas: formati yoki oʻlchami notoʻgʻri.
     invalid_emoji: |
