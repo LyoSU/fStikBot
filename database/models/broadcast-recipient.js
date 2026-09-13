@@ -16,7 +16,11 @@ const mongoose = require('mongoose')
 // blip) — documents older than 30 days disappear on their own.
 const broadcastRecipientSchema = new mongoose.Schema({
   broadcastId: { type: mongoose.Schema.Types.ObjectId, ref: 'Broadcast', required: true, index: true },
-  telegram_id: { type: Number, required: true }
+  telegram_id: { type: Number, required: true },
+  // Handled out of checkpoint order: a batch is sent concurrently, so when it
+  // pauses at recipient N the ones after N may already have their message.
+  // They are marked done and skipped on resume instead of being sent again.
+  done: { type: Boolean }
 }, { timestamps: { createdAt: true, updatedAt: false } })
 
 // Primary iteration index — covers the sendLoop query in broadcast/runner.js.

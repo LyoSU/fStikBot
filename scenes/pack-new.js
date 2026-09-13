@@ -20,6 +20,7 @@ const { removePlaceholderIfPending } = require('../utils/placeholder')
 const { sendPackMenu } = require('../handlers/pack-menu')
 const { flushPendingStickers } = require('../handlers/sticker')
 const log = require('../utils/logger').scope('pack-new')
+const metrics = require('../utils/metrics')
 
 const { match } = I18n
 
@@ -172,6 +173,7 @@ newPack.enter(async (ctx) => {
   ctx.session.scene.newPack = { ...(enterState.newPack || {}) }
   if (enterState.copyPack) ctx.session.scene.copyPack = enterState.copyPack
   else delete ctx.session.scene.copyPack
+  if (!enterState.chooseType) metrics.track(enterState.copyPack ? 'copy_started' : 'new_pack_started')
 
   const args = ctx.message?.text?.split(' ') || []
   if (['fill', 'adaptive'].includes(args[1])) ctx.session.scene.newPack.fillColor = true
@@ -375,7 +377,7 @@ const uploadPlaceholder = (ctx, packType, copy) => {
 const chargeCopy = async (ctx) => {
   const userId = ctx.session.userInfo._id
   const result = await ctx.db.User.updateOne({ _id: userId, balance: { $gte: 1 } }, { $inc: { balance: -1 } })
-  if (!result.nModified) return null
+  if (!result.modifiedCount) return null
 
   ctx.session.userInfo.balance -= 1
   let refunded = false
@@ -615,6 +617,8 @@ newPackConfirm.enter(async (ctx) => {
 
     if (hasPlaceholder) placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, created.name)
   }
+
+  metrics.track(copyPack ? 'copy_created' : 'pack_created')
 
   const userStickerSet = await ctx.db.StickerSet.newSet({
     owner: ctx.session.userInfo.id,

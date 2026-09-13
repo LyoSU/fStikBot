@@ -137,6 +137,7 @@ const gracefulShutdown = async (signal) => {
 
   const drain = Promise.allSettled([
     bot.stop(),
+    require('./utils/metrics').flush(),
     require('./broadcast').stopWorker()
   ]).then((results) => {
     for (const r of results) {

@@ -8,6 +8,7 @@ const { isRateLimitError, getRetryAfter } = require('../utils/retry-api')
 const { redactErrorToken } = require('../utils/telegram-error')
 const log = require('../utils/logger').scope('error-handler')
 const { isExpectedNoise } = require('../utils/expected-noise')
+const metrics = require('../utils/metrics')
 
 // Probe once at module load: is .git available at project root?
 // Skip git blame entirely in environments without .git (e.g. Docker deploys)
@@ -80,6 +81,8 @@ async function errorLog (error, ctx) {
   if (error.description && error.description.includes('timeout')) return
 
   if (!ctx.config) return log.error(errorText)
+
+  metrics.track('error_unknown')
 
   await ctx.telegram.sendMessage(ctx.config.logChatId, errorText, {
     parse_mode: 'HTML'

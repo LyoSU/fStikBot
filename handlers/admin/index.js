@@ -1,4 +1,5 @@
 const path = require('path')
+const metrics = require('../../utils/metrics')
 const Composer = require('telegraf/composer')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
@@ -124,8 +125,43 @@ const displayAdminPanel = async (ctx) => {
   if (showTransactions) {
     buttons.push([Markup.callbackButton('📊 Transaction history', 'admin:transactions')])
   }
+  buttons.push([Markup.callbackButton('📈 Product metrics', 'admin:metrics')])
 
   await renderMessage(ctx, text, Markup.inlineKeyboard(buttons))
+}
+
+// Funnel pairs shown as a conversion rate: [label, from, to].
+const METRIC_FUNNELS = [
+  ['/new → pack created', 'new_pack_started', 'pack_created'],
+  ['copy → pack created', 'copy_started', 'copy_created'],
+  ['files → stickers added', 'sticker_received', 'sticker_added']
+]
+
+const displayMetrics = async (ctx) => {
+  const days = await metrics.recent(7)
+  const total = {}
+  for (const { counts } of days) {
+    for (const [name, count] of Object.entries(counts)) total[name] = (total[name] || 0) + count
+  }
+  const today = days[0]?.day === new Date().toISOString().slice(0, 10) ? days[0].counts : {}
+
+  const funnels = METRIC_FUNNELS
+    .filter(([, from]) => total[from])
+    .map(([label, from, to]) => `${label}: <b>${Math.round(((total[to] || 0) / total[from]) * 100)}%</b> (${total[to] || 0}/${total[from]})`)
+
+  const rows = Object.keys(total).sort().map((name) => `<code>${name}</code> — ${total[name]} <i>(today ${today[name] || 0})</i>`)
+
+  const text = [
+    '📈 <b>Product metrics</b> — last 7 days',
+    '',
+    ...(funnels.length ? [...funnels, ''] : []),
+    ...(rows.length ? rows : ['<i>No data yet.</i>'])
+  ].join('\n')
+
+  await renderMessage(ctx, text, Markup.inlineKeyboard([
+    [Markup.callbackButton('🔄 Refresh', 'admin:metrics')],
+    [Markup.callbackButton('« Back', 'admin:back')]
+  ]))
 }
 
 const displayUserManagement = async (ctx) => {
@@ -490,6 +526,7 @@ composer.command('stars', requireRight('finance'), getStarsTransactions)
 composer.action('admin:user_management', requireRight('users'), displayUserManagement)
 composer.action('admin:financial_ops', requireRight('finance'), displayFinancialOps)
 composer.action('admin:transactions', requireRight('finance'), displayTransactionHistory)
+composer.action('admin:metrics', requireAnyAdmin, displayMetrics)
 
 // User-management actions
 composer.action('admin:user:ban', requireRight('users'), promptBanUser)

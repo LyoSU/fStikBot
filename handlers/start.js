@@ -2,6 +2,7 @@ const Markup = require('telegraf/markup')
 const { escapeHTML, userName } = require('../utils')
 const packLink = require('../utils/pack-link')
 const { sendBanner } = require('../banners')
+const metrics = require('../utils/metrics')
 
 // "Stickers go to: <pack>" — the one thing a returning user needs to know
 // before sending a photo.
@@ -35,6 +36,7 @@ module.exports = async (ctx) => {
 
   // Only "has at least one pack" matters here; exists() stops at the first match.
   const hasStickerSets = await ctx.db.StickerSet.exists({ owner: ctx.session.userInfo.id })
+  metrics.track(hasStickerSets ? 'start_returning' : 'start_new')
 
   const keyboard = [
     hasStickerSets

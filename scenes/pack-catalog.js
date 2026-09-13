@@ -46,7 +46,7 @@ const createStickerSet = async (packName, userInfo) => {
     const flags = deriveStickerFlags(stickerSetInfo.stickers)
 
     stickerSet = new db.StickerSet({
-      _id: mongoose.Types.ObjectId(),
+      _id: new mongoose.Types.ObjectId(),
       owner: userInfo,
       name: stickerSetInfo.name,
       title: stickerSetInfo.title,
@@ -260,41 +260,49 @@ catalogPublish.enter(async (ctx) => {
     return ctx.scene.leave()
   }
 
-  const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
-
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.enter', {
-    link: `${linkPrefix}${stickerSet.name}`,
-    title: escapeHTML(stickerSet.title)
-  }), {
-    reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.catalog.publish.continue_button'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
-    ]).resize()
-  })
-
+  // Straight to the description (the rules come with it). Editing a published
+  // pack starts from what it already has instead of a blank form.
   ctx.session.scene.publish = {
-    stickerSet
+    stickerSet,
+    description: stickerSet.about?.description || '',
+    tags: stickerSet.about?.tags || [],
+    languages: [...(stickerSet.about?.languages || [])],
+    showRules: true
   }
-})
 
-catalogPublish.hears(match('scenes.catalog.publish.continue_button'), async (ctx) => {
   return ctx.scene.enter('catalogEnterDescription')
 })
 
 const catalogEnterDescription = new Scene('catalogEnterDescription')
 
 catalogEnterDescription.enter(async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.catalog.publish.enter_description'), {
+  const publish = ctx.session.scene?.publish
+  if (!publish?.stickerSet) return ctx.scene.leave()
+
+  const parts = []
+  if (publish.showRules) {
+    parts.push(ctx.i18n.t('scenes.catalog.publish.enter', {
+      link: packLink(publish.stickerSet),
+      title: escapeHTML(publish.stickerSet.title)
+    }))
+  }
+  parts.push(ctx.i18n.t('scenes.catalog.publish.enter_description'))
+  if (publish.description) {
+    parts.push(ctx.i18n.t('scenes.catalog.publish.current_description', { description: escapeHTML(publish.description) }))
+  }
+
+  await ctx.replyWithHTML(parts.join('\n'), {
+    disable_web_page_preview: true,
     reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
+      ...(publish.description ? [[{ text: ctx.i18n.t('scenes.catalog.publish.keep_description'), style: 'primary' }]] : []),
+      [{ text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }]
     ]).resize()
   })
+})
+
+catalogEnterDescription.hears(match('scenes.catalog.publish.keep_description'), (ctx) => {
+  if (!ctx.session.scene?.publish?.description) return ctx.scene.reenter()
+  return ctx.scene.enter('catalogSelectLanguage')
 })
 
 catalogEnterDescription.on('text', async (ctx) => {
@@ -302,6 +310,7 @@ catalogEnterDescription.on('text', async (ctx) => {
   const { entities, text } = ctx.message
 
   ctx.session.scene.publish.description = text.slice(0, 512)
+  ctx.session.scene.publish.tags = []
 
   if (entities?.length > 0) {
     const hashtags = []

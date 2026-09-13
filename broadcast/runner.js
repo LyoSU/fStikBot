@@ -153,14 +153,26 @@ const buildPauseReason = (err) => {
 //   - flag unreachable users (bulk update on User.blocked)
 //   - decide whether to pause the campaign (long 429 or invalid media)
 //
-// When pause is triggered mid-batch, results at/after the trigger index are
-// NOT counted: they'll be retried on resume. The checkpoint `lastRecipientId`
-// only advances past results that were definitively handled. Trade-off: a
-// recipient who received the post but whose response was rate-limited will
-// see a duplicate when resumed (at-least-once delivery > silent loss).
+// When pause is triggered mid-batch, the checkpoint `lastRecipientId` stops
+// right before the trigger. The batch was sent concurrently, so recipients
+// after the trigger may already be handled: those are counted now and marked
+// `done`, and only the ones that hit the pause condition themselves (the
+// trigger, rate limits) are sent again on resume. They used to get the post a
+// second time.
+const needsRetry = (result) => {
+  if (result.ok) return false
+  const code = classify(result.err)
+  return isPauseTrigger(code) || code === CODE.RATE_LIMIT
+}
+
 const applyBatchResults = async (broadcast, recipients, results) => {
   const pauseIdx = findPauseTriggerIdx(results)
-  const processable = pauseIdx >= 0 ? results.slice(0, pauseIdx) : results
+  const processable = pauseIdx >= 0
+    ? results.filter((result, index) => index < pauseIdx || (index > pauseIdx && !needsRetry(result)))
+    : results
+  const doneAfterPause = pauseIdx >= 0
+    ? recipients.filter((recipient, index) => index > pauseIdx && !needsRetry(results[index])).map((recipient) => recipient._id)
+    : []
   const pauseReason = pauseIdx >= 0 ? buildPauseReason(results[pauseIdx].err) : null
 
   const inc = { 'progress.sent': 0, 'progress.failed': 0 }
@@ -214,6 +226,10 @@ const applyBatchResults = async (broadcast, recipients, results) => {
   }
   if (!Object.keys(update.$set).length) delete update.$set
 
+  if (doneAfterPause.length) {
+    await db.BroadcastRecipient.updateMany({ _id: { $in: doneAfterPause } }, { $set: { done: true } })
+  }
+
   await db.Broadcast.updateOne({ _id: broadcast._id }, update)
 
   if (softBans.length) {
@@ -258,7 +274,7 @@ const sendLoop = async (broadcast, shouldStop) => {
       return
     }
 
-    const filter = { broadcastId: broadcast._id }
+    const filter = { broadcastId: broadcast._id, done: { $ne: true } }
     if (lastId) filter._id = { $gt: lastId }
 
     const recipients = await db.BroadcastRecipient

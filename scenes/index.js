@@ -1,6 +1,7 @@
 const Stage = require('telegraf/stage')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
+const metrics = require('../utils/metrics')
 
 const { match } = I18n
 
@@ -91,6 +92,7 @@ stage.guard = async (ctx, next) => {
 
   if (!ctx.message || ctx.message.successful_payment) return next()
 
+  metrics.track(`scene_hint_${ctx.scene.current.id}`)
   return ctx.replyWithHTML(ctx.i18n.t('scenes.unexpected'), {
     reply_to_message_id: ctx.message.message_id,
     allow_sending_without_reply: true,

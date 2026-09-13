@@ -351,8 +351,10 @@ composer.on('inline_query', async (ctx) => {
         id: mapped.id,
         // Bot API 6.6 renamed thumb_url → thumbnail_url.
         thumbnail_url: mapped.thumbUrl,
-        mpeg4_url: mapped.mp4Url,
-        caption: mapped.gifUrl
+        // No caption: it used to carry the Tenor URL, visible under the GIF in
+        // whatever chat it was sent to. A GIF forwarded back to the bot is
+        // added from its own file.
+        mpeg4_url: mapped.mp4Url
       }
 
       // Telegram renders the placeholder at the right aspect ratio when it

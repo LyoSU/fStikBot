@@ -40,4 +40,11 @@ const paymentsSchema = mongoose.Schema({
 // Index for admin refund lookups by Telegram charge ID
 paymentsSchema.index({ 'resultData.telegram_payment_charge_id': 1 })
 
+// A pending Payment is created per tap on a credit package; most are never
+// paid. They expire after 30 days — an invoice that old is not coming back.
+paymentsSchema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: 30 * 24 * 60 * 60, partialFilterExpression: { status: 'pending' } }
+)
+
 module.exports = paymentsSchema

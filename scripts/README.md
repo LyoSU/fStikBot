@@ -8,6 +8,23 @@ node scripts/<name>.js
 
 Each one loads `.env` from the parent directory, so no extra setup is needed.
 
+## `ensure-indexes.js`
+
+Creates the indexes declared in the schemas. The app runs with
+`autoIndex: false`, so a new index (the pending-payment TTL, the co-edit
+activity log TTL, broadcast recipient uniqueness, shared-pack lookups) only
+exists once this has run against production.
+
+```bash
+node scripts/ensure-indexes.js --dry-run   # list what's missing
+node scripts/ensure-indexes.js             # create the missing ones
+```
+
+It never drops or changes an existing index. A declared index whose key
+already exists with different options (`unique`, `expireAfterSeconds`) is
+reported and left alone — fix those by hand. Builds run in the background, but
+on the big `stickers` collection pick a quiet hour anyway.
+
 ## `inspect-db.js`
 
 Read-only diagnostic of the `Sticker` and `StickerSet` collections. Dumps
