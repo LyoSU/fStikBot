@@ -234,21 +234,14 @@ const logRateLimit = (method, error, { userId, stickerSet, stickerFile, stickerE
 }
 
 // getStickerSet reports "⭐" where emoji_list had "⭐️" (or the reverse).
-const normalizeEmoji = (emoji) => (emoji || '').replace(/️/g, '')
+const normalizeEmoji = (emoji) => (emoji || '').replace(/\uFE0F/g, '')
 
 // `beforeStickers` is the set's sticker list as it looked immediately before
 // this add (the caller usually already has it). Passing it lets us identify the
 // sticker WE added instead of assuming it's the last one — with two concurrent
 // adds to the same pack, slice(-1)[0] mapped both DB rows onto the same file.
 const pickAddedSticker = (setInfo, beforeStickers, stickerFile) => {
-  // The set holding our exact document settles it: either we just added it
-  // (file_id path keeps file_unique_id) or it was already there and Telegram
-  // left the set unchanged ("If exactly the same sticker had already been
-  // added to the set, then the set isn't changed"). An upload normally gets a
-  // new file_unique_id, so on that path this simply misses.
-  const exact = setInfo.stickers.find((s) => s.file_unique_id === stickerFile?.file_unique_id)
-  if (exact) return exact
-
+  const isOurs = (s) => s.file_unique_id === stickerFile?.file_unique_id
   const beforeIds = new Set(
     Array.isArray(beforeStickers) ? beforeStickers.map((s) => s.file_unique_id) : []
   )
@@ -256,9 +249,19 @@ const pickAddedSticker = (setInfo, beforeStickers, stickerFile) => {
     ? setInfo.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
     : []
 
-  // Fall back to "last sticker" when we have no before-snapshot (e.g. the
-  // convert-queue path) or the diff came out empty.
-  return added.length > 0 ? added[added.length - 1] : setInfo.stickers.slice(-1)[0]
+  // 1. A new sticker with our exact document — only the file_id path keeps
+  //    file_unique_id, so this is the precise hit when concurrent adds landed.
+  // 2. Otherwise the newest new sticker (upload path gets a new file_unique_id).
+  // 3. Nothing new, but our document is in the set: Telegram left it unchanged
+  //    ("If exactly the same sticker had already been added to the set, then
+  //    the set isn't changed").
+  // 4. No before-snapshot (e.g. the convert-queue path): the last sticker.
+  // Checking the whole set for our document BEFORE the diff would map a fresh
+  // upload onto an older copy of the same source already in the pack.
+  return added.find(isOurs) ||
+    added[added.length - 1] ||
+    setInfo.stickers.find(isOurs) ||
+    setInfo.stickers.slice(-1)[0]
 }
 
 // After a 429 on addStickerToSet, check whether the sticker made it into the
@@ -451,14 +454,18 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
 
 // Telegram reasons that mean "this file, sent this way, was refused" — the
 // only failures a fresh upload of the same sticker can get past. Pack, emoji
-// and limit errors would fail the upload path identically. null = a 400 we
-// have no pattern for (e.g. "wrong file identifier").
-const FILE_REJECTION_REASONS = new Set([null, 'invalid_sticker_format', 'sticker_not_in_set'])
+// and limit errors would fail the upload path identically.
+const FILE_REJECTION_REASONS = new Set(['invalid_sticker_format', 'sticker_not_in_set'])
+// For a 400 we have no pattern for, retry only if it is about the file itself
+// ("wrong file identifier", "Wrong file type", ...) — not e.g. USER_NOT_FOUND.
+const FILE_ERROR_HINT = /file|sticker|document|media/i
 
 const isFileRejection = (result) => {
   const error = result?.error?.telegram
   if (!error || error.code !== 400) return false
-  return FILE_REJECTION_REASONS.has(matchTelegramErrorReason(error))
+  const reason = matchTelegramErrorReason(error)
+  if (reason === null) return FILE_ERROR_HINT.test(error.description || error.message || '')
+  return FILE_REJECTION_REASONS.has(reason)
 }
 
 // A sticker taken from a set of the same type: its file_id is already a
