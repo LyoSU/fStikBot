@@ -1,3 +1,4 @@
+const http = require('http')
 const https = require('https')
 
 module.exports = (fileUrl, timeout = 30000) => new Promise((resolve, reject) => {
@@ -5,7 +6,11 @@ module.exports = (fileUrl, timeout = 30000) => new Promise((resolve, reject) => 
   let totalSize = 0
   const MAX_SIZE = 20 * 1024 * 1024 // 20MB limit
 
-  const req = https.get(fileUrl, (response) => {
+  // A self-hosted Bot API server (apiRoot over http) serves files over http;
+  // https.get refused those URLs outright.
+  const client = String(fileUrl).startsWith('http:') ? http : https
+
+  const req = client.get(fileUrl, (response) => {
     // Check for successful response status
     if (response.statusCode !== 200) {
       req.destroy()

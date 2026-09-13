@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 In browser'
       catalog_app: '📱 Download for Android'
       catalog_app_mini: '📱 Android app'
+    current_pack: '📦 Stickers go to: <a href="${link}">${title}</a>'
+    hint: 'Send a photo, video, GIF or sticker — I''ll add it to <a href="${link}">${title}</a>.'
   guide:
     web: |
-      <b>📖 How to use fStikBot</b>
+      <b>📖 How it works</b>
 
-      Full guides, tips, and FAQ on our website.
+      1. /new — create a pack
+      2. Send photos, videos, GIFs or stickers — even a whole album
+      3. /packs — your packs and their settings
+
+      Guides, tips and FAQ are on the website.
     menu: |
       <b>❓ Help</b>
 
@@ -214,6 +220,13 @@ cmd:
 
       Admins can select a pack for the group with the button below.
     select_group_pack: Select pack
+    hidden_btn: '🗄 Hidden'
+    hidden_info: |
+      <b>🗄 Hidden packs</b>
+
+      Tap a pack to restore or delete it.
+    hidden_empty: 'No hidden packs here.'
+    group_admin_only: 'Only group admins can choose the group pack.'
   emoji:
     info: |
       To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji, separated by a space
@@ -238,8 +251,8 @@ cmd:
 
       Send a photo — I'll cut it into a grid of emoji.
     no_pack: |
-      You need a custom emoji pack first.
-      Create one with /new and choose "Emoji".
+      Mosaic works with a custom emoji pack.
+      Pick one of yours below or create a new one.
     choose_grid: |
       📐 Choose grid size:
     btn:
@@ -448,9 +461,9 @@ sticker:
       reply: |
         Reply to a sticker.
       no_selected_pack: |
-        <b>You haven't selected a pack</b>
+        <b>First, a pack for your stickers</b>
 
-        Create (/new) or select (/packs) a pack
+        Create one — and I'll add this file to it right away.
       no_selected_group_pack: |
         <b>You haven't selected a group pack</b>
 
@@ -481,9 +494,9 @@ sticker:
         The video file has the wrong format (WEBM required).
       file_type:
         unknown: |
-          This file type is not supported
+          This file type isn't supported.
 
-          <i>Create (/new) or select (/packs) another sticker pack</i>
+          Send a photo, video, GIF, sticker, or an image as a file.
       wait_load: |
         ⏳ Still processing the previous file...
       timeout: |
@@ -501,6 +514,12 @@ sticker:
       invalid_image: |
 
         Couldn't process this image. Try sending a different file or format.
+      queue_full: '⏳ Too many files at once. Wait until I''ve handled the ones in the queue, then send the rest.'
+    album_progress: '⏳ Adding album: ${current}/${total}'
+    album_done: '✅ Added ${added} of ${total} to <a href="${link}">${title}</a>'
+    album_converting: '⏳ ${count} more are videos: converting, I''ll reply to each one when it''s ready.'
+    album_duplicates: '♻️ Already in the pack: ${count}.'
+    album_failed: '⚠️ Couldn''t add: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Subscribe to the channel</a> — news, updates, new features.
@@ -539,6 +558,7 @@ scenes:
       <b>Pack title</b>
 
       Everyone will see it. Type your own or pick one of the suggestions below.
+      <i>I'll make the pack link from the title.</i>
     pack_name: |
       <b>Pack link</b>
 
@@ -562,6 +582,9 @@ scenes:
           The bot can't upload stickers to Telegram.
 
           Try again later.
+    btn:
+      custom_link: '🔗 My own pack link'
+    custom_link_on: 'OK — send the title, then I''ll ask for the link.'
   copy:
     enter: |
       First, let's create a new pack for the copy.
@@ -599,6 +622,16 @@ scenes:
         Sorry, this feature is only available to those who have supported the bot.
 
         You can do that by sending /donate.
+    title: |
+      <b>📋 Copying <a href="${originalLink}">${originalTitle}</a></b> (${count})
+
+      Title for your copy — type your own or pick one below.
+    btn:
+      change_type: '🔄 Change pack type'
+    created: |
+      ✅ Pack created: <a href="${link}">${title}</a>
+
+      Copying the stickers — I'll let you know when it's done.
   original:
     enter: |
       <b>🔎 Find source</b>
@@ -614,7 +647,7 @@ scenes:
     enter: |
       <b>🗑 Delete sticker</b>
 
-      Send the sticker you want to delete. No need to choose a pack — I'll find where it is myself.
+      Send a sticker — I'll delete it from its pack right away (you can restore it). Send as many as you like.
     confirm: |
       Delete this sticker from the pack?
     error:
@@ -660,6 +693,7 @@ scenes:
     btn:
       yes: '⚡ Boost'
       no: Cancel
+      buy: '⭐ Buy credits'
     canceled: |
       Canceled
     success: |
@@ -746,7 +780,7 @@ scenes:
     enter: |
       ⚠️ Delete <a href="${link}">${title}</a> forever?
 
-      Send <code>${confirm}</code> to confirm, or tap "Cancel".
+      Tap «${confirm}» to confirm, or «Cancel».
     confirm: Yes, delete
     success: |
       🗑 Pack deleted
@@ -780,7 +814,7 @@ scenes:
       <b>✂️ Remove background</b>
 
       Send a photo — you'll get a PNG without the background.
-      <i>Works best with photos of people.</i>
+      <i>Model for your photos:</i>
     enter_anime: |
       <b>✂️ Remove background</b>
 
@@ -801,6 +835,7 @@ scenes:
       ⏱ Processing took too long. Try again later or with a smaller photo.
     error_queue_disabled: |
       This feature is temporarily unavailable. Try again later.
+    not_image: 'Send a photo or an image as a file (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Video to circle</b>
@@ -832,6 +867,7 @@ scenes:
     Canceled
   btn:
     cancel: '← Cancel'
+  unexpected: 'I''m waiting for something else right now — follow the step above, or tap «← Cancel».'
 error:
   stickerset_invalid: |
     The pack is unavailable. It may have been deleted in Telegram.

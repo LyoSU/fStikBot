@@ -64,10 +64,11 @@ module.exports = (addStickerResult, lang) => {
     if (addStickerResult.error.type === 'duplicate') {
       messageText = i18n.t(lang, 'sticker.add.error.have_already')
 
+      // Only "delete": the old "copy" button re-added the sticker to the pack
+      // it was already in, which could only fail.
       if (addStickerResult.error.sticker) {
         replyMarkup = Markup.inlineKeyboard([
-          { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.delete'), `delete_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'danger' },
-          { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.copy'), `restore_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'primary' }
+          { ...Markup.callbackButton(i18n.t(lang, 'callback.sticker.btn.delete'), `delete_sticker:${addStickerResult.error.sticker.fileUniqueId}`), style: 'danger' }
         ])
       }
     } else if (addStickerResult.error.i18nKey) {

@@ -7,6 +7,7 @@ const config = require('../config.json')
 const addStickerText = require('./add-sticker-text')
 const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
+const { runQueueJob } = require('./queue-job')
 const downloadFileByUrl = require('./download-file-by-url')
 const { removePlaceholderIfPending } = require('./placeholder')
 const escapeHTML = require('./html-escape')
@@ -27,21 +28,18 @@ const retargetTgs = (buffer, stickerSet) => {
   return rescaleTgs(buffer, target)
 }
 
-// Track users with video currently processing (userId -> timestamp)
-const videoProcessing = new Map()
-const VIDEO_PROCESSING_TTL = 1000 * 60 * 2 // 2 minutes auto-unlock
-
 // Bot API hard limit on InputSticker.emoji_list
 const MAX_EMOJI_LIST = 20
 
-// Lost global:completed/global:failed events would otherwise leave entries in
-// videoProcessing forever. Sweep anything past the TTL.
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, value] of videoProcessing) {
-    if (now - value > VIDEO_PROCESSING_TTL) videoProcessing.delete(key)
-  }
-}, 1000 * 60).unref()
+// Background removal for a "!" caption shares the /clear queue.
+const REMOVEBG_TIMEOUT_MS = 60 * 1000
+
+// Something that isn't the user's fault and has no better message. The
+// details go to the log; the user used to read them as "Telegram error: …".
+const internalError = (reason) => {
+  log.error(reason)
+  return { error: { i18nKey: 'error.unknown' } }
+}
 
 // This bot's id, straight from the token (`<id>:<secret>`). The convert queue's
 // global:* events fire in every process attached to the queue, so each handler
@@ -60,7 +58,7 @@ const i18n = new I18n({
 // addStickerText, addSticker never calls ctx.reply directly):
 //
 //   { ok: {...} }       — success
-//   { wait: true }      — queued to convertQueue; worker will reply later
+//   { wait: true, job } — queued to convertQueue; worker will reply later
 //   { error: {...} }    — any of:
 //     { type: 'duplicate', sticker }   — dup in inline pack (caller renders
 //                                         inline buttons to delete/copy)
@@ -112,16 +110,13 @@ async function updateConvertQueueMessages () {
   }
 }
 
-// Trigger queue position updates only when a slot frees (completion shifts remaining waiting jobs).
-// global:failed/global:active previously duplicated this work and hammered Telegram with edits.
-convertQueue.on('global:completed', () => {
-  updateConvertQueueMessages().catch((err) => console.error('updateConvertQueueMessages error:', err.message))
-})
-
+// A finished job adds its sticker and frees a slot, which moves every waiting
+// job up — so that's also the only moment queue positions are refreshed.
 convertQueue.on('global:completed', (jobId, result) => {
   handleConvertCompleted(jobId, result).catch((err) => {
     console.error('convertQueue global:completed handler failed:', err?.stack || err)
   })
+  updateConvertQueueMessages().catch((err) => console.error('updateConvertQueueMessages error:', err.message))
 })
 
 async function handleConvertCompleted (jobId, result) {
@@ -142,17 +137,14 @@ async function handleConvertCompleted (jobId, result) {
   // duplicate failure replies.
   if (isForeignJob(input)) return
 
-  videoProcessing.delete(input.userId)
-
   const stickerExtra = input.stickerExtra
 
   // Handle case when conversion failed (no metadata/content)
   if (!metadata || !content) {
+    log.warn(`convert job ${jobId} finished without output`)
     if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
-      parse_mode: 'HTML'
-    }).catch(() => {})
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
     return
   }
 
@@ -166,9 +158,7 @@ async function handleConvertCompleted (jobId, result) {
   const stickerSet = await db.StickerSet.findById(input.stickerSet._id)
 
   if (!stickerSet) {
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
-      parse_mode: 'HTML'
-    }).catch(() => {})
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
     return
   }
 
@@ -190,10 +180,22 @@ async function handleConvertCompleted (jobId, result) {
 
     if (textResult.messageText) {
       await telegram.sendMessage(input.chatId, textResult.messageText, {
-        parse_mode: 'HTML',
+        ...replyExtra(input),
         reply_markup: textResult.replyMarkup
       }).catch((err) => console.error('convert result reply failed:', err.message))
     }
+  }
+}
+
+// Worker results reply to the message that sent the video: with several videos
+// converting, a bare "Added" didn't say which one it was about.
+function replyExtra (input) {
+  return {
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+    ...(input.replyToMessageId
+      ? { reply_to_message_id: input.replyToMessageId, allow_sending_without_reply: true }
+      : {})
   }
 }
 
@@ -214,22 +216,16 @@ async function handleConvertFailed (jobId, errorData) {
   // messages the user.
   if (isForeignJob(input)) return
 
-  if (input.userId) videoProcessing.delete(input.userId)
-
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
   if (errorData === 'timeout') {
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), {
-      parse_mode: 'HTML'
-    }).catch(() => {})
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), replyExtra(input)).catch(() => {})
   } else {
     await telegram.sendMessage(config.logChatId, `<b>Convert error</b>\n\n<code>${escapeHTML(JSON.stringify(errorData))}</code>`, {
       parse_mode: 'HTML'
     }).catch(() => {})
 
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), {
-      parse_mode: 'HTML'
-    }).catch(() => {})
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
   }
 
   await job.remove().catch(() => {})
@@ -347,13 +343,8 @@ const finalizeAdd = async (stickerSet, stickerFile, stickerExtra, setInfo, stick
 const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, beforeStickers) => {
   let stickerAdd
 
-  // Validate stickerExtra has required fields
   if (!stickerExtra || !stickerExtra.sticker) {
-    return {
-      error: {
-        message: 'Invalid sticker data: sticker is undefined'
-      }
-    }
+    return internalError(`uploadSticker without sticker data (pack ${stickerSet.name})`)
   }
 
   const { sticker } = stickerExtra
@@ -383,13 +374,8 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
     stickerExtra.sticker = uploadedSticker.file_id
   }
 
-  // Final validation before API call
   if (!stickerExtra.sticker) {
-    return {
-      error: {
-        message: 'Sticker file not uploaded properly'
-      }
-    }
+    return internalError(`uploadStickerFile returned no file_id (pack ${stickerSet.name})`)
   }
 
   if (stickerSet.create === false) {
@@ -466,11 +452,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
     }
 
     if (!getStickerSet.stickers || getStickerSet.stickers.length === 0) {
-      return {
-        error: {
-          message: 'Sticker set is empty after adding sticker'
-        }
-      }
+      return internalError(`pack ${stickerSet.name} is empty right after an add`)
     }
 
     const stickerInfo = pickAddedSticker(getStickerSet, beforeStickers, stickerFile)
@@ -523,23 +505,29 @@ const tryAddByFileId = async (userId, stickerSet, stickerFile, stickerExtra, bef
   return null
 }
 
-// Rate limiting for static stickers (userId -> timestamp)
-const lastStickerTime = new Map()
-const STICKER_COOLDOWN = 1000 * 30 // 30 seconds
-
-// Periodic cleanup of old entries (every 5 minutes).
-// .unref() so this janitorial timer doesn't keep the process alive on shutdown.
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, value] of lastStickerTime) {
-    if (now - value > STICKER_COOLDOWN * 2) {
-      lastStickerTime.delete(key)
-    }
+// Download a TGS, fit its canvas to this pack's type and upload it.
+const uploadRetargetedTgs = async (userId, stickerSet, stickerFile, stickerExtra, fileUrl, beforeStickers) => {
+  let animatedData
+  try {
+    animatedData = await downloadFileByUrl(fileUrl)
+  } catch (err) {
+    return { error: { i18nKey: 'sticker.add.error.convert' } }
   }
-}, 1000 * 60 * 5).unref()
 
+  const retargeted = retargetTgs(animatedData, stickerSet)
+  if (retargeted.error) return retargeted
+
+  stickerExtra.sticker = { source: retargeted.buffer }
+  return uploadSticker(userId, stickerSet, stickerFile, stickerExtra, beforeStickers)
+}
+
+// Per-user ordering and "one video at a time" for free users live in the
+// caller's queue (handlers/sticker.js, utils/user-queue.js) — this function
+// no longer keeps locks of its own that refused files.
+//
 // options.stickerSetInfo — a getStickerSet result the caller already fetched
 // for this pack; reused as the "before" snapshot instead of fetching again.
+// options.replyToMessageId — the user's message a queued conversion replies to.
 module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options = {}) => {
   let stickerFile = inputFile
 
@@ -569,35 +557,11 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   const stickerSet = toStickerSet
 
   if (stickerSet && stickerSet.inline) {
-    // Validate file_unique_id exists
     if (!stickerFile?.file_unique_id) {
-      return {
-        error: {
-          message: 'Invalid sticker file: missing file_unique_id'
-        }
-      }
+      return internalError(`inline add without file_unique_id (pack ${stickerSet.name})`)
     }
 
-    // Check for duplicates in inline pack (by fileUniqueId, original.fileUniqueId, or legacy file.file_unique_id)
-    const existingSticker = await ctx.db.Sticker.findOne({
-      stickerSet: stickerSet.id,
-      deleted: false,
-      $or: [
-        { fileUniqueId: stickerFile.file_unique_id },
-        { 'original.fileUniqueId': stickerFile.file_unique_id },
-        { 'file.file_unique_id': stickerFile.file_unique_id }
-      ]
-    })
-
-    if (existingSticker) {
-      return {
-        error: {
-          type: 'duplicate',
-          sticker: existingSticker
-        }
-      }
-    }
-
+    // Duplicates are checked by the caller (handlers/sticker.js) before queueing.
     const sticker = await ctx.db.Sticker.addSticker(stickerSet.id, inputFile.emoji, stickerFile, null)
 
     return {
@@ -703,18 +667,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
       return fileUrl
     }
 
-    let animatedData
-    try {
-      animatedData = await downloadFileByUrl(fileUrl)
-    } catch (err) {
-      return { error: { i18nKey: 'sticker.add.error.convert' } }
-    }
-
-    const retargeted = retargetTgs(animatedData, stickerSet)
-    if (retargeted.error) return retargeted
-
-    stickerExtra.sticker = { source: retargeted.buffer }
-    return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+    return uploadRetargetedTgs(ctx.from.id, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers)
   }
 
   // Static and video stickers from a set of the same type go by file_id too.
@@ -770,25 +723,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
   // Handle animated stickers that weren't caught by is_animated check (fallback from URL detection)
   if (stickerExtra.sticker_format === 'animated' && !stickerFile.is_animated) {
-    let animatedData
-    try {
-      animatedData = await downloadFileByUrl(fileUrl)
-    } catch (err) {
-      return { error: { i18nKey: 'sticker.add.error.convert' } }
-    }
-
-    const retargeted = retargetTgs(animatedData, stickerSet)
-    if (retargeted.error) return retargeted
-
-    stickerExtra.sticker = { source: retargeted.buffer }
-    return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+    return uploadRetargetedTgs(ctx.from.id, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers)
   }
 
-  // For stickers already in a Telegram set with matching type - use directly
+  // A same-type set sticker gets here only after Telegram refused it by file_id
+  // (see tryAddByFileId above): upload the file itself, with sticker_format
+  // now corrected from the file extension.
   if (stickerFile.set_name && stickerFile.type === stickerSet.packType) {
-    // Always download and re-upload to ensure format consistency
-    // Using file_id directly can cause "wrong file type" errors when
-    // sticker_format doesn't match the actual file format
     let stickerData
     try {
       stickerData = await downloadFileByUrl(fileUrl)
@@ -805,38 +746,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
     if (stickerSet?.boost) priority = 5
     else if (ctx.i18n.locale() === 'ru') priority = 15
 
-    let job
-    try {
-      job = await removebgQueue.add({
-        fileUrl
-      }, {
-        priority,
-        attempts: 1,
-        removeOnComplete: true,
-        removeOnFail: true
-      })
-    } catch (err) {
-      return { error: { i18nKey: 'sticker.add.error.convert' } }
+    const removed = await runQueueJob(removebgQueue, { fileUrl }, { priority, timeoutMs: REMOVEBG_TIMEOUT_MS })
+
+    if (removed.error) {
+      return { error: { i18nKey: removed.error === 'timeout' ? 'sticker.add.error.timeout' : 'sticker.add.error.convert' } }
     }
 
-    // Same pattern as scenes/photo-clear.js: race job.finished() against a
-    // timeout that RESOLVES with a sentinel (a rejecting loser becomes an
-    // unhandled rejection once the race is decided). Without this the caller's
-    // in-flight slot stayed taken until the process restarted.
-    const TIMEOUT = Symbol('timeout')
-    let timer
-    const timeoutPromise = new Promise((resolve) => {
-      timer = setTimeout(() => resolve(TIMEOUT), 1000 * 60)
-    })
-    const jobPromise = job.finished().catch(() => null)
-    const raceResult = await Promise.race([jobPromise, timeoutPromise])
-    clearTimeout(timer)
-
-    if (raceResult === TIMEOUT || !raceResult || !raceResult.content) {
-      return { error: { i18nKey: 'sticker.add.error.timeout' } }
-    }
-
-    fileData = await sharp(Buffer.from(raceResult.content, 'base64'))
+    fileData = await sharp(Buffer.from(removed.result.content, 'base64'))
       .trim()
       .toBuffer()
   }
@@ -871,191 +787,161 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
     (stickerExtra.sticker_format === 'static' && stickerSet.frameType && stickerSet.frameType !== 'square')
 
   if (needsVideoProcessing) {
-    // Check if user already has video processing (with auto-unlock after TTL)
-    const lastProcessing = videoProcessing.get(ctx.from.id)
-    if (lastProcessing && (Date.now() - lastProcessing < VIDEO_PROCESSING_TTL) && !stickerSet?.boost) {
-      return { error: { i18nKey: 'sticker.add.error.wait_load' } }
+    // Size check for new files (stickers from sets are already validated)
+    if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) {
+      return { error: { i18nKey: 'sticker.add.error.too_big' } }
     }
 
-    // Take the lock right after the check. It used to be set only after
-    // convertQueue.add — four awaits later — so double-tapping the same GIF
-    // converted and added it twice. Released in the finally below on every
-    // path that doesn't actually enqueue.
-    videoProcessing.set(ctx.from.id, Date.now())
-    let queued = false
+    // Skip re-encoding if explicitly requested
+    if (inputFile.skip_reencode) {
+      let skipData
+      try {
+        skipData = await downloadFileByUrl(fileUrl)
+      } catch (err) {
+        return { error: { i18nKey: 'sticker.add.error.convert' } }
+      }
+      stickerExtra.sticker = { source: skipData }
+      return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+    }
 
+    // Convert video through queue
+    if (stickerExtra.sticker_format === 'static') {
+      stickerExtra.sticker_format = 'video'
+    }
+
+    const stickerSetsCount = await ctx.db.StickerSet.countDocuments({
+      owner: ctx.session.userInfo._id,
+      video: true
+    })
+
+    let priority = Math.round(stickerSetsCount / 3)
+    if (ctx.i18n.locale() === 'ru') priority += 40
+    if (stickerSet?.boost) priority = 5
+
+    const maxDuration = stickerSet?.boost ? 35 : 4
+    const total = await convertQueue.getJobCounts()
+
+    if (total.waiting > 200 && priority > 50) {
+      return { error: { i18nKey: 'sticker.add.error.timeout' } }
+    }
+
+    let convertingMessage
+    if (!stickerSet?.boost && total.waiting > 5) {
+      convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
+        progress: total.waiting + 1,
+        total: total.waiting + 1
+      }), options.replyToMessageId
+        ? { reply_to_message_id: options.replyToMessageId, allow_sending_without_reply: true }
+        : {}
+      ).catch(() => null)
+    }
+
+    let frameType = isVideoNote ? 'circle' : 'rounded'
+    const forceCrop = inputFile.forceCrop || stickerSet.packType === 'custom_emoji'
+
+    if (frameType === 'rounded') {
+      frameType = stickerSet.frameType || 'square'
+    }
+
+    let job
     try {
-      // Size check for new files (stickers from sets are already validated)
-      if (!stickerFile.set_name && (inputFile.file_size > 1000 * 1000 * 15 || inputFile.duration > 65)) {
-        return { error: { i18nKey: 'sticker.add.error.too_big' } }
-      }
-
-      // Skip re-encoding if explicitly requested
-      if (inputFile.skip_reencode) {
-        let skipData
-        try {
-          skipData = await downloadFileByUrl(fileUrl)
-        } catch (err) {
-          return { error: { i18nKey: 'sticker.add.error.convert' } }
-        }
-        stickerExtra.sticker = { source: skipData }
-        return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
-      }
-
-      // Convert video through queue
-      if (stickerExtra.sticker_format === 'static') {
-        stickerExtra.sticker_format = 'video'
-      }
-
-      const stickerSetsCount = await ctx.db.StickerSet.countDocuments({
-        owner: ctx.session.userInfo._id,
-        video: true
+      job = await convertQueue.add({
+        input: {
+          botId: ctx.botInfo.id,
+          userId: ctx.from.id,
+          chatId: ctx.chat.id,
+          replyToMessageId: options.replyToMessageId || null,
+          locale: ctx.i18n.locale(),
+          showResult,
+          convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
+          stickerExtra,
+          stickerSet,
+          stickerFile
+        },
+        fileUrl,
+        fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
+        timestamp: Date.now(),
+        isEmoji: stickerSet.packType === 'custom_emoji',
+        frameType,
+        forceCrop,
+        maxDuration
+      }, {
+        priority,
+        attempts: 1,
+        removeOnComplete: true,
+        // Keep a failed job for an hour rather than deleting it on failure:
+        // Bull deletes the job hash BEFORE publishing global:failed, so with
+        // `true` handleConvertFailed could never load the job — no error
+        // reply, and the "converting" message stayed. The handler removes
+        // the job itself; the age cap bounds what a missed event leaves
+        // behind (jobs carry base64 fileData).
+        removeOnFail: { age: 60 * 60 }
       })
-
-      let priority = Math.round(stickerSetsCount / 3)
-      if (ctx.i18n.locale() === 'ru') priority += 40
-      if (stickerSet?.boost) priority = 5
-
-      const maxDuration = stickerSet?.boost ? 35 : 4
-      const total = await convertQueue.getJobCounts()
-
-      if (total.waiting > 200 && priority > 50) {
-        return { error: { i18nKey: 'sticker.add.error.timeout' } }
+    } catch (err) {
+      // The "converting N/N" message would otherwise sit there for good.
+      if (convertingMessage) {
+        await ctx.telegram.deleteMessage(ctx.chat.id, convertingMessage.message_id).catch(() => {})
       }
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
+    }
 
-      let convertingMessage
-      if (!stickerSet?.boost && total.waiting > 5) {
-        convertingMessage = await ctx.replyWithHTML(ctx.i18n.t('sticker.add.converting_process', {
-          progress: total.waiting + 1,
-          total: total.waiting + 1
-        }))
-      }
+    return { wait: true, job }
+  }
 
-      let frameType = isVideoNote ? 'circle' : 'rounded'
-      const forceCrop = inputFile.forceCrop || stickerSet.packType === 'custom_emoji'
-
-      if (frameType === 'rounded') {
-        frameType = stickerSet.frameType || 'square'
-      }
-
-      try {
-        await convertQueue.add({
-          input: {
-            botId: ctx.botInfo.id,
-            userId: ctx.from.id,
-            chatId: ctx.chat.id,
-            locale: ctx.i18n.locale(),
-            showResult,
-            convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
-            stickerExtra,
-            stickerSet,
-            stickerFile
-          },
-          fileUrl,
-          fileData: fileData ? Buffer.from(fileData).toString('base64') : null,
-          timestamp: Date.now(),
-          isEmoji: stickerSet.packType === 'custom_emoji',
-          frameType,
-          forceCrop,
-          maxDuration
-        }, {
-          priority,
-          attempts: 1,
-          removeOnComplete: true,
-          // Keep a failed job for an hour rather than deleting it on failure:
-          // Bull deletes the job hash BEFORE publishing global:failed, so with
-          // `true` handleConvertFailed could never load the job — no error
-          // reply, and the "converting" message stayed. The handler removes
-          // the job itself; the age cap bounds what a missed event leaves
-          // behind (jobs carry base64 fileData).
-          removeOnFail: { age: 60 * 60 }
-        })
-        queued = true
-      } catch (err) {
-        // The "converting N/N" message would otherwise sit there for good.
-        if (convertingMessage) {
-          await ctx.telegram.deleteMessage(ctx.chat.id, convertingMessage.message_id).catch(() => {})
-        }
-        return { error: { i18nKey: 'sticker.add.error.convert' } }
-      }
-
-      return { wait: true }
-    } finally {
-      if (!queued) videoProcessing.delete(ctx.from.id)
+  if (!fileData) {
+    try {
+      fileData = await downloadFileByUrl(fileUrl)
+    } catch (err) {
+      return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
   }
 
-  // Static image processing - rate limiting
-  const lastTime = lastStickerTime.get(ctx.from.id) || 0
-
-  if (Date.now() - lastTime < STICKER_COOLDOWN && !stickerSet?.boost) {
-    return { error: { i18nKey: 'sticker.add.error.wait_load' } }
+  if (!fileData || fileData.length === 0) {
+    return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
   }
 
-  // Held for the duration of the processing only, and released in the finally
-  // below no matter how we leave. Previously it was cleared solely on the happy
-  // path, so a broken file / sharp throw locked the user out for 30 s and the
-  // *next* valid file was rejected with "still processing the previous one".
-  lastStickerTime.set(ctx.from.id, Date.now())
+  const imageSharp = sharp(fileData, {
+    failOnError: false,
+    limitInputPixels: 268402689,
+    pages: 1
+  })
 
-  try {
-    if (!fileData) {
-      try {
-        fileData = await downloadFileByUrl(fileUrl)
-      } catch (err) {
-        return { error: { i18nKey: 'sticker.add.error.convert' } }
-      }
-    }
+  const imageMetadata = await imageSharp.metadata().catch((err) => {
+    log.warn('sharp metadata failed:', err.message, 'bytes:', fileData?.length, 'head:', fileData?.slice(0, 20)?.toString('hex'))
+    return null
+  })
 
-    if (!fileData || fileData.length === 0) {
-      return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
-    }
-
-    const imageSharp = sharp(fileData, {
-      failOnError: false,
-      limitInputPixels: 268402689,
-      pages: 1
-    })
-
-    const imageMetadata = await imageSharp.metadata().catch((err) => {
-      console.error('Sharp metadata error:', err.message, 'Buffer size:', fileData?.length, 'First bytes:', fileData?.slice(0, 20)?.toString('hex'))
-      return null
-    })
-
-    if (!imageMetadata) {
-      return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
-    }
-
-    let pipeline = imageSharp.clone()
-
-    if (stickerSet.packType === 'custom_emoji') {
-      if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
-        pipeline = pipeline.resize(100, 100, {
-          fit: 'contain',
-          background: { r: 0, g: 0, b: 0, alpha: 0 }
-        })
-      }
-    } else {
-      // Longer side exactly 512, the other proportional. Small sources are
-      // scaled UP — the old code centred them on a transparent 512×512
-      // canvas, so a 100×100 custom emoji became a thumbnail-sized sticker.
-      // See utils/sticker-geometry.js.
-      const { width, height } = fitStickerSize(imageMetadata.width, imageMetadata.height)
-
-      if (width !== imageMetadata.width || height !== imageMetadata.height) {
-        pipeline = pipeline.resize(width, height, {
-          fit: 'fill',
-          kernel: sharp.kernel.lanczos3
-        })
-      }
-    }
-
-    stickerExtra.sticker = {
-      source: await pipeline.png({ compressionLevel: 6, effort: 3 }).toBuffer()
-    }
-
-    return await uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
-  } finally {
-    lastStickerTime.delete(ctx.from.id)
+  if (!imageMetadata) {
+    return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
   }
+
+  let pipeline = imageSharp.clone()
+
+  if (stickerSet.packType === 'custom_emoji') {
+    if (imageMetadata.width !== 100 || imageMetadata.height !== 100) {
+      pipeline = pipeline.resize(100, 100, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
+    }
+  } else {
+    // Longer side exactly 512, the other proportional. Small sources are
+    // scaled UP — the old code centred them on a transparent 512×512
+    // canvas, so a 100×100 custom emoji became a thumbnail-sized sticker.
+    // See utils/sticker-geometry.js.
+    const { width, height } = fitStickerSize(imageMetadata.width, imageMetadata.height)
+
+    if (width !== imageMetadata.width || height !== imageMetadata.height) {
+      pipeline = pipeline.resize(width, height, {
+        fit: 'fill',
+        kernel: sharp.kernel.lanczos3
+      })
+    }
+  }
+
+  stickerExtra.sticker = {
+    source: await pipeline.png({ compressionLevel: 6, effort: 3 }).toBuffer()
+  }
+
+  return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
 }
