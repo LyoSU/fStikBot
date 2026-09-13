@@ -50,7 +50,7 @@ telegram.getMe().then((info) => {
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'uk',
+  defaultLanguage: 'en',
   defaultLanguageOnMissing: true
 })
 

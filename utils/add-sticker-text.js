@@ -11,7 +11,7 @@ const SEND_MESSAGE_DESCRIPTION_MAX = 1000
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'uk',
+  defaultLanguage: 'en',
   defaultLanguageOnMissing: true
 })
 

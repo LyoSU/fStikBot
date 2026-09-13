@@ -3,725 +3,901 @@ language_name: '🇨🇳 简体中文'
 name: fStik — 贴纸和表情
 description:
   long: |
-    从照片、视频和GIF创建贴纸和表情，无需手动转换 - 机器人处理一切！
+    用照片、视频和 GIF 制作贴纸和表情。无需手动转换，机器人会自动搞定。比 @Stickers 更简单。
 
     功能：
-    • 包管理
+    • 管理贴纸包
     • 视频贴纸和自定义表情
     • 下载原始文件
-    • 转换为图片
+    • 将贴纸/视频/GIF 转换为图片
     • 贴纸目录
 
-    搜索贴纸: play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    搜索贴纸：play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    从照片、视频、GIF创建贴纸和表情。贴纸目录和搜索。🇺🇦
+    用照片、视频、GIF 制作贴纸和表情。贴纸目录与搜索。🇺🇦
 ratelimit: 操作太频繁了！
 cmd:
   start:
     enter: |
-      🧙 你好，${name}！我是表情符号和贴纸包向导。
-      我可以将照片、视频和 GIF 快速转换成炫酷的贴纸。
+      你好，${name}！
+      我可以用照片、视频和 GIF 制作贴纸和表情。
 
-      发送 /help 命令获取更多信息
-
-      💬 支持聊天：@fStikCommunity （仅限英语）
+      💬 @fStikCommunity
     group: |
-      🧙 你好，${groupTitle}！我是表情包和贴纸包的向导。
+      你好，${groupTitle}！我可以制作贴纸和表情。
 
-      要将贴纸添加到群组包中，请在回复照片、视频、GIF 或贴纸时使用 /ss 命令。
+      要把贴纸添加到群组贴纸包，请回复照片、视频、GIF 或贴纸并发送 /ss。
     catalog: |
-      <b>😻 您可以在我们的目录中找到新的贴纸包</b>
+      <b>🔍 贴纸目录</b>
 
-      • 单击下面的按钮并访问适合各种口味的大量贴纸包目录
-      • 按关键字或在准备好的标签中搜索
-      • 不要忘记评价以进行促销或降低贴纸包的排名
+      按关键词搜索贴纸包，或浏览热门贴纸包。
+      给贴纸包评分，帮助其他人发现优质贴纸包。
+    search_catalog: |
+      <b>🌐 贴纸包目录</b>
+
+      浏览其他人的贴纸包，或发布你自己的：
     commands:
       ss: '🌟 保存贴纸'
-      start: '📜 开始菜单'
-      help: '📖 帮助'
-      packs: '📁 管理包'
-      new: '🌝 创建贴纸包'
-      catalog: '📖 目录'
-      publish: '📤 出版包'
-      delete: '❌ 删除贴纸'
-      original: '🔍 查找原始贴纸'
-      restore: '🔀 恢复一个包'
-      copy: '📋 恢复一个包'
-      emoji: '📝 更改表情符号后缀'
-      round: '🎥 圆形视频'
-      clear: '🖼️ 删除照片背景'
-      about: '📦 包装信息'
-      user_about: '🧑‍🎨 创作者信息'
-      lang: '🌐 更改语言'
-      report: '🚨 报告包'
-      donate: '☕️ 支持开发人员'
-      add_to_group: '👥 添加到小组'
-      privacy: '🔒 隐私政策'
+      start: '📜 菜单'
+      help: '❓ 帮助'
+      packs: '📁 我的贴纸包'
+      new: '➕ 新建贴纸包'
+      search_catalog: '🌐 目录'
+      catalog: '🌐 目录'
+      publish: '📤 发布'
+      delete: '🗑 删除贴纸'
+      original: '🔎 贴纸来源'
+      restore: '♻️ 恢复贴纸包'
+      copy: '📋 复制贴纸包'
+      emoji: '😀 更改表情'
+      round: '⭕ 圆形视频'
+      clear: '✂️ 去除背景'
+      info: '🔎 谁的贴纸'
+      user_about: '👤 关于作者'
+      lang: '🌐 语言'
+      report: '🚨 举报'
+      donate: '⭐ 支持'
+      add_to_group: '👥 添加到群组'
+      privacy: '🔒 隐私'
+      guide: '❓ 帮助'
     btn:
-      new: '📥 创建新的'
-      catalog: '💖 打开目录'
-      catalog_mini: '💖 目录'
-      catalog_browser: '🌐 在浏览器中打开'
-      catalog_browser_mini: '🌐 浏览器中'
-      catalog_app: '📱 下载安卓应用程序'
-      catalog_app_mini: '📱 安卓应用程序'
+      new: '➕ 新建贴纸包'
+      catalog: '🔍 目录'
+      catalog_mini: '🔍 目录'
+      catalog_browser: '在浏览器中打开'
+      catalog_browser_mini: '🌐 浏览器'
+      catalog_app: '下载 Android 应用'
+      catalog_app_mini: '📱 Android 应用'
+  guide:
+    web: |
+      <b>📖 fStikBot 使用指南</b>
+
+      完整教程、技巧和常见问题请访问我们的网站。
+    menu: |
+      <b>❓ 帮助</b>
+
+      请选择主题：
+    create: |
+      <b>🎨 制作贴纸</b>
+
+      1. 发送 /new 创建贴纸包
+      2. 选择类型：普通、视频或表情
+      3. 发送照片、视频或 GIF
+      4. 完成！机器人会自动转换一切
+
+      <b>实用命令：</b>
+      • /clear — 去除照片背景
+      • /round — 把视频做成圆形视频消息
+      • /frame — 视频贴纸的形状：
+        └ lite, medium, rounded, square, circle
+
+      <b>💡 提示：</b>以<b>文件</b>（📎）形式发送 PNG 可保留透明背景。“照片”模式会压缩图片并去掉透明度。
+    manage: |
+      <b>📁 管理贴纸包</b>
+
+      <b>命令：</b>
+      • /packs — 你的贴纸包列表
+      • /delete — 删除贴纸
+      • /copy — 复制贴纸包
+      • /restore — 恢复已隐藏的贴纸包
+      • /original — 查找贴纸原件
+      • /about — 贴纸包和作者信息
+
+      <b>更改表情：</b>
+      发送贴纸 → 再发送新的表情。
+      也可以在添加贴纸后立即发送表情。
+
+      <b>默认表情：</b>
+      /emoji 🔥 — 之后添加的所有贴纸都会使用这个表情。
+
+      <b>在群组中：</b>
+      /ss（回复媒体消息）— 快速添加到群组贴纸包。
+
+      <b>内联贴纸包：</b>
+      一种独立的贴纸包类型，可在任意聊天中通过 @机器人用户名 快速调用。
+      • 并非真正的 Telegram 贴纸包，只保存在机器人中
+      • 可以包含贴纸、照片、GIF 和视频
+      • 在 /packs →“内联”标签页中创建
+      • 还支持 GIF 搜索模式（基于 Tenor）
+
+      <b>协作编辑（Co-edit）：</b>
+      点击贴纸包 → 协作编辑 → 获取链接。
+      任何拿到链接的人都可以添加或删除贴纸。
+      重置链接即可移除所有编辑者。
+
+      <b>贴纸包选项：</b>
+      在 /packs 中点击贴纸包 → 重命名、助力、协作编辑、删除。
+    catalog: |
+      <b>🔍 目录</b>
+
+      • /catalog — 热门贴纸包
+      • /publish — 发布你的贴纸包
+      • 给贴纸包评分，让优质贴纸包获得更多曝光
+    boost: |
+      <b>⚡ 助力</b>
+
+      • 名称中不带“${titleSuffix}”
+      • 视频优先处理
+      • 视频最长 30 秒
+      • 可将多个贴纸加入队列
+
+      <b>自适应表情</b> — /new 中的独立按钮（颜色会随文字变化）
+
+      获取 → /donate
+    problems: |
+      <b>❓ 常见问题</b>
+
+      <b>⚫ 背景变黑了？</b>
+      以“照片”形式发送时，Telegram 会去掉透明度。
+      → 请以<b>文件</b>形式发送 PNG（📎 回形针）。
+
+      <b>🔄 修改没有生效？</b>
+      Telegram 会缓存贴纸。请等待约 1 小时或重启应用。
+
+      <b>📹 视频不会动？</b>
+      很可能是格式特殊。请尝试转换为 MP4，或以文件而非视频形式发送。
+
+      <b>🗑 如何删除贴纸？</b>
+      发送 /delete，然后点击要删除的贴纸。
+
+      <b>🤏 贴纸太小？</b>
+      发送前先把图片裁剪成正方形（1:1）。
+
+      <b>🔗 如何去掉链接中的“_by_fStikBot”？</b>
+      无法去掉。Telegram 要求使用此后缀来识别贴纸包由哪个机器人创建。这是平台规则，不是我们定的。
+
+      <b>💎 需要 Premium 吗？</b>
+      • 创建贴纸包：免费
+      • 使用贴纸：免费
+      • 发送自定义表情：仅限 Premium（Telegram 规则）
+
+      <b>还有问题？</b> @fStikCommunity
+    btn:
+      open: '📖 打开指南'
+      create: '🎨 制作贴纸'
+      manage: '📁 管理贴纸包'
+      catalog: '🔍 搜索与发布'
+      boost: '⚡ 助力与功能'
+      problems: '❓ 遇到问题？'
+      back: '← 返回'
   inline:
-    switch_pm: '📁 选择包'
+    switch_pm: '📁 选择贴纸包'
+  lang:
+    choose: |
+      🌐 选择语言
+
+      帮助我们翻译：https://crwd.in/fStikBot
   restore: |
-    <b>🗃 包装修复</b>
+    <b>♻️ 恢复贴纸包</b>
 
-    如果您之前通过该机器人创建了一个软件包，但在软件包列表中找不到它，那么您可以将它恢复回来。
-
-    <b>为此，您需要执行几项操作：</b>
-    1.打开 @Stickers 机器人
-    2.发送 <code>/packstats</code> 命令
-    3.查找并选择所需的软件包
-    4.将收到的信息转发给机器人
-    5.如果恢复成功，机器人会通知相关信息
-    <b>🗄 复制包</b>
-
-    要将另一个软件包复制到新的软件包中，您只需向我发送一个贴纸或表情包的链接即可
+    发送你想恢复的贴纸包链接。
   copy: |
-    <b>🗄 复制包</b>
+    <b>📋 复制贴纸包</b>
 
-    要将另一个软件包复制到新的包中，您只需向我发送一个贴纸或表情包的链接即可
+    发送你想复制的贴纸包链接。
   report: |
-    <b>🚨 报告</b>
+    <b>🚨 举报</b>
 
-    如果您发现您认为可能违法或违反 Telegram 服务条款的贴纸包，请将其链接发送至 @StickersReportBot 报告给我们。
-
-    <i>请记住，机器人不对包的内容负责，也无法控制包的内容</i>
+    发现违反规则的贴纸包？请将链接发送给 @StickersReportBot
   packs:
     info: |
-      <b>📁 管理包</b>
+      <b>📁 我的贴纸包</b>
     types:
       regular: 贴纸
-      custom_emoji: 表情符号
+      custom_emoji: 表情
       inline: 内联
     empty: |
-      <b>您还没有包.</b>
-      要创建，请编写命令 /new
-    inline_title: 内联包
+      还没有贴纸包。创建第一个 → /new
+    inline_title: 内联贴纸包
     select_group_pack_info: |
-      <b>📁 选择包</b>
+      <b>📁 选择贴纸包</b>
 
-      要在群组中使用此包，管理员必须使用下方按钮进行选择
-    select_group_pack: 选择包
+      管理员可以通过下方按钮为群组选择贴纸包。
+    select_group_pack: 选择贴纸包
   emoji:
     info: |
-      要更改当前包的默认表情符号，请发送 <code>/emoji</code> 并用空格分隔表情符号。
+      要更改当前贴纸包的默认表情，请发送 <code>/emoji</code>，后面加空格和表情
 
-      例如 - <code>/emoji 🌟</code>
+      例如：<code>/emoji 🌟</code>
+    no_pack_selected: |
+      请先通过 /packs 选择贴纸包，然后发送 /emoji 🌟
     done: 表情已成功更改。
-    error: 更改表情时发生错误！
+    error: 更改表情时出错！
   round_video:
     enabled: |
-      视频现在将呈现圆形
+      从现在起，视频将变为圆角形状
     disabled: |
-      视频将不再是圆形
+      视频将不再是圆角形状
   paysupport: |
-    <b>👨‍💻 支付支持</b>
+    <b>💳 付款问题</b>
 
-    关于机器人操作的所有问题，包括支付和捐赠，您可以直接联系开发者
+    请联系开发者：@ly_oBot
+  mosaic:
+    enter: |
+      🧩 为 <b>${packTitle}</b> 制作拼图
 
-    <b>联系方式:</b>
-    🧑‍💻 开发者: @ly_oBot
+      发送一张照片，我会把它切成表情网格。
+    no_pack: |
+      你需要先有一个自定义表情包。
+      通过 /new 创建，并选择“表情”。
+    choose_grid: |
+      📐 选择网格尺寸：
+    btn:
+      recommended: "✅ ${rows}×${cols}"
+      option: "${rows}×${cols} · ${total} 个"
+      custom: "✏️ 自定义尺寸"
+      cancel: "← 取消"
+      exit: "🚪 退出拼图"
+      undo: "🗑 删除此拼图"
+    custom_prompt: |
+      输入网格尺寸（例如 3x4）：
+    custom_invalid: |
+      格式无效。示例：3x4。行数 1-10，列数 1-10，总数不超过 50。
+    no_space: |
+      贴纸包空间不足。剩余 ${freeSlots} 个位置，需要 ${total} 个。
+      请选择更小的网格，或通过 /new 创建新贴纸包。
+    blurry_warning: |
+      ⚠️ 图片太小，在此网格尺寸下结果可能会模糊。
+    uploading: "⏳ 正在上传 ${current}/${total}..."
+    done: |
+      ✅ ${rows}×${cols} 拼图已添加到贴纸包！
+    done_link: "📦 使用贴纸包"
+    undo_done: |
+      🗑 拼图已删除（已从贴纸包中删除 ${count} 个表情）。
+    undo_failed: |
+      ❌ 部分表情删除失败，请手动删除。
+    wait_photo: |
+      继续发送照片，或点击“退出”。
+    reject_animated: |
+      暂不支持动态贴纸和视频贴纸。请发送静态贴纸、照片，或 PNG/JPEG/WebP 格式的文件。
+    reject_document: |
+      仅支持图片（JPEG/PNG/WebP）。请发送这些格式的文件。
+    reject_media: |
+      暂不支持动图和视频。请发送静态贴纸、照片，或 PNG/JPEG/WebP 格式的文件。
 donate:
   menu: |
-    <b>☕️ 机器人开发支持</b>
-    通过支持机器人的开发，您将获得信用点数
+    <b>⭐ 支持机器人</b>
 
-    <b>余额：</b> <code>${balance}</code> 信用点数
-    使用 1 个信用点，您有机会提升一个包。
+    <b>余额：</b>${balance} 积分
+    1 积分 = 为一个贴纸包助力
 
-    <b>升级可带来以下好处：</b>
-    ➖ 包名中没有 "<code>${titleSuffix}</code>" <i>（不在链接中）</i>
-    ➖ 标题最多64个字符（而不是35个）
-    ➖ 视频最长可达35秒
-    ➖ 优先转换队列
-    ➖ 一次添加多个贴纸
-    ➖ 没有广告
+    <b>助力可获得：</b>
+    • 名称中不带“<code>${titleSuffix}</code>”
+    • 名称最长 64 个字符（原为 35 个）
+    • 视频最长 35 秒
+    • 转换优先排队
+    • 可同时添加多个贴纸
+    • 无广告
 
-    <b>请选择你想购买的信用点数：</b>
+    <b>要购买多少积分？</b>
+  invoice_title: '${amount} 积分'
   btn:
-    donate: '☕️ 捐赠'
+    donate: '☕ 捐赠'
   topup: |
     <b>请输入你想购买的积分数量：</b>
   invalid_amount: |
-    <b>无效金额</b>
+    <b>数量无效</b>
 
-    最低金额是 1 个信用点
+    最少购买 1 积分
   paymenu: |
-    您要购买 <b>${amount} 个信用点</b>，价格为 <b>${price}$</b>
+    你要以 <b>${price}$</b> 购买 <b>${amount} 积分</b>
 
-    ⚠️ 信用点由管理员手动发放。
-    等待时间从 5 分钟到 1 小时不等
+    ⚠️ 积分由管理员手动发放。
+    等待时间为 5 分钟到 1 小时
 
-    <u>请选择支付方式:</u>
+    <u>选择支付方式：</u>
   description: |
-    购买信用点支持机器人的开发，并获得使用附加功能的机会
+    购买积分即可支持机器人的开发，并解锁更多功能
   update: |
     <b>🔄 余额更新</b>
 
-    余额: <code>${balance}</code> 信用点(添加了 <code>${amount}</code> 信用点)
+    余额：<code>${balance}</code> 积分（增加了 <code>${amount}</code> 积分）
   error:
     already_donated: |
-      您已经为此支付获得了信用点
+      你已经为这笔付款领取过积分
+    already_paid: 该付款已完成
+    not_found: 未找到该付款
+    user_not_found: 未找到用户
     error: |
-      <b>错误!</b>\n处理支付时出错
+      处理付款时出错
     canceled: |
-      支付已取消
+      付款已取消
 coedit:
   info: |
-    <b>👥 联合编辑 </b>
+    <b>👥 协作编辑</b>
 
-    共同编辑链接 <a href="${link}">${title}</a>: <code>${colink}</code>
+    链接：<code>${colink}</code>
 
-    <b>如何使用</b>
-    1.将链接发送给您想让其访问软件包的人
-    2.点击链接后，他们需要按 "开始"，然后就会被添加到编辑器中
-    3.编辑器可以添加、删除和编辑软件包中的贴纸
+    分享此链接，其他人就可以在 <a href="${link}">${title}</a> 中添加和删除贴纸。
 
-    <b>Editors:</b>
-    ${editors}
+    <b>编辑者：</b>${editors}
 
-    <i>要删除编辑器，您需要重新设置链接</i>
+    <i>重置链接即可移除所有编辑者</i>
   no_editors: |
-    尚无编辑
+    暂无
   btn:
     send: '📤 发送链接'
     reset: '🔁 重置链接'
   share: |
-    点击链接并按下 "开始"，共同编辑"${title}"软件包
+    打开链接并点击“开始”，即可协作编辑贴纸包“${title}”
   reset: |
-    <b>🔁 链路重置成功</b>
+    <b>🔁 链接已重置</b>
 
-    共同编辑的新链接 <a href="${link}">${title}</a>:
+    <a href="${link}">${title}</a> 的新协作编辑链接：
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: 未找到包
+      not_found: 未找到贴纸包
       not_owner: 这不是你的贴纸包
-      hidden: 包成功隐藏
-      restored: 成功恢复包
+      hidden: 贴纸包已隐藏
+      restored: 贴纸包已恢复
     set_pack: |
-      🌟 已选 <a href="${link}">${title}</a> 打包
+      ✅ 已选择 <a href="${link}">${title}</a>
 
-      <b>❔ 如何添加？</b>
-      发送照片、视频或贴纸以添加到包中
+      发送照片、视频或贴纸即可添加。
     set_inline_pack: |
-      选择了<u>${title}</u>包
+      ✅ 已选择 <u>${title}</u>
 
-      要使用它，请在任何聊天内容中写入 <code> @${botUsername} </code> 和空格。
-      您也可以按下面的按钮使用它
+      使用方法：在任意聊天中输入 <code>@${botUsername} </code>
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">加速</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">助力</a></b>：${boostStatus}
       status:
         on: 已启用
         off: 未启用
-    hidden: 将 <a href="${link}">${title} </a> 从列表中隐藏。
-    restored: 将 <a href="${link}">${title}</a> 还原到您的列表。
+    hidden: 贴纸包 <a href="${link}">${title}</a> 已从你的列表中隐藏。
+    restored: 贴纸包 <a href="${link}">${title}</a> 已恢复到你的列表。
     btn:
-      hide: '❌ 隐藏包'
-      delete: '🗑删除包'
+      hide: '👁 隐藏贴纸包'
+      delete: '🗑 删除贴纸包'
       restore: '✅ 恢复'
-      use_pack: '📦 使用包'
-      boost: '⚡ 提升'
+      use_pack: '📦 使用贴纸包'
+      boost: '⚡ 助力'
       frame: '🖼 边框'
-      rename: '✏️重命名'
+      rename: '✏️ 重命名'
       search_gif: '🔎 搜索 GIF'
-      coedit: '👥 共同编辑'
+      coedit: '👥 协作编辑'
       catalog_add: '🗂 添加到目录'
       catalog_edit: '📝 在目录中编辑'
       catalog_delete: '🗑 从目录中删除'
       catalog_share: '🔗️️ 分享'
       catalog_open: '📂 在目录中打开'
+      mosaic: '🧩 拼图'
     error:
       not_found: |
-        错误！
-        找不到标签。
+        找不到该贴纸。
       invalid_png: |
-        错误！
-        文件不是有效的PNG图像。请在发送前将其转换为PNG格式。
+        该文件不是有效的 PNG 图片。请先转换为 PNG 格式再发送。
       invalid_dimensions: |
-        错误！
-        贴纸尺寸无效。贴纸必须为 <b>512</b>x<b>512</b> 像素。
+        贴纸尺寸无效。贴纸必须为 512x512 像素。
       invalid_animated: |
-        错误！
-        动画标签文件的格式不正确，应为TGS格式。
+        动态贴纸文件不是正确的 TGS 格式。
       invalid_video: |
-        错误！
-        视频文件的格式不正确，应为WEBM格式。
+        视频文件不是正确的 WEBM 格式。
       restore: |
-        错误！
-        无法还原包。
+        无法恢复该贴纸包。
       copy: |
-        错误！
-        找不到包。
+        找不到该贴纸包。
     select_group:
       success: |
-        包<a href="${link}">${title}</a>已成功为群组选择。
+        已成功为群组选择贴纸包 <a href="${link}">${title}</a>。
       access_rights:
-        add: 谁可以添加贴纸到群组包？
-        delete: 谁可以从群组包中删除贴纸？
+        add: 谁可以向群组贴纸包添加贴纸？
+        delete: 谁可以从群组贴纸包删除贴纸？
         rights:
           all: 所有人
-          admins: 只有管理员
+          admins: 仅管理员
       error: |
-        错误！
-        未找到集合。
+        未找到贴纸包。
   sticker:
     answerCbQuery:
-      delete: 贴纸已成功从包中取出。
-      restored: 贴纸已成功保存到当前包。
-    delete: 贴纸已成功从包中取出。
-    restored: 贴纸已成功保存到当前包。
+      delete: 贴纸已从贴纸包中删除。
+      restored: 贴纸已保存到当前贴纸包。
+    delete: 贴纸已从贴纸包中删除。
+    restored: 贴纸已保存到当前贴纸包。
     btn:
       delete: '🗑 删除'
       copy: '🌟 复制'
       restore: '✅ 恢复'
     error:
       not_found: |
-        错误！
-        找不到标签。
+        找不到该贴纸。
       invalid_png: |
-        <b>错误！</b>
-        该文件不是有效的PNG图像。请将其转换为PNG格式后再发送。
+        该文件不是有效的 PNG 图片。请先转换为 PNG 格式再发送。
       invalid_dimensions: |
-        <b>错误！</b>
-        贴纸尺寸无效。贴纸必须是512x512像素。
+        贴纸尺寸无效。贴纸必须为 512x512 像素。
       invalid_animated: |
-        <b>错误！</b>
-        动画贴纸文件格式不正确，应该为TGS格式。
+        动态贴纸文件不是正确的 TGS 格式。
       invalid_video: |
-        <b>错误！</b>
-        视频文件格式不正确，应为WEBM格式。
+        视频文件不是正确的 WEBM 格式。
   group_settings:
     success: |
-      群组设置已成功更新。
+      群组设置已更新。
 sticker:
   add:
     ok: |
-      <b>成功添加到包中：</b>
-      <a href="${link}">${title}</a>
+      ✅ 已添加到 <a href="${link}">${title}</a>
 
-      1小时内，此包将更新给所有用户。
-
-      <i>发送一个或多个与贴纸匹配的emoji，如果您想要添加它们</i>
+      <i>你可以为这个贴纸发送表情</i>
     ok_inline: |
-      <b>成功添加到包装中：</b>
-      <u>${title}</u>
-    send_emoji: 太好了，现在发送与之匹配的表情
+      ✅ 已添加到 <u>${title}</u>
+    ok_repainting_notice: |
+      ⚠️ 这是单色表情：在普通贴纸包中它会显示为白色，在浅色背景上几乎看不见。
+    send_emoji: 请为这个贴纸发送表情
     converting_process: |
-      <b>等待...</b>
-      你的文件正在等待转换。等待完成。这可能需要一些时间。
+      ⏳ 正在转换：${progress}/${total}
 
-      进度: ${progress} / ${total}
-
-      <i>支持机器人的用户在队列中获得优先级 (更多: /donate)</i>
+      <i>助力 = 优先处理 → /donate</i>
     catalog_offer: |
-      <b>😲 哇，你做了一个很棒的包！</b>
-
-      您是否希望将 <a href="${link}">${title}</a> 添加到公共贴纸目录中，以便机器人的其他用户也能看到？
-      <i>无需花费大量时间</i>
+      想分享贴纸包 <a href="${link}">${title}</a> 吗？
+      添加到目录，让其他人也能找到它。
     quote: |
-      使用 @QuotlyBot 从此消息创建引用
+      使用 @QuotlyBot 将这条消息制作成引用贴纸
     error:
       reply: |
-        <b>错误！</b>
-        请回复贴纸。
+        请回复一个贴纸。
       no_selected_pack: |
-        <b>您没有选择包</b>
+        <b>你还没有选择贴纸包</b>
 
-        请创建 (/new) 或选择 (/packs) 包
+        请创建（/new）或选择（/packs）贴纸包
       no_selected_group_pack: |
-        <b>您没有选择群组包</b>
+        <b>你还没有选择群组贴纸包</b>
 
-        请使用 /packs 命令选择一个包
+        请使用 /packs 命令选择贴纸包
       no_rights: |
-        <b>错误！</b>
-        您没有权限添加贴纸到此包。
+        你没有向此贴纸包添加贴纸的权限。
       stickers_too_much: |
-        该包中的贴纸数量最多。
+        此贴纸包的贴纸数量已达上限。
 
-        您可以使用 /new 命令创建新包
+        你可以使用 /new 命令创建新的贴纸包。
       have_already: |
-        <b>该贴纸已在包中</b>
+        <b>该贴纸已在贴纸包中</b>
 
-        如果您想更改表情符号，请在以下信息中发送。
+        如需更改表情，请在下一条消息中发送。
       stickerset_invalid: |
-        <b>错误！</b>
-        Bot 无法访问您当前选择的包。
+        机器人无法访问所选的贴纸包。
 
-        请创建 (/new) 或选择 (/packs) 另一个包。
+        请创建（/new）或选择（/packs）其他贴纸包。
       invalid_png: |
-        <b>错误！</b>
-        该文件不是有效的PNG图像。请将其转换为PNG格式后再发送。
+        该文件不是有效的 PNG 图片。请先转换为 PNG 格式再发送。
       invalid_dimensions: |
-        <b>错误！</b>
-        贴纸尺寸无效。贴纸必须是512x512像素。
+        贴纸尺寸无效。贴纸必须为 512x512 像素。
       invalid_animated: |
-        <b>错误！</b>
-        动画贴纸文件格式不正确，应该为TGS格式。
+        动态贴纸文件不是正确的 TGS 格式。
+      animated_too_big: |
+        调整为贴纸包尺寸后，该动态贴纸超出了 Telegram 64 KB 的限制，无法转移。
       invalid_video: |
-        <b>错误！</b>
-        视频文件格式不正确，应为WEBM格式。
+        视频文件不是正确的 WEBM 格式。
       file_type:
         static: |
-          <b>错误！</b>
-          不支持该文件类型
-          您可以将这张照片或静态贴纸添加到静态包中
+          不支持此文件类型
+          你可以将这张照片或静态贴纸添加到静态贴纸包
 
-          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
+          <i>创建（/new）或选择（/packs）其他贴纸包</i>
         video: |
-          <b>错误！</b>
-          不支持该文件类型
-          您可以将这些视频文件添加到视频包中
+          不支持此文件类型
+          你可以将此视频文件添加到视频贴纸包
 
-          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
+          <i>创建（/new）或选择（/packs）其他贴纸包</i>
         animated: |
-          <b>错误！</b>
-          不支持该文件类型
-          您可以将该动画文件添加到矢量包中
+          不支持此文件类型
+          你可以将这些动态文件添加到矢量贴纸包
 
-          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
+          <i>创建（/new）或选择（/packs）其他贴纸包</i>
         unknown: |
-          <b>错误！</b>
-          不支持该文件类型
+          不支持此文件类型
 
-          <i>创建 (/new) 或选择 (/packs) 另一个包</i>
+          <i>创建（/new）或选择（/packs）其他贴纸包</i>
       wait_load: |
-        <b>等等！</b>
-
-        Bot 仍在处理之前的文件...
-        您可以支持 bot 开发 (/donate) 以提高处理的优先级和向队列添加多个贴纸的能力。
+        ⏳ 仍在处理上一个文件...
       timeout: |
-        <b>目前，机器人正在经历巨大的负载</b>
-        因此，视频转换只适用于激活了提升功能的包
-
-        如需了解更多详情，请访问 /donate
+        ⚠️ 当前负载较高，请几分钟后再试。
       convert: |
-        <b>错误！</b>
-        不幸的是，机器人无法转换您的视频。
+        视频转换失败。
 
-        也许您的视频是以机器人无法理解的格式保存的。确保它是 mp4 格式。
-        也可能是bot内部错误，重新发送这个视频试试。
+        请尝试 MP4 格式或重新发送。
       too_big: |
-        <b>错误！</b>.
 
-        文件太大，无法处理。请在发送前降低质量和持续时间。
+        文件太大，无法处理。请降低画质并缩短时长后再发送。
       sticker_not_found: |
-        <b>错误！</b>
 
-        未找到此贴纸。请确保它在正确的包中或尝试重新添加。
+        找不到这个贴纸。请确认它在正确的贴纸包中，或尝试重新添加。
+      invalid_image: |
+
+        无法处理这张图片。请尝试发送其他文件或格式。
 news:
   join: |
-    ℹ️ <a href="${link}">加入我们的频道</a> 获取有关机器人的最新消息。
-
-    <i>订阅频道，获取有关机器人的最新消息以及更新和新功能。</i>
-  join_btn: '📢 加入频道'
-  not_joined: '🙅 您尚未订阅该频道'
+    📢 <a href="${link}">订阅频道</a> — 获取新闻、更新和新功能。
+  join_btn: '📢 订阅'
+  not_joined: '🙅 你还没有订阅频道'
   continue: '✅ 继续'
 userAbout:
   help: |
     <b>🧑‍🎨 关于用户</b>
 
-    通过该菜单，您可以找到有关用户及其贴纸包的信息
+    通过此菜单，你可以查看用户信息及其贴纸包
 
-    要获取用户信息，请使用下面的按钮或转发他的信息
+    要获取用户信息，请使用下方按钮或转发该用户的消息
   result: |
     <b>🧑‍🎨 用户信息</b>
-    <b>🆔 用户 ID:</b> <code>${userId}</code>
-    <b>🎨 该用户提供的包：</b>
+    <b>🆔 用户 ID：</b><code>${userId}</code>
+    <b>🎨 该用户的贴纸包：</b>
     ${packs}
   no_packs: |
-    <i>我们没有关于该业主贴纸的信息</i>
+    <i>我们没有该用户的贴纸包信息</i>
   forward_hidden: |
-    该用户隐藏了转发消息的功能。使用下面的按钮查看他的贴纸包。
+    该用户已禁止转发其消息。请使用下方按钮查看其贴纸包。
   select_user: '🧑‍🎨 选择用户'
 scenes:
   new_pack:
     pack_type: |
-      <b><u>选择包装类型</u></b>
-    regular: '😊 贴纸'
-    custom_emoji: '🌟 表情符号（高级）'
-    static: '🌟 静态'
-    animated: '✨ 矢量'
-    video: '📹 视频'
-    pack_format: |
-      <b><u>选择包类型</u></b>
+      <b>要创建哪种贴纸包？</b>
 
-      <b>常见问题</b> - 静态（不移动），光栅，文件格式 - 添加前为 PNG（机器人正在处理），添加后为 WEBP。
-      常规包示例 - t.me/addstickers/Animals
-
-      <b>视频</b> - 动画视频包。您可以添加任何视频、gif 和照片。
-      视频示例包 - t.me/addstickers/TheMascot
-
-      <b>Animated</b> - 动画，矢量（它们对文件中的对象有精确的描述，因此在任何比例下都能清晰显示），文件格式 - TGS，Lottie 格式的一种变体。
-      动画包示例 - t.me/addstickers/IsabelleShizue
-
-      <i>动画和视频贴纸套装最多可有 50 个贴纸。静态贴纸套装最多可有 120 个贴纸。
+      <b>🖼 贴纸</b> — 经典贴纸，就像聊天中的表情图。
+      <b>✨ 表情</b> — 可插入文字中的自定义表情。只有 Telegram Premium 用户才能发送。
+      <b>🎨 自适应表情</b> — 单色表情：以单一颜色绘制，会自动适配文字颜色。
+    regular: '🖼 贴纸'
+    custom_emoji: '✨ 表情'
+    custom_emoji_adaptive: '🎨 自适应表情'
     pack_title: |
-      <b>为新贴纸输入名称：</b>
-      <i>您也可以在下面选择一个随机生成的名称。</i>
+      <b>贴纸包名称</b>
+
+      所有人都能看到。可以自己输入，也可以从下方建议中选择。
     pack_name: |
-      <b>输入新贴纸包的短链接：</b>
+      <b>贴纸包地址</b>
 
-      <i>例如，此包使用“动物”作为短链接：https://t.me/addstickers/<u>动物</u></i>
-      <i>您可以在按钮上选择随机短链接。</i>
+      仅限英文字母、数字和 <code>_</code>。例如：t.me/addstickers/<u>MyStickers</u>
     ok: |
-      包 <a href="${link}">${title}</a> 创建成功！
+      ✅ 贴纸包已创建：<a href="${link}">${title}</a>
 
-      <b>软件包链接：</b> <pre>${link}</pre>
-
-      发送文件、照片、视频或贴纸，以便我将其添加到您的套装中
+      发送照片、视频或贴纸即可添加。
     error:
-      title_long: 名称字符数不得超过 ${max} 字符
-      name_long: 地址长度不得超过 ${max} 字符。
+      title_long: 名称不能超过 ${max} 个字符。
+      name_long: 地址不能超过 ${max} 个字符。
+      inline_exists: |
+        你已经有一个内联贴纸包 — <b>${title}</b>。
+
+        内联贴纸包只能有一个：新建会覆盖现有的这个。
+        它已被选中，直接继续添加贴纸即可。
       telegram:
-        name_invalid: 您不能使用这样的地址。
-        name_occupied: 该地址已被占用。
+        name_invalid: 无法使用这个地址。
+        name_occupied: 该地址已被占用，请换一个。
         upload_failed: |
-          <b>错误！</b>
           机器人无法将贴纸上传到 Telegram。
 
           请稍后再试。
   copy:
     enter: |
-      我可以复制它，但在此之前，让我们创建一个新的包
+      首先，为副本创建一个新的贴纸包。
     progress: |
-      将包从 <a href="${originalLink}">${originalTitle}</a> 复制到 <a href="${link}">${title}</a>
-
-      进度： ${current}/${total}
+      ⏳ 正在复制：${current}/${total}
     done: |
-      成功完成从 <a href="${originalLink}">${originalTitle}</a> 到 <a href="${link}">${title}</a> 的打包复制。
+      ✅ 已复制到 <a href="${link}">${title}</a>
+    done_partial: |
+      ⚠️ 已复制到 <a href="${link}">${title}</a>
+
+      已复制 ${success} 个贴纸，${failed} 个复制失败。
+    done_pending: |
+      ✅ 已复制到 <a href="${link}">${title}</a>
+
+      已复制 ${success} 个贴纸，${pending} 个视频仍在处理中。
+    done_partial_pending: |
+      ⚠️ 已复制到 <a href="${link}">${title}</a>
+
+      已复制 ${success} 个贴纸，${failed} 个失败，${pending} 个视频仍在处理中。
     pay: |
-      <b>包转换</b>
+      <b>贴纸包转换</b>
 
-      将包从一种类型转换为另一种类型需要 1 个信用点
+      将贴纸包从一种类型转换为另一种类型需要 1 积分
 
-      <b>当前余额:</b> ${balance} 个信用点
+      <b>当前余额：</b>${balance} 积分
 
-      购买信用点: /donate
+      购买积分：/donate
     pay_btn: '✅ 确认'
     error:
-      premium: |
-        <b>错误！</b>
-        此功能仅用于捐赠成员。
+      all_failed: |
+        ❌ 未能从 <a href="${originalLink}">${originalTitle}</a> 复制任何贴纸。
 
-        您可以通过发送/捐赠命令来做到这一点。
+        贴纸包未创建。
+      premium: |
+        抱歉，此功能仅对支持过机器人的用户开放。
+
+        你可以发送 /donate 命令来支持。
   original:
     enter: |
-      发送一个通过该机器人添加的贴纸，我会给你看原件。
+      <b>🔎 贴纸来源</b>
+
+      发送贴纸，我会告诉你它是从哪个贴纸包复制的。
+      如果找不到原件，你会收到贴纸文件（PNG/WEBM）。
+    source_found: |
+      🔎 复制自：<a href="${link}">${title}</a>
     error:
       not_found: |
-        <b>错误！</b>
-        我没有找到这张贴纸的原件。
+        未找到原件。这是贴纸文件：
   delete:
     enter: |
-      发送通过此机器人添加的贴纸，我将把它从包中删除。
+      <b>🗑 删除贴纸</b>
+
+      发送你想从贴纸包中删除的贴纸。
     confirm: |
-      您确定要删除这个贴纸吗？
+      要从贴纸包中删除这个贴纸吗？
     error:
       not_found: |
-        <b>错误！</b>
-        我找不到贴纸。
+        数据库中未找到该贴纸。它可能不是通过本机器人创建的。
   rename:
     enter_name: |
-      <b>输入新标题r <a href="${link}">${title}</a>:</b>
+      <a href="${link}">${title}</a> 的新名称：
     success: |
-      <b>标题已成功更改！</b>
-
-      新标题<a href="${link}">${title}</a>
+      ✅ 已重命名：<a href="${link}">${title}</a>
     boost_notice: |
-      ❕ 要删除后缀 "<code>${titleSuffix}</code>", 您需要提升包。更多详情请访问：\/donate
+      助力后可去掉“${titleSuffix}” → /donate
   packAbout:
     enter: |
-      <b>给我发送一个贴纸或自定义表情符号，以查找相关信息：</b>
-    not_found: |
-      我找不到贴纸
-    result: |
-      <b>📦 包：</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(拥有者包的唯一编号，每包递增)）</i>
+      <b>🔎 谁的贴纸</b>
 
-      🧑‍🎨 用户: <code>${ownerId}</code>
+      发送贴纸，我会显示它所属的贴纸包、作者及其其他贴纸包。
+      或转发一条消息，我会显示此人的贴纸包。
+    not_found: |
+      未找到贴纸。
+    btn:
+      download: '📎 下载文件'
+      show_all_packs: '📦 全部贴纸包（${count}）'
+    result: |
+      <b>📦 贴纸包：</b><a href="${link}">${name}</a>
+      🔢 贴纸数：<code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
+
+      🧑‍🎨 所有者 ID：<code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 该用户的其他包</b>
+      <b>🎨 该所有者的其他贴纸包：</b>
       ${otherPacks}
     no_other_packs: |
-      <i>我们没有该用户其他贴纸的信息</i>
+      <i>我们没有该所有者其他贴纸包的信息</i>
+    unknown_owner: '<i>未知</i>'
+    hidden: '<i>[已隐藏]</i>'
   boost:
     sure: |
-      <b>您确定要提升 <a href="${link}">${title}</a> 吗？</b>
+      要为 <a href="${link}">${title}</a> 助力吗？
 
-      提升将增加处理优先级并且能够将多个贴纸添加到队列中
-      您可以通过访问菜单中的 /donate 获取更多有关提升的详细信息
-
-      <b>价格:</b> 1 个信用点
-      <b>当前余额:</b> ${balance} 个信用点
+      <b>价格：</b>1 积分
+      <b>余额：</b>${balance}
     btn:
-      yes: 是，提升！
-      no: 否，取消
+      yes: '⚡ 助力'
+      no: 取消
     canceled: |
-      提升已取消
+      已取消
     success: |
-      提升成功完成！
+      ⚡ <a href="${link}">${title}</a> 助力已激活！
 
-      ${title} 现在得到提升
+      <b>已解锁：</b>
+      • 名称可去掉后缀“${titleSuffix}”（需重命名）
+      • 名称最长 64 个字符（原为 35 个）
+      • 视频最长 35 秒
+      • 转换优先
+      • 可同时添加多个贴纸
+
+      <i>要去掉后缀，请在贴纸包菜单中点击“✏️ 重命名”。</i>
     error:
+      too_fast: 慢一点，请稍等一秒再试。
       not_enough_credits: |
-        您的信用点不足以提升此包。
-
-        您可以通过发送 /donate 命令来充值余额。
+        积分不足。/donate
       already_boosted: |
-        这个包已经提升.
+        已经助力过了。
   catalog:
     publish:
       publish_new: |
-        👌 <b>将您要发布的包中的贴纸发给我</b>
+        👌 <b>发送你想发布的贴纸包中的任意贴纸</b>
 
-        <i>您可以发布任何属于您的包，即使它们是在其他地方创建的</i>
+        <i>你可以发布任何属于你的贴纸包，即使它是在其他地方创建的</i>
       owner_proof: |
-        <b>要验证此数据包的所有权，您需要遵循几个简单的步骤：</b>
-        1.打开 @Stickers 机器人
-        2.发送 <code>/packstats</code> 命令
-        3.查找并选择所需的软件包
-        4.将收到的信息转发给机器人
+        <b>要验证你是此贴纸包的所有者，请完成以下几个简单步骤：</b>
+        1. 打开 @Stickers 机器人
+        2. 发送 <code>/packstats</code> 命令
+        3. 找到并选择对应的贴纸包
+        4. 将收到的消息转发给我
       publish_new_access_denied: |
-        <b>错误！</b>
-        这个包不是你的。
+        这不是你的贴纸包。
 
-        您只能发布自己的包
+        只能发布你自己的贴纸包
       banned: |
-        <b>错误！</b>
-        您已被禁止使用此功能。
+        你已被禁止使用此功能。
         请联系管理员。
       enter: |
-        您即将在我们机器人的公共目录中发布"<a href="${link}">${title}</a>"包
-        机器人的任何用户都可以通过名称、标签或过滤器找到它
-        因此，会有更多人安装您的软件包
-        尽量只发送高质量的软件包，这样会有更多人感兴趣
+        要将 <a href="${link}">${title}</a> 发布到目录吗？
 
-        <b>发布软件包的规则：</b>
-        - 不要发布面向小范围人群的个人软件包。例如，您朋友的面孔或您信息中的引语。
-        - 不要发布违反欧盟法律或其他地方法律的贴纸压力。
+        其他用户可以通过名称或标签找到你的贴纸包。
 
-        您需要提交其他信息才能在目录中发布
+        <b>规则：</b>
+        • 仅限面向大众的优质贴纸包
+        • 不得包含个人照片或隐私内容
+        • 不得违反法律
       continue_button: 继续
       enter_description: |
-        <b>简要描述您的背包，以便他人找到它</b>
+        <b>简单描述一下你的贴纸包，方便其他人找到它</b>
 
-        <i>您还可以使用标签对 [#]</i> 进行分类
-        <i>例如#anime #meme #animals #cute #kop #funny #cat #game </i>
+        <i>可以使用话题标签进行分类 [#]</i>
+        <i>例如：#anime #meme #animals #cute #kpop #funny #cat #game</i>
       select_language: |
-        <b>选择您的软件包适用的语言：</b>
-        <i>您可以选择多种语言</i>
-      button_all_languages: 所有语言
+        <b>选择你的贴纸包适用的语言：</b>
+        <i>可以多选</i>
+      button_all_languages: 任何语言
       button_confirm_language: 确认
       set_safe: |
-        <b>您的软件包对用户安全吗？
-        <i>即不包含色情和其他令人震惊的内容</i>
+        <b>你的贴纸包对用户安全吗？</b>
+        <i>即不含色情或其他令人不适的内容</i>
       button_safe:
-        safe: 是的，它是没有的
-        not_safe: 不，它有的
-      no_tags: 不确定
+        safe: 是，内容安全
+        not_safe: 否，内容不安全
+      no_tags: 未指定
       confirm: |
-        <b>确认出版"<a href="${link}">${title}</a>"</b> 包
+        <b>确认发布贴纸包“<a href="${link}">${title}</a>”</b>
 
-        <b>描述：</b> <i>${description}</i>
+        <b>描述：</b><i>${description}</i>
 
-        <b>标签：</b> ${tags}
-        <b>语言：</b> ${languages}
+        <b>标签：</b>${tags}
+        <b>语言：</b>${languages}
       button_confirm: '✅ 确认发布'
       success: |
-        恭喜您，您的软件包已发布在我们机器人的总目录中，其他用户可以在其中找到！
+        恭喜！你的贴纸包已发布到目录，其他用户现在可以找到它了！
 
-        使用_/packs_命令选择数据包，即可编辑数据包搜索信息。
+        可以通过 /packs 编辑贴纸包信息。
 
-        <i>我们提醒您，可以通过官方机器人 @Stickers 查看包的统计数据</i>
+        <i>贴纸包的统计数据可以通过官方机器人 @Stickers 查看</i>
     unpublish:
       success: |
-        该数据包已成功从机器人目录中取消发布。
+        贴纸包已从目录中移除。
   delete_pack:
     enter: |
-      您确定要删除数据包 <a href="${link}">${title}</a> 吗？
-      它将被永久删除，无法恢复。
+      ⚠️ 要永久删除 <a href="${link}">${title}</a> 吗？
 
-      如果只想删除一个贴纸，请使用 /delete 命令。
-
-      发送 <code>${confirm}</code> 以确认您真的要删除此贴包。
-    confirm: 是的，我完全肯定。
+      发送 <code>${confirm}</code> 以确认。
+    confirm: 是的，删除
     success: |
-      <b>成功删除软件包！</b>
+      🗑 贴纸包已删除
     error:
-      - <b>错误！</b>
-      - 哎呀，出错了。
+      - 出了点问题。
   frame:
+    no_sticker_set: |
+      你还没有选择贴纸包。请通过 /packs 选择后再次执行该命令。
     no_video: |
-      <b>错误！</b>
-      您只能为视频包添加帧。
+      只能为视频贴纸包添加边框。
     select_type: |
-      <a href="${example}">&#8203;</a><b>选择边框类型：</b>
-      边框是贴纸周围的透明背景
+      <a href="${example}">&#8203;</a><b>选择贴纸形状：</b>
 
-      <code>lite</code> - 边角将稍作修剪
-      <code>medium</code> - 将更多地剪切边角
-      <code>rounded</code> - 边角将被磨圆
-      <code>square</code> - 边框的矩形形状，即不会以任何方式改变。
-      <code>circle</code> - 边框将呈圆形
+      <code>轻度</code> — 几乎没有圆角
+      <code>中度</code> — 边角略微圆润
+      <code>圆角</code> — 边角明显圆润
+      <code>方形</code> — 直角，无圆角
+      <code>圆形</code> — 圆形贴纸
 
-      <i>今后，您可以使用 /frame 命令来设置边框类型</i>
+      <i>可以使用 /frame 命令更改形状</i>
     types:
-      lite: '1. 精简版'
-      medium: '2. 中等'
-      rounded: '3. 圆形'
+      lite: '1. 轻度'
+      medium: '2. 中度'
+      rounded: '3. 圆角'
       square: '4. 方形'
-      circle: '5. 圆圈'
+      circle: '5. 圆形'
     selected: |
-      <b>所选边框类型：</b> ${type}
+      <b>已选择边框类型：</b>${type}
   photoClear:
     enter: |
-      发送一张您想去掉背景的照片<u></u>，我将发送没有背景的文件。
+      <b>✂️ 去除背景</b>
 
-      <i>对照片效果最佳。对图画、插图等效果较差</i>。
+      发送照片，你将收到去除背景的 PNG。
+      <i>对人物照片效果最好。</i>
     enter_anime: |
-      发送一张您想去掉背景的照片<u></u>，我将发送没有背景的文件。
+      <b>✂️ 去除背景</b>
 
-      <i>它对动漫图片最有效</i>
+      发送照片，你将收到去除背景的 PNG。
+      <i>对动漫图片效果最好。</i>
     choose_model: |
-      <b>选择型号：</b>
-    web_app: WebApp - 用于与人合影
+      模型：
+    web_app: WebApp — 适合人物照片
     model:
-      ordinary: 普通 - 用于与人合影
-      general: 一般 - 任何照片
-      anime: 动漫 - 用于动漫图片
-      birefnet_general: 一般 - 任何照片
-    add_to_set_btn: '🌟 添加到设置'
+      ordinary: 普通 — 适合人物照片
+      general: 通用 — 适合任何照片
+      anime: 动漫 — 适合动漫图片
+      birefnet_general: BiRefNet — 适合任何照片
+    add_to_set_btn: '🌟 添加到贴纸包'
     error: |
-      <b>错误！</b>
-      哎呀，出错了。
+      哎呀，出了点问题。请再试一次。
+    error_timeout: |
+      ⏱ 处理时间过长。请稍后再试，或换一张较小的照片。
+    error_queue_disabled: |
+      此功能暂时不可用，请稍后再试。
+  videoRound:
+    enter: |
+      <b>⭕ 视频转圆形视频消息</b>
+
+      发送视频，我会把它做成圆形视频消息。
+    not_video: |
+      请发送视频、GIF、视频贴纸或动态图片。
+    error: |
+      转换失败。请换一个视频试试。
+    forbidden: |
+      无法向你发送圆形视频消息。请检查隐私设置（需允许语音消息）。
+    processing: |
+      ⏳ 正在转换：${position}/${total}
+
+      <i>助力 = 优先处理 → /donate</i>
+    file_too_big: |
+      文件太大（最大 20 MB）。请发送更小的视频。
+  search:
+    error:
+      not_found: |
+        没有找到结果。请尝试其他关键词。
+    enter: |
+      <b>🔍 搜索贴纸</b>
+
+      输入关键词，我会在目录中查找贴纸包。
+  error:
+    notFound: 未找到贴纸包
   leave: |
-    行动取消。
+    已取消
   btn:
-    cancel: '❌ 取消'
+    cancel: '← 取消'
 error:
+  stickerset_invalid: |
+    贴纸包不可用，可能已在 Telegram 中被删除。
   telegram: |
-    <b>电报返回错误！</b>
-    <code>${error}</code>
+    Telegram 错误：<code>${error}</code>
+  telegram_reasons:
+    sticker_not_in_set: |
+      该贴纸已不在贴纸包中，可能之前已被删除。
+    pack_invalid: |
+      贴纸包不可用，可能已在 Telegram 中被删除。
+    pack_full: |
+      贴纸包已满（已达 Telegram 上限）。请删除一些贴纸后再试。
+    not_pack_owner: |
+      此贴纸包属于其他用户，你无法修改。
+    pack_name_taken: |
+      该贴纸包地址已被占用，请换一个名称。
+    pack_name_invalid: |
+      贴纸包地址格式无效。只能使用英文字母、数字和下划线。
+    invalid_sticker_format: |
+      该文件无法用作贴纸：格式或尺寸不正确。
+    invalid_emoji: |
+      表情无效。请发送标准的 Unicode 表情。
+    rate_limited: |
+      Telegram 要求稍候，请几秒后再试。
+    cannot_reach_user: |
+      无法给该用户发消息：机器人已被屏蔽或聊天不可用。
   answerCbQuery:
     telegram: |
-      Telegram 返回错误信息：
-      ${error}
+      错误：${error}
+  file_too_big: |
+    文件太大（最大 20 MB）。
+  download: |
+    文件下载失败，请重试。
   banned: |
-    <b>错误！</b>
-    您被禁止使用此功能。
-
-    <i>如果您认为这是一个错误，请联系管理员：@ly_oBot</i>
+    🚫 访问被拒绝。如有疑问 → @ly_oBot
+  access_denied: 访问被拒绝
   unknown: |
-    <b>出现未知错误，请再试一次。</b>
+    出了点问题，请重试。
 
-    如果问题仍然存在，请写到 @Ly_oBot。
-    请立即写出你谈论的机器人并在一个消息中详细描述问题。
+    仍然不行？请联系 @Ly_oBot
+  rate_limit: |
+    ⏳ 请求过多。请稍等片刻后再试。
+  rate_limit_seconds: |
+    ⏳ 请求过多。请等待 ${seconds} 秒。

@@ -1,15 +1,15 @@
 ---
 language_name: '🇩🇪 Deutsch'
-name: fStik — Sticker & Emoji
+name: fStik — Sticker & Emojis
 description:
   long: |
-    Erstelle Sticker und Emojis aus Fotos, Videos und GIFs – keine manuelle Konvertierung nötig, der Bot erledigt alles.
+    Erstelle Sticker und Emojis aus Fotos, Videos und GIFs. Keine manuelle Konvertierung — der Bot erledigt alles für dich. Einfacher als @Stickers.
 
     Funktionen:
-    • Paket-Verwaltung
-    • Video-Sticker & benutzerdefinierte Emojis
-    • Originale herunterladen
-    • Zu Bild konvertieren
+    • Sets verwalten
+    • Video-Sticker und benutzerdefinierte Emojis
+    • Originaldateien herunterladen
+    • Sticker/Video/GIF in ein Bild umwandeln
     • Sticker-Katalog
 
     Sticker suchen: play.google.com/store/apps/details?id=app.fstik 🇺🇦
@@ -19,276 +19,417 @@ ratelimit: Nicht so oft!
 cmd:
   start:
     enter: |
-      🧙 Hallo, ${name}! Ich bin der Emoji- und Sticker-Pack-Zauberer.
-      Ich kann deine Fotos, Videos und GIFs mit nur wenigen Klicks in coole Sticker verwandeln.
+      Hallo, ${name}!
+      Ich erstelle Sticker und Emojis aus Fotos, Videos und GIFs.
 
-      Sende den /help-Befehl, um mehr darüber zu erfahren, was ich tun kann.
-
-      💬 Brauchst du Hilfe? Trete unserer Supportgruppe @fStikCommunity bei (nur Englisch).
+      💬 @StickLyUA
     group: |
-      🧙 Hallo, ${groupTitle}! Ich bin der Emoji- und Stickerpack-Zauberer.
+      Hallo, ${groupTitle}! Ich erstelle Sticker und Emojis.
 
-      Um einen Sticker zu einem Gruppenset hinzuzufügen, verwende den /ss-Befehl als Antwort auf ein Foto, Video, Gif oder Sticker.
+      Um einen Sticker zum Gruppen-Set hinzuzufügen, antworte mit /ss auf ein Foto, Video, GIF oder einen Sticker.
     catalog: |
-      <b>😻 Du kannst neue Stickerpacks in unserem Katalog finden</b>
+      <b>🔍 Sticker-Katalog</b>
 
-      • Klicke auf den Button unten, um Zugang zu einem riesigen Katalog von Stickerpacks für jeden Geschmack zu erhalten
-      • Suche nach Schlüsselwörtern oder in vorbereiteten Tabs
-      • Vergiss nicht zu bewerten, um das Stickerpack in den Rankings zu fördern oder zu senken
+      Suche Sets nach Stichwörtern oder stöbere in den beliebtesten.
+      Bewerte Sets, damit andere die besten finden.
+    search_catalog: |
+      <b>🌐 Set-Katalog</b>
+
+      Stöbere in den Sets anderer oder veröffentliche deine eigenen:
     commands:
       ss: '🌟 Sticker speichern'
-      start: '📜 Startmenü'
-      help: '📖 Hilfe'
-      packs: '📁 Packs verwalten'
-      new: '🌝 Stickerpack erstellen'
-      catalog: '📖 Katalog'
-      publish: '📤 Pack veröffentlichen'
-      delete: '❌ Sticker löschen'
-      original: '🔍 Original-Sticker finden'
-      restore: '🔀 Ein Pack wiederherstellen'
-      copy: '📋 Ein Pack kopieren'
-      emoji: '📝 Emoji-Suffix ändern'
-      round: '🎥 Abgerundetes Video'
-      clear: '🖼️ Hintergrund eines Fotos entfernen'
-      about: '📦 Pack-Info'
-      user_about: '🧑‍🎨 Erstellerinfo'
-      lang: '🌐 Sprache ändern'
-      report: '🚨 Pack melden'
-      donate: '☕️ Entwickler unterstützen'
+      start: '📜 Menü'
+      help: '❓ Hilfe'
+      packs: '📁 Meine Sets'
+      new: '➕ Neues Set'
+      search_catalog: '🌐 Katalog'
+      catalog: '🌐 Katalog'
+      publish: '📤 Veröffentlichen'
+      delete: '🗑 Sticker löschen'
+      original: '🔎 Herkunft finden'
+      restore: '♻️ Set wiederherstellen'
+      copy: '📋 Set kopieren'
+      emoji: '😀 Emoji ändern'
+      round: '⭕ Rundes Video'
+      clear: '✂️ Hintergrund entfernen'
+      info: '🔎 Wessen Sticker'
+      user_about: '👤 Über den Ersteller'
+      lang: '🌐 Sprache'
+      report: '🚨 Melden'
+      donate: '⭐ Unterstützen'
       add_to_group: '👥 Zur Gruppe hinzufügen'
-      privacy: '🔒 Datenschutzrichtlinie'
+      privacy: '🔒 Datenschutz'
+      guide: '❓ Hilfe'
     btn:
-      new: '📥 Neu erstellen'
-      catalog: '💖 Katalog öffnen'
-      catalog_mini: '💖 Katalog'
-      catalog_browser: '🌐 Im Browser öffnen'
+      new: '➕ Neues Set'
+      catalog: '🔍 Katalog'
+      catalog_mini: '🔍 Katalog'
+      catalog_browser: 'Im Browser öffnen'
       catalog_browser_mini: '🌐 Im Browser'
-      catalog_app: '📱 Android-App herunterladen'
+      catalog_app: 'Für Android herunterladen'
       catalog_app_mini: '📱 Android-App'
+  guide:
+    web: |
+      <b>📖 So nutzt du fStikBot</b>
+
+      Ausführliche Anleitungen, Tipps und FAQ findest du auf unserer Website.
+    menu: |
+      <b>❓ Hilfe</b>
+
+      Wähle ein Thema:
+    create: |
+      <b>🎨 Sticker erstellen</b>
+
+      1. Sende /new, um ein Set zu erstellen
+      2. Wähle den Typ: normal, Video oder Emoji
+      3. Sende Fotos, Videos oder GIFs
+      4. Fertig! Der Bot konvertiert alles automatisch
+
+      <b>Nützliche Befehle:</b>
+      • /clear — Hintergrund vom Foto entfernen
+      • /round — Video in ein rundes Video umwandeln
+      • /frame — Form des Video-Stickers:
+        └ lite, medium, rounded, square, circle
+
+      <b>💡 Tipp:</b> Sende PNGs als <b>Datei</b> (📎), damit die Transparenz erhalten bleibt. Im Modus „Foto“ wird das Bild komprimiert und die Transparenz geht verloren.
+    manage: |
+      <b>📁 Sets verwalten</b>
+
+      <b>Befehle:</b>
+      • /packs — Liste deiner Sets
+      • /delete — Sticker löschen
+      • /copy — Set kopieren
+      • /restore — ausgeblendete Sets wiederherstellen
+      • /original — Original eines Stickers finden
+      • /about — Infos zu Set und Ersteller
+
+      <b>Emoji ändern:</b>
+      Sende den Sticker → sende das neue Emoji.
+      Oder sende das Emoji direkt nach dem Hinzufügen.
+
+      <b>Standard-Emoji:</b>
+      /emoji 🔥 — alle neuen Sticker bekommen dieses Emoji.
+
+      <b>In Gruppen:</b>
+      /ss (als Antwort auf ein Medium) — schnell zum Gruppen-Set hinzufügen.
+
+      <b>Inline-Sets:</b>
+      Ein eigener Set-Typ für den schnellen Zugriff über @Botname in jedem Chat.
+      • Kein echtes Telegram-Set — wird nur im Bot gespeichert
+      • Kann Sticker, Fotos, GIFs und Videos enthalten
+      • Erstellen unter /packs → Tab „Inline“
+      • Mit GIF-Suchmodus (über Tenor)
+
+      <b>Gemeinsam bearbeiten (Co-Edit):</b>
+      Tippe auf ein Set → Co-Edit → du bekommst einen Link.
+      Jeder mit dem Link kann Sticker hinzufügen und löschen.
+      Setze den Link zurück, um alle Bearbeiter zu entfernen.
+
+      <b>Set-Optionen:</b>
+      Tippe in /packs auf ein Set → umbenennen, boosten, gemeinsam bearbeiten, löschen.
+    catalog: |
+      <b>🔍 Katalog</b>
+
+      • /catalog — beliebte Sets
+      • /publish — eigenes Set veröffentlichen
+      • Bewerte Sets, damit gute nach oben kommen
+    boost: |
+      <b>⚡ Boost</b>
+
+      • Ohne "${titleSuffix}" im Namen
+      • Videos werden bevorzugt verarbeitet
+      • Videos bis zu 30 Sek.
+      • Mehrere Sticker in der Warteschlange
+
+      <b>Adaptive Emojis</b> — eigener Button in /new (passen ihre Farbe an den Text an)
+
+      Holen → /donate
+    problems: |
+      <b>❓ FAQ</b>
+
+      <b>⚫ Hintergrund ist schwarz geworden?</b>
+      Telegram entfernt die Transparenz, wenn du als „Foto“ sendest.
+      → Sende PNGs als <b>Datei</b> (📎 Büroklammer).
+
+      <b>🔄 Änderungen nicht sichtbar?</b>
+      Telegram speichert Sticker im Cache. Warte ca. 1 Stunde oder starte die App neu.
+
+      <b>📹 Video wird nicht animiert?</b>
+      Wahrscheinlich ein ungewöhnliches Format. Konvertiere es in MP4 oder sende es als Datei statt als Video.
+
+      <b>🗑 Wie lösche ich einen Sticker?</b>
+      Sende /delete und tippe dann auf den Sticker.
+
+      <b>🤏 Sticker zu klein?</b>
+      Schneide das Bild vor dem Senden quadratisch (1:1) zu.
+
+      <b>🔗 Wie entferne ich "_by_fStikBot" aus dem Link?</b>
+      Gar nicht. Telegram verlangt dieses Suffix, um zu erkennen, welcher Bot das Set erstellt hat. Das ist eine Regel der Plattform, nicht unsere.
+
+      <b>💎 Brauche ich Premium?</b>
+      • Sets erstellen: kostenlos
+      • Sticker verwenden: kostenlos
+      • Benutzerdefinierte Emojis senden: nur mit Premium (Telegram-Regel)
+
+      <b>Noch Fragen?</b> @fStikCommunity
+    btn:
+      open: '📖 Anleitung öffnen'
+      create: '🎨 Sticker erstellen'
+      manage: '📁 Sets verwalten'
+      catalog: '🔍 Suchen & veröffentlichen'
+      boost: '⚡ Boost & Funktionen'
+      problems: '❓ Probleme?'
+      back: '← Zurück'
   inline:
-    switch_pm: '📁 Pack auswählen'
+    switch_pm: '📁 Set auswählen'
+  lang:
+    choose: |
+      🌐 Wähle eine Sprache
+
+      Hilf beim Übersetzen: https://crwd.in/fStikBot
   restore: |
-    <b>🗃 Pack-Wiederherstellung</b>
+    <b>♻️ Set wiederherstellen</b>
 
-    Um einen Pack wiederherzustellen, musst du mir einen Link zu dem Pack senden, das du wiederherstellen möchtest
+    Sende den Link zu dem Set, das du wiederherstellen möchtest.
   copy: |
-    <b>🗄 Paket kopieren</b>
+    <b>📋 Set kopieren</b>
 
-    Um ein anderes Pack zu einem neuen zu kopieren, musst du mir einen Link zu einem Sticker- oder Emojipaket senden
+    Sende den Link zu dem Set, das du kopieren möchtest.
   report: |
-    <b>🚨 Bericht</b>
+    <b>🚨 Melden</b>
 
-    Falls du auf ein Stickerpack triffst, das möglicherweise gegen das Gesetz verstößt oder gegen die Nutzungsbedingungen von Telegram verstößt, melde es bitte, indem du den Link an @StickersReportBot sendest
-
-    <i>Denke daran, dass der Bot nicht für den Inhalt der Packs verantwortlich ist und keine Kontrolle darüber hat</i>
+    Du hast ein Set gefunden, das gegen die Regeln verstößt? Sende den Link an @StickersReportBot
   packs:
     info: |
-      <b>📁 Packs</b>
+      <b>📁 Meine Sets</b>
     types:
       regular: Sticker
       custom_emoji: Emojis
       inline: Inline
     empty: |
-      <b>Du hast noch keine Packs.</b>
-      Zum Erstellen schreibe den Befehl /new
-    inline_title: Inline-Pack
+      Noch keine Sets. Erstelle dein erstes → /new
+    inline_title: Inline-Set
     select_group_pack_info: |
-      <b>📁 Pack auswählen</b>
+      <b>📁 Set auswählen</b>
 
-      Um das Pack in der Gruppe zu verwenden, müssen Administratoren es mit dem Button unten auswählen
-    select_group_pack: Pack auswählen
+      Admins können über den Button unten ein Set für die Gruppe auswählen.
+    select_group_pack: Set auswählen
   emoji:
     info: |
-      Um das Standard-Emoji für das aktuelle Pack zu ändern, sende <code>/emoji</code> gefolgt von dem Emoji, getrennt durch ein Leerzeichen
+      Um das Standard-Emoji für das aktuelle Set zu ändern, sende <code>/emoji</code> und das Emoji, getrennt durch ein Leerzeichen
 
-      Zum Beispiel - <code>/emoji 🌟</code>
+      Zum Beispiel: <code>/emoji 🌟</code>
+    no_pack_selected: |
+      Wähle zuerst ein Set über /packs — dann /emoji 🌟
     done: Emoji erfolgreich geändert.
-    error: Beim Ändern von Emoji ist ein Fehler aufgetreten!
+    error: Beim Ändern des Emojis ist ein Fehler aufgetreten!
   round_video:
     enabled: |
-      Videos haben jetzt eine runde Form
+      Videos haben ab jetzt abgerundete Ecken
     disabled: |
-      Videos haben jetzt keine runde Form mehr
+      Videos haben ab jetzt keine abgerundeten Ecken mehr
   paysupport: |
-    <b>👨‍💻 Zahlungssupport</b>
+    <b>💳 Fragen zur Zahlung</b>
 
-    Bei allen Fragen im Zusammenhang mit dem Betrieb des Bots, einschließlich Zahlungen und Spenden, können Sie sich direkt an den Entwickler wenden
+    Schreib dem Entwickler: @ly_oBot
+  mosaic:
+    enter: |
+      🧩 Mosaik für <b>${packTitle}</b>
 
-    <b>Kontakte:</b>
-    🧑‍💻 Entwickler: @ly_oBot
+      Sende ein Foto — ich zerschneide es in ein Emoji-Raster.
+    no_pack: |
+      Du brauchst zuerst ein Set mit benutzerdefinierten Emojis.
+      Erstelle es über /new und wähle „Emojis“.
+    choose_grid: |
+      📐 Wähle die Rastergröße:
+    btn:
+      recommended: "✅ ${rows}×${cols}"
+      option: "${rows}×${cols} · ${total} Stk."
+      custom: "✏️ Eigene Größe"
+      cancel: "← Abbrechen"
+      exit: "🚪 Mosaik beenden"
+      undo: "🗑 Dieses Mosaik löschen"
+    custom_prompt: |
+      Gib die Rastergröße ein (z. B. 3x4):
+    custom_invalid: |
+      Ungültiges Format. Beispiel: 3x4. Zeilen 1–10, Spalten 1–10, insgesamt höchstens 50.
+    no_space: |
+      Nicht genug Platz im Set. Frei: ${freeSlots} Plätze, benötigt: ${total}.
+      Wähle ein kleineres Raster oder erstelle ein neues Set über /new.
+    blurry_warning: |
+      ⚠️ Das Bild ist zu klein — bei dieser Rastergröße kann das Ergebnis unscharf werden.
+    uploading: "⏳ Wird hochgeladen ${current}/${total}..."
+    done: |
+      ✅ Mosaik ${rows}×${cols} zum Set hinzugefügt!
+    done_link: "📦 Set verwenden"
+    undo_done: |
+      🗑 Mosaik gelöscht (${count} Emojis aus dem Set entfernt).
+    undo_failed: |
+      ❌ Einige Emojis konnten nicht gelöscht werden. Versuche es manuell.
+    wait_photo: |
+      Sende ein weiteres Foto oder tippe auf „Beenden“.
+    reject_animated: |
+      Animierte und Video-Sticker werden noch nicht unterstützt. Sende einen statischen Sticker, ein Foto oder eine PNG-/JPEG-/WebP-Datei.
+    reject_document: |
+      Es werden nur Bilder unterstützt (JPEG/PNG/WebP). Sende eine Datei in einem dieser Formate.
+    reject_media: |
+      Animationen und Videos werden noch nicht unterstützt. Sende einen statischen Sticker, ein Foto oder eine PNG-/JPEG-/WebP-Datei.
 donate:
   menu: |
-    <b>☕️ Unterstützung für die Bot-Entwicklung</b>
-    Durch die Unterstützung der Bot-Entwicklung erhalten Sie Credits
+    <b>⭐ Bot unterstützen</b>
 
-    <b>Saldo:</b> <code>${balance}</code> Credits
-    Mit 1 Credits kannst du ein Pack boosten.
+    <b>Guthaben:</b> ${balance} Credits
+    1 Credit = Boost für ein Set
 
-    <b>Das Boost bietet folgende Vorteile:</b>
-    ➖ Deaktivierung von "<code>${titleSuffix}</code>" im Pack-Namen <i>(nicht im Link)</i>
-    ➖ Titel bis zu 64 Zeichen (statt 35)
-    ➖ Videosticker bis zu 35 Sekunden
-    ➖ Priorität bei der Konvertierungswarteschlange
-    ➖ Mehrere Sticker gleichzeitig
-    ➖ Keine Werbung
+    <b>Der Boost bietet:</b>
+    • Ohne "<code>${titleSuffix}</code>" im Namen
+    • Namen bis zu 64 Zeichen (statt 35)
+    • Videos bis zu 35 Sekunden
+    • Vorrang in der Konvertierungswarteschlange
+    • Mehrere Sticker gleichzeitig
+    • Keine Werbung
 
-    <b>Wählen Sie die Anzahl der Credits aus, die Sie kaufen möchten:</b>
+    <b>Wie viele Credits möchtest du kaufen?</b>
+  invoice_title: '${amount} Credits'
   btn:
     donate: '☕ Spenden'
   topup: |
-    <b>Geben Sie die Anzahl der Credits ein, die Sie kaufen möchten:</b>
+    <b>Gib die Anzahl der Credits ein, die du kaufen möchtest:</b>
   invalid_amount: |
-    <b>Ungültiger Betrag</b>
+    <b>Ungültige Anzahl</b>
 
-    Der Mindestbetrag beträgt 1 Credit
+    Die Mindestanzahl ist 1 Credit
   paymenu: |
     Du möchtest <b>${amount} Credits</b> für <b>${price}$</b> kaufen
 
     ⚠️ Credits werden manuell vom Administrator vergeben.
-    Die Wartezeit reicht von 5 Minuten bis zu 1 Stunde
+    Die Wartezeit beträgt 5 Minuten bis 1 Stunde
 
-    <u>Zahlungsmethode auswählen:</u>
+    <u>Wähle eine Zahlungsmethode:</u>
   description: |
-    Wenn Sie Credits kaufen, unterstützen Sie die Entwicklung des Bots und erhalten die Möglichkeit, zusätzliche Funktionen zu nutzen
+    Mit dem Kauf von Credits unterstützt du die Entwicklung des Bots und kannst zusätzliche Funktionen nutzen
   update: |
-    <b>🔄 Saldo-Update</b>
+    <b>🔄 Guthaben aktualisiert</b>
 
-    Saldo: <code>${balance}</code> Credits (hinzugefügt <code>${amount}</code> Credits)
+    Guthaben: <code>${balance}</code> Credits (<code>${amount}</code> Credits hinzugefügt)
   error:
     already_donated: |
       Du hast für diese Zahlung bereits Credits erhalten
+    already_paid: Zahlung bereits abgeschlossen
+    not_found: Zahlung nicht gefunden
+    user_not_found: Nutzer nicht gefunden
     error: |
-      <b>Fehler!</b>
-      Beim Verarbeiten der Zahlung ist ein Fehler aufgetreten
+      Bei der Verarbeitung der Zahlung ist ein Fehler aufgetreten
     canceled: |
-      Zahlung storniert
+      Zahlung abgebrochen
 coedit:
   info: |
-    <b>👥 Gemeinsame Bearbeitung</b>
+    <b>👥 Gemeinsam bearbeiten</b>
 
-    Link zur gemeinsamen Bearbeitung <a href="${link}">${title}</a>: <code>${colink}</code>
+    Link: <code>${colink}</code>
 
-    <b>Wie benutzt man:</b>
-    1. Sende den Link an die Person, der du Zugriff auf das Pack geben möchtest
-    2. Nach dem Klicken auf den Link müssen sie "start" drücken und sie werden zu den Editoren hinzugefügt
-    3. Der Editor kann Sticker im Pack hinzufügen, löschen und bearbeiten
+    Teile ihn — andere können dann Sticker in <a href="${link}">${title}</a> hinzufügen und löschen.
 
-    <b>Editoren:</b>
-    ${editors}
+    <b>Bearbeiter:</b> ${editors}
 
-    <i>Um Editoren zu entfernen, musst du den Link zurücksetzen</i>
+    <i>Setze den Link zurück, um alle zu entfernen</i>
   no_editors: |
-    Noch keine Editoren
+    keine
   btn:
     send: '📤 Link senden'
     reset: '🔁 Link zurücksetzen'
   share: |
-    Folge dem Link und drücke "start", um das Pack "${title}" gemeinsam zu bearbeiten
+    Öffne den Link und tippe auf „Starten“, um das Set „${title}“ gemeinsam zu bearbeiten
   reset: |
     <b>🔁 Link erfolgreich zurückgesetzt</b>
 
-    Neuer Link zur gemeinsamen Bearbeitung <a href="${link}">${title}</a>:
+    Neuer Link zum gemeinsamen Bearbeiten von <a href="${link}">${title}</a>:
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
-      not_found: Pack nicht gefunden
-      not_owner: Das ist nicht dein Paket
-      hidden: Pack erfolgreich verborgen
-      restored: Pack erfolgreich wiederhergestellt
+      not_found: Set nicht gefunden
+      not_owner: Das ist nicht dein Set
+      hidden: Set erfolgreich ausgeblendet
+      restored: Set erfolgreich wiederhergestellt
     set_pack: |
-      🌟 Ausgewähltes <a href="${link}">${title}</a> Pack
+      ✅ <a href="${link}">${title}</a> ausgewählt
 
-      <b>❔ Wie hinzuzufügen?</b>
-      Sende ein Foto, Video oder Sticker, um es dem Pack hinzuzufügen
+      Sende ein Foto, Video oder einen Sticker, um ihn hinzuzufügen.
     set_inline_pack: |
-      Ausgewähltes <u>${title}</u> Pack
+      ✅ <u>${title}</u> ausgewählt
 
-      Um es zu verwenden, schreibe in einem Chat <code>@${botUsername} </code> und Leerzeichen
-      Du kannst es auch verwenden, indem du auf den Button unten drückst
+      So nutzt du es: <code>@${botUsername} </code>in jedem Chat.
     boost:
       info: |
-
-        ⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Eingeschaltet
-        off: Ausgeschaltet
-    hidden: Pack <a href="${link}">${title}</a> aus deiner Liste verborgen.
-    restored: Pack <a href="${link}">${title}</a> in deiner Liste wiederhergestellt.
+        on: Aktiv
+        off: Inaktiv
+    hidden: Set <a href="${link}">${title}</a> wurde aus deiner Liste ausgeblendet.
+    restored: Set <a href="${link}">${title}</a> wurde in deiner Liste wiederhergestellt.
     btn:
-      hide: '❌ Pack verbergen'
-      delete: '🗑 Pack löschen'
+      hide: '👁 Set ausblenden'
+      delete: '🗑 Set löschen'
       restore: '✅ Wiederherstellen'
-      use_pack: '📦 Pack verwenden'
-      boost: '⚡ Boost'
+      use_pack: '📦 Set verwenden'
+      boost: '⚡ Boosten'
       frame: '🖼 Rahmen'
       rename: '✏️ Umbenennen'
-      search_gif: '🔎 GIF suchen'
-      coedit: '👥 Co-editieren'
+      search_gif: '🔎 GIF-Suche'
+      coedit: '👥 Gemeinsam bearbeiten'
       catalog_add: '🗂 Zum Katalog hinzufügen'
       catalog_edit: '📝 Im Katalog bearbeiten'
-      catalog_delete: '🗑 Aus dem Katalog löschen'
+      catalog_delete: '🗑 Aus dem Katalog entfernen'
       catalog_share: '🔗️️ Teilen'
       catalog_open: '📂 Im Katalog öffnen'
+      mosaic: '🧩 Mosaik'
     error:
       not_found: |
-        Fehler!
-        Kann keinen Sticker finden.
+        Sticker konnte nicht gefunden werden.
       invalid_png: |
-        Fehler!
-        Die Datei ist kein gültiges PNG-Bild. Bitte konvertieren Sie sie in das PNG-Format, bevor Sie sie senden.
+        Die Datei ist kein gültiges PNG-Bild. Konvertiere sie vor dem Senden ins PNG-Format.
       invalid_dimensions: |
-        Fehler!
-        Die Stickerabmessungen sind ungültig. Sticker müssen 512x512 Pixel betragen.
+        Die Abmessungen des Stickers sind ungültig. Sticker müssen 512x512 Pixel groß sein.
       invalid_animated: |
-        Fehler!
-        Die animierte Sticker-Datei hat nicht das richtige TGS-Format.
+        Die Datei des animierten Stickers hat nicht das richtige TGS-Format.
       invalid_video: |
-        Fehler!
         Die Videodatei hat nicht das richtige WEBM-Format.
       restore: |
-        Fehler!
-        Kann Paket nicht wiederherstellen.
+        Set kann nicht wiederhergestellt werden.
       copy: |
-        Fehler!
-        Paket nicht gefunden.
+        Set kann nicht gefunden werden.
     select_group:
       success: |
-        Pack <a href="${link}">${title}</a> erfolgreich für die Gruppe ausgewählt.
+        Set <a href="${link}">${title}</a> erfolgreich für die Gruppe ausgewählt.
       access_rights:
-        add: Wer darf Sticker zum Gruppenpak hinzufügen?
-        delete: Wer darf Sticker aus dem Gruppenpak löschen?
+        add: Wer darf Sticker zum Gruppen-Set hinzufügen?
+        delete: Wer darf Sticker aus dem Gruppen-Set löschen?
         rights:
-          all: Jeder
+          all: Alle
           admins: Nur Admins
       error: |
-        Fehler!
         Set nicht gefunden.
   sticker:
     answerCbQuery:
-      delete: Der Sticker wurde erfolgreich aus dem Pack entfernt.
-      restored: Der Sticker wurde erfolgreich dem aktuellen Pack hinzugefügt.
-    delete: Der Sticker wurde erfolgreich aus dem Pack entfernt.
-    restored: Der Sticker wurde erfolgreich dem aktuellen Pack hinzugefügt.
+      delete: Sticker erfolgreich aus dem Set gelöscht.
+      restored: Sticker erfolgreich im aktuellen Set gespeichert.
+    delete: Sticker erfolgreich aus dem Set gelöscht.
+    restored: Sticker erfolgreich im aktuellen Set gespeichert.
     btn:
       delete: '🗑 Löschen'
       copy: '🌟 Kopieren'
       restore: '✅ Wiederherstellen'
     error:
       not_found: |
-        Fehler!
-        Sticker nicht gefunden.
+        Sticker konnte nicht gefunden werden.
       invalid_png: |
-        <b>Fehler!</b>
-        Die Datei ist kein gültiges PNG-Bild. Bitte konvertieren Sie sie in das PNG-Format, bevor Sie sie senden.
+        Die Datei ist kein gültiges PNG-Bild. Konvertiere sie vor dem Senden ins PNG-Format.
       invalid_dimensions: |
-        <b>Fehler!</b>
-        Die Stickerabmessungen sind ungültig. Sticker müssen 512x512 Pixel betragen.
+        Die Abmessungen des Stickers sind ungültig. Sticker müssen 512x512 Pixel groß sein.
       invalid_animated: |
-        <b>Fehler!</b>
-        Die animierte Sticker-Datei hat nicht das richtige TGS-Format.
+        Die Datei des animierten Stickers hat nicht das richtige TGS-Format.
       invalid_video: |
-        <b>Fehler!</b>
         Die Videodatei hat nicht das richtige WEBM-Format.
   group_settings:
     success: |
@@ -296,333 +437,321 @@ callback:
 sticker:
   add:
     ok: |
-      <b>Erfolgreich zum Pack hinzugefügt:</b>
-      <a href="${link}">${title}</a>
+      ✅ Zu <a href="${link}">${title}</a> hinzugefügt
 
-      Innerhalb einer Stunde wird dieses Pack für alle Benutzer aktualisiert.
-
-      <i>Senden Sie ein oder mehrere Emojis, die zum Sticker passen, wenn Sie sie hinzufügen möchten</i>
+      <i>Du kannst ein Emoji für diesen Sticker senden</i>
     ok_inline: |
-      <b>Erfolgreich zum Pack hinzugefügt:</b>
-      <u>${title}</u>
-    send_emoji: Großartig, jetzt sende das Emoji, das zum Sticker passt
+      ✅ Zu <u>${title}</u> hinzugefügt
+    ok_repainting_notice: |
+      ⚠️ Das ist ein einfarbiges Emoji: In einem normalen Set bleibt es weiß und ist auf hellem Hintergrund kaum zu sehen.
+    send_emoji: Sende ein Emoji für diesen Sticker
     converting_process: |
-      <b>Warten...</b>
-      Ihre Datei steht zur Konvertierung in der Warteschlange. Warten Sie auf den Abschluss. Dies kann einige Zeit dauern.
+      ⏳ Konvertierung: ${progress}/${total}
 
-      Fortschritt: ${progress} / ${total}
-
-      <i>Benutzer, die den Bot unterstützt haben, erhalten Vorrang in der Warteschlange (mehr: /donate)</i>
+      <i>Boost = Vorrang → /donate</i>
     catalog_offer: |
-      <b>😲 Wow, du hast ein tolles Pack erstellt!</b>
-
-      Möchtest du <a href="${link}">${title}</a> zum öffentlichen Stickerkatalog hinzufügen, damit auch andere Benutzer des Bots es sehen können?
-      <i>Es dauert nicht lange</i>
+      Möchtest du <a href="${link}">${title}</a> teilen?
+      Füge es zum Katalog hinzu, damit andere es finden können.
     quote: |
-      Verwenden Sie @QuotlyBot, um ein Angebot aus dieser Nachricht zu erstellen
+      Nutze @QuotlyBot, um aus dieser Nachricht ein Zitat zu erstellen
     error:
       reply: |
-        <b>Fehler!</b>
-        Bitte, antworte auf den Sticker.
+        Antworte auf einen Sticker.
       no_selected_pack: |
-        <b>Du hast kein Pack ausgewählt</b>
+        <b>Du hast kein Set ausgewählt</b>
 
-        Bitte erstelle (/new) oder wähle (/packs) ein Pack
+        Erstelle (/new) oder wähle (/packs) ein Set
       no_selected_group_pack: |
-        <b>Du hast kein Gruppenpack ausgewählt</b>
+        <b>Du hast kein Gruppen-Set ausgewählt</b>
 
-        Bitte wähle ein Pack mit dem Befehl /packs
+        Wähle ein Set mit dem Befehl /packs
       no_rights: |
-        <b>Fehler!</b>
-        Du hast nicht das Recht, Sticker zu diesem Pack hinzuzufügen.
+        Du darfst keine Sticker zu diesem Set hinzufügen.
       stickers_too_much: |
-        Dieses Pack hat die maximale Anzahl an Stickern.
+        Dieses Set hat bereits die maximale Anzahl an Stickern.
 
-        Du kannst ein neues Pack mit dem Befehl /new erstellen.
+        Mit dem Befehl /new kannst du ein neues Set erstellen.
       have_already: |
-        <b>Dieser Sticker ist bereits in dem Pack</b>
+        <b>Dieser Sticker ist bereits im Set</b>
 
         Wenn du das Emoji ändern möchtest, sende es in der nächsten Nachricht.
       stickerset_invalid: |
-        <b>Fehler!</b>
-        Bot kann nicht auf dein aktuell ausgewähltes Pack zugreifen.
+        Der Bot hat keinen Zugriff auf das ausgewählte Sticker-Set.
 
-        Bitte erstelle (/new) oder wähle (/packs) ein anderes Pack.
+        Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set.
       invalid_png: |
-        <b>Fehler!</b>
-        Die Datei ist kein gültiges PNG-Bild. Bitte konvertieren Sie sie in das PNG-Format, bevor Sie sie senden.
+        Die Datei ist kein gültiges PNG-Bild. Konvertiere sie vor dem Senden ins PNG-Format.
       invalid_dimensions: |
-        <b>Fehler!</b>
-        Die Stickerabmessungen sind ungültig. Sticker müssen 512x512 Pixel betragen.
+        Die Abmessungen des Stickers sind ungültig. Sticker müssen 512x512 Pixel groß sein.
       invalid_animated: |
-        <b>Fehler!</b>
-        Die animierte Sticker-Datei hat nicht das richtige TGS-Format.
+        Die Datei des animierten Stickers hat nicht das richtige TGS-Format.
+      animated_too_big: |
+        Nach der Anpassung an das Set-Format überschreitet dieser animierte Sticker das Telegram-Limit von 64 KB und kann nicht übertragen werden.
       invalid_video: |
-        <b>Fehler!</b>
         Die Videodatei hat nicht das richtige WEBM-Format.
       file_type:
         static: |
-          <b>Fehler!</b>
           Dieser Dateityp wird nicht unterstützt
-          Du kannst dieses Foto oder den statischen Sticker zum statischen Pack hinzufügen
+          Du kannst dieses Foto oder diesen statischen Sticker zu einem statischen Sticker-Set hinzufügen
 
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
         video: |
-          <b>Fehler!</b>
           Dieser Dateityp wird nicht unterstützt
-          Du kannst diese Videodateien zum Videopack hinzufügen
+          Du kannst diese Videodatei zu einem Video-Set hinzufügen
 
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
         animated: |
-          <b>Fehler!</b>
           Dieser Dateityp wird nicht unterstützt
-          Du kannst diese animierten Dateien zum Vektorpack hinzufügen
+          Du kannst diese animierten Dateien zu einem animierten Sticker-Set hinzufügen
 
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
         unknown: |
-          <b>Fehler!</b>
+          Dieser Dateityp wird nicht unterstützt
 
-          Der Dateityp wird nicht unterstützt
-
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Pack</i>
+          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
       wait_load: |
-        <b>Warten!</b>
-
-        Der Bot verarbeitet noch die vorherige Datei...
-        Du kannst die Bot-Entwicklung unterstützen (/donate), um die Priorität bei der Bearbeitung zu erhöhen und die Möglichkeit zu erhalten, mehr als einen Sticker in die Warteschlange zu stellen.
+        ⏳ Die vorherige Datei wird noch verarbeitet...
       timeout: |
-        <b>Zur Zeit erlebt der Bot eine enorme Belastung</b>
-        Daher ist die Videokonvertierung nur für Packs mit aktivem Boost verfügbar
-
-        Für weitere Informationen folge dem Befehl /donate
+        ⚠️ Gerade ist die Auslastung sehr hoch. Versuche es in ein paar Minuten erneut.
       convert: |
-        <b>Fehler!</b>
-        Leider konnte der Bot dein Video nicht konvertieren.
+        Das Video konnte nicht konvertiert werden.
 
-        Vielleicht ist dein Video in einem Format gespeichert, das dem Bot nicht verständlich ist. Stelle sicher, dass es im MP4-Format ist.
-        Es könnte auch ein interner Fehler des Bots sein, versuche, dieses Video erneut zu senden
+        Versuche es im MP4-Format oder sende es erneut.
       too_big: |
-        <b>Fehler!</b>
 
-        Die Datei ist zu groß, um verarbeitet zu werden. Bitte reduziere die Qualität und Dauer, bevor du sie sendest.
+        Die Datei ist zu groß für die Verarbeitung. Verringere vor dem Senden Qualität und Länge.
       sticker_not_found: |
-        <b>Fehler!</b>
 
-        Dieser Sticker konnte nicht gefunden werden. Bitte stellen Sie sicher, dass er im richtigen Paket ist oder versuchen Sie, ihn erneut hinzuzufügen.
+        Dieser Sticker wurde nicht gefunden. Prüfe, ob er im richtigen Set ist, oder füge ihn erneut hinzu.
+      invalid_image: |
+
+        Dieses Bild konnte nicht verarbeitet werden. Versuche es mit einer anderen Datei oder einem anderen Format.
 news:
   join: |
-    ℹ️ <a href="${link}">Tritt unserem Kanal bei</a>, um die neuesten Bot-News zu erhalten.
-
-    <i>Abonniere den Kanal, um die neuesten Nachrichten über den Bot sowie Updates und neue Funktionen zu erhalten.</i>
-  join_btn: '📢 Kanal beitreten'
-  not_joined: '🙅 Du bist nicht dem Kanal beigetreten'
-  continue: '✅ Fortfahren'
+    📢 <a href="${link}">Abonniere den Kanal</a> — News, Updates und neue Funktionen.
+  join_btn: '📢 Abonnieren'
+  not_joined: '🙅 Du hast den Kanal nicht abonniert'
+  continue: '✅ Weiter'
 userAbout:
   help: |
-    <b>🧑‍🎨 Benutzerinfo</b>
+    <b>🧑‍🎨 Über den Nutzer</b>
 
-    Mit diesem Menü kannst du Informationen über den Benutzer und seine Stickerpacks herausfinden
+    In diesem Menü findest du Infos über einen Nutzer und seine Sticker-Sets
 
-    Um Informationen über den Benutzer zu erhalten, verwenden Sie den Button unten oder leiten Sie seine Nachricht weiter
+    Um Infos über einen Nutzer zu erhalten, nutze den Button unten oder leite eine Nachricht von ihm weiter
   result: |
-    <b>🧑‍🎨 Benutzerinfo</b>
-    <b>🆔 Benutzer-ID:</b> <code>${userId}</code>
-    <b>🎨 Packs von diesem Benutzer:</b>
+    <b>🧑‍🎨 Nutzerinfo</b>
+    <b>🆔 Nutzer-ID:</b> <code>${userId}</code>
+    <b>🎨 Sets dieses Nutzers:</b>
     ${packs}
   no_packs: |
-    <i>Wir haben keine Informationen über die Sticker dieses Besitzers</i>
+    <i>Wir haben keine Infos über Sets dieses Besitzers</i>
   forward_hidden: |
-    Der Benutzer hat die Möglichkeit zum Weiterleiten von Nachrichten verborgen. Verwenden Sie den Button unten, um seine Stickerpacks anzusehen.
-  select_user: '🧑‍🎨 Benutzer auswählen'
+    Der Nutzer hat das Weiterleiten seiner Nachrichten eingeschränkt. Nutze den Button unten, um seine Sticker-Sets anzusehen.
+  select_user: '🧑‍🎨 Nutzer auswählen'
 scenes:
   new_pack:
     pack_type: |
-      <b><u>Pack-Typ wählen</u></b>
-    regular: '😊 Sticker'
-    custom_emoji: '🌟 Emoji (Premium)'
-    static: '🌟 Statisch'
-    animated: '✨ Vektor'
-    video: '📹 Video'
-    pack_format: |
-      <b><u>Pack-Typ wählen</u></b>
+      <b>Welches Set erstellen wir?</b>
 
-      <b>Allgemein</b> - statisch (nicht beweglich), Raster, Dateiformat - vor dem Hinzufügen PNG (der Bot verarbeitet), nach dem Hinzufügen - WEBP.
-      Ein Beispiel für ein reguläres Pack - t.me/addstickers/Animals
-
-      <b>Video</b> - animiertes Video-Pack. Du kannst beliebige Videos, GIFs und Fotos hinzufügen.
-      Beispielvideo-Pack - t.me/addstickers/TheMascot
-
-      <b>Animiert</b> - animiert, Vektor (sie haben eine genaue Beschreibung der Objekte innerhalb der Datei, wodurch sie bei jeder Skalierung klar dargestellt werden), Dateiformat - TGS, eine Variation des Lottie-Formats.
-      Ein Beispiel für ein animiertes Pack - t.me/addstickers/IsabelleShizue
-
-      <i>Animierte und Video-Sticker-Sets können bis zu 50 Sticker enthalten. Statische Sticker-Sets können bis zu 120 Sticker enthalten.</i>
+      <b>🖼 Sticker</b> — klassische Sticker für den Chat.
+      <b>✨ Emojis</b> — benutzerdefinierte Emojis direkt im Text. Senden können sie nur Nutzer mit Telegram Premium.
+      <b>🎨 Adaptive Emojis</b> — einfarbig: Sie werden in einer Farbe gezeichnet und passen sich automatisch an die Textfarbe an.
+    regular: '🖼 Sticker'
+    custom_emoji: '✨ Emojis'
+    custom_emoji_adaptive: '🎨 Adaptive Emojis'
     pack_title: |
-      <b>Gebe einen neuen Stickernamen ein:</b>
-      <i>Du kannst durch den Knopf einen zufälligen Namen wählen.</i>
+      <b>Name des Sets</b>
+
+      Ihn sehen alle. Schreib einen eigenen oder wähle einen Vorschlag unten.
     pack_name: |
-      <b>Gebe einen kurzen Link für das neue Pack ein:</b>
+      <b>Adresse des Sets</b>
 
-      <i>Zum Beispiel verwendet dieses Pack 'Animals' als Kurzlink: https://t.me/addstickers/<u>Animals</u></i>
-      <i>Du kannst durch den Knopf einen zufälligen Kurzlink wählen.</i>
+      Nur lateinische Buchstaben, Ziffern und <code>_</code>. Beispiel: t.me/addstickers/<u>MeineSticker</u>
     ok: |
-      Pack <a href="${link}">${title}</a> erfolgreich erstellt!
+      ✅ Set erstellt: <a href="${link}">${title}</a>
 
-      <b>Pack-Link:</b> <pre>${link}</pre>
-
-      Sende eine Datei, ein Foto, ein Video oder einen Sticker, damit ich es deinem Set hinzufüge
+      Sende ein Foto, Video oder einen Sticker, um ihn hinzuzufügen.
     error:
-      title_long: Name kann nicht mehr als ${max} Zeichen enthalten.
-      name_long: Adresse kann nicht mehr als ${max} Zeichen enthalten.
+      title_long: Der Name darf höchstens ${max} Zeichen lang sein.
+      name_long: Die Adresse darf höchstens ${max} Zeichen lang sein.
+      inline_exists: |
+        Du hast bereits ein Inline-Set — <b>${title}</b>.
+
+        Es kann nur ein Inline-Set geben: Ein neues würde dieses löschen.
+        Es ist bereits ausgewählt, du kannst also einfach weiter Sticker hinzufügen.
       telegram:
         name_invalid: Diese Adresse kann nicht verwendet werden.
-        name_occupied: Diese Adresse ist bereits vergeben.
+        name_occupied: Diese Adresse ist bereits vergeben. Versuche eine andere.
         upload_failed: |
-          <b>Fehler!</b>
-          Bot kann keine Sticker zu Telegram hochladen.
+          Der Bot kann keine Sticker zu Telegram hochladen.
 
-          Bitte versuche es später erneut.
+          Versuche es später erneut.
   copy:
     enter: |
-      Ich kann es kopieren, aber vorher lass uns ein neues Pack erstellen
+      Erstellen wir zuerst ein neues Set für die Kopie.
     progress: |
-      Kopieren des Packs von <a href="${originalLink}">${originalTitle}</a> nach <a href="${link}">${title}</a>
-
-      Fortschritt: ${current}/${total}
+      ⏳ Wird kopiert: ${current}/${total}
     done: |
-      Pack-Kopieren von <a href="${originalLink}">${originalTitle}</a> nach <a href="${link}">${title}</a> erfolgreich abgeschlossen.
+      ✅ Nach <a href="${link}">${title}</a> kopiert
+    done_partial: |
+      ⚠️ Nach <a href="${link}">${title}</a> kopiert
+
+      ${success} Sticker kopiert, ${failed} konnten nicht kopiert werden.
+    done_pending: |
+      ✅ Nach <a href="${link}">${title}</a> kopiert
+
+      ${success} Sticker kopiert, ${pending} Videos werden noch verarbeitet.
+    done_partial_pending: |
+      ⚠️ Nach <a href="${link}">${title}</a> kopiert
+
+      ${success} Sticker kopiert, ${failed} fehlgeschlagen, ${pending} Videos werden noch verarbeitet.
     pay: |
-      <b>Pack-Konvertierung</b>
+      <b>Set-Konvertierung</b>
 
-      Das Konvertieren eines Pakets von einem Format in ein anderes kostet 1 Credit
+      Die Umwandlung eines Sets in einen anderen Typ kostet 1 Credit
 
-      <b>Aktueller Saldo:</b> ${balance} Credits
+      <b>Aktuelles Guthaben:</b> ${balance} Credits
 
       Credits kaufen: /donate
     pay_btn: '✅ Bestätigen'
     error:
-      premium: |
-        <b>Fehler!</b>
-        Diese Funktion ist nur für Spendermitglieder verfügbar.
+      all_failed: |
+        ❌ Aus <a href="${originalLink}">${originalTitle}</a> konnte kein einziger Sticker kopiert werden.
 
-        Du kannst es tun, indem du den Befehl /donate sendest.
+        Das Set wurde nicht erstellt.
+      premium: |
+        Diese Funktion steht leider nur Unterstützern des Bots zur Verfügung.
+
+        Du kannst den Bot mit dem Befehl /donate unterstützen.
   original:
     enter: |
-      Sende den Sticker, der durch diesen Bot hinzugefügt wurde, und ich zeige dir seinen ursprünglichen Sticker.
+      <b>🔎 Herkunft finden</b>
+
+      Sende einen Sticker — ich zeige dir, aus welchem Set er kopiert wurde.
+      Wird kein Original gefunden, bekommst du die Datei (PNG/WEBM).
+    source_found: |
+      🔎 Kopiert aus: <a href="${link}">${title}</a>
     error:
       not_found: |
-        <b>Fehler!</b>
-        Ich konnte den Originalsticker nicht finden.
+        Original nicht gefunden. Hier ist die Sticker-Datei:
   delete:
     enter: |
-      Senden Sie den Sticker, der über diesen Bot hinzugefügt wurde, und ich werde ihn aus dem Paket löschen.
+      <b>🗑 Sticker löschen</b>
+
+      Sende den Sticker, den du aus dem Set löschen möchtest.
     confirm: |
-      Sind Sie sicher, dass Sie diesen Sticker löschen möchten?
+      Diesen Sticker aus dem Set löschen?
     error:
       not_found: |
-        <b>Fehler!</b>
-        Ich konnte den Sticker nicht finden.
+        Sticker nicht in der Datenbank gefunden. Vielleicht wurde er nicht mit diesem Bot erstellt.
   rename:
     enter_name: |
-      <b>Geben Sie einen neuen Titel für <a href="${link}">${title}</a> ein:</b>
+      Neuer Name für <a href="${link}">${title}</a>:
     success: |
-      <b>Titel erfolgreich geändert!</b>
-
-      Neuer Titel: <a href="${link}">${title}</a>
+      ✅ Umbenannt: <a href="${link}">${title}</a>
     boost_notice: |
-      ❕ Um das Suffix "<code>${titleSuffix}</code>" zu entfernen, müssen Sie das Paket boosten. Mehr Details im Menü unter: /donate
+      Ein Boost entfernt "${titleSuffix}" → /donate
   packAbout:
     enter: |
-      <b>Senden Sie mir einen Sticker oder ein benutzerdefiniertes Emoji, um Informationen darüber zu suchen:</b>
+      <b>🔎 Wessen Sticker</b>
+
+      Sende einen Sticker — ich zeige dir das Set, den Ersteller und seine anderen Sets.
+      Oder leite eine Nachricht weiter — ich zeige dir die Sets dieser Person.
     not_found: |
-      Ich konnte den Sticker nicht finden
+      Sticker nicht gefunden.
+    btn:
+      download: '📎 Datei herunterladen'
+      show_all_packs: '📦 Alle Sets (${count})'
     result: |
-      <b>📦 Paket:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(Eindeutige Nummer für die Pakete des Besitzers, pro Paket erhöht)</i>
+      <b>📦 Set:</b> <a href="${link}">${name}</a>
+      🔢 Sticker: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
 
       🧑‍🎨 Besitzer-ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Andere Pakete von diesem Besitzer:</b>
+      <b>🎨 Weitere Sets dieses Besitzers:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>Wir haben keine Informationen über andere Sticker dieses Besitzers</i>
+      <i>Wir haben keine Infos über weitere Sets dieses Besitzers</i>
+    unknown_owner: '<i>Unbekannt</i>'
+    hidden: '<i>[ausgeblendet]</i>'
   boost:
     sure: |
-      <b>Sind Sie sicher, dass Sie <a href="${link}">${title}</a> boosten möchten?</b>
+      <a href="${link}">${title}</a> boosten?
 
-      Das Boosten wird die Priorität der Verarbeitung erhöhen und die Möglichkeit bieten, mehr als einen Sticker zur Warteschlange hinzuzufügen.
-      Detaillierte Informationen über Boosts finden Sie im Menü unter: /donate
-
-      <b>Preis:</b> 1 Credits
-      <b>Aktuelles Guthaben:</b> ${balance} Credits
+      <b>Preis:</b> 1 Credit
+      <b>Guthaben:</b> ${balance}
     btn:
-      yes: Ja, boosten!
-      no: Nein, abbrechen
+      yes: '⚡ Boosten'
+      no: Abbrechen
     canceled: |
-      Boosting abgebrochen
+      Abgebrochen
     success: |
-      Boosting erfolgreich abgeschlossen!
+      ⚡ <a href="${link}">${title}</a> — Boost aktiviert!
 
-      ${title} ist jetzt geboostet
+      <b>Freigeschaltet:</b>
+      • Name ohne Suffix „${titleSuffix}“ — nach dem Umbenennen
+      • Bis zu 64 Zeichen im Namen (statt 35)
+      • Videos bis zu 35 Sekunden
+      • Vorrang bei der Konvertierung
+      • Mehrere Sticker gleichzeitig
+
+      <i>Um das Suffix zu entfernen, tippe im Set-Menü auf „✏️ Umbenennen“.</i>
     error:
+      too_fast: Nicht so schnell — versuche es in einer Sekunde erneut.
       not_enough_credits: |
-        Sie haben nicht genug Credits, um dieses Paket zu boosten.
-
-        Sie können Ihr Guthaben aufladen, indem Sie den Befehl /donate senden.
+        Nicht genug Credits. /donate
       already_boosted: |
-        Dieses Paket ist bereits geboostet.
+        Bereits geboostet.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Senden Sie mir den Sticker aus dem Paket, das Sie veröffentlichen möchten</b>
+        👌 <b>Sende einen Sticker aus dem Set, das du veröffentlichen möchtest</b>
 
-        <i>Sie können jedes Paket veröffentlichen, das Ihnen gehört, auch wenn es anderswo erstellt wurde</i>
+        <i>Du kannst jedes deiner Sets veröffentlichen, auch wenn es woanders erstellt wurde</i>
       owner_proof: |
-        <b>Um die Besitzverhältnisse dieses Pakets zu überprüfen, müssen Sie einige einfache Schritte befolgen:</b>
-        1. Öffnen Sie den Bot @Stickers
-        2. Senden Sie den Befehl <code>/packstats</code>
-        3. Finden und wählen Sie das benötigte Paket aus
-        4. Leiten Sie die erhaltene Nachricht an den Bot weiter
+        <b>Um zu bestätigen, dass dir dieses Set gehört, folge diesen einfachen Schritten:</b>
+        1. Öffne den Bot @Stickers
+        2. Sende den Befehl <code>/packstats</code>
+        3. Suche und wähle das gewünschte Set aus
+        4. Leite mir die erhaltene Nachricht weiter
       publish_new_access_denied: |
-        <b>Fehler!</b>
-        Dieses Paket gehört nicht Ihnen.
+        Das ist nicht dein Set.
 
-        Sie können nur Ihre eigenen Pakete veröffentlichen
+        Du kannst nur eigene Sets veröffentlichen
       banned: |
-        <b>Fehler!</b>
-        Sie sind von der Nutzung dieser Funktion ausgeschlossen.
-        Bitte kontaktieren Sie den Administrator.
+        Du darfst diese Funktion nicht nutzen.
+        Wende dich an den Administrator.
       enter: |
-        Sie sind dabei, das „<a href="${link}">${title}</a>“ Paket in unserem öffentlichen Verzeichnis des Bots zu veröffentlichen.
-        Es kann von jedem Bot-Benutzer nach Name, Tags oder Filter gefunden werden.
-        Da durch werden mehr Leute Ihr Paket installieren.
-        Versuchen Sie nur qualitativ hochwertige Pakete zu senden, die für eine große Anzahl von Menschen von Interesse sein können.
+        <a href="${link}">${title}</a> im Katalog veröffentlichen?
 
-        <b>Regeln für das Veröffentlichen von Paketen:</b>
-        • Veröffentlichen Sie keine persönlichen Pakete, die für einen engen Personenkreis gedacht sind. Zum Beispiel Gesichter Ihrer Freunde oder Zitate aus Ihren Nachrichten.
-        • Veröffentlichen Sie keine Sticker, die gegen EU-Rechtsvorschriften oder andere lokale Gesetze verstoßen.
+        Andere Nutzer können dein Set dann über den Namen oder Tags finden.
 
-        Sie müssen zusätzliche Informationen einreichen, damit es im Katalog veröffentlicht werden kann.
-      continue_button: Fortfahren
+        <b>Regeln:</b>
+        • Nur hochwertige Sets für ein breites Publikum
+        • Keine privaten Fotos oder persönlichen Inhalte
+        • Keine Gesetzesverstöße
+      continue_button: Weiter
       enter_description: |
-        <b>Beschreiben Sie Ihr Paket kurz, damit andere es finden können</b>
+        <b>Beschreibe dein Set kurz, damit andere es finden können</b>
 
-        <i>Sie können auch Hashtags verwenden, um es zu kategorisieren [#]</i>
-        <i>Zum Beispiel: #anime #meme #tiere #niedlich #kpop #lustig #katze #spiel </i>
+        <i>Du kannst Hashtags zur Kategorisierung verwenden [#]</i>
+        <i>Zum Beispiel: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       select_language: |
-        <b>Wählen Sie die Sprachen aus, für die Ihr Paket gedacht ist:</b>
-        <i>Sie können mehrere Sprachen auswählen</i>
+        <b>Wähle die Sprachen, für die dein Set gedacht ist:</b>
+        <i>Du kannst mehrere auswählen</i>
       button_all_languages: Alle Sprachen
       button_confirm_language: Bestätigen
       set_safe: |
-        <b>Ist Ihr Paket sicher für Benutzer?</b>
-        <i>Das heißt, es enthält keine Erotik oder anderen schockierenden Inhalte</i>
+        <b>Ist dein Set für alle Nutzer unbedenklich?</b>
+        <i>Also ohne Erotik und andere schockierende Inhalte</i>
       button_safe:
-        safe: Ja, es ist sicher
-        not_safe: Nein, es ist nicht sicher
-      no_tags: wurden nicht angegeben
+        safe: Ja, unbedenklich
+        not_safe: Nein, nicht unbedenklich
+      no_tags: nicht angegeben
       confirm: |
-        <b>Bestätigen Sie die Veröffentlichung des Pakets "<a href="${link}">${title}</a>"</b>
+        <b>Veröffentlichung des Sticker-Sets „<a href="${link}">${title}</a>“ bestätigen</b>
 
         <b>Beschreibung:</b> <i>${description}</i>
 
@@ -630,91 +759,145 @@ scenes:
         <b>Sprachen:</b> ${languages}
       button_confirm: '✅ Veröffentlichung bestätigen'
       success: |
-        Herzlichen Glückwunsch, Ihr Paket wurde im allgemeinen Verzeichnis unseres Bots veröffentlicht, wo andere Benutzer es finden können!
+        Glückwunsch! Dein Set wurde im Katalog veröffentlicht und kann jetzt von anderen Nutzern gefunden werden!
 
-        Sie können die Suchinformationen des Pakets bearbeiten, indem Sie das Paket mit dem Befehl /packs auswählen.
+        Die Infos zum Set kannst du über /packs bearbeiten.
 
-        <i>Wir erinnern Sie daran, dass Sie die Statistiken Ihres Pakets über den offiziellen Bot @Stickers einsehen können</i>
+        <i>Die Statistik deines Sets siehst du im offiziellen Bot @Stickers</i>
     unpublish:
       success: |
-        Das Paket wurde erfolgreich aus dem Bot-Katalog entfernt.
+        Set erfolgreich aus dem Katalog entfernt.
   delete_pack:
     enter: |
-      Bist du sicher, dass du das Paket <a href="${link}">${title}</a> löschen möchtest?
-      Es wird dauerhaft gelöscht und kann nicht wiederhergestellt werden.
+      ⚠️ <a href="${link}">${title}</a> endgültig löschen?
 
-      Wenn du nur einen Sticker löschen möchtest, verwende den Befehl /delete.
-
-      Sende <code>${confirm}</code>, um zu bestätigen, dass du dieses Paket wirklich löschen möchtest.
-    confirm: Ja, ich bin völlig sicher.
+      Sende <code>${confirm}</code> zur Bestätigung.
+    confirm: Ja, löschen
     success: |
-      <b>Paket erfolgreich gelöscht!</b>
+      🗑 Set gelöscht
     error:
-      - <b>Fehler!</b>
-      - Ups, etwas ist schiefgelaufen.
+      - Etwas ist schiefgelaufen.
   frame:
+    no_sticker_set: |
+      Du hast noch kein Set ausgewählt. Wähle eins über /packs und wiederhole den Befehl.
     no_video: |
-      <b>Fehler!</b>
-      Du kannst nur Frames zu Videopaketen hinzufügen.
+      Einen Rahmen kannst du nur zu Video-Sets hinzufügen.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Rahmentyp wählen:</b>
-      Der Rahmen ist ein transparenter Hintergrund um den Sticker.
+      <a href="${example}">&#8203;</a><b>Wähle die Form des Stickers:</b>
 
-      <code>lite</code> — die Ecken werden ein wenig abgeschnitten.
-      <code>medium</code> — die Ecken werden mehr abgeschnitten.
-      <code>rounded</code> — die Ecken werden abgerundet.
-      <code>square</code> — die rechteckige Form des Rahmens, d.h. es wird nicht verändert.
-      <code>circle</code> — der Rahmen wird in Form eines Kreises sein.
+      <code>leicht</code> — fast keine Abrundung
+      <code>mittel</code> — leicht abgerundete Ecken
+      <code>abgerundet</code> — stark abgerundete Ecken
+      <code>quadratisch</code> — gerade Ecken ohne Abrundung
+      <code>rund</code> — Sticker in Kreisform
 
-      <i>In Zukunft kannst du den Befehl /frame verwenden, um den Rahmentyp festzulegen.</i>
+      <i>Die Form kannst du mit dem Befehl /frame ändern</i>
     types:
       lite: '1. Leicht'
       medium: '2. Mittel'
       rounded: '3. Abgerundet'
       square: '4. Quadratisch'
-      circle: '5. Kreis'
+      circle: '5. Rund'
     selected: |
-      <b>Ausgewählter Rahmentyp:</b> ${type}
+      <b>Ausgewählte Rahmenform:</b> ${type}
   photoClear:
     enter: |
-      Senden Sie ein <u>Foto</u>, von dem Sie den Hintergrund entfernen möchten, und ich sende Ihnen die Datei ohne den Hintergrund zurück
+      <b>✂️ Hintergrund entfernen</b>
 
-      <i>Funktioniert am besten mit Fotos. Funktioniert schlechter mit Zeichnungen, Illustrationen usw.</i>
+      Sende ein Foto — du bekommst ein PNG ohne Hintergrund.
+      <i>Funktioniert am besten mit Fotos von Personen.</i>
     enter_anime: |
-      Senden Sie ein <u>Foto</u>, von dem Sie den Hintergrund entfernen möchten, und ich sende Ihnen die Datei ohne den Hintergrund zurück
+      <b>✂️ Hintergrund entfernen</b>
 
-      <i>Funktioniert am besten mit Anime-Bildern</i>
+      Sende ein Foto — du bekommst ein PNG ohne Hintergrund.
+      <i>Funktioniert am besten mit Anime.</i>
     choose_model: |
-      <b>Modell wählen:</b>
-    web_app: WebApp - für Fotos mit Personen
+      Modell:
+    web_app: WebApp — für Fotos mit Personen
     model:
-      ordinary: Gewöhnlich — für Fotos mit Personen
+      ordinary: Normal — für Fotos mit Personen
       general: Allgemein — für alle Fotos
       anime: Anime — für Anime-Bilder
-      birefnet_general: BirefNet - für alle Fotos
+      birefnet_general: BirefNet — für alle Fotos
     add_to_set_btn: '🌟 Zum Set hinzufügen'
     error: |
-      <b>Fehler!</b>
-      Ups, etwas ist schiefgelaufen.
+      Ups, etwas ist schiefgelaufen. Versuche es erneut.
+    error_timeout: |
+      ⏱ Die Verarbeitung hat zu lange gedauert. Versuche es später erneut oder mit einem kleineren Foto.
+    error_queue_disabled: |
+      Diese Funktion ist vorübergehend nicht verfügbar. Versuche es später erneut.
+  videoRound:
+    enter: |
+      <b>⭕ Rundes Video</b>
+
+      Sende ein Video — ich mache daraus ein rundes Video.
+    not_video: |
+      Sende ein Video, ein GIF, einen Video-Sticker oder ein animiertes Bild.
+    error: |
+      Konvertierung fehlgeschlagen. Versuche es mit einem anderen Video.
+    forbidden: |
+      Ich kann dir kein rundes Video senden. Prüfe deine Datenschutzeinstellungen (Sprachnachrichten müssen erlaubt sein).
+    processing: |
+      ⏳ Wird konvertiert: ${position}/${total}
+
+      <i>Boost = Vorrang → /donate</i>
+    file_too_big: |
+      Die Datei ist zu groß (max. 20 MB). Sende ein kleineres Video.
+  search:
+    error:
+      not_found: |
+        Nichts gefunden. Versuche es mit anderen Stichwörtern.
+    enter: |
+      <b>🔍 Sticker suchen</b>
+
+      Gib Stichwörter ein — ich suche passende Sets im Katalog.
+  error:
+    notFound: Set nicht gefunden
   leave: |
-    Aktion abgebrochen.
+    Abgebrochen
   btn:
-    cancel: '❌ Abbrechen'
+    cancel: '← Abbrechen'
 error:
+  stickerset_invalid: |
+    Das Set ist nicht verfügbar. Vielleicht wurde es in Telegram gelöscht.
   telegram: |
-    <b>Telegram hat einen Fehler zurückgegeben!</b>
-    <code>${error}</code>
+    Telegram-Fehler: <code>${error}</code>
+  telegram_reasons:
+    sticker_not_in_set: |
+      Der Sticker ist nicht mehr im Set — vielleicht wurde er schon gelöscht.
+    pack_invalid: |
+      Das Sticker-Set ist nicht verfügbar. Vielleicht wurde es in Telegram gelöscht.
+    pack_full: |
+      Das Set ist voll (Telegram-Limit erreicht). Lösche ein paar Sticker und versuche es erneut.
+    not_pack_owner: |
+      Dieses Set gehört einem anderen Nutzer — du kannst es nicht ändern.
+    pack_name_taken: |
+      Diese Set-Adresse ist bereits vergeben. Wähle einen anderen Namen.
+    pack_name_invalid: |
+      Die Set-Adresse hat ein ungültiges Format. Erlaubt sind lateinische Buchstaben, Ziffern und Unterstriche.
+    invalid_sticker_format: |
+      Die Datei eignet sich nicht als Sticker: falsches Format oder falsche Größe.
+    invalid_emoji: |
+      Ungültiges Emoji. Sende ein Standard-Unicode-Emoji.
+    rate_limited: |
+      Telegram bittet um eine Pause — versuche es in ein paar Sekunden erneut.
+    cannot_reach_user: |
+      Ich kann dem Nutzer nicht schreiben: Der Bot ist blockiert oder der Chat ist nicht verfügbar.
   answerCbQuery:
     telegram: |
-      Telegram hat einen Fehler zurückgegeben:
-      ${error}
+      Fehler: ${error}
+  file_too_big: |
+    Die Datei ist zu groß (max. 20 MB).
+  download: |
+    Die Datei konnte nicht heruntergeladen werden. Versuche es erneut.
   banned: |
-    <b>Fehler!</b>
-    Du bist von der Nutzung dieser Funktion ausgeschlossen.
-
-    <i>Wenn du denkst, dass dies ein Fehler ist, kontaktiere bitte den Administrator: @ly_oBot</i>
+    🚫 Zugriff verweigert. Fragen → @ly_oBot
+  access_denied: Zugriff verweigert
   unknown: |
-    <b>Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.</b>
+    Etwas ist schiefgelaufen. Versuche es erneut.
 
-    Wenn das Problem weiterhin besteht, schreiben Sie an @Ly_oBot.
-    Bitte schreiben Sie sofort, um welchen Bot es sich handelt, und beschreiben Sie das Problem in einer Nachricht ausführlich.
+    Hilft das nicht? Schreib an @Ly_oBot
+  rate_limit: |
+    ⏳ Zu viele Anfragen. Warte kurz und versuche es erneut.
+  rate_limit_seconds: |
+    ⏳ Zu viele Anfragen. Warte ${seconds} Sekunden.
