@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 Di browser'
       catalog_app: 'Unduh untuk Android'
       catalog_app_mini: '📱 Aplikasi Android'
+    current_pack: '📦 Stiker masuk ke: <a href="${link}">${title}</a>'
+    hint: 'Kirim foto, video, GIF, atau stiker — aku akan menambahkannya ke <a href="${link}">${title}</a>.'
   guide:
     web: |
-      <b>📖 Cara menggunakan fStikBot</b>
+      <b>📖 Cara kerjanya</b>
 
-      Panduan lengkap, tips, dan FAQ ada di situs kami.
+      1. /new — buat paket
+      2. Kirim foto, video, GIF, atau stiker — bahkan satu album sekaligus
+      3. /packs — paketmu dan pengaturannya
+
+      Panduan, tips, dan FAQ ada di situs web.
     menu: |
       <b>❓ Bantuan</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: Stiker
       custom_emoji: Emoji
       inline: Inline
+      shared: '👥 Bersama'
     empty: |
       Belum ada paket. Buat yang pertama → /new
     inline_title: Paket inline
@@ -214,6 +221,13 @@ cmd:
 
       Admin dapat memilih paket untuk grup dengan tombol di bawah.
     select_group_pack: Pilih paket
+    hidden_btn: '🗄 Tersembunyi'
+    hidden_info: |
+      <b>🗄 Paket tersembunyi</b>
+
+      Ketuk paket untuk memulihkan atau menghapusnya.
+    hidden_empty: 'Tidak ada paket tersembunyi di sini.'
+    group_admin_only: 'Hanya admin grup yang bisa memilih paket untuk grup.'
   emoji:
     info: |
       Untuk mengganti emoji default paket saat ini, kirim <code>/emoji</code> diikuti emoji, dipisahkan spasi
@@ -238,8 +252,8 @@ cmd:
 
       Kirim foto — aku akan memotongnya menjadi kisi emoji.
     no_pack: |
-      Kamu perlu paket emoji kustom terlebih dahulu.
-      Buat lewat /new dan pilih "Emoji".
+      Mozaik bekerja dengan paket emoji kustom.
+      Pilih salah satu paketmu di bawah atau buat yang baru.
     choose_grid: |
       📐 Pilih ukuran kisi:
     btn:
@@ -313,27 +327,71 @@ donate:
       Pembayaran dibatalkan
 coedit:
   info: |
-    <b>👥 Edit bersama</b>
+    <b>👥 Edit bersama</b> <a href="${link}">${title}</a>
 
-    Tautan: <code>${colink}</code>
+    Siapa pun yang membuka tautan ini akan bergabung ke paket:
+    <code>${colink}</code>
 
-    Bagikan — orang lain bisa menambah dan menghapus stiker di <a href="${link}">${title}</a>.
-
-    <b>Editor:</b> ${editors}
-
-    <i>Setel ulang tautan untuk menghapus semua editor</i>
+    <b>Anggota baru:</b> ${defaultRole}
+    <b>Anggota:</b> ${count}
   no_editors: |
     tidak ada
   btn:
     send: '📤 Kirim tautan'
-    reset: '🔁 Setel ulang tautan'
+    reset: '🔁 Tautan baru'
+    activity: '🧾 Aktivitas'
+    default_role: '⚙️ Baru: ${role}'
+    clear: '🧹 Keluarkan semua'
+    clear_confirm: '⚠️ Ya, keluarkan semua'
+    role_editor: '✏️ Menambah dan menghapus'
+    role_contributor: '➕ Hanya menambah'
+    remove: '🚫 Keluarkan dari paket'
+    leave: '🚪 Keluar dari paket'
+    back: '‹ Kembali'
+  roles:
+    editor: 'menambah dan menghapus'
+    contributor: 'hanya menambah'
   share: |
     Buka tautan dan tekan "Mulai" untuk ikut mengedit paket "${title}"
   reset: |
-    <b>🔁 Tautan berhasil disetel ulang</b>
+    <b>🔁 Tautan baru.</b> Tautan lama tidak berlaku lagi; anggota saat ini tetap punya akses.
+  member: |
+    <b>👤 ${name}</b>
 
-    Tautan baru untuk mengedit bersama <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    <b>Peran:</b> ${role}
+    <b>Bergabung:</b> ${date}
+    <b>Aksi dalam 30 hari terakhir:</b> ${actions}
+  clear_confirm: |
+    Keluarkan semua anggota (${count}) dari <b>${title}</b>? Tautannya juga akan diganti.
+  cleared: 'Semua anggota sudah dikeluarkan, dan tautannya diganti.'
+  joined: '👥 Kamu bergabung ke <b>${title}</b>. Peranmu: ${role}.'
+  joined_notice: |
+    👥 ${name} bergabung ke <a href="${link}">${title}</a> lewat tautan edit bersama.
+
+    Kelola anggota: /packs → paketnya → 👥 Edit bersama
+  left: '🚪 Kamu keluar dari <b>${title}</b>.'
+  left_notice: '🚪 ${name} keluar dari <b>${title}</b>.'
+  removed_notice: 'Kamu dikeluarkan dari edit bersama <b>${title}</b>.'
+  role_notice: 'Peranmu di <b>${title}</b> sekarang: ${role}.'
+  no_access: 'Kamu tidak lagi punya akses ke paket ini. Pilih paket lain di /packs.'
+  no_rights: "Peranmu di paket ini tidak mengizinkan hal ini."
+  your_role: '👥 Peranmu: ${role}'
+  activity: |
+    <b>🧾 Aktivitas</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>Belum ada apa-apa.</i>'
+  actions:
+    add: '➕ menambahkan stiker: ${count}'
+    delete: '🗑 menghapus stiker'
+    restore: '♻️ memulihkan stiker'
+    emoji: '😀 mengubah emoji'
+    join: '👋 bergabung'
+    leave: '🚪 keluar'
+    removed: '🚫 mengeluarkan ${target}'
+    role: '🔧 ${target}: ${role}'
+    reset: '🔁 mengganti tautan'
+    clear: '🧹 mengeluarkan semua (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -448,9 +506,9 @@ sticker:
       reply: |
         Balas ke sebuah stiker.
       no_selected_pack: |
-        <b>Kamu belum memilih paket</b>
+        <b>Pertama, buat paket untuk stikermu</b>
 
-        Buat (/new) atau pilih (/packs) paket
+        Buat satu — dan aku langsung menambahkan file ini ke sana.
       no_selected_group_pack: |
         <b>Kamu belum memilih paket grup</b>
 
@@ -481,9 +539,9 @@ sticker:
         Format file video salah (harus WEBM).
       file_type:
         unknown: |
-          Jenis file ini tidak didukung
+          Jenis file ini tidak didukung.
 
-          <i>Buat (/new) atau pilih (/packs) paket stiker lain</i>
+          Kirim foto, video, GIF, stiker, atau gambar sebagai file.
       wait_load: |
         ⏳ Masih memproses file sebelumnya...
       timeout: |
@@ -501,6 +559,12 @@ sticker:
       invalid_image: |
 
         Gambar ini tidak dapat diproses. Coba kirim file atau format lain.
+      queue_full: '⏳ Terlalu banyak file sekaligus. Tunggu sampai aku selesai memproses yang ada di antrean, lalu kirim sisanya.'
+    album_progress: '⏳ Menambahkan album: ${current}/${total}'
+    album_done: '✅ ${added} dari ${total} ditambahkan ke <a href="${link}">${title}</a>'
+    album_converting: '⏳ ${count} lainnya berupa video: sedang dikonversi, aku akan membalas masing-masing begitu siap.'
+    album_duplicates: '♻️ Sudah ada di paket: ${count}.'
+    album_failed: '⚠️ Gagal ditambahkan: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Ikuti saluran kami</a> — berita, pembaruan, fitur baru.
@@ -539,6 +603,7 @@ scenes:
       <b>Nama paket</b>
 
       Nama ini terlihat oleh semua orang. Tulis sendiri atau pilih dari saran di bawah.
+      <i>Alamat paket akan aku buat dari namanya.</i>
     pack_name: |
       <b>Alamat paket</b>
 
@@ -562,6 +627,9 @@ scenes:
           Bot tidak dapat mengunggah stiker ke Telegram.
 
           Coba lagi nanti.
+    btn:
+      custom_link: '🔗 Alamat paket sendiri'
+    custom_link_on: 'Oke — kirim namanya, lalu aku akan menanyakan alamatnya.'
   copy:
     enter: |
       Pertama, kita buat paket baru untuk salinannya.
@@ -599,6 +667,16 @@ scenes:
         Sayangnya, fitur ini hanya tersedia bagi yang telah mendukung bot.
 
         Kamu bisa mendukung dengan mengirim perintah /donate.
+    title: |
+      <b>📋 Menyalin <a href="${originalLink}">${originalTitle}</a></b> (${count})
+
+      Nama untuk salinanmu — tulis sendiri atau pilih di bawah.
+    btn:
+      change_type: '🔄 Ganti jenis paket'
+    created: |
+      ✅ Paket dibuat: <a href="${link}">${title}</a>
+
+      Sedang menyalin stiker — aku kabari kalau sudah selesai.
   original:
     enter: |
       <b>🔎 Asal stiker</b>
@@ -614,7 +692,7 @@ scenes:
     enter: |
       <b>🗑 Hapus stiker</b>
 
-      Kirim stiker yang ingin kamu hapus. Tidak perlu memilih paket — aku akan mencari sendiri di mana stiker itu berada.
+      Kirim stiker — aku langsung menghapusnya dari paketnya (bisa dipulihkan). Kirim sebanyak yang kamu mau.
     confirm: |
       Hapus stiker ini dari paket?
     error:
@@ -660,6 +738,7 @@ scenes:
     btn:
       yes: 'Ya, tingkatkan!'
       no: Batal
+      buy: '⭐ Beli kredit'
     canceled: |
       Dibatalkan
     success: |
@@ -713,6 +792,10 @@ scenes:
 
         <i>Kamu juga bisa memakai tagar untuk kategori [#]</i>
         <i>Contoh: #anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>Deskripsi saat ini:</b> <i>${description}</i>
+      keep_description: '✅ Pakai deskripsi saat ini'
       select_language: |
         <b>Pilih bahasa yang sesuai untuk paketmu:</b>
         <i>Bisa pilih lebih dari satu</i>
@@ -746,7 +829,7 @@ scenes:
     enter: |
       ⚠️ Hapus <a href="${link}">${title}</a> selamanya?
 
-      Kirim <code>${confirm}</code> untuk konfirmasi, atau ketuk "Batal".
+      Ketuk "${confirm}" untuk konfirmasi, atau "Batal".
     confirm: Ya, hapus
     success: |
       🗑 Paket dihapus
@@ -780,7 +863,7 @@ scenes:
       <b>✂️ Hapus latar belakang</b>
 
       Kirim foto — kamu akan menerima PNG tanpa latar belakang.
-      <i>Paling bagus untuk foto orang.</i>
+      <i>Model untuk fotomu:</i>
     enter_anime: |
       <b>✂️ Hapus latar belakang</b>
 
@@ -801,6 +884,7 @@ scenes:
       ⏱ Pemrosesan terlalu lama. Coba lagi nanti atau gunakan foto yang lebih kecil.
     error_queue_disabled: |
       Fitur ini sementara tidak tersedia. Coba lagi nanti.
+    not_image: 'Kirim foto atau gambar sebagai file (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Video jadi bulat</b>
@@ -832,6 +916,7 @@ scenes:
     Dibatalkan
   btn:
     cancel: '← Batal'
+  unexpected: 'Saat ini aku menunggu hal lain — ikuti langkah di atas, atau ketuk "← Batal".'
 error:
   stickerset_invalid: |
     Paket tidak tersedia. Mungkin sudah dihapus di Telegram.
