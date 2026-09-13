@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 ブラウザで'
       catalog_app: 'Android 版をダウンロード'
       catalog_app_mini: '📱 Android アプリ'
+    current_pack: '📦 スタンプの追加先：<a href="${link}">${title}</a>'
+    hint: '写真、動画、GIF、スタンプを送ると、<a href="${link}">${title}</a> に追加します。'
   guide:
     web: |
-      <b>📖 fStikBot の使い方</b>
+      <b>📖 使い方</b>
 
-      詳しいガイド、ヒント、よくある質問は公式サイトでご覧いただけます。
+      1. /new — パックを作成
+      2. 写真、動画、GIF、スタンプを送信（アルバムごとでもOK）
+      3. /packs — パック一覧と設定
+
+      ガイド、ヒント、よくある質問は公式サイトでご覧いただけます。
     menu: |
       <b>❓ ヘルプ</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: スタンプ
       custom_emoji: 絵文字
       inline: インライン
+      shared: '👥 共有'
     empty: |
       パックはまだありません。最初のパックを作成しましょう → /new
     inline_title: インラインパック
@@ -214,6 +221,13 @@ cmd:
 
       グループで使うパックは、管理者が下のボタンから選択できます。
     select_group_pack: パックを選択
+    hidden_btn: '🗄 非表示'
+    hidden_info: |
+      <b>🗄 非表示のパック</b>
+
+      パックをタップすると、復元または削除できます。
+    hidden_empty: '非表示のパックはありません。'
+    group_admin_only: 'グループのパックを選べるのはグループの管理者だけです。'
   emoji:
     info: |
       現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> のあとにスペースを空けて絵文字を送信してください
@@ -238,8 +252,8 @@ cmd:
 
       写真を送信してください。絵文字のグリッドに分割します。
     no_pack: |
-      まずカスタム絵文字のパックが必要です。
-      /new で作成し、「絵文字」を選んでください。
+      モザイクはカスタム絵文字のパックで使えます。
+      下から自分のパックを選ぶか、新しく作成してください。
     choose_grid: |
       📐 グリッドのサイズを選んでください：
     btn:
@@ -313,27 +327,71 @@ donate:
       お支払いがキャンセルされました
 coedit:
   info: |
-    <b>👥 共同編集</b>
+    <b>👥 共同編集</b> <a href="${link}">${title}</a>
 
-    リンク：<code>${colink}</code>
+    このリンクを開いた人は誰でもパックに参加できます：
+    <code>${colink}</code>
 
-    このリンクを共有すると、ほかの人も <a href="${link}">${title}</a> のスタンプを追加・削除できるようになります。
-
-    <b>編集者：</b>${editors}
-
-    <i>リンクをリセットすると、すべての編集者が削除されます</i>
+    <b>新しいメンバー：</b>${defaultRole}
+    <b>メンバー数：</b>${count}
   no_editors: |
     なし
   btn:
     send: '📤 リンクを送信'
-    reset: '🔁 リンクをリセット'
+    reset: '🔁 新しいリンク'
+    activity: '🧾 履歴'
+    default_role: '⚙️ 新規：${role}'
+    clear: '🧹 全員を削除'
+    clear_confirm: '⚠️ はい、全員を削除'
+    role_editor: '✏️ 追加と削除'
+    role_contributor: '➕ 追加のみ'
+    remove: '🚫 パックから外す'
+    leave: '🚪 パックから抜ける'
+    back: '‹ 戻る'
+  roles:
+    editor: '追加と削除'
+    contributor: '追加のみ'
   share: |
     リンクを開いて「開始」を押すと、パック「${title}」を共同編集できます
   reset: |
-    <b>🔁 リンクをリセットしました</b>
+    <b>🔁 新しいリンクを作成しました。</b>古いリンクは使えなくなりましたが、現在のメンバーはそのまま利用できます。
+  member: |
+    <b>👤 ${name}</b>
 
-    <a href="${link}">${title}</a> の新しい共同編集リンク：
-    <code>${colink}</code>
+    <b>権限：</b>${role}
+    <b>参加日：</b>${date}
+    <b>過去30日間の操作：</b>${actions}
+  clear_confirm: |
+    <b>${title}</b> からメンバー全員（${count}人）を削除しますか？リンクも新しくなります。
+  cleared: '全員を削除し、リンクを新しくしました。'
+  joined: '👥 <b>${title}</b> に参加しました。あなたの権限：${role}。'
+  joined_notice: |
+    👥 ${name} さんが共同編集リンクから <a href="${link}">${title}</a> に参加しました。
+
+    メンバーの管理：/packs → パック → 👥 共同編集
+  left: '🚪 <b>${title}</b> から抜けました。'
+  left_notice: '🚪 ${name} さんが <b>${title}</b> から抜けました。'
+  removed_notice: '<b>${title}</b> の共同編集から外されました。'
+  role_notice: '<b>${title}</b> でのあなたの権限が「${role}」に変更されました。'
+  no_access: 'このパックにはアクセスできなくなりました。/packs で別のパックを選んでください。'
+  no_rights: "このパックでのあなたの権限では、この操作はできません。"
+  your_role: '👥 あなたの権限：${role}'
+  activity: |
+    <b>🧾 履歴</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>まだ何もありません。</i>'
+  actions:
+    add: '➕ スタンプを追加：${count}'
+    delete: '🗑 スタンプを削除'
+    restore: '♻️ スタンプを復元'
+    emoji: '😀 絵文字を変更'
+    join: '👋 参加'
+    leave: '🚪 退出'
+    removed: '🚫 ${target} を削除'
+    role: '🔧 ${target}：${role}'
+    reset: '🔁 リンクを変更'
+    clear: '🧹 全員を削除（${count}）'
 callback:
   pack:
     answerCbQuer:
@@ -448,9 +506,9 @@ sticker:
       reply: |
         スタンプに返信してください。
       no_selected_pack: |
-        <b>パックが選択されていません</b>
+        <b>まずはスタンプ用のパックを作りましょう</b>
 
-        パックを作成（/new）または選択（/packs）してください
+        作成すると、このファイルをすぐに追加します。
       no_selected_group_pack: |
         <b>グループパックが選択されていません</b>
 
@@ -481,9 +539,9 @@ sticker:
         動画ファイルの形式が正しくありません（WEBM 形式が必要です）。
       file_type:
         unknown: |
-          このファイル形式には対応していません
+          このファイル形式には対応していません。
 
-          <i>別のスタンプパックを作成（/new）または選択（/packs）してください</i>
+          写真、動画、GIF、スタンプ、またはファイルとして画像を送信してください。
       wait_load: |
         ⏳ 前のファイルをまだ処理しています...
       timeout: |
@@ -501,6 +559,12 @@ sticker:
       invalid_image: |
 
         この画像を処理できませんでした。別のファイルや形式で送信してみてください。
+      queue_full: '⏳ 一度に送られたファイルが多すぎます。キューのファイルの処理が終わってから、残りを送信してください。'
+    album_progress: '⏳ アルバムを追加中：${current}/${total}'
+    album_done: '✅ ${total} 件中 ${added} 件を <a href="${link}">${title}</a> に追加しました'
+    album_converting: '⏳ 残りの ${count} 件は動画です。変換が終わり次第、1 件ずつ返信します。'
+    album_duplicates: '♻️ すでにパックにあるもの：${count} 件。'
+    album_failed: '⚠️ 追加できなかったもの：${count} 件。'
 news:
   join: |
     📢 <a href="${link}">チャンネルを登録</a>して、ニュース、アップデート、新機能の情報を受け取りましょう。
@@ -539,6 +603,7 @@ scenes:
       <b>パックの名前</b>
 
       名前は全員に表示されます。自分で入力するか、下の候補から選んでください。
+      <i>パックのアドレスは名前から自動で作成します。</i>
     pack_name: |
       <b>パックのアドレス</b>
 
@@ -562,6 +627,9 @@ scenes:
           ボットが Telegram にスタンプをアップロードできません。
 
           しばらくしてからもう一度お試しください。
+    btn:
+      custom_link: '🔗 アドレスを自分で決める'
+    custom_link_on: 'OK — 名前を送信してください。そのあとアドレスをお聞きします。'
   copy:
     enter: |
       まず、コピー先となる新しいパックを作成しましょう。
@@ -599,6 +667,16 @@ scenes:
         申し訳ありませんが、この機能はボットを支援してくださった方のみご利用いただけます。
 
         /donate コマンドを送信すると支援できます。
+    title: |
+      <b>📋 <a href="${originalLink}">${originalTitle}</a> をコピー</b>（${count}）
+
+      コピーの名前を入力するか、下から選んでください。
+    btn:
+      change_type: '🔄 パックの種類を変更'
+    created: |
+      ✅ パックを作成しました：<a href="${link}">${title}</a>
+
+      スタンプをコピーしています。完了したらお知らせします。
   original:
     enter: |
       <b>🔎 スタンプの出どころ</b>
@@ -614,7 +692,7 @@ scenes:
     enter: |
       <b>🗑 スタンプの削除</b>
 
-      削除したいスタンプを送信してください。パックを選ぶ必要はありません。どのパックにあるかはボットが自動で見つけます。
+      スタンプを送信すると、すぐにそのパックから削除します（あとで復元できます）。何枚でも続けて送れます。
     confirm: |
       このスタンプをパックから削除しますか？
     error:
@@ -660,6 +738,7 @@ scenes:
     btn:
       yes: '⚡ ブーストする'
       no: キャンセル
+      buy: '⭐ クレジットを購入'
     canceled: |
       キャンセルしました
     success: |
@@ -713,6 +792,10 @@ scenes:
 
         <i>ハッシュタグでカテゴリを付けることもできます [#]</i>
         <i>例：#アニメ #ミーム #動物 #かわいい #kpop #おもしろ #猫 #ゲーム</i>
+      current_description: |
+
+        <b>現在の説明：</b><i>${description}</i>
+      keep_description: '✅ 現在の説明のままにする'
       select_language: |
         <b>パックの対象言語を選んでください：</b>
         <i>複数選択できます</i>
@@ -746,7 +829,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> を完全に削除しますか？
 
-      確認のため <code>${confirm}</code> と送信するか、「キャンセル」を押してください。
+      確認するには「${confirm}」を、やめる場合は「キャンセル」を押してください。
     confirm: はい、削除します
     success: |
       🗑 パックを削除しました
@@ -780,7 +863,7 @@ scenes:
       <b>✂️ 背景の削除</b>
 
       写真を送信すると、背景を削除した PNG をお送りします。
-      <i>人物の写真に最適です。</i>
+      <i>写真に使うモデル：</i>
     enter_anime: |
       <b>✂️ 背景の削除</b>
 
@@ -801,6 +884,7 @@ scenes:
       ⏱ 処理に時間がかかりすぎました。しばらくしてから、または小さい写真でお試しください。
     error_queue_disabled: |
       この機能は一時的にご利用いただけません。しばらくしてからお試しください。
+    not_image: '写真、またはファイルとして画像を送信してください（PNG、JPEG、WebP）。'
   videoRound:
     enter: |
       <b>⭕ 動画をビデオメッセージに</b>
@@ -832,6 +916,7 @@ scenes:
     キャンセルしました
   btn:
     cancel: '← キャンセル'
+  unexpected: '今は別の入力を待っています。上の手順に従うか、「← キャンセル」を押してください。'
 error:
   stickerset_invalid: |
     パックを利用できません。Telegram で削除された可能性があります。
