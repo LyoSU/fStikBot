@@ -275,6 +275,11 @@ newPackConfirm.enter(async (ctx, next) => {
   const copyPack = ctx.session.scene.copyPack
   const inline = !!ctx.session.scene.newPack.inline
 
+  // A copy keeps working long after the update that started it. The session
+  // object is shared with the user's later updates, so before touching scene
+  // state after a long wait, check it is still this copy's.
+  const isStillThisCopy = () => !!ctx.session.scene && ctx.session.scene.copyPack === copyPack
+
   const nameSuffix = `_by_${ctx.options.username}`
   const titleSuffix = ` :: @${ctx.options.username}`
 
@@ -422,6 +427,9 @@ newPackConfirm.enter(async (ctx, next) => {
             reply_to_message_id: ctx.message.message_id,
             allow_sending_without_reply: true
           })
+          // The seed upload above takes up to a minute; don't wipe a wizard
+          // the user has started since.
+          if (!isStillThisCopy()) return
           ctx.session.scene = {}
           return ctx.scene.leave()
         }
@@ -787,10 +795,15 @@ newPackConfirm.enter(async (ctx, next) => {
       }
     }
 
-    // Clean up session state
-    delete ctx.session.scene.copyPack
-
-    await ctx.scene.leave()
+    // Clean up — but only if the session still belongs to this copy. The copy
+    // runs for minutes; meanwhile the user may have left the scene (/copy,
+    // /cancel and every other exit command set session.scene to null, which
+    // used to crash here with "Cannot convert undefined or null to object") or
+    // started a new wizard, which leaving here would silently kill.
+    if (isStillThisCopy()) {
+      delete ctx.session.scene.copyPack
+      await ctx.scene.leave()
+    }
   }
 })
 
