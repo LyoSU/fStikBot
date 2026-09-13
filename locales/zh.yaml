@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 浏览器'
       catalog_app: '下载 Android 应用'
       catalog_app_mini: '📱 Android 应用'
+    current_pack: '📦 贴纸将添加到：<a href="${link}">${title}</a>'
+    hint: '发送照片、视频、GIF 或贴纸，我会把它添加到 <a href="${link}">${title}</a>。'
   guide:
     web: |
-      <b>📖 fStikBot 使用指南</b>
+      <b>📖 使用方法</b>
 
-      完整教程、技巧和常见问题请访问我们的网站。
+      1. /new — 创建贴纸包
+      2. 发送照片、视频、GIF 或贴纸，整个相册也可以
+      3. /packs — 你的贴纸包及其设置
+
+      教程、技巧和常见问题请访问网站。
     menu: |
       <b>❓ 帮助</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: 贴纸
       custom_emoji: 表情
       inline: 内联
+      shared: '👥 共享'
     empty: |
       还没有贴纸包。创建第一个 → /new
     inline_title: 内联贴纸包
@@ -214,6 +221,13 @@ cmd:
 
       管理员可以通过下方按钮为群组选择贴纸包。
     select_group_pack: 选择贴纸包
+    hidden_btn: '🗄 已隐藏'
+    hidden_info: |
+      <b>🗄 已隐藏的贴纸包</b>
+
+      点击贴纸包即可恢复或删除。
+    hidden_empty: '这里没有已隐藏的贴纸包。'
+    group_admin_only: '只有群管理员才能选择群组贴纸包。'
   emoji:
     info: |
       要更改当前贴纸包的默认表情，请发送 <code>/emoji</code>，后面加空格和表情
@@ -238,8 +252,8 @@ cmd:
 
       发送一张照片，我会把它切成表情网格。
     no_pack: |
-      你需要先有一个自定义表情包。
-      通过 /new 创建，并选择“表情”。
+      拼图功能需要使用自定义表情包。
+      从下方选择你的一个表情包，或创建一个新的。
     choose_grid: |
       📐 选择网格尺寸：
     btn:
@@ -313,27 +327,71 @@ donate:
       付款已取消
 coedit:
   info: |
-    <b>👥 协作编辑</b>
+    <b>👥 协作编辑</b> <a href="${link}">${title}</a>
 
-    链接：<code>${colink}</code>
+    任何打开此链接的人都会加入贴纸包：
+    <code>${colink}</code>
 
-    分享此链接，其他人就可以在 <a href="${link}">${title}</a> 中添加和删除贴纸。
-
-    <b>编辑者：</b>${editors}
-
-    <i>重置链接即可移除所有编辑者</i>
+    <b>新成员：</b>${defaultRole}
+    <b>成员数：</b>${count}
   no_editors: |
     暂无
   btn:
     send: '📤 发送链接'
-    reset: '🔁 重置链接'
+    reset: '🔁 新链接'
+    activity: '🧾 动态'
+    default_role: '⚙️ 新成员：${role}'
+    clear: '🧹 移除所有人'
+    clear_confirm: '⚠️ 是的，移除所有人'
+    role_editor: '✏️ 可添加和删除'
+    role_contributor: '➕ 仅可添加'
+    remove: '🚫 移出贴纸包'
+    leave: '🚪 退出贴纸包'
+    back: '‹ 返回'
+  roles:
+    editor: '可添加和删除'
+    contributor: '仅可添加'
   share: |
     打开链接并点击“开始”，即可协作编辑贴纸包“${title}”
   reset: |
-    <b>🔁 链接已重置</b>
+    <b>🔁 已生成新链接。</b>旧链接已失效，现有成员仍保留访问权限。
+  member: |
+    <b>👤 ${name}</b>
 
-    <a href="${link}">${title}</a> 的新协作编辑链接：
-    <code>${colink}</code>
+    <b>角色：</b>${role}
+    <b>加入时间：</b>${date}
+    <b>近 30 天操作次数：</b>${actions}
+  clear_confirm: |
+    要将所有成员（${count}）移出 <b>${title}</b> 吗？链接也会同时更换。
+  cleared: '已移除所有人，链接也已更换。'
+  joined: '👥 你已加入 <b>${title}</b>。你的角色：${role}。'
+  joined_notice: |
+    👥 ${name} 通过协作编辑链接加入了 <a href="${link}">${title}</a>。
+
+    管理成员：/packs → 贴纸包 → 👥 协作编辑
+  left: '🚪 你已退出 <b>${title}</b>。'
+  left_notice: '🚪 ${name} 已退出 <b>${title}</b>。'
+  removed_notice: '你已被移出 <b>${title}</b> 的协作编辑。'
+  role_notice: '你在 <b>${title}</b> 中的角色现在是：${role}。'
+  no_access: '你已无法访问此贴纸包。请在 /packs 中选择其他贴纸包。'
+  no_rights: "你在此贴纸包中的角色无权执行此操作。"
+  your_role: '👥 你的角色：${role}'
+  activity: |
+    <b>🧾 动态</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>暂无记录。</i>'
+  actions:
+    add: '➕ 添加了贴纸：${count}'
+    delete: '🗑 删除了一张贴纸'
+    restore: '♻️ 恢复了一张贴纸'
+    emoji: '😀 更改了表情'
+    join: '👋 加入'
+    leave: '🚪 退出'
+    removed: '🚫 移除了 ${target}'
+    role: '🔧 ${target}：${role}'
+    reset: '🔁 更换了链接'
+    clear: '🧹 移除了所有人（${count}）'
 callback:
   pack:
     answerCbQuer:
@@ -448,9 +506,9 @@ sticker:
       reply: |
         请回复一个贴纸。
       no_selected_pack: |
-        <b>你还没有选择贴纸包</b>
+        <b>先创建一个贴纸包吧</b>
 
-        请创建（/new）或选择（/packs）贴纸包
+        创建后，我会立即把这个文件添加进去。
       no_selected_group_pack: |
         <b>你还没有选择群组贴纸包</b>
 
@@ -481,9 +539,9 @@ sticker:
         视频文件格式不正确（需要 WEBM 格式）。
       file_type:
         unknown: |
-          不支持此文件类型
+          不支持此文件类型。
 
-          <i>创建（/new）或选择（/packs）其他贴纸包</i>
+          请发送照片、视频、GIF、贴纸，或以文件形式发送图片。
       wait_load: |
         ⏳ 仍在处理上一个文件...
       timeout: |
@@ -501,6 +559,12 @@ sticker:
       invalid_image: |
 
         无法处理这张图片。请尝试发送其他文件或格式。
+      queue_full: '⏳ 一次发送的文件太多了。请等我处理完队列中的文件，再发送剩下的。'
+    album_progress: '⏳ 正在添加相册：${current}/${total}'
+    album_done: '✅ 已将 ${total} 个中的 ${added} 个添加到 <a href="${link}">${title}</a>'
+    album_converting: '⏳ 另有 ${count} 个是视频：正在转换，每个完成后我都会单独回复。'
+    album_duplicates: '♻️ 已在贴纸包中：${count} 个。'
+    album_failed: '⚠️ 未能添加：${count} 个。'
 news:
   join: |
     📢 <a href="${link}">订阅频道</a> — 获取新闻、更新和新功能。
@@ -539,6 +603,7 @@ scenes:
       <b>贴纸包名称</b>
 
       所有人都能看到。可以自己输入，也可以从下方建议中选择。
+      <i>我会根据名称生成贴纸包地址。</i>
     pack_name: |
       <b>贴纸包地址</b>
 
@@ -562,6 +627,9 @@ scenes:
           机器人无法将贴纸上传到 Telegram。
 
           请稍后再试。
+    btn:
+      custom_link: '🔗 自定义贴纸包地址'
+    custom_link_on: '好的——先发送名称，之后我会询问地址。'
   copy:
     enter: |
       首先，为副本创建一个新的贴纸包。
@@ -599,6 +667,16 @@ scenes:
         抱歉，此功能仅对支持过机器人的用户开放。
 
         你可以发送 /donate 命令来支持。
+    title: |
+      <b>📋 正在复制 <a href="${originalLink}">${originalTitle}</a></b>（${count}）
+
+      为副本起个名字——自己输入或从下方选择。
+    btn:
+      change_type: '🔄 更改贴纸包类型'
+    created: |
+      ✅ 贴纸包已创建：<a href="${link}">${title}</a>
+
+      正在复制贴纸——完成后我会通知你。
   original:
     enter: |
       <b>🔎 贴纸来源</b>
@@ -614,7 +692,7 @@ scenes:
     enter: |
       <b>🗑 删除贴纸</b>
 
-      发送你想删除的贴纸。无需选择贴纸包——我会自动找到它所在的位置。
+      发送一张贴纸，我会立即将它从所在的贴纸包中删除（之后可以恢复）。想发多少张都可以。
     confirm: |
       要从贴纸包中删除这个贴纸吗？
     error:
@@ -660,6 +738,7 @@ scenes:
     btn:
       yes: '⚡ 助力'
       no: 取消
+      buy: '⭐ 购买积分'
     canceled: |
       已取消
     success: |
@@ -713,6 +792,10 @@ scenes:
 
         <i>可以使用话题标签进行分类 [#]</i>
         <i>例如：#anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>当前描述：</b><i>${description}</i>
+      keep_description: '✅ 保留当前描述'
       select_language: |
         <b>选择你的贴纸包适用的语言：</b>
         <i>可以多选</i>
@@ -746,7 +829,7 @@ scenes:
     enter: |
       ⚠️ 要永久删除 <a href="${link}">${title}</a> 吗？
 
-      发送 <code>${confirm}</code> 以确认，或点击“取消”。
+      点击“${confirm}”确认，或点击“取消”。
     confirm: 是的，删除
     success: |
       🗑 贴纸包已删除
@@ -780,7 +863,7 @@ scenes:
       <b>✂️ 去除背景</b>
 
       发送照片，你将收到去除背景的 PNG。
-      <i>对人物照片效果最好。</i>
+      <i>适合你照片的模型：</i>
     enter_anime: |
       <b>✂️ 去除背景</b>
 
@@ -801,6 +884,7 @@ scenes:
       ⏱ 处理时间过长。请稍后再试，或换一张较小的照片。
     error_queue_disabled: |
       此功能暂时不可用，请稍后再试。
+    not_image: '请发送照片，或以文件形式发送图片（PNG、JPEG、WebP）。'
   videoRound:
     enter: |
       <b>⭕ 视频转圆形视频消息</b>
@@ -832,6 +916,7 @@ scenes:
     已取消
   btn:
     cancel: '← 取消'
+  unexpected: '我现在在等待其他内容——请按照上面的步骤操作，或点击“← 取消”。'
 error:
   stickerset_invalid: |
     贴纸包不可用，可能已在 Telegram 中被删除。
