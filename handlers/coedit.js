@@ -1,4 +1,3 @@
-const StegCloak = require('stegcloak')
 const Composer = require('telegraf/composer')
 const crypto = require('crypto')
 const { escapeHTML } = require('../utils')

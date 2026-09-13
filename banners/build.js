@@ -32,19 +32,19 @@ const DIST = path.join(__dirname, 'dist')
 // `width`/`height` override the defaults for banners that ship at different
 // aspect ratios (e.g. Telegram's description picture is 640×360, not 960×360).
 const BANNERS = [
-  { name: 'welcome',     file: 'welcome.html' },
-  { name: 'packs',       file: 'packs.html' },
-  { name: 'catalog',     file: 'catalog.html' },
-  { name: 'new-pack',    file: 'new-pack.html' },
-  { name: 'boost',       file: 'boost.html' },
-  { name: 'help',        file: 'help.html' },
-  { name: 'donate',      file: 'donate.html' },
-  { name: 'origin',      file: 'origin.html' },
-  { name: 'publish',     file: 'publish.html' },
-  { name: 'language',    file: 'language.html' },
-  { name: 'emoji',       file: 'emoji.html' },
-  { name: 'group',       file: 'group.html' },
-  { name: 'mosaic',      file: 'mosaic.html' },
+  { name: 'welcome', file: 'welcome.html' },
+  { name: 'packs', file: 'packs.html' },
+  { name: 'catalog', file: 'catalog.html' },
+  { name: 'new-pack', file: 'new-pack.html' },
+  { name: 'boost', file: 'boost.html' },
+  { name: 'help', file: 'help.html' },
+  { name: 'donate', file: 'donate.html' },
+  { name: 'origin', file: 'origin.html' },
+  { name: 'publish', file: 'publish.html' },
+  { name: 'language', file: 'language.html' },
+  { name: 'emoji', file: 'emoji.html' },
+  { name: 'group', file: 'group.html' },
+  { name: 'mosaic', file: 'mosaic.html' },
   { name: 'description', file: 'description.html', width: 640, height: 360 }
 ]
 

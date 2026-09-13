@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "test": "for t in scripts/test-*.js; do node \"$t\" || exit 1; done",
     "lint": "node_modules/.bin/eslint --ext js .",
     "lint:fix": "node_modules/.bin/eslint --fix --ext js .",
     "banners:build": "node banners/build.js"
@@ -26,12 +27,9 @@
     "emoji-regex": "^10.2.1",
     "error-stack-parser": "^2.0.6",
     "got": "^11.8.6",
-    "ioredis": "^4.28.5",
     "limax": "^4.1.0",
     "moment": "^2.30.1",
     "mongoose": "^5.13.22",
-    "node-cron": "^3.0.2",
-    "openai": "^4.65.0",
     "sharp": "^0.32.6",
     "stegcloak": "^0.0.1",
     "sticker-pack-names": "^1.0.0",

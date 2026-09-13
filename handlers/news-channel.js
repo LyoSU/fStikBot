@@ -1,5 +1,4 @@
 const Composer = require('telegraf/composer')
-const Markup = require('telegraf/markup')
 const handleStart = require('./start')
 
 const composer = new Composer()

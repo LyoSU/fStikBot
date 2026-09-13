@@ -83,22 +83,13 @@ Two things worth knowing before running it:
   though even then the ident sits in `drop-pending` for a few minutes until
   `oldest_timestamp` passes it.
 
-## `top-sets.js`
-
-Cron-style helper that lists popular public packs — unrelated to DB
-maintenance.
-
-## `update-packs.js` / `update-sticker.js`
-
-Legacy one-offs for repairing corrupted records. Kept for reference.
-
 ## `test-*.js`
 
 Dependency-free unit/smoke tests. No DB, no Redis, no Telegram connection —
 run them all with:
 
 ```bash
-for t in scripts/test-*.js; do node "$t" || break; done
+npm test
 ```
 
 - `test-callback-routing.js` — the `action(...)` / `hears(...)` regexes in

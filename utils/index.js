@@ -1,3 +1,6 @@
+// Barrel for the helpers handlers/scenes import together. Only things that are
+// actually consumed through the barrel live here — leaf modules with a single
+// consumer are required directly.
 const escapeHTML = require('./html-escape')
 const userName = require('./user-name')
 const addSticker = require('./add-sticker')
@@ -11,18 +14,13 @@ const substrUnicode = require('./unicode-substr')
 const telegramApi = require('./telegram-api')
 const updateMonitor = require('./update-monitor')
 const showGramAds = require('./gramads')
-const downloadFileByURL = require('./download-file-by-url')
-const moderatePack = require('./moderate-pack')
 const escapeRegex = require('./escape-regex')
-const { deriveStickerFlags, flagsToType, stickerSetType } = require('./sticker-type')
-const { withRetry, isRateLimitError, getRetryAfter, retryMiddleware, clearBlockedChat, getRateLimitRemaining } = require('./retry-api')
-const { perfStage, perfRecord, perfTick, perfSnapshot, ENABLED: PERF_TIMING_ENABLED } = require('./perf-timing')
+const { deriveStickerFlags } = require('./sticker-type')
+const { isRateLimitError, getRetryAfter, retryMiddleware } = require('./retry-api')
 
 module.exports = {
   escapeRegex,
   deriveStickerFlags,
-  flagsToType,
-  stickerSetType,
   escapeHTML,
   userName,
   addSticker,
@@ -36,17 +34,7 @@ module.exports = {
   telegramApi,
   updateMonitor,
   showGramAds,
-  downloadFileByURL,
-  moderatePack,
-  withRetry,
   isRateLimitError,
   getRetryAfter,
-  retryMiddleware,
-  clearBlockedChat,
-  getRateLimitRemaining,
-  perfStage,
-  perfRecord,
-  perfTick,
-  perfSnapshot,
-  PERF_TIMING_ENABLED
+  retryMiddleware
 }

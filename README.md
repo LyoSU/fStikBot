@@ -10,11 +10,11 @@ Telegram sticker bot. Make packs, copy packs, edit stickers, search a public cat
 - Frame, mosaic, round-video and background-removal tools
 - Co-edit packs with other users
 - Group-mode packs and boosts
-- Admin panel, broadcasts, moderation (OpenAI)
+- Admin panel and broadcasts
 
 ## Stack
 
-Node.js, [telegraf](https://github.com/telegraf/telegraf) for Bot API, [gram.js](https://github.com/gram-js/gramjs) MTProto for large files, MongoDB, Redis + Bull for queues, Sharp for image work.
+Node.js, [telegraf](https://github.com/telegraf/telegraf) for Bot API, [gram.js](https://github.com/gram-js/gramjs) MTProto for sticker-set owner lookup, MongoDB, Redis + Bull for queues, Sharp for image work.
 
 ## Run it
 
@@ -33,15 +33,16 @@ Without Docker: install Node LTS, MongoDB and Redis, then `npm i && npm start`.
 
 Two files:
 
-- `.env` — runtime secrets (bot token, MTProto keys, MongoDB URI, Redis host, OpenAI key, Tenor key)
-- `config.json` — non-secret app config (admin id, log chat, sticker link prefix, messaging limits)
+- `.env` — runtime secrets (bot token, MTProto keys, MongoDB URI, Redis host, Tenor key)
+- `config.json` — non-secret app config (admin id, log chat, link prefixes, catalog links)
 
-Minimum to boot: `BOT_TOKEN`, `MONGODB_URI`, `REDIS_HOST`. Everything else is optional and disables the matching feature when missing (OpenAI moderation, Tenor, GramAds, large-file downloads).
+Minimum to boot: `BOT_TOKEN`, `MONGODB_URI`. Everything else is optional and disables the matching feature when missing (Redis queues for video/remove-bg, MTProto owner lookup, Tenor, GramAds).
 
 ## Scripts
 
 ```bash
 npm start               # run the bot
+npm test                # dependency-free unit tests (scripts/test-*.js)
 npm run lint            # eslint
 npm run lint:fix        # eslint --fix
 npm run banners:build   # rebuild banner assets

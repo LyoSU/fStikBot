@@ -1,2 +1,19 @@
 node_modules
 npm-debug.log
+
+# Secrets and per-host state — .env reaches the container via env_file.
+.env
+.mtproto-session
+.locale-sync-mtime
+session
+tgsnake
+scripts/.prune-stickers-*-state.json
+
+# Not needed at runtime.
+.git
+.github
+.claude
+.superpowers
+.playwright-mcp
+.wrangler
+docs

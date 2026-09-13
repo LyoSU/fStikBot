@@ -12,7 +12,6 @@ const originalSticker = require('./sticker-original')
 const deleteSticker = require('./sticker-delete')
 const packEdit = require('./admin-pack')
 const adminPackBulkDelete = require('./admin-pack-bulk-delete')
-const searchStickerSet = require('./pack-search')
 const photoClear = require('./photo-clear')
 const videoRound = require('./video-round')
 const packCatalog = require('./pack-catalog')
@@ -30,7 +29,6 @@ const stage = new Stage([].concat(
   broadcast,
   packEdit,
   adminPackBulkDelete,
-  searchStickerSet,
   photoClear,
   videoRound,
   packCatalog,

@@ -85,7 +85,6 @@ function main () {
   // The keys added for the audit fixes — pinned so they can't silently vanish
   // from any of the three primary locales.
   const REQUIRED = [
-    'scenes.search.error.not_found',
     'scenes.frame.no_sticker_set',
     'error.stickerset_invalid',
     'scenes.boost.error.too_fast',
