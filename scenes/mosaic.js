@@ -7,30 +7,12 @@ const { splitImage, checkMinCellSize } = require('../utils/mosaic-split')
 const { getStickerCooldown } = require('../utils/sticker-cooldown')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
 const escapeHTML = require('../utils/html-escape')
-const https = require('https')
+const downloadFileByUrl = require('../utils/download-file-by-url')
 const sharp = require('sharp')
 
 const { match } = I18n
 
 const mosaic = new Scene('mosaic')
-
-// Download file from Telegram URL
-const downloadFile = (fileUrl, timeout = 30000) => new Promise((resolve, reject) => {
-  const data = []
-  let totalSize = 0
-  const MAX_SIZE = 20 * 1024 * 1024
-  const req = https.get(fileUrl, (response) => {
-    if (response.statusCode !== 200) { req.destroy(); reject(new Error(`Download failed: ${response.statusCode}`)); return }
-    response.on('data', (chunk) => {
-      totalSize += chunk.length
-      if (totalSize > MAX_SIZE) { req.destroy(); reject(new Error('File too large')); return }
-      data.push(chunk)
-    })
-    response.on('end', () => resolve(Buffer.concat(data)))
-  })
-  req.on('error', reject)
-  req.setTimeout(timeout, () => { req.destroy(); reject(new Error('Timeout')) })
-})
 
 const FALLBACK_EMOJI = ['🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '🟫', '⬛', '⬜', '🔲']
 
@@ -167,7 +149,7 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
   let stickerSet, freeSlots
   try {
     const fileUrl = await ctx.telegram.getFileLink(source.fileId)
-    imageBuffer = await downloadFile(fileUrl.href || fileUrl)
+    imageBuffer = await downloadFileByUrl(fileUrl.href || fileUrl)
 
     // Documents don't carry width/height on the message itself — read from buffer.
     ;({ width, height } = source)
@@ -194,7 +176,9 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
     previewBuffer = await generatePreview(imageBuffer, suggestions.recommended.rows, suggestions.recommended.cols)
   } catch (err) {
     console.error('[mosaic] preview prep failed:', err.message)
-    const key = /Too large|Timeout|Download/.test(err.message)
+    // Messages from utils/download-file-by-url.js: "File too large",
+    // "Download timeout", "Download failed with status N".
+    const key = /too large|timeout|download/i.test(err.message)
       ? 'sticker.add.error.convert'
       : 'sticker.add.error.invalid_image'
     return ctx.replyWithHTML(ctx.i18n.t(key))
@@ -262,7 +246,7 @@ const processMosaic = async (ctx, rows, cols) => {
   try {
     // Download photo again (not stored in session)
     const fileUrl = await ctx.telegram.getFileLink(state.photoFileId)
-    const imageBuffer = await downloadFile(fileUrl.href || fileUrl)
+    const imageBuffer = await downloadFileByUrl(fileUrl.href || fileUrl)
 
     // Send progress message
     const progressMsg = await ctx.replyWithHTML(
@@ -504,6 +488,17 @@ mosaic.action('mosaic:exit', async (ctx) => {
   await ctx.scene.leave()
 })
 
+// --- Exit via keyboard button ---
+//
+// Must be registered BEFORE the text handler below: that handler doesn't call
+// next(), so while it sat first the exit button text was swallowed (or parsed
+// as an invalid "3x4" size) and the button never worked.
+
+mosaic.hears(match('cmd.mosaic.btn.exit'), async (ctx) => {
+  delete ctx.session.scene.mosaic
+  await ctx.scene.leave()
+})
+
 // --- Text handler for custom size ---
 
 mosaic.on('text', async (ctx) => {
@@ -535,13 +530,6 @@ mosaic.on('text', async (ctx) => {
   }
 
   return processMosaic(ctx, rows, cols)
-})
-
-// --- Exit via keyboard button ---
-
-mosaic.hears(match('cmd.mosaic.btn.exit'), async (ctx) => {
-  delete ctx.session.scene.mosaic
-  await ctx.scene.leave()
 })
 
 module.exports = mosaic

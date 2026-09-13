@@ -24,7 +24,9 @@ const i18n = new I18n({
   defaultLanguageOnMissing: true
 })
 
-const localesFile = fs.readdirSync('./locales/')
+// __dirname-relative: a bare './locales/' threw at require time whenever the
+// process was started from another working directory.
+const localesFile = fs.readdirSync(path.resolve(__dirname, '../locales'))
 
 const createStickerSet = async (packName, userInfo) => {
   let stickerSet = await db.StickerSet.findOne({
@@ -114,12 +116,13 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
 
   // MTProto is optional (pack-about guards it the same way). Without a client
   // there's no way to read the set owner, so say so instead of re-prompting.
-  if (!telegramApi.client) {
+  const mtproto = await telegramApi.getClient()
+  if (!mtproto) {
     await ctx.replyWithHTML(ctx.i18n.t('error.unknown'))
     return ctx.scene.leave()
   }
 
-  const getStickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
+  const getStickerSetInfo = await mtproto.invoke(new telegramApi.Api.messages.GetStickerSet({
     stickerset: new telegramApi.Api.InputStickerSetShortName({
       shortName: packName
     }),
@@ -356,7 +359,7 @@ catalogSelectLanguage.enter(async (ctx) => {
 
   button.push(Markup.callbackButton(ctx.i18n.t('scenes.catalog.publish.button_all_languages'), 'catalog:set_language:all'))
 
-  Object.keys(locales).map((key) => {
+  Object.keys(locales).forEach((key) => {
     let name = locales[key].flag
 
     if (ctx.session.scene.publish.languages.includes(key)) {
@@ -550,7 +553,6 @@ module.exports = [
   catalogPublish,
   catalogEnterDescription,
   catalogSelectLanguage,
-  catalogSetSafe,
   catalogPublishConfirm,
   catalogUnpublish
 ]

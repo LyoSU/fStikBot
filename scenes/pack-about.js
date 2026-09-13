@@ -4,13 +4,55 @@ const { sendBanner } = require('../banners')
 const {
   escapeHTML,
   telegramApi,
-  moderatePack,
   showGramAds
 } = require('../utils')
 const {
   db
 } = require('../database')
 const decodeStickerSetId = require('../utils/decode-sticker-set-id')
+const { formatOwnerPacks } = require('../utils/owner-packs')
+
+// One reply per lookup; the rest stays behind the "show all packs" button.
+const USER_PACKS_CHUNK = 70
+// The sticker lookup reply carries a lot of other text, so its pack list is
+// kept shorter to stay under Telegram's message-length limit.
+const OTHER_PACKS_CHUNK = 20
+
+// Remembered for the "show all packs" button (bot/commands.js), which sends
+// every chunk after the first.
+const rememberShowAllPacks = (ctx, ownerId, excludeSetId, chunkSize) => {
+  ctx.session.showAllPacksData = { ownerId, excludeSetId, chunkSize }
+}
+
+const showAllPacksKeyboard = (ctx, total) => Markup.inlineKeyboard([[
+  Markup.callbackButton(ctx.i18n.t('scenes.packAbout.btn.show_all_packs', { count: total }), 'show_all_packs')
+]]).extra()
+
+// "Whose packs are these?" for a user picked via request_users or a forward.
+const replyWithUserPacks = async (ctx, ownerId) => {
+  if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
+    showGramAds(ctx.chat.id)
+  }
+
+  // Only the first ~500 are ever rendered, so there is no reason to hydrate
+  // every pack a prolific user ever made.
+  const packs = await ctx.db.StickerSet.find({ ownerTelegramId: ownerId })
+    .select('name public packType')
+    .limit(500)
+    .lean()
+
+  const chunks = formatOwnerPacks(ctx, packs, ownerId, USER_PACKS_CHUNK)
+  const hasMore = chunks.length > 1
+  if (hasMore) rememberShowAllPacks(ctx, ownerId, null, USER_PACKS_CHUNK)
+
+  return ctx.replyWithHTML(ctx.i18n.t('userAbout.result', {
+    userId: ownerId,
+    packs: chunks.length > 0 ? chunks[0].join(', ') : ctx.i18n.t('userAbout.no_packs')
+  }), {
+    disable_web_page_preview: true,
+    ...(hasMore ? showAllPacksKeyboard(ctx, packs.length) : {})
+  })
+}
 
 // Telegram datacenter regions
 const DC_REGIONS = {
@@ -52,74 +94,7 @@ packAbout.use((ctx, next) => {
 
     if (!sharedUserId) return next()
 
-    if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
-      showGramAds(ctx.chat.id)
-    }
-
-    return ctx.db.StickerSet.find({
-      ownerTelegramId: sharedUserId
-    }).select('_id name public').limit(500).lean().then((findPacks) => {
-      let chunkedPacks = []
-      const chunkSize = 70
-
-      if (findPacks.length > 0) {
-        chunkedPacks = (findPacks.map((pack) => {
-          if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
-            if (
-              ctx.from.id === sharedUserId ||
-              ctx.from.id === ctx.config.mainAdminId ||
-              ctx?.session?.userInfo?.adminRights?.includes('pack')
-            ) {
-              return `<a href="https://t.me/addstickers/${escapeHTML(pack.name)}"><s>${escapeHTML(pack.name)}</s></a>`
-            } else {
-              return '<i>[hidden]</i>'
-            }
-          }
-          return `<a href="https://t.me/addstickers/${escapeHTML(pack.name)}">${escapeHTML(pack.name)}</a>`
-        })).reduce((resultArray, item, index) => {
-          const chunkIndex = Math.floor(index / chunkSize)
-
-          if (!resultArray[chunkIndex]) {
-            resultArray[chunkIndex] = []
-          }
-
-          resultArray[chunkIndex].push(item)
-
-          return resultArray
-        }, [])
-      }
-
-      let packsToReturn
-
-      if (chunkedPacks.length > 0) {
-        packsToReturn = chunkedPacks.shift()
-      }
-
-      // Save data for "show all packs" button
-      const totalPacks = findPacks.length
-      if (chunkedPacks.length > 0) {
-        ctx.session.showAllPacksData = {
-          ownerId: sharedUserId,
-          excludeSetId: null
-        }
-      }
-
-      const keyboard = []
-      if (chunkedPacks.length > 0) {
-        keyboard.push([Markup.callbackButton(
-          ctx.i18n.t('scenes.packAbout.btn.show_all_packs', { count: totalPacks }),
-          'show_all_packs'
-        )])
-      }
-
-      return ctx.replyWithHTML(ctx.i18n.t('userAbout.result', {
-        userId: sharedUserId,
-        packs: packsToReturn ? packsToReturn.join(', ') : ctx.i18n.t('userAbout.no_packs')
-      }), {
-        disable_web_page_preview: true,
-        ...(keyboard.length > 0 ? Markup.inlineKeyboard(keyboard).extra() : {})
-      })
-    })
+    return replyWithUserPacks(ctx, sharedUserId)
   }
   return next()
 })
@@ -127,78 +102,7 @@ packAbout.use((ctx, next) => {
 packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   // Handle forwarded message for user info
   if (ctx.message.forward_from) {
-    const sharedUserId = ctx.message.forward_from.id
-
-    if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
-      showGramAds(ctx.chat.id)
-    }
-
-    // Only the first ~500 are ever rendered (chunked at 70 per message), so
-    // there is no reason to hydrate every pack a prolific user ever made.
-    const findPacks = await ctx.db.StickerSet.find({
-      ownerTelegramId: sharedUserId
-    }).limit(500).lean()
-
-    let chunkedPacks = []
-    const chunkSize = 70
-
-    if (findPacks.length > 0) {
-      chunkedPacks = (findPacks.map((pack) => {
-        if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
-          if (
-            ctx.from.id === sharedUserId ||
-            ctx.from.id === ctx.config.mainAdminId ||
-            ctx?.session?.userInfo?.adminRights?.includes('pack')
-          ) {
-            return `<a href="https://t.me/addstickers/${escapeHTML(pack.name)}"><s>${escapeHTML(pack.name)}</s></a>`
-          } else {
-            return '<i>[hidden]</i>'
-          }
-        }
-        return `<a href="https://t.me/addstickers/${escapeHTML(pack.name)}">${escapeHTML(pack.name)}</a>`
-      })).reduce((resultArray, item, index) => {
-        const chunkIndex = Math.floor(index / chunkSize)
-
-        if (!resultArray[chunkIndex]) {
-          resultArray[chunkIndex] = []
-        }
-
-        resultArray[chunkIndex].push(item)
-
-        return resultArray
-      }, [])
-    }
-
-    let packsToReturn
-
-    if (chunkedPacks.length > 0) {
-      packsToReturn = chunkedPacks.shift()
-    }
-
-    // Save data for "show all packs" button
-    const totalPacks = findPacks.length
-    if (chunkedPacks.length > 0) {
-      ctx.session.showAllPacksData = {
-        ownerId: sharedUserId,
-        excludeSetId: null
-      }
-    }
-
-    const keyboard = []
-    if (chunkedPacks.length > 0) {
-      keyboard.push([Markup.callbackButton(
-        ctx.i18n.t('scenes.packAbout.btn.show_all_packs', { count: totalPacks }),
-        'show_all_packs'
-      )])
-    }
-
-    await ctx.replyWithHTML(ctx.i18n.t('userAbout.result', {
-      userId: sharedUserId,
-      packs: packsToReturn ? packsToReturn.join(', ') : ctx.i18n.t('userAbout.no_packs')
-    }), {
-      disable_web_page_preview: true,
-      ...(keyboard.length > 0 ? Markup.inlineKeyboard(keyboard).extra() : {})
-    })
+    await replyWithUserPacks(ctx, ctx.message.forward_from.id)
     return
   }
   if (!ctx.message) return
@@ -242,9 +146,10 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   let stickerCount = null
 
   // Only use MTProto if we don't have owner info in database
-  if (!ownerId && telegramApi.client) {
+  const mtproto = ownerId ? null : await telegramApi.getClient()
+  if (mtproto) {
     try {
-      const stickerSetInfo = await telegramApi.client.invoke(new telegramApi.Api.messages.GetStickerSet({
+      const stickerSetInfo = await mtproto.invoke(new telegramApi.Api.messages.GetStickerSet({
         stickerset: new telegramApi.Api.InputStickerSetShortName({
           shortName: sticker.set_name
         }),
@@ -287,38 +192,10 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
     ? await db.StickerSet.find({
       ownerTelegramId: actualOwnerId,
       _id: { $ne: stickerSet?._id || null }
-    }).limit(500).lean()
+    }).select('name public packType').limit(500).lean()
     : []
 
-  let chunkedPacks = []
-  const chunkSize = 20 // Reduced to prevent "message too long" errors
-
-  if (packs.length > 0) {
-    chunkedPacks = (packs.map((pack) => {
-      if (pack.name.toLowerCase().endsWith('fStikBot'.toLowerCase()) && pack.public !== true) {
-        if (
-          ctx.from.id === actualOwnerId ||
-          ctx.from.id === ctx.config.mainAdminId ||
-          ctx?.session?.userInfo?.adminRights?.includes('pack')
-        ) {
-          return `<a href="https://t.me/addstickers/${escapeHTML(pack.name)}"><s>${escapeHTML(pack.name)}</s></a>`
-        } else {
-          return '<i>[hidden]</i>'
-        }
-      }
-      return `<a href="https://t.me/addstickers/${escapeHTML(pack.name)}">${escapeHTML(pack.name)}</a>`
-    })).reduce((resultArray, item, index) => {
-      const chunkIndex = Math.floor(index / chunkSize)
-
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []
-      }
-
-      resultArray[chunkIndex].push(item)
-
-      return resultArray
-    }, [])
-  }
+  const chunkedPacks = formatOwnerPacks(ctx, packs, actualOwnerId, OTHER_PACKS_CHUNK)
 
   if (ctx.session.userInfo.locale === 'ru' && !ctx.session.userInfo?.stickerSet?.boost) {
     showGramAds(ctx.chat.id)
@@ -350,10 +227,7 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   // Save data for "show all packs" button
   const totalOtherPacks = packs.length
   if (chunkedPacks.length > 0) {
-    ctx.session.showAllPacksData = {
-      ownerId: actualOwnerId,
-      excludeSetId: stickerSet?._id || null
-    }
+    rememberShowAllPacks(ctx, actualOwnerId, stickerSet?._id || null, OTHER_PACKS_CHUNK)
   }
 
   // Build keyboard

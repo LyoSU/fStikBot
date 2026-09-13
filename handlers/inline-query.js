@@ -10,82 +10,56 @@ const INLINE_QUERY_LIMIT = 50
 // HELPER FUNCTIONS
 // ===================
 
-/**
- * Get file ID from sticker (supports both old and new schema).
- * Works with both Mongoose documents and lean objects.
- */
-function getStickerFileId (sticker) {
-  if (typeof sticker.getFileId === 'function') {
-    return sticker.getFileId()
-  }
-  return sticker.fileId || (sticker.info && sticker.info.file_id)
+// All queries below are .lean(), so these read both document shapes directly:
+// the flat fields of new docs and the legacy `info.*` sub-document.
+const getStickerFileId = (sticker) => sticker.fileId || sticker.info?.file_id
+
+// Trust the stored type, default to 'sticker'. Looking the type up via
+// telegram.getFile per result (at ~500M docs, most without a stored type)
+// turned inline queries into rate-limit bombs.
+const getStickerType = (sticker) => sticker.stickerType || sticker.info?.stickerType || 'sticker'
+
+const getStickerCaption = (sticker) => sticker.caption || sticker.info?.caption
+
+// Stored media type → Telegram's cached inline result type.
+// custom_emoji (mosaic cells) and legacy 'text' docs are sticker files.
+const INLINE_TYPE = {
+  sticker: 'sticker',
+  custom_emoji: 'sticker',
+  text: 'sticker',
+  photo: 'photo',
+  video: 'video',
+  video_note: 'document',
+  document: 'document',
+  animation: 'mpeg4_gif',
+  gif: 'gif',
+  audio: 'audio',
+  voice: 'voice'
+}
+
+const FILE_ID_FIELD = {
+  sticker: 'sticker_file_id',
+  photo: 'photo_file_id',
+  video: 'video_file_id',
+  document: 'document_file_id',
+  mpeg4_gif: 'mpeg4_file_id',
+  gif: 'gif_file_id',
+  audio: 'audio_file_id',
+  voice: 'voice_file_id'
 }
 
 /**
- * Get sticker type (supports both old and new schema).
- *
- * At 488M docs (94% legacy, 100% missing top-level stickerType in our
- * sample), per-request Telegram getFile detection used to burn through
- * the API rate limit to "upgrade" the default. Now we trust the stored
- * value (new docs have it set) or fall back to 'sticker'. Non-sticker
- * media that never had its type stored will be answered as 'sticker' —
- * Telegram accepts it for most cases, and the worst outcome is a skipped
- * result, not a crash.
+ * Build an inline result from a stored sticker, or null when its type has no
+ * cached-result equivalent. One unknown type used to produce a bogus field
+ * like `custom_emoji_file_id`, and Telegram then rejected the WHOLE answer.
  */
-function getStickerType (sticker) {
-  if (typeof sticker.getStickerType === 'function') {
-    return sticker.getStickerType()
-  }
-  return sticker.stickerType || (sticker.info && sticker.info.stickerType) || 'sticker'
-}
-
-/**
- * Get caption (supports both old and new schema).
- */
-function getStickerCaption (sticker) {
-  if (typeof sticker.getCaption === 'function') {
-    return sticker.getCaption()
-  }
-  return sticker.caption || (sticker.info && sticker.info.caption)
-}
-
-/**
- * Resolve sticker type for every doc in the input list.
- *
- * Previously this would call telegram.getFile() for any doc whose
- * stickerType wasn't stored — at 488M docs with ~0% stickerType set,
- * that turned inline queries into Telegram rate-limit bombs.
- * Simplified to a synchronous lookup: trust the stored value or
- * default to 'sticker'. No API calls, no cache, no DB writes.
- */
-function detectStickerTypes (stickers) {
-  const results = new Map()
-  for (const sticker of stickers) {
-    const fileId = getStickerFileId(sticker)
-    if (!fileId) continue
-    results.set(sticker._id.toString(), getStickerType(sticker))
-  }
-  return results
-}
-
-/**
- * Build inline query result item from sticker
- */
-function buildInlineResult (sticker, stickerType) {
+function buildInlineResult (sticker) {
   const fileId = getStickerFileId(sticker)
+  const type = INLINE_TYPE[getStickerType(sticker)]
+  if (!fileId || !type) return null
+
   const caption = getStickerCaption(sticker)
-
-  // Normalize type for Telegram API
-  let type = stickerType
-  if (type === 'video_note') type = 'document'
-  if (type === 'animation') type = 'mpeg4_gif'
-
-  // Map type to correct file_id field name
-  const fileIdFieldMap = {
-    mpeg4_gif: 'mpeg4_file_id',
-    gif: 'gif_file_id'
-  }
-  const fieldName = fileIdFieldMap[type] || type + '_file_id'
+  const fieldName = FILE_ID_FIELD[type]
 
   const result = {
     type,
@@ -223,82 +197,83 @@ composer.on('inline_query', async (ctx) => {
     // STICKER PACK MODE
     // ===================
 
-    let inlineSet = ctx.session.userInfo.inlineStickerSet
-
-    if (!inlineSet) {
-      inlineSet = await ctx.db.StickerSet.findOne({
-        owner: ctx.session.userInfo.id,
-        inline: true
-      })
-    }
+    const emptyAnswer = () => ctx.answerInlineQuery([], {
+      is_personal: true,
+      cache_time: 30,
+      switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
+      switch_pm_parameter: 'inline_pack'
+    }).catch(() => {})
 
     let searchStickers = []
 
-    // Search by query if provided
-    if (query.length >= 1) {
-      const searchSet = await ctx.db.StickerSet.findOne({
-        owner: ctx.session.userInfo.id,
-        inline: true,
-        $or: [
-          { title: { $regex: escapeRegex(query), $options: 'i' } },
-          { name: { $regex: escapeRegex(query), $options: 'i' } }
-        ]
-      }).maxTimeMS(2000)
+    // The queries run with maxTimeMS and throw on timeout. Nothing upstream
+    // answers an inline query on error, so without this the user was left on
+    // a spinner.
+    try {
+      let inlineSet = ctx.session.userInfo.inlineStickerSet
 
-      if (searchSet) {
-        inlineSet = searchSet
-      } else {
-        // Search across all user's stickers
-        const userSetIds = await ctx.db.StickerSet.find({
+      if (!inlineSet) {
+        inlineSet = await ctx.db.StickerSet.findOne({
           owner: ctx.session.userInfo.id,
-          hide: false
-        }).select('_id').lean()
+          inline: true
+        })
+      }
 
+      // Search by query if provided
+      if (query.length >= 1) {
+        const searchSet = await ctx.db.StickerSet.findOne({
+          owner: ctx.session.userInfo.id,
+          inline: true,
+          $or: [
+            { title: { $regex: escapeRegex(query), $options: 'i' } },
+            { name: { $regex: escapeRegex(query), $options: 'i' } }
+          ]
+        }).maxTimeMS(2000)
+
+        if (searchSet) {
+          inlineSet = searchSet
+        } else {
+          // Search across all user's stickers
+          const userSetIds = await ctx.db.StickerSet.find({
+            owner: ctx.session.userInfo.id,
+            hide: false
+          }).select('_id').lean()
+
+          searchStickers = await ctx.db.Sticker.find({
+            deleted: false,
+            stickerSet: { $in: userSetIds.map(s => s._id) },
+            $or: [
+              { caption: { $regex: escapeRegex(query), $options: 'i' } },
+              { emojis: { $regex: escapeRegex(query), $options: 'i' } }
+            ]
+          })
+            .select('_id fileId stickerType caption fileUniqueId emojis info')
+            .limit(limit)
+            .skip(offset)
+            .maxTimeMS(2000)
+            .lean()
+        }
+      }
+
+      // Fallback to inline set stickers
+      if (searchStickers.length === 0 && inlineSet) {
         searchStickers = await ctx.db.Sticker.find({
           deleted: false,
-          stickerSet: { $in: userSetIds.map(s => s._id) },
-          $or: [
-            { caption: { $regex: escapeRegex(query), $options: 'i' } },
-            { emojis: { $regex: escapeRegex(query), $options: 'i' } }
-          ]
+          stickerSet: inlineSet._id || inlineSet
         })
           .select('_id fileId stickerType caption fileUniqueId emojis info')
           .limit(limit)
           .skip(offset)
-          .maxTimeMS(2000)
           .lean()
       }
+    } catch (error) {
+      console.error('Inline sticker search failed:', { error: error.message, user: ctx.from.id })
+      return emptyAnswer()
     }
 
-    // Fallback to inline set stickers
-    if (searchStickers.length === 0 && inlineSet) {
-      searchStickers = await ctx.db.Sticker.find({
-        deleted: false,
-        stickerSet: inlineSet._id || inlineSet
-      })
-        .select('_id fileId stickerType caption fileUniqueId emojis info')
-        .limit(limit)
-        .skip(offset)
-        .lean()
-    }
-
-    // Resolve sticker type for every result (synchronous — no API calls)
-    const stickerTypes = detectStickerTypes(searchStickers)
-
-    // Build results
     for (const sticker of searchStickers) {
-      try {
-        const fileId = getStickerFileId(sticker)
-        if (!fileId) continue
-
-        const type = stickerTypes.get(sticker._id.toString()) || getStickerType(sticker)
-        results.push(buildInlineResult(sticker, type))
-      } catch (error) {
-        console.error('Error processing sticker:', {
-          sticker_id: sticker._id,
-          error: error.message
-        })
-      }
+      const result = buildInlineResult(sticker)
+      if (result) results.push(result)
     }
 
     // Send response
@@ -317,13 +292,7 @@ composer.on('inline_query', async (ctx) => {
         results_count: results.length
       })
 
-      // Fallback to empty response
-      await ctx.answerInlineQuery([], {
-        is_personal: true,
-        cache_time: 30,
-        switch_pm_text: ctx.i18n.t('cmd.inline.switch_pm'),
-        switch_pm_parameter: 'inline_pack'
-      }).catch(() => {})
+      await emptyAnswer()
     }
   } else {
     // ===================
@@ -377,7 +346,8 @@ composer.on('inline_query', async (ctx) => {
       const result = {
         type: 'mpeg4_gif',
         id: mapped.id,
-        thumb_url: mapped.thumbUrl,
+        // Bot API 6.6 renamed thumb_url → thumbnail_url.
+        thumbnail_url: mapped.thumbUrl,
         mpeg4_url: mapped.mp4Url,
         caption: mapped.gifUrl
       }

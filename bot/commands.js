@@ -3,7 +3,13 @@
 // addstickers/addemoji restore→copy chain and for /start payload routing.
 const Composer = require('telegraf/composer')
 const sendStickerAsDocument = require('../utils/send-sticker-as-document')
-const { escapeHTML } = require('../utils')
+const escapeHTML = require('../utils/html-escape')
+const { formatOwnerPacks } = require('../utils/owner-packs')
+
+// Pack links: `t.me/addstickers/<name>` or `t.me/addemoji/<name>`. `[^\s/?#]+`
+// stops at whitespace and URL punctuation — `(.*)` used to swallow
+// "?startapp=1" or trailing words into the set name.
+const PACK_LINK_RE = /(addstickers|addemoji)\/([^\s/?#]+)/
 
 module.exports = (bot, privateMessage, {
   handlers,
@@ -104,7 +110,7 @@ module.exports = (bot, privateMessage, {
   // Pack link handler chain: restore (if owner) → copy (if not owner).
   // Both hears use the same regex; handleRestorePack calls next() when the
   // pack isn't owned, which lets handleCopyPack fire.
-  privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleRestorePack)
+  privateMessage.hears(PACK_LINK_RE, handleRestorePack)
 
   privateMessage.command('report', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.report')))
   // Anchored: an unanchored /\/new/ also matched pack links that merely contain
@@ -125,7 +131,7 @@ module.exports = (bot, privateMessage, {
     // as the next message).
     return ctx.scene.enter('newPack', state)
   })
-  privateMessage.hears(/(addstickers|addemoji)\/(.*)/, handleCopyPack)
+  privateMessage.hears(PACK_LINK_RE, handleCopyPack)
 
   privateMessage.command('publish', (ctx) => ctx.scene.enter('catalogPublishNew'))
   // Anchored — an unanchored /publish/ swallowed catalog:publish:<id> and
@@ -197,32 +203,10 @@ module.exports = (bot, privateMessage, {
     const packs = await db.StickerSet.find({
       ownerTelegramId: data.ownerId,
       _id: { $ne: data.excludeSetId }
-    }).limit(500)
+    }).select('name public packType').limit(500).lean()
 
-    if (packs.length === 0) return
-
-    const chunkSize = 70
-    const formattedPacks = packs.map((pack) => {
-      if (pack.name.toLowerCase().endsWith('fstikbot') && pack.public !== true) {
-        if (
-          ctx.from.id === data.ownerId ||
-          ctx.from.id === ctx.config.mainAdminId ||
-          ctx?.session?.userInfo?.adminRights?.includes('pack')
-        ) {
-          return `<a href="https://t.me/addstickers/${pack.name}"><s>${pack.name}</s></a>`
-        } else {
-          return ctx.i18n.t('scenes.packAbout.hidden')
-        }
-      }
-      return `<a href="https://t.me/addstickers/${pack.name}">${pack.name}</a>`
-    })
-
-    // Skip first 70 (already shown) and send the rest in chunks
-    const remainingPacks = formattedPacks.slice(chunkSize)
-    const chunks = []
-    for (let i = 0; i < remainingPacks.length; i += chunkSize) {
-      chunks.push(remainingPacks.slice(i, i + chunkSize))
-    }
+    // The first chunk was already shown by the /about reply; send the rest.
+    const chunks = formatOwnerPacks(ctx, packs, data.ownerId, data.chunkSize).slice(1)
 
     for (const chunk of chunks) {
       await ctx.replyWithHTML(chunk.join(', '), { disable_web_page_preview: true })
@@ -245,7 +229,7 @@ module.exports = (bot, privateMessage, {
   privateMessage.action(/delete_pack:(.*)/, (ctx) => ctx.scene.enter('packDelete'))
 
   privateMessage.action('mosaic:enter', (ctx) => {
-    ctx.answerCbQuery()
+    ctx.answerCbQuery().catch(() => {})
     return ctx.scene.enter('mosaic')
   })
 
