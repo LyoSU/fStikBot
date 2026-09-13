@@ -7,28 +7,25 @@ const { removePlaceholderIfPending } = require('../utils/placeholder')
 module.exports = async (ctx) => {
   let packBotUsername
   let deleteSticker
-  let sticker
   let dbStickerSet
-
-  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
   const { message } = ctx.callbackQuery
 
-  sticker = await ctx.db.Sticker.findOne({
+  const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet', '_id name title owner inline passcode placeholderFileUniqueId')
 
   if (!sticker) {
     let setName
 
-    const { reply_to_message } = message
+    const replyTo = message.reply_to_message
 
-    if (message?.reply_to_message?.sticker) {
-      setName = reply_to_message.sticker.set_name
+    if (replyTo?.sticker) {
+      setName = replyTo.sticker.set_name
 
-      deleteSticker = reply_to_message.sticker.file_id
-    } else if (reply_to_message?.entities && reply_to_message?.entities?.[0] && reply_to_message?.entities?.[0]?.type === 'custom_emoji') {
-      const customEmoji = reply_to_message.entities.find((e) => e.type === 'custom_emoji')
+      deleteSticker = replyTo.sticker.file_id
+    } else if (replyTo?.entities?.[0]?.type === 'custom_emoji') {
+      const customEmoji = replyTo.entities.find((e) => e.type === 'custom_emoji')
 
       if (!customEmoji) return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
 

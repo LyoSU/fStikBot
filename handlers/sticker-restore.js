@@ -101,6 +101,13 @@ module.exports = async (ctx) => {
       return ctx.answerCbQuery(ctx.i18n.t('error.unknown'), true)
     }
 
+    // Queued for conversion (e.g. a static sticker in a framed pack): the
+    // convert worker adds it and sends its own reply. Reporting "unknown
+    // error" here used to be followed seconds later by "sticker added".
+    if (result?.wait) {
+      return ctx.answerCbQuery()
+    }
+
     newFileUniqueId = result?.ok?.stickerInfo?.file_unique_id
   }
 

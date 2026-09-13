@@ -4,7 +4,7 @@ const I18n = require('telegraf-i18n')
 const emojiRegex = require('emoji-regex')
 const { db } = require('../database')
 const config = require('../config.json')
-const addStickerText = require('../utils/add-sticker-text')
+const addStickerText = require('./add-sticker-text')
 const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const downloadFileByUrl = require('./download-file-by-url')
@@ -43,10 +43,12 @@ setInterval(() => {
   }
 }, 1000 * 60).unref()
 
-let botInfo = null
-telegram.getMe().then((info) => {
-  botInfo = info
-})
+// This bot's id, straight from the token (`<id>:<secret>`). The convert queue's
+// global:* events fire in every process attached to the queue, so each handler
+// skips jobs enqueued by another bot. It used to come from a getMe() at module
+// load with no .catch — a Telegram hiccup at boot became an unhandled rejection.
+const BOT_ID = parseInt(String(process.env.BOT_TOKEN || '').split(':')[0], 10) || null
+const isForeignJob = (input) => !!(input.botId && BOT_ID && input.botId !== BOT_ID)
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -93,6 +95,9 @@ async function updateConvertQueueMessages () {
       const job = waiting[i]
       if (job?.data?.input?.convertingMessageId) {
         const { input } = job.data
+        // Message ids are per chat; editing another bot's (chat, message)
+        // pair could hit one of this bot's own messages.
+        if (isForeignJob(input)) continue
 
         await telegram.editMessageText(input.chatId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
           progress: i + 1,
@@ -135,7 +140,7 @@ async function handleConvertCompleted (jobId, result) {
   // global:* fires in EVERY process attached to this Redis queue. Without this
   // guard each replica ran uploadSticker for the same job — double adds and
   // duplicate failure replies.
-  if (input.botId && botInfo?.id && input.botId !== botInfo.id) return
+  if (isForeignJob(input)) return
 
   videoProcessing.delete(input.userId)
 
@@ -167,9 +172,18 @@ async function handleConvertCompleted (jobId, result) {
     return
   }
 
-  const uploadResult = await uploadSticker(input.userId, stickerSet, input.stickerFile, stickerExtra)
-
-  if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
+  let uploadResult
+  try {
+    uploadResult = await uploadSticker(input.userId, stickerSet, input.stickerFile, stickerExtra)
+  } catch (err) {
+    // A Mongo or network throw here used to escape to the event listener's
+    // .catch: the "converting" message stayed forever and the user never got
+    // a reply. Report it as a conversion failure instead.
+    log.error('convert upload failed:', err?.stack || err)
+    uploadResult = { error: { i18nKey: 'sticker.add.error.convert' } }
+  } finally {
+    if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
+  }
 
   if (input.showResult) {
     const textResult = addStickerText(uploadResult, input.locale || 'en')
@@ -198,7 +212,7 @@ async function handleConvertFailed (jobId, errorData) {
 
   // Same reason as global:completed — one owner per job, or every replica
   // messages the user.
-  if (input.botId && botInfo?.id && input.botId !== botInfo.id) return
+  if (isForeignJob(input)) return
 
   if (input.userId) videoProcessing.delete(input.userId)
 
@@ -545,7 +559,6 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
         file_unique_id: originalSticker.getOriginalFileUniqueId(),
         stickerType: originalSticker.getOriginalStickerType() || stickerFile.stickerType,
         // Preserve these fields for proper sticker type detection
-        set_name: stickerFile.set_name,
         type: stickerFile.type,
         is_animated: stickerFile.is_animated,
         is_video: stickerFile.is_video
@@ -949,9 +962,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
           priority,
           attempts: 1,
           removeOnComplete: true,
-          // Failed jobs carry the base64 fileData; without this they pile up in
-          // Redis forever.
-          removeOnFail: true
+          // Keep a failed job for an hour rather than deleting it on failure:
+          // Bull deletes the job hash BEFORE publishing global:failed, so with
+          // `true` handleConvertFailed could never load the job — no error
+          // reply, and the "converting" message stayed. The handler removes
+          // the job itself; the age cap bounds what a missed event leaves
+          // behind (jobs carry base64 fileData).
+          removeOnFail: { age: 60 * 60 }
         })
         queued = true
       } catch (err) {

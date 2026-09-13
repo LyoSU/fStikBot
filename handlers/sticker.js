@@ -11,6 +11,20 @@ const stickerInflight = require('../utils/sticker-inflight')
 const { getStickerCooldown } = require('../utils/sticker-cooldown')
 const handleError = require('./catch')
 
+// A GIF sent from the bot's inline Tenor search carries its Tenor media URL as
+// the caption. Only a real https Tenor URL may be downloaded: the caption is
+// user-controlled, and it used to be fetched as-is by the converter whenever it
+// merely contained "tenor.com" (the '.' in match('tenor.com') matched anything).
+const isTenorMediaUrl = (text) => {
+  if (!text) return false
+  try {
+    const url = new URL(text.trim())
+    return url.protocol === 'https:' && (url.hostname === 'tenor.com' || url.hostname.endsWith('.tenor.com'))
+  } catch (_) {
+    return false
+  }
+}
+
 module.exports = async (ctx, next) => {
   if (ctx.message?.text?.startsWith('/ss') && !ctx.message?.reply_to_message) {
     return ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.reply'), {
@@ -70,13 +84,11 @@ module.exports = async (ctx, next) => {
       break
 
     case 'animation':
-      // if caption tenor gif
-      if (message.caption && message.caption.match('tenor.com')) {
-        stickerFile = message.animation
-        stickerFile.fileUrl = message.caption
-      } else {
-        stickerFile = message.animation
-        if (message.caption) stickerFile.emoji = message.caption
+      stickerFile = message.animation
+      if (isTenorMediaUrl(message.caption)) {
+        stickerFile.fileUrl = message.caption.trim()
+      } else if (message.caption) {
+        stickerFile.emoji = message.caption
       }
       break
 

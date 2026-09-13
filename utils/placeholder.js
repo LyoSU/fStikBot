@@ -12,29 +12,25 @@
 //
 // This lives in its own module (telegram injected, no DB import) so the logic
 // is unit-testable in isolation.
+const log = require('./logger').scope('placeholder')
 //
 // DB footprint: placeholderFileUniqueId is transient. Setting it to undefined
 // and saving issues a Mongo $unset, so the field physically exists only on a
 // freshly-created set that hasn't received its first real sticker yet — it
 // disappears from the document the moment the placeholder is removed.
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const delay = require('./sleep')
+const { getRetryAfter } = require('./retry-api')
 
 // How hard to try deleting the placeholder within a single call. Telegram's
 // patched callApi already retries short 429s (≤5s); this outer loop additionally
 // waits out a longer per-user cooldown, which is exactly the case that used to
-// leave placeholders behind ("не видаляло бо тг кидав помилку"). Kept modest so
+// leave placeholders behind (Telegram threw, nothing retried). Kept modest so
 // a normal sticker-add handler is never parked for long — anything past this is
 // caught by the self-healing retry on the next add.
 const MAX_ATTEMPTS = 3
 const MAX_WAIT_MS = 30 * 1000
 const TRANSIENT_RETRY_MS = 1000
-
-// Telegram surfaces the cooldown as parameters.retry_after (seconds).
-const getRetryAfter = (error) =>
-  error?.parameters?.retry_after ||
-  error?.response?.parameters?.retry_after ||
-  null
 
 // Besides a 429 cooldown, a quick in-call retry is worth it for what's plainly
 // transient: a Telegram 5xx, or a bare network failure (no Telegram description
@@ -110,7 +106,7 @@ async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { a
       const canRetry = attempt < MAX_ATTEMPTS && (retryAfter || isTransientError(error))
       if (!canRetry) {
         // Keep the marker so the next added sticker retries the removal.
-        console.error('[placeholder] cleanup failed, will retry on next add:', error?.description || error?.message || error)
+        log.warn('cleanup failed, will retry on next add:', error?.description || error?.message || error)
         return false
       }
       await delay(retryAfter ? Math.min(retryAfter * 1000, MAX_WAIT_MS) : TRANSIENT_RETRY_MS)
