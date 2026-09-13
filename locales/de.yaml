@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 Im Browser'
       catalog_app: 'Für Android herunterladen'
       catalog_app_mini: '📱 Android-App'
+    current_pack: '📦 Sticker landen in: <a href="${link}">${title}</a>'
+    hint: 'Sende ein Foto, Video, GIF oder einen Sticker — ich füge es zu <a href="${link}">${title}</a> hinzu.'
   guide:
     web: |
-      <b>📖 So nutzt du fStikBot</b>
+      <b>📖 So funktioniert’s</b>
 
-      Ausführliche Anleitungen, Tipps und FAQ findest du auf unserer Website.
+      1. /new — Set erstellen
+      2. Sende Fotos, Videos, GIFs oder Sticker — auch als ganzes Album
+      3. /packs — deine Sets und ihre Einstellungen
+
+      Anleitungen, Tipps und FAQ findest du auf der Website.
     menu: |
       <b>❓ Hilfe</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: Sticker
       custom_emoji: Emojis
       inline: Inline
+      shared: '👥 Geteilt'
     empty: |
       Noch keine Sets. Erstelle dein erstes → /new
     inline_title: Inline-Set
@@ -214,6 +221,13 @@ cmd:
 
       Admins können über den Button unten ein Set für die Gruppe auswählen.
     select_group_pack: Set auswählen
+    hidden_btn: '🗄 Ausgeblendet'
+    hidden_info: |
+      <b>🗄 Ausgeblendete Sets</b>
+
+      Tippe auf ein Set, um es wiederherzustellen oder zu löschen.
+    hidden_empty: 'Hier gibt es keine ausgeblendeten Sets.'
+    group_admin_only: 'Nur Gruppenadmins können das Set für die Gruppe auswählen.'
   emoji:
     info: |
       Um das Standard-Emoji für das aktuelle Set zu ändern, sende <code>/emoji</code> und das Emoji, getrennt durch ein Leerzeichen
@@ -238,8 +252,8 @@ cmd:
 
       Sende ein Foto — ich zerschneide es in ein Emoji-Raster.
     no_pack: |
-      Du brauchst zuerst ein Set mit benutzerdefinierten Emojis.
-      Erstelle es über /new und wähle „Emojis“.
+      Mosaik funktioniert mit einem Set benutzerdefinierter Emojis.
+      Wähle unten eines deiner Sets oder erstelle ein neues.
     choose_grid: |
       📐 Wähle die Rastergröße:
     btn:
@@ -313,27 +327,71 @@ donate:
       Zahlung abgebrochen
 coedit:
   info: |
-    <b>👥 Gemeinsam bearbeiten</b>
+    <b>👥 Gemeinsam bearbeiten</b> <a href="${link}">${title}</a>
 
-    Link: <code>${colink}</code>
+    Wer diesen Link öffnet, tritt dem Set bei:
+    <code>${colink}</code>
 
-    Teile ihn — andere können dann Sticker in <a href="${link}">${title}</a> hinzufügen und löschen.
-
-    <b>Bearbeiter:</b> ${editors}
-
-    <i>Setze den Link zurück, um alle zu entfernen</i>
+    <b>Neue Mitglieder:</b> ${defaultRole}
+    <b>Mitglieder:</b> ${count}
   no_editors: |
     keine
   btn:
     send: '📤 Link senden'
-    reset: '🔁 Link zurücksetzen'
+    reset: '🔁 Neuer Link'
+    activity: '🧾 Verlauf'
+    default_role: '⚙️ Neue: ${role}'
+    clear: '🧹 Alle entfernen'
+    clear_confirm: '⚠️ Ja, alle entfernen'
+    role_editor: '✏️ Hinzufügen und löschen'
+    role_contributor: '➕ Nur hinzufügen'
+    remove: '🚫 Aus dem Set entfernen'
+    leave: '🚪 Set verlassen'
+    back: '‹ Zurück'
+  roles:
+    editor: 'hinzufügen und löschen'
+    contributor: 'nur hinzufügen'
   share: |
     Öffne den Link und tippe auf „Starten“, um das Set „${title}“ gemeinsam zu bearbeiten
   reset: |
-    <b>🔁 Link erfolgreich zurückgesetzt</b>
+    <b>🔁 Neuer Link.</b> Der alte funktioniert nicht mehr; bisherige Mitglieder behalten ihren Zugriff.
+  member: |
+    <b>👤 ${name}</b>
 
-    Neuer Link zum gemeinsamen Bearbeiten von <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    <b>Rolle:</b> ${role}
+    <b>Beigetreten:</b> ${date}
+    <b>Aktionen in den letzten 30 Tagen:</b> ${actions}
+  clear_confirm: |
+    Alle Mitglieder (${count}) aus <b>${title}</b> entfernen? Der Link wird ebenfalls ersetzt.
+  cleared: 'Alle wurden entfernt und der Link wurde ersetzt.'
+  joined: '👥 Du bist <b>${title}</b> beigetreten. Deine Rolle: ${role}.'
+  joined_notice: |
+    👥 ${name} ist <a href="${link}">${title}</a> über den Link zum gemeinsamen Bearbeiten beigetreten.
+
+    Mitglieder verwalten: /packs → das Set → 👥 Gemeinsam bearbeiten
+  left: '🚪 Du hast <b>${title}</b> verlassen.'
+  left_notice: '🚪 ${name} hat <b>${title}</b> verlassen.'
+  removed_notice: 'Du wurdest aus der gemeinsamen Bearbeitung von <b>${title}</b> entfernt.'
+  role_notice: 'Deine Rolle in <b>${title}</b> ist jetzt: ${role}.'
+  no_access: 'Du hast keinen Zugriff mehr auf dieses Set. Wähle unter /packs ein anderes.'
+  no_rights: "Deine Rolle in diesem Set erlaubt das nicht."
+  your_role: '👥 Deine Rolle: ${role}'
+  activity: |
+    <b>🧾 Verlauf</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>Noch nichts.</i>'
+  actions:
+    add: '➕ Sticker hinzugefügt: ${count}'
+    delete: '🗑 einen Sticker gelöscht'
+    restore: '♻️ einen Sticker wiederhergestellt'
+    emoji: '😀 ein Emoji geändert'
+    join: '👋 beigetreten'
+    leave: '🚪 ausgetreten'
+    removed: '🚫 ${target} entfernt'
+    role: '🔧 ${target}: ${role}'
+    reset: '🔁 Link ersetzt'
+    clear: '🧹 alle entfernt (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -449,9 +507,9 @@ sticker:
       reply: |
         Antworte auf einen Sticker.
       no_selected_pack: |
-        <b>Du hast kein Set ausgewählt</b>
+        <b>Zuerst brauchst du ein Set für deine Sticker</b>
 
-        Erstelle (/new) oder wähle (/packs) ein Set
+        Erstelle eins — dann füge ich diese Datei sofort hinzu.
       no_selected_group_pack: |
         <b>Du hast kein Gruppen-Set ausgewählt</b>
 
@@ -482,9 +540,9 @@ sticker:
         Die Videodatei hat das falsche Format (WEBM erforderlich).
       file_type:
         unknown: |
-          Dieser Dateityp wird nicht unterstützt
+          Dieser Dateityp wird nicht unterstützt.
 
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
+          Sende ein Foto, Video, GIF, einen Sticker oder ein Bild als Datei.
       wait_load: |
         ⏳ Die vorherige Datei wird noch verarbeitet...
       timeout: |
@@ -502,6 +560,12 @@ sticker:
       invalid_image: |
 
         Dieses Bild konnte nicht verarbeitet werden. Versuche es mit einer anderen Datei oder einem anderen Format.
+      queue_full: '⏳ Zu viele Dateien auf einmal. Warte, bis ich die in der Warteschlange verarbeitet habe, und sende dann den Rest.'
+    album_progress: '⏳ Album wird hinzugefügt: ${current}/${total}'
+    album_done: '✅ ${added} von ${total} zu <a href="${link}">${title}</a> hinzugefügt'
+    album_converting: '⏳ ${count} weitere sind Videos: Ich konvertiere sie und antworte auf jedes, sobald es fertig ist.'
+    album_duplicates: '♻️ Schon im Set: ${count}.'
+    album_failed: '⚠️ Nicht hinzugefügt: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Abonniere den Kanal</a> — News, Updates und neue Funktionen.
@@ -540,6 +604,7 @@ scenes:
       <b>Name des Sets</b>
 
       Ihn sehen alle. Schreib einen eigenen oder wähle einen Vorschlag unten.
+      <i>Die Adresse des Sets erstelle ich aus dem Namen.</i>
     pack_name: |
       <b>Adresse des Sets</b>
 
@@ -563,6 +628,9 @@ scenes:
           Der Bot kann keine Sticker zu Telegram hochladen.
 
           Versuche es später erneut.
+    btn:
+      custom_link: '🔗 Eigene Set-Adresse'
+    custom_link_on: 'OK — sende den Namen, danach frage ich nach der Adresse.'
   copy:
     enter: |
       Erstellen wir zuerst ein neues Set für die Kopie.
@@ -600,6 +668,16 @@ scenes:
         Diese Funktion steht leider nur Unterstützern des Bots zur Verfügung.
 
         Du kannst den Bot mit dem Befehl /donate unterstützen.
+    title: |
+      <b>📋 Kopiere <a href="${originalLink}">${originalTitle}</a></b> (${count})
+
+      Name für deine Kopie — schreib einen eigenen oder wähle unten einen aus.
+    btn:
+      change_type: '🔄 Set-Typ ändern'
+    created: |
+      ✅ Set erstellt: <a href="${link}">${title}</a>
+
+      Ich kopiere die Sticker — ich sage Bescheid, wenn ich fertig bin.
   original:
     enter: |
       <b>🔎 Herkunft finden</b>
@@ -615,7 +693,7 @@ scenes:
     enter: |
       <b>🗑 Sticker löschen</b>
 
-      Sende den Sticker, den du löschen möchtest. Ein Set musst du nicht auswählen — ich finde selbst heraus, wo er liegt.
+      Sende einen Sticker — ich lösche ihn sofort aus seinem Set (du kannst ihn wiederherstellen). Du kannst beliebig viele senden.
     confirm: |
       Diesen Sticker aus dem Set löschen?
     error:
@@ -661,6 +739,7 @@ scenes:
     btn:
       yes: '⚡ Boosten'
       no: Abbrechen
+      buy: '⭐ Credits kaufen'
     canceled: |
       Abgebrochen
     success: |
@@ -714,6 +793,10 @@ scenes:
 
         <i>Du kannst Hashtags zur Kategorisierung verwenden [#]</i>
         <i>Zum Beispiel: #anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>Aktuelle Beschreibung:</b> <i>${description}</i>
+      keep_description: '✅ Aktuelle Beschreibung behalten'
       select_language: |
         <b>Wähle die Sprachen, für die dein Set gedacht ist:</b>
         <i>Du kannst mehrere auswählen</i>
@@ -747,7 +830,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> endgültig löschen?
 
-      Sende <code>${confirm}</code> zur Bestätigung oder tippe auf „Abbrechen“.
+      Tippe zur Bestätigung auf „${confirm}“ oder auf „Abbrechen“.
     confirm: Ja, löschen
     success: |
       🗑 Set gelöscht
@@ -781,7 +864,7 @@ scenes:
       <b>✂️ Hintergrund entfernen</b>
 
       Sende ein Foto — du bekommst ein PNG ohne Hintergrund.
-      <i>Funktioniert am besten mit Fotos von Personen.</i>
+      <i>Modell für deine Fotos:</i>
     enter_anime: |
       <b>✂️ Hintergrund entfernen</b>
 
@@ -802,6 +885,7 @@ scenes:
       ⏱ Die Verarbeitung hat zu lange gedauert. Versuche es später erneut oder mit einem kleineren Foto.
     error_queue_disabled: |
       Diese Funktion ist vorübergehend nicht verfügbar. Versuche es später erneut.
+    not_image: 'Sende ein Foto oder ein Bild als Datei (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Rundes Video</b>
@@ -833,6 +917,7 @@ scenes:
     Abgebrochen
   btn:
     cancel: '← Abbrechen'
+  unexpected: 'Gerade erwarte ich etwas anderes — folge dem Schritt oben oder tippe auf „← Abbrechen“.'
 error:
   stickerset_invalid: |
     Das Set ist nicht verfügbar. Vielleicht wurde es in Telegram gelöscht.
