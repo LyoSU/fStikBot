@@ -37,7 +37,7 @@ cmd:
 
       Jelajahi paket milik orang lain atau publikasikan paketmu:
     commands:
-      ss: '🌟 Simpan stiker'
+      ss: '➕ Tambah ke paket grup'
       start: '📜 Start menu'
       help: '❓ Bantuan'
       packs: '📁 Paketku'
@@ -114,8 +114,8 @@ cmd:
       /ss (sebagai balasan ke media) — tambah cepat ke paket grup.
 
       <b>Paket inline:</b>
-      Jenis paket terpisah untuk akses cepat lewat @nama_bot di chat mana pun.
-      • Bukan paket Telegram sungguhan — hanya tersimpan di bot
+      Koleksi pribadimu: kirim stiker, GIF, foto, dan video yang kamu simpan di chat mana pun — ketik @nama_bot lalu pilih yang kamu mau.
+      • Tidak ada yang ditambahkan ke stiker Telegram — semuanya disimpan di bot
       • Bisa berisi stiker, foto, GIF, video
       • Buat di /packs → tab "Inline"
       • Ada juga mode pencarian GIF (lewat Tenor)
@@ -138,10 +138,10 @@ cmd:
 
       • Tanpa "${titleSuffix}" di nama paket
       • Prioritas pemrosesan video
-      • Video hingga 30 detik
-      • Beberapa stiker sekaligus dalam antrean
+      • Video hingga 35 detik
+      • Beberapa stiker sekaligus
 
-      <b>Emoji adaptif</b> — tombol terpisah di /new (warnanya menyesuaikan teks)
+      <b>🎨 Emoji adaptif</b> — jenis paket terpisah di /new: warna emojinya menyesuaikan teks
 
       Dapatkan → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Masukkan ukuran kisi (mis. 3x4):
     custom_invalid: |
-      Format tidak valid. Contoh: 3x4. Baris 1-10, kolom 1-10, total maksimal 50.
+      Format salah. Contoh: 3x4. Baris 1-10, kolom 1-10, total maksimal 50.
     no_space: |
       Ruang di paket tidak cukup. Tersisa ${freeSlots} slot, dibutuhkan ${total}.
       Pilih kisi yang lebih kecil atau buat paket baru lewat /new.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Donasi'
   topup: |
     <b>Masukkan jumlah Kredit yang ingin kamu beli:</b>
-  invalid_amount: |
-    <b>Jumlah tidak valid</b>
-
-    Jumlah minimum — 1 Kredit
-  paymenu: |
-    Kamu ingin membeli <b>${amount} Kredit</b> seharga <b>${price}$</b>
-
-    ⚠️ Kredit diberikan secara manual oleh administrator.
-    Waktu tunggu — 5 menit hingga 1 jam
-
-    <u>Pilih metode pembayaran:</u>
   description: |
     Dengan membeli Kredit, kamu mendukung pengembangan bot dan bisa menggunakan fitur tambahan
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Peningkatan</a></b>: ${boostStatus}
       status:
-        on: Aktif
-        off: Nonaktif
+        on: 'aktif'
+        off: 'nonaktif'
     hidden: Paket <a href="${link}">${title}</a> disembunyikan dari daftarmu.
     restored: Paket <a href="${link}">${title}</a> dikembalikan ke daftarmu.
     btn:
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
       invalid_animated: |
-        File stiker animasi tidak dalam format TGS yang benar.
+        Telegram hanya menerima stiker animasi dalam format TGS. Kirim GIF atau MP4 sebagai video — bot akan mengubahnya jadi stiker video.
       invalid_video: |
-        File video tidak dalam format WEBM yang benar.
+        Format file video salah (harus WEBM).
       restore: |
         Paket tidak dapat dipulihkan.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
       invalid_animated: |
-        File stiker animasi tidak dalam format TGS yang benar.
+        Telegram hanya menerima stiker animasi dalam format TGS. Kirim GIF atau MP4 sebagai video — bot akan mengubahnya jadi stiker video.
       invalid_video: |
-        File video tidak dalam format WEBM yang benar.
+        Format file video salah (harus WEBM).
   group_settings:
     success: |
       Pengaturan grup berhasil diperbarui.
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ Ditambahkan ke <u>${title}</u>
     ok_repainting_notice: |
-      ⚠️ Ini emoji monokrom: di paket stiker biasa warnanya tetap putih dan hampir tidak terlihat di latar terang.
+      ⚠️ Ini emoji monokrom: di paket biasa warnanya tetap putih dan hampir tidak terlihat di latar terang.
+      Agar warnanya menyesuaikan teks, buat paket terpisah "🎨 Emoji adaptif" lewat /new.
     send_emoji: Kirim emoji untuk stiker ini
     converting_process: |
       ⏳ Mengonversi: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Ukuran stiker tidak valid. Stiker harus berukuran 512x512 piksel.
       invalid_animated: |
-        File stiker animasi tidak dalam format TGS yang benar.
+        Telegram hanya menerima stiker animasi dalam format TGS. Kirim GIF atau MP4 sebagai video — bot akan mengubahnya jadi stiker video.
       animated_too_big: |
         Setelah disesuaikan dengan ukuran paket, stiker animasi ini melebihi batas Telegram 64 KB — stiker tidak dapat dipindahkan.
       invalid_video: |
-        File video tidak dalam format WEBM yang benar.
+        Format file video salah (harus WEBM).
       file_type:
-        static: |
-          Jenis file ini tidak didukung
-          Kamu bisa menambahkan foto atau stiker statis ini ke paket stiker statis
-
-          <i>Buat (/new) atau pilih (/packs) paket stiker lain</i>
-        video: |
-          Jenis file ini tidak didukung
-          Kamu bisa menambahkan file video ini ke paket video
-
-          <i>Buat (/new) atau pilih (/packs) paket stiker lain</i>
-        animated: |
-          Jenis file ini tidak didukung
-          Kamu bisa menambahkan file animasi ini ke paket stiker animasi
-
-          <i>Buat (/new) atau pilih (/packs) paket stiker lain</i>
         unknown: |
           Jenis file ini tidak didukung
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Hapus stiker</b>
 
-      Kirim stiker yang ingin kamu hapus dari paket.
+      Kirim stiker yang ingin kamu hapus. Tidak perlu memilih paket — aku akan mencari sendiri di mana stiker itu berada.
     confirm: |
       Hapus stiker ini dari paket?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Semua bahasa
       button_confirm_language: Konfirmasi
       set_safe: |
-        <b>Apakah paketmu aman untuk pengguna?</b>
-        <i>Artinya, tidak berisi konten erotis atau konten mengejutkan lainnya</i>
+        <b>Apakah paketmu aman untuk semua orang?</b>
+        <i>Artinya, tidak berisi konten erotis, kekerasan, atau konten 18+ lainnya</i>
       button_safe:
-        safe: Ya, aman
-        not_safe: Tidak, tidak aman
+        safe: '✅ Ya, tanpa 18+'
+        not_safe: '🔞 Tidak, ada konten 18+'
       no_tags: tidak ada
       confirm: |
         <b>Konfirmasi publikasi paket stiker "<a href="${link}">${title}</a>"</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ Hapus <a href="${link}">${title}</a> selamanya?
 
-      Kirim <code>${confirm}</code> untuk konfirmasi.
+      Kirim <code>${confirm}</code> untuk konfirmasi, atau ketuk "Batal".
     confirm: Ya, hapus
     success: |
       🗑 Paket dihapus
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Alamat paket ini sudah dipakai. Pilih nama lain.
     pack_name_invalid: |
-      Format alamat paket tidak valid. Gunakan huruf Latin, angka, dan garis bawah.
+      Format alamat paket tidak valid. Gunakan huruf Latin, angka, dan garis bawah (_).
     invalid_sticker_format: |
       File ini tidak bisa dijadikan stiker: format atau ukurannya tidak sesuai.
     invalid_emoji: |
