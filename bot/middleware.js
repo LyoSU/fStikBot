@@ -6,17 +6,9 @@ const rateLimit = require('telegraf-ratelimit')
 const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
 const { touchLastSeen } = require('../utils/last-seen')
 const { wrapAnswerCbQuery } = require('../utils/callback-text')
-const handleError = require('../handlers/catch')
 const log = require('../utils/logger').scope('middleware')
 
 const MAX_CHAIN_ACTIONS = 15
-
-// Polling detach: enabled by default (set POLLING_DETACH=0 to disable).
-// Default ON because we've verified the tradeoffs are covered:
-//   - Errors routed through handleError (same pipeline as bot.catch)
-//   - Heavy work already fire-and-forget at handler level (addSticker)
-//   - Session save-wrap awaits user persist inline
-const POLLING_DETACH = process.env.POLLING_DETACH !== '0'
 
 module.exports = (bot, {
   i18n,
@@ -26,33 +18,10 @@ module.exports = (bot, {
   stats,
   retryMiddleware
 }) => {
-  // Detach from Telegraf's batch-await loop.
-  //
-  // Telegraf 3.40's fetchUpdates does:
-  //   handleUpdates(batch).then(() => fetchUpdates())   // next poll
-  // which waits for Promise.all of all handleUpdate(u) in the batch to
-  // resolve before issuing the next getUpdates. Returning a resolved
-  // Promise from the FIRST middleware short-circuits that wait: the
-  // batch Promise.all completes immediately, fetchUpdates re-polls, and
-  // the downstream middleware chain still executes in the background.
-  //
-  // This preserves throughput under rare bursts where any middleware
-  // gets slow. Trade-offs we consciously accept:
-  //   - Telegraf's handlerTimeout (60s) only bounds how long the polling
-  //     batch is awaited; it never interrupts a handler, detached or not.
-  //     We don't rely on it — all slow paths are already fire-and-forget
-  //     via Bull queues (convert/removebg) or the sticker-handler IIFE.
-  //   - getUpdates advances the offset before the handler finishes, so a
-  //     crash/restart mid-batch loses those updates. Conscious trade-off.
-  //   - Two rapid updates from the same user run concurrently, so a
-  //     session SET race is theoretically possible. The session store is
-  //     IN-MEMORY (bot/session-store.js — it is NOT Redis-backed, and it
-  //     does not survive a restart); dirty-check cuts writes; last writer
-  //     wins for the rare race. Scene state advances one step at a time via
-  //     user actions spaced >>100ms apart — not observed in practice.
-  //   - Errors don't reach bot.catch. We route them through handleError
-  //     manually so the log channel still gets git blame + stack +
-  //     chainActions.
+  // Polling throughput is decoupled from handler latency by telegraf's own
+  // handlerTimeout (see bot.js) — no detach middleware needed here, and every
+  // handler error reaches bot.catch the normal way.
+
   // answerCbQuery text is capped at 200 chars by Telegram and rendered as
   // plain text; our i18n strings are HTML written for replyWithHTML and a
   // dozen locales exceed the cap. Clamp centrally (utils/callback-text.js).
@@ -61,22 +30,12 @@ module.exports = (bot, {
     return next()
   })
 
-  if (POLLING_DETACH) {
-    bot.use((ctx, next) => {
-      next().catch((err) => handleError(err, ctx).catch((e) => {
-        console.error('[polling-detach] handleError itself failed:', e)
-      }))
-      return Promise.resolve()
-    })
-  }
-
   // i18n
   bot.use(i18n)
 
-  // Retry 429s at the ctx level (prototype-level patch already handles the
-  // underlying Telegram.callApi; this just exposes ctx.withRetry helper)
-  // AND clears the blocked-chat cache for the current chat_id so a user
-  // who unblocked us can receive replies immediately.
+  // Clears the blocked-chat cache for the current chat_id so a user who
+  // unblocked us can receive replies immediately (the 429 retry itself lives
+  // in the Telegram.prototype patch, utils/retry-api.js).
   bot.use(retryMiddleware())
 
   // Rate-limit writes to public packs (1 sticker per minute) to prevent
@@ -116,7 +75,6 @@ module.exports = (bot, {
       ctx.session.chainActions.push(action)
     }
 
-    if (ctx.inlineQuery) ctx.state.answerIQ = []
     if (ctx.callbackQuery) ctx.state.answerCbQuery = []
 
     return next(ctx).then(() => {
@@ -142,18 +100,16 @@ module.exports = (bot, {
     return next()
   }))
 
-  // Лагідна українізація — auto-switch ru → uk when Telegram reports uk.
-  // Now runs after updateUser so userInfo is a live Mongoose doc and
-  // its .save() actually fires.
+  // Gentle Ukrainization — auto-switch ru → uk when Telegram reports uk.
+  // Only for users who never picked a language themselves (localeChosen is
+  // set by /lang): before that guard, choosing Russian via /lang was undone
+  // on the very next update. Setting `locale` marks the doc dirty, so
+  // persistUserIfDirty below saves it — no separate save() (which raced the
+  // one below and threw ParallelSaveError).
   bot.use((ctx, next) => {
-    if (
-      ctx?.session?.userInfo?.locale === 'ru' &&
-      ctx.from && ctx.from.language_code === 'uk'
-    ) {
-      ctx.session.userInfo.locale = 'uk'
-      if (typeof ctx.session.userInfo.save === 'function') {
-        ctx.session.userInfo.save().catch(err => log.error('Failed to save user locale:', err.message))
-      }
+    const user = ctx?.session?.userInfo
+    if (user?.locale === 'ru' && !user.localeChosen && ctx.from?.language_code === 'uk') {
+      user.locale = 'uk'
       ctx.i18n.locale('uk')
     }
     return next()

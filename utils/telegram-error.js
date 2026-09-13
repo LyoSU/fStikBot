@@ -26,8 +26,33 @@ const truncateDescription = (s, max) => (
   s.length > max ? `${s.slice(0, max - 1)}…` : s
 )
 // Default fits answerCbQuery (200) once the i18n template wraps it in
-// "Помилка Telegram: <code>…</code>" (~30 chars of prefix/suffix).
+// "Telegram error: <code>…</code>" (~30 chars of prefix/suffix).
 const DEFAULT_MAX_DESCRIPTION_LEN = 150
+
+// telegraf builds every request URL as `.../bot<token>/<method>` and node-fetch
+// puts that URL into the message of every network-level error (ECONNRESET,
+// ETIMEDOUT, …). Strip the token before such text reaches a log or the admin
+// log channel.
+const BOT_TOKEN_RE = /\/bot\d+:[A-Za-z0-9_-]+\//g
+
+const redactBotToken = (text) => (
+  typeof text === 'string' ? text.replace(BOT_TOKEN_RE, '/bot<redacted>/') : text
+)
+
+// Mutates message/stack in place — the error object is what gets rethrown
+// and eventually logged, so the copy has to be the one callers see.
+const redactErrorToken = (error) => {
+  if (!error || typeof error !== 'object') return error
+  try {
+    if (typeof error.message === 'string' && BOT_TOKEN_RE.test(error.message)) {
+      error.message = redactBotToken(error.message)
+    }
+    if (typeof error.stack === 'string' && BOT_TOKEN_RE.test(error.stack)) {
+      error.stack = redactBotToken(error.stack)
+    }
+  } catch (_) { /* frozen error object — nothing to do */ }
+  return error
+}
 
 const matchTelegramErrorReason = (error) => {
   if (!error) return null
@@ -71,5 +96,7 @@ module.exports = {
   matchTelegramErrorReason,
   extractRetryAfterSeconds,
   humanizeTelegramError,
-  truncateDescription
+  truncateDescription,
+  redactBotToken,
+  redactErrorToken
 }

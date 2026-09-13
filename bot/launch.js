@@ -1,7 +1,7 @@
 const { URL } = require('url')
+const log = require('../utils/logger').scope('launch')
 
-// Bot launch + graceful shutdown.
-// Webhook mode when BOT_DOMAIN is set, polling otherwise.
+// Bot launch: webhook mode when BOT_DOMAIN is set, polling otherwise.
 //
 // allowedUpdates cuts channel_post, edited_channel_post, and poll updates
 // at the Telegram side — the bot doesn't handle them, and previously there
@@ -18,7 +18,7 @@ const ALLOWED_UPDATES = [
   'my_chat_member'
 ]
 
-module.exports = async function launch (bot) {
+module.exports = async function launch (bot, { isShuttingDown = () => false } = {}) {
   if (process.env.BOT_DOMAIN) {
     // Keep the original raw-token path — server nginx is configured to
     // proxy exactly this route to the bot port. Changing to sha256(token)
@@ -29,28 +29,41 @@ module.exports = async function launch (bot) {
       domain = new URL(domain).host
     }
 
+    // No `domain` in the launch config: telegraf 3 then only starts the HTTP
+    // server and skips its own setWebhook(url) — which takes no extra and
+    // would have dropped allowed_updates. We register the hook ourselves.
     await bot.launch({
       webhook: {
-        domain: process.env.BOT_DOMAIN,
         hookPath,
         port: process.env.WEBHOOK_PORT || 2500
       }
     })
 
-    // telegraf 3's launch() calls setWebhook(url) with no extra — the top-level
-    // `allowedUpdates` option it used to be passed here was simply ignored.
-    // Re-issue the call ourselves with allowed_updates so the filter actually
-    // reaches Telegram. setWebhook(url, extra) spreads extra into the payload.
     await bot.telegram.setWebhook(`https://${domain}${hookPath}`, {
       allowed_updates: ALLOWED_UPDATES
     })
-    console.log('bot start webhook')
-  } else {
-    // telegraf 3 reads the polling options from config.polling — a top-level
-    // `allowedUpdates` never made it to getUpdates.
-    await bot.launch({ polling: { allowedUpdates: ALLOWED_UPDATES } })
-    console.log('bot start polling')
+    log.info('bot started (webhook)')
+    return
   }
+
+  // telegraf 3 reads the polling options from config.polling — a top-level
+  // `allowedUpdates` never made it to getUpdates.
+  //
+  // bot.launch() never rejects and a 401/409 on getUpdates silently stops
+  // polling while the process stays alive, so PM2 would report a healthy bot
+  // that receives nothing. stopCallback is the only hook telegraf gives us to
+  // notice that; exit so PM2 restarts us (or surfaces a bad token).
+  await bot.launch({
+    polling: {
+      allowedUpdates: ALLOWED_UPDATES,
+      stopCallback: () => {
+        if (isShuttingDown()) return
+        log.error('polling stopped unexpectedly — exiting so PM2 restarts the bot')
+        process.exit(1)
+      }
+    }
+  })
+  log.info('bot started (polling)')
 }
 
 module.exports.ALLOWED_UPDATES = ALLOWED_UPDATES

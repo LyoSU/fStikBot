@@ -40,6 +40,11 @@ const userSchema = mongoose.Schema({
     type: String
     // Note: No separate index - covered by compound { locale: 1, blocked: 1 } below
   },
+  // True once the user picked a language via /lang; the ru → uk auto-switch
+  // in bot/middleware.js only applies while this is unset.
+  localeChosen: {
+    type: Boolean
+  },
   blocked: {
     type: Boolean,
     default: false,

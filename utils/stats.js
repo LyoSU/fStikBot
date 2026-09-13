@@ -1,3 +1,6 @@
+// Rolling rps / response-time averages, exposed as ctx.stats (read by /ping)
+// and as a PM2 metric. Nothing here is logged: at ~40 rps the old per-second
+// console.log lines added ~350k lines a day to the PM2 logs.
 const io = require('@pm2/io')
 
 const stats = {
@@ -10,11 +13,6 @@ const rtOP = io.metric({
   name: 'response time',
   unit: 'ms'
 })
-
-// const usersCountIO = io.metric({
-//   name: 'Users count',
-//   unit: 'user'
-// })
 
 // .unref() so this stats sampler doesn't keep the process alive on shutdown.
 setInterval(() => {
@@ -38,26 +36,11 @@ setInterval(() => {
     if (stats.responseTimeAvrg > 0) stats.responseTimeAvrg = (stats.responseTimeAvrg + lastResponseTimeAvrg) / 2
     else stats.responseTimeAvrg = lastResponseTimeAvrg
 
-    console.log('🔄 rps last:', rps)
-    console.log('🔄 rps avrg:', stats.rpsAvrg)
-    console.log('🔄 response time avrg last:', lastResponseTimeAvrg)
-    console.log('🔄 response time avrg total:', stats.responseTimeAvrg)
-
     rtOP.set(stats.responseTimeAvrg)
 
     delete stats.times[time]
   }
 }, 1000).unref()
-
-// setInterval(async () => {
-//   const usersCount = await db.User.count({
-//     updatedAt: {
-//       $gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-//     }
-//   })
-
-//   usersCountIO.set(usersCount)
-// }, 60 * 1000)
 
 module.exports = async (ctx, next) => {
   const startMs = new Date()

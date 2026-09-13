@@ -29,22 +29,18 @@ module.exports = async (ctx) => {
   // template-literal interpolation surprises us downstream.
   const firstName = ctx.from.first_name || ''
   const lastName = ctx.from.last_name || ''
-  const fullName = lastName ? `${firstName} ${lastName}` : firstName
 
   if (!user) {
     // First-message race: two parallel updates both see `null` here and
     // would both `new User() + save()`, producing E11000 on the second.
     // Atomic upsert ensures one wins and the other gets the inserted doc.
-    const now = Math.floor(Date.now() / 1000)
     user = await ctx.db.User.findOneAndUpdate(
       { telegram_id: ctx.from.id },
       {
         $setOnInsert: {
           telegram_id: ctx.from.id,
-          first_act: now,
           first_name: firstName,
           last_name: lastName,
-          full_name: fullName,
           username: ctx.from.username
         }
       },
@@ -63,7 +59,6 @@ module.exports = async (ctx) => {
 
   user.first_name = firstName
   user.last_name = lastName
-  user.full_name = fullName
   user.username = ctx.from.username
   // No manual updatedAt — see save-wrap in bot/middleware.js. We bump it
   // via a throttled fire-and-forget updateOne instead, so unchanged-user

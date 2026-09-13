@@ -3,7 +3,9 @@ const path = require('path')
 const util = require('util')
 const execFile = util.promisify(require('child_process').execFile)
 const errorStackParser = require('error-stack-parser')
-const { escapeHTML, isRateLimitError, getRetryAfter } = require('../utils')
+const escapeHTML = require('../utils/html-escape')
+const { isRateLimitError, getRetryAfter } = require('../utils/retry-api')
+const { redactErrorToken } = require('../utils/telegram-error')
 const log = require('../utils/logger').scope('error-handler')
 const { isExpectedNoise } = require('../utils/expected-noise')
 
@@ -86,6 +88,10 @@ async function errorLog (error, ctx) {
 
 module.exports = async (error, ctx) => {
   if (isExpectedNoise(error)) return
+
+  // Network-level errors carry the request URL — and with it the bot token —
+  // in their message. Never let that reach stdout or the log channel.
+  redactErrorToken(error)
 
   log.error(error?.stack || error)
 

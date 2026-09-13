@@ -29,14 +29,22 @@ const syncLocales = require('./bot/locale-sync')
 const { runPreflight } = require('./bot/preflight')
 const log = require('./utils/logger').scope('bot')
 
-global.startDate = new Date()
-
 const MONITOR_INTERVAL_MS = 25 * 1000
 
-// NOTE: telegraf 3.40 has no `handlerTimeout` option at all (it was added in
-// v4) — the one that used to be passed here was silently ignored. Polling
-// throughput is handled by the POLLING_DETACH middleware in bot/middleware.js.
+// handlerTimeout: telegraf 3 races each polling batch against this timer and
+// issues the next getUpdates as soon as it fires, while the handlers keep
+// running to completion in the background (telegraf.js handleUpdates). A tiny
+// value therefore detaches handler latency from polling throughput — one slow
+// handler no longer holds back the whole batch. Errors still reach bot.catch:
+// handleUpdate wraps every chain in its own .catch.
+//
+// Trade-offs (unchanged from the previous hand-rolled detach middleware):
+//   - the offset advances before handlers finish, so a crash mid-batch loses
+//     those updates;
+//   - two rapid updates from the same user run concurrently; the session
+//     store is in-memory and last writer wins.
 const bot = new Telegraf(process.env.BOT_TOKEN, {
+  handlerTimeout: 1,
   telegram: { webhookReply: false }
 })
 
@@ -78,7 +86,7 @@ registerCommands(bot, privateMessage, {
 ;(async () => {
   await runPreflight({ bot, dbConnection: db.connection })
 
-  await launch(bot)
+  await launch(bot, { isShuttingDown })
 
   // Don't block startup on the locale sync — it's eventually consistent.
   syncLocales(bot, i18n).catch((err) => log.error('[locale-sync] failed:', err.message))
@@ -115,8 +123,11 @@ registerCommands(bot, privateMessage, {
 //     never got its turn inside the shutdown window.
 // PM2 must give us that window: ecosystem.config.js sets kill_timeout above
 // SHUTDOWN_TIMEOUT_MS (PM2's default is 1.6s, which would SIGKILL us first).
-const SHUTDOWN_TIMEOUT_MS = 15_000
+// The polling getUpdates long-poll lasts up to 30s, so anything shorter than
+// that logged "shutdown timed out" on nearly every restart.
+const SHUTDOWN_TIMEOUT_MS = 35_000
 let shuttingDown = false
+const isShuttingDown = () => shuttingDown
 
 const gracefulShutdown = async (signal) => {
   if (shuttingDown) return
@@ -153,13 +164,12 @@ process.on('SIGINT', (signal) => { gracefulShutdown(signal || 'SIGINT') })
 // behavior (it exits the process), we just make sure the cause is in
 // the log channel before PM2 restarts us. Without these, all we'd see
 // in PM2 logs is "process exited" with no stack trace.
+// Log only, never exit. Almost every unhandled rejection here is a stray
+// Telegram reply (a stale answerCbQuery, a blocked user) that some handler
+// forgot to .catch — restarting the bot for those cost far more than it saved.
+// Genuinely corrupted state surfaces as an uncaughtException below.
 process.on('unhandledRejection', (reason) => {
   log.error('Unhandled rejection:', reason instanceof Error ? reason.stack : reason)
-  // Re-throw so Node's default termination kicks in — promise state may
-  // be inconsistent, restart is safer than continuing on corrupted state.
-  // Use setImmediate so the error bubbles to uncaughtException with full
-  // context, not swallowed by the rejection handler chain.
-  setImmediate(() => { throw reason })
 })
 
 process.on('uncaughtException', (err, origin) => {

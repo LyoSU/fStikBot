@@ -1,8 +1,5 @@
 const collections = require('./models')
-const {
-  connection,
-  atlasConnection
-} = require('./connection')
+const { connection } = require('./connection')
 
 const db = {
   connection
@@ -10,14 +7,6 @@ const db = {
 
 Object.keys(collections).forEach((collectionName) => {
   db[collectionName] = connection.model(collectionName, collections[collectionName])
-})
-
-const atlasDb = {
-  connection: atlasConnection
-}
-
-Object.keys(collections).forEach((collectionName) => {
-  atlasDb[collectionName] = atlasConnection.model(collectionName, collections[collectionName])
 })
 
 // Truncate string to max length
@@ -57,21 +46,6 @@ db.User.getData = async (tgUser) => {
   return user
 }
 
-db.User.updateData = async (tgUser) => {
-  const user = await db.User.getData(tgUser)
-
-  // Coerce missing/empty Telegram fields to '' once — same reason as
-  // utils/user-update.js: deleted/deactivated accounts can omit
-  // first_name, and we don't want undefined sneaking into the DB.
-  user.first_name = tgUser.first_name || ''
-  user.last_name = tgUser.last_name || ''
-  user.username = tgUser.username
-  user.updatedAt = new Date()
-  await user.save()
-
-  return user
-}
-
 db.StickerSet.newSet = async (stickerSetInfo) => {
   const oldStickerSet = await db.StickerSet.findOneAndDelete({ name: stickerSetInfo.name })
 
@@ -105,16 +79,6 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
       { _id: stickerSetInfo.owner },
       { $inc: { [countField]: 1 } }
     )
-  }
-
-  return stickerSet
-}
-
-db.StickerSet.getSet = async (stickerSetInfo) => {
-  let stickerSet = await db.StickerSet.findOne({ name: stickerSetInfo.name })
-
-  if (!stickerSet) {
-    stickerSet = await db.StickerSet.newSet(stickerSetInfo)
   }
 
   return stickerSet
@@ -166,6 +130,5 @@ db.Sticker.addSticker = async (stickerSet, emojisText = '', info, originalFile =
 }
 
 module.exports = {
-  db,
-  atlasDb
+  db
 }
