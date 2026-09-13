@@ -216,6 +216,31 @@ function targetScopeId (data) {
   return data.chat_id || data.user_id || data.name || null
 }
 
+// Total bytes of top-level uploads ({ source: Buffer }) in a payload. The Bot
+// API server keeps its own flood bucket for multipart uploads over 100 KB,
+// keyed by exact file size — so the size is what tells that 429 apart from a
+// Telegram-side FLOOD_WAIT in the logs.
+function uploadBytes (data) {
+  if (!data || typeof data !== 'object') return 0
+  let total = 0
+  for (const value of Object.values(data)) {
+    if (value && Buffer.isBuffer(value.source)) total += value.source.length
+  }
+  return total
+}
+
+// "addStickerToSet @123 name=foo_by_bot upload=49197B" — enough context in a
+// 429 log line to see WHO hit the limit and with WHAT, not just which method.
+function describeCall (method, data) {
+  const parts = [method]
+  const scopeId = targetScopeId(data)
+  if (scopeId) parts.push(`@${scopeId}`)
+  if (data?.name && data.name !== scopeId) parts.push(`name=${data.name}`)
+  const bytes = uploadBytes(data)
+  if (bytes) parts.push(`upload=${bytes}B`)
+  return parts.join(' ')
+}
+
 // ────────────────────────────────────────────────────────────────
 // Retry
 // ────────────────────────────────────────────────────────────────
@@ -327,9 +352,10 @@ function patchTelegramPrototype () {
       return Promise.reject(buildRateLimitError(method, scopeId))
     }
 
+    const description = describeCall(method, data)
     const retryOptions = inCopyScope
-      ? { method, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS, onWait: copyStore.onWait }
-      : { method }
+      ? { method: description, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS, onWait: copyStore.onWait }
+      : { method: description }
 
     return withRetry(
       () => originalCallApi.call(this, method, data, ...rest),
@@ -411,9 +437,21 @@ function runInCopyScope (fn, options = {}) {
   return copyScope.run({ copy: true, onWait: options.onWait }, fn)
 }
 
+/**
+ * True when called (directly or through awaits) from inside runInCopyScope.
+ * Callers that pre-check the cooldown cache must skip that check here — the
+ * copy deliberately ignores the cache and waits cooldowns out instead.
+ *
+ * @returns {boolean}
+ */
+function isInCopyScope () {
+  return !!copyScope.getStore()
+}
+
 module.exports = {
   withRetry,
   runInCopyScope,
+  isInCopyScope,
   isRateLimitError,
   getRetryAfter,
   retryMiddleware,

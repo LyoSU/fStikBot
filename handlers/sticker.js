@@ -5,10 +5,10 @@ const {
   countUncodeChars,
   substrUnicode,
   addSticker,
-  addStickerText,
-  getRateLimitRemaining
+  addStickerText
 } = require('../utils')
 const stickerInflight = require('../utils/sticker-inflight')
+const { getStickerCooldown } = require('../utils/sticker-cooldown')
 const handleError = require('./catch')
 
 module.exports = async (ctx, next) => {
@@ -140,8 +140,12 @@ module.exports = async (ctx, next) => {
     })
   }
 
+  // Kept past this block: addSticker reuses it as the pack's "before" snapshot
+  // instead of calling getStickerSet a second time for the same sticker.
+  let stickerSetInfo = null
+
   if (!isGroupChat && !stickerSet?.inline) {
-    const stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => null) // STICKERSET_INVALID / deleted pack → caller handles null below
+    stickerSetInfo = await ctx.telegram.getStickerSet(stickerSet.name).catch(() => null) // STICKERSET_INVALID / deleted pack → caller handles null below
 
     if (stickerSetInfo) {
       // if user not premium and not boosed pack and title not have bot username
@@ -294,11 +298,11 @@ module.exports = async (ctx, next) => {
         ])
       })
     } else {
-      // Pre-check: if the user's addStickerToSet is in a 429 cooldown from
-      // a recent attempt on the same pack, bail BEFORE downloading and
+      // Pre-check: if the user's uploadStickerFile / addStickerToSet is in a
+      // 429 cooldown from a recent attempt, bail BEFORE downloading and
       // re-uploading a file that would only trip the same limit again.
       // Saves 1-3s of wasted Telegram bandwidth per attempt.
-      const cooldown = getRateLimitRemaining('addStickerToSet', ctx.from.id)
+      const cooldown = getStickerCooldown(ctx.from.id)
       if (cooldown > 0) {
         return ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: cooldown }), {
           reply_to_message_id: message.message_id,
@@ -332,7 +336,7 @@ module.exports = async (ctx, next) => {
       // cases.
       ;(async () => {
         try {
-          const stickerInfo = await addSticker(ctx, stickerFile, stickerSet)
+          const stickerInfo = await addSticker(ctx, stickerFile, stickerSet, true, { stickerSetInfo })
 
           // Video path: enqueued to convertQueue. The worker's
           // global:completed handler (utils/add-sticker.js) will reply.

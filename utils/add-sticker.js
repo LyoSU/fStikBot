@@ -13,6 +13,10 @@ const escapeHTML = require('./html-escape')
 const { rescaleTgs } = require('./lottie-rescale')
 const { fitStickerSize } = require('./sticker-geometry')
 const { isVideoContainer } = require('./sniff-media')
+const { isInCopyScope, getRetryAfter } = require('./retry-api')
+const { getStickerCooldown, buildCooldownError } = require('./sticker-cooldown')
+const { matchTelegramErrorReason } = require('./telegram-error')
+const log = require('./logger').scope('add-sticker')
 
 // Telegram pins the Lottie canvas per pack type. A TGS taken from a pack of
 // the other type has to be retargeted or Telegram rejects it.
@@ -217,10 +221,99 @@ async function handleConvertFailed (jobId, errorData) {
   await job.remove().catch(() => {})
 }
 
+// A real Telegram 429 (not a cooldown we short-circuited ourselves), logged
+// with the sticker it happened on — so "flood on a specific file" can be told
+// apart from "the next file after a flood" in prod logs.
+const logRateLimit = (method, error, { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }) => {
+  if (error?.code !== 429 || error.__cachedRateLimit) return
+  log.warn(
+    `429 on ${method}: retry_after=${getRetryAfter(error)}s user=${userId} pack=${stickerSet.name} ` +
+    `pack_type=${stickerSet.packType || 'regular'} format=${stickerExtra.sticker_format} ` +
+    `file_unique_id=${stickerFile?.file_unique_id} via=${uploadBytes ? `upload(${uploadBytes}B)` : 'file_id'}`
+  )
+}
+
+// getStickerSet reports "⭐" where emoji_list had "⭐️" (or the reverse).
+const normalizeEmoji = (emoji) => (emoji || '').replace(/️/g, '')
+
 // `beforeStickers` is the set's sticker list as it looked immediately before
 // this add (the caller usually already has it). Passing it lets us identify the
 // sticker WE added instead of assuming it's the last one — with two concurrent
 // adds to the same pack, slice(-1)[0] mapped both DB rows onto the same file.
+const pickAddedSticker = (setInfo, beforeStickers, stickerFile) => {
+  // The set holding our exact document settles it: either we just added it
+  // (file_id path keeps file_unique_id) or it was already there and Telegram
+  // left the set unchanged ("If exactly the same sticker had already been
+  // added to the set, then the set isn't changed"). An upload normally gets a
+  // new file_unique_id, so on that path this simply misses.
+  const exact = setInfo.stickers.find((s) => s.file_unique_id === stickerFile?.file_unique_id)
+  if (exact) return exact
+
+  const beforeIds = new Set(
+    Array.isArray(beforeStickers) ? beforeStickers.map((s) => s.file_unique_id) : []
+  )
+  const added = beforeIds.size > 0
+    ? setInfo.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
+    : []
+
+  // Fall back to "last sticker" when we have no before-snapshot (e.g. the
+  // convert-queue path) or the diff came out empty.
+  return added.length > 0 ? added[added.length - 1] : setInfo.stickers.slice(-1)[0]
+}
+
+// After a 429 on addStickerToSet, check whether the sticker made it into the
+// set anyway. Accepts only an unambiguous match: the same file_unique_id
+// (file_id path), or exactly one new sticker with our emoji and format —
+// with up to three adds in flight per user, "any new sticker" could be a
+// sibling's.
+const findLandedSticker = async (stickerSet, stickerFile, stickerExtra, beforeStickers) => {
+  if (!Array.isArray(beforeStickers) || beforeStickers.length === 0) return null
+
+  const setInfo = await telegram.getStickerSet(stickerSet.name).catch(() => null)
+  if (!setInfo?.stickers) return null
+
+  const beforeIds = new Set(beforeStickers.map((s) => s.file_unique_id))
+  const fresh = setInfo.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
+
+  const exact = fresh.find((s) => s.file_unique_id === stickerFile?.file_unique_id)
+  if (exact) return { setInfo, sticker: exact }
+
+  const format = stickerExtra.sticker_format
+  const emoji = normalizeEmoji(stickerExtra.emojis?.[0])
+  const candidates = fresh.filter((s) =>
+    normalizeEmoji(s.emoji) === emoji &&
+    !!s.is_animated === (format === 'animated') &&
+    !!s.is_video === (format === 'video')
+  )
+
+  return candidates.length === 1 ? { setInfo, sticker: candidates[0] } : null
+}
+
+// Everything after the sticker is confirmed in the set: placeholder cleanup,
+// DB row, success payload.
+const finalizeAdd = async (stickerSet, stickerFile, stickerExtra, setInfo, stickerInfo) => {
+  // A real sticker just landed — safe to drop the bootstrap placeholder now.
+  await removePlaceholderIfPending(telegram, stickerSet, setInfo)
+
+  const sticker = await db.Sticker.addSticker(stickerSet._id, stickerExtra.emojis, stickerInfo, stickerFile)
+
+  const linkPrefix = stickerSet.packType === 'custom_emoji' ? config.emojiLinkPrefix : config.stickerLinkPrefix
+
+  return {
+    ok: {
+      title: stickerSet.title,
+      link: `${linkPrefix}${stickerSet.name}`,
+      stickerInfo,
+      sticker,
+      // A monochrome (needs_repainting) emoji dropped into a regular sticker
+      // pack stays white-on-transparent — nothing repaints it there. Surface
+      // that in the success text so the user isn't puzzled by a "blank"
+      // sticker on a light background.
+      repainting: !!stickerFile?.needs_repainting && stickerSet.packType !== 'custom_emoji'
+    }
+  }
+}
+
 const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, beforeStickers) => {
   let stickerAdd
 
@@ -234,6 +327,8 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
   }
 
   const { sticker } = stickerExtra
+  const uploadBytes = sticker?.source ? sticker.source.length : 0
+  const logContext = { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }
 
   if (sticker?.source) {
     const uploadedSticker = await telegram.callApi('uploadStickerFile', {
@@ -243,6 +338,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
         source: sticker.source
       }
     }).catch((error) => {
+      logRateLimit('uploadStickerFile', error, logContext)
       return {
         error: {
           telegram: error
@@ -278,6 +374,7 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
       }],
       sticker_type: stickerSet.packType === 'custom_emoji' ? 'custom_emoji' : 'regular'
     }).catch((error) => {
+      logRateLimit('createNewStickerSet', error, logContext)
       return {
         error: {
           telegram: error
@@ -309,7 +406,20 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
     })
 
     if (stickerAdd.error) {
-      return stickerAdd
+      const error = stickerAdd.error.telegram
+      if (error?.code !== 429 || error.__cachedRateLimit) return stickerAdd
+
+      logRateLimit('addStickerToSet', error, logContext)
+
+      // A 429 isn't always a refusal: the Bot API server's TDLib retries
+      // FLOOD_WAIT internally, and bulk importers (moe-sticker-bot) report
+      // stickers landing despite the error. Look before telling the user it
+      // failed — otherwise they resend and get a duplicate or a deeper wait.
+      const landed = await findLandedSticker(stickerSet, stickerFile, stickerExtra, beforeStickers)
+      log.warn(`addStickerToSet 429 on pack=${stickerSet.name}: sticker ${landed ? 'landed anyway' : 'not in set'}`)
+
+      if (!landed) return stickerAdd
+      return finalizeAdd(stickerSet, stickerFile, stickerExtra, landed.setInfo, landed.sticker)
     }
   }
 
@@ -333,40 +443,32 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
       }
     }
 
-    // A real sticker just landed — safe to drop the bootstrap placeholder now.
-    await removePlaceholderIfPending(telegram, stickerSet, getStickerSet)
+    const stickerInfo = pickAddedSticker(getStickerSet, beforeStickers, stickerFile)
 
-    const beforeIds = new Set(
-      Array.isArray(beforeStickers) ? beforeStickers.map((s) => s.file_unique_id) : []
-    )
-    const added = beforeIds.size > 0
-      ? getStickerSet.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
-      : []
-    // Fall back to "last sticker" when we have no before-snapshot (e.g. the
-    // convert-queue path) or the diff came out empty.
-    const stickerInfo = added.length > 0
-      ? added[added.length - 1]
-      : getStickerSet.stickers.slice(-1)[0]
-
-    const sticker = await db.Sticker.addSticker(stickerSet._id, stickerExtra.emojis, stickerInfo, stickerFile)
-
-    const linkPrefix = stickerSet.packType === 'custom_emoji' ? config.emojiLinkPrefix : config.stickerLinkPrefix
-
-    return {
-      ok: {
-        title: stickerSet.title,
-        link: `${linkPrefix}${stickerSet.name}`,
-        stickerInfo,
-        sticker,
-        // A monochrome (needs_repainting) emoji dropped into a regular sticker
-        // pack stays white-on-transparent — nothing repaints it there. Surface
-        // that in the success text so the user isn't puzzled by a "blank"
-        // sticker on a light background.
-        repainting: !!stickerFile?.needs_repainting && stickerSet.packType !== 'custom_emoji'
-      }
-    }
+    return finalizeAdd(stickerSet, stickerFile, stickerExtra, getStickerSet, stickerInfo)
   }
 }
+
+// Telegram reasons that mean "this file, sent this way, was refused" — the
+// only failures a fresh upload of the same sticker can get past. Pack, emoji
+// and limit errors would fail the upload path identically. null = a 400 we
+// have no pattern for (e.g. "wrong file identifier").
+const FILE_REJECTION_REASONS = new Set([null, 'invalid_sticker_format', 'sticker_not_in_set'])
+
+const isFileRejection = (result) => {
+  const error = result?.error?.telegram
+  if (!error || error.code !== 400) return false
+  return FILE_REJECTION_REASONS.has(matchTelegramErrorReason(error))
+}
+
+// A sticker taken from a set of the same type: its file_id is already a
+// sticker document with the canvas Telegram expects for this pack, so it can
+// go straight into addStickerToSet.
+const canAddByFileId = (stickerFile, stickerSet) => (
+  !!stickerFile.set_name &&
+  !!stickerFile.file_id &&
+  stickerFile.type === (stickerSet.packType || 'regular')
+)
 
 // Rate limiting for static stickers (userId -> timestamp)
 const lastStickerTime = new Map()
@@ -383,7 +485,9 @@ setInterval(() => {
   }
 }, 1000 * 60 * 5).unref()
 
-module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
+// options.stickerSetInfo — a getStickerSet result the caller already fetched
+// for this pack; reused as the "before" snapshot instead of fetching again.
+module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options = {}) => {
   let stickerFile = inputFile
 
   // If inputFile is already a sticker from a Telegram set, use it directly
@@ -489,13 +593,27 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  const getStickerSetCheck = await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
-    return {
-      error: {
-        telegram: error
+  // Bail before any download/convert work if a sticker call for this user is
+  // already in a 429 cooldown — it would only fail again, and each attempt
+  // re-uploads the file. A pack copy runs in copy scope and waits cooldowns
+  // out instead, so it skips this.
+  if (!isInCopyScope()) {
+    const cooldown = getStickerCooldown(ctx.from.id)
+    if (cooldown > 0) return { error: { telegram: buildCooldownError(cooldown) } }
+  }
+
+  // Reuse the caller's snapshot when it is for this very pack — every
+  // getStickerSet is another server round-trip per sticker.
+  const snapshot = options.stickerSetInfo
+  const getStickerSetCheck = snapshot?.name && snapshot.name.toLowerCase() === stickerSet.name.toLowerCase()
+    ? snapshot
+    : await ctx.telegram.getStickerSet(stickerSet.name).catch((error) => {
+      return {
+        error: {
+          telegram: error
+        }
       }
-    }
-  })
+    })
   if (getStickerSetCheck.error) {
     return getStickerSetCheck
   }
@@ -513,6 +631,25 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true) => {
   }
 
   if (stickerFile.is_animated) {
+    // Same pack type → the TGS canvas already fits, so add it by file_id: no
+    // download, and no uploadStickerFile, which is a messages.uploadMedia on
+    // every attempt under the same per-user flood limit.
+    if (canAddByFileId(stickerFile, stickerSet)) {
+      const byFileId = await uploadSticker(
+        ctx.from.id,
+        stickerSet,
+        stickerFile,
+        { ...stickerExtra, sticker: stickerFile.file_id },
+        getStickerSetCheck.stickers
+      )
+      if (!isFileRejection(byFileId)) return byFileId
+
+      log.info(
+        `file_id add refused for ${stickerFile.file_unique_id} ` +
+        `(${byFileId.error.telegram.description}) — falling back to re-upload`
+      )
+    }
+
     const fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
       return {
         error: {
