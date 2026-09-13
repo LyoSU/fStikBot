@@ -37,7 +37,7 @@ cmd:
 
       Başkalarının paketlerine göz at veya kendi paketlerini yayınla:
     commands:
-      ss: '🌟 Çıkartmayı kaydet'
+      ss: '➕ Grup paketine ekle'
       start: '📜 Menü'
       help: '❓ Yardım'
       packs: '📁 Paketlerim'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Yeni paket'
       catalog: '🔍 Katalog'
       catalog_mini: '🔍 Katalog'
-      catalog_browser: 'Tarayıcıda aç'
+      catalog_browser: '🌐 Tarayıcıda aç'
       catalog_browser_mini: '🌐 Tarayıcıda'
       catalog_app: 'Android için indir'
       catalog_app_mini: '📱 Android uygulaması'
@@ -114,8 +114,8 @@ cmd:
       /ss (bir medyaya yanıt olarak) — grup paketine hızlıca ekle.
 
       <b>Satır içi paketler:</b>
-      Herhangi bir sohbette @bot_adı ile hızlı erişim için ayrı bir paket türü.
-      • Gerçek bir Telegram paketi değil — yalnızca botta saklanır
+      Kişisel koleksiyonun: kaydettiğin çıkartmaları, GIF'leri, fotoğrafları ve videoları herhangi bir sohbette gönder — @bot_adı yaz ve istediğini seç.
+      • Telegram çıkartmalarına hiçbir şey eklenmez — her şey botta saklanır
       • Çıkartma, fotoğraf, GIF ve video içerebilir
       • /packs → "Satır içi" sekmesinden oluştur
       • GIF arama modu da var (Tenor üzerinden)
@@ -138,10 +138,10 @@ cmd:
 
       • Adda "${titleSuffix}" eki olmaz
       • Videolar öncelikli işlenir
-      • 30 saniyeye kadar videolar
-      • Kuyruğa birden fazla çıkartma
+      • 35 saniyeye kadar videolar
+      • Aynı anda birden fazla çıkartma
 
-      <b>Uyarlanabilir emoji</b> — /new içinde ayrı bir düğme (rengi metne uyum sağlar)
+      <b>🎨 Uyarlanabilir emoji</b> — /new içinde ayrı bir paket türü: emojilerin rengi metne uyum sağlar
 
       Almak için → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Izgara boyutunu gir (örn. 3x4):
     custom_invalid: |
-      Geçersiz format. Örnek: 3x4. Satır 1-10, sütun 1-10, toplam en fazla 50.
+      Hatalı format. Örnek: 3x4. Satır 1-10, sütun 1-10, toplam en fazla 50.
     no_space: |
       Pakette yeterli yer yok. Boş yer: ${freeSlots}, gereken: ${total}.
       Daha küçük bir ızgara seç veya /new ile yeni bir paket oluştur.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Bağış yap'
   topup: |
     <b>Satın almak istediğin Kredi miktarını gir:</b>
-  invalid_amount: |
-    <b>Geçersiz miktar</b>
-
-    Minimum miktar 1 Kredi
-  paymenu: |
-    <b>${price}$</b> karşılığında <b>${amount} Kredi</b> satın almak istiyorsun
-
-    ⚠️ Krediler yönetici tarafından elle yüklenir.
-    Bekleme süresi 5 dakika ile 1 saat arasındadır
-
-    <u>Ödeme yöntemini seç:</u>
   description: |
     Kredi satın alarak botun gelişimine destek olur ve ek özellikleri kullanma imkânı elde edersin
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Takviye</a></b>: ${boostStatus}
       status:
-        on: Etkin
-        off: Etkin değil
+        on: etkin
+        off: etkin değil
     hidden: <a href="${link}">${title}</a> paketi listenden gizlendi.
     restored: <a href="${link}">${title}</a> paketi listene geri yüklendi.
     btn:
@@ -373,7 +362,7 @@ callback:
       delete: '🗑 Paketi sil'
       restore: '✅ Geri yükle'
       use_pack: '📦 Paketi kullan'
-      boost: '⚡ Takviye et'
+      boost: '⚡ Takviye'
       frame: '🖼 Çerçeve'
       rename: '✏️ Yeniden adlandır'
       search_gif: '🔎 GIF ara'
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
       invalid_animated: |
-        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
+        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot bunlardan video çıkartma yapar.
       invalid_video: |
-        Video dosyası doğru WEBM formatında değil.
+        Video dosyasının formatı hatalı (WEBM gerekli).
       restore: |
         Paket geri yüklenemedi.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
       invalid_animated: |
-        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
+        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot bunlardan video çıkartma yapar.
       invalid_video: |
-        Video dosyası doğru WEBM formatında değil.
+        Video dosyasının formatı hatalı (WEBM gerekli).
   group_settings:
     success: |
       Grup ayarları güncellendi.
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ <u>${title}</u> paketine eklendi
     ok_repainting_notice: |
-      ⚠️ Bu tek renkli bir emoji: normal bir çıkartma paketinde beyaz kalır ve açık arka planda neredeyse görünmez.
+      ⚠️ Bu tek renkli bir emoji: normal bir pakette beyaz kalır ve açık arka planda neredeyse görünmez.
+      Metin rengine uyum sağlaması için /new ile ayrı bir "🎨 Uyarlanabilir emoji" paketi oluştur.
     send_emoji: Bu çıkartma için emoji gönder
     converting_process: |
       ⏳ Dönüştürülüyor: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
       invalid_animated: |
-        Animasyonlu çıkartma dosyası doğru TGS formatında değil.
+        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot bunlardan video çıkartma yapar.
       animated_too_big: |
         Paket boyutuna uyarlandıktan sonra bu animasyonlu çıkartma Telegram'ın 64 KB sınırını aşıyor — aktarılamaz.
       invalid_video: |
-        Video dosyası doğru WEBM formatında değil.
+        Video dosyasının formatı hatalı (WEBM gerekli).
       file_type:
-        static: |
-          Bu dosya türü desteklenmiyor
-          Bu fotoğrafı veya statik çıkartmayı statik bir çıkartma paketine ekleyebilirsin
-
-          <i>Başka bir paket oluştur (/new) veya seç (/packs)</i>
-        video: |
-          Bu dosya türü desteklenmiyor
-          Bu video dosyasını bir video paketine ekleyebilirsin
-
-          <i>Başka bir paket oluştur (/new) veya seç (/packs)</i>
-        animated: |
-          Bu dosya türü desteklenmiyor
-          Bu animasyonlu dosyaları vektörel bir çıkartma paketine ekleyebilirsin
-
-          <i>Başka bir paket oluştur (/new) veya seç (/packs)</i>
         unknown: |
           Bu dosya türü desteklenmiyor
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Çıkartma silme</b>
 
-      Paketten silmek istediğin çıkartmayı gönder.
+      Silmek istediğin çıkartmayı gönder. Paket seçmene gerek yok — hangi pakette olduğunu kendim bulurum.
     confirm: |
       Bu çıkartma paketten silinsin mi?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Tüm diller
       button_confirm_language: Onayla
       set_safe: |
-        <b>Paketin kullanıcılar için güvenli mi?</b>
-        <i>Yani erotik veya başka rahatsız edici içerik barındırmıyor</i>
+        <b>Paketin herkes için güvenli mi?</b>
+        <i>Yani erotik, şiddet veya başka 18+ içerik barındırmıyor</i>
       button_safe:
-        safe: Evet, güvenli
-        not_safe: Hayır, güvenli değil
+        safe: '✅ Evet, 18+ yok'
+        not_safe: '🔞 Hayır, 18+ içerik var'
       no_tags: belirtilmedi
       confirm: |
         <b>"<a href="${link}">${title}</a>" paketinin yayınlanmasını onayla</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> kalıcı olarak silinsin mi?
 
-      Onaylamak için <code>${confirm}</code> gönder.
+      Onaylamak için <code>${confirm}</code> gönder ya da "İptal"e dokun.
     confirm: Evet, sil
     success: |
       🗑 Paket silindi
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Bu paket adresi zaten alınmış. Başka bir ad seç.
     pack_name_invalid: |
-      Paket adresinin formatı geçersiz. Yalnızca Latin harfleri, rakamlar ve alt çizgi kullanılabilir.
+      Paket adresinin formatı geçersiz. Yalnızca Latin harfleri, rakamlar ve alt çizgi (_) kullanılabilir.
     invalid_sticker_format: |
       Dosya çıkartma olarak kullanılamıyor: format veya boyut hatalı.
     invalid_emoji: |

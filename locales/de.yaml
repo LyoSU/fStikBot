@@ -22,7 +22,7 @@ cmd:
       Hallo, ${name}!
       Ich erstelle Sticker und Emojis aus Fotos, Videos und GIFs.
 
-      💬 @StickLyUA
+      💬 @fStikCommunity
     group: |
       Hallo, ${groupTitle}! Ich erstelle Sticker und Emojis.
 
@@ -37,7 +37,7 @@ cmd:
 
       Stöbere in den Sets anderer oder veröffentliche deine eigenen:
     commands:
-      ss: '🌟 Sticker speichern'
+      ss: '➕ Zum Gruppen-Set hinzufügen'
       start: '📜 Menü'
       help: '❓ Hilfe'
       packs: '📁 Meine Sets'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Neues Set'
       catalog: '🔍 Katalog'
       catalog_mini: '🔍 Katalog'
-      catalog_browser: 'Im Browser öffnen'
+      catalog_browser: '🌐 Im Browser öffnen'
       catalog_browser_mini: '🌐 Im Browser'
       catalog_app: 'Für Android herunterladen'
       catalog_app_mini: '📱 Android-App'
@@ -114,8 +114,8 @@ cmd:
       /ss (als Antwort auf ein Medium) — schnell zum Gruppen-Set hinzufügen.
 
       <b>Inline-Sets:</b>
-      Ein eigener Set-Typ für den schnellen Zugriff über @Botname in jedem Chat.
-      • Kein echtes Telegram-Set — wird nur im Bot gespeichert
+      Deine persönliche Sammlung: Sende gespeicherte Sticker, GIFs, Fotos und Videos in jedem Chat — schreib @Botname und wähle das Passende aus.
+      • Zu deinen Telegram-Stickern wird nichts hinzugefügt — alles wird im Bot gespeichert
       • Kann Sticker, Fotos, GIFs und Videos enthalten
       • Erstellen unter /packs → Tab „Inline“
       • Mit GIF-Suchmodus (über Tenor)
@@ -138,10 +138,10 @@ cmd:
 
       • Ohne "${titleSuffix}" im Namen
       • Videos werden bevorzugt verarbeitet
-      • Videos bis zu 30 Sek.
-      • Mehrere Sticker in der Warteschlange
+      • Videos bis zu 35 Sek.
+      • Mehrere Sticker gleichzeitig
 
-      <b>Adaptive Emojis</b> — eigener Button in /new (passen ihre Farbe an den Text an)
+      <b>🎨 Adaptive Emojis</b> — eigener Set-Typ in /new: Die Emojis passen ihre Farbe an den Text an
 
       Holen → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Gib die Rastergröße ein (z. B. 3x4):
     custom_invalid: |
-      Ungültiges Format. Beispiel: 3x4. Zeilen 1–10, Spalten 1–10, insgesamt höchstens 50.
+      Falsches Format. Beispiel: 3x4. Zeilen 1–10, Spalten 1–10, insgesamt höchstens 50.
     no_space: |
       Nicht genug Platz im Set. Frei: ${freeSlots} Plätze, benötigt: ${total}.
       Wähle ein kleineres Raster oder erstelle ein neues Set über /new.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Spenden'
   topup: |
     <b>Gib die Anzahl der Credits ein, die du kaufen möchtest:</b>
-  invalid_amount: |
-    <b>Ungültige Anzahl</b>
-
-    Die Mindestanzahl ist 1 Credit
-  paymenu: |
-    Du möchtest <b>${amount} Credits</b> für <b>${price}$</b> kaufen
-
-    ⚠️ Credits werden manuell vom Administrator vergeben.
-    Die Wartezeit beträgt 5 Minuten bis 1 Stunde
-
-    <u>Wähle eine Zahlungsmethode:</u>
   description: |
     Mit dem Kauf von Credits unterstützt du die Entwicklung des Bots und kannst zusätzliche Funktionen nutzen
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Aktiv
-        off: Inaktiv
+        on: aktiv
+        off: inaktiv
     hidden: Set <a href="${link}">${title}</a> wurde aus deiner Liste ausgeblendet.
     restored: Set <a href="${link}">${title}</a> wurde in deiner Liste wiederhergestellt.
     btn:
@@ -373,7 +362,7 @@ callback:
       delete: '🗑 Set löschen'
       restore: '✅ Wiederherstellen'
       use_pack: '📦 Set verwenden'
-      boost: '⚡ Boosten'
+      boost: '⚡ Boost'
       frame: '🖼 Rahmen'
       rename: '✏️ Umbenennen'
       search_gif: '🔎 GIF-Suche'
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Die Abmessungen des Stickers sind ungültig. Sticker müssen 512x512 Pixel groß sein.
       invalid_animated: |
-        Die Datei des animierten Stickers hat nicht das richtige TGS-Format.
+        Animierte Sticker akzeptiert Telegram nur im TGS-Format. Sende GIFs oder MP4s als Video — der Bot macht daraus einen Videosticker.
       invalid_video: |
-        Die Videodatei hat nicht das richtige WEBM-Format.
+        Die Videodatei hat das falsche Format (WEBM erforderlich).
       restore: |
         Set kann nicht wiederhergestellt werden.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Die Abmessungen des Stickers sind ungültig. Sticker müssen 512x512 Pixel groß sein.
       invalid_animated: |
-        Die Datei des animierten Stickers hat nicht das richtige TGS-Format.
+        Animierte Sticker akzeptiert Telegram nur im TGS-Format. Sende GIFs oder MP4s als Video — der Bot macht daraus einen Videosticker.
       invalid_video: |
-        Die Videodatei hat nicht das richtige WEBM-Format.
+        Die Videodatei hat das falsche Format (WEBM erforderlich).
   group_settings:
     success: |
       Gruppeneinstellungen erfolgreich aktualisiert.
@@ -444,6 +433,7 @@ sticker:
       ✅ Zu <u>${title}</u> hinzugefügt
     ok_repainting_notice: |
       ⚠️ Das ist ein einfarbiges Emoji: In einem normalen Set bleibt es weiß und ist auf hellem Hintergrund kaum zu sehen.
+      Damit es sich an die Textfarbe anpasst, erstelle über /new ein eigenes Set „🎨 Adaptive Emojis“.
     send_emoji: Sende ein Emoji für diesen Sticker
     converting_process: |
       ⏳ Konvertierung: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Die Abmessungen des Stickers sind ungültig. Sticker müssen 512x512 Pixel groß sein.
       invalid_animated: |
-        Die Datei des animierten Stickers hat nicht das richtige TGS-Format.
+        Animierte Sticker akzeptiert Telegram nur im TGS-Format. Sende GIFs oder MP4s als Video — der Bot macht daraus einen Videosticker.
       animated_too_big: |
         Nach der Anpassung an das Set-Format überschreitet dieser animierte Sticker das Telegram-Limit von 64 KB und kann nicht übertragen werden.
       invalid_video: |
-        Die Videodatei hat nicht das richtige WEBM-Format.
+        Die Videodatei hat das falsche Format (WEBM erforderlich).
       file_type:
-        static: |
-          Dieser Dateityp wird nicht unterstützt
-          Du kannst dieses Foto oder diesen statischen Sticker zu einem statischen Sticker-Set hinzufügen
-
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
-        video: |
-          Dieser Dateityp wird nicht unterstützt
-          Du kannst diese Videodatei zu einem Video-Set hinzufügen
-
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
-        animated: |
-          Dieser Dateityp wird nicht unterstützt
-          Du kannst diese animierten Dateien zu einem animierten Sticker-Set hinzufügen
-
-          <i>Erstelle (/new) oder wähle (/packs) ein anderes Sticker-Set</i>
         unknown: |
           Dieser Dateityp wird nicht unterstützt
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Sticker löschen</b>
 
-      Sende den Sticker, den du aus dem Set löschen möchtest.
+      Sende den Sticker, den du löschen möchtest. Ein Set musst du nicht auswählen — ich finde selbst heraus, wo er liegt.
     confirm: |
       Diesen Sticker aus dem Set löschen?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Alle Sprachen
       button_confirm_language: Bestätigen
       set_safe: |
-        <b>Ist dein Set für alle Nutzer unbedenklich?</b>
-        <i>Also ohne Erotik und andere schockierende Inhalte</i>
+        <b>Ist dein Set für alle unbedenklich?</b>
+        <i>Also ohne Erotik, Gewalt oder andere Inhalte ab 18</i>
       button_safe:
-        safe: Ja, unbedenklich
-        not_safe: Nein, nicht unbedenklich
+        safe: '✅ Ja, ohne 18+'
+        not_safe: '🔞 Nein, mit 18+-Inhalten'
       no_tags: nicht angegeben
       confirm: |
         <b>Veröffentlichung des Sticker-Sets „<a href="${link}">${title}</a>“ bestätigen</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> endgültig löschen?
 
-      Sende <code>${confirm}</code> zur Bestätigung.
+      Sende <code>${confirm}</code> zur Bestätigung oder tippe auf „Abbrechen“.
     confirm: Ja, löschen
     success: |
       🗑 Set gelöscht
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Diese Set-Adresse ist bereits vergeben. Wähle einen anderen Namen.
     pack_name_invalid: |
-      Die Set-Adresse hat ein ungültiges Format. Erlaubt sind lateinische Buchstaben, Ziffern und Unterstriche.
+      Die Set-Adresse hat ein ungültiges Format. Erlaubt sind lateinische Buchstaben, Ziffern und der Unterstrich (_).
     invalid_sticker_format: |
       Die Datei eignet sich nicht als Sticker: falsches Format oder falsche Größe.
     invalid_emoji: |

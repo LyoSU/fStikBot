@@ -37,7 +37,7 @@ cmd:
 
       Parcours les packs des autres ou publie les tiens :
     commands:
-      ss: '🌟 Enregistrer le sticker'
+      ss: '➕ Ajouter au pack du groupe'
       start: '📜 Menu'
       help: '❓ Aide'
       packs: '📁 Mes packs'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Nouveau pack'
       catalog: '🔍 Catalogue'
       catalog_mini: '🔍 Catalogue'
-      catalog_browser: 'Ouvrir dans le navigateur'
+      catalog_browser: '🌐 Ouvrir dans le navigateur'
       catalog_browser_mini: '🌐 Dans le navigateur'
       catalog_app: 'Télécharger pour Android'
       catalog_app_mini: '📱 Application Android'
@@ -114,8 +114,8 @@ cmd:
       /ss (en réponse à un média) — ajout rapide au pack du groupe.
 
       <b>Packs inline :</b>
-      Un type de pack à part, accessible rapidement via @nom_du_bot dans n'importe quel chat.
-      • Ce n'est pas un vrai pack Telegram — il est stocké uniquement dans le bot
+      Ta collection perso : envoie tes stickers, GIF, photos et vidéos enregistrés dans n'importe quel chat — écris @nom_du_bot et choisis ce qu'il te faut.
+      • Rien n'est ajouté à tes stickers Telegram — tout est stocké dans le bot
       • Peut contenir des stickers, photos, GIF et vidéos
       • À créer dans /packs → onglet « Inline »
       • Propose aussi un mode de recherche de GIF (via Tenor)
@@ -138,10 +138,10 @@ cmd:
 
       • Sans « ${titleSuffix} » dans le titre
       • Traitement prioritaire des vidéos
-      • Vidéos jusqu'à 30 s
-      • Plusieurs stickers dans la file d'attente
+      • Vidéos jusqu'à 35 s
+      • Plusieurs stickers à la fois
 
-      <b>Émojis adaptatifs</b> — bouton à part dans /new (ils prennent la couleur du texte)
+      <b>🎨 Émojis adaptatifs</b> — un type de pack à part dans /new : les émojis prennent la couleur du texte
 
       Obtenir → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Saisis la taille de la grille (ex. 3x4) :
     custom_invalid: |
-      Format invalide. Exemple : 3x4. Lignes de 1 à 10, colonnes de 1 à 10, 50 au total maximum.
+      Format incorrect. Exemple : 3x4. Lignes de 1 à 10, colonnes de 1 à 10, 50 au total maximum.
     no_space: |
       Pas assez de place dans le pack : ${freeSlots} emplacements libres, ${total} nécessaires.
       Choisis une grille plus petite ou crée un nouveau pack avec /new.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Faire un don'
   topup: |
     <b>Saisis le nombre de crédits que tu veux acheter :</b>
-  invalid_amount: |
-    <b>Montant invalide</b>
-
-    Le minimum est de 1 crédit
-  paymenu: |
-    Tu veux acheter <b>${amount} crédits</b> pour <b>${price}$</b>
-
-    ⚠️ Les crédits sont attribués manuellement par l'administrateur.
-    Délai d'attente : de 5 minutes à 1 heure
-
-    <u>Choisis le mode de paiement :</u>
   description: |
     En achetant des crédits, tu soutiens le développement du bot et tu débloques des fonctionnalités supplémentaires
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b> : ${boostStatus}
       status:
-        on: Actif
-        off: Inactif
+        on: actif
+        off: inactif
     hidden: Le pack <a href="${link}">${title}</a> a été masqué de ta liste.
     restored: Le pack <a href="${link}">${title}</a> a été restauré dans ta liste.
     btn:
@@ -373,7 +362,7 @@ callback:
       delete: '🗑 Supprimer le pack'
       restore: '✅ Restaurer'
       use_pack: '📦 Utiliser le pack'
-      boost: '⚡ Booster'
+      boost: '⚡ Boost'
       frame: '🖼 Cadre'
       rename: '✏️ Renommer'
       search_gif: '🔎 Rechercher un GIF'
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Les dimensions du sticker sont incorrectes. Les stickers doivent faire 512x512 pixels.
       invalid_animated: |
-        Le fichier du sticker animé n'est pas au bon format TGS.
+        Telegram n'accepte les stickers animés qu'au format TGS. Envoie les GIF ou MP4 en tant que vidéo : le bot en fera un sticker vidéo.
       invalid_video: |
-        Le fichier vidéo n'est pas au bon format WEBM.
+        Le fichier vidéo n'est pas au bon format (WEBM requis).
       restore: |
         Impossible de restaurer le pack.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Les dimensions du sticker sont incorrectes. Les stickers doivent faire 512x512 pixels.
       invalid_animated: |
-        Le fichier du sticker animé n'est pas au bon format TGS.
+        Telegram n'accepte les stickers animés qu'au format TGS. Envoie les GIF ou MP4 en tant que vidéo : le bot en fera un sticker vidéo.
       invalid_video: |
-        Le fichier vidéo n'est pas au bon format WEBM.
+        Le fichier vidéo n'est pas au bon format (WEBM requis).
   group_settings:
     success: |
       Paramètres du groupe mis à jour avec succès.
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ Ajouté à <u>${title}</u>
     ok_repainting_notice: |
-      ⚠️ C'est un émoji monochrome : dans un pack de stickers classique, il reste blanc et se voit à peine sur un fond clair.
+      ⚠️ C'est un émoji monochrome : dans un pack classique, il reste blanc et se voit à peine sur un fond clair.
+      Pour qu'il prenne la couleur du texte, crée un pack à part « 🎨 Émojis adaptatifs » via /new.
     send_emoji: Envoie un émoji pour ce sticker
     converting_process: |
       ⏳ Conversion : ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Les dimensions du sticker sont incorrectes. Les stickers doivent faire 512x512 pixels.
       invalid_animated: |
-        Le fichier du sticker animé n'est pas au bon format TGS.
+        Telegram n'accepte les stickers animés qu'au format TGS. Envoie les GIF ou MP4 en tant que vidéo : le bot en fera un sticker vidéo.
       animated_too_big: |
         Une fois adapté au format du pack, ce sticker animé dépasse la limite de 64 Ko de Telegram — impossible de le transférer.
       invalid_video: |
-        Le fichier vidéo n'est pas au bon format WEBM.
+        Le fichier vidéo n'est pas au bon format (WEBM requis).
       file_type:
-        static: |
-          Ce type de fichier n'est pas pris en charge
-          Tu peux ajouter cette photo ou ce sticker statique à un pack de stickers statiques
-
-          <i>Crée (/new) ou choisis (/packs) un autre pack de stickers</i>
-        video: |
-          Ce type de fichier n'est pas pris en charge
-          Tu peux ajouter ce fichier vidéo à un pack de stickers vidéo
-
-          <i>Crée (/new) ou choisis (/packs) un autre pack de stickers</i>
-        animated: |
-          Ce type de fichier n'est pas pris en charge
-          Tu peux ajouter ces fichiers animés à un pack de stickers animés
-
-          <i>Crée (/new) ou choisis (/packs) un autre pack de stickers</i>
         unknown: |
           Ce type de fichier n'est pas pris en charge
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Suppression d'un sticker</b>
 
-      Envoie le sticker que tu veux supprimer du pack.
+      Envoie le sticker que tu veux supprimer. Pas besoin de choisir le pack : je trouve moi-même où il se trouve.
     confirm: |
       Supprimer ce sticker du pack ?
     error:
@@ -745,10 +720,10 @@ scenes:
       button_confirm_language: Confirmer
       set_safe: |
         <b>Ton pack est-il tout public ?</b>
-        <i>C'est-à-dire sans contenu érotique ni autre contenu choquant</i>
+        <i>C'est-à-dire sans érotisme, violence ni autre contenu 18+</i>
       button_safe:
-        safe: Oui, tout public
-        not_safe: Non, sensible
+        safe: '✅ Oui, sans 18+'
+        not_safe: '🔞 Non, contenu 18+'
       no_tags: non renseignés
       confirm: |
         <b>Confirmer la publication du pack « <a href="${link}">${title}</a> »</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ Supprimer <a href="${link}">${title}</a> définitivement ?
 
-      Envoie <code>${confirm}</code> pour confirmer.
+      Envoie <code>${confirm}</code> pour confirmer ou appuie sur « Annuler ».
     confirm: Oui, supprimer
     success: |
       🗑 Pack supprimé
@@ -842,7 +817,7 @@ scenes:
 
       <i>Boost = priorité → /donate</i>
     file_too_big: |
-      Fichier trop volumineux (20 Mo max). Envoie une vidéo plus légère.
+      Fichier trop volumineux (20 Mo max). Envoie une vidéo plus petite.
   search:
     error:
       not_found: |
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Cette adresse de pack est déjà prise. Choisis-en une autre.
     pack_name_invalid: |
-      Le format de l'adresse du pack est invalide. Seuls les lettres latines, les chiffres et les tirets bas sont autorisés.
+      Le format de l'adresse du pack est invalide. Seuls les lettres latines, les chiffres et le tiret bas (_) sont autorisés.
     invalid_sticker_format: |
       Ce fichier ne peut pas servir de sticker : format ou dimensions incorrects.
     invalid_emoji: |

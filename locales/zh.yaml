@@ -37,7 +37,7 @@ cmd:
 
       浏览其他人的贴纸包，或发布你自己的：
     commands:
-      ss: '🌟 保存贴纸'
+      ss: '➕ 添加到群组贴纸包'
       start: '📜 菜单'
       help: '❓ 帮助'
       packs: '📁 我的贴纸包'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ 新建贴纸包'
       catalog: '🔍 目录'
       catalog_mini: '🔍 目录'
-      catalog_browser: '在浏览器中打开'
+      catalog_browser: '🌐 在浏览器中打开'
       catalog_browser_mini: '🌐 浏览器'
       catalog_app: '下载 Android 应用'
       catalog_app_mini: '📱 Android 应用'
@@ -114,8 +114,8 @@ cmd:
       /ss（回复媒体消息）— 快速添加到群组贴纸包。
 
       <b>内联贴纸包：</b>
-      一种独立的贴纸包类型，可在任意聊天中通过 @机器人用户名 快速调用。
-      • 并非真正的 Telegram 贴纸包，只保存在机器人中
+      你的个人收藏：在任意聊天中输入 @机器人用户名 并选择所需内容，即可发送已保存的贴纸、GIF、照片和视频。
+      • 不会向 Telegram 贴纸中添加任何内容——所有内容都保存在机器人中
       • 可以包含贴纸、照片、GIF 和视频
       • 在 /packs →“内联”标签页中创建
       • 还支持 GIF 搜索模式（基于 Tenor）
@@ -138,10 +138,10 @@ cmd:
 
       • 名称中不带“${titleSuffix}”
       • 视频优先处理
-      • 视频最长 30 秒
-      • 可将多个贴纸加入队列
+      • 视频最长 35 秒
+      • 可同时处理多个贴纸
 
-      <b>自适应表情</b> — /new 中的独立按钮（颜色会随文字变化）
+      <b>🎨 自适应表情</b> — /new 中的独立贴纸包类型：表情颜色会随文字颜色变化
 
       获取 → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       输入网格尺寸（例如 3x4）：
     custom_invalid: |
-      格式无效。示例：3x4。行数 1-10，列数 1-10，总数不超过 50。
+      格式不正确。示例：3x4。行数 1-10，列数 1-10，总数不超过 50。
     no_space: |
       贴纸包空间不足。剩余 ${freeSlots} 个位置，需要 ${total} 个。
       请选择更小的网格，或通过 /new 创建新贴纸包。
@@ -295,17 +295,6 @@ donate:
     donate: '☕ 捐赠'
   topup: |
     <b>请输入你想购买的积分数量：</b>
-  invalid_amount: |
-    <b>数量无效</b>
-
-    最少购买 1 积分
-  paymenu: |
-    你要以 <b>${price}$</b> 购买 <b>${amount} 积分</b>
-
-    ⚠️ 积分由管理员手动发放。
-    等待时间为 5 分钟到 1 小时
-
-    <u>选择支付方式：</u>
   description: |
     购买积分即可支持机器人的开发，并解锁更多功能
   update: |
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         贴纸尺寸无效。贴纸必须为 512x512 像素。
       invalid_animated: |
-        动态贴纸文件不是正确的 TGS 格式。
+        Telegram 仅接受 TGS 格式的动态贴纸。GIF 或 MP4 请以视频形式发送——机器人会将其制作成视频贴纸。
       invalid_video: |
-        视频文件不是正确的 WEBM 格式。
+        视频文件格式不正确（需要 WEBM 格式）。
       restore: |
         无法恢复该贴纸包。
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         贴纸尺寸无效。贴纸必须为 512x512 像素。
       invalid_animated: |
-        动态贴纸文件不是正确的 TGS 格式。
+        Telegram 仅接受 TGS 格式的动态贴纸。GIF 或 MP4 请以视频形式发送——机器人会将其制作成视频贴纸。
       invalid_video: |
-        视频文件不是正确的 WEBM 格式。
+        视频文件格式不正确（需要 WEBM 格式）。
   group_settings:
     success: |
       群组设置已更新。
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ 已添加到 <u>${title}</u>
     ok_repainting_notice: |
-      ⚠️ 这是单色表情：在普通贴纸包中它会显示为白色，在浅色背景上几乎看不见。
+      ⚠️ 这是单色表情：在普通贴纸包中它会保持白色，在浅色背景上几乎看不见。
+      如需让它随文字颜色变化，请通过 /new 另建一个“🎨 自适应表情”贴纸包。
     send_emoji: 请为这个贴纸发送表情
     converting_process: |
       ⏳ 正在转换：${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         贴纸尺寸无效。贴纸必须为 512x512 像素。
       invalid_animated: |
-        动态贴纸文件不是正确的 TGS 格式。
+        Telegram 仅接受 TGS 格式的动态贴纸。GIF 或 MP4 请以视频形式发送——机器人会将其制作成视频贴纸。
       animated_too_big: |
         调整为贴纸包尺寸后，该动态贴纸超出了 Telegram 64 KB 的限制，无法转移。
       invalid_video: |
-        视频文件不是正确的 WEBM 格式。
+        视频文件格式不正确（需要 WEBM 格式）。
       file_type:
-        static: |
-          不支持此文件类型
-          你可以将这张照片或静态贴纸添加到静态贴纸包
-
-          <i>创建（/new）或选择（/packs）其他贴纸包</i>
-        video: |
-          不支持此文件类型
-          你可以将此视频文件添加到视频贴纸包
-
-          <i>创建（/new）或选择（/packs）其他贴纸包</i>
-        animated: |
-          不支持此文件类型
-          你可以将这些动态文件添加到矢量贴纸包
-
-          <i>创建（/new）或选择（/packs）其他贴纸包</i>
         unknown: |
           不支持此文件类型
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 删除贴纸</b>
 
-      发送你想从贴纸包中删除的贴纸。
+      发送你想删除的贴纸。无需选择贴纸包——我会自动找到它所在的位置。
     confirm: |
       要从贴纸包中删除这个贴纸吗？
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: 任何语言
       button_confirm_language: 确认
       set_safe: |
-        <b>你的贴纸包对用户安全吗？</b>
-        <i>即不含色情或其他令人不适的内容</i>
+        <b>你的贴纸包对所有人都安全吗？</b>
+        <i>即不含色情、暴力或其他 18+ 内容</i>
       button_safe:
-        safe: 是，内容安全
-        not_safe: 否，内容不安全
+        safe: '✅ 是，无 18+ 内容'
+        not_safe: '🔞 否，含 18+ 内容'
       no_tags: 未指定
       confirm: |
         <b>确认发布贴纸包“<a href="${link}">${title}</a>”</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ 要永久删除 <a href="${link}">${title}</a> 吗？
 
-      发送 <code>${confirm}</code> 以确认。
+      发送 <code>${confirm}</code> 以确认，或点击“取消”。
     confirm: 是的，删除
     success: |
       🗑 贴纸包已删除
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       该贴纸包地址已被占用，请换一个名称。
     pack_name_invalid: |
-      贴纸包地址格式无效。只能使用英文字母、数字和下划线。
+      贴纸包地址格式无效。只能使用英文字母、数字和下划线（_）。
     invalid_sticker_format: |
       该文件无法用作贴纸：格式或尺寸不正确。
     invalid_emoji: |

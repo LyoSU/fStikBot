@@ -37,7 +37,7 @@ cmd:
 
       Browse other users' packs or publish your own:
     commands:
-      ss: '🌟 Save sticker'
+      ss: '➕ Add to group pack'
       start: '📜 Menu'
       help: '❓ Help'
       packs: '📁 My packs'
@@ -114,8 +114,8 @@ cmd:
       /ss (in reply to media) — quick add to the group pack.
 
       <b>Inline packs:</b>
-      A separate pack type for quick access via @botname in any chat.
-      • Not a real Telegram pack — stored only in the bot
+      Your personal collection: send saved stickers, GIFs, photos and videos in any chat — type @botname and pick what you need.
+      • Nothing is added to your Telegram stickers — everything is stored in the bot
       • Can contain stickers, photos, GIFs, videos
       • Create one in /packs → "Inline" tab
       • Also has a GIF search mode (via Tenor)
@@ -138,10 +138,10 @@ cmd:
 
       • No "${titleSuffix}" in the title
       • Priority video processing
-      • Videos up to 30 sec
-      • Multiple stickers in the queue
+      • Videos up to 35 sec
+      • Multiple stickers at once
 
-      <b>Adaptive emoji</b> — a separate button in /new (they change color to match the text)
+      <b>🎨 Adaptive emoji</b> — a separate pack type in /new: the emoji change color to match the text
 
       Get it → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Enter grid size (e.g. 3x4):
     custom_invalid: |
-      Invalid format. Example: 3x4. Rows 1-10, columns 1-10, up to 50 total.
+      Incorrect format. Example: 3x4. Rows 1-10, columns 1-10, up to 50 total.
     no_space: |
       Not enough space in the pack. ${freeSlots} slots free, ${total} needed.
       Choose a smaller grid or create a new pack with /new.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Donate'
   topup: |
     <b>Enter the number of Credits you want to buy:</b>
-  invalid_amount: |
-    <b>Invalid amount</b>
-
-    The minimum is 1 Credit
-  paymenu: |
-    You want to buy <b>${amount} Credits</b> for <b>${price}$</b>
-
-    ⚠️ Credits are issued manually by the administrator.
-    Waiting time: from 5 minutes to 1 hour
-
-    <u>Choose a payment method:</u>
   description: |
     By buying Credits, you support the bot's development and unlock additional features
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Active
-        off: Inactive
+        on: 'active'
+        off: 'inactive'
     hidden: Pack <a href="${link}">${title}</a> hidden from your list.
     restored: Pack <a href="${link}">${title}</a> restored to your list.
     btn:
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Invalid sticker dimensions. Stickers must be 512x512 pixels.
       invalid_animated: |
-        The animated sticker file is not in the correct TGS format.
+        Telegram accepts animated stickers only in TGS format. Send GIFs or MP4s as videos — the bot will turn them into a video sticker.
       invalid_video: |
-        The video file is not in the correct WEBM format.
+        The video file has the wrong format (WEBM required).
       restore: |
         Can't restore the pack.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Invalid sticker dimensions. Stickers must be 512x512 pixels.
       invalid_animated: |
-        The animated sticker file is not in the correct TGS format.
+        Telegram accepts animated stickers only in TGS format. Send GIFs or MP4s as videos — the bot will turn them into a video sticker.
       invalid_video: |
-        The video file is not in the correct WEBM format.
+        The video file has the wrong format (WEBM required).
   group_settings:
     success: |
       Group settings updated.
@@ -444,6 +433,7 @@ sticker:
       ✅ Added to <u>${title}</u>
     ok_repainting_notice: |
       ⚠️ This is a monochrome emoji: in a regular pack it stays white and is barely visible on a light background.
+      To make it adapt to the text color, create a separate "🎨 Adaptive emoji" pack via /new.
     send_emoji: Send an emoji for this sticker
     converting_process: |
       ⏳ Converting: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Invalid sticker dimensions. Stickers must be 512x512 pixels.
       invalid_animated: |
-        The animated sticker file is not in the correct TGS format.
+        Telegram accepts animated stickers only in TGS format. Send GIFs or MP4s as videos — the bot will turn them into a video sticker.
       animated_too_big: |
         After fitting to the pack's size, this animated sticker exceeds Telegram's 64 KB limit, so it can't be transferred.
       invalid_video: |
-        The video file is not in the correct WEBM format.
+        The video file has the wrong format (WEBM required).
       file_type:
-        static: |
-          This file type is not supported
-          You can add this photo or static sticker to a static sticker pack
-
-          <i>Create (/new) or select (/packs) another sticker pack</i>
-        video: |
-          This file type is not supported
-          You can add this video file to a video pack
-
-          <i>Create (/new) or select (/packs) another sticker pack</i>
-        animated: |
-          This file type is not supported
-          You can add these animated files to an animated sticker pack
-
-          <i>Create (/new) or select (/packs) another sticker pack</i>
         unknown: |
           This file type is not supported
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Delete sticker</b>
 
-      Send the sticker you want to delete from the pack.
+      Send the sticker you want to delete. No need to choose a pack — I'll find where it is myself.
     confirm: |
       Delete this sticker from the pack?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Any language
       button_confirm_language: Confirm
       set_safe: |
-        <b>Is your pack safe for users?</b>
-        <i>That is, it contains no erotic or other shocking content</i>
+        <b>Is your pack safe for everyone?</b>
+        <i>That is, it has no erotica, violence or other 18+ content</i>
       button_safe:
-        safe: Yes, it's safe
-        not_safe: No, it's not safe
+        safe: '✅ Yes, no 18+'
+        not_safe: '🔞 No, has 18+ content'
       no_tags: not specified
       confirm: |
         <b>Confirm publishing the sticker pack "<a href="${link}">${title}</a>"</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ Delete <a href="${link}">${title}</a> forever?
 
-      Send <code>${confirm}</code> to confirm.
+      Send <code>${confirm}</code> to confirm, or tap "Cancel".
     confirm: Yes, delete
     success: |
       🗑 Pack deleted
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       This pack link is already taken. Choose a different name.
     pack_name_invalid: |
-      The pack link has an invalid format. Only Latin letters, digits, and underscores are allowed.
+      The pack link has an invalid format. Only Latin letters, digits and underscore (_) are allowed.
     invalid_sticker_format: |
       This file can't be used as a sticker: wrong format or dimensions.
     invalid_emoji: |

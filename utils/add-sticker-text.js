@@ -100,8 +100,6 @@ module.exports = (addStickerResult, lang) => {
       messageText = i18n.t(lang, 'error.telegram', {
         error: escapeHTML(truncateDescription(String(addStickerResult.error.message), SEND_MESSAGE_DESCRIPTION_MAX))
       })
-    } else if (addStickerResult.error === 'ITS_ANIMATED') {
-      messageText = i18n.t(lang, 'sticker.add.error.file_type')
     } else {
       messageText = i18n.t(lang, 'error.telegram', {
         error: escapeHTML(truncateDescription(String(addStickerResult.error), SEND_MESSAGE_DESCRIPTION_MAX))

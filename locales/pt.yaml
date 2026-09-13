@@ -37,7 +37,7 @@ cmd:
 
       Veja pacotes de outras pessoas ou publique os seus:
     commands:
-      ss: '🌟 Salvar figurinha'
+      ss: '➕ Adicionar ao pacote do grupo'
       start: '📜 Menu'
       help: '❓ Ajuda'
       packs: '📁 Meus pacotes'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Novo pacote'
       catalog: '🔍 Catálogo'
       catalog_mini: '🔍 Catálogo'
-      catalog_browser: 'Abrir no navegador'
+      catalog_browser: '🌐 Abrir no navegador'
       catalog_browser_mini: '🌐 No navegador'
       catalog_app: 'Baixar para Android'
       catalog_app_mini: '📱 App para Android'
@@ -114,8 +114,8 @@ cmd:
       /ss (em resposta a uma mídia) — adiciona rapidamente ao pacote do grupo.
 
       <b>Pacotes inline:</b>
-      Um tipo separado de pacote para acesso rápido via @nome_do_bot em qualquer chat.
-      • Não é um pacote de verdade do Telegram — fica salvo só no bot
+      Sua coleção pessoal: envie figurinhas, GIFs, fotos e vídeos salvos em qualquer chat — digite @nome_do_bot e escolha o que quiser.
+      • Nada é adicionado às suas figurinhas do Telegram — tudo fica salvo no bot
       • Pode conter figurinhas, fotos, GIFs e vídeos
       • Crie em /packs → aba "Inline"
       • Também tem um modo de busca de GIFs (via Tenor)
@@ -138,10 +138,10 @@ cmd:
 
       • Sem "${titleSuffix}" no nome
       • Processamento prioritário de vídeos
-      • Vídeos de até 30 s
-      • Várias figurinhas na fila
+      • Vídeos de até 35 s
+      • Várias figurinhas de uma vez
 
-      <b>Emojis adaptáveis</b> — botão separado em /new (mudam de cor conforme o texto)
+      <b>🎨 Emojis adaptáveis</b> — um tipo de pacote separado em /new: os emojis mudam de cor conforme o texto
 
       Obter → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Digite o tamanho da grade (ex.: 3x4):
     custom_invalid: |
-      Formato inválido. Exemplo: 3x4. Linhas de 1 a 10, colunas de 1 a 10, no máximo 50 no total.
+      Formato incorreto. Exemplo: 3x4. Linhas de 1 a 10, colunas de 1 a 10, no máximo 50 no total.
     no_space: |
       Não há espaço suficiente no pacote. Vagas livres: ${freeSlots}, necessárias: ${total}.
       Escolha uma grade menor ou crie um novo pacote com /new.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Doar'
   topup: |
     <b>Digite a quantidade de créditos que você quer comprar:</b>
-  invalid_amount: |
-    <b>Quantidade inválida</b>
-
-    A quantidade mínima é 1 crédito
-  paymenu: |
-    Você quer comprar <b>${amount} créditos</b> por <b>${price}$</b>
-
-    ⚠️ Os créditos são liberados manualmente pelo administrador.
-    O tempo de espera vai de 5 minutos a 1 hora
-
-    <u>Escolha a forma de pagamento:</u>
   description: |
     Ao comprar créditos, você apoia o desenvolvimento do bot e ganha acesso a recursos extras
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Ativo
-        off: Inativo
+        on: ativo
+        off: inativo
     hidden: Pacote <a href="${link}">${title}</a> ocultado da sua lista.
     restored: Pacote <a href="${link}">${title}</a> restaurado na sua lista.
     btn:
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         As dimensões da figurinha são inválidas. As figurinhas devem ter 512x512 pixels.
       invalid_animated: |
-        O arquivo da figurinha animada não está no formato TGS correto.
+        O Telegram só aceita figurinhas animadas no formato TGS. Envie GIFs ou MP4 como vídeo — o bot vai transformá-los em figurinha de vídeo.
       invalid_video: |
-        O arquivo de vídeo não está no formato WEBM correto.
+        O arquivo de vídeo está no formato errado (é preciso WEBM).
       restore: |
         Não é possível restaurar o pacote.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         As dimensões da figurinha são inválidas. As figurinhas devem ter 512x512 pixels.
       invalid_animated: |
-        O arquivo da figurinha animada não está no formato TGS correto.
+        O Telegram só aceita figurinhas animadas no formato TGS. Envie GIFs ou MP4 como vídeo — o bot vai transformá-los em figurinha de vídeo.
       invalid_video: |
-        O arquivo de vídeo não está no formato WEBM correto.
+        O arquivo de vídeo está no formato errado (é preciso WEBM).
   group_settings:
     success: |
       Configurações do grupo atualizadas.
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ Adicionada a <u>${title}</u>
     ok_repainting_notice: |
-      ⚠️ Este é um emoji monocromático: em um pacote de figurinhas normal ele fica branco e quase não aparece em fundo claro.
+      ⚠️ Este é um emoji monocromático: em um pacote normal ele fica branco e quase não aparece em fundo claro.
+      Para ele se adaptar à cor do texto, crie um pacote separado "🎨 Emojis adaptáveis" em /new.
     send_emoji: Envie um emoji para esta figurinha
     converting_process: |
       ⏳ Convertendo: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         As dimensões da figurinha são inválidas. As figurinhas devem ter 512x512 pixels.
       invalid_animated: |
-        O arquivo da figurinha animada não está no formato TGS correto.
+        O Telegram só aceita figurinhas animadas no formato TGS. Envie GIFs ou MP4 como vídeo — o bot vai transformá-los em figurinha de vídeo.
       animated_too_big: |
         Depois de ajustada ao tamanho do pacote, a figurinha animada ultrapassa o limite de 64 KB do Telegram — não é possível transferi-la.
       invalid_video: |
-        O arquivo de vídeo não está no formato WEBM correto.
+        O arquivo de vídeo está no formato errado (é preciso WEBM).
       file_type:
-        static: |
-          Este tipo de arquivo não é suportado
-          Você pode adicionar esta foto ou figurinha estática a um pacote de figurinhas estáticas
-
-          <i>Crie (/new) ou escolha (/packs) outro pacote</i>
-        video: |
-          Este tipo de arquivo não é suportado
-          Você pode adicionar este arquivo de vídeo a um pacote de vídeo
-
-          <i>Crie (/new) ou escolha (/packs) outro pacote</i>
-        animated: |
-          Este tipo de arquivo não é suportado
-          Você pode adicionar estes arquivos animados a um pacote de figurinhas animadas
-
-          <i>Crie (/new) ou escolha (/packs) outro pacote</i>
         unknown: |
           Este tipo de arquivo não é suportado
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Excluir figurinha</b>
 
-      Envie a figurinha que você quer excluir do pacote.
+      Envie a figurinha que você quer excluir. Não precisa escolher o pacote — eu mesmo encontro onde ela está.
     confirm: |
       Excluir esta figurinha do pacote?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Qualquer idioma
       button_confirm_language: Confirmar
       set_safe: |
-        <b>Seu pacote é seguro para os usuários?</b>
-        <i>Ou seja, não contém conteúdo erótico ou chocante</i>
+        <b>Seu pacote é seguro para todos?</b>
+        <i>Ou seja, não tem erotismo, violência nem outro conteúdo 18+</i>
       button_safe:
-        safe: Sim, é seguro
-        not_safe: Não, não é seguro
+        safe: '✅ Sim, sem 18+'
+        not_safe: '🔞 Não, tem conteúdo 18+'
       no_tags: não informadas
       confirm: |
         <b>Confirmar a publicação do pacote "<a href="${link}">${title}</a>"</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ Excluir <a href="${link}">${title}</a> para sempre?
 
-      Envie <code>${confirm}</code> para confirmar.
+      Envie <code>${confirm}</code> para confirmar ou toque em "Cancelar".
     confirm: Sim, excluir
     success: |
       🗑 Pacote excluído
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Esse endereço de pacote já está em uso. Escolha outro nome.
     pack_name_invalid: |
-      O endereço do pacote tem formato inválido. Use letras latinas, números e sublinhados.
+      O endereço do pacote tem formato inválido. Use letras latinas, números e sublinhado (_).
     invalid_sticker_format: |
       O arquivo não serve como figurinha: formato ou tamanho inválido.
     invalid_emoji: |

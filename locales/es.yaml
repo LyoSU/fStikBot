@@ -37,7 +37,7 @@ cmd:
 
       Explora los paquetes de otros usuarios o publica los tuyos:
     commands:
-      ss: '🌟 Guardar sticker'
+      ss: '➕ Añadir al paquete del grupo'
       start: '📜 Menú'
       help: '❓ Ayuda'
       packs: '📁 Mis paquetes'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Nuevo paquete'
       catalog: '🔍 Catálogo'
       catalog_mini: '🔍 Catálogo'
-      catalog_browser: 'Abrir en el navegador'
+      catalog_browser: '🌐 Abrir en el navegador'
       catalog_browser_mini: '🌐 En el navegador'
       catalog_app: 'Descargar para Android'
       catalog_app_mini: '📱 App para Android'
@@ -114,8 +114,8 @@ cmd:
       /ss (respondiendo a una foto o video) — añadir rápido al paquete del grupo.
 
       <b>Paquetes inline:</b>
-      Un tipo de paquete aparte para acceder rápido mediante @nombre_del_bot en cualquier chat.
-      • No es un paquete real de Telegram: solo se guarda en el bot
+      Tu colección personal: envía los stickers, GIFs, fotos y videos que guardaste en cualquier chat — escribe @nombre_del_bot y elige lo que quieras.
+      • No se añade nada a tus stickers de Telegram: todo se guarda en el bot
       • Puede contener stickers, fotos, GIFs y videos
       • Créalo en /packs → pestaña «Inline»
       • También tiene un modo de búsqueda de GIFs (con Tenor)
@@ -138,10 +138,10 @@ cmd:
 
       • Sin "${titleSuffix}" en el nombre
       • Procesamiento prioritario de videos
-      • Videos de hasta 30 s
-      • Varios stickers en cola
+      • Videos de hasta 35 s
+      • Varios stickers a la vez
 
-      <b>Emojis adaptativos</b> — botón aparte en /new (cambian de color según el texto)
+      <b>🎨 Emojis adaptativos</b> — un tipo de paquete aparte en /new: los emojis cambian de color según el texto
 
       Consíguelo → /donate
     problems: |
@@ -252,7 +252,7 @@ cmd:
     custom_prompt: |
       Escribe el tamaño de la cuadrícula (p. ej., 3x4):
     custom_invalid: |
-      Formato no válido. Ejemplo: 3x4. Filas de 1 a 10, columnas de 1 a 10, hasta 50 en total.
+      Formato incorrecto. Ejemplo: 3x4. Filas de 1 a 10, columnas de 1 a 10, hasta 50 en total.
     no_space: |
       No hay espacio suficiente en el paquete. Quedan ${freeSlots} espacios libres y se necesitan ${total}.
       Elige una cuadrícula más pequeña o crea un paquete nuevo con /new.
@@ -295,17 +295,6 @@ donate:
     donate: '☕ Donar'
   topup: |
     <b>Escribe cuántos créditos quieres comprar:</b>
-  invalid_amount: |
-    <b>Cantidad no válida</b>
-
-    La cantidad mínima es 1 crédito
-  paymenu: |
-    Quieres comprar <b>${amount} créditos</b> por <b>${price}$</b>
-
-    ⚠️ Los créditos los asigna manualmente el administrador.
-    El tiempo de espera va de 5 minutos a 1 hora
-
-    <u>Elige el método de pago:</u>
   description: |
     Al comprar créditos, apoyas el desarrollo del bot y obtienes acceso a funciones adicionales
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
-        on: Activo
-        off: Inactivo
+        on: activo
+        off: inactivo
     hidden: El paquete <a href="${link}">${title}</a> se ocultó de tu lista.
     restored: El paquete <a href="${link}">${title}</a> se restauró en tu lista.
     btn:
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Las dimensiones del sticker no son válidas. Los stickers deben medir 512x512 píxeles.
       invalid_animated: |
-        El archivo del sticker animado no tiene el formato TGS correcto.
+        Telegram solo acepta stickers animados en formato TGS. Envía los GIF o MP4 como video y el bot los convertirá en un sticker de video.
       invalid_video: |
-        El archivo de video no tiene el formato WEBM correcto.
+        El archivo de video tiene un formato incorrecto (se requiere WEBM).
       restore: |
         No se puede restaurar el paquete.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Las dimensiones del sticker no son válidas. Los stickers deben medir 512x512 píxeles.
       invalid_animated: |
-        El archivo del sticker animado no tiene el formato TGS correcto.
+        Telegram solo acepta stickers animados en formato TGS. Envía los GIF o MP4 como video y el bot los convertirá en un sticker de video.
       invalid_video: |
-        El archivo de video no tiene el formato WEBM correcto.
+        El archivo de video tiene un formato incorrecto (se requiere WEBM).
   group_settings:
     success: |
       Configuración del grupo actualizada.
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ Añadido a <u>${title}</u>
     ok_repainting_notice: |
-      ⚠️ Este es un emoji monocromo: en un paquete de stickers normal se verá blanco y apenas se distinguirá sobre un fondo claro.
+      ⚠️ Este es un emoji monocromo: en un paquete normal se queda blanco y apenas se ve sobre un fondo claro.
+      Para que se adapte al color del texto, crea un paquete aparte «🎨 Emojis adaptativos» con /new.
     send_emoji: Envía un emoji para este sticker
     converting_process: |
       ⏳ Conversión: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Las dimensiones del sticker no son válidas. Los stickers deben medir 512x512 píxeles.
       invalid_animated: |
-        El archivo del sticker animado no tiene el formato TGS correcto.
+        Telegram solo acepta stickers animados en formato TGS. Envía los GIF o MP4 como video y el bot los convertirá en un sticker de video.
       animated_too_big: |
         Tras ajustarlo al tamaño del paquete, el sticker animado supera el límite de 64 KB de Telegram, así que no se puede transferir.
       invalid_video: |
-        El archivo de video no tiene el formato WEBM correcto.
+        El archivo de video tiene un formato incorrecto (se requiere WEBM).
       file_type:
-        static: |
-          Este tipo de archivo no es compatible
-          Puedes añadir esta foto o sticker estático a un paquete de stickers estáticos
-
-          <i>Crea (/new) o elige (/packs) otro paquete</i>
-        video: |
-          Este tipo de archivo no es compatible
-          Puedes añadir este video a un paquete de stickers de video
-
-          <i>Crea (/new) o elige (/packs) otro paquete</i>
-        animated: |
-          Este tipo de archivo no es compatible
-          Puedes añadir estos archivos animados a un paquete de stickers animados (vectoriales)
-
-          <i>Crea (/new) o elige (/packs) otro paquete</i>
         unknown: |
           Este tipo de archivo no es compatible
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Eliminar sticker</b>
 
-      Envía el sticker que quieres eliminar del paquete.
+      Envía el sticker que quieres eliminar. No hace falta elegir el paquete: yo mismo encuentro dónde está.
     confirm: |
       ¿Eliminar este sticker del paquete?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: Cualquier idioma
       button_confirm_language: Confirmar
       set_safe: |
-        <b>¿Tu paquete es apto para todos los usuarios?</b>
-        <i>Es decir, no contiene erotismo ni otro contenido impactante</i>
+        <b>¿Tu paquete es apto para todos?</b>
+        <i>Es decir, no contiene erotismo, violencia ni otro contenido para mayores de 18</i>
       button_safe:
-        safe: Sí, es seguro
-        not_safe: No, no es seguro
+        safe: '✅ Sí, sin 18+'
+        not_safe: '🔞 No, tiene contenido 18+'
       no_tags: sin especificar
       confirm: |
         <b>Confirma la publicación del paquete «<a href="${link}">${title}</a>»</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ ¿Eliminar <a href="${link}">${title}</a> para siempre?
 
-      Envía <code>${confirm}</code> para confirmar.
+      Envía <code>${confirm}</code> para confirmar o pulsa «Cancelar».
     confirm: Sí, eliminar
     success: |
       🗑 Paquete eliminado
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Esa dirección de paquete ya está ocupada. Elige otro nombre.
     pack_name_invalid: |
-      La dirección del paquete tiene un formato no válido. Solo se permiten letras latinas, números y guiones bajos.
+      La dirección del paquete tiene un formato no válido. Solo se permiten letras latinas, números y el guion bajo (_).
     invalid_sticker_format: |
       El archivo no sirve como sticker: formato o tamaño incorrecto.
     invalid_emoji: |
