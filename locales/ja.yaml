@@ -1,956 +1,903 @@
 ---
 language_name: '🇯🇵 日本語'
-name: fStik — ステッカー＆絵文字
+name: fStik — スタンプ＆絵文字
 description:
   long: |
-    写真、動画、GIFからステッカーと絵文字を作成 – 手動変換不要、ボットが全て処理します。
+    写真・動画・GIF からスタンプと絵文字を作成できます。手動での変換は不要で、ボットがすべて自動で処理します。@Stickers よりも簡単です。
 
-    機能:
-    • パック管理
-    • 動画ステッカーとカスタム絵文字
-    • オリジナルをダウンロード
-    • 画像に変換
-    • ステッカーカタログ
+    機能：
+    • パックの管理
+    • 動画スタンプとカスタム絵文字
+    • オリジナルファイルのダウンロード
+    • スタンプ・動画・GIF を画像に変換
+    • スタンプカタログ
 
-    ステッカーを検索: play.google.com/store/apps/details?id=app.fstik 🇺🇦
+    スタンプを検索：play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    写真・動画・GIFからステッカーと絵文字を作成。カタログと検索機能。🇺🇦
-ratelimit: そう頻繁ではない！
+    写真・動画・GIF からスタンプと絵文字を作成。スタンプのカタログと検索も。🇺🇦
+ratelimit: 操作が速すぎます！
 cmd:
   start:
     enter: |
-      🧙 こんにちは、 ${name}！私は絵文字とステッカー パックのウィザードです。
-      写真、ビデオ、GIF を数回クリックするだけでクールなステッカーに変換できます
+      こんにちは、${name}さん！
+      写真・動画・GIF からスタンプと絵文字を作成します。
 
-      私の機能について詳しく知るには、/help コマンドを送信してください
-
-      💬 ヘルプが必要ですか? @fStikCommunity のサポート チャットに参加してください (英語のみ)
+      💬 @fStikCommunity
     group: |
-      🧙 こんにちは、${groupTitle}！ 私は絵文字とステッカーパックの魔法使いです。
+      こんにちは、${groupTitle}の皆さん！スタンプと絵文字を作成するボットです。
 
-      グループパックにステッカーを追加するには、写真、ビデオ、GIF、またはステッカーに返信して/ssコマンドを使用してください。
+      グループパックにスタンプを追加するには、写真・動画・GIF・スタンプに返信して /ss を送信してください。
     catalog: |
-      <b>😻 カタログで新たなステッカーを見つけよう〜</b>
+      <b>🔍 スタンプカタログ</b>
 
-      ・このボタンを押すと、色々なステッカーを手に入れる事ができます
-      ・キーワードまたはタブで検索しよう
-      ・おすすめしたいまたはしたかないステッカーをレートして下さい
+      キーワードでパックを検索したり、人気のパックを見たりできます。
+      評価をつけて、ほかの人が素敵なパックを見つけられるよう手伝ってください。
     search_catalog: |
-      <b>🌐 Pack catalog</b>
+      <b>🌐 パックカタログ</b>
 
-      Browse other users' packs or publish your own:
+      ほかのユーザーのパックを見たり、自分のパックを公開したりできます：
     commands:
-      ss: '🌟 ステッカーを保存'
-      start: '📜 スタートメニュー'
-      help: '📖 ヘルプ'
-      packs: '📁 パックを管理'
-      new: '🌝 ステッカーパックを作成'
-      search_catalog: '🌐 Catalog'
-      catalog: '📖 カタログ'
-      publish: '📤 パックを公開'
-      delete: '❌ ステッカーを削除'
-      original: '🎯 元のステッカーを検索'
-      restore: '🔀 パックを復元'
+      ss: '🌟 スタンプを保存'
+      start: '📜 メニュー'
+      help: '❓ ヘルプ'
+      packs: '📁 マイパック'
+      new: '➕ 新しいパック'
+      search_catalog: '🌐 カタログ'
+      catalog: '🌐 カタログ'
+      publish: '📤 公開する'
+      delete: '🗑 スタンプを削除'
+      original: '🔎 スタンプの出どころ'
+      restore: '♻️ パックを復元'
       copy: '📋 パックをコピー'
-      emoji: '📝 絵文字を変更'
-      round: '丸'
-      clear: '🖼️ 背景を写真から削除する'
-      info: '🔎 Whose sticker'
-      lang: '🌐 言語を変更'
-      report: '🚨 レポート パック'
-      donate: '☕️ 開発者をサポート'
+      emoji: '😀 絵文字を変更'
+      round: '⭕ ビデオメッセージ'
+      clear: '✂️ 背景を削除'
+      info: '🔎 スタンプの作者'
+      user_about: '👤 作者について'
+      lang: '🌐 言語'
+      report: '🚨 通報'
+      donate: '⭐ 支援する'
       add_to_group: '👥 グループに追加'
-      privacy: '🔒 プライバシーポリシー'
-      guide: '📖 ヘルプ'
+      privacy: '🔒 プライバシー'
+      guide: '❓ ヘルプ'
     btn:
-      new: '📥 新規作成'
-      catalog: '💖 カタログを開く'
-      catalog_mini: '💖 カタログ'
+      new: '➕ 新しいパック'
+      catalog: '🔍 カタログ'
+      catalog_mini: '🔍 カタログ'
       catalog_browser: 'ブラウザで開く'
       catalog_browser_mini: '🌐 ブラウザで'
-      catalog_app: '📱 Android アプリをダウンロード'
+      catalog_app: 'Android 版をダウンロード'
       catalog_app_mini: '📱 Android アプリ'
   guide:
     web: |
-      <b>📖 How to use fStikBot</b>
+      <b>📖 fStikBot の使い方</b>
 
-      Full guides, tips, and FAQ on our website.
+      詳しいガイド、ヒント、よくある質問は公式サイトでご覧いただけます。
     menu: |
-      <b>📖 How to use</b>
+      <b>❓ ヘルプ</b>
 
-      Choose a topic:
+      トピックを選んでください：
     create: |
-      <b>🎨 Create stickers</b>
+      <b>🎨 スタンプの作成</b>
 
-      1. Send /new to create a pack
-      2. Choose type: regular, video, or emoji
-      3. Send photos, videos, or GIFs
-      4. Done! Bot converts everything automatically
+      1. /new を送信してパックを作成します
+      2. 種類を選びます：通常・動画・絵文字
+      3. 写真・動画・GIF を送信します
+      4. 完了！変換はボットが自動で行います
 
-      <b>Useful commands:</b>
-      • /clear — remove background from photo
-      • /round — convert video to circle (video note)
-      • /frame — set video sticker shape:
+      <b>便利なコマンド：</b>
+      • /clear — 写真の背景を削除
+      • /round — 動画を丸いビデオメッセージに変換
+      • /frame — 動画スタンプの形を設定：
         └ lite, medium, rounded, square, circle
 
-      <b>💡 Tip:</b> Send PNG as <b>File</b> (📎) to keep transparency. "Photo" mode compresses and removes it.
+      <b>💡 ヒント：</b>透過を保つには、PNG を<b>ファイル</b>（📎）として送信してください。「写真」として送ると圧縮され、透過が失われます。
     manage: |
-      <b>📁 Manage packs</b>
+      <b>📁 パックの管理</b>
 
-      <b>Commands:</b>
-      • /packs — your packs list
-      • /delete — remove a sticker
-      • /copy — copy any pack
-      • /restore — recover hidden packs
-      • /original — find original sticker
-      • /about — pack and creator info
+      <b>コマンド：</b>
+      • /packs — パックの一覧
+      • /delete — スタンプを削除
+      • /copy — パックをコピー
+      • /restore — 非表示にしたパックを復元
+      • /original — スタンプのオリジナルを探す
+      • /about — パックと作者の情報
 
-      <b>Change emoji:</b>
-      Send a sticker → send new emoji.
-      Or send emoji right after adding.
+      <b>絵文字を変更するには：</b>
+      スタンプを送信 → 新しい絵文字を送信。
+      または、追加した直後に絵文字を送信してください。
 
-      <b>Default pack emoji:</b>
-      /emoji 🔥 — all new stickers get this.
+      <b>デフォルトの絵文字：</b>
+      /emoji 🔥 — 新しく追加するスタンプすべてにこの絵文字が設定されます。
 
-      <b>In groups:</b>
-      /ss (reply to media) — quick add to group pack.
+      <b>グループでは：</b>
+      /ss（メディアに返信）— グループパックにすばやく追加。
 
-      <b>Inline packs (For search):</b>
-      A separate pack type for quick access via @botname in any chat.
-      • Not a real Telegram pack — stored in bot only
-      • Can contain stickers, photos, GIFs, videos
-      • Create in /packs → "For search" tab
-      • Also has GIF search mode (via Tenor)
+      <b>インラインパック：</b>
+      どのチャットでも @ボット名 からすぐに呼び出せる、専用の種類のパックです。
+      • Telegram の正式なパックではなく、ボット内にのみ保存されます
+      • スタンプ・写真・GIF・動画を入れられます
+      • /packs →「インライン」タブで作成します
+      • GIF 検索モード（Tenor 経由）もあります
 
-      <b>Co-edit (share pack editing):</b>
-      Tap pack → Co-edit → get a link.
-      Anyone with link can add/delete stickers in your pack.
-      Reset link to remove all editors.
+      <b>共同編集：</b>
+      パックをタップ →「共同編集」→ リンクを取得。
+      リンクを知っている人は誰でもスタンプを追加・削除できます。
+      リンクをリセットすると、すべての編集者が削除されます。
 
-      <b>Pack options:</b>
-      Tap any pack in /packs → rename, boost, co-edit, delete.
+      <b>パックのオプション：</b>
+      /packs でパックをタップ → 名前の変更、ブースト、共同編集、削除。
     catalog: |
-      <b>🔍 Find & share packs</b>
+      <b>🔍 カタログ</b>
 
-      • /catalog — browse popular packs
-      • /publish — share your pack publicly
-      • Rate packs ⭐ to help others discover good ones
-
-      Good packs get more visibility. Yours can go viral 🔥
+      • /catalog — 人気のパック
+      • /publish — 自分のパックを公開
+      • 評価をつけて素敵なパックを広めましょう
     boost: |
-      <b>⚡ Boost & extras</b>
+      <b>⚡ ブースト</b>
 
-      <b>Boost benefits:</b>
-      • No "${titleSuffix}" suffix in pack name
-      • Priority video processing
-      • Longer videos (up to 30 sec)
-      • Add multiple stickers at once
+      • パック名に「${titleSuffix}」が付かない
+      • 動画を優先的に処理
+      • 最長 30 秒の動画
+      • 複数のスタンプをまとめてキューに追加
 
-      <b>Hidden feature:</b>
-      <b>Adaptive emoji</b> — a separate button in /new (changes color with text).
+      <b>アダプティブ絵文字</b> — /new にある専用ボタンから作成できます（テキストの色に合わせて色が変わります）
 
-      Get boost → /donate
+      入手する → /donate
     problems: |
-      <b>❓ FAQ & Fixes</b>
+      <b>❓ よくある質問</b>
 
-      <b>⚫ Background turned black?</b>
-      Telegram removes transparency when you send as "Photo".
-      → Send PNG as <b>File</b> (📎 paperclip icon).
+      <b>⚫ 背景が黒くなった？</b>
+      「写真」として送信すると、Telegram が透過を削除します。
+      → PNG を<b>ファイル</b>（📎 クリップ）として送信してください。
 
-      <b>🔄 Changes not showing?</b>
-      Telegram caches stickers. Wait ~1 hour or restart the app.
+      <b>🔄 変更が反映されない？</b>
+      Telegram はスタンプをキャッシュしています。1 時間ほど待つか、アプリを再起動してください。
 
-      <b>📹 Video not animating?</b>
-      Likely a weird format. Try converting to MP4 or send as File instead of Video.
+      <b>📹 動画が動かない？</b>
+      特殊な形式の可能性があります。MP4 に変換するか、「動画」ではなく「ファイル」として送信してみてください。
 
-      <b>🗑 How to delete a sticker?</b>
-      Send /delete, then tap the sticker you want to remove.
+      <b>🗑 スタンプを削除するには？</b>
+      /delete を送信し、削除したいスタンプをタップしてください。
 
-      <b>🤏 Sticker too small?</b>
-      Crop your image to a square (1:1) before sending.
+      <b>🤏 スタンプが小さすぎる？</b>
+      送信する前に画像を正方形（1:1）にトリミングしてください。
 
-      <b>🔗 How to remove "_by_fStikBot" from link?</b>
-      You can't. Telegram requires this suffix to identify which bot created the pack. It's a platform rule, not ours.
+      <b>🔗 リンクから「_by_fStikBot」を消すには？</b>
+      消すことはできません。どのボットで作成されたパックかを識別するため、Telegram がこのサフィックスを必須にしています。当ボットではなくプラットフォームのルールです。
 
-      <b>💎 Do I need Premium?</b>
-      • Create packs: Free
-      • Use stickers: Free
-      • Send custom emoji: Premium only (Telegram rule)
+      <b>💎 Premium は必要？</b>
+      • パックの作成：無料
+      • スタンプの使用：無料
+      • カスタム絵文字の送信：Premium のみ（Telegram のルール）
 
-      <b>Still stuck?</b> @fStikCommunity
+      <b>ほかにご質問は？</b> @fStikCommunity
     btn:
-      open: '📖 Open Guide'
-      create: '🎨 Create stickers'
-      manage: '📁 パックを管理'
-      catalog: '🔍 Find & share'
-      boost: '⚡ Boost & extras'
-      problems: '❓ Problems?'
-      back: '← Back'
+      open: '📖 ガイドを開く'
+      create: '🎨 スタンプの作成'
+      manage: '📁 パックの管理'
+      catalog: '🔍 検索と公開'
+      boost: '⚡ ブーストと機能'
+      problems: '❓ お困りですか？'
+      back: '← 戻る'
   inline:
     switch_pm: '📁 パックを選択'
   lang:
     choose: |
-      🌐 Choose language
+      🌐 言語を選択してください
 
-      Help with translation: https://crwd.in/fStikBot
+      翻訳にご協力ください：https://crwd.in/fStikBot
   restore: |
-    <b>🗃️ パックの復元</b>
+    <b>♻️ パックの復元</b>
 
-    パックを復元するには、復元したいパックへのリンクを送信する必要があります
+    復元したいパックのリンクを送信してください。
   copy: |
-    <b>🗄 パックをコピー</b>
+    <b>📋 パックのコピー</b>
 
-    別のパックを新しいパックにコピーするには、ステッカーまたは絵文字パックへのリンクを送信するだけです
+    コピーしたいパックのリンクを送信してください。
   report: |
-    <b>🚨 報告</b>
+    <b>🚨 通報</b>
 
-    法律に違反する可能性がある、または Telegram の利用規約に違反する可能性があると思われるステッカー パックを見つけた場合は、そのリンクを @ に送信して報告してください。 StickersReportBot
-
-    <i>ボットはパックの内容に対して責任がなく、それを制御する機能もないことに注意してください</i>
+    規約に違反するパックを見つけましたか？リンクを @StickersReportBot に送信してください。
   packs:
     info: |
-      <b>📁 パック</b>
+      <b>📁 マイパック</b>
     types:
-      regular: ステッカー
+      regular: スタンプ
       custom_emoji: 絵文字
-      inline: Inline
+      inline: インライン
     empty: |
-      <b>パックはまだありません。</b>
-      作成するには/new コマンドを入力してください
+      パックはまだありません。最初のパックを作成しましょう → /new
     inline_title: インラインパック
     select_group_pack_info: |
-      <b>📁 パックを選択する</b>
+      <b>📁 パックの選択</b>
 
-      グループでパックを使用するには、以下のボタンを使用して管理者がパックを選択する必要があります
+      グループで使うパックは、管理者が下のボタンから選択できます。
     select_group_pack: パックを選択
   emoji:
     info: |
-      現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> の後にスペースを空けて絵文字を送信してください。
+      現在のパックのデフォルト絵文字を変更するには、<code>/emoji</code> のあとにスペースを空けて絵文字を送信してください
 
-      例 - <code>/emoji 🌟</code>
+      例：<code>/emoji 🌟</code>
     no_pack_selected: |
-      Select a pack with /packs first — then /emoji 🌟
-    done: 絵文字が正常に変更されました。
+      まず /packs でパックを選択してから、/emoji 🌟 を送信してください
+    done: 絵文字を変更しました。
     error: 絵文字の変更中にエラーが発生しました！
   round_video:
     enabled: |
-      これから動画の形が丸くなります
+      今後、動画は角丸の形になります
     disabled: |
-      動画の形はもう丸くではありません
+      今後、動画は角丸の形になりません
   paysupport: |
-    <b>👨‍💻 支払いサポート</b>
+    <b>💳 お支払いに関するお問い合わせ</b>
 
-    ボットの操作に関連するすべての問題、支払いと寄付を含む、直接開発者に連絡することができます。
-
-    <b>連絡先:</b>
-    🧑‍💻 開発者: @ly_oBot
+    開発者までご連絡ください：@ly_oBot
   mosaic:
     enter: |
-      🔲 Mosaic mode for <b>${packTitle}</b>
+      🧩 <b>${packTitle}</b> のモザイク
 
-      Send a photo to split into custom emoji grid.
+      写真を送信してください。絵文字のグリッドに分割します。
     no_pack: |
-      You need a custom emoji pack first.
-      Use /new to create one and select "Custom Emoji" type.
+      まずカスタム絵文字のパックが必要です。
+      /new で作成し、「絵文字」を選んでください。
     choose_grid: |
-      📐 Choose grid size:
+      📐 グリッドのサイズを選んでください：
     btn:
       recommended: "✅ ${rows}×${cols}"
-      option: "${rows}×${cols} · ${total}pcs"
-      custom: "✏️ Custom size"
-      cancel: "❌ Cancel"
-      exit: "🚪 Exit mosaic"
-      undo: "🗑 Remove this mosaic"
+      option: "${rows}×${cols} · ${total}個"
+      custom: "✏️ サイズを指定"
+      cancel: "← キャンセル"
+      exit: "🚪 モザイクを終了"
+      undo: "🗑 このモザイクを削除"
     custom_prompt: |
-      Enter grid size (e.g. 3x4):
+      グリッドのサイズを入力してください（例：3x4）：
     custom_invalid: |
-      Invalid format. Use e.g. 3x4 (rows from 1 to 10, cols from 1 to 10, max 50 total).
+      形式が正しくありません。例：3x4。行は 1〜10、列は 1〜10、合計 50 個までです。
     no_space: |
-      Not enough space in pack. ${freeSlots} slots left, but ${total} needed.
-      Choose a smaller grid or create a new pack with /new.
+      パックの空きが足りません。空きは ${freeSlots} 枠、必要なのは ${total} 枠です。
+      小さいグリッドを選ぶか、/new で新しいパックを作成してください。
     blurry_warning: |
-      ⚠️ Source image is small — result may be blurry at this grid size.
-    uploading: "⏳ Uploading ${current}/${total}..."
+      ⚠️ 画像が小さすぎます。このグリッドサイズでは仕上がりがぼやける可能性があります。
+    uploading: "⏳ アップロード中 ${current}/${total}..."
     done: |
-      ✅ Mosaic ${rows}×${cols} added to pack!
+      ✅ ${rows}×${cols} のモザイクをパックに追加しました！
     done_link: "📦 パックを使う"
     undo_done: |
-      🗑 Mosaic removed (${count} emoji deleted from pack).
+      🗑 モザイクを削除しました（パックから絵文字 ${count} 個を削除）。
     undo_failed: |
-      ❌ Could not remove some emoji. Try deleting manually.
+      ❌ 一部の絵文字を削除できませんでした。手動で削除してください。
     wait_photo: |
-      Send another photo or tap Exit.
+      別の写真を送信するか、「終了」をタップしてください。
     reject_animated: |
-      Animated/video stickers aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+      アニメーションスタンプと動画スタンプにはまだ対応していません。静止画スタンプ、写真、または PNG/JPEG/WebP ファイルを送信してください。
     reject_document: |
-      Only images are supported (JPEG/PNG/WebP). Please send a file in one of these formats.
+      対応しているのは画像（JPEG/PNG/WebP）のみです。この形式のファイルを送信してください。
     reject_media: |
-      Animations and videos aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+      アニメーションと動画にはまだ対応していません。静止画スタンプ、写真、または PNG/JPEG/WebP ファイルを送信してください。
 donate:
   menu: |
-    <b>☕️ Bot開発支援</b>\nBotの開発を支援することにより、クレジットを受け取ることができます\n\n<b>残高:</b> <code>${balance}</code> クレジット\n1クレジットで1パックをブーストすることができます。\n\n<b>ブーストの利点:</b>\n➖ パック名から "<code>${titleSuffix}</code>" を無効にする <i>(リンク内では無効になりません)</i>\n➖ タイトルを最大64文字まで (35文字の代わりに)\n➖ 動画を最大35秒まで\n➖ 優先変換キュー\n➖ 複数のステッカーを同時に\n➖ 広告なし\n\n<b>購入したいクレジットの金額を選択してください:</b>
-  invoice_title: '${amount} Credits'
+    <b>⭐ ボットを支援</b>
+
+    <b>残高：</b>${balance} クレジット
+    1 クレジット = パック 1 つをブースト
+
+    <b>ブーストの特典：</b>
+    • パック名に「<code>${titleSuffix}</code>」が付かない
+    • 名前は最大 64 文字（通常は 35 文字）
+    • 最長 35 秒の動画
+    • 変換キューで優先
+    • 複数のスタンプを同時に追加
+    • 広告なし
+
+    <b>何クレジット購入しますか？</b>
+  invoice_title: '${amount} クレジット'
   btn:
-    donate: '☕ 寄付'
+    donate: '☕ 寄付する'
   topup: |
-    <b>購入したいクレジットの金額を入力してください:</b>
+    <b>購入したいクレジット数を入力してください：</b>
   invalid_amount: |
-    <b>無効な量</b>
+    <b>数量が正しくありません</b>
 
-    最小は1クレジットです
+    最小数量は 1 クレジットです
   paymenu: |
-    <b>${amount}クレジット</b> を <b>${price}$</b> で購入する
+    <b>${amount} クレジット</b>を <b>${price}$</b> で購入します
 
-    ⚠️ クレジットは管理者によって手動で発行されます。
-    待機時間は5分から1時間の範囲です。
+    ⚠️ クレジットは管理者が手動で付与します。
+    お待ちいただく時間は 5 分〜1 時間です
 
-    <u>支払い方法を選択してください:</u>
+    <u>お支払い方法を選択してください：</u>
   description: |
-    クレジットを購入することで、ボットの開発をサポートし、追加の機能を利用する機会が得られます。
+    クレジットを購入すると、ボットの開発を支援しながら追加機能を利用できるようになります
   update: |
-    <b>🔄 残高更新</b>
+    <b>🔄 残高の更新</b>
 
-    残高: <code>${balance}</code> クレジット (追加 <code>${amount}</code> クレジット)
+    残高：<code>${balance}</code> クレジット（<code>${amount}</code> クレジット追加）
   error:
     already_donated: |
-      この支払いに対して既にクレジットを受け取っています。
-    already_paid: Payment already completed
-    not_found: Payment not found
-    user_not_found: User not found
+      このお支払いのクレジットはすでに受け取り済みです
+    already_paid: お支払いはすでに完了しています
+    not_found: お支払いが見つかりません
+    user_not_found: ユーザーが見つかりません
     error: |
-      <b>エラー！</b>
-      支払い処理中にエラーが発生しました
+      お支払いの処理中にエラーが発生しました
     canceled: |
-      支払いがキャンセルされました
+      お支払いがキャンセルされました
 coedit:
   info: |
     <b>👥 共同編集</b>
 
-    共同編集のリンク <a href="${link}">${title}</a>: <code>${colink}</code>
+    リンク：<code>${colink}</code>
 
-    <b>使い方:</b>
-    1. パックへのアクセスを許可したい人にリンクを送信します
-    2. リンクをクリックした後、"start"を押して編集者に追加されます
-    3. 編集者は、パック内のステッカーを追加、削除、編集できます
+    このリンクを共有すると、ほかの人も <a href="${link}">${title}</a> のスタンプを追加・削除できるようになります。
 
-    <b>編集者:</b>
-    ${editors}
+    <b>編集者：</b>${editors}
 
-    <i>編集者を削除するには、リンクをリセットする必要があります</i>
+    <i>リンクをリセットすると、すべての編集者が削除されます</i>
   no_editors: |
-    編集者はまだいません。
+    なし
   btn:
     send: '📤 リンクを送信'
     reset: '🔁 リンクをリセット'
   share: |
-    リンクをフォローし、"start"を押してパック "${title}" を共同編集します
+    リンクを開いて「開始」を押すと、パック「${title}」を共同編集できます
   reset: |
-    <b>🔁 リンクのリセットが成功しました</b>
+    <b>🔁 リンクをリセットしました</b>
 
-    共同編集用の新しいリンク <a href="${link}">${title}</a>:
+    <a href="${link}">${title}</a> の新しい共同編集リンク：
     <code>${colink}</code>
 callback:
   pack:
     answerCbQuer:
       not_found: パックが見つかりません
-      not_owner: これはあなたのパックではありません
+      not_owner: あなたのパックではありません
       hidden: パックを非表示にしました
       restored: パックを復元しました
     set_pack: |
-      🌟 <a href="${link}">${title}</a> パックを選択しました
+      ✅ <a href="${link}">${title}</a> を選択しました
 
-      <b>❔ 追加方法</b>
-      パックに追加する写真、ビデオ、ステッカーを送信してください
+      追加するには、写真・動画・スタンプを送信してください。
     set_inline_pack: |
-      選択された<u>${title}</u>パック
+      ✅ <u>${title}</u> を選択しました
 
-      これを使用するには、任意のチャットで<code>@${botUsername} </code>とスペースを入力してください
-      下のボタンを押しても使用できます
+      使い方：どのチャットでも <code>@${botUsername} </code>と入力してください。
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">ブースト</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">ブースト</a></b>：${boostStatus}
       status:
         on: 有効
         off: 無効
-    hidden: <a href="${link}">${title}</a> をリストから非表示にします。
-    restored: <a href="${link}">${title}</a> をリストに復元しました。
+    hidden: パック <a href="${link}">${title}</a> を一覧から非表示にしました。
+    restored: パック <a href="${link}">${title}</a> を一覧に戻しました。
     btn:
-      hide: '❌ パックを隠す'
+      hide: '👁 パックを非表示'
       delete: '🗑 パックを削除'
-      restore: '✅ リストア'
+      restore: '✅ 復元'
       use_pack: '📦 パックを使う'
       boost: '⚡ ブースト'
       frame: '🖼 フレーム'
       rename: '✏️ 名前を変更'
-      search_gif: '🔎 GIFを検索'
+      search_gif: '🔎 GIF 検索'
       coedit: '👥 共同編集'
       catalog_add: '🗂 カタログに追加'
       catalog_edit: '📝 カタログで編集'
       catalog_delete: '🗑 カタログから削除'
-      catalog_share: '🔗 共有'
+      catalog_share: '🔗️️ 共有'
       catalog_open: '📂 カタログで開く'
-      mosaic: '🧩 Mosaic'
+      mosaic: '🧩 モザイク'
     error:
       not_found: |
-        エラー！
-        ステッカーが見つかりません。
+        スタンプが見つかりませんでした。
       invalid_png: |
-        エラー！
-        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
+        ファイルが有効な PNG 画像ではありません。送信する前に PNG 形式に変換してください。
       invalid_dimensions: |
-        エラー！
-        ステッカーの寸法が無効です。ステッカーは512x512ピクセルである必要があります。
+        スタンプのサイズが正しくありません。スタンプは 512x512 ピクセルである必要があります。
       invalid_animated: |
-        エラー！
-        アニメーションステッカーファイルが正しいTGS形式ではありません。
+        アニメーションスタンプのファイルが正しい TGS 形式ではありません。
       invalid_video: |
-        エラー！
-        ビデオファイルが正しいWEBM形式ではありません。
+        動画ファイルが正しい WEBM 形式ではありません。
       restore: |
-        エラー!
         パックを復元できません。
       copy: |
-        エラー!
         パックが見つかりません。
     select_group:
       success: |
-        パック <a href="${link}">${title}</a> がグループに正常に選択されました。
+        パック <a href="${link}">${title}</a> をグループ用に選択しました。
       access_rights:
-        add: 誰がグループパックにステッカーを追加できますか？
-        delete: 誰がグループパックからステッカーを削除できますか？
+        add: グループパックにスタンプを追加できるのは誰ですか？
+        delete: グループパックからスタンプを削除できるのは誰ですか？
         rights:
           all: 全員
           admins: 管理者のみ
       error: |
-        エラー！
-        セットが見つかりません。
+        パックが見つかりません。
   sticker:
     answerCbQuery:
-      delete: ステッカーはパックから正常に削除されました。
-      restored: ステッカーを現在のパックに正常に保存しました。
-    delete: ステッカーはパックから正常に削除されました。
-    restored: ステッカーを現在のパックに正常に保存しました。
+      delete: スタンプをパックから削除しました。
+      restored: スタンプを現在のパックに保存しました。
+    delete: スタンプをパックから削除しました。
+    restored: スタンプを現在のパックに保存しました。
     btn:
       delete: '🗑 削除'
       copy: '🌟 コピー'
-      restore: '✅ リストア'
+      restore: '✅ 復元'
     error:
       not_found: |
-        エラー！
-        ステッカーが見つかりません。
+        スタンプが見つかりませんでした。
       invalid_png: |
-        <b>エラー！</b>
-        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
+        ファイルが有効な PNG 画像ではありません。送信する前に PNG 形式に変換してください。
       invalid_dimensions: |
-        <b>エラー！</b>
-        ステッカーのサイズが無効です。ステッカーは512x512ピクセルでなければなりません。
+        スタンプのサイズが正しくありません。スタンプは 512x512 ピクセルである必要があります。
       invalid_animated: |
-        <b>エラー！</b>
-        アニメーションステッカーファイルが正しいTGS形式ではありません。
+        アニメーションスタンプのファイルが正しい TGS 形式ではありません。
       invalid_video: |
-        <b>エラー！</b>
-        ビデオファイルが正しいWEBM形式ではありません。
+        動画ファイルが正しい WEBM 形式ではありません。
   group_settings:
     success: |
-      グループ設定が正常に更新されました。
+      グループの設定を更新しました。
 sticker:
   add:
     ok: |
-      <b>パックに正常に追加されました：</b>\n<a href="${link}">${title}</a>\n\n1時間以内に、このパックはすべてのユーザーに更新されます。\n\n<i>ステッカーに一致する絵文字を1つ以上送信して追加したい場合は追加してください</i>
+      ✅ <a href="${link}">${title}</a> に追加しました
+
+      <i>このスタンプに設定する絵文字を送信できます</i>
     ok_inline: |
-      <b></b>
-      <u>${title}</u> を追加しました
+      ✅ <u>${title}</u> に追加しました
     ok_repainting_notice: |
-      ⚠️ This is a monochrome emoji: in a regular sticker pack it stays white and is barely visible on a light background.
-    send_emoji: わかりました、次に一致する絵文字を送信してください
+      ⚠️ これは単色の絵文字です。通常のパックでは白く表示され、明るい背景ではほとんど見えません。
+    send_emoji: このスタンプに設定する絵文字を送信してください
     converting_process: |
-      <b>お待ちください...</b>
-      ファイルは変換待ちキューに入っています。完了までお待ちください。これは時間がかかる場合があります。
+      ⏳ 変換中：${progress}/${total}
 
-      進捗: ${progress} / ${total}
-
-      <i>ボットをサポートしたユーザーはキュー内で優先されます（詳細: /donate）</i>
+      <i>ブーストで優先処理 → /donate</i>
     catalog_offer: |
-      <b>😲 すごい、素晴らしいパックができました！</b>
-
-      ボットの他のユーザーも見られるように、 <a href="${link}">${title}</a> を公開ステッカーカタログに追加しますか？
-      <i>時間はかかりませんよ</i>
+      パック <a href="${link}">${title}</a> を共有しませんか？
+      カタログに追加すると、ほかの人が見つけられるようになります。
     quote: |
-      このメッセージから引用を作成するには @QuotlyBot を使用してください
+      このメッセージから引用を作成するには @QuotlyBot を使ってください
     error:
       reply: |
-        <b>エラー!</b>
-        ステッカーに返信してください。
+        スタンプに返信してください。
       no_selected_pack: |
-        <b>パック</b>
+        <b>パックが選択されていません</b>
 
-        を選択してください(/new) またはパック (/packs) を選択してください
+        パックを作成（/new）または選択（/packs）してください
       no_selected_group_pack: |
-        <b>グループパックを選択していません</b>
+        <b>グループパックが選択されていません</b>
 
-        /packs コマンドを使用してパックを選択してください
+        /packs コマンドでパックを選択してください
       no_rights: |
-        <b>Error!</b>
-        このパックにステッカーを追加する権限がありません。
+        このパックにスタンプを追加する権限がありません。
       stickers_too_much: |
-        このパックにはステッカーの最大数があります。
+        このパックのスタンプ数は上限に達しています。
 
-        /new コマンドを使用して新しいパックを作成できます。
+        /new コマンドで新しいパックを作成できます。
       have_already: |
-        <b>このステッカーはすでにパックに入っています</b>
+        <b>このスタンプはすでにパックに入っています</b>
 
         絵文字を変更したい場合は、次のメッセージで送信してください。
       stickerset_invalid: |
-        <b>エラー！</b>
-        Botは現在選択されているパックにアクセスできません。
+        選択中のスタンプパックにボットがアクセスできません。
 
-        (/new) を作成するか、別のパックを選択してください。
+        別のスタンプパックを作成（/new）または選択（/packs）してください。
       invalid_png: |
-        <b>エラー！</b>
-        ファイルが有効なPNG画像ではありません。送信する前にPNG形式に変換してください。
+        ファイルが有効な PNG 画像ではありません。送信する前に PNG 形式に変換してください。
       invalid_dimensions: |
-        <b>エラー！</b>
-        ステッカーのサイズが無効です。ステッカーは512x512ピクセルでなければなりません。
+        スタンプのサイズが正しくありません。スタンプは 512x512 ピクセルである必要があります。
       invalid_animated: |
-        <b>エラー！</b>
-        アニメーションステッカーファイルが正しいTGS形式ではありません。
+        アニメーションスタンプのファイルが正しい TGS 形式ではありません。
       animated_too_big: |
-        <b>Error!</b>
-        After fitting the pack canvas this animated sticker exceeds Telegram's 64 KB limit and cannot be transferred.
+        パックのサイズに合わせると、このアニメーションスタンプは Telegram の上限である 64 KB を超えてしまうため、移動できません。
       invalid_video: |
-        <b>エラー！</b>
-        ビデオファイルが正しいWEBM形式ではありません。
+        動画ファイルが正しい WEBM 形式ではありません。
       file_type:
         static: |
-          <b>エラー!</b>
-          このファイルタイプはサポートされていません
-          この写真または静的ステッカーを静的パックに追加できます
+          このファイル形式には対応していません
+          この写真や静止画スタンプは、静止画のスタンプパックに追加できます
 
-          <i>作成 (/新規) または選択してください(/パック) 別のパック</i>
+          <i>別のスタンプパックを作成（/new）または選択（/packs）してください</i>
         video: |
-          <b>エラー!</b>
-          このファイルの種類はサポートされていません
-          このビデオ ファイルをビデオ パックに追加できます
+          このファイル形式には対応していません
+          この動画ファイルは、動画のスタンプパックに追加できます
 
-          <i>作成 (/新規) または (/パック) 別のパック</i>
+          <i>別のスタンプパックを作成（/new）または選択（/packs）してください</i>
         animated: |
-          <b>エラー!</b>
-          このファイルタイプはサポートされていません
-          このアニメーションファイルをベクターパックに追加できます
+          このファイル形式には対応していません
+          このアニメーションファイルは、アニメーションのスタンプパックに追加できます
 
-          <i>別のパックを作成 (/new) するか、選択 (/packs) します</i>
+          <i>別のスタンプパックを作成（/new）または選択（/packs）してください</i>
         unknown: |
-          <b>エラー！</b>
-          このファイルタイプはサポートされていません。
+          このファイル形式には対応していません
 
-          <i>作成（/new）するか、別のパック</i> を選択してください。
+          <i>別のスタンプパックを作成（/new）または選択（/packs）してください</i>
       wait_load: |
-        ⏳ Still processing previous file...
+        ⏳ 前のファイルをまだ処理しています...
       timeout: |
-        ⚠️ High load right now. Please try again in a few minutes.
+        ⚠️ 現在、混み合っています。数分後にもう一度お試しください。
       convert: |
-        <b>エラー!</b>
-        残念ながら、ボットはビデオを変換できませんでした。
+        動画を変換できませんでした。
 
-        おそらくあなたのビデオはボットが理解できない形式で保存されています。 mp4形式であることを確認してください。
-        ボットの内部エラーである可能性もあります。このビデオをもう一度送信してみてください。
+        MP4 形式を試すか、もう一度送信してください。
       too_big: |
-        <b>エラー！</b>.
 
-        ファイルが大きすぎて処理できません。送信する前に品質と期間を減らしてください。
+        ファイルが大きすぎて処理できません。画質を下げるか、長さを短くしてから送信してください。
       sticker_not_found: |
-        <b>エラー!</b>
 
-        このステッカーは見つかりませんでした。正しいパックにあることを確認するか、もう一度追加してみてください。
+        このスタンプが見つかりませんでした。正しいパックに入っているか確認するか、もう一度追加してみてください。
       invalid_image: |
-        <b>Error!</b>
 
-        Unable to process this image. Please try sending a different file or format.
+        この画像を処理できませんでした。別のファイルや形式で送信してみてください。
 news:
   join: |
-    ℹ️ <a href="${link}">チャンネル</a> に参加して、ボットに関する最新ニュースを入手してください。
-
-    <i>チャンネルに登録して、ボットに関する最新ニュース、アップデートや新機能を入手してください。</i>
-  join_btn: '📢 チャンネルに参加'
-  not_joined: '🙅 チャンネルを購読していません'
-  continue: '✅ 続行'
+    📢 <a href="${link}">チャンネルを登録</a>して、ニュース、アップデート、新機能の情報を受け取りましょう。
+  join_btn: '📢 登録する'
+  not_joined: '🙅 チャンネルに登録していません'
+  continue: '✅ 続ける'
 userAbout:
   help: |
-    <b>🧑‍🎨</b>
+    <b>🧑‍🎨 ユーザー情報</b>
 
-    このメニューを使用すると、ユーザーとそのステッカー パックに関する情報を見つけることができます
+    このメニューでは、ユーザーとそのスタンプパックの情報を確認できます
 
-    ユーザーに関する情報を取得するには、 ボタンを使用してください彼のメッセージを以下または転送してください
+    ユーザーの情報を見るには、下のボタンを使うか、そのユーザーのメッセージを転送してください
   result: |
     <b>🧑‍🎨 ユーザー情報</b>
-    <b>🆔 ユーザーID:</b> <code>${userId}</code>
-    <b>🎨 このユーザーのパック:</b>
+    <b>🆔 ユーザー ID：</b><code>${userId}</code>
+    <b>🎨 このユーザーのパック：</b>
     ${packs}
   no_packs: |
-    <i>このオーナーのステッカーに関する情報はありません</i>
+    <i>このユーザーのパックに関する情報はありません</i>
   forward_hidden: |
-    ユーザーはメッセージを転送する機能を隠しました。ステッカーパックを表示するには、下のボタンを使用してください。
+    このユーザーはメッセージの転送を制限しています。スタンプパックを見るには、下のボタンを使ってください。
   select_user: '🧑‍🎨 ユーザーを選択'
 scenes:
   new_pack:
     pack_type: |
-      <b><u>パックタイプ</u></b>
-    regular: '😊 ステッカー'
-    custom_emoji: '🌟 絵文字 (プレミアム)'
-    custom_emoji_adaptive: '🎨 Adaptive emoji'
+      <b>どのパックを作成しますか？</b>
+
+      <b>🖼 スタンプ</b> — チャットで送る、おなじみのスタンプです。
+      <b>✨ 絵文字</b> — テキストの中で使うカスタム絵文字です。送信できるのは Telegram Premium ユーザーのみです。
+      <b>🎨 アダプティブ絵文字</b> — 単色で描かれ、テキストの色に合わせて自動で色が変わる絵文字です。
+    regular: '🖼 スタンプ'
+    custom_emoji: '✨ 絵文字'
+    custom_emoji_adaptive: '🎨 アダプティブ絵文字'
     pack_title: |
-      <b>新しいステッカーパックの名前を入力してください：<i>ボタンでランダムな名前を選択できます。</i></b>
+      <b>パックの名前</b>
+
+      名前は全員に表示されます。自分で入力するか、下の候補から選んでください。
     pack_name: |
-      <b>新しいステッカーパックの短縮リンクを入力してください:</b>
+      <b>パックのアドレス</b>
 
-      <i>たとえば、このパックは「動物」を短縮リンクとして使用します: https://t.me/addstickers/<u>動物</u></i>
-      <i>ボタンでランダムに短縮リンクを選択できます。</i>
+      半角英字、数字、<code>_</code> のみ使えます。例：t.me/addstickers/<u>Neko</u>
     ok: |
-      パック <a href="${link}">${title}</a> 正常に作成されました!
+      ✅ パックを作成しました：<a href="${link}">${title}</a>
 
-      <b>パックのリンク:</b> <pre>${link}</pre>
-
-      ファイル、写真、ビデオ、またはステッカーを送信して、セットに追加します
+      追加するには、写真・動画・スタンプを送信してください。
     error:
-      title_long: 名前は${max}文字を超えることはできません。
-      name_long: アドレスは${max}文字を超えることはできません。
+      title_long: 名前は ${max} 文字以内にしてください。
+      name_long: アドレスは ${max} 文字以内にしてください。
       inline_exists: |
-        You already have an inline pack — <b>${title}</b>.
+        インラインパック <b>${title}</b> はすでに作成済みです。
 
-        One inline pack per account: creating another would wipe this one.
-        It is selected now, so just keep adding stickers to it.
+        インラインパックは 1 つしか作れません。新しく作成すると、このパックが消えてしまいます。
+        すでに選択されているので、そのままスタンプを追加してください。
       telegram:
-        name_invalid: そのアドレスは使用できません。
-        name_occupied: このアドレスはすでに使用されています。
+        name_invalid: このアドレスは使用できません。
+        name_occupied: このアドレスはすでに使われています。別のアドレスをお試しください。
         upload_failed: |
-          <b>エラー！</b>
-          BotはTelegramにステッカーをアップロードできません。
+          ボットが Telegram にスタンプをアップロードできません。
 
-          後でもう一度お試しください。
+          しばらくしてからもう一度お試しください。
   copy:
     enter: |
-      コピーできますが、その前に新しいパックを作りましょう
+      まず、コピー先となる新しいパックを作成しましょう。
     progress: |
-      <a href="${originalLink}">${originalTitle}</a> から <a href="${link}">${title}</a>
-
-      進行状況: ${current}/${total}
+      ⏳ コピー中：${current}/${total}
     done: |
-      <a href="${originalLink}">${originalTitle}</a> から <a href="${link}">${title}</a> へのパックのコピーが正常に完了しました。
+      ✅ <a href="${link}">${title}</a> にコピーしました
     done_partial: |
-      ⚠️ Copied to <a href="${link}">${title}</a>
+      ⚠️ <a href="${link}">${title}</a> にコピーしました
 
-      ${success} stickers copied, ${failed} failed to copy.
+      ${success} 個のスタンプをコピーしました。${failed} 個はコピーできませんでした。
     done_pending: |
-      ✅ Copied to <a href="${link}">${title}</a>
+      ✅ <a href="${link}">${title}</a> にコピーしました
 
-      ${success} stickers copied, ${pending} videos still processing.
+      ${success} 個のスタンプをコピーしました。${pending} 個の動画はまだ処理中です。
     done_partial_pending: |
-      ⚠️ Copied to <a href="${link}">${title}</a>
+      ⚠️ <a href="${link}">${title}</a> にコピーしました
 
-      ${success} stickers copied, ${failed} failed, ${pending} videos still processing.
+      ${success} 個のスタンプをコピーしました。${failed} 個は失敗し、${pending} 個の動画はまだ処理中です。
     pay: |
-      <b>パック変換</b>
+      <b>パックの変換</b>
 
-      パッケージの1つのタイプから別のタイプへの変換には1クレジットが必要です。
+      パックを別の種類に変換するには 1 クレジットが必要です
 
-      <b>現在の残高:</b> ${balance}クレジット
+      <b>現在の残高：</b>${balance} クレジット
 
-      クレジットを購入する: /donate
+      クレジットを購入：/donate
     pay_btn: '✅ 確認'
     error:
       all_failed: |
-        ❌ Failed to copy any stickers from <a href="${originalLink}">${originalTitle}</a>.
+        ❌ <a href="${originalLink}">${originalTitle}</a> のスタンプを 1 つもコピーできませんでした。
 
-        Pack was not created.
+        パックは作成されていません。
       premium: |
-        <b>エラー！</b>
-        この機能は寄付メンバーのみが利用可能です。
+        申し訳ありませんが、この機能はボットを支援してくださった方のみご利用いただけます。
 
-        /donate コマンドを送信してこれを行うことができます。
+        /donate コマンドを送信すると支援できます。
   original:
     enter: |
-      このボットを介して追加されたステッカーを送信してください。元のステッカーを表示します。
+      <b>🔎 スタンプの出どころ</b>
+
+      スタンプを送信すると、どのパックからコピーされたかを表示します。
+      オリジナルが見つからない場合は、ファイル（PNG/WEBM）をお送りします。
     source_found: |
-      🔎 Copied from: <a href="${link}">${title}</a>
+      🔎 コピー元：<a href="${link}">${title}</a>
     error:
       not_found: |
-        <b>エラー！</b>
-        元のステッカーが見つかりませんでした。
+        オリジナルが見つかりませんでした。スタンプのファイルはこちらです：
   delete:
     enter: |
-      このボットを通して追加されたステッカーを送信すると、パックから削除します。
+      <b>🗑 スタンプの削除</b>
+
+      パックから削除したいスタンプを送信してください。
     confirm: |
-      このステッカーを削除してもよろしいですか？
+      このスタンプをパックから削除しますか？
     error:
       not_found: |
-        <b>エラー!</b>
-        ステッカーが見つかりません。
+        データベースにスタンプが見つかりません。このボット以外で作成された可能性があります。
   rename:
     enter_name: |
-      <b>新しいタイトルを <a href="${link}">${title}</a>:</b>
+      <a href="${link}">${title}</a> の新しい名前：
     success: |
-      <b>タイトルが正常に変更されました!</b>
-
-      新しいタイトル: <a href="${link}">${title}</a>
+      ✅ 名前を変更しました：<a href="${link}">${title}</a>
     boost_notice: |
-      ❕ サフィックス "<code>${titleSuffix}</code>" を削除するには、パックをブーストする必要があります。 詳細はメニューでご確認ください: \/donate
+      ブーストで「${titleSuffix}」を外せます → /donate
   packAbout:
     enter: |
-      <b>ステッカーやカスタム絵文字を送ってそれに関する情報を調べてみましょう:</b>
-    not_found: |
-      ステッカーが見つかりませんでした
-    btn:
-      download: '📎 Download file'
-      show_all_packs: '📦 All packs (${count})'
-    result: |
-      <b>📦 パック:</b> <a href="${link}">${name}</a>
-      🆔 <code>${setId}</code> <i>(所有者のパックごとにインクリメントされる一意の番号)</i>
+      <b>🔎 スタンプの作者</b>
 
-      🧑‍🎨 オーナーID: <code>${ownerId}</code>
+      スタンプを送信すると、パック、作者、その作者のほかのパックを表示します。
+      メッセージを転送すると、その人のパックを表示します。
+    not_found: |
+      スタンプが見つかりませんでした。
+    btn:
+      download: '📎 ファイルを保存'
+      show_all_packs: '📦 すべてのパック（${count}）'
+    result: |
+      <b>📦 パック：</b><a href="${link}">${name}</a>
+      🔢 スタンプ数：<code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
+
+      🧑‍🎨 所有者 ID：<code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 このオーナーからの他のパック:</b>
+      <b>🎨 この所有者のほかのパック：</b>
       ${otherPacks}
     no_other_packs: |
-      <i>この所有者の他のステッカーに関する情報はありません</i>
-    unknown_owner: '<i>Unknown</i>'
-    hidden: '<i>[hidden]</i>'
+      <i>この所有者のほかのパックに関する情報はありません</i>
+    unknown_owner: '<i>不明</i>'
+    hidden: '<i>[非公開]</i>'
   boost:
     sure: |
-      <b><a href="${link}">${title}</a> を本当にブーストしますか?</b>
+      <a href="${link}">${title}</a> をブーストしますか？
 
-      ブーストすると、処理の優先順位が上がり、キューに複数のステッカーを追加できるようになります。
-      詳細については、メニューから /donate を参照してください。
-
-      <b>価格:</b> 1クレジット
-      <b>現在の残高:</b> ${balance}クレジット
+      <b>価格：</b>1 クレジット
+      <b>残高：</b>${balance}
     btn:
-      yes: 'はい、ブースト！'
-      no: いいえ、キャンセル
+      yes: '⚡ ブーストする'
+      no: キャンセル
     canceled: |
-      ブーストはキャンセルされました
+      キャンセルしました
     success: |
-      ブーストが正常に完了しました！
+      ⚡ <a href="${link}">${title}</a> のブーストが有効になりました！
 
-      ${title} がブーストされました
+      <b>解放された機能：</b>
+      • 名前から「${titleSuffix}」を外せます（名前の変更後）
+      • 名前は最大 64 文字（通常は 35 文字）
+      • 最長 35 秒の動画
+      • 変換で優先
+      • 複数のスタンプを同時に追加
+
+      <i>サフィックスを外すには、パックのメニューで「✏️ 名前を変更」をタップしてください。</i>
     error:
-      too_fast: Not so fast — try again in a second.
+      too_fast: 操作が速すぎます。1 秒後にもう一度お試しください。
       not_enough_credits: |
-        このパックをブーストするためのクレジットが不足しています。
-
-        バランスをトップアップするには、 /donate コマンドを送信してください。
+        クレジットが足りません。/donate
       already_boosted: |
-        このパックは既にブーストされています。
+        すでにブースト済みです。
   catalog:
     publish:
       publish_new: |
-        👌 <b>公開したいパックからステッカーを送ってください</b>
+        👌 <b>公開したいパックのスタンプを送信してください</b>
 
-        <i>あなたが所有するどのパックでも公開できます、他の場所で作成されたものであっても</i>
+        <i>ほかの場所で作成したものでも、自分のパックであれば公開できます</i>
       owner_proof: |
-        <b>このパックの所有権を確認するには、いくつかの簡単な手順に従う必要があります:</b>
+        <b>このパックの所有者であることを確認するため、次の簡単な手順を行ってください：</b>
         1. @Stickers ボットを開きます
-        2. <code>を送信します/packstats</code> コマンド
-        3. 必要なパックを見つけて選択します
-        4. 受信したメッセージをボットに転送します
+        2. <code>/packstats</code> コマンドを送信します
+        3. 対象のパックを探して選択します
+        4. 届いたメッセージをこちらに転送します
       publish_new_access_denied: |
-        <b>エラー!</b>
-        このパックはあなたのものではありません。
+        これはあなたのパックではありません。
 
-        自分のパックのみを公開できます
+        公開できるのは自分のパックのみです
       banned: |
-        <b>エラー！</b>
         この機能の使用は禁止されています。
-        管理者に問い合わせてください。
+        管理者にお問い合わせください。
       enter: |
-        「<a href="${link}">${title}</a>」パックをボットのパブリック ディレクトリ
-        に公開しようとしています。このパックは、名前、タグ、またはフィルタによってボットのユーザーであれば誰でも見つけることができます。
-        これにより、より多くの人があなたのパックをインストールするようになります
-        多くの人が興味を持ちそうな高品質のパックのみを送るようにしてください
+        <a href="${link}">${title}</a> をカタログに公開しますか？
 
-        <b>ルールパックの公開について:</b>
-        • 狭い範囲の人々を対象とした個人パックを公開しないでください。たとえば、友達の顔やメッセージの引用など
-        • EU 法やその他の現地法に違反するステッカーの圧力を投稿しないでください
+        ほかのユーザーが名前やタグであなたのパックを見つけられるようになります。
 
-        追加情報を送信する必要があります。カタログに掲載されました
+        <b>ルール：</b>
+        • 幅広い人向けの質の高いパックのみ
+        • 個人的な写真やプライベートな内容は禁止
+        • 法律に違反する内容は禁止
       continue_button: 続ける
       enter_description: |
-        <b>他の人が見つけられるようにパックを簡単に説明します</b>
+        <b>ほかの人が見つけやすいように、パックの説明を簡単に書いてください</b>
 
-        <i>ハッシュタグを使用して [#] を分類することもできます</i>
-        <i>例: #アニメ #ミーム #動物 #かわいい #kpop #面白い #猫 #ゲーム </i>
+        <i>ハッシュタグでカテゴリを付けることもできます [#]</i>
+        <i>例：#アニメ #ミーム #動物 #かわいい #kpop #おもしろ #猫 #ゲーム</i>
       select_language: |
-        <b>パックの言語を選択:</b>
-        <i>複数の言語</i>
-      button_all_languages: 全ての言語
+        <b>パックの対象言語を選んでください：</b>
+        <i>複数選択できます</i>
+      button_all_languages: すべての言語
       button_confirm_language: 確認
       set_safe: |
-        <b>あなたのパックはユーザーにとって安全ですか？</b>
-        <i>つまり、エロティカやその他の衝撃的なコンテンツ</i> が含まれていません。
+        <b>あなたのパックはすべてのユーザーにとって安全ですか？</b>
+        <i>性的な内容やショッキングな内容を含まないという意味です</i>
       button_safe:
         safe: はい、安全です
         not_safe: いいえ、安全ではありません
-      no_tags: 指定されていません
+      no_tags: 指定なし
       confirm: |
-        <b>パックの公開を確認します "<a href="${link}">${title}</a>"</b>
+        <b>スタンプパック「<a href="${link}">${title}</a>」の公開を確認</b>
 
-        <b>説明:</b> <i>${description}</i>
+        <b>説明：</b><i>${description}</i>
 
-        <b>タグ:</b> ${tags}
-        <b>言語:</b> ${languages}
-      button_confirm: '✅ 公開確認'
+        <b>タグ：</b>${tags}
+        <b>言語：</b>${languages}
+      button_confirm: '✅ 公開を確定'
       success: |
-        おめでとうございます。あなたのパックは他のユーザーが見つけられるボットの一般的なディレクトリに公開されました！
+        おめでとうございます！パックがカタログに公開され、ほかのユーザーが見つけられるようになりました！
 
-        /packsコマンドでパックを選択することで、パック検索情報を編集できます。
+        パックの情報は /packs から編集できます。
 
-
-
-        <i>公式ボットの @Stickers</i> でパックの統計を確認できることをお知らせします。
+        <i>パックの統計は公式ボット @Stickers で確認できます</i>
     unpublish:
       success: |
-        パックはボットカタログから正常に非公開になりました。
+        パックをカタログから削除しました。
   delete_pack:
     enter: |
-      <a href="${link}">${title}</a>パックを削除してもよろしいですか?
-      完全に削除され、復元することはできません。
+      ⚠️ <a href="${link}">${title}</a> を完全に削除しますか？
 
-      ステッカーを 1 つだけ削除したい場合は、/delete コマンドを使用します。
-
-       <code>${confirm}</code> を送信して、このパックを本当に削除することを確認してください。
-    confirm: はい、私は完全に確かです。
+      確認のため <code>${confirm}</code> と送信してください。
+    confirm: はい、削除します
     success: |
-      <b>パックを削除しました！</b>
+      🗑 パックを削除しました
     error:
-      - <b>エラー!</b>
+      - 問題が発生しました。
   frame:
     no_sticker_set: |
-      You haven't selected a pack yet. Pick one with /packs and run the command again.
+      パックがまだ選択されていません。/packs でパックを選択してから、もう一度コマンドを実行してください。
     no_video: |
-      <b>エラー!</b>
-      ビデオパックにのみフレームを追加できます。
+      フレームを追加できるのは動画のパックのみです。
     select_type: |
-      <a href="${example}">&#8203;</a><b>フレームタイプを選択:</b>
-      フレームはステッカー周りの透明な背景です
+      <a href="${example}">&#8203;</a><b>スタンプの形を選んでください：</b>
 
-      <code>lite</code> — 角が少し切り取られます
-      <code>medium</code> — 角がもっと切り取られます
-      <code>rounded</code> — 角が丸くなります
-      <code>square</code> — フレームの矩形の形状が変わらず、そのままです
-      <code>circle</code> — フレームが円形になります
+      <code>ライト</code> — 角丸はほとんどなし
+      <code>ミディアム</code> — 角が少し丸い
+      <code>角丸</code> — 角が大きく丸い
+      <code>四角</code> — 角丸なしの直角
+      <code>円形</code> — 円の形のスタンプ
 
-      <i>将来的には、/frame コマンドを使用してフレームタイプを設定できます</i>
+      <i>形は /frame コマンドで変更できます</i>
     types:
-      lite: '1. Lite'
-      medium: '2. 中'
-      rounded: '3. 丸みを帯びた'
-      square: '4. スクエア'
+      lite: '1. ライト'
+      medium: '2. ミディアム'
+      rounded: '3. 角丸'
+      square: '4. 四角'
       circle: '5. 円形'
     selected: |
-      <b>選択したフレームタイプ:</b> ${type}
+      <b>選択したフレーム：</b>${type}
   photoClear:
     enter: |
-      背景を削除したい <u>写真</u> を送信してください。背景なしのファイル
+      <b>✂️ 背景の削除</b>
 
-      <i>写真に最適です。絵やイラストなどではさらにうまくいきません</i>
+      写真を送信すると、背景を削除した PNG をお送りします。
+      <i>人物の写真に最適です。</i>
     enter_anime: |
-      背景を削除したい<u>写真</u>を送り、背景なしのファイルを返送します
+      <b>✂️ 背景の削除</b>
 
-      <i>アニメ画像に最適です</i>
+      写真を送信すると、背景を削除した PNG をお送りします。
+      <i>アニメ画像に最適です。</i>
     choose_model: |
-      <b>モデルを選択:</b>
-    web_app: WebApp - 人と写真用
+      モデル：
+    web_app: WebApp — 人物の写真向け
     model:
-      ordinary: Common — 人と一緒に写真を撮るには
-      general: 全般 — 任意の写真用
-      anime: Anime — アニメ写真用
-      birefnet_general: 全般 — 任意の写真用
-    add_to_set_btn: '🌟 セットに追加'
+      ordinary: 標準 — 人物の写真向け
+      general: 汎用 — あらゆる写真向け
+      anime: アニメ — アニメ画像向け
+      birefnet_general: BirefNet — あらゆる写真向け
+    add_to_set_btn: '🌟 パックに追加'
     error: |
-      <b>エラー！</b>
-      オペ、何か問題が発生しました。
+      問題が発生しました。もう一度お試しください。
     error_timeout: |
-      ⏱ Processing took too long. Try again later or with a smaller photo.
+      ⏱ 処理に時間がかかりすぎました。しばらくしてから、または小さい写真でお試しください。
     error_queue_disabled: |
-      This feature is temporarily unavailable. Please try again later.
+      この機能は一時的にご利用いただけません。しばらくしてからお試しください。
   videoRound:
     enter: |
-      <b>⭕ Video to Circle</b>
+      <b>⭕ 動画をビデオメッセージに</b>
 
-      Send a video — I'll turn it into a circle (video note).
+      動画を送信すると、丸いビデオメッセージに変換します。
     not_video: |
-      Send a video, GIF, video sticker, or animated image.
+      動画、GIF、動画スタンプ、またはアニメーション画像を送信してください。
     error: |
-      Couldn't convert. Try a different video.
+      変換できませんでした。別の動画をお試しください。
     forbidden: |
-      Can't send video circles to you. Check your privacy settings (voice messages must be allowed).
+      ビデオメッセージを送信できません。プライバシー設定を確認してください（ボイスメッセージの受信を許可する必要があります）。
     processing: |
-      ⏳ Converting: ${position}/${total}
+      ⏳ 変換中：${position}/${total}
 
-      <i>Boost = priority → /donate</i>
+      <i>ブーストで優先処理 → /donate</i>
     file_too_big: |
-      File is too big (max 20 MB). Send a smaller video.
+      ファイルが大きすぎます（最大 20 MB）。もっと小さい動画を送信してください。
   search:
     error:
       not_found: |
-        Nothing found. Try other keywords.
+        見つかりませんでした。別のキーワードをお試しください。
     enter: |
-      <b>🔍 Search stickers</b>
+      <b>🔍 スタンプを検索</b>
 
-      Enter keywords — I'll find packs in the catalog.
+      キーワードを入力すると、カタログからパックを探します。
   error:
     notFound: パックが見つかりません
   leave: |
-    アクションがキャンセルされました。
+    キャンセルしました
   btn:
-    cancel: '❌ キャンセル'
+    cancel: '← キャンセル'
 error:
   stickerset_invalid: |
-    The sticker pack is unavailable. It may have been deleted in Telegram.
+    パックを利用できません。Telegram で削除された可能性があります。
   telegram: |
-    <b>Telegramでエラーが発生しました！</b>
-    <code>${error}</code>
+    Telegram エラー：<code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
-      This sticker is no longer in the pack — it may have been removed already.
+      このスタンプはすでにパックにありません。以前に削除された可能性があります。
     pack_invalid: |
-      The sticker pack is unavailable. It may have been deleted in Telegram.
+      スタンプパックを利用できません。Telegram で削除された可能性があります。
     pack_full: |
-      The pack is full (Telegram limit reached). Remove a few stickers and try again.
+      パックがいっぱいです（Telegram の上限に達しました）。いくつかスタンプを削除してから、もう一度お試しください。
     not_pack_owner: |
-      This pack belongs to another user — you can't modify it.
+      このパックは別のユーザーのものなので、変更できません。
     pack_name_taken: |
-      That pack address is already taken. Pick another name.
+      このパックのアドレスはすでに使われています。別の名前を選んでください。
     pack_name_invalid: |
-      The pack address has an invalid format. Use Latin letters, digits, and underscores.
+      パックのアドレスの形式が正しくありません。使えるのは半角英字、数字、アンダースコアです。
     invalid_sticker_format: |
-      The file is not a valid sticker: wrong format or dimensions.
+      このファイルはスタンプとして使えません。形式またはサイズが正しくありません。
     invalid_emoji: |
-      The emoji is invalid. Send a standard Unicode emoji.
+      絵文字が正しくありません。標準の Unicode 絵文字を送信してください。
     rate_limited: |
-      Telegram is asking to wait — please try again in a few seconds.
+      Telegram から待機を求められています。数秒後にもう一度お試しください。
     cannot_reach_user: |
-      Can't message this user: the bot is blocked or the chat is unavailable.
+      このユーザーにメッセージを送れません。ボットがブロックされているか、チャットを利用できません。
   answerCbQuery:
     telegram: |
-      Telegramでエラーが発生しました：
-      ${error}
+      エラー：${error}
   file_too_big: |
-    File is too big (max 20 MB).
+    ファイルが大きすぎます（最大 20 MB）。
   download: |
-    Failed to download file. Try again.
+    ファイルをダウンロードできませんでした。もう一度お試しください。
   banned: |
-    <b>エラー！</b>
-    この機能の使用は禁止されています。
-
-    <i>これが間違いだと思う場合は、管理者に問い合わせてください: @ly_oBot</i>
-  access_denied: Access denied
+    🚫 アクセスが禁止されています。お問い合わせ → @ly_oBot
+  access_denied: アクセスが拒否されました
   unknown: |
-    <b>不明なエラーが発生しました。もう一度お試しください。</b>
+    問題が発生しました。もう一度お試しください。
 
-    問題が解決しない場合は、@Ly_oBot に連絡してください。
-    どのボットのことを話しているのかをすぐに書き、問題を詳細に説明してください。
+    解決しない場合は @Ly_oBot までご連絡ください
   rate_limit: |
-    ⏳ Too many requests. Please wait a moment and try again.
+    ⏳ リクエストが多すぎます。少し待ってから、もう一度お試しください。
   rate_limit_seconds: |
-    ⏳ Too many requests. Please wait ${seconds} seconds.
+    ⏳ リクエストが多すぎます。${seconds} 秒お待ちください。
