@@ -4,6 +4,7 @@ const {
 } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
+const coedit = require('../utils/coedit')
 
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
@@ -14,7 +15,8 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 
-  if (sticker.stickerSet.owner.toString() !== ctx.session.userInfo.id.toString()) {
+  // The owner, or a co-editor allowed to delete (restore undoes a delete).
+  if (!coedit.can(await coedit.getAccess(ctx, sticker.stickerSet), 'delete')) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 
@@ -115,6 +117,7 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('error.unknown'), true)
   }
 
+  coedit.track(ctx.db, sticker.stickerSet, ctx.from, 'restore', { fileUniqueId: newFileUniqueId })
   await ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.restored'))
 
   await safeEditMessage(ctx, ctx.i18n.t('callback.sticker.restored'), {

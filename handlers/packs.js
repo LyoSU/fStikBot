@@ -2,9 +2,12 @@ const Markup = require('telegraf/markup')
 const { sendBanner, editBanner } = require('../banners')
 const { sendPackMenu, isOwner } = require('./pack-menu')
 const { flushPendingStickers } = require('./sticker')
+const coedit = require('../utils/coedit')
 
 const PAGE_SIZE = 10
 const PACK_TYPES = ['regular', 'custom_emoji', 'inline']
+// Tabs also include packs other people shared with the user.
+const VIEW_TYPES = [...PACK_TYPES, 'shared']
 
 const typeFilter = (packType) => {
   if (packType === 'inline') return { inline: true }
@@ -35,7 +38,7 @@ const parseView = (ctx) => {
   const [, kind, type, page] = data.split(':')
 
   if (kind === 'type' || kind === 'list' || kind === 'hidden') {
-    if (PACK_TYPES.includes(type)) view.packType = type
+    if (VIEW_TYPES.includes(type)) view.packType = type
     view.page = Math.max(0, parseInt(page, 10) || 0)
     view.hidden = kind === 'hidden'
   } else if (data.startsWith('packs:')) {
@@ -79,12 +82,10 @@ async function renderList (ctx, view) {
   const { userInfo } = ctx.session
   const t = (key) => ctx.i18n.t(key)
 
-  const query = {
-    owner: userInfo.id,
-    create: true,
-    hide: view.hidden ? true : { $ne: true },
-    ...typeFilter(view.packType)
-  }
+  const shared = view.packType === 'shared'
+  const query = shared
+    ? { 'editors.user': userInfo._id, create: true, deleted: { $ne: true } }
+    : { owner: userInfo.id, create: true, hide: view.hidden ? true : { $ne: true }, ...typeFilter(view.packType) }
 
   // limit+1 tells whether there is a next page without a count query.
   const stickerSets = await ctx.db.StickerSet.find(query)
@@ -107,7 +108,7 @@ async function renderList (ctx, view) {
   if (view.hidden) {
     text = t(stickerSets.length > 0 ? 'cmd.packs.hidden_info' : 'cmd.packs.hidden_empty')
   } else if (stickerSets.length > 0) {
-    const total = await packCount(ctx, view, query, stickerSets.length)
+    const total = shared ? await ctx.db.StickerSet.countDocuments(query) : await packCount(ctx, view, query, stickerSets.length)
     text = t('cmd.packs.info')
     if (total > PAGE_SIZE) text += `\n<i>${view.page + 1}/${Math.ceil(total / PAGE_SIZE)} (${total})</i>\n`
   } else {
@@ -139,9 +140,15 @@ async function renderList (ctx, view) {
       `packs:type:${type}`
     )))
 
-    const hasHidden = await ctx.db.StickerSet.exists({ owner: userInfo.id, create: true, hide: true, ...typeFilter(view.packType) })
+    const [hasShared, hasHidden] = await Promise.all([
+      ctx.db.StickerSet.exists({ 'editors.user': userInfo._id, deleted: { $ne: true } }),
+      !shared && ctx.db.StickerSet.exists({ owner: userInfo.id, create: true, hide: true, ...typeFilter(view.packType) })
+    ])
+    if (hasShared) {
+      keyboard.push([Markup.callbackButton((shared ? '✅ ' : '') + t('cmd.packs.types.shared'), 'packs:type:shared')])
+    }
     // Only one inline pack per user — its name is fixed, a second would wipe it.
-    const canCreate = view.packType !== 'inline'
+    const canCreate = !['inline', 'shared'].includes(view.packType)
     keyboard.push([
       canCreate && Markup.callbackButton(t('cmd.start.btn.new'), `new_pack:${view.packType}`),
       hasHidden && Markup.callbackButton(t('cmd.packs.hidden_btn'), `packs:hidden:${view.packType}:0`)
@@ -176,15 +183,18 @@ async function openPack (ctx) {
   if (!stickerSet || stickerSet.deleted) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
   }
-  if (!isOwner(ctx, stickerSet)) {
+  const owner = isOwner(ctx, stickerSet)
+  if (!owner && !coedit.can(await coedit.getAccess(ctx, stickerSet), 'add')) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 
   await ctx.answerCbQuery()
 
-  if (stickerSet.hide !== true) {
-    stickerSet.updatedAt = new Date()
-    await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
+  if (stickerSet.hide !== true || !owner) {
+    if (owner) {
+      stickerSet.updatedAt = new Date()
+      await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
+    }
 
     if (stickerSet.inline) {
       userInfo.inlineType = 'packs'
@@ -195,10 +205,11 @@ async function openPack (ctx) {
 
   await sendPackMenu(ctx, stickerSet)
 
-  if (stickerSet.hide !== true) {
+  if (stickerSet.hide !== true || !owner) {
     flushPendingStickers(ctx, stickerSet)
     // Refresh the ✅ mark in the list the pack was opened from.
-    await renderList(ctx, { packType: stickerSet.inline ? 'inline' : (stickerSet.packType || 'regular'), page: 0, hidden: false })
+    const packType = !owner ? 'shared' : (stickerSet.inline ? 'inline' : (stickerSet.packType || 'regular'))
+    await renderList(ctx, { packType, page: 0, hidden: false })
   }
 }
 

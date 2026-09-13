@@ -39,12 +39,18 @@ const makeCtx = ({ previousSticker, byId, setStickers, fromDb, callApi }) => {
     message: { text: '😀', message_id: 1 },
     session: {
       previousSticker,
-      userInfo: { stickerSet: { name: 'set_by_bot', inline: false } }
+      userInfo: { _id: 'owner', stickerSet: { name: 'set_by_bot', inline: false } }
     },
     db: {
       Sticker: {
         async findById () { return byId },
         async findOne () { return fromDb }
+      },
+      // The caller owns the pack (utils/coedit.js access check); no co-editors,
+      // so nothing is written to the activity log.
+      StickerSet: {
+        findById: () => ({ select: () => ({ lean: async () => ({ owner: 'owner', editors: [] }) }) }),
+        async exists () { return null }
       }
     },
     tg: {

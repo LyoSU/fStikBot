@@ -1,23 +1,17 @@
 const emojiRegex = require('emoji-regex')
 const { sendBanner } = require('../banners')
+const coedit = require('../utils/coedit')
 
-// The selected pack can belong to somebody else: /public and the co-edit link
-// let a stranger select a pack they don't own. The owner and co-editors (anyone
-// who got in via the secret /coedit passcode) may change pack-wide settings;
-// the shared demo pack (passcode 'public', selectable by everyone) may not.
-const canEditPackSettings = (ctx, stickerSet) => {
-  if (!stickerSet) return false
-  const ownerId = stickerSet.owner && stickerSet.owner.toString()
-  if (ownerId && ownerId === ctx.session.userInfo.id.toString()) return true
-  return stickerSet.passcode !== 'public'
-}
+// The selected pack can belong to somebody else (a co-edit link, /public).
+// Pack-wide settings need the "settings" right: the owner and editors.
+const canEditPackSettings = async (ctx, stickerSet) => coedit.can(await coedit.getAccess(ctx, stickerSet), 'settings')
 
 module.exports = async (ctx) => {
   const uncleanUserInput = ctx.message.text.substring(0, 15)
   const emojiSymbols = uncleanUserInput.match(emojiRegex())
   if (emojiSymbols) {
     const emoji = emojiSymbols.join('')
-    if (ctx.session.userInfo.stickerSet && !canEditPackSettings(ctx, ctx.session.userInfo.stickerSet)) {
+    if (ctx.session.userInfo.stickerSet && !await canEditPackSettings(ctx, ctx.session.userInfo.stickerSet)) {
       await ctx.replyWithHTML(ctx.i18n.t('error.access_denied'), {
         reply_to_message_id: ctx.message.message_id,
         allow_sending_without_reply: true

@@ -1,4 +1,13 @@
 const emojiRegex = require('emoji-regex')
+const coedit = require('../utils/coedit')
+
+// An editor may change any emoji in the pack; a contributor only the one of
+// the sticker they just added.
+const mayChangeEmoji = async (ctx, sticker) => {
+  const access = await coedit.getAccess(ctx, { _id: sticker.stickerSet })
+  if (coedit.can(access, 'emoji')) return true
+  return access?.role === 'contributor' && String(ctx.session.previousSticker?.id) === String(sticker._id)
+}
 
 module.exports = async (ctx, next) => {
   if (ctx.session.previousSticker && ctx.session?.userInfo?.stickerSet?.inline) {
@@ -77,6 +86,13 @@ module.exports = async (ctx, next) => {
   // error instead of just working.
   if (emojis.length > 20) emojis.length = 20
 
+  if (!await mayChangeEmoji(ctx, sticker)) {
+    return ctx.replyWithHTML(ctx.i18n.t('coedit.no_rights'), {
+      reply_to_message_id: ctx.message.message_id,
+      allow_sending_without_reply: true
+    })
+  }
+
   const updateResult = await ctx.tg.callApi('setStickerEmojiList', {
     sticker: sticker.getFileId(),
     emoji_list: emojis
@@ -98,6 +114,7 @@ module.exports = async (ctx, next) => {
   if (updateResult) {
     sticker.emojis = emojis.join(' ')
     await sticker.save()
+    coedit.track(ctx.db, { _id: sticker.stickerSet }, ctx.from, 'emoji', { fileUniqueId: sticker.fileUniqueId })
 
     await ctx.replyWithHTML(ctx.i18n.t('cmd.emoji.done'), {
       reply_to_message_id: ctx.message.message_id,

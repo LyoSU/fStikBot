@@ -13,6 +13,8 @@ const { waitForJob } = require('../utils/queue-job')
 const packLink = require('../utils/pack-link')
 const { parseCaption, extractMedia } = require('../utils/sticker-media')
 const log = require('../utils/logger').scope('sticker')
+const metrics = require('../utils/metrics')
+const coedit = require('../utils/coedit')
 const handleError = require('./catch')
 
 // Adds for a boosted pack may run side by side ("multiple stickers at once");
@@ -131,9 +133,15 @@ const findExisting = (ctx, stickerSet, file) => ctx.db.Sticker.findOne({
 // converter has finished it, so their files still go one at a time.
 const addOne = async (ctx, stickerSet, file, { stickerSetInfo, replyTo }) => {
   const existing = await findExisting(ctx, stickerSet, file)
-  if (existing) return { error: { type: 'duplicate', sticker: existing } }
+  if (existing) {
+    metrics.track('sticker_duplicate')
+    return { error: { type: 'duplicate', sticker: existing } }
+  }
 
   const result = await addSticker(ctx, file, stickerSet, true, { stickerSetInfo, replyToMessageId: replyTo })
+  if (result.ok) metrics.track('sticker_added')
+  else if (result.wait) metrics.track('video_queued')
+  else metrics.track('sticker_failed')
 
   if (result.wait && result.job && !stickerSet.boost) {
     await waitForJob(result.job, VIDEO_WAIT_MS)
@@ -175,13 +183,17 @@ const addSingle = async (ctx, stickerSet, item, stickerSetInfo) => {
   const { messageText, replyMarkup } = addStickerText(result, ctx.i18n.locale())
   if (messageText) await reply(ctx, messageText, item.replyTo, { reply_markup: replyMarkup })
 
-  if (result.ok) await maybeOfferCatalog(ctx, stickerSet, 1)
+  if (result.ok) {
+    coedit.track(ctx.db, stickerSet, ctx.from, 'add', { count: 1 })
+    await maybeOfferCatalog(ctx, stickerSet, 1)
+  }
 }
 
 // An album gets one progress message and one summary instead of a reply per
 // file — ten "Added to pack" messages in a row buried the chat.
 const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
   const total = items.length
+  metrics.track('album')
   const counts = { added: 0, converting: 0, duplicates: 0, failed: 0 }
   let failReason = null
   let lastSticker = null
@@ -243,6 +255,7 @@ const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
     reply_markup: Markup.inlineKeyboard([button])
   })
 
+  if (counts.added) coedit.track(ctx.db, stickerSet, ctx.from, 'add', { count: counts.added })
   await maybeOfferCatalog(ctx, stickerSet, counts.added)
 }
 
@@ -280,6 +293,7 @@ const schedule = (ctx, stickerSet, getItems, replyTo) => {
   }, { concurrency: stickerSet.boost ? BOOST_CONCURRENCY : 1 })
 
   if (!queued) {
+    metrics.track('queue_full')
     return reply(ctx, ctx.i18n.t('sticker.add.error.queue_full'), replyTo)
   }
 
@@ -306,10 +320,12 @@ const flushPendingStickers = (ctx, stickerSet) => {
   if (!pending || Date.now() - pending.at > PENDING_TTL_MS || !pending.items.length) return
   if (pending.items[0].chatId !== ctx.chat?.id) return
 
+  metrics.track('pending_flushed')
   schedule(ctx, stickerSet, () => pending.items, pending.items[0].replyTo)
 }
 
 const replyNoPack = async (ctx, replyTo) => {
+  metrics.track('no_pack_prompt')
   const hasPacks = await ctx.db.StickerSet.exists({ owner: ctx.session.userInfo.id, create: true, deleted: { $ne: true } })
 
   const buttons = [Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), 'new_pack:null')]
@@ -377,6 +393,7 @@ module.exports = async (ctx, next) => {
   }
 
   ctx.replyWithChatAction('upload_document').catch(() => {})
+  metrics.track('sticker_received')
 
   const item = {
     file,
@@ -395,6 +412,16 @@ module.exports = async (ctx, next) => {
       rememberPending(ctx, item)
       if (album && !album.first) return
       return replyNoPack(ctx, replyTo)
+    }
+
+    // Someone else's pack: members can be removed or limited at any time.
+    if (coedit.idOf(stickerSet.owner) !== coedit.idOf(ctx.session.userInfo)) {
+      if (album && !album.first) return
+      const access = await coedit.getAccess(ctx, stickerSet)
+      if (!coedit.can(access, 'add')) {
+        ctx.session.userInfo.stickerSet = null
+        return reply(ctx, ctx.i18n.t('coedit.no_access'), replyTo)
+      }
     }
 
     if (album) {

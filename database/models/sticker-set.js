@@ -14,6 +14,21 @@ const stickerSetsSchema = mongoose.Schema({
     type: String,
     index: true
   },
+  // Co-editors (see utils/coedit.js). `name` is a display snapshot taken when
+  // they joined.
+  editors: [{
+    _id: false,
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    telegramId: Number,
+    name: String,
+    role: { type: String, enum: ['editor', 'contributor'], default: 'editor' },
+    addedAt: Date
+  }],
+  coedit: {
+    defaultRole: { type: String, enum: ['editor', 'contributor'], default: 'editor' },
+    // Pre-member-list co-editors have been adopted into `editors`.
+    migrated: Boolean
+  },
   name: {
     type: String,
     unique: true,
@@ -152,5 +167,7 @@ stickerSetsSchema.index({ owner: 1, create: 1, hide: 1, inline: 1, packType: 1, 
 // For inline queries: find({ owner, inline }).sort({ updatedAt: -1 })
 stickerSetsSchema.index({ owner: 1, inline: 1, updatedAt: -1 })
 // Note: { owner: 1, hide: 1 } removed - covered by the main compound index above
+// Packs shared with a user (/packs "Shared" tab).
+stickerSetsSchema.index({ 'editors.user': 1 })
 
 module.exports = stickerSetsSchema

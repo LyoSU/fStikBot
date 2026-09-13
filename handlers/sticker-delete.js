@@ -3,6 +3,7 @@ const escapeHTML = require('../utils/html-escape')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
+const coedit = require('../utils/coedit')
 
 const isOwnerOf = (ctx, stickerSet) => String(stickerSet.owner) === String(ctx.session.userInfo.id)
 
@@ -23,13 +24,13 @@ const resolveTarget = async (ctx, fileUniqueId, telegramSticker) => {
     .populate('stickerSet', '_id name title owner inline passcode placeholderFileUniqueId packType')
 
   if (sticker?.stickerSet) {
-    const selected = ctx.session.userInfo?.stickerSet
-    const allowed = isOwnerOf(ctx, sticker.stickerSet) ||
-      // A co-editor works on the pack they selected through the co-edit link.
-      String(selected?._id || selected || '') === String(sticker.stickerSet._id) ||
+    const access = await coedit.getAccess(ctx, sticker.stickerSet)
+    const allowed = coedit.can(access, 'delete') ||
       (ctx.chat.type !== 'private' && await canDeleteInGroup(ctx, sticker.stickerSet))
 
-    return allowed ? { sticker, stickerSet: sticker.stickerSet, fileId: sticker.getFileId() } : null
+    if (allowed) return { sticker, stickerSet: sticker.stickerSet, fileId: sticker.getFileId(), access }
+    // A member whose role only allows adding.
+    return access ? { denied: true } : null
   }
 
   const setName = telegramSticker?.set_name
@@ -48,6 +49,7 @@ const resolveTarget = async (ctx, fileUniqueId, telegramSticker) => {
 async function deleteSticker (ctx, fileUniqueId, telegramSticker) {
   const target = await resolveTarget(ctx, fileUniqueId, telegramSticker)
   if (!target) return { error: ctx.i18n.t('callback.sticker.error.not_found') }
+  if (target.denied) return { error: ctx.i18n.t('coedit.no_rights') }
 
   const { sticker, stickerSet, fileId } = target
 
@@ -83,9 +85,11 @@ async function deleteSticker (ctx, fileUniqueId, telegramSticker) {
     await sticker.save()
   }
 
-  // Restoring re-adds the sticker as the pack owner, so only the owner gets
-  // the button — a group admin used to get one that always failed.
-  const buttons = sticker && isOwnerOf(ctx, stickerSet)
+  coedit.track(ctx.db, stickerSet, ctx.from, 'delete', { fileUniqueId: sticker?.fileUniqueId })
+
+  // Restore needs the same right as delete within the pack; a group admin
+  // deleting through group rights used to get a button that always failed.
+  const buttons = sticker && (isOwnerOf(ctx, stickerSet) || coedit.can(target.access, 'delete'))
     ? [{ ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.fileUniqueId}`), style: 'success' }]
     : []
 

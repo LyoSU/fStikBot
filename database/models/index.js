@@ -6,6 +6,8 @@ const Broadcast = require('./broadcast')
 const BroadcastRecipient = require('./broadcast-recipient')
 const Payment = require('./payment')
 const DeepLink = require('./deeplink')
+const Metric = require('./metric')
+const PackActivity = require('./pack-activity')
 
 module.exports = {
   User,
@@ -15,5 +17,7 @@ module.exports = {
   Broadcast,
   BroadcastRecipient,
   Payment,
-  DeepLink
+  DeepLink,
+  Metric,
+  PackActivity
 }

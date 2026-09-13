@@ -6,6 +6,7 @@ const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
 const escapeHTML = require('../utils/html-escape')
 const packLink = require('../utils/pack-link')
+const coedit = require('../utils/coedit')
 
 const stegcloak = new StegCloak(false, false)
 
@@ -56,6 +57,8 @@ const catalogRows = async (ctx, stickerSet) => {
 async function buildPackMenu (ctx, stickerSet, { notice, text: textOverride } = {}) {
   const t = (key, params) => ctx.i18n.t(key, params)
   const owner = isOwner(ctx, stickerSet)
+  const access = owner ? { role: 'owner' } : await coedit.getAccess(ctx, stickerSet)
+  const member = ['editor', 'contributor'].includes(access?.role)
   const hidden = stickerSet.hide === true
   const title = escapeHTML(stickerSet.title)
 
@@ -76,6 +79,7 @@ async function buildPackMenu (ctx, stickerSet, { notice, text: textOverride } = 
     }
   }
 
+  if (member && !hidden) text += '\n' + t('coedit.your_role', { role: coedit.roleLabel(t, access.role) })
   if (textOverride) text = textOverride
   if (notice) text = `${notice}\n\n${text}`
 
@@ -107,10 +111,11 @@ async function buildPackMenu (ctx, stickerSet, { notice, text: textOverride } = 
     ]))
     keyboard.push(...await catalogRows(ctx, stickerSet))
     keyboard.push([Markup.callbackButton(t('callback.pack.btn.hide'), `hide_pack:${stickerSet.id}`)])
-  } else if (!stickerSet.inline && stickerSet.passcode !== 'public') {
-    // Co-editors may change the frame (see scenes/pack-frame.js); the shared
-    // public demo pack may not.
-    keyboard.push([Markup.callbackButton(t('callback.pack.btn.frame'), 'set_frame')])
+  } else if (access) {
+    keyboard.push(...rows([
+      !stickerSet.inline && coedit.can(access, 'settings') && Markup.callbackButton(t('callback.pack.btn.frame'), 'set_frame'),
+      member && Markup.callbackButton(t('coedit.btn.leave'), `ce:leave:${stickerSet.id}`)
+    ]))
   }
 
   return {

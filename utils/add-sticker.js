@@ -18,6 +18,7 @@ const { isInCopyScope, getRetryAfter } = require('./retry-api')
 const { getStickerCooldown, buildCooldownError } = require('./sticker-cooldown')
 const { matchTelegramErrorReason } = require('./telegram-error')
 const log = require('./logger').scope('add-sticker')
+const coedit = require('./coedit')
 
 // Telegram pins the Lottie canvas per pack type. A TGS taken from a pack of
 // the other type has to be retargeted or Telegram rejects it.
@@ -174,6 +175,8 @@ async function handleConvertCompleted (jobId, result) {
   } finally {
     if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
   }
+
+  if (uploadResult?.ok && input.actor) coedit.track(db, stickerSet, input.actor, 'add', { count: 1 })
 
   if (input.showResult) {
     const textResult = addStickerText(uploadResult, input.locale || 'en')
@@ -505,6 +508,16 @@ const tryAddByFileId = async (userId, stickerSet, stickerFile, stickerExtra, bef
   return null
 }
 
+// Telegram adds stickers only on behalf of the pack's owner (user_id of
+// uploadStickerFile / addStickerToSet). A co-editor or a group member used
+// their own id, and Telegram refused the add.
+const resolveOwnerId = async (ctx, stickerSet) => {
+  if (stickerSet?.ownerTelegramId) return stickerSet.ownerTelegramId
+  const ownerRef = stickerSet?.owner?._id || stickerSet?.owner
+  const owner = ownerRef && await db.User.findById(ownerRef).select('telegram_id').lean().catch(() => null)
+  return owner?.telegram_id || ctx.from.id
+}
+
 // Download a TGS, fit its canvas to this pack's type and upload it.
 const uploadRetargetedTgs = async (userId, stickerSet, stickerFile, stickerExtra, fileUrl, beforeStickers) => {
   let animatedData
@@ -555,6 +568,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   }
 
   const stickerSet = toStickerSet
+  const ownerId = await resolveOwnerId(ctx, stickerSet)
 
   if (stickerSet && stickerSet.inline) {
     if (!stickerFile?.file_unique_id) {
@@ -615,7 +629,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   // nothing, so it still goes through during an upload flood. A pack copy
   // runs in copy scope and waits cooldowns out instead, so it skips this.
   if (!isInCopyScope()) {
-    const cooldown = getStickerCooldown(ctx.from.id, { upload: !canAddByFileId(stickerFile, stickerSet) })
+    const cooldown = getStickerCooldown(ownerId, { upload: !canAddByFileId(stickerFile, stickerSet) })
     if (cooldown > 0) return { error: { telegram: buildCooldownError(cooldown) } }
   }
 
@@ -651,7 +665,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
     // Same pack type (or a restore of this pack's own file) → the TGS canvas
     // already fits, so add it by file_id: no download, no upload.
     if (canAddByFileId(stickerFile, stickerSet)) {
-      const byFileId = await tryAddByFileId(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+      const byFileId = await tryAddByFileId(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
       if (byFileId) return byFileId
     }
 
@@ -667,7 +681,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
       return fileUrl
     }
 
-    return uploadRetargetedTgs(ctx.from.id, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers)
+    return uploadRetargetedTgs(ownerId, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers)
   }
 
   // Static and video stickers from a set of the same type go by file_id too.
@@ -676,7 +690,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   // is_video/is_animated flags, and a refusal still falls through to the
   // download path below, which corrects the format from the file extension.
   if (canAddByFileId(stickerFile, stickerSet)) {
-    const byFileId = await tryAddByFileId(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+    const byFileId = await tryAddByFileId(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
     if (byFileId) return byFileId
   }
 
@@ -723,7 +737,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
   // Handle animated stickers that weren't caught by is_animated check (fallback from URL detection)
   if (stickerExtra.sticker_format === 'animated' && !stickerFile.is_animated) {
-    return uploadRetargetedTgs(ctx.from.id, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers)
+    return uploadRetargetedTgs(ownerId, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers)
   }
 
   // A same-type set sticker gets here only after Telegram refused it by file_id
@@ -737,7 +751,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
       return { error: { i18nKey: 'sticker.add.error.convert' } }
     }
     stickerExtra.sticker = { source: stickerData }
-    return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+    return uploadSticker(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
   }
 
   // Remove background if requested
@@ -801,7 +815,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
         return { error: { i18nKey: 'sticker.add.error.convert' } }
       }
       stickerExtra.sticker = { source: skipData }
-      return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+      return uploadSticker(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
     }
 
     // Convert video through queue
@@ -848,9 +862,10 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
       job = await convertQueue.add({
         input: {
           botId: ctx.botInfo.id,
-          userId: ctx.from.id,
+          userId: ownerId,
           chatId: ctx.chat.id,
           replyToMessageId: options.replyToMessageId || null,
+          actor: { id: ctx.from.id, first_name: ctx.from.first_name, last_name: ctx.from.last_name, username: ctx.from.username },
           locale: ctx.i18n.locale(),
           showResult,
           convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
@@ -943,5 +958,5 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
     source: await pipeline.png({ compressionLevel: 6, effort: 3 }).toBuffer()
   }
 
-  return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+  return uploadSticker(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
 }

@@ -31,7 +31,7 @@ db.User.getData = async (tgUser) => {
       // placeholderFileUniqueId must survive this projection: uploadSticker's
       // placeholder cleanup reads it off the session doc, and without it the
       // guard sees "no placeholder" and silently skips the removal.
-      select: '_id name title packType inline create emojiSuffix frameType boost hide owner passcode public publishDate placeholderFileUniqueId'
+      select: '_id name title packType inline create emojiSuffix frameType boost hide owner ownerTelegramId passcode public publishDate placeholderFileUniqueId'
     })
     .populate({
       path: 'inlineStickerSet',
