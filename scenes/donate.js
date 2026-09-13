@@ -1,6 +1,5 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
-const mongoose = require('mongoose')
 const { replyOrEditBanner } = require('../banners')
 
 // Regional pricing tiers
@@ -28,6 +27,8 @@ const CREDIT_PACKAGES = {
   25: { stars: 375, discount: 0.40 } // $4.88 (40% off)
 }
 
+const PACKAGES = Object.keys(CREDIT_PACKAGES).map(Number)
+
 const getPricingTier = (locale) => {
   if (PRICING_TIERS.tier1.includes(locale)) return 'tier1'
   if (PRICING_TIERS.tier3.includes(locale)) return 'tier3'
@@ -35,70 +36,30 @@ const getPricingTier = (locale) => {
 }
 
 const calculateStarPrice = (credits, locale) => {
-  const tier = getPricingTier(locale)
-  const multiplier = TIER_MULTIPLIERS[tier]
-
-  // Check for predefined packages first
-  if (CREDIT_PACKAGES[credits]) {
-    return Math.round(CREDIT_PACKAGES[credits].stars * multiplier)
-  }
-
-  // For custom amounts: base 25 stars per credit
-  const basePrice = credits * 25
-  return Math.round(basePrice * multiplier)
+  const multiplier = TIER_MULTIPLIERS[getPricingTier(locale)]
+  const stars = CREDIT_PACKAGES[credits] ? CREDIT_PACKAGES[credits].stars : credits * 25
+  return Math.round(stars * multiplier)
 }
 
-// Create invoice link for a specific credit amount
-const createInvoiceForAmount = async (ctx, amount, starPrice) => {
-  const payment = new ctx.db.Payment({
-    _id: new mongoose.Types.ObjectId(),
-    user: ctx.session.userInfo._id,
-    amount,
-    price: starPrice,
-    currency: 'XTR',
-    paymentSystem: 'telegram',
-    status: 'pending'
-  })
-
-  await payment.save()
-
-  const invoiceLink = await ctx.telegram.callApi('createInvoiceLink', {
-    title: ctx.i18n.t('donate.invoice_title', { amount }),
-    description: ctx.i18n.t('donate.description', { amount }),
-    payload: payment._id.toString(),
-    provider_token: '',
-    currency: 'XTR',
-    prices: JSON.stringify([{ label: 'Credits', amount: starPrice }])
-  })
-
-  return invoiceLink
+const discountLabel = (amount) => {
+  const { discount } = CREDIT_PACKAGES[amount]
+  // The 3-credit package has a discount on paper but was never advertised as one.
+  return discount && amount > 3 ? ` (-${Math.round(discount * 100)}%)` : ''
 }
 
+// The menu only offers packages. The invoice itself (and its pending Payment
+// row) is created when the user taps one — see handlers/donate.js. Building
+// five invoice links on every menu render created five pending Payments per
+// view that nothing ever cleaned up.
 const donateScene = new Scene('donate')
 
 donateScene.enter(async (ctx) => {
   const locale = ctx.i18n.locale()
-  const packages = [1, 3, 5, 10, 25]
-  const discounts = { 1: '', 3: '', 5: ' (-20%)', 10: ' (-30%)', 25: ' (-40%)' }
 
-  // Calculate prices for each package
-  const prices = {}
-  for (const amount of packages) {
-    prices[amount] = calculateStarPrice(amount, locale)
-  }
-
-  // Create invoice links for all packages in parallel
-  const invoiceLinks = {}
-  await Promise.all(
-    packages.map(async (amount) => {
-      invoiceLinks[amount] = await createInvoiceForAmount(ctx, amount, prices[amount])
-    })
-  )
-
-  // Build buttons with direct payment links
-  const buttons = packages.map((amount) => {
+  const buttons = PACKAGES.map((amount) => {
     const label = amount === 1 ? '1 Credit' : `${amount} Credits`
-    return [Markup.urlButton(`${label} — ${prices[amount]} ⭐${discounts[amount]}`, invoiceLinks[amount])]
+    const price = calculateStarPrice(amount, locale)
+    return [Markup.callbackButton(`${label} — ${price} ⭐${discountLabel(amount)}`, `donate:buy:${amount}`)]
   })
 
   await replyOrEditBanner(ctx, 'donate', ctx.i18n.t('donate.menu', {
@@ -113,6 +74,4 @@ donateScene.enter(async (ctx) => {
 
 module.exports = donateScene
 module.exports.calculateStarPrice = calculateStarPrice
-module.exports.getPricingTier = getPricingTier
 module.exports.CREDIT_PACKAGES = CREDIT_PACKAGES
-module.exports.PRICING_TIERS = PRICING_TIERS

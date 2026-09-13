@@ -1,17 +1,44 @@
 const Composer = require('telegraf/composer')
+const { calculateStarPrice, CREDIT_PACKAGES } = require('../scenes/donate')
+const log = require('../utils/logger').scope('donate')
 
 const composer = new Composer()
 
-const donateMenu = async (ctx) => {
-  return ctx.scene.enter('donate')
-}
+const donateMenu = (ctx) => ctx.scene.enter('donate')
 
-composer.on('pre_checkout_query', async (ctx) => {
-  const telegramPayment = await ctx.db.Payment.findOne({
-    _id: ctx.preCheckoutQuery.invoice_payload
+// Invoice payloads are Payment _ids; a malformed one must not throw a CastError.
+const findPendingPayment = (ctx, id) => ctx.db.Payment.findOne({ _id: id, status: 'pending' }).catch(() => null)
+
+// One pending Payment per tap on a package — i.e. per real purchase intent.
+composer.action(/^donate:buy:(\d+)$/, async (ctx) => {
+  const amount = parseInt(ctx.match[1], 10)
+  if (!CREDIT_PACKAGES[amount]) return
+
+  const price = calculateStarPrice(amount, ctx.i18n.locale())
+
+  const payment = await ctx.db.Payment.create({
+    user: ctx.session.userInfo._id,
+    amount,
+    price,
+    currency: 'XTR',
+    paymentSystem: 'telegram',
+    status: 'pending'
   })
 
-  if (!telegramPayment || telegramPayment.status !== 'pending') {
+  await ctx.telegram.sendInvoice(ctx.chat.id, {
+    title: ctx.i18n.t('donate.invoice_title', { amount }),
+    description: ctx.i18n.t('donate.description', { amount }),
+    payload: payment._id.toString(),
+    provider_token: '',
+    currency: 'XTR',
+    prices: [{ label: 'Credits', amount: price }]
+  })
+})
+
+composer.on('pre_checkout_query', async (ctx) => {
+  const payment = await findPendingPayment(ctx, ctx.preCheckoutQuery.invoice_payload)
+
+  if (!payment) {
     return ctx.answerPreCheckoutQuery(false, ctx.i18n.t('donate.error.already_donated'))
   }
 
@@ -19,24 +46,21 @@ composer.on('pre_checkout_query', async (ctx) => {
 })
 
 composer.on('successful_payment', async (ctx) => {
-  const telegramPayment = await ctx.db.Payment.findOne({
-    _id: ctx.message.successful_payment.invoice_payload
-  })
+  const { successful_payment: successfulPayment } = ctx.message
 
-  if (!telegramPayment || telegramPayment.status !== 'pending') {
-    return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
-  }
-
+  // Atomic pending → paid flip: a duplicated update can't credit twice.
+  // `user` is set to the payer — an invoice can be forwarded, and refunds
+  // (handlers/admin) go to payment.user, so it must be whoever actually paid.
   const updated = await ctx.db.Payment.findOneAndUpdate(
-    { _id: telegramPayment._id, status: 'pending' },
-    { $set: { status: 'paid', resultData: ctx.message.successful_payment } },
+    { _id: successfulPayment.invoice_payload, status: 'pending' },
+    { $set: { status: 'paid', user: ctx.session.userInfo._id, resultData: successfulPayment } },
     { new: true }
-  )
+  ).catch(() => null)
+
   if (!updated) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
   }
 
-  // Use atomic $inc to prevent race conditions
   const updatedUser = await ctx.db.User.findByIdAndUpdate(
     ctx.session.userInfo._id,
     { $inc: { balance: updated.amount } },
@@ -44,7 +68,7 @@ composer.on('successful_payment', async (ctx) => {
   )
 
   if (!updatedUser) {
-    console.error('User not found after payment:', ctx.session.userInfo._id)
+    log.error('user not found after payment:', ctx.session.userInfo._id)
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.user_not_found'))
   }
 
@@ -58,15 +82,10 @@ composer.on('successful_payment', async (ctx) => {
 
 composer.hears(['/donate', '/boost', '/start boost'], Composer.privateChat(donateMenu))
 
-composer.action('donate:topup', async (ctx) => {
-  return ctx.scene.enter('donate')
-})
+composer.action('donate:topup', donateMenu)
 
-composer.start(async (ctx, next) => {
-  if (ctx.startPayload === 'donate') {
-    return donateMenu(ctx)
-  }
-
+composer.start((ctx, next) => {
+  if (ctx.startPayload === 'donate') return donateMenu(ctx)
   return next()
 })
 
