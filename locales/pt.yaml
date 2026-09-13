@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 No navegador'
       catalog_app: 'Baixar para Android'
       catalog_app_mini: '📱 App para Android'
+    current_pack: '📦 As figurinhas vão para: <a href="${link}">${title}</a>'
+    hint: 'Envie uma foto, vídeo, GIF ou figurinha — eu adiciono em <a href="${link}">${title}</a>.'
   guide:
     web: |
-      <b>📖 Como usar o fStikBot</b>
+      <b>📖 Como funciona</b>
 
-      Guias completos, dicas e perguntas frequentes no nosso site.
+      1. /new — crie um pacote
+      2. Envie fotos, vídeos, GIFs ou figurinhas — até um álbum inteiro
+      3. /packs — seus pacotes e as configurações deles
+
+      Guias, dicas e perguntas frequentes estão no site.
     menu: |
       <b>❓ Ajuda</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: Figurinhas
       custom_emoji: Emojis
       inline: Inline
+      shared: '👥 Compartilhados'
     empty: |
       Você ainda não tem pacotes. Crie o primeiro → /new
     inline_title: Pacote inline
@@ -214,6 +221,13 @@ cmd:
 
       Os administradores podem escolher o pacote do grupo pelo botão abaixo.
     select_group_pack: Escolher pacote
+    hidden_btn: '🗄 Ocultos'
+    hidden_info: |
+      <b>🗄 Pacotes ocultos</b>
+
+      Toque em um pacote para restaurar ou excluir.
+    hidden_empty: 'Nenhum pacote oculto por aqui.'
+    group_admin_only: 'Só os administradores do grupo podem escolher o pacote do grupo.'
   emoji:
     info: |
       Para alterar o emoji padrão do pacote atual, envie <code>/emoji</code> seguido do emoji, separado por um espaço
@@ -238,8 +252,8 @@ cmd:
 
       Envie uma foto — vou cortá-la em uma grade de emojis.
     no_pack: |
-      Primeiro você precisa de um pacote de emojis personalizados.
-      Crie um com /new e escolha "Emojis".
+      O mosaico funciona com um pacote de emojis personalizados.
+      Escolha um dos seus abaixo ou crie um novo.
     choose_grid: |
       📐 Escolha o tamanho da grade:
     btn:
@@ -313,27 +327,71 @@ donate:
       Pagamento cancelado
 coedit:
   info: |
-    <b>👥 Edição compartilhada</b>
+    <b>👥 Edição compartilhada</b> <a href="${link}">${title}</a>
 
-    Link: <code>${colink}</code>
+    Quem abrir este link entra no pacote:
+    <code>${colink}</code>
 
-    Compartilhe — outras pessoas poderão adicionar e excluir figurinhas em <a href="${link}">${title}</a>.
-
-    <b>Editores:</b> ${editors}
-
-    <i>Redefina o link para remover todos</i>
+    <b>Novos membros:</b> ${defaultRole}
+    <b>Membros:</b> ${count}
   no_editors: |
     nenhum
   btn:
     send: '📤 Enviar link'
-    reset: '🔁 Redefinir link'
+    reset: '🔁 Novo link'
+    activity: '🧾 Atividade'
+    default_role: '⚙️ Novos: ${role}'
+    clear: '🧹 Remover todos'
+    clear_confirm: '⚠️ Sim, remover todos'
+    role_editor: '✏️ Adiciona e exclui'
+    role_contributor: '➕ Só adiciona'
+    remove: '🚫 Remover do pacote'
+    leave: '🚪 Sair do pacote'
+    back: '‹ Voltar'
+  roles:
+    editor: 'adiciona e exclui'
+    contributor: 'só adiciona'
   share: |
     Abra o link e toque em "Iniciar" para editar o pacote "${title}" em conjunto
   reset: |
-    <b>🔁 Link redefinido com sucesso</b>
+    <b>🔁 Novo link.</b> O antigo não funciona mais; os membros atuais continuam com acesso.
+  member: |
+    <b>👤 ${name}</b>
 
-    Novo link para edição compartilhada de <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    <b>Função:</b> ${role}
+    <b>Entrou em:</b> ${date}
+    <b>Ações nos últimos 30 dias:</b> ${actions}
+  clear_confirm: |
+    Remover todos os membros (${count}) de <b>${title}</b>? O link também será trocado.
+  cleared: 'Todos foram removidos e o link foi trocado.'
+  joined: '👥 Você entrou em <b>${title}</b>. Sua função: ${role}.'
+  joined_notice: |
+    👥 ${name} entrou em <a href="${link}">${title}</a> pelo link de edição compartilhada.
+
+    Gerenciar membros: /packs → o pacote → 👥 Edição compartilhada
+  left: '🚪 Você saiu de <b>${title}</b>.'
+  left_notice: '🚪 ${name} saiu de <b>${title}</b>.'
+  removed_notice: 'Você foi removido da edição compartilhada de <b>${title}</b>.'
+  role_notice: 'Sua função em <b>${title}</b> agora é: ${role}.'
+  no_access: 'Você não tem mais acesso a este pacote. Escolha outro em /packs.'
+  no_rights: "Sua função neste pacote não permite isso."
+  your_role: '👥 Sua função: ${role}'
+  activity: |
+    <b>🧾 Atividade</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>Nada ainda.</i>'
+  actions:
+    add: '➕ adicionou figurinhas: ${count}'
+    delete: '🗑 excluiu uma figurinha'
+    restore: '♻️ restaurou uma figurinha'
+    emoji: '😀 mudou um emoji'
+    join: '👋 entrou'
+    leave: '🚪 saiu'
+    removed: '🚫 removeu ${target}'
+    role: '🔧 ${target}: ${role}'
+    reset: '🔁 trocou o link'
+    clear: '🧹 removeu todos (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -448,9 +506,9 @@ sticker:
       reply: |
         Responda a uma figurinha.
       no_selected_pack: |
-        <b>Você não escolheu um pacote</b>
+        <b>Primeiro, um pacote para suas figurinhas</b>
 
-        Crie (/new) ou escolha (/packs) um pacote
+        Crie um — e eu adiciono este arquivo nele na hora.
       no_selected_group_pack: |
         <b>Você não escolheu um pacote do grupo</b>
 
@@ -481,9 +539,9 @@ sticker:
         O arquivo de vídeo está no formato errado (é preciso WEBM).
       file_type:
         unknown: |
-          Este tipo de arquivo não é suportado
+          Este tipo de arquivo não é suportado.
 
-          <i>Crie (/new) ou escolha (/packs) outro pacote</i>
+          Envie uma foto, vídeo, GIF, figurinha ou uma imagem como arquivo.
       wait_load: |
         ⏳ Ainda estou processando o arquivo anterior...
       timeout: |
@@ -501,6 +559,12 @@ sticker:
       invalid_image: |
 
         Não foi possível processar esta imagem. Tente enviar outro arquivo ou formato.
+      queue_full: '⏳ Arquivos demais de uma vez. Espere eu processar os que estão na fila e depois envie o resto.'
+    album_progress: '⏳ Adicionando álbum: ${current}/${total}'
+    album_done: '✅ Adicionadas ${added} de ${total} em <a href="${link}">${title}</a>'
+    album_converting: '⏳ Mais ${count} são vídeos: estou convertendo e respondo cada um assim que ficar pronto.'
+    album_duplicates: '♻️ Já estão no pacote: ${count}.'
+    album_failed: '⚠️ Não foi possível adicionar: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Inscreva-se no canal</a> — novidades, atualizações e novos recursos.
@@ -539,6 +603,7 @@ scenes:
       <b>Nome do pacote</b>
 
       Todos vão ver. Escreva o seu ou escolha uma das sugestões abaixo.
+      <i>Vou montar o endereço do pacote a partir do nome.</i>
     pack_name: |
       <b>Endereço do pacote</b>
 
@@ -562,6 +627,9 @@ scenes:
           O bot não consegue enviar as figurinhas para o Telegram.
 
           Tente novamente mais tarde.
+    btn:
+      custom_link: '🔗 Meu próprio endereço'
+    custom_link_on: 'Certo — envie o nome, depois eu peço o endereço.'
   copy:
     enter: |
       Primeiro, vamos criar um novo pacote para a cópia.
@@ -599,6 +667,16 @@ scenes:
         Infelizmente, este recurso está disponível só para quem apoiou o bot.
 
         Você pode apoiar enviando o comando /donate.
+    title: |
+      <b>📋 Copiando <a href="${originalLink}">${originalTitle}</a></b> (${count})
+
+      Nome da sua cópia — escreva o seu ou escolha um abaixo.
+    btn:
+      change_type: '🔄 Mudar tipo de pacote'
+    created: |
+      ✅ Pacote criado: <a href="${link}">${title}</a>
+
+      Copiando as figurinhas — aviso quando terminar.
   original:
     enter: |
       <b>🔎 Origem da figurinha</b>
@@ -614,7 +692,7 @@ scenes:
     enter: |
       <b>🗑 Excluir figurinha</b>
 
-      Envie a figurinha que você quer excluir. Não precisa escolher o pacote — eu mesmo encontro onde ela está.
+      Envie uma figurinha — eu excluo do pacote na hora (dá para restaurar). Envie quantas quiser.
     confirm: |
       Excluir esta figurinha do pacote?
     error:
@@ -660,6 +738,7 @@ scenes:
     btn:
       yes: '⚡ Dar boost'
       no: Cancelar
+      buy: '⭐ Comprar créditos'
     canceled: |
       Cancelado
     success: |
@@ -713,6 +792,10 @@ scenes:
 
         <i>Você pode usar hashtags para categorizar [#]</i>
         <i>Por exemplo: #anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>Descrição atual:</b> <i>${description}</i>
+      keep_description: '✅ Manter a descrição atual'
       select_language: |
         <b>Escolha para quais idiomas é o seu pacote:</b>
         <i>Você pode escolher mais de um</i>
@@ -746,7 +829,7 @@ scenes:
     enter: |
       ⚠️ Excluir <a href="${link}">${title}</a> para sempre?
 
-      Envie <code>${confirm}</code> para confirmar ou toque em "Cancelar".
+      Toque em «${confirm}» para confirmar ou em «Cancelar».
     confirm: Sim, excluir
     success: |
       🗑 Pacote excluído
@@ -780,7 +863,7 @@ scenes:
       <b>✂️ Remover fundo</b>
 
       Envie uma foto — você recebe um PNG sem fundo.
-      <i>Funciona melhor com fotos de pessoas.</i>
+      <i>Modelo para suas fotos:</i>
     enter_anime: |
       <b>✂️ Remover fundo</b>
 
@@ -801,6 +884,7 @@ scenes:
       ⏱ O processamento demorou demais. Tente mais tarde ou com uma foto menor.
     error_queue_disabled: |
       Este recurso está temporariamente indisponível. Tente mais tarde.
+    not_image: 'Envie uma foto ou uma imagem como arquivo (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Vídeo redondo</b>
@@ -832,6 +916,7 @@ scenes:
     Cancelado
   btn:
     cancel: '← Cancelar'
+  unexpected: 'Agora estou esperando outra coisa — siga o passo acima ou toque em «← Cancelar».'
 error:
   stickerset_invalid: |
     Pacote indisponível. Talvez ele tenha sido excluído no Telegram.
