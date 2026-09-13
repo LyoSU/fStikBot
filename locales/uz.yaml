@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 Brauzerda'
       catalog_app: 'Android uchun yuklab olish'
       catalog_app_mini: '📱 Android ilovasi'
+    current_pack: '📦 Stikerlar shu yerga qoʻshiladi: <a href="${link}">${title}</a>'
+    hint: 'Rasm, video, GIF yoki stiker yuboring — uni <a href="${link}">${title}</a> toʻplamiga qoʻshaman.'
   guide:
     web: |
-      <b>📖 fStikBot dan qanday foydalanish</b>
+      <b>📖 Bu qanday ishlaydi</b>
 
-      Toʻliq qoʻllanmalar, maslahatlar va FAQ saytimizda.
+      1. /new — toʻplam yarating
+      2. Rasm, video, GIF yoki stikerlar yuboring — hatto butun albom bilan
+      3. /packs — toʻplamlaringiz va ularning sozlamalari
+
+      Qoʻllanmalar, maslahatlar va FAQ — saytda.
     menu: |
       <b>❓ Yordam</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: Stikerlar
       custom_emoji: Emoji
       inline: Inline
+      shared: '👥 Umumiy'
     empty: |
       Hozircha toʻplamlar yoʻq. Birinchisini yarating → /new
     inline_title: Inline toʻplam
@@ -214,6 +221,13 @@ cmd:
 
       Adminlar quyidagi tugma orqali guruh uchun toʻplam tanlashi mumkin.
     select_group_pack: Toʻplamni tanlash
+    hidden_btn: '🗄 Yashirin'
+    hidden_info: |
+      <b>🗄 Yashirin toʻplamlar</b>
+
+      Toʻplamni tiklash yoki oʻchirish uchun ustiga bosing.
+    hidden_empty: 'Bu yerda yashirin toʻplamlar yoʻq.'
+    group_admin_only: 'Guruh toʻplamini faqat guruh adminlari tanlay oladi.'
   emoji:
     info: |
       Joriy toʻplamning standart emojisini oʻzgartirish uchun <code>/emoji</code> buyrugʻini boʻsh joy bilan ajratilgan emoji bilan yuboring
@@ -238,8 +252,8 @@ cmd:
 
       Rasm yuboring — uni emoji toʻriga boʻlib beraman.
     no_pack: |
-      Avval maxsus emoji toʻplami kerak.
-      /new orqali yarating va «Emoji» turini tanlang.
+      Mozaika maxsus emoji toʻplami bilan ishlaydi.
+      Quyidan oʻz toʻplamlaringizdan birini tanlang yoki yangisini yarating.
     choose_grid: |
       📐 Toʻr oʻlchamini tanlang:
     btn:
@@ -313,27 +327,71 @@ donate:
       Toʻlov bekor qilindi
 coedit:
   info: |
-    <b>👥 Birgalikda tahrirlash</b>
+    <b>👥 Birgalikda tahrirlash</b> <a href="${link}">${title}</a>
 
-    Havola: <code>${colink}</code>
+    Bu havolani ochgan har kim toʻplamga qoʻshiladi:
+    <code>${colink}</code>
 
-    Ulashing — boshqalar <a href="${link}">${title}</a> toʻplamiga stiker qoʻshishi va oʻchirishi mumkin boʻladi.
-
-    <b>Muharrirlar:</b> ${editors}
-
-    <i>Hammasini olib tashlash uchun havolani yangilang</i>
+    <b>Yangi ishtirokchilar:</b> ${defaultRole}
+    <b>Ishtirokchilar:</b> ${count}
   no_editors: |
     yoʻq
   btn:
     send: '📤 Havolani yuborish'
-    reset: '🔁 Havolani yangilash'
+    reset: '🔁 Yangi havola'
+    activity: '🧾 Faoliyat'
+    default_role: '⚙️ Yangilar: ${role}'
+    clear: '🧹 Hammani chiqarish'
+    clear_confirm: '⚠️ Ha, hammani chiqarish'
+    role_editor: '✏️ Qoʻshadi va oʻchiradi'
+    role_contributor: '➕ Faqat qoʻshadi'
+    remove: '🚫 Toʻplamdan chiqarish'
+    leave: '🚪 Toʻplamdan chiqish'
+    back: '‹ Orqaga'
+  roles:
+    editor: 'qoʻshadi va oʻchiradi'
+    contributor: 'faqat qoʻshadi'
   share: |
     «${title}» toʻplamini birgalikda tahrirlash uchun havolaga oʻting va «Start» tugmasini bosing
   reset: |
-    <b>🔁 Havola muvaffaqiyatli yangilandi</b>
+    <b>🔁 Yangi havola.</b> Eskisi endi ishlamaydi; hozirgi ishtirokchilar kirish huquqini saqlab qoladi.
+  member: |
+    <b>👤 ${name}</b>
 
-    <a href="${link}">${title}</a> toʻplamini birgalikda tahrirlash uchun yangi havola:
-    <code>${colink}</code>
+    <b>Rol:</b> ${role}
+    <b>Qoʻshilgan sana:</b> ${date}
+    <b>Soʻnggi 30 kundagi amallar:</b> ${actions}
+  clear_confirm: |
+    Barcha ishtirokchilar (${count}) <b>${title}</b> toʻplamidan chiqarilsinmi? Havola ham almashtiriladi.
+  cleared: 'Hamma chiqarildi va havola almashtirildi.'
+  joined: '👥 Siz <b>${title}</b> toʻplamiga qoʻshildingiz. Rolingiz: ${role}.'
+  joined_notice: |
+    👥 ${name} birgalikda tahrirlash havolasi orqali <a href="${link}">${title}</a> toʻplamiga qoʻshildi.
+
+    Ishtirokchilarni boshqarish: /packs → toʻplam → 👥 Birgalikda tahrirlash
+  left: '🚪 Siz <b>${title}</b> toʻplamidan chiqdingiz.'
+  left_notice: '🚪 ${name} <b>${title}</b> toʻplamidan chiqdi.'
+  removed_notice: 'Siz <b>${title}</b> toʻplamini birgalikda tahrirlashdan chiqarildingiz.'
+  role_notice: '<b>${title}</b> toʻplamidagi rolingiz endi: ${role}.'
+  no_access: 'Bu toʻplamga endi kirish huquqingiz yoʻq. /packs orqali boshqasini tanlang.'
+  no_rights: "Bu toʻplamdagi rolingiz bunga ruxsat bermaydi."
+  your_role: '👥 Rolingiz: ${role}'
+  activity: |
+    <b>🧾 Faoliyat</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>Hozircha hech narsa yoʻq.</i>'
+  actions:
+    add: '➕ stiker qoʻshildi: ${count}'
+    delete: '🗑 stiker oʻchirildi'
+    restore: '♻️ stiker tiklandi'
+    emoji: '😀 emoji oʻzgartirildi'
+    join: '👋 qoʻshildi'
+    leave: '🚪 chiqdi'
+    removed: '🚫 chiqarildi: ${target}'
+    role: '🔧 ${target}: ${role}'
+    reset: '🔁 havola almashtirildi'
+    clear: '🧹 hamma chiqarildi (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -448,9 +506,9 @@ sticker:
       reply: |
         Stikerga javob yozing.
       no_selected_pack: |
-        <b>Siz toʻplam tanlamadingiz</b>
+        <b>Avval stikerlaringiz uchun toʻplam kerak</b>
 
-        Toʻplam yarating (/new) yoki tanlang (/packs)
+        Uni yarating — bu faylni darhol unga qoʻshaman.
       no_selected_group_pack: |
         <b>Siz guruh toʻplamini tanlamadingiz</b>
 
@@ -481,9 +539,9 @@ sticker:
         Video fayl formati notoʻgʻri (WEBM kerak).
       file_type:
         unknown: |
-          Bu fayl turi qoʻllab-quvvatlanmaydi
+          Bu fayl turi qoʻllab-quvvatlanmaydi.
 
-          <i>Boshqa toʻplam yarating (/new) yoki tanlang (/packs)</i>
+          Rasm, video, GIF, stiker yoki tasvirni fayl sifatida yuboring.
       wait_load: |
         ⏳ Oldingi fayl hali qayta ishlanmoqda...
       timeout: |
@@ -501,6 +559,12 @@ sticker:
       invalid_image: |
 
         Bu rasmni qayta ishlab boʻlmadi. Boshqa fayl yoki formatda yuborib koʻring.
+      queue_full: '⏳ Bir vaqtda juda koʻp fayl. Navbatdagilarni qayta ishlab boʻlishimni kuting, keyin qolganini yuboring.'
+    album_progress: '⏳ Albom qoʻshilmoqda: ${current}/${total}'
+    album_done: '✅ ${total} tadan ${added} tasi <a href="${link}">${title}</a> toʻplamiga qoʻshildi'
+    album_converting: '⏳ Yana ${count} tasi video: konvertatsiya qilyapman, har biri tayyor boʻlganda javob beraman.'
+    album_duplicates: '♻️ Toʻplamda allaqachon bor: ${count}.'
+    album_failed: '⚠️ Qoʻshib boʻlmadi: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Kanalga obuna boʻling</a> — yangiliklar, yangilanishlar va yangi imkoniyatlar.
@@ -539,6 +603,7 @@ scenes:
       <b>Toʻplam nomi</b>
 
       Uni hamma koʻradi. Oʻzingiz yozing yoki quyidagi takliflardan tanlang.
+      <i>Toʻplam manzilini nomidan tuzaman.</i>
     pack_name: |
       <b>Toʻplam manzili</b>
 
@@ -562,6 +627,9 @@ scenes:
           Bot stikerlarni Telegramga yuklay olmayapti.
 
           Keyinroq urinib koʻring.
+    btn:
+      custom_link: '🔗 Oʻz toʻplam manzilim'
+    custom_link_on: 'Yaxshi — nomini yuboring, keyin manzilini soʻrayman.'
   copy:
     enter: |
       Avval nusxa uchun yangi toʻplam yaratamiz.
@@ -599,6 +667,16 @@ scenes:
         Afsuski, bu funksiya faqat botni qoʻllab-quvvatlaganlar uchun mavjud.
 
         Buni /donate buyrugʻini yuborib qilishingiz mumkin.
+    title: |
+      <b>📋 <a href="${originalLink}">${originalTitle}</a> nusxalanmoqda</b> (${count})
+
+      Nusxangiz uchun nom — oʻzingiz yozing yoki quyidan tanlang.
+    btn:
+      change_type: '🔄 Toʻplam turini oʻzgartirish'
+    created: |
+      ✅ Toʻplam yaratildi: <a href="${link}">${title}</a>
+
+      Stikerlarni nusxalayapman — tugagach xabar beraman.
   original:
     enter: |
       <b>🔎 Stiker manbasi</b>
@@ -614,7 +692,7 @@ scenes:
     enter: |
       <b>🗑 Stikerni oʻchirish</b>
 
-      Oʻchirmoqchi boʻlgan stikerni yuboring. Toʻplamni tanlash shart emas — uning qayerdaligini oʻzim topaman.
+      Stiker yuboring — uni darhol toʻplamidan oʻchiraman (keyin tiklash mumkin). Xohlagancha yuborishingiz mumkin.
     confirm: |
       Bu stiker toʻplamdan oʻchirilsinmi?
     error:
@@ -660,6 +738,7 @@ scenes:
     btn:
       yes: '⚡ Boost qilish'
       no: Bekor qilish
+      buy: '⭐ Kredit sotib olish'
     canceled: |
       Bekor qilindi
     success: |
@@ -713,6 +792,10 @@ scenes:
 
         <i>Turkumlash uchun heshteglardan foydalanishingiz mumkin [#]</i>
         <i>Masalan: #anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>Joriy taʼrif:</b> <i>${description}</i>
+      keep_description: '✅ Joriy taʼrifni qoldirish'
       select_language: |
         <b>Toʻplamingiz qaysi tillar uchun moʻljallanganini tanlang:</b>
         <i>Bir nechtasini tanlash mumkin</i>
@@ -746,7 +829,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> butunlay oʻchirilsinmi?
 
-      Tasdiqlash uchun <code>${confirm}</code> deb yuboring yoki «Bekor qilish» tugmasini bosing.
+      Tasdiqlash uchun «${confirm}» tugmasini yoki «Bekor qilish» tugmasini bosing.
     confirm: Ha, oʻchirilsin
     success: |
       🗑 Toʻplam oʻchirildi
@@ -780,7 +863,7 @@ scenes:
       <b>✂️ Fonni olib tashlash</b>
 
       Rasm yuboring — fonsiz PNG olasiz.
-      <i>Odamlar tasvirlangan rasmlar bilan yaxshiroq ishlaydi.</i>
+      <i>Rasmlaringiz uchun model:</i>
     enter_anime: |
       <b>✂️ Fonni olib tashlash</b>
 
@@ -801,6 +884,7 @@ scenes:
       ⏱ Qayta ishlash juda uzoq davom etdi. Keyinroq yoki kichikroq rasm bilan urinib koʻring.
     error_queue_disabled: |
       Bu funksiya vaqtincha ishlamayapti. Keyinroq urinib koʻring.
+    not_image: 'Rasm yoki tasvirni fayl sifatida yuboring (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Dumaloq video</b>
@@ -832,6 +916,7 @@ scenes:
     Bekor qilindi
   btn:
     cancel: '← Bekor qilish'
+  unexpected: 'Hozir boshqa narsani kutyapman — yuqoridagi qadamni bajaring yoki «← Bekor qilish» tugmasini bosing.'
 error:
   stickerset_invalid: |
     Toʻplam mavjud emas. Ehtimol, u Telegramda oʻchirilgan.
