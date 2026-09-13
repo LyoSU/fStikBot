@@ -258,6 +258,10 @@ broadcastNewConfirm.action('broadcast:new:publish', async (ctx) => {
     await ctx.answerCbQuery('Incomplete draft', true).catch(() => {})
     return exitScene(ctx)
   }
+  // Take the draft synchronously, before the first await: two quick taps run
+  // as concurrent updates sharing the same in-memory session object, and both
+  // used to read the intact draft and create two campaigns.
+  ctx.session.scene = {}
   await ctx.answerCbQuery().catch(() => {})
 
   try {

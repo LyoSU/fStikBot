@@ -15,7 +15,6 @@ const { STATUS } = broadcast
 const composer = new Composer()
 
 const STATUS_BADGES = {
-  [STATUS.DRAFT]: '📝 Draft',
   [STATUS.QUEUED]: '⏳ Queued',
   [STATUS.SENDING]: '🚀 Sending',
   [STATUS.PAUSED]: '⏸ Paused',
@@ -86,6 +85,11 @@ const statusKeyboard = (b) => {
   }
   if (b.status === STATUS.PAUSED) {
     rows.push([Markup.callbackButton('▶️ Resume', `admin:messaging:resume:${b._id}`)])
+  }
+  // A crash (usually a transient Mongo error between batches) keeps the
+  // materialized recipients, so the campaign can simply be re-queued.
+  if (b.status === STATUS.FAILED) {
+    rows.push([Markup.callbackButton('🔁 Retry', `admin:messaging:resume:${b._id}`)])
   }
   rows.push([
     Markup.callbackButton('← Broadcasts', 'admin:messaging'),
@@ -197,9 +201,9 @@ composer.action(/^admin:messaging:view:([a-f0-9]{24})$/, async (ctx) => {
   const b = await ctx.db.Broadcast.findById(ctx.match[1]).lean()
   if (!b) return ctx.replyWithHTML('⚠️ Broadcast not found.')
 
-  await broadcast.renderPreview(ctx.telegram, ctx.chat.id, b.message).catch((err) => {
-    ctx.replyWithHTML(`❌ Preview failed: <code>${escapeHTML(err.message || err.description || 'unknown')}</code>`)
-  })
+  await broadcast.renderPreview(ctx.telegram, ctx.chat.id, b.message).catch((err) => (
+    ctx.replyWithHTML(`❌ Preview failed: <code>${escapeHTML(err.message || err.description || 'unknown')}</code>`).catch(() => {})
+  ))
 })
 
 // ───────────────────────────────────────────────────────────────────────
@@ -232,17 +236,17 @@ composer.action(/^admin:messaging:cancel:([a-f0-9]{24})$/, async (ctx) => {
 })
 
 // ───────────────────────────────────────────────────────────────────────
-// Resume (from paused → queued, runner picks up on next tick)
+// Resume / retry (paused or failed → queued, runner picks up on next tick)
 // ───────────────────────────────────────────────────────────────────────
 composer.action(/^admin:messaging:resume:([a-f0-9]{24})$/, async (ctx) => {
   await ctx.answerCbQuery().catch(() => {})
   const updated = await ctx.db.Broadcast.findOneAndUpdate(
-    { _id: ctx.match[1], status: STATUS.PAUSED },
+    { _id: ctx.match[1], status: { $in: [STATUS.PAUSED, STATUS.FAILED] } },
     { $set: { status: STATUS.QUEUED, pausedReason: null } },
     { new: true }
   )
   if (!updated) {
-    return ctx.replyWithHTML('⚠️ Cannot resume — broadcast is not paused.')
+    return ctx.replyWithHTML('⚠️ Cannot resume — broadcast is neither paused nor failed.')
   }
   await tolerantEditMessage(ctx, renderStatusText(updated), {
     parse_mode: 'HTML',

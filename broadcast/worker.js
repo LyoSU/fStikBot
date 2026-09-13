@@ -1,7 +1,7 @@
 const os = require('os')
 const { db } = require('../database')
 const log = require('../utils/logger').scope('broadcast:worker')
-const { runBroadcast, cleanupRecipients } = require('./runner')
+const { runBroadcast } = require('./runner')
 const { STATUS } = require('./status')
 
 // Single-process worker. One tick claims at most one broadcast; while it's
@@ -51,9 +51,11 @@ const claimNext = async () => {
   )
   if (fresh) return fresh
 
-  // Stale-lock takeover — keep startedAt as-is, just refresh the lock.
+  // Stale-lock takeover — keep startedAt as-is, just refresh the lock. A
+  // released lock is `null`, which `$lt` never matches — without the `$or` a
+  // campaign left in `sending` with no lock was stranded forever.
   return db.Broadcast.findOneAndUpdate(
-    { status: STATUS.SENDING, lockedUntil: { $lt: now } },
+    { status: STATUS.SENDING, $or: [{ lockedUntil: null }, { lockedUntil: { $lt: now } }] },
     { $set: { lockedBy: PROCESS_ID, lockedUntil } },
     { sort: { startedAt: 1 }, new: true }
   )
@@ -105,18 +107,17 @@ const tick = async () => {
 
   activeRun = (async () => {
     try {
-      await runBroadcast(broadcast)
+      await runBroadcast(broadcast, { shouldStop: () => shuttingDown })
     } catch (err) {
       log.error(`broadcast ${broadcast._id} crashed:`, err.stack || err.message)
+      // Keep the materialized recipients: a crash here is usually a transient
+      // Mongo error between batches, and the admin "Retry" button re-queues
+      // the campaign from its checkpoint. The TTL index on BroadcastRecipient
+      // reclaims the rows if nobody ever retries.
       await db.Broadcast.updateOne(
         { _id: broadcast._id },
         { $set: { status: STATUS.FAILED, pausedReason: String(err.message || err).slice(0, 300) } }
       ).catch(() => {})
-      // Mirror the cleanup runBroadcast does on graceful completion — failed
-      // campaigns also shouldn't leave their materialized queue behind. The
-      // TTL index on BroadcastRecipient catches this if the explicit delete
-      // also fails.
-      await cleanupRecipients(broadcast._id).catch(() => {})
     } finally {
       clearInterval(renewal)
       await releaseLock(broadcast._id)
@@ -138,13 +139,13 @@ const start = () => {
   tickTimer.unref()
 }
 
-// Graceful drain: stop accepting new claims, wait for the in-flight run to
-// reach a checkpoint, release its lock. Called from SIGTERM/SIGINT.
+// Graceful drain: stop accepting new claims, let the in-flight run finish its
+// current batch (runner's sendLoop checks shouldStop between batches and
+// re-queues the campaign), release its lock. bot.js awaits this from its
+// SIGTERM/SIGINT handler — the only place process signals are handled.
 //
-// Idempotent AND awaitable: bot.js awaits stop() from its own signal handler,
-// and the handlers below fire for the same signal. Returning the shared promise
-// means whoever calls second still waits for the same drain instead of
-// short-circuiting on a `shuttingDown` flag and letting the process exit early.
+// Idempotent AND awaitable: whoever calls second still waits for the same
+// drain instead of short-circuiting on a flag and letting the process exit.
 let stopPromise = null
 
 const stop = () => {
@@ -167,7 +168,4 @@ const stop = () => {
   return stopPromise
 }
 
-process.on('SIGTERM', () => { stop().catch(() => {}) })
-process.on('SIGINT', () => { stop().catch(() => {}) })
-
-module.exports = { start, stop, PROCESS_ID }
+module.exports = { start, stop }

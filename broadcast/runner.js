@@ -229,10 +229,23 @@ const applyBatchResults = async (broadcast, recipients, results) => {
 // ───────────────────────────────────────────────────────────────────────
 // Main send loop
 // ───────────────────────────────────────────────────────────────────────
-const sendLoop = async (broadcast) => {
+const sendLoop = async (broadcast, shouldStop) => {
   let lastId = broadcast.progress.lastRecipientId
 
   while (true) {
+    // Graceful shutdown: stop at a batch boundary and hand the campaign back
+    // to the queue. The checkpoint is already persisted, so the next boot
+    // resumes exactly here; before this the whole in-flight batch was re-sent
+    // and the lock lingered until its TTL expired.
+    if (shouldStop()) {
+      await db.Broadcast.updateOne(
+        { _id: broadcast._id, status: STATUS.SENDING },
+        { $set: { status: STATUS.QUEUED } }
+      )
+      log.info(`broadcast ${broadcast._id} re-queued for shutdown`)
+      return
+    }
+
     // Cheap status check — one indexed read per batch (100 sends).
     // Lets cancel/pause from the admin UI take effect within seconds.
     const fresh = await db.Broadcast.findById(broadcast._id).select('status').lean()
@@ -273,14 +286,14 @@ const sendLoop = async (broadcast) => {
 // ───────────────────────────────────────────────────────────────────────
 // Public entry: run one broadcast end-to-end
 // ───────────────────────────────────────────────────────────────────────
-const runBroadcast = async (broadcast) => {
+const runBroadcast = async (broadcast, { shouldStop = () => false } = {}) => {
   log.info(`starting broadcast ${broadcast._id} "${broadcast.name}"`)
 
   if (!broadcast.progress.materialized) {
     await materialize(broadcast)
   }
 
-  await sendLoop(broadcast)
+  await sendLoop(broadcast, shouldStop)
 
   // Re-read terminal status: sendLoop may have set paused/cancelled.
   const finalDoc = await db.Broadcast.findById(broadcast._id).select('status progress').lean()
@@ -303,4 +316,4 @@ const runBroadcast = async (broadcast) => {
 const cleanupRecipients = (broadcastId) =>
   db.BroadcastRecipient.deleteMany({ broadcastId })
 
-module.exports = { runBroadcast, materialize, cleanupRecipients }
+module.exports = { runBroadcast, cleanupRecipients }

@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 
-// Status state machine — transitions enforced by broadcast/status.js
-//   draft     → operator is still building (currently unused: wizard saves as 'queued')
+// Status values — see broadcast/status.js. Transitions are enforced by the
+// conditional updates at each write site.
+//   draft     → legacy value, never written by current code (kept so old docs validate)
 //   queued    → ready, waiting for scheduledAt
 //   sending   → worker has claimed it, currently materializing/dispatching
 //   paused    → halted by long retry_after or invalid media; resume manually
 //   completed → all recipients processed
 //   cancelled → operator stopped it
-//   failed    → unrecoverable error (e.g. unknown audience)
+//   failed    → the run crashed; recipients are kept so the admin can retry
 const STATUSES = ['draft', 'queued', 'sending', 'paused', 'completed', 'cancelled', 'failed']
 
 const broadcastSchema = new mongoose.Schema({

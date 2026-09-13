@@ -1,6 +1,5 @@
 const moment = require('moment')
 const { db } = require('../database')
-const log = require('../utils/logger').scope('broadcast:audiences')
 
 // Registry of broadcast audiences. Each entry exposes:
 //   - label:  human-readable name for the wizard inline keyboard
@@ -98,23 +97,28 @@ const activeAudience = (key, label, locale) => ({
       { $project: { _id: 0, telegram_id: '$user.telegram_id' } }
     ])
     .allowDiskUse(true)
-    .cursor({ batchSize: 1000 })
+    .cursor()
 })
 
 // ───────────────────────────────────────────────────────────────────────
 // Registry
 // ───────────────────────────────────────────────────────────────────────
+// Nobody unreachable or banned, whatever the audience. Used to differ per
+// audience (some forgot `banned`, `ru` filtered on a `premium` field that no
+// longer exists in the User schema).
+const REACHABLE = { blocked: { $ne: true }, banned: { $ne: true } }
+
 const AUDIENCES = {
   all: findAudience('all', '🌐 All users (excl. RU)',
-    () => ({ blocked: { $ne: true }, locale: { $ne: 'ru' } })),
-  ru: findAudience('ru', '🇷🇺 Russian (excl. premium)',
-    () => ({ blocked: { $ne: true }, premium: { $ne: true }, locale: 'ru' })),
+    () => ({ ...REACHABLE, locale: { $ne: 'ru' } })),
+  ru: findAudience('ru', '🇷🇺 Russian',
+    () => ({ ...REACHABLE, locale: 'ru' })),
   uk: findAudience('uk', '🇺🇦 Ukrainian',
-    () => ({ blocked: { $ne: true }, locale: 'uk' })),
+    () => ({ ...REACHABLE, locale: 'uk' })),
   en: findAudience('en', '🇬🇧 English',
-    () => ({ blocked: { $ne: true }, locale: 'en' })),
+    () => ({ ...REACHABLE, locale: 'en' })),
   other: findAudience('other', '🌐 Other locales',
-    () => ({ blocked: { $ne: true }, banned: { $ne: true }, locale: { $nin: ['en', 'ru', 'uk'] } })),
+    () => ({ ...REACHABLE, locale: { $nin: ['en', 'ru', 'uk'] } })),
   en_active: activeAudience('en_active', '🇬🇧 Active EN (≥2 packs)', 'en'),
   other_active: activeAudience('other_active', '🌐 Active other-lang (≥2 packs)', null)
 }
@@ -123,18 +127,4 @@ const list = () => Object.entries(AUDIENCES).map(([key, { label }]) => ({ key, l
 
 const get = (key) => AUDIENCES[key] || null
 
-// Best-effort warmup: run all counts in the background at boot so the wizard
-// is responsive on first use. Failures are logged but don't crash the boot.
-// Worker calls this once via broadcast.startWorker().
-const warmupCounts = () => {
-  for (const [key, audience] of Object.entries(AUDIENCES)) {
-    audience.count().catch((err) => {
-      log.warn(`warmup count failed for ${key}: ${err.message}`)
-    })
-  }
-}
-
-// Expose for invalidation if needed (e.g. ad-hoc /admin "refresh counts").
-const invalidateCache = () => countCache.clear()
-
-module.exports = { AUDIENCES, list, get, warmupCounts, invalidateCache }
+module.exports = { list, get }
