@@ -1,6 +1,6 @@
+const crypto = require('crypto')
 const got = require('got')
 const slug = require('limax')
-const StegCloak = require('stegcloak')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
@@ -13,10 +13,15 @@ const {
   countUncodeChars,
   substrUnicode
 } = require('../utils')
+const packLink = require('../utils/pack-link')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { runInCopyScope } = require('../utils/retry-api')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
+const { sendPackMenu } = require('../handlers/pack-menu')
+const { flushPendingStickers } = require('../handlers/sticker')
 const log = require('../utils/logger').scope('pack-new')
+
+const { match } = I18n
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -28,15 +33,12 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 // retry_after and continues, so the copy completes instead of erroring out.
 const COPY_PACE_MS = parseInt(process.env.COPY_PACE_MS, 10) || 1000
 
-const { match } = I18n
+// createNewStickerSet takes at most 50 stickers.
+const SEED_BATCH = 50
 
 const placeholder = {
-  regular: {
-    video: 'sticker_placeholder.webm'
-  },
-  custom_emoji: {
-    video: 'emoji_placeholder.webm'
-  }
+  regular: 'sticker_placeholder.webm',
+  custom_emoji: 'emoji_placeholder.webm'
 }
 
 // Resolve the placeholder's *canonical* file_unique_id — the one Telegram
@@ -45,16 +47,13 @@ const placeholder = {
 // These two are DIFFERENT strings for the same sticker (an uploaded file and
 // the sticker it becomes inside a set are distinct objects). removePlaceholder-
 // IfPending matches the marker against getStickerSet's stickers, so the marker
-// must hold the getStickerSet value or it never matches — the bug that left the
-// placeholder in every new pack forever. Right after createNewStickerSet the
-// set holds exactly the placeholder at index 0.
+// must hold the getStickerSet value or it never matches. Right after
+// createNewStickerSet the set holds exactly the placeholder at index 0.
 //
 // A freshly created set isn't always visible to getStickerSet on the very first
 // read (Telegram-side propagation lag), so retry a few times with a short
-// backoff. Returns null only if the set never materialises in time — in which
-// case the placeholder just isn't auto-removed (same as the pre-fix state, no
-// worse). The removal itself is deferred to the first real sticker add, so
-// there's no "delete right after create" race to worry about here.
+// backoff. Returns null only if the set never materialises in time — the
+// placeholder then just isn't auto-removed.
 const resolvePlaceholderUniqueId = async (ctx, name) => {
   for (let attempt = 0; attempt < 5; attempt++) {
     const set = await ctx.telegram.getStickerSet(name).catch(() => null)
@@ -62,19 +61,14 @@ const resolvePlaceholderUniqueId = async (ctx, name) => {
     if (uniqueId) return uniqueId
     await delay(500)
   }
-  // Without the marker nothing will ever auto-remove this placeholder — make
-  // the failure visible instead of silently orphaning it.
   log.error(`placeholder unique id unresolved for ${name}; placeholder will not be auto-removed`)
   return null
 }
 
-const stegcloak = new StegCloak(false, false)
-
 // Download a source sticker and re-upload it via uploadStickerFile,
 // returning the InputSticker entry ({ sticker: file_id, format, emoji_list })
 // or null if it couldn't be fetched/uploaded. Runs in copy scope, so a 429
-// is waited out rather than failed fast. Used to seed a same-type copy's
-// createNewStickerSet with its first (ordered) batch of stickers.
+// is waited out rather than failed fast.
 const uploadSourceSticker = async (ctx, sticker, onWait) => {
   let stickerFormat = 'static'
   if (sticker.is_animated) stickerFormat = 'animated'
@@ -108,49 +102,91 @@ const uploadSourceSticker = async (ctx, sticker, onWait) => {
   }
 }
 
+// A pack's short name: Latin letters, digits and "_", starting with a letter.
+const normalizeName = (raw) => {
+  const name = slug(
+    String(raw || '')
+      .replace(/https?:\/\//, '')
+      .replace(/t\.me\/add(stickers|emoji)\//, ''),
+    { separator: '_', maintainCase: true }
+  )
+  return name
+    .replace(/[^0-9a-z_]/gi, '')
+    .replace(/_{2,}/g, '_')
+    .replace(/^[^a-z]+/i, '')
+    .replace(/_+$/, '')
+}
+
+const fitName = (name, suffix) => name.slice(0, 64 - suffix.length).replace(/_+$/, '')
+
+// Names to try for a pack the user didn't name: the title itself, then the
+// title with a short random tail. The "type a Latin link" step was where most
+// people gave up on /new — a custom link is now an optional button.
+const autoNameCandidates = (title, suffix) => {
+  const base = fitName(normalizeName(title) || 'stickers', suffix + '_xxxx')
+  const tail = () => crypto.randomBytes(2).toString('hex')
+  return [base, `${base}_${tail()}`, `${base}_${tail()}`].map((name) => name + suffix)
+}
+
+const NAME_REJECTED = /STICKERSET_INVALID|name is already occupied|invalid sticker set name/i
+
+const cancelButton = (ctx) => ({ text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' })
+
+const buyCreditsKeyboard = (ctx) => Markup.inlineKeyboard([
+  { ...Markup.callbackButton(ctx.i18n.t('scenes.boost.btn.buy'), 'donate:topup'), style: 'success' }
+])
+
+const replyTo = (ctx) => ({
+  reply_to_message_id: ctx.message?.message_id,
+  allow_sending_without_reply: true
+})
+
+// A reply keyboard can only be removed by a message; one that disappears
+// right away leaves just the menu that follows it.
+const removeReplyKeyboard = async (ctx) => {
+  const message = await ctx.reply('👌', { reply_markup: { remove_keyboard: true } }).catch(() => null)
+  if (message) await ctx.telegram.deleteMessage(ctx.chat.id, message.message_id).catch(() => {})
+}
+
+// Everything after the first slow call may run when the user has already moved
+// on (/cancel, another command or a new wizard replace session.scene), so the
+// wizard only cleans up after itself while it is still the current one.
+const wizardOf = (ctx) => ctx.session.scene?.newPack
+
+const abandon = async (ctx, newPack) => {
+  if (wizardOf(ctx) !== newPack) return
+  ctx.session.scene = {}
+  await removeReplyKeyboard(ctx)
+  return ctx.scene.leave()
+}
+
 const newPack = new Scene('newPack')
 
-newPack.enter(async (ctx, next) => {
+newPack.enter(async (ctx) => {
   if (!ctx.session.scene) ctx.session.scene = {}
 
-  // Start from a clean slate every time. Leftovers from an abandoned wizard
-  // (session.scene lives for an hour and callback buttons fall straight
-  // through the scene) used to bleed into the next run: "new inline pack"
-  // abandoned mid-flow turned the next /new into an inline pack, and a
-  // stale copyPack turned it into a copy of a stranger's pack with boost.
-  // Everything this run needs is passed explicitly via ctx.scene.state.
+  // Start from a clean slate every time: leftovers from an abandoned wizard
+  // used to bleed into the next run. Everything this run needs comes via
+  // ctx.scene.state.
   const enterState = ctx.scene.state || {}
   ctx.session.scene.newPack = { ...(enterState.newPack || {}) }
   if (enterState.copyPack) ctx.session.scene.copyPack = enterState.copyPack
   else delete ctx.session.scene.copyPack
 
-  if (ctx?.message?.text) {
-    const args = ctx.message.text.split(' ')
+  const args = ctx.message?.text?.split(' ') || []
+  if (['fill', 'adaptive'].includes(args[1])) ctx.session.scene.newPack.fillColor = true
 
-    if (['fill', 'adaptive'].includes(args[1])) {
-      ctx.session.scene.newPack.fillColor = true
-    }
-  }
+  if (ctx.session.scene.newPack.inline) return ctx.scene.enter('newPackTitle')
 
-  // Якщо це інлайн пак, пропускаємо вибір типу
-  if (ctx.session.scene.newPack.inline) {
-    return ctx.scene.enter('newPackTitle')
-  }
+  // A copy keeps the source's type unless the user asks to change it.
+  if (ctx.session.scene.copyPack && !enterState.chooseType) return ctx.scene.enter('newPackTitle')
 
   await sendBanner(ctx, 'new-pack', ctx.i18n.t('scenes.new_pack.pack_type'), {
     reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.new_pack.regular'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.new_pack.custom_emoji'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.new_pack.custom_emoji_adaptive'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
+      [{ text: ctx.i18n.t('scenes.new_pack.regular'), style: 'primary' }],
+      [{ text: ctx.i18n.t('scenes.new_pack.custom_emoji'), style: 'primary' }],
+      [{ text: ctx.i18n.t('scenes.new_pack.custom_emoji_adaptive'), style: 'primary' }],
+      [cancelButton(ctx)]
     ]).resize()
   })
 })
@@ -159,25 +195,22 @@ newPack.on('message', async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   const { text } = ctx.message
   const { newPack } = ctx.session.scene
+
   if (text === ctx.i18n.t('scenes.new_pack.custom_emoji_adaptive')) {
-    // Adaptive (needs_repainting) emoji used to be reachable only through the
-    // undocumented `/new fill`. Same pack type, plus the repaint flag.
     newPack.packType = 'custom_emoji'
     newPack.fillColor = true
   } else if (text === ctx.i18n.t('scenes.new_pack.custom_emoji')) {
     newPack.packType = 'custom_emoji'
+    newPack.fillColor = false
   } else if (text === ctx.i18n.t('scenes.new_pack.regular')) {
     newPack.packType = 'regular'
+    newPack.fillColor = false
   } else {
     return ctx.scene.reenter()
   }
 
-  if (
-    ctx.session.scene?.copyPack &&
-    ctx.session.scene.copyPack.sticker_type !== newPack.packType
-  ) {
-    return ctx.scene.enter('newPackCopyPay')
-  }
+  const { copyPack } = ctx.session.scene
+  if (copyPack && copyPack.sticker_type !== newPack.packType) return ctx.scene.enter('newPackCopyPay')
 
   return ctx.scene.enter('newPackTitle')
 })
@@ -185,152 +218,306 @@ newPack.on('message', async (ctx) => {
 const newPackCopyPay = new Scene('newPackCopyPay')
 
 newPackCopyPay.enter(async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.pay', {
-    balance: ctx.session.userInfo.balance
-  }), {
+  const { balance } = ctx.session.userInfo
+  const text = ctx.i18n.t('scenes.copy.pay', { balance })
+
+  if (balance < 1) {
+    return ctx.replyWithHTML(text, { reply_markup: buyCreditsKeyboard(ctx) })
+  }
+
+  await ctx.replyWithHTML(text, {
     reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.copy.pay_btn'), style: 'primary' }
-      ],
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
+      [{ text: ctx.i18n.t('scenes.copy.pay_btn'), style: 'primary' }],
+      [cancelButton(ctx)]
     ]).resize()
   })
 })
 
-newPackCopyPay.hears(match('scenes.copy.pay_btn'), async (ctx) => {
-  if (ctx.session.userInfo.balance < 1) {
-    await ctx.replyWithHTML(ctx.i18n.t('scenes.boost.error.not_enough_credits'), {
-      reply_markup: Markup.removeKeyboard()
-    })
-
-    // Clean up all session state
-    ctx.session.scene = {}
-    return ctx.scene.leave()
-  }
-  return ctx.scene.enter('newPackTitle')
-})
+newPackCopyPay.hears(match('scenes.copy.pay_btn'), (ctx) => ctx.scene.enter('newPackTitle'))
 
 const newPackTitle = new Scene('newPackTitle')
 
 newPackTitle.enter(async (ctx) => {
-  if (!ctx.session.scene) return ctx.scene.leave()
-  if (!ctx.session.scene.newPack) {
-    ctx.session.scene.newPack = {}
+  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
+  const { newPack, copyPack } = ctx.session.scene
+
+  const suggestions = generateStrings({ count: 3 })
+  let text = ctx.i18n.t('scenes.new_pack.pack_title')
+
+  if (copyPack) {
+    // The source's own title is the most likely choice for a copy.
+    const sourceTitle = copyPack.title.replace(/ :: @\w+$/, '')
+    suggestions.unshift(substrUnicode(sourceTitle, 0, ctx.config.charTitleMax))
+    suggestions.length = 3
+    text = ctx.i18n.t('scenes.copy.title', {
+      originalTitle: escapeHTML(copyPack.title),
+      originalLink: packLink(copyPack),
+      count: copyPack.stickers.length
+    })
   }
 
-  const names = generateStrings({ count: 3 })
+  const keyboard = suggestions.map((name) => [name])
+  if (!newPack.inline) keyboard.push([ctx.i18n.t('scenes.new_pack.btn.custom_link')])
+  if (copyPack) keyboard.push([ctx.i18n.t('scenes.copy.btn.change_type')])
+  keyboard.push([cancelButton(ctx)])
 
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_title'), {
-    reply_markup: Markup.keyboard([
-      ...names.map((name) => [name]),
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
-    ]).resize()
+  await ctx.replyWithHTML(text, {
+    disable_web_page_preview: true,
+    reply_markup: Markup.keyboard(keyboard).resize()
   })
 })
+
+newPackTitle.hears(match('scenes.new_pack.btn.custom_link'), (ctx) => {
+  if (!ctx.session.scene?.newPack) return ctx.scene.leave()
+  ctx.session.scene.newPack.wantsCustomName = true
+  return ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.custom_link_on'))
+})
+
+newPackTitle.hears(match('scenes.copy.btn.change_type'), (ctx) => {
+  const { newPack, copyPack } = ctx.session.scene || {}
+  if (!copyPack) return ctx.scene.leave()
+  return ctx.scene.enter('newPack', { copyPack, newPack: { fillColor: newPack?.fillColor }, chooseType: true })
+})
+
 newPackTitle.on('text', async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
-  const charTitleMax = ctx.config.charTitleMax
+  const { newPack } = ctx.session.scene
 
   let title = ctx.message.text
-
-  if (countUncodeChars(title) > charTitleMax) {
-    title = substrUnicode(title, 0, charTitleMax)
+  if (countUncodeChars(title) > ctx.config.charTitleMax) {
+    title = substrUnicode(title, 0, ctx.config.charTitleMax)
   }
+  newPack.title = title
 
-  ctx.session.scene.newPack.title = title
-
-  if (ctx.session.scene.newPack.inline) return ctx.scene.enter('newPackConfirm')
-  else return ctx.scene.enter('newPackName')
+  if (newPack.wantsCustomName) return ctx.scene.enter('newPackName')
+  return ctx.scene.enter('newPackConfirm')
 })
 
 const newPackName = new Scene('newPackName')
 
 newPackName.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.pack_name'), {
-  reply_to_message_id: ctx.message.message_id,
-  allow_sending_without_reply: true,
-  disable_web_page_preview: true
+  ...replyTo(ctx),
+  disable_web_page_preview: true,
+  reply_markup: Markup.keyboard([[cancelButton(ctx)]]).resize()
 }))
 
-newPackName.on('text', async (ctx) => {
-  // Ensure scene state exists
-  if (!ctx.session.scene?.newPack) {
-    return ctx.scene.enter('newPack')
-  }
-
+newPackName.on('text', (ctx) => {
+  if (!ctx.session.scene?.newPack) return ctx.scene.enter('newPack')
   ctx.session.scene.newPack.name = ctx.message.text
-
   return ctx.scene.enter('newPackConfirm')
 })
 
+// createNewStickerSet under the first name Telegram accepts. For a pack the
+// user named that's their name or nothing.
+const createSet = async (ctx, { names, title, packType, fillColor, stickers, copy }) => {
+  let lastError = null
+
+  for (const name of names) {
+    if (await ctx.db.StickerSet.exists({ name })) {
+      lastError = { description: 'Bad Request: sticker set name is already occupied' }
+      continue
+    }
+
+    const call = () => ctx.telegram.callApi('createNewStickerSet', {
+      user_id: ctx.from.id,
+      name,
+      title,
+      stickers,
+      sticker_type: packType,
+      needs_repainting: !!fillColor
+    })
+    const created = await (copy ? runInCopyScope(call) : call()).then(() => true).catch((error) => {
+      lastError = error
+      return false
+    })
+
+    if (created) return { name }
+    if (!NAME_REJECTED.test(lastError?.description || '')) break
+  }
+
+  return { error: lastError || {} }
+}
+
+// Tell the user why creating failed, and where to go from here.
+const handleCreateError = async (ctx, error, { customName, newPack }) => {
+  const description = error?.description || ''
+
+  if (NAME_REJECTED.test(description)) {
+    const key = /invalid/i.test(description)
+      ? 'scenes.new_pack.error.telegram.name_invalid'
+      : 'scenes.new_pack.error.telegram.name_occupied'
+    await ctx.replyWithHTML(ctx.i18n.t(key), replyTo(ctx))
+    // Even the generated names were refused — let the user pick one.
+    return ctx.scene.enter('newPackName')
+  }
+
+  await ctx.replyWithHTML(humanizeTelegramError(ctx, error), replyTo(ctx))
+  if (customName) return ctx.scene.enter('newPackName')
+  return abandon(ctx, newPack)
+}
+
+const uploadPlaceholder = (ctx, packType, copy) => {
+  const call = () => ctx.telegram.callApi('uploadStickerFile', {
+    user_id: ctx.from.id,
+    sticker_format: 'video',
+    sticker: { source: placeholder[packType] || placeholder.regular }
+  })
+  return (copy ? runInCopyScope(call) : call()).catch((error) => {
+    log.error('placeholder upload failed:', error.description || error.message)
+    return null
+  })
+}
+
+// Charging for a copy into another pack type: atomic, and only when the
+// balance covers it (the session balance can be stale — two copies started
+// together used to take it below zero). Refundable until the copy produced
+// something.
+const chargeCopy = async (ctx) => {
+  const userId = ctx.session.userInfo._id
+  const result = await ctx.db.User.updateOne({ _id: userId, balance: { $gte: 1 } }, { $inc: { balance: -1 } })
+  if (!result.nModified) return null
+
+  ctx.session.userInfo.balance -= 1
+  let refunded = false
+  return {
+    refund: async () => {
+      if (refunded) return
+      refunded = true
+      await ctx.db.User.updateOne({ _id: userId }, { $inc: { balance: 1 } })
+        .catch((error) => log.error('failed to refund copy credit:', error))
+      ctx.session.userInfo.balance += 1
+    }
+  }
+}
+
+const NO_CHARGE = { refund: async () => {} }
+
+// Copy the rest of the source one sticker at a time, then report.
+const copyRemaining = async (ctx, { copyPack, userStickerSet, seeded, seedAttempted, hasPlaceholder, charged }) => {
+  const remaining = copyPack.stickers.slice(seedAttempted)
+  const links = {
+    originalTitle: escapeHTML(copyPack.title),
+    originalLink: packLink(copyPack),
+    title: escapeHTML(userStickerSet.title),
+    link: packLink(userStickerSet)
+  }
+
+  let success = seeded
+  let failed = seedAttempted - seeded
+  let pending = 0
+
+  if (remaining.length > 0) {
+    const progressText = () => ctx.i18n.t('scenes.copy.progress', {
+      ...links,
+      current: success + pending,
+      total: copyPack.stickers.length
+    })
+    const message = await ctx.replyWithHTML(progressText())
+
+    // While Telegram makes us wait out a rate limit, say so on the progress
+    // message so the copy doesn't look frozen.
+    const onWait = (seconds) => ctx.telegram.editMessageText(
+      message.chat.id, message.message_id, null,
+      ctx.i18n.t('error.rate_limit_seconds', { seconds })
+    ).catch(() => {})
+
+    for (const [index, sticker] of remaining.entries()) {
+      const result = await runInCopyScope(() => addSticker(ctx, sticker, userStickerSet, false), { onWait })
+
+      if (result?.error) failed++
+      else if (result?.wait) pending++
+      else success++
+
+      if ((index + 1) % 10 === 0) {
+        await ctx.telegram.editMessageText(message.chat.id, message.message_id, null, progressText(), { parse_mode: 'HTML' })
+          .catch(() => {})
+      }
+
+      await delay(COPY_PACE_MS)
+    }
+
+    await ctx.telegram.deleteMessage(message.chat.id, message.message_id).catch(() => {})
+  }
+
+  if (hasPlaceholder) {
+    if (success === 0 && pending === 0) {
+      // Nothing was copied — the set holds only the placeholder. Delete it and
+      // give the conversion credit back.
+      await ctx.telegram.callApi('deleteStickerSet', { name: userStickerSet.name })
+        .catch((error) => log.error('failed to delete empty sticker set:', error))
+      await ctx.db.StickerSet.deleteOne({ _id: userStickerSet._id }).catch(() => {})
+      await charged.refund()
+      return ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.all_failed', links), { disable_web_page_preview: true })
+    }
+
+    // The placeholder is normally removed by the first copied sticker; retry
+    // in case that removal didn't stick.
+    if (userStickerSet.placeholderFileUniqueId) {
+      const set = await ctx.telegram.getStickerSet(userStickerSet.name).catch(() => null)
+      await removePlaceholderIfPending(ctx.telegram, userStickerSet, set)
+    }
+  }
+
+  // A copy that fit entirely in the seed batch was already announced.
+  if (remaining.length === 0 && failed === 0) return
+
+  let key = 'scenes.copy.done'
+  if (failed > 0 && pending > 0) key = 'scenes.copy.done_partial_pending'
+  else if (failed > 0) key = 'scenes.copy.done_partial'
+  else if (pending > 0) key = 'scenes.copy.done_pending'
+
+  return ctx.replyWithHTML(ctx.i18n.t(key, { ...links, success, failed, pending }), {
+    disable_web_page_preview: true
+  })
+}
+
+// Same-type copy: upload the first ≤50 source stickers for one ordered
+// createNewStickerSet. Uploads run one by one with pacing; a sticker that
+// fails is skipped (re-adding it later would break the order).
+const uploadSeed = async (ctx, copyPack) => {
+  const waitMessage = await ctx.replyWithHTML('⏳', { reply_markup: { remove_keyboard: true } })
+  const onWait = (seconds) => ctx.telegram.editMessageText(
+    waitMessage.chat.id, waitMessage.message_id, null,
+    ctx.i18n.t('error.rate_limit_seconds', { seconds })
+  ).catch(() => {})
+
+  const batch = copyPack.stickers.slice(0, SEED_BATCH)
+  const stickers = []
+  for (const [index, sticker] of batch.entries()) {
+    const entry = await uploadSourceSticker(ctx, sticker, onWait)
+    if (entry) stickers.push(entry)
+    if ((index + 1) % 10 === 0) {
+      await ctx.telegram.editMessageText(waitMessage.chat.id, waitMessage.message_id, null,
+        `⏳ ${index + 1}/${copyPack.stickers.length}`
+      ).catch(() => {})
+    }
+    await delay(COPY_PACE_MS)
+  }
+
+  await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id).catch(() => {})
+  return { stickers, attempted: batch.length }
+}
+
 const newPackConfirm = new Scene('newPackConfirm')
 
-newPackConfirm.enter(async (ctx, next) => {
+newPackConfirm.enter(async (ctx) => {
   if (!ctx.session.scene?.newPack) return ctx.scene.leave()
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  const copyPack = ctx.session.scene.copyPack
-  const inline = !!ctx.session.scene.newPack.inline
+  const { copyPack, newPack } = ctx.session.scene
+  const inline = !!newPack.inline
+  const packType = newPack.packType || 'regular'
+  const { fillColor } = newPack
 
-  // A copy keeps working long after the update that started it. The session
-  // object is shared with the user's later updates, so before touching scene
-  // state after a long wait, check it is still this copy's.
-  const isStillThisCopy = () => !!ctx.session.scene && ctx.session.scene.copyPack === copyPack
+  const isCurrent = () => wizardOf(ctx) === newPack
 
   const nameSuffix = `_by_${ctx.options.username}`
-  const titleSuffix = ` :: @${ctx.options.username}`
-
-  let { name, title, fillColor, packType } = ctx.session.scene.newPack
-
-  // Для inline паку автоматично генеруємо name
-  if (inline) {
-    name = 'inline_' + ctx.from.id
-  } else {
-    name = name.replace(/https/, '')
-    name = name.replace(/t.me\/addstickers\//, '')
-    name = slug(name, { separator: '_', maintainCase: true })
-    name = name.replace(/[^0-9a-z_]/gi, '')
-    // Telegram requires the short name to start with a letter; collapse the
-    // double underscores transliteration leaves behind while we're here.
-    name = name.replace(/_{2,}/g, '_').replace(/^[^a-z]+/i, '').replace(/_+$/, '')
-  }
-
-  if (!name) {
-    return ctx.scene.enter('newPackName')
-  }
-
-  const maxNameLength = 64 - nameSuffix.length
-
-  if (name.length >= maxNameLength) {
-    name = name.slice(0, maxNameLength).replace(/_+$/, '')
-  }
-
-  if (!name) {
-    return ctx.scene.enter('newPackName')
-  }
-
-  if (!inline) name += nameSuffix
-  if (!inline) title += titleSuffix
-
-  let alreadyUploadedStickers = 0
-  let createNewStickerSet
-  let hasPlaceholder = false
-  // file_unique_id of the bootstrap placeholder, if this create used one.
-  // Persisted on the StickerSet so the placeholder is removed the moment the
-  // first real sticker is added (see uploadSticker in utils/add-sticker.js),
-  // instead of a blind timer that fails when the user is slow.
-  let placeholderFileUniqueId = null
-
-  packType = packType || 'regular'
+  const title = inline ? newPack.title : `${newPack.title} :: @${ctx.options.username}`
 
   if (inline) {
     // The inline pack name is fixed (inline_<userId>) and StickerSet.newSet
-    // does findOneAndDelete({ name }) + soft-deletes every sticker of the old
-    // set — so creating a second one silently destroyed the first. Select the
-    // existing pack instead and say why.
+    // replaces a set of the same name — a second inline pack would wipe the
+    // first. Select the existing one instead and say why.
     const existingInline = await ctx.db.StickerSet.findOne({
       owner: ctx.session.userInfo.id,
       inline: true,
@@ -342,11 +529,7 @@ newPackConfirm.enter(async (ctx, next) => {
       ctx.session.userInfo.inlineStickerSet = existingInline
       ctx.session.userInfo.inlineType = 'packs'
 
-      await ctx.db.User.updateOne(
-        { _id: ctx.session.userInfo._id },
-        { $set: { stickerSet: existingInline._id, inlineStickerSet: existingInline._id, inlineType: 'packs' } }
-      )
-
+      await removeReplyKeyboard(ctx)
       await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.inline_exists', {
         title: escapeHTML(existingInline.title)
       }), {
@@ -355,456 +538,127 @@ newPackConfirm.enter(async (ctx, next) => {
         ])
       })
 
-      await ctx.replyWithHTML('👌', {
-        reply_markup: {
-          remove_keyboard: true
-        }
-      })
-
       ctx.session.scene = {}
       return ctx.scene.leave()
     }
+  }
 
-    createNewStickerSet = true
-  } else {
-    const stickerSetByName = await ctx.db.StickerSet.findOne({ name })
-
-    if (stickerSetByName) {
-      await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
-        reply_to_message_id: ctx.message.message_id,
-        allow_sending_without_reply: true
-      })
+  const customName = !!newPack.name
+  let names
+  if (inline) {
+    names = [`inline_${ctx.from.id}`]
+  } else if (customName) {
+    const name = fitName(normalizeName(newPack.name), nameSuffix)
+    if (!name) {
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid'), replyTo(ctx))
       return ctx.scene.enter('newPackName')
     }
+    names = [name + nameSuffix]
+  } else {
+    names = autoNameCandidates(newPack.title, nameSuffix)
+  }
 
-    if (copyPack) {
-      const waitMessage = await ctx.replyWithHTML('⏳', {
-        reply_markup: {
-          remove_keyboard: true
-        }
-      })
-
-      const sameType = copyPack.sticker_type === packType
-      let seedStickers
-
-      if (sameType) {
-        // Same type → seed the set with the first ≤50 source stickers in a
-        // single ordered createNewStickerSet call (Telegram preserves the
-        // array order). Uploads run strictly sequentially with pacing so we
-        // never burst the per-user limit. A sticker that still fails to
-        // upload is skipped (never re-inserted later — that scrambles order)
-        // and reported as failed below.
-        // While Telegram makes us wait out a rate limit, show it on the ⏳
-        // message so the copy doesn't look frozen.
-        const seedOnWait = (seconds) => ctx.telegram.editMessageText(
-          waitMessage.chat.id, waitMessage.message_id, null,
-          ctx.i18n.t('error.rate_limit_seconds', { seconds })
-        ).catch(() => {})
-
-        const firstBatch = copyPack.stickers.slice(0, 50)
-        const uploaded = []
-        let seedProcessed = 0
-        for (const sticker of firstBatch) {
-          const entry = await uploadSourceSticker(ctx, sticker, seedOnWait)
-          if (entry) uploaded.push(entry)
-          seedProcessed++
-          // Keep the ⏳ message alive with a counter — the seed upload can
-          // take ~50s (one per second) before the set link exists.
-          if (seedProcessed % 10 === 0) {
-            await ctx.telegram.editMessageText(
-              waitMessage.chat.id, waitMessage.message_id, null,
-              `⏳ ${seedProcessed}/${copyPack.stickers.length}`
-            ).catch(() => {})
-          }
-          await delay(COPY_PACE_MS)
-        }
-
-        if (uploaded.length === 0) {
-          // Whole first batch failed → Telegram is hard-limiting us; abort
-          // cleanly rather than create an empty/broken pack.
-          await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id).catch(() => {})
-          await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), {
-            reply_to_message_id: ctx.message.message_id,
-            allow_sending_without_reply: true
-          })
-          // The seed upload above takes up to a minute; don't wipe a wizard
-          // the user has started since.
-          if (!isStillThisCopy()) return
-          ctx.session.scene = {}
-          return ctx.scene.leave()
-        }
-
-        seedStickers = uploaded
-        alreadyUploadedStickers = uploaded.length
-      } else {
-        // Different type → each sticker needs per-sticker conversion
-        // (addSticker), so we can't bulk-upload raw files. Seed with a
-        // placeholder and copy everything individually below; the
-        // placeholder is removed once copying finishes.
-        const placeholderSticker = await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
-          user_id: ctx.from.id,
-          sticker_format: 'video',
-          sticker: {
-            source: placeholder[packType].video
-          }
-        }))
-
-        seedStickers = [{ sticker: placeholderSticker.file_id, format: 'video', emoji_list: ['🌟'] }]
-        hasPlaceholder = true
-        // The canonical file_unique_id is resolved from getStickerSet after the
-        // set exists (see below) — the one uploadStickerFile returns here does
-        // not match what getStickerSet reports.
-      }
-
-      createNewStickerSet = await runInCopyScope(() => ctx.telegram.callApi('createNewStickerSet', {
-        user_id: ctx.from.id,
-        name,
-        title,
-        stickers: seedStickers,
-        sticker_type: packType,
-        needs_repainting: !!fillColor
-      })).catch((error) => {
-        return { error }
-      })
-
-      await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id).catch(() => {})
-
-      if (createNewStickerSet.error) {
-        // In create-flow, STICKERSET_INVALID actually means "name not
-        // accepted" — Telegram quirk where this code surfaces on
-        // create. Keep the context-specific mapping; fall back to the
-        // generic humanizer for everything else.
-        if (createNewStickerSet.error.description === 'STICKERSET_INVALID') {
-          await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied'), {
-            reply_to_message_id: ctx.message.message_id,
-            allow_sending_without_reply: true
-          })
-          return ctx.scene.enter('newPackName')
-        }
-
-        await ctx.replyWithHTML(humanizeTelegramError(ctx, createNewStickerSet.error), {
-          reply_to_message_id: ctx.message.message_id,
-          allow_sending_without_reply: true
-        })
-        return ctx.scene.enter('newPackName')
-      }
-
-      if (hasPlaceholder) {
-        placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, name)
-      }
-    } else {
-      const uploadedSticker = await ctx.telegram.callApi('uploadStickerFile', {
-        user_id: ctx.from.id,
-        sticker_format: 'video',
-        sticker: {
-          source: placeholder[packType].video
-        }
-      })
-
-      createNewStickerSet = await ctx.telegram.callApi('createNewStickerSet', {
-        user_id: ctx.from.id,
-        name,
-        title,
-        stickers: [
-          {
-            sticker: uploadedSticker.file_id,
-            format: 'video',
-            emoji_list: ['🌟']
-          }
-        ],
-        sticker_type: packType,
-        needs_repainting: !!fillColor
-      }).catch((error) => {
-        return { error }
-      })
-
-      if (createNewStickerSet.error) {
-        const { error } = createNewStickerSet
-        const description = error?.description || ''
-
-        // Context-specific name validation errors keep their own keys —
-        // they appear at the "enter pack name" step and need step-specific
-        // copy. Other Telegram errors flow through the shared humanizer.
-        let messageText
-        if (description === 'Bad Request: invalid sticker set name is specified') {
-          messageText = ctx.i18n.t('scenes.new_pack.error.telegram.name_invalid')
-        } else if (description === 'Bad Request: sticker set name is already occupied') {
-          messageText = ctx.i18n.t('scenes.new_pack.error.telegram.name_occupied')
-        } else {
-          messageText = humanizeTelegramError(ctx, error)
-        }
-
-        await ctx.replyWithHTML(messageText, {
-          reply_to_message_id: ctx.message.message_id,
-          allow_sending_without_reply: true
-        })
-        return ctx.scene.enter('newPackName')
-      }
-
-      placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, name)
+  let charged = NO_CHARGE
+  if (copyPack && copyPack.sticker_type !== packType) {
+    charged = await chargeCopy(ctx)
+    if (!charged) {
+      await ctx.replyWithHTML(ctx.i18n.t('scenes.boost.error.not_enough_credits'), { reply_markup: buyCreditsKeyboard(ctx) })
+      return abandon(ctx, newPack)
     }
   }
 
-  if (createNewStickerSet) {
-    // The bootstrap placeholder is removed the moment the first real sticker
-    // is added (uploadSticker in utils/add-sticker.js reads placeholderFileUniqueId
-    // and deletes it once the set has ≥2 stickers). Deferring to the first real
-    // sticker — rather than a blind timer — keeps the pack from ever being
-    // momentarily empty and avoids racing a slow user (the old timer would fire
-    // before any real sticker existed and leave the placeholder behind forever).
-    const userStickerSet = await ctx.db.StickerSet.newSet({
-      owner: ctx.session.userInfo.id,
-      ownerTelegramId: ctx.from.id,
-      name,
-      title,
-      inline,
-      packType,
-      boost: !!copyPack,
-      emojiSuffix: '🌟',
-      create: true,
-      placeholderFileUniqueId
+  let created = { name: names[0] }
+  let seeded = 0
+  let seedAttempted = 0
+  let hasPlaceholder = false
+  let placeholderFileUniqueId = null
+
+  if (!inline) {
+    // Uploading can take a minute (a copy's seed batch). The scene is left
+    // now so the bot keeps working meanwhile; session.scene stays for the
+    // isCurrent() checks and for going back to the name step.
+    await ctx.scene.leave()
+
+    let stickers
+
+    if (copyPack && copyPack.sticker_type === packType) {
+      const seed = await uploadSeed(ctx, copyPack)
+      stickers = seed.stickers
+      seeded = seed.stickers.length
+      seedAttempted = seed.attempted
+
+      if (stickers.length === 0) {
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), replyTo(ctx))
+        return abandon(ctx, newPack)
+      }
+    } else {
+      // A new empty pack, or a copy into another type (each sticker is
+      // converted one by one later): Telegram won't create an empty set, so it
+      // starts with a placeholder that the first real sticker replaces.
+      const uploaded = await uploadPlaceholder(ctx, packType, !!copyPack)
+      if (!uploaded) {
+        await charged.refund()
+        await ctx.replyWithHTML(ctx.i18n.t('scenes.new_pack.error.telegram.upload_failed'), replyTo(ctx))
+        return abandon(ctx, newPack)
+      }
+      stickers = [{ sticker: uploaded.file_id, format: 'video', emoji_list: ['🌟'] }]
+      hasPlaceholder = true
+    }
+
+    created = await createSet(ctx, { names, title, packType, fillColor, stickers, copy: !!copyPack })
+
+    if (created.error) {
+      await charged.refund()
+      if (!isCurrent()) return
+      return handleCreateError(ctx, created.error, { customName, newPack })
+    }
+
+    if (hasPlaceholder) placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, created.name)
+  }
+
+  const userStickerSet = await ctx.db.StickerSet.newSet({
+    owner: ctx.session.userInfo.id,
+    ownerTelegramId: ctx.from.id,
+    name: created.name,
+    title,
+    inline,
+    packType,
+    boost: !!copyPack,
+    emojiSuffix: '🌟',
+    create: true,
+    placeholderFileUniqueId
+  })
+
+  // The cached pack count is reset so /packs recounts it (see handlers/pack-hide.js).
+  const countType = inline ? 'inline' : packType
+  await ctx.db.User.updateOne(
+    { _id: ctx.session.userInfo._id },
+    { $set: { stickerSet: userStickerSet._id, [`packsCount.${countType}`]: 0 } }
+  )
+  if (ctx.session.userInfo.packsCount) ctx.session.userInfo.packsCount[countType] = 0
+  ctx.session.userInfo.stickerSet = userStickerSet
+  if (inline) {
+    ctx.session.userInfo.inlineStickerSet = userStickerSet
+    ctx.session.userInfo.inlineType = 'packs'
+  }
+
+  if (isCurrent()) await removeReplyKeyboard(ctx)
+  await sendPackMenu(ctx, userStickerSet, {
+    text: ctx.i18n.t(copyPack ? 'scenes.copy.created' : 'scenes.new_pack.ok', {
+      title: escapeHTML(userStickerSet.title),
+      link: packLink(userStickerSet)
     })
+  })
 
-    if (inline) {
-      ctx.session.userInfo.inlineStickerSet = userStickerSet
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
-        title: escapeHTML(userStickerSet.title),
-        botUsername: ctx.options.username
-      }), {
-        reply_to_message_id: ctx.message.message_id,
-        allow_sending_without_reply: true,
-        reply_markup: Markup.inlineKeyboard([
-          Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
-        ])
-      })
-    } else {
-      let inlineData = ''
-      if (ctx.session.userInfo.inlineType === 'packs') {
-        inlineData = stegcloak.hide('{gif}', '', ' : ')
-      }
-
-      const linkPrefix = userStickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
-
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
-        title: escapeHTML(userStickerSet.title),
-        link: `${linkPrefix}${name}`
-      }), {
-        disable_web_page_preview: true,
-        reply_markup: Markup.inlineKeyboard([
-          [
-            Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${linkPrefix}${userStickerSet.name}`)
-          ],
-          [
-            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.boost'), `boost:${userStickerSet.id}`, userStickerSet.boost)
-          ],
-          [
-            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
-          ],
-          [
-            Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)
-          ],
-          [
-            Markup.callbackButton(ctx.i18n.t('callback.pack.btn.coedit'), `coedit:${userStickerSet.id}`)
-          ]
-        ]),
-        parse_mode: 'HTML'
-      })
-    }
-
-    ctx.session.userInfo.stickerSet = userStickerSet
-
-    // if different pack type, use atomic $inc to prevent race conditions
-    if (copyPack && copyPack.sticker_type !== packType) {
-      await ctx.db.User.updateOne(
-        { _id: ctx.session.userInfo._id },
-        { $inc: { balance: -1 }, $set: { stickerSet: userStickerSet._id } }
-      )
-      ctx.session.userInfo.balance -= 1
-    } else {
-      await ctx.db.User.updateOne(
-        { _id: ctx.session.userInfo._id },
-        { $set: { stickerSet: userStickerSet._id } }
-      )
-    }
-
-    if (!copyPack) {
-      await ctx.replyWithHTML('👌', {
-        reply_markup: {
-          remove_keyboard: true
-        }
-      })
-
-      return ctx.scene.leave()
-    }
-
-    const originalPack = copyPack
-
-    // Same-type copies already seeded the first ≤50 stickers via
-    // createNewStickerSet; any of those that failed to upload are counted as
-    // failed here (never re-added — re-adding would break the order). What's
-    // left to copy one-by-one is everything past that seed batch (or, for a
-    // different-type copy, every sticker).
-    const batchAttemptedCount = hasPlaceholder ? 0 : Math.min(50, originalPack.stickers.length)
-    const remainingItems = originalPack.stickers.slice(batchAttemptedCount)
-
-    // Hoisted so the hasPlaceholder cleanup and result-message branches below
-    // can reference them even when there's nothing left to copy individually.
-    let successCount = alreadyUploadedStickers
-    let failedCount = batchAttemptedCount - alreadyUploadedStickers // stickers skipped during the seed batch
-    let pendingCount = 0
-    let processed = 0
-
-    if (remainingItems.length > 0) {
-      const message = await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.progress', {
-        originalTitle: escapeHTML(originalPack.title),
-        originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-        title: escapeHTML(title),
-        link: `${ctx.config.stickerLinkPrefix}${name}`,
-        current: successCount + pendingCount,
-        total: originalPack.stickers.length
-      }))
-
-      // Copy the rest strictly one at a time, in original order, paced ~1/s.
-      // On a 429 the copy-scope policy waits out Telegram's retry_after and
-      // then continues (the handler survives past handlerTimeout), so we copy
-      // everything rather than erroring out. A sticker that still fails after
-      // that (a genuinely broken file) is simply skipped and counted.
-      const copyOnWait = (seconds) => ctx.telegram.editMessageText(
-        message.chat.id, message.message_id, null,
-        ctx.i18n.t('error.rate_limit_seconds', { seconds })
-      ).catch(() => {})
-
-      for (const sticker of remainingItems) {
-        const result = await runInCopyScope(() => addSticker(ctx, sticker, userStickerSet, false), { onWait: copyOnWait })
-
-        if (result?.error) {
-          failedCount++
-        } else if (result?.wait) {
-          // Video stickers queued for async processing - don't count as success yet
-          pendingCount++
-        } else {
-          successCount++
-        }
-        processed++
-
-        if (processed % 10 === 0) {
-          await ctx.telegram.editMessageText(
-            message.chat.id, message.message_id, null,
-            ctx.i18n.t('scenes.copy.progress', {
-              originalTitle: escapeHTML(originalPack.title),
-              originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-              title: escapeHTML(title),
-              link: `${ctx.config.stickerLinkPrefix}${name}`,
-              current: successCount + pendingCount,
-              total: originalPack.stickers.length
-            }),
-            { parse_mode: 'HTML' }
-          ).catch(() => {})
-        }
-
-        await delay(COPY_PACE_MS)
-      }
-
-      await ctx.telegram.deleteMessage(message.chat.id, message.message_id).catch(() => {})
-    }
-
-    // Show result with appropriate message based on outcome. Skipped only
-    // when a copy completed fully within the seed batch (nothing processed
-    // individually, nothing failed) — the pack link reply already covers it.
-    if (processed > 0 || failedCount > 0) {
-      if (failedCount > 0 && pendingCount > 0) {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial_pending', {
-          originalTitle: escapeHTML(originalPack.title),
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-          title: escapeHTML(title),
-          link: `${ctx.config.stickerLinkPrefix}${name}`,
-          success: successCount,
-          failed: failedCount,
-          pending: pendingCount
-        }),
-        { parse_mode: 'HTML' }
-        )
-      } else if (failedCount > 0) {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_partial', {
-          originalTitle: escapeHTML(originalPack.title),
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-          title: escapeHTML(title),
-          link: `${ctx.config.stickerLinkPrefix}${name}`,
-          success: successCount,
-          failed: failedCount
-        }),
-        { parse_mode: 'HTML' }
-        )
-      } else if (pendingCount > 0) {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done_pending', {
-          originalTitle: escapeHTML(originalPack.title),
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-          title: escapeHTML(title),
-          link: `${ctx.config.stickerLinkPrefix}${name}`,
-          success: successCount,
-          pending: pendingCount
-        }),
-        { parse_mode: 'HTML' }
-        )
-      } else {
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.done', {
-          originalTitle: escapeHTML(originalPack.title),
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`,
-          title: escapeHTML(title),
-          link: `${ctx.config.stickerLinkPrefix}${name}`
-        }),
-        { parse_mode: 'HTML' }
-        )
-      }
-    }
-
-    // Placeholder handling for a different-type copy. The normal removal now
-    // happens inside uploadSticker on the first successfully copied sticker
-    // (utils/add-sticker.js) — so by here it's usually already gone. Two cases
-    // remain: nothing copied at all, or a transient failure left it behind.
-    if (hasPlaceholder) {
-      if (successCount === 0 && pendingCount === 0) {
-        // Nothing was copied — the set holds only the placeholder, so it's
-        // useless. Delete the whole pack and refund the conversion credit.
-        await ctx.telegram.callApi('deleteStickerSet', { name }).catch(error => {
-          log.error('failed to delete empty sticker set:', error)
-        })
-        await ctx.db.StickerSet.deleteOne({ name }).catch(() => {})
-        // A different-type copy is charged 1 credit up front, but nothing was
-        // actually copied (rate limit / all stickers failed), so give it back.
-        if (copyPack.sticker_type !== packType) {
-          await ctx.db.User.updateOne(
-            { _id: ctx.session.userInfo._id },
-            { $inc: { balance: 1 } }
-          ).catch((error) => log.error('failed to refund copy credit:', error))
-          ctx.session.userInfo.balance += 1
-        }
-        await ctx.replyWithHTML(ctx.i18n.t('scenes.copy.error.all_failed', {
-          originalTitle: escapeHTML(originalPack.title),
-          originalLink: `${ctx.config.stickerLinkPrefix}${originalPack.name}`
-        }))
-      } else if (userStickerSet.placeholderFileUniqueId) {
-        // Real stickers were copied but the in-loop removal didn't stick.
-        // Retry via the shared helper: it clears the marker only once the
-        // placeholder is truly gone, so a failed delete here stays retryable
-        // on the next sticker add. (The old hand-rolled version dropped the
-        // marker even when deleteStickerFromSet failed — losing the marker
-        // forever and with it any chance of self-healing.)
-        const set = await ctx.telegram.getStickerSet(name).catch(() => null)
-        await removePlaceholderIfPending(ctx.telegram, userStickerSet, set)
-      }
-    }
-
-    // Clean up — but only if the session still belongs to this copy. The copy
-    // runs for minutes; meanwhile the user may have left the scene (/copy,
-    // /cancel and every other exit command set session.scene to null, which
-    // used to crash here with "Cannot convert undefined or null to object") or
-    // started a new wizard, which leaving here would silently kill.
-    if (isStillThisCopy()) {
-      delete ctx.session.scene.copyPack
-      await ctx.scene.leave()
-    }
+  // The wizard is done — unless the user already moved on to something else.
+  if (isCurrent()) {
+    ctx.session.scene = {}
+    await ctx.scene.leave()
   }
+
+  if (!copyPack) return flushPendingStickers(ctx, userStickerSet)
+
+  return copyRemaining(ctx, { copyPack, userStickerSet, seeded, seedAttempted, hasPlaceholder, charged })
 })
 
 module.exports = [

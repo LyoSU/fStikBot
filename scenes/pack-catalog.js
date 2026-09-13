@@ -1,4 +1,6 @@
 const fs = require('fs')
+const packLink = require('../utils/pack-link')
+const { editPackMenu } = require('../handlers/pack-menu')
 const path = require('path')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
@@ -413,31 +415,6 @@ catalogSelectLanguage.action(/^catalog:set_language:(.*)$/, async (ctx) => {
   return ctx.scene.reenter()
 })
 
-const catalogSetSafe = new Scene('catalogSetSafe')
-
-catalogSetSafe.enter(async (ctx) => {
-  const inlineKeyboard = Markup.inlineKeyboard([
-    [
-      Markup.callbackButton(ctx.i18n.t('scenes.catalog.publish.button_safe.safe'), 'catalog:set_safe:true')
-    ],
-    [
-      Markup.callbackButton(ctx.i18n.t('scenes.catalog.publish.button_safe.not_safe'), 'catalog:set_safe:false')
-    ]
-  ])
-
-  const resultText = ctx.i18n.t('scenes.catalog.publish.set_safe')
-
-  await ctx.replyWithHTML(resultText, {
-    reply_markup: inlineKeyboard
-  })
-})
-
-catalogSetSafe.action(/^catalog:set_safe:(.*)$/, async (ctx) => {
-  if (!ctx.session.scene?.publish) return ctx.scene.leave()
-  ctx.session.scene.publish.safe = ctx.match[1] === 'true'
-  return ctx.scene.enter('catalogPublishConfirm')
-})
-
 const catalogPublishConfirm = new Scene('catalogPublishConfirm')
 
 catalogPublishConfirm.enter(async (ctx) => {
@@ -467,7 +444,7 @@ catalogPublishConfirm.enter(async (ctx) => {
   }
 
   const resultText = ctx.i18n.t('scenes.catalog.publish.confirm', {
-    link: `${ctx.config.stickerLinkPrefix}${publish.stickerSet.name}`,
+    link: packLink(publish.stickerSet),
     title: escapeHTML(publish.stickerSet.title),
     description: escapeHTML(publish.description),
     tags: tags.join(' '),
@@ -541,7 +518,9 @@ const unpublish = async (ctx) => {
   await stickerSet.save()
 
   await ctx.answerCbQuery(ctx.i18n.t('scenes.catalog.unpublish.success'), true)
-  return ctx.scene.leave()
+  await ctx.scene.leave()
+  // The menu still offered "Edit / Remove from catalog" for an unpublished pack.
+  return editPackMenu(ctx, stickerSet)
 }
 
 catalogUnpublish.enter(unpublish)

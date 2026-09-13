@@ -1,4 +1,5 @@
 const { escapeHTML } = require('../utils')
+const packLink = require('../utils/pack-link')
 
 module.exports = async (ctx, next) => {
   let messageText = ctx.i18n.t('callback.pack.error.restore')
@@ -29,6 +30,10 @@ module.exports = async (ctx, next) => {
       if (findStickerSet.create === true) {
         if (findStickerSet.hide === true) {
           findStickerSet.hide = false
+          // Reset the cached pack count so /packs recounts it (see pack-hide.js).
+          const countType = findStickerSet.inline ? 'inline' : (findStickerSet.packType || 'regular')
+          await ctx.db.User.updateOne({ _id: findStickerSet.owner }, { $set: { [`packsCount.${countType}`]: 0 } })
+          if (ctx.session.userInfo.packsCount) ctx.session.userInfo.packsCount[countType] = 0
         } else {
           const packOwner = await ctx.db.User.findById(findStickerSet.owner)
           if (!packOwner) {
@@ -102,7 +107,7 @@ module.exports = async (ctx, next) => {
 
       messageText = ctx.i18n.t('callback.pack.restored', {
         title: escapeHTML(findStickerSet.title),
-        link: `${ctx.config.stickerLinkPrefix}${findStickerSet.name}`
+        link: packLink(findStickerSet)
       })
     }
   }

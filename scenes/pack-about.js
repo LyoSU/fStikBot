@@ -1,4 +1,5 @@
 const Scene = require('telegraf/scenes/base')
+const packLink = require('../utils/pack-link')
 const Markup = require('telegraf/markup')
 const { sendBanner } = require('../banners')
 const {
@@ -247,7 +248,7 @@ packAbout.on(['sticker', 'text', 'forward'], async (ctx, next) => {
   const dcDisplay = dcId ? `${dcRegion}` : '?'
 
   await ctx.replyWithHTML(ctx.i18n.t('scenes.packAbout.result', {
-    link: `https://t.me/addstickers/${sticker.set_name}`,
+    link: `https://${packLink({ name: sticker.set_name, sticker_type: sticker.type })}`,
     name: escapeHTML(sticker.set_name),
     ownerId: actualOwnerId ?? '?',
     mention,

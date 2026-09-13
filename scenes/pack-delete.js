@@ -3,6 +3,7 @@ const Markup = require('telegraf/markup')
 const { match } = require('telegraf-i18n')
 const { escapeHTML } = require('../utils')
 const { humanizeTelegramError } = require('../utils/telegram-error')
+const packLink = require('../utils/pack-link')
 
 // If the pack we just deleted was the selected one, drop it — otherwise the
 // next sticker is uploaded into a set that no longer exists and the user only
@@ -43,17 +44,16 @@ packDelete.enter(async (ctx) => {
     }
   }
 
-  const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
-
   await ctx.replyWithHTML(ctx.i18n.t('scenes.delete_pack.enter', {
-    link: `${linkPrefix}${stickerSet.name}`,
+    link: packLink(stickerSet),
     title: escapeHTML(stickerSet.title),
     confirm: ctx.i18n.t('scenes.delete_pack.confirm')
   }), {
+    disable_web_page_preview: true,
+    // The confirmation used to be typed by hand; the keyboard had only Cancel.
     reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
+      [{ text: ctx.i18n.t('scenes.delete_pack.confirm'), style: 'danger' }],
+      [{ text: ctx.i18n.t('scenes.btn.cancel') }]
     ]).resize()
   })
 })

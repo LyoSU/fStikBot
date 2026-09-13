@@ -1,356 +1,221 @@
-const StegCloak = require('stegcloak')
 const Markup = require('telegraf/markup')
-const { escapeHTML } = require('../utils')
 const { sendBanner, editBanner } = require('../banners')
+const { sendPackMenu, isOwner } = require('./pack-menu')
+const { flushPendingStickers } = require('./sticker')
 
-const stegcloak = new StegCloak(false, false)
+const PAGE_SIZE = 10
+const PACK_TYPES = ['regular', 'custom_emoji', 'inline']
 
-module.exports = async (ctx) => {
+const typeFilter = (packType) => {
+  if (packType === 'inline') return { inline: true }
+  return {
+    inline: { $ne: true },
+    packType: packType === 'regular' ? { $in: ['regular', null] } : packType
+  }
+}
+
+const selectedType = (userInfo) => {
+  if (userInfo.stickerSet?.inline) return 'inline'
+  return userInfo.stickerSet?.packType || 'regular'
+}
+
+// Which list to show, from the button that was pressed:
+//   packs:type:<type>                  a tab
+//   packs:list:<type>:<page>           a page of a tab
+//   packs:hidden:<type>:<page>         hidden packs of a tab
+//   packs:<page> / packs:null          older messages — the selected pack's tab
+// The tab and page travel in the button. Switching tabs used to select that
+// tab's newest pack (or none), so just looking at "Emoji" made the next photo
+// fail with "no pack selected".
+const parseView = (ctx) => {
+  const view = { packType: selectedType(ctx.session.userInfo), page: 0, hidden: false }
+  if (ctx.state.type) view.packType = ctx.state.type
+
+  const data = ctx.callbackQuery?.data || ''
+  const [, kind, type, page] = data.split(':')
+
+  if (kind === 'type' || kind === 'list' || kind === 'hidden') {
+    if (PACK_TYPES.includes(type)) view.packType = type
+    view.page = Math.max(0, parseInt(page, 10) || 0)
+    view.hidden = kind === 'hidden'
+  } else if (data.startsWith('packs:')) {
+    view.page = Math.max(0, parseInt(kind, 10) || 0)
+  }
+
+  return view
+}
+
+// The inline pack is created on first visit to the inline tab.
+const ensureInlinePack = async (ctx) => {
   const { userInfo } = ctx.session
+  const existing = await ctx.db.StickerSet.findOne({ owner: userInfo.id, inline: true, deleted: { $ne: true } })
+  if (existing) return existing
 
-  // if its in group
-  if (ctx.chat.type !== 'private') {
-    const replyMarkup = Markup.inlineKeyboard([
-      Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_group_pack'), 'select_group_pack')
-    ])
+  return ctx.db.StickerSet.newSet({
+    owner: userInfo.id,
+    ownerTelegramId: ctx.from.id,
+    name: 'inline_' + ctx.from.id,
+    title: ctx.i18n.t('cmd.packs.inline_title'),
+    emojiSuffix: '💫',
+    create: true,
+    inline: true
+  })
+}
 
-    return ctx.replyWithHTML(ctx.i18n.t('cmd.packs.select_group_pack_info'), {
-      reply_markup: replyMarkup,
-      reply_to_message_id: ctx.message.message_id,
-      allow_sending_without_reply: true
-    })
+const packCount = async (ctx, view, query, pageSize) => {
+  const { userInfo } = ctx.session
+  // Cached on the user document; counted (and cached) when missing.
+  let total = userInfo.packsCount?.[view.packType] ?? 0
+  if (total === 0 && pageSize > 0) {
+    total = await ctx.db.StickerSet.countDocuments(query)
+    if (!userInfo.packsCount) userInfo.packsCount = {}
+    userInfo.packsCount[view.packType] = total
+    ctx.db.User.updateOne({ _id: userInfo._id }, { $set: { [`packsCount.${view.packType}`]: total } }).catch(() => {})
   }
+  return total
+}
 
-  if (!userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
-
-  let packType = userInfo.stickerSet?.packType || 'regular'
-  if (userInfo.stickerSet?.inline || ctx.state.type) packType = 'inline'
-
-  if (ctx.callbackQuery && ctx.match && ctx.match[1] === 'type') {
-    if (ctx.match[2] === 'inline') {
-      const findStickerSet = await ctx.db.StickerSet.findOne({
-        owner: userInfo.id,
-        deleted: { $ne: true },
-        inline: true
-      }).sort({
-        updatedAt: -1
-      })
-
-      if (findStickerSet) {
-        userInfo.stickerSet = findStickerSet
-        userInfo.inlineStickerSet = findStickerSet
-        userInfo.inlineType = 'packs'
-      } else {
-        userInfo.stickerSet = null
-      }
-
-      packType = 'inline'
-    } else {
-      const findStickerSet = await ctx.db.StickerSet.findOne({
-        owner: userInfo.id,
-        deleted: { $ne: true },
-        packType: ctx.match[2]
-      }).sort({
-        updatedAt: -1
-      })
-
-      if (findStickerSet) {
-        userInfo.stickerSet = findStickerSet
-      } else {
-        userInfo.stickerSet = null
-      }
-
-      packType = ctx.match[2]
-    }
-  }
+async function renderList (ctx, view) {
+  const { userInfo } = ctx.session
+  const t = (key) => ctx.i18n.t(key)
 
   const query = {
     owner: userInfo.id,
     create: true,
-    hide: { $ne: true }
+    hide: view.hidden ? true : { $ne: true },
+    ...typeFilter(view.packType)
   }
 
-  let page = 0
-  const limit = 10
-
-  if (ctx.callbackQuery) {
-    page = parseInt(ctx.match[1]) || 0
-  }
-  if (page < 0) page = 0
-
-  if (ctx.callbackQuery && ctx.match && ctx.match[1] === 'set_pack') {
-    if (ctx.match[2] === 'gif') {
-      ctx.session.userInfo.inlineType = 'gif'
-      if (userInfo?.stickerSet?.inline) userInfo.stickerSet = null
-      userInfo.inlineStickerSet = null
-    } else {
-      const stickerSet = await ctx.db.StickerSet.findById(ctx.match[2])
-
-      if (!stickerSet) {
-        return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
-      }
-
-      packType = stickerSet.inline ? 'inline' : stickerSet.packType
-
-      if (stickerSet?.owner.toString() === userInfo.id.toString()) {
-        // Bump only after the owner check — otherwise a forged set_pack:<id>
-        // reordered a stranger's pack list.
-        stickerSet.updatedAt = new Date()
-        await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
-
-        await ctx.answerCbQuery()
-
-        if (stickerSet.inline) {
-          ctx.session.userInfo.inlineType = 'packs'
-          userInfo.inlineStickerSet = stickerSet
-        }
-
-        userInfo.stickerSet = stickerSet
-
-        const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
-
-        if (stickerSet.inline) {
-          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
-            title: escapeHTML(stickerSet.title),
-            botUsername: ctx.options.username
-          }), {
-            reply_markup: Markup.inlineKeyboard([
-              [
-                Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
-              ],
-              [
-                Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-              ]
-            ]),
-            parse_mode: 'HTML'
-          })
-        } else {
-          let inlineData = ''
-          if (ctx.session.userInfo.inlineType === 'packs') {
-            inlineData = stegcloak.hide('{gif}', '', ' : ')
-          }
-
-          const searchGifButton = [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.btn.search_gif'), inlineData)]
-
-          let coeditButton = []
-
-          if (stickerSet.owner.toString() === userInfo.id.toString()) {
-            coeditButton = [Markup.callbackButton(ctx.i18n.t('callback.pack.btn.coedit'), `coedit:${stickerSet.id}`)]
-          }
-
-          let catalogButton = []
-
-          const stickersCount = await ctx.db.Sticker.countDocuments({
-            stickerSet: stickerSet.id,
-            deleted: false
-          })
-
-          if (stickerSet.public) {
-            catalogButton = [
-              [
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_edit'), `catalog:publish:${stickerSet.id}`),
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_delete'), `catalog:unpublish:${stickerSet.id}`)
-              ],
-              [
-                Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_share'), `https://t.me/share/url?url=https://t.me/${ctx.options.username}/catalog?startapp=set=${stickerSet.name}`),
-                Markup.urlButton(ctx.i18n.t('callback.pack.btn.catalog_open'), `https://t.me/${ctx.options.username}/catalog?startApp=set=${stickerSet.name}&startapp=set=${stickerSet.name}`)
-              ]
-            ]
-          } else if (stickersCount >= 10 && !stickerSet.public) {
-            catalogButton = [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]]
-          }
-
-          const linkPrefix = stickerSet.packType === 'custom_emoji' ? ctx.config.emojiLinkPrefix : ctx.config.stickerLinkPrefix
-
-          const boostText = ctx.i18n.t('callback.pack.boost.info', {
-            botUsername: ctx.options.username,
-            boostStatus: stickerSet.boost ? ctx.i18n.t('callback.pack.boost.status.on') : ctx.i18n.t('callback.pack.boost.status.off')
-          })
-
-          await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
-            title: escapeHTML(stickerSet.title),
-            link: `${linkPrefix}${stickerSet.name}`
-          }) + boostText, {
-            disable_web_page_preview: true,
-            reply_markup: Markup.inlineKeyboard([
-              [
-                Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${linkPrefix}${stickerSet.name}`)
-              ],
-              [
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.boost'), `boost:${stickerSet.id}`, stickerSet.boost)
-              ],
-              [
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.rename'), `rename_pack:${stickerSet.id}`)
-              ],
-              [
-                Markup.callbackButton(ctx.i18n.t('callback.pack.btn.frame'), 'set_frame')
-              ],
-              ...(stickerSet.packType === 'custom_emoji'
-                ? [[Markup.callbackButton(ctx.i18n.t('callback.pack.btn.mosaic'), 'mosaic:enter')]]
-                : []
-              ),
-              searchGifButton,
-              coeditButton,
-              ...catalogButton,
-              [
-                Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-              ]
-            ]),
-            parse_mode: 'HTML'
-          })
-        }
-      } else {
-        await ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
-      }
-    }
-  }
-
-  if (packType === 'inline') {
-    query.inline = true
-  } else {
-    query.inline = { $ne: true }
-    if (packType === 'regular') {
-      query.packType = {
-        $in: [packType, null]
-      }
-    } else {
-      query.packType = packType
-    }
-  }
-
-  // Fetch limit+1 to check if there's a next page (avoids separate countDocuments query)
+  // limit+1 tells whether there is a next page without a count query.
   const stickerSets = await ctx.db.StickerSet.find(query)
     .sort({ updatedAt: -1 })
-    .limit(limit + 1)
-    .skip(page * limit)
+    .skip(view.page * PAGE_SIZE)
+    .limit(PAGE_SIZE + 1)
     .lean()
 
-  const hasNextPage = stickerSets.length > limit
+  const hasNextPage = stickerSets.length > PAGE_SIZE
   if (hasNextPage) stickerSets.pop()
 
-  // Use cached count from user document, fallback to countDocuments for old users
-  let totalCount = userInfo.packsCount?.[packType] ?? 0
-  if (totalCount === 0 && stickerSets.length > 0) {
-    // Fallback for users without packsCount (lazy migration)
-    totalCount = await ctx.db.StickerSet.countDocuments(query)
-    // Save for future requests (non-blocking)
-    if (!userInfo.packsCount) userInfo.packsCount = {}
-    userInfo.packsCount[packType] = totalCount
-    ctx.db.User.updateOne(
-      { _id: userInfo._id },
-      { $set: { [`packsCount.${packType}`]: totalCount } }
-    ).then(() => {})
+  if (view.packType === 'inline' && !view.hidden && view.page === 0 && stickerSets.length === 0) {
+    const inlineSet = await ensureInlinePack(ctx)
+    if (inlineSet.hide !== true) stickerSets.push(inlineSet)
   }
 
-  // Whether the user already owns an inline pack — the "new pack" button is
-  // hidden on the inline tab when they do, because the inline pack name is
-  // fixed (inline_<userId>) and newSet() would wipe the existing one.
-  let hasInlinePack = packType === 'inline' && stickerSets.length > 0
+  const keyboard = []
+  let text
 
-  // Auto-create only on the first page: on page 2+ an empty result just means
-  // "no more packs", and unshifting a pack there duplicated it in the list.
-  if (packType === 'inline' && page === 0 && stickerSets.length <= 0) {
-    let inlineSet = await ctx.db.StickerSet.findOne({
-      owner: userInfo.id,
-      inline: true,
-      deleted: { $ne: true }
-    })
-
-    if (!inlineSet) {
-      inlineSet = await ctx.db.StickerSet.newSet({
-        owner: userInfo.id,
-        ownerTelegramId: ctx.from.id,
-        name: 'inline_' + ctx.from.id,
-        title: ctx.i18n.t('cmd.packs.inline_title'),
-        emojiSuffix: '💫',
-        create: true,
-        inline: true
-      })
-    }
-
-    hasInlinePack = true
-
-    // The list query already filters out hidden packs; don't smuggle one back
-    // in through this fallback.
-    if (inlineSet.hide !== true) stickerSets.unshift(inlineSet)
-  }
-
-  let messageText = ''
-  const keyboardMarkup = []
-
-  if (stickerSets.length > 0) {
-    const totalPages = Math.ceil(totalCount / limit)
-    const statsText = totalCount > limit
-      ? `\n<i>${page + 1}/${totalPages} (${totalCount})</i>\n`
-      : ''
-    messageText = ctx.i18n.t('cmd.packs.info') + statsText
-
-    stickerSets.forEach((pack) => {
-      let { title } = pack
-
-      // if (pack.video === true) title = `📹 ${title}`
-      // else if (pack.animated === true) title = `✨ ${title}`
-      // else if (pack.inline === true) title = `💫 ${title}`
-      // else title = `🌟 ${title}`
-
-      if (
-        userInfo.stickerSet?._id?.toString() === pack._id.toString()
-      ) title += ' ✅'
-
-      keyboardMarkup.push([Markup.callbackButton(title, `set_pack:${pack._id}`)])
-    })
+  if (view.hidden) {
+    text = t(stickerSets.length > 0 ? 'cmd.packs.hidden_info' : 'cmd.packs.hidden_empty')
+  } else if (stickerSets.length > 0) {
+    const total = await packCount(ctx, view, query, stickerSets.length)
+    text = t('cmd.packs.info')
+    if (total > PAGE_SIZE) text += `\n<i>${view.page + 1}/${Math.ceil(total / PAGE_SIZE)} (${total})</i>\n`
   } else {
-    messageText = ctx.i18n.t('cmd.packs.empty')
+    text = t('cmd.packs.empty')
   }
 
-  if (packType === 'inline') {
-    const title = ctx.session.userInfo.inlineType !== 'gif' ? 'GIF' : '✅ GIF'
-    keyboardMarkup.push([Markup.callbackButton(title, 'set_pack:gif')])
+  const selectedId = String(userInfo.stickerSet?._id || '')
+  for (const pack of stickerSets) {
+    const mark = String(pack._id) === selectedId ? ' ✅' : ''
+    keyboard.push([Markup.callbackButton(pack.title + mark, `set_pack:${pack._id}`)])
   }
 
-  const paginationKeyboard = []
-
-  if (page > 0) {
-    paginationKeyboard.push(Markup.callbackButton(`‹ ${page}`, `packs:${page - 1}`))
-  }
-  if (hasNextPage) {
-    paginationKeyboard.push(Markup.callbackButton(`${page + 2} ›`, `packs:${page + 1}`))
+  if (view.packType === 'inline' && !view.hidden) {
+    const gifTitle = userInfo.inlineType === 'gif' ? '✅ GIF' : 'GIF'
+    keyboard.push([Markup.callbackButton(gifTitle, 'set_pack:gif')])
   }
 
-  keyboardMarkup.push(paginationKeyboard)
+  const listKind = view.hidden ? 'hidden' : 'list'
+  const pagination = []
+  if (view.page > 0) pagination.push(Markup.callbackButton(`‹ ${view.page}`, `packs:${listKind}:${view.packType}:${view.page - 1}`))
+  if (hasNextPage) pagination.push(Markup.callbackButton(`${view.page + 2} ›`, `packs:${listKind}:${view.packType}:${view.page + 1}`))
+  if (pagination.length) keyboard.push(pagination)
 
-  keyboardMarkup.push([
-    Markup.callbackButton(
-      (packType === 'regular' ? '✅ ' : '') +
-      ctx.i18n.t('cmd.packs.types.regular'),
-      'packs:type:regular'
-    ),
-    Markup.callbackButton(
-      (packType === 'custom_emoji' ? '✅ ' : '') +
-      ctx.i18n.t('cmd.packs.types.custom_emoji'),
-      'packs:type:custom_emoji'
-    ),
-    Markup.callbackButton(
-      (packType === 'inline' ? '✅ ' : '') +
-      ctx.i18n.t('cmd.packs.types.inline'),
-      'packs:type:inline'
-    )
-  ])
+  if (view.hidden) {
+    keyboard.push([Markup.callbackButton(ctx.i18n.t('cmd.guide.btn.back'), `packs:list:${view.packType}:0`)])
+  } else {
+    keyboard.push(PACK_TYPES.map((type) => Markup.callbackButton(
+      (view.packType === type ? '✅ ' : '') + t(`cmd.packs.types.${type}`),
+      `packs:type:${type}`
+    )))
 
-  keyboardMarkup.push([Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), `new_pack:${packType}`, hasInlinePack)])
+    const hasHidden = await ctx.db.StickerSet.exists({ owner: userInfo.id, create: true, hide: true, ...typeFilter(view.packType) })
+    // Only one inline pack per user — its name is fixed, a second would wipe it.
+    const canCreate = view.packType !== 'inline'
+    keyboard.push([
+      canCreate && Markup.callbackButton(t('cmd.start.btn.new'), `new_pack:${view.packType}`),
+      hasHidden && Markup.callbackButton(t('cmd.packs.hidden_btn'), `packs:hidden:${view.packType}:0`)
+    ].filter(Boolean))
+  }
 
-  const replyMarkup = Markup.inlineKeyboard(keyboardMarkup)
+  const extra = { reply_markup: Markup.inlineKeyboard(keyboard.filter((row) => row.length > 0)) }
 
-  if (ctx.updateType === 'message') {
-    await sendBanner(ctx, 'packs', messageText, {
-      reply_to_message_id: ctx.message.message_id,
-      allow_sending_without_reply: true,
-      reply_markup: replyMarkup
+  if (ctx.callbackQuery) return editBanner(ctx, 'packs', text, extra)
+  return sendBanner(ctx, 'packs', text, {
+    ...extra,
+    reply_to_message_id: ctx.message?.message_id,
+    allow_sending_without_reply: true
+  })
+}
+
+// set_pack:<id> — open a pack from the list. A visible pack is selected (new
+// stickers go there); a hidden one just shows its restore/delete menu.
+async function openPack (ctx) {
+  const { userInfo } = ctx.session
+  const id = ctx.match[2]
+
+  if (id === 'gif') {
+    userInfo.inlineType = 'gif'
+    if (userInfo.stickerSet?.inline) userInfo.stickerSet = null
+    userInfo.inlineStickerSet = null
+    await ctx.answerCbQuery()
+    return renderList(ctx, { packType: 'inline', page: 0, hidden: false })
+  }
+
+  const stickerSet = await ctx.db.StickerSet.findById(id).catch(() => null)
+  if (!stickerSet || stickerSet.deleted) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
+  }
+  if (!isOwner(ctx, stickerSet)) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
+  }
+
+  await ctx.answerCbQuery()
+
+  if (stickerSet.hide !== true) {
+    stickerSet.updatedAt = new Date()
+    await ctx.db.StickerSet.updateOne({ _id: stickerSet._id }, { updatedAt: stickerSet.updatedAt })
+
+    if (stickerSet.inline) {
+      userInfo.inlineType = 'packs'
+      userInfo.inlineStickerSet = stickerSet
+    }
+    userInfo.stickerSet = stickerSet
+  }
+
+  await sendPackMenu(ctx, stickerSet)
+
+  if (stickerSet.hide !== true) {
+    flushPendingStickers(ctx, stickerSet)
+    // Refresh the ✅ mark in the list the pack was opened from.
+    await renderList(ctx, { packType: stickerSet.inline ? 'inline' : (stickerSet.packType || 'regular'), page: 0, hidden: false })
+  }
+}
+
+module.exports = async (ctx) => {
+  if (ctx.chat.type !== 'private') {
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.packs.select_group_pack_info'), {
+      reply_markup: Markup.inlineKeyboard([
+        Markup.switchToCurrentChatButton(ctx.i18n.t('cmd.packs.select_group_pack'), 'select_group_pack')
+      ]),
+      reply_to_message_id: ctx.message?.message_id,
+      allow_sending_without_reply: true
     })
-  } else if (ctx.updateType === 'callback_query') {
-    // Swap whatever banner was shown (welcome, or packs from a prior nav) to
-    // the packs banner + updated caption/keyboard. editBanner internally uses
-    // editMessageMedia, which works whether the prior message is text or photo.
-    await editBanner(ctx, 'packs', messageText, { reply_markup: replyMarkup })
   }
+
+  if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
+
+  if (ctx.callbackQuery && ctx.match?.[1] === 'set_pack') return openPack(ctx)
+
+  return renderList(ctx, parseView(ctx))
 }

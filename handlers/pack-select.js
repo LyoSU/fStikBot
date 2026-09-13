@@ -1,80 +1,30 @@
-const Markup = require('telegraf/markup')
-const { escapeHTML } = require('../utils')
+const { sendPackMenu, isOwner } = require('./pack-menu')
+const { flushPendingStickers } = require('./sticker')
 
+// Select a pack by passcode: a co-edit link (/start s_<passcode>) or /public.
 module.exports = async (ctx) => {
   const { userInfo } = ctx.session
 
   let passcode
+  if (ctx.startPayload) passcode = ctx.startPayload.match(/^s_(.+)$/)?.[1]
+  if (ctx.message?.text === '/public') passcode = 'public'
 
-  if (ctx.startPayload) passcode = ctx.startPayload.match(/s_(.*)/)?.[1]
-  if (ctx?.message?.text === '/public') passcode = 'public'
-
-  // Without this guard `/public xyz` (or /public@bot) left passcode undefined,
-  // the driver serialised it to null, and findOne({ passcode: null }) returned
-  // the first pack that has no passcode at all — a stranger's pack, selected
-  // and persisted for the caller.
-  if (!passcode) {
-    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
-  }
-
-  const stickerSet = await ctx.db.StickerSet.findOne({
-    passcode,
-    deleted: { $ne: true }
-  })
-
-  if (!stickerSet) {
-    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
-  }
-
-  const isOwner = stickerSet.owner.toString() === userInfo.id.toString()
+  // Without this guard findOne({ passcode: undefined }) matched the first pack
+  // without a passcode — a stranger's pack, selected for the caller.
+  const stickerSet = passcode
+    ? await ctx.db.StickerSet.findOne({ passcode, deleted: { $ne: true } })
+    : null
 
   // A hidden pack is only reachable by its owner — a co-edit link shouldn't
   // resurrect a pack the owner deliberately took out of the list.
-  if (stickerSet.hide === true && !isOwner) {
+  if (!stickerSet || (stickerSet.hide === true && !isOwner(ctx, stickerSet))) {
     return ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_found'))
   }
 
-  // Knowing the passcode IS the co-edit grant — that's the whole point of the
-  // /coedit link. The owner gets in regardless.
-  if (isOwner || stickerSet.passcode === passcode) {
-    if (stickerSet.inline) {
-      userInfo.inlineStickerSet = stickerSet
-    }
+  // Knowing the passcode IS the co-edit grant.
+  if (stickerSet.inline) userInfo.inlineStickerSet = stickerSet
+  userInfo.stickerSet = stickerSet
 
-    userInfo.stickerSet = stickerSet
-
-    const btnName = stickerSet.hide === true ? 'callback.pack.btn.restore' : 'callback.pack.btn.hide'
-
-    if (stickerSet.inline) {
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_inline_pack', {
-        title: escapeHTML(stickerSet.title),
-        botUsername: ctx.options.username
-      }), {
-        reply_markup: Markup.inlineKeyboard([
-          [
-            Markup.switchToChatButton(ctx.i18n.t('callback.pack.btn.use_pack'), '')
-          ],
-          [
-            Markup.callbackButton(ctx.i18n.t(btnName), `hide_pack:${stickerSet.id}`)
-          ]
-        ]),
-        parse_mode: 'HTML'
-      })
-    } else {
-      await ctx.replyWithHTML(ctx.i18n.t('callback.pack.set_pack', {
-        title: escapeHTML(stickerSet.title),
-        link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
-      }), {
-        disable_web_page_preview: true,
-        reply_markup: Markup.inlineKeyboard([
-          [
-            Markup.urlButton(ctx.i18n.t('callback.pack.btn.use_pack'), `${ctx.config.stickerLinkPrefix}${stickerSet.name}`)
-          ]
-        ]),
-        parse_mode: 'HTML'
-      })
-    }
-  } else {
-    await ctx.replyWithHTML(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'))
-  }
+  await sendPackMenu(ctx, stickerSet)
+  flushPendingStickers(ctx, stickerSet)
 }

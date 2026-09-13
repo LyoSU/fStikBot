@@ -1,15 +1,13 @@
 const Markup = require('telegraf/markup')
 const { escapeHTML } = require('../utils')
+const packLink = require('../utils/pack-link')
 
+// /pack <name> in a group — an admin picks one of their packs for the group.
 module.exports = async (ctx, next) => {
-  const packsName = ctx.message.text.split(' ')[1]
+  const packName = ctx.message.text.split(' ')[1]
 
-  if (!packsName) {
-    return next()
-  }
+  if (!packName) return next()
 
-  // /pack is a group command. In private it used to delete the user's message
-  // and reply nothing at all.
   if (ctx.chat.type !== 'group' && ctx.chat.type !== 'supergroup') {
     return ctx.replyWithHTML(ctx.i18n.t('cmd.packs.select_group_pack_info'), {
       reply_to_message_id: ctx.message.message_id,
@@ -17,51 +15,41 @@ module.exports = async (ctx, next) => {
     })
   }
 
-  await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
-
-  const { userInfo } = ctx.session
-
-  if (!ctx.message.from || !ctx.message.from.id) {
-    return
-  }
+  // The command carries a pack name; keep the group chat clean.
+  await ctx.deleteMessage().catch(() => {})
 
   const isAdmin = await ctx.telegram.getChatAdministrators(ctx.chat.id)
-    .then((admins) => admins.some((admin) => admin.user.id === ctx.message.from.id))
+    .then((admins) => admins.some((admin) => admin.user.id === ctx.from.id))
+    .catch(() => false)
 
+  // Used to delete the command and say nothing at all.
   if (!isAdmin) {
-    return
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.packs.group_admin_only'))
   }
 
   const stickerSet = await ctx.db.StickerSet.findOne({
-    name: packsName,
-    owner: userInfo.id
+    name: packName,
+    owner: ctx.session.userInfo.id,
+    deleted: { $ne: true }
   })
+  const group = stickerSet && await ctx.db.Group.findOne({ telegram_id: ctx.chat.id })
 
-  if (!stickerSet) {
-    return ctx.replyWithHTML(ctx.i18n.t('callback.pack.select_group.error'))
-  }
-
-  const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id })
-
-  if (!group) {
+  if (!stickerSet || !group) {
     return ctx.replyWithHTML(ctx.i18n.t('callback.pack.select_group.error'))
   }
 
   group.stickerSet = stickerSet
   group.updatedAt = new Date()
-
   await group.save()
 
-  const inlineKeyboard = Markup.inlineKeyboard([
-    [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.add'), 'group_settings add')],
-    [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.delete'), 'group_settings delete')]
-  ])
-
   return ctx.replyWithHTML(ctx.i18n.t('callback.pack.select_group.success', {
-    link: `t.me/addstickers/${stickerSet.name}`,
+    link: packLink(stickerSet),
     title: escapeHTML(stickerSet.title)
   }), {
-    reply_markup: inlineKeyboard,
+    reply_markup: Markup.inlineKeyboard([
+      [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.add'), 'group_settings add')],
+      [Markup.switchToCurrentChatButton(ctx.i18n.t('callback.pack.select_group.access_rights.delete'), 'group_settings delete')]
+    ]),
     disable_web_page_preview: true
   })
 }

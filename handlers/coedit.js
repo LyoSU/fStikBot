@@ -1,6 +1,7 @@
 const Composer = require('telegraf/composer')
 const crypto = require('crypto')
 const { escapeHTML } = require('../utils')
+const packLink = require('../utils/pack-link')
 
 const generatePasscode = () => {
   return crypto.randomBytes(16).toString('hex')
@@ -37,7 +38,7 @@ composer.action(/coedit:reset:(.*)/, async (ctx) => {
   return ctx.replyWithHTML(ctx.i18n.t('coedit.reset', {
     colink: `t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
     title: escapeHTML(stickerSet.title),
-    link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`
+    link: packLink(stickerSet)
   }))
 })
 
@@ -71,7 +72,7 @@ composer.action(/coedit:(.*)/, async (ctx) => {
   return ctx.replyWithHTML(ctx.i18n.t('coedit.info', {
     colink: `t.me/${ctx.botInfo.username}?start=s_${stickerSet.passcode}`,
     title: escapeHTML(stickerSet.title),
-    link: `${ctx.config.stickerLinkPrefix}${stickerSet.name}`,
+    link: packLink(stickerSet),
     editors
   }), {
     reply_markup: {

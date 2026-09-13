@@ -53,23 +53,37 @@ const buildGridKeyboard = (ctx, suggestions) => {
   return Markup.inlineKeyboard(buttons)
 }
 
+// Not a dead end: the user's emoji packs to pick from (opening one selects it,
+// and its menu has the Mosaic button), or a new one.
+const replyNoEmojiPack = async (ctx) => {
+  const packs = await ctx.db.StickerSet.find({
+    owner: ctx.session.userInfo.id,
+    packType: 'custom_emoji',
+    create: true,
+    hide: { $ne: true },
+    deleted: { $ne: true }
+  }).sort({ updatedAt: -1 }).limit(5).select('_id title').lean()
+
+  return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.no_pack'), {
+    reply_markup: Markup.inlineKeyboard([
+      ...packs.map((pack) => [Markup.callbackButton(pack.title, `set_pack:${pack._id}`)]),
+      [Markup.callbackButton(ctx.i18n.t('cmd.start.btn.new'), 'new_pack:custom_emoji')]
+    ])
+  })
+}
+
 // --- Enter handler ---
 
 mosaic.enter(async (ctx) => {
   if (!ctx.session.scene) ctx.session.scene = {}
   ctx.session.scene.mosaic = {}
 
-  // Check if user has a custom_emoji pack selected
+  // Mosaic needs a custom emoji pack selected.
   const userInfo = ctx.session.userInfo
-  if (!userInfo || !userInfo.stickerSet) {
-    await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.no_pack'))
-    return ctx.scene.leave()
-  }
-
-  const stickerSet = await ctx.db.StickerSet.findById(userInfo.stickerSet)
+  const stickerSet = userInfo?.stickerSet && await ctx.db.StickerSet.findById(userInfo.stickerSet)
   if (!stickerSet || stickerSet.packType !== 'custom_emoji') {
-    await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.no_pack'))
-    return ctx.scene.leave()
+    await ctx.scene.leave()
+    return replyNoEmojiPack(ctx)
   }
 
   ctx.session.scene.mosaic.packId = stickerSet.id
@@ -133,7 +147,8 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
 
   // Block new input while uploading
   if (ctx.session.scene.mosaic.uploading) {
-    return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.uploading', { current: '...', total: '...' }))
+    const { current = 0, total = '…' } = ctx.session.scene.mosaic.progress || {}
+    return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.uploading', { current, total }))
   }
 
   const source = getMosaicSource(ctx.message)
@@ -319,6 +334,8 @@ const processMosaic = async (ctx, rows, cols) => {
         await ctx.replyWithHTML(ctx.i18n.t(replyKey))
         return
       }
+
+      ctx.session.scene.mosaic.progress = { current: i + 1, total }
 
       // Update progress every 3 uploads
       if ((i + 1) % 3 === 0 || i === cells.length - 1) {
