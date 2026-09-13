@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const log = require('../utils/logger').scope('mongo')
 
+// Mongoose 5 never stripped unknown keys from query filters. Keep that
+// behaviour explicitly so an upgrade can't silently turn a filter on a
+// non-schema path into a match-everything query.
+mongoose.set('strictQuery', false)
+
 // mongodb+srv:// URIs resolve their own hosts; directConnection only makes
 // sense for a plain single-host mongodb:// URI.
 const isSrvUri = (uri) => uri && uri.startsWith('mongodb+srv://')
@@ -12,20 +17,11 @@ const isSrvUri = (uri) => uri && uri.startsWith('mongodb+srv://')
 // Pool=50 keeps the burst queue ≤20 deep so each query waits <100ms.
 // Memory cost is trivial (~1MB per connection client-side).
 //
-// useUnifiedTopology: Mongoose 5 still defaults to the legacy SDAM engine,
-// which logs a deprecation warning at boot and ignores serverSelectionTimeoutMS,
-// directConnection and minPoolSize. useFindAndModify:false makes
-// findOneAndUpdate use the native command instead of the deprecated
-// findAndModify.
-//
 // autoIndex:false — index management is an ops task, not a boot-time side
 // effect; see scripts/README.md.
 const mainUri = process.env.MONGODB_URI
 const connection = mongoose.createConnection(mainUri, {
   ...(isSrvUri(mainUri) ? {} : { directConnection: true }),
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
   autoIndex: false,
   maxPoolSize: parseInt(process.env.MONGO_POOL_SIZE, 10) || 50,
   minPoolSize: parseInt(process.env.MONGO_POOL_MIN, 10) || 10,

@@ -43,12 +43,12 @@ composer.action(/^boost:(yes|no):(.+)$/, rateLimit({
   }
 
   // Charge first, atomically and only when the balance covers it — the
-  // session balance can be stale. Mongoose 5 reports `nModified`.
+  // session balance can be stale.
   const charged = await ctx.db.User.updateOne(
     { _id: ctx.session.userInfo._id, balance: { $gte: 1 } },
     { $inc: { balance: -1 } }
   )
-  if (!charged.nModified) {
+  if (!charged.modifiedCount) {
     return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.not_enough_credits'), true)
   }
 
@@ -56,7 +56,7 @@ composer.action(/^boost:(yes|no):(.+)$/, rateLimit({
     { _id: stickerSet._id, boost: { $ne: true } },
     { $set: { boost: true } }
   )
-  if (!boosted.nModified) {
+  if (!boosted.modifiedCount) {
     // Someone boosted it in the meantime — give the credit back.
     await ctx.db.User.updateOne({ _id: ctx.session.userInfo._id }, { $inc: { balance: 1 } })
     return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.already_boosted'), true)

@@ -29,7 +29,7 @@
     "got": "^11.8.6",
     "limax": "^4.1.0",
     "moment": "^2.30.1",
-    "mongoose": "^5.13.22",
+    "mongoose": "^8.24.4",
     "sharp": "^0.32.6",
     "stegcloak": "^0.0.1",
     "sticker-pack-names": "^1.0.0",
