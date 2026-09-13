@@ -212,6 +212,7 @@ cmd:
       regular: Stickers
       custom_emoji: Emoji
       inline: Inline
+      shared: '👥 Shared'
     empty: |
       No packs yet. Create your first → /new
     inline_title: Inline pack
@@ -326,27 +327,71 @@ donate:
       Payment canceled
 coedit:
   info: |
-    <b>👥 Co-editing</b>
+    <b>👥 Co-editing</b> <a href="${link}">${title}</a>
 
-    Link: <code>${colink}</code>
+    Anyone who opens this link joins the pack:
+    <code>${colink}</code>
 
-    Share it — others will be able to add and delete stickers in <a href="${link}">${title}</a>.
-
-    <b>Editors:</b> ${editors}
-
-    <i>Reset the link to remove everyone</i>
+    <b>New members:</b> ${defaultRole}
+    <b>Members:</b> ${count}
   no_editors: |
     none
   btn:
     send: '📤 Send link'
-    reset: '🔁 Reset link'
+    reset: '🔁 New link'
+    activity: '🧾 Activity'
+    default_role: '⚙️ New: ${role}'
+    clear: '🧹 Remove everyone'
+    clear_confirm: '⚠️ Yes, remove everyone'
+    role_editor: '✏️ Adds and deletes'
+    role_contributor: '➕ Only adds'
+    remove: '🚫 Remove from the pack'
+    leave: '🚪 Leave the pack'
+    back: '‹ Back'
+  roles:
+    editor: 'adds and deletes'
+    contributor: 'only adds'
   share: |
     Open the link and tap "Start" to co-edit the pack "${title}"
   reset: |
-    <b>🔁 Link reset</b>
+    <b>🔁 New link.</b> The old one no longer works; current members keep their access.
+  member: |
+    <b>👤 ${name}</b>
 
-    New co-editing link for <a href="${link}">${title}</a>:
-    <code>${colink}</code>
+    <b>Role:</b> ${role}
+    <b>Joined:</b> ${date}
+    <b>Actions in the last 30 days:</b> ${actions}
+  clear_confirm: |
+    Remove all members (${count}) from <b>${title}</b>? The link will be replaced too.
+  cleared: 'Everyone was removed, and the link was replaced.'
+  joined: '👥 You joined <b>${title}</b>. Your role: ${role}.'
+  joined_notice: |
+    👥 ${name} joined <a href="${link}">${title}</a> via the co-edit link.
+
+    Manage members: /packs → the pack → 👥 Co-edit
+  left: '🚪 You left <b>${title}</b>.'
+  left_notice: '🚪 ${name} left <b>${title}</b>.'
+  removed_notice: 'You were removed from co-editing <b>${title}</b>.'
+  role_notice: 'Your role in <b>${title}</b> is now: ${role}.'
+  no_access: 'You no longer have access to this pack. Pick another one in /packs.'
+  no_rights: "Your role in this pack doesn't allow this."
+  your_role: '👥 Your role: ${role}'
+  activity: |
+    <b>🧾 Activity</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>Nothing yet.</i>'
+  actions:
+    add: '➕ added stickers: ${count}'
+    delete: '🗑 deleted a sticker'
+    restore: '♻️ restored a sticker'
+    emoji: '😀 changed an emoji'
+    join: '👋 joined'
+    leave: '🚪 left'
+    removed: '🚫 removed ${target}'
+    role: '🔧 ${target}: ${role}'
+    reset: '🔁 replaced the link'
+    clear: '🧹 removed everyone (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -747,6 +792,10 @@ scenes:
 
         <i>You can use hashtags to categorize it [#]</i>
         <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>Current description:</b> <i>${description}</i>
+      keep_description: '✅ Keep the current description'
       select_language: |
         <b>Choose the languages your pack is meant for:</b>
         <i>You can select several</i>
