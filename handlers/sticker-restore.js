@@ -68,6 +68,10 @@ module.exports = async (ctx) => {
     // Determine format and set flags
     if (looksAnimated) {
       fileForRestore.is_animated = true
+      // Try this pack's own former file first: it already has the canvas the
+      // pack expects, so it goes in by file_id with no download or upload.
+      // The original stays as file_id for the re-upload fallback.
+      fileForRestore.reuse_file_id = currentFileId
     } else if (looksVideo) {
       // Video format
       fileForRestore.is_video = true

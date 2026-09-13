@@ -226,11 +226,24 @@ async function handleConvertFailed (jobId, errorData) {
 // apart from "the next file after a flood" in prod logs.
 const logRateLimit = (method, error, { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }) => {
   if (error?.code !== 429 || error.__cachedRateLimit) return
+  const via = uploadBytes
+    ? `upload(${uploadBytes}B) reason=${uploadReason(stickerSet, stickerFile, stickerExtra)}`
+    : 'file_id'
   log.warn(
     `429 on ${method}: retry_after=${getRetryAfter(error)}s user=${userId} pack=${stickerSet.name} ` +
     `pack_type=${stickerSet.packType || 'regular'} format=${stickerExtra.sticker_format} ` +
-    `file_unique_id=${stickerFile?.file_unique_id} via=${uploadBytes ? `upload(${uploadBytes}B)` : 'file_id'}`
+    `file_unique_id=${stickerFile?.file_unique_id} src_set=${stickerFile?.set_name || '-'} ` +
+    `src_type=${stickerFile?.type || '-'} via=${via}`
   )
+}
+
+// Why a sticker went through an upload instead of file_id — the question a
+// bare "via=upload" in the 429 log couldn't answer.
+const uploadReason = (stickerSet, stickerFile, stickerExtra) => {
+  if (stickerExtra.uploadReason) return stickerExtra.uploadReason
+  if (!stickerFile?.set_name) return 'no_source_set'
+  if (stickerFile.type !== (stickerSet.packType || 'regular')) return `retarget_from_${stickerFile.type}`
+  return 'other'
 }
 
 // getStickerSet reports "⭐" where emoji_list had "⭐️" (or the reverse).
@@ -468,14 +481,33 @@ const isFileRejection = (result) => {
   return FILE_REJECTION_REASONS.has(reason)
 }
 
-// A sticker taken from a set of the same type: its file_id is already a
-// sticker document with the canvas Telegram expects for this pack, so it can
-// go straight into addStickerToSet.
+// A file_id can go straight into addStickerToSet when the file already has the
+// canvas this pack expects: a sticker taken from a set of the same type, or a
+// restore reusing this pack's own former file (sticker-restore sets
+// reuse_file_id). No download, and no upload under the bot-wide upload flood.
 const canAddByFileId = (stickerFile, stickerSet) => (
-  !!stickerFile.set_name &&
-  !!stickerFile.file_id &&
-  stickerFile.type === (stickerSet.packType || 'regular')
+  typeof stickerFile.reuse_file_id === 'string' || (
+    !!stickerFile.set_name &&
+    !!stickerFile.file_id &&
+    stickerFile.type === (stickerSet.packType || 'regular')
+  )
 )
+
+// Add a sticker by file_id. Returns the add result, or null when Telegram
+// refused the file itself — the caller then re-uploads, and the reason is
+// kept for that upload's 429 log.
+const tryAddByFileId = async (userId, stickerSet, stickerFile, stickerExtra, beforeStickers) => {
+  const fileId = stickerFile.reuse_file_id || stickerFile.file_id
+  const result = await uploadSticker(userId, stickerSet, stickerFile, { ...stickerExtra, sticker: fileId }, beforeStickers)
+  if (!isFileRejection(result)) return result
+
+  log.info(
+    `file_id add refused for ${stickerFile.file_unique_id} ` +
+    `(${result.error.telegram.description}) — falling back to re-upload`
+  )
+  stickerExtra.uploadReason = 'file_id_refused'
+  return null
+}
 
 // Rate limiting for static stickers (userId -> timestamp)
 const lastStickerTime = new Map()
@@ -600,12 +632,13 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
-  // Bail before any download/convert work if a sticker call for this user is
-  // already in a 429 cooldown — it would only fail again, and each attempt
-  // re-uploads the file. A pack copy runs in copy scope and waits cooldowns
-  // out instead, so it skips this.
+  // Bail before any download/convert work if this add would only fail again:
+  // the user's sticker calls are in a 429 cooldown, or the file has to be
+  // uploaded while the bot-wide upload cooldown is on. A file_id add uploads
+  // nothing, so it still goes through during an upload flood. A pack copy
+  // runs in copy scope and waits cooldowns out instead, so it skips this.
   if (!isInCopyScope()) {
-    const cooldown = getStickerCooldown(ctx.from.id)
+    const cooldown = getStickerCooldown(ctx.from.id, { upload: !canAddByFileId(stickerFile, stickerSet) })
     if (cooldown > 0) return { error: { telegram: buildCooldownError(cooldown) } }
   }
 
@@ -638,23 +671,11 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   }
 
   if (stickerFile.is_animated) {
-    // Same pack type → the TGS canvas already fits, so add it by file_id: no
-    // download, and no uploadStickerFile, which is a messages.uploadMedia on
-    // every attempt under the same per-user flood limit.
+    // Same pack type (or a restore of this pack's own file) → the TGS canvas
+    // already fits, so add it by file_id: no download, no upload.
     if (canAddByFileId(stickerFile, stickerSet)) {
-      const byFileId = await uploadSticker(
-        ctx.from.id,
-        stickerSet,
-        stickerFile,
-        { ...stickerExtra, sticker: stickerFile.file_id },
-        getStickerSetCheck.stickers
-      )
-      if (!isFileRejection(byFileId)) return byFileId
-
-      log.info(
-        `file_id add refused for ${stickerFile.file_unique_id} ` +
-        `(${byFileId.error.telegram.description}) — falling back to re-upload`
-      )
+      const byFileId = await tryAddByFileId(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+      if (byFileId) return byFileId
     }
 
     const fileUrl = await ctx.telegram.getFileLink(stickerFile).catch((error) => {
@@ -681,6 +702,16 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
     stickerExtra.sticker = { source: retargeted.buffer }
     return uploadSticker(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+  }
+
+  // Static and video stickers from a set of the same type go by file_id too.
+  // This path used to always re-upload because a wrong format guess made
+  // Telegram answer "wrong file type"; set stickers carry reliable
+  // is_video/is_animated flags, and a refusal still falls through to the
+  // download path below, which corrects the format from the file extension.
+  if (canAddByFileId(stickerFile, stickerSet)) {
+    const byFileId = await tryAddByFileId(ctx.from.id, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
+    if (byFileId) return byFileId
   }
 
   // Non-animated stickers (static or video)

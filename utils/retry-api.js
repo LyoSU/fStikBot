@@ -196,6 +196,96 @@ function buildRateLimitError (method, scopeId) {
   return err
 }
 
+// ────────────────────────────────────────────────────────────────
+// Bot-wide upload cooldown
+// ────────────────────────────────────────────────────────────────
+// The scope cache above deliberately never locks globally. Uploads are the
+// exception prod logs proved: every new file (uploadStickerFile, sendDocument
+// with a Buffer or URL, …) is a messages.uploadMedia under the bot's single
+// MTProto account, and Telegram floods that bot-wide — 429s from different
+// users and different methods all expired at the same second, cycling every
+// ~5 min. Keyed per user, each new user still downloaded, uploaded and hit
+// the same wall.
+//
+// One 429 says nothing about how wide the limit is, so the cooldown turns
+// bot-wide only when upload 429s from two DIFFERENT scopes agree on the
+// deadline within UPLOAD_DEADLINE_TOLERANCE_MS. Only calls that upload are
+// blocked; file_id sends and everything else keep going.
+const UPLOAD_DEADLINE_TOLERANCE_MS = parseInt(process.env.UPLOAD_DEADLINE_TOLERANCE_MS, 10) || 3000
+const UPLOAD_EVIDENCE_MAX = 50
+
+const uploadFloodEvidence = []
+let uploadCooldownUntil = 0
+
+// Payload fields that can carry a top-level `url` without being a file.
+const NON_MEDIA_FIELDS = new Set(['reply_markup', 'link_preview_options'])
+
+const isMediaValue = (value) => !!value && typeof value === 'object' &&
+  (value.source != null || typeof value.url === 'string')
+
+// Mirrors telegraf's includesMedia(): true when the call goes out as a
+// multipart upload rather than a JSON request.
+function hasUpload (data) {
+  if (!data || typeof data !== 'object') return false
+  return Object.entries(data).some(([key, value]) => {
+    if (NON_MEDIA_FIELDS.has(key)) return false
+    if (Array.isArray(value)) return value.some((item) => isMediaValue(item?.media))
+    return isMediaValue(value) || isMediaValue(value?.media)
+  })
+}
+
+function noteUploadRateLimit (scopeId, retryAfterS) {
+  if (!scopeId) return
+
+  const now = Date.now()
+  const deadline = now + retryAfterS * 1000
+
+  for (let i = uploadFloodEvidence.length - 1; i >= 0; i--) {
+    if (uploadFloodEvidence[i].deadline <= now) uploadFloodEvidence.splice(i, 1)
+  }
+
+  const match = uploadFloodEvidence.find((entry) =>
+    entry.scopeId !== scopeId &&
+    Math.abs(entry.deadline - deadline) <= UPLOAD_DEADLINE_TOLERANCE_MS
+  )
+
+  uploadFloodEvidence.push({ scopeId, deadline })
+  if (uploadFloodEvidence.length > UPLOAD_EVIDENCE_MAX) uploadFloodEvidence.shift()
+
+  if (!match) return
+
+  const until = Math.max(match.deadline, deadline)
+  if (until <= uploadCooldownUntil) return
+
+  uploadCooldownUntil = until
+  log.warn(
+    `bot-wide upload cooldown for ${Math.ceil((until - now) / 1000)}s: ` +
+    `upload 429s from @${match.scopeId} and @${scopeId} share a deadline`
+  )
+}
+
+/**
+ * Seconds left on the bot-wide upload cooldown, or 0 when none is active.
+ * For callers that want to skip download/convert work for a file that would
+ * have to be uploaded.
+ *
+ * @returns {number}
+ */
+function getUploadCooldownRemaining () {
+  const remainingMs = uploadCooldownUntil - Date.now()
+  return remainingMs > 0 ? Math.ceil(remainingMs / 1000) : 0
+}
+
+function buildUploadCooldownError (method, seconds) {
+  const err = new Error(`Too Many Requests: retry after ${seconds}`)
+  err.code = 429
+  err.description = err.message
+  err.parameters = { retry_after: seconds }
+  err.on = { method }
+  err.__cachedRateLimit = true
+  return err
+}
+
 // Extract the rate-limit scope id from a Bot API payload.
 // Telegram applies three layers of limits on sticker ops in parallel:
 // per-bot (global), per-user-owner, and per-pack. We cache on whichever
@@ -352,6 +442,14 @@ function patchTelegramPrototype () {
       return Promise.reject(buildRateLimitError(method, scopeId))
     }
 
+    // Short-circuit: this call uploads a file while the bot-wide upload
+    // cooldown is on. Same copy-scope bypass as above.
+    const isUpload = hasUpload(data)
+    if (!inCopyScope && isUpload) {
+      const uploadCooldown = getUploadCooldownRemaining()
+      if (uploadCooldown > 0) return Promise.reject(buildUploadCooldownError(method, uploadCooldown))
+    }
+
     const description = describeCall(method, data)
     const retryOptions = inCopyScope
       ? { method: description, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS, onWait: copyStore.onWait }
@@ -374,10 +472,13 @@ function patchTelegramPrototype () {
       // there) so we don't need to gate on scopeId here. Skipped inside a
       // copy scope so one long 429 can't poison the shared cooldown cache
       // and cascade-fail the rest of the copy.
-      if (!inCopyScope && error?.code === 429) {
+      if (error?.code === 429) {
         const retryAfter = getRetryAfter(error)
         if (retryAfter && retryAfter > RETRY_MAX_WAIT_S) {
-          cacheRateLimit(method, scopeId, retryAfter)
+          if (!inCopyScope) cacheRateLimit(method, scopeId, retryAfter)
+          // Upload 429s feed bot-wide flood detection from every scope, the
+          // copy included — its evidence can't short-circuit the copy itself.
+          if (isUpload) noteUploadRateLimit(scopeId, retryAfter)
         }
       }
 
@@ -457,6 +558,7 @@ module.exports = {
   retryMiddleware,
   clearBlockedChat,
   getRateLimitRemaining,
+  getUploadCooldownRemaining,
   _blockedCacheSize: () => blockedChats.size,
   _rateLimitCacheSize: () => rateLimitedCalls.size
 }

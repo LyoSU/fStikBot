@@ -6,19 +6,29 @@
 // own, so checking only addStickerToSet let a user whose uploadStickerFile was
 // in cooldown re-download and re-upload the file on every attempt — deepening
 // the very flood wait they were stuck in.
-const { getRateLimitRemaining } = require('./retry-api')
+//
+// On top of that, uploads are flooded bot-wide (see retry-api's upload
+// cooldown), which matters only when the file really has to be uploaded.
+const { getRateLimitRemaining, getUploadCooldownRemaining } = require('./retry-api')
 
 const STICKER_METHODS = ['uploadStickerFile', 'addStickerToSet', 'createNewStickerSet']
 
 /**
- * Longest remaining cooldown (seconds) across the sticker-creation methods
- * for this user, or 0 when none is active.
+ * Longest remaining cooldown (seconds) that would make this user's sticker
+ * add fail right now, or 0 when none is active.
  *
  * @param {number} userId
+ * @param {Object}  [options]
+ * @param {boolean} [options.upload=false] the add will upload a file, so the
+ *   bot-wide upload cooldown applies too
  * @returns {number}
  */
-function getStickerCooldown (userId) {
-  return Math.max(0, ...STICKER_METHODS.map((method) => getRateLimitRemaining(method, userId)))
+function getStickerCooldown (userId, { upload = false } = {}) {
+  return Math.max(
+    0,
+    ...STICKER_METHODS.map((method) => getRateLimitRemaining(method, userId)),
+    upload ? getUploadCooldownRemaining() : 0
+  )
 }
 
 /**

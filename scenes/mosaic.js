@@ -251,7 +251,7 @@ const processMosaic = async (ctx, rows, cols) => {
   // Pre-check: if the user's sticker upload/add is in a 429 cooldown we'd
   // get synthetic 429 on every single cell. Better to bail here with a
   // clear "wait N seconds" than half-upload and roll back.
-  const cooldown = getStickerCooldown(ctx.from.id)
+  const cooldown = getStickerCooldown(ctx.from.id, { upload: true })
   if (cooldown > 0) {
     await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: cooldown }))
     return
@@ -324,7 +324,7 @@ const processMosaic = async (ctx, rows, cols) => {
         const description = err?.description || err?.message || ''
         let replyKey = 'cmd.mosaic.undo_failed'
         if (err?.code === 429) {
-          const retryAfter = err?.parameters?.retry_after || getStickerCooldown(ctx.from.id)
+          const retryAfter = err?.parameters?.retry_after || getStickerCooldown(ctx.from.id, { upload: true })
           await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: retryAfter || 30 }))
           return
         } else if (description.includes('STICKERSET_INVALID')) {
