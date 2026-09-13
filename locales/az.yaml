@@ -37,7 +37,7 @@ cmd:
 
       Başqalarının paketlərinə baxın və ya öz paketlərinizi dərc edin:
     commands:
-      ss: '🌟 Stikeri saxla'
+      ss: '➕ Qrup paketinə əlavə et'
       start: '📜 Menyu'
       help: '❓ Kömək'
       packs: '📁 Paketlərim'
@@ -64,7 +64,7 @@ cmd:
       new: '➕ Yeni paket'
       catalog: '🔍 Kataloq'
       catalog_mini: '🔍 Kataloq'
-      catalog_browser: 'Brauzerdə aç'
+      catalog_browser: '🌐 Brauzerdə aç'
       catalog_browser_mini: '🌐 Brauzerdə'
       catalog_app: 'Android üçün yüklə'
       catalog_app_mini: '📱 Android tətbiqi'
@@ -114,8 +114,8 @@ cmd:
       /ss (mediaya cavab olaraq) — qrup paketinə tez əlavə etmək.
 
       <b>İnline paketlər:</b>
-      İstənilən söhbətdə @bot_adı vasitəsilə tez giriş üçün ayrıca paket növü.
-      • Əsl Telegram paketi deyil — yalnız botda saxlanılır
+      Şəxsi kolleksiyanız: saxlanılmış stiker, GIF, foto və videoları istənilən söhbətdə göndərin — @bot_adı yazın və lazım olanı seçin.
+      • Telegram stikerlərinə heç nə əlavə olunmur — hər şey botda saxlanılır
       • Stiker, foto, GIF və video saxlaya bilər
       • /packs → «İnline» bölməsində yaradın
       • GIF axtarışı rejimi də var (Tenor vasitəsilə)
@@ -138,10 +138,10 @@ cmd:
 
       • Adda "${titleSuffix}" olmur
       • Videolar prioritetlə emal olunur
-      • 30 saniyəyə qədər video
-      • Növbəyə bir neçə stiker
+      • 35 saniyəyə qədər video
+      • Eyni anda bir neçə stiker
 
-      <b>Adaptiv emojilər</b> — /new-da ayrıca düymə (rəngi mətnə uyğunlaşır)
+      <b>🎨 Adaptiv emojilər</b> — /new-da ayrıca paket növü: emojilər mətnin rənginə uyğunlaşır
 
       Əldə etmək → /donate
     problems: |
@@ -295,17 +295,6 @@ donate:
     donate: '☕ İanə et'
   topup: |
     <b>Almaq istədiyiniz kredit sayını daxil edin:</b>
-  invalid_amount: |
-    <b>Yanlış miqdar</b>
-
-    Minimum miqdar — 1 kredit
-  paymenu: |
-    <b>${amount} kredit</b> <b>${price}$</b> qarşılığında almaq istəyirsiniz
-
-    ⚠️ Kreditlər administrator tərəfindən əl ilə verilir.
-    Gözləmə müddəti — 5 dəqiqədən 1 saata qədər
-
-    <u>Ödəniş üsulunu seçin:</u>
   description: |
     Kredit almaqla botun inkişafına dəstək olur və əlavə funksiyalardan istifadə imkanı qazanırsınız
   update: |
@@ -364,8 +353,8 @@ callback:
       info: |
         \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Gücləndirmə</a></b>: ${boostStatus}
       status:
-        on: Aktiv
-        off: Deaktiv
+        on: 'aktiv'
+        off: 'qeyri-aktiv'
     hidden: Paket <a href="${link}">${title}</a> siyahınızdan gizlədildi.
     restored: Paket <a href="${link}">${title}</a> siyahınıza qaytarıldı.
     btn:
@@ -373,7 +362,7 @@ callback:
       delete: '🗑 Paketi sil'
       restore: '✅ Bərpa et'
       use_pack: '📦 Paketdən istifadə et'
-      boost: '⚡ Gücləndir'
+      boost: '⚡ Gücləndirmə'
       frame: '🖼 Çərçivə'
       rename: '✏️ Adını dəyiş'
       search_gif: '🔎 GIF axtar'
@@ -392,9 +381,9 @@ callback:
       invalid_dimensions: |
         Stikerin ölçüləri yanlışdır. Stikerlər 512x512 piksel olmalıdır.
       invalid_animated: |
-        Animasiyalı stiker faylı düzgün TGS formatında deyil.
+        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndərin — bot onlardan video stiker hazırlayacaq.
       invalid_video: |
-        Video fayl düzgün WEBM formatında deyil.
+        Video faylın formatı yanlışdır (WEBM tələb olunur).
       restore: |
         Paketi bərpa etmək mümkün deyil.
       copy: |
@@ -428,9 +417,9 @@ callback:
       invalid_dimensions: |
         Stikerin ölçüləri yanlışdır. Stikerlər 512x512 piksel olmalıdır.
       invalid_animated: |
-        Animasiyalı stiker faylı düzgün TGS formatında deyil.
+        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndərin — bot onlardan video stiker hazırlayacaq.
       invalid_video: |
-        Video fayl düzgün WEBM formatında deyil.
+        Video faylın formatı yanlışdır (WEBM tələb olunur).
   group_settings:
     success: |
       Qrup ayarları uğurla yeniləndi.
@@ -443,7 +432,8 @@ sticker:
     ok_inline: |
       ✅ <u>${title}</u> paketinə əlavə edildi
     ok_repainting_notice: |
-      ⚠️ Bu monoxrom emojidir: adi paketdə ağ rəngdə qalacaq və açıq fonda demək olar ki, görünməyəcək.
+      ⚠️ Bu monoxrom emojidir: adi paketdə ağ rəngdə qalır və açıq fonda demək olar ki, görünmür.
+      Onun mətnin rənginə uyğunlaşması üçün /new vasitəsilə ayrıca «🎨 Adaptiv emojilər» paketi yaradın.
     send_emoji: Bu stiker üçün emoji göndərin
     converting_process: |
       ⏳ Çevrilir: ${progress}/${total}
@@ -484,27 +474,12 @@ sticker:
       invalid_dimensions: |
         Stikerin ölçüləri yanlışdır. Stikerlər 512x512 piksel olmalıdır.
       invalid_animated: |
-        Animasiyalı stiker faylı düzgün TGS formatında deyil.
+        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndərin — bot onlardan video stiker hazırlayacaq.
       animated_too_big: |
         Paketin ölçüsünə uyğunlaşdırıldıqdan sonra animasiyalı stiker Telegram-ın 64 KB limitini keçir — onu köçürmək mümkün deyil.
       invalid_video: |
-        Video fayl düzgün WEBM formatında deyil.
+        Video faylın formatı yanlışdır (WEBM tələb olunur).
       file_type:
-        static: |
-          Bu fayl növü dəstəklənmir
-          Bu foto və ya statik stikeri statik stiker paketinə əlavə edə bilərsiniz
-
-          <i>Başqa stiker paketi yaradın (/new) və ya seçin (/packs)</i>
-        video: |
-          Bu fayl növü dəstəklənmir
-          Bu video faylı video paketinə əlavə edə bilərsiniz
-
-          <i>Başqa stiker paketi yaradın (/new) və ya seçin (/packs)</i>
-        animated: |
-          Bu fayl növü dəstəklənmir
-          Bu animasiyalı faylları vektor stiker paketinə əlavə edə bilərsiniz
-
-          <i>Başqa stiker paketi yaradın (/new) və ya seçin (/packs)</i>
         unknown: |
           Bu fayl növü dəstəklənmir
 
@@ -639,7 +614,7 @@ scenes:
     enter: |
       <b>🗑 Stikerin silinməsi</b>
 
-      Paketdən silmək istədiyiniz stikeri göndərin.
+      Silmək istədiyiniz stikeri göndərin. Paketi seçməyə ehtiyac yoxdur — onun harada olduğunu özüm tapacağam.
     confirm: |
       Bu stiker paketdən silinsin?
     error:
@@ -744,11 +719,11 @@ scenes:
       button_all_languages: İstənilən dil
       button_confirm_language: Təsdiqlə
       set_safe: |
-        <b>Paketiniz istifadəçilər üçün təhlükəsizdirmi?</b>
-        <i>Yəni erotik və digər şokedici məzmun yoxdur</i>
+        <b>Paketiniz hamı üçün təhlükəsizdirmi?</b>
+        <i>Yəni onda erotika, zorakılıq və ya digər 18+ məzmun yoxdur</i>
       button_safe:
-        safe: Bəli, təhlükəsizdir
-        not_safe: Xeyr, təhlükəsiz deyil
+        safe: '✅ Bəli, 18+ yoxdur'
+        not_safe: '🔞 Xeyr, 18+ məzmun var'
       no_tags: göstərilməyib
       confirm: |
         <b>«<a href="${link}">${title}</a>» stiker paketinin dərcini təsdiqləyin</b>
@@ -771,7 +746,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> həmişəlik silinsin?
 
-      Təsdiqləmək üçün <code>${confirm}</code> göndərin.
+      Təsdiqləmək üçün <code>${confirm}</code> göndərin və ya «Ləğv et» düyməsini basın.
     confirm: Bəli, sil
     success: |
       🗑 Paket silindi
@@ -874,7 +849,7 @@ error:
     pack_name_taken: |
       Bu paket ünvanı artıq tutulub. Başqa ad seçin.
     pack_name_invalid: |
-      Paket ünvanının formatı yanlışdır. Yalnız latın hərfləri, rəqəmlər və alt xətt istifadə edilə bilər.
+      Paket ünvanının formatı yanlışdır. Yalnız latın hərfləri, rəqəmlər və alt xətt (_) istifadə edilə bilər.
     invalid_sticker_format: |
       Fayl stiker üçün uyğun deyil: format və ya ölçü yanlışdır.
     invalid_emoji: |
