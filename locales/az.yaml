@@ -68,11 +68,17 @@ cmd:
       catalog_browser_mini: '🌐 Brauzerdə'
       catalog_app: 'Android üçün yüklə'
       catalog_app_mini: '📱 Android tətbiqi'
+    current_pack: '📦 Stikerlər buraya əlavə olunur: <a href="${link}">${title}</a>'
+    hint: 'Foto, video, GIF və ya stiker göndərin — onu <a href="${link}">${title}</a> paketinə əlavə edəcəyəm.'
   guide:
     web: |
-      <b>📖 fStikBot-dan necə istifadə etməli</b>
+      <b>📖 Necə işləyir</b>
 
-      Tam bələdçilər, məsləhətlər və FAQ saytımızdadır.
+      1. /new — paket yaradın
+      2. Foto, video, GIF və ya stikerlər göndərin — hətta bütöv albom
+      3. /packs — paketləriniz və onların ayarları
+
+      Bələdçilər, məsləhətlər və FAQ saytdadır.
     menu: |
       <b>❓ Kömək</b>
 
@@ -206,6 +212,7 @@ cmd:
       regular: Stikerlər
       custom_emoji: Emojilər
       inline: İnline
+      shared: '👥 Ortaq'
     empty: |
       Hələ paket yoxdur. İlk paketinizi yaradın → /new
     inline_title: İnline paket
@@ -214,6 +221,13 @@ cmd:
 
       Adminlər aşağıdakı düymə ilə qrup üçün paket seçə bilər.
     select_group_pack: Paket seç
+    hidden_btn: '🗄 Gizli'
+    hidden_info: |
+      <b>🗄 Gizli paketlər</b>
+
+      Bərpa etmək və ya silmək üçün paketə toxunun.
+    hidden_empty: 'Burada gizli paket yoxdur.'
+    group_admin_only: 'Qrup paketini yalnız qrup adminləri seçə bilər.'
   emoji:
     info: |
       Cari paketin standart emojisini dəyişmək üçün <code>/emoji</code> əmrini boşluqdan sonra emoji ilə göndərin
@@ -238,8 +252,8 @@ cmd:
 
       Foto göndərin — onu emoji şəbəkəsinə bölüm.
     no_pack: |
-      Əvvəlcə fərdi emoji paketi lazımdır.
-      /new ilə yaradın və «Emoji» seçin.
+      Mozaika fərdi emoji paketi ilə işləyir.
+      Aşağıdan paketlərinizdən birini seçin və ya yenisini yaradın.
     choose_grid: |
       📐 Şəbəkə ölçüsünü seçin:
     btn:
@@ -313,27 +327,71 @@ donate:
       Ödəniş ləğv edildi
 coedit:
   info: |
-    <b>👥 Birgə redaktə</b>
+    <b>👥 Birgə redaktə</b> <a href="${link}">${title}</a>
 
-    Link: <code>${colink}</code>
+    Bu linki açan hər kəs paketə qoşulur:
+    <code>${colink}</code>
 
-    Paylaşın — başqaları <a href="${link}">${title}</a> paketinə stiker əlavə edib silə biləcək.
-
-    <b>Redaktorlar:</b> ${editors}
-
-    <i>Hamısını çıxarmaq üçün linki sıfırlayın</i>
+    <b>Yeni üzvlər:</b> ${defaultRole}
+    <b>Üzvlər:</b> ${count}
   no_editors: |
     yoxdur
   btn:
     send: '📤 Linki göndər'
-    reset: '🔁 Linki sıfırla'
+    reset: '🔁 Yeni link'
+    activity: '🧾 Fəaliyyət'
+    default_role: '⚙️ Yenilər: ${role}'
+    clear: '🧹 Hamını çıxar'
+    clear_confirm: '⚠️ Bəli, hamını çıxar'
+    role_editor: '✏️ Əlavə edir və silir'
+    role_contributor: '➕ Yalnız əlavə edir'
+    remove: '🚫 Paketdən çıxar'
+    leave: '🚪 Paketdən çıx'
+    back: '‹ Geri'
+  roles:
+    editor: 'əlavə edir və silir'
+    contributor: 'yalnız əlavə edir'
   share: |
     «${title}» paketini birgə redaktə etmək üçün linkə keçin və «Başlat» düyməsinə basın
   reset: |
-    <b>🔁 Link uğurla sıfırlandı</b>
+    <b>🔁 Yeni link.</b> Köhnəsi artıq işləmir; hazırkı üzvlərin girişi qalır.
+  member: |
+    <b>👤 ${name}</b>
 
-    <a href="${link}">${title}</a> paketinin birgə redaktəsi üçün yeni link:
-    <code>${colink}</code>
+    <b>Rol:</b> ${role}
+    <b>Qoşulub:</b> ${date}
+    <b>Son 30 gündə əməliyyatlar:</b> ${actions}
+  clear_confirm: |
+    Bütün üzvlər (${count}) <b>${title}</b> paketindən çıxarılsın? Link də dəyişdiriləcək.
+  cleared: 'Hamı çıxarıldı və link dəyişdirildi.'
+  joined: '👥 <b>${title}</b> paketinə qoşuldunuz. Rolunuz: ${role}.'
+  joined_notice: |
+    👥 ${name} birgə redaktə linki ilə <a href="${link}">${title}</a> paketinə qoşuldu.
+
+    Üzvləri idarə edin: /packs → paket → 👥 Birgə redaktə
+  left: '🚪 <b>${title}</b> paketindən çıxdınız.'
+  left_notice: '🚪 ${name} <b>${title}</b> paketindən çıxdı.'
+  removed_notice: 'Siz <b>${title}</b> paketinin birgə redaktəsindən çıxarıldınız.'
+  role_notice: '<b>${title}</b> paketində rolunuz indi: ${role}.'
+  no_access: 'Bu paketə artıq girişiniz yoxdur. /packs bölməsində başqasını seçin.'
+  no_rights: "Bu paketdəki rolunuz buna icazə vermir."
+  your_role: '👥 Rolunuz: ${role}'
+  activity: |
+    <b>🧾 Fəaliyyət</b> — <a href="${link}">${title}</a>
+
+    ${entries}
+  activity_empty: '<i>Hələ heç nə yoxdur.</i>'
+  actions:
+    add: '➕ stiker əlavə etdi: ${count}'
+    delete: '🗑 stiker sildi'
+    restore: '♻️ stikeri bərpa etdi'
+    emoji: '😀 emojini dəyişdi'
+    join: '👋 qoşuldu'
+    leave: '🚪 çıxdı'
+    removed: '🚫 ${target} çıxarıldı'
+    role: '🔧 ${target}: ${role}'
+    reset: '🔁 linki dəyişdi'
+    clear: '🧹 hamını çıxardı (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -448,9 +506,9 @@ sticker:
       reply: |
         Stikerə cavab verin.
       no_selected_pack: |
-        <b>Paket seçməmisiniz</b>
+        <b>Əvvəlcə stikerləriniz üçün paket lazımdır</b>
 
-        Paket yaradın (/new) və ya seçin (/packs)
+        Paket yaradın — bu faylı dərhal ona əlavə edəcəyəm.
       no_selected_group_pack: |
         <b>Qrup paketi seçməmisiniz</b>
 
@@ -481,9 +539,9 @@ sticker:
         Video faylın formatı yanlışdır (WEBM tələb olunur).
       file_type:
         unknown: |
-          Bu fayl növü dəstəklənmir
+          Bu fayl növü dəstəklənmir.
 
-          <i>Başqa stiker paketi yaradın (/new) və ya seçin (/packs)</i>
+          Foto, video, GIF, stiker və ya fayl kimi şəkil göndərin.
       wait_load: |
         ⏳ Hələ əvvəlki faylı emal edirəm...
       timeout: |
@@ -501,6 +559,12 @@ sticker:
       invalid_image: |
 
         Bu şəkli emal etmək alınmadı. Başqa fayl və ya format göndərməyə çalışın.
+      queue_full: '⏳ Eyni anda çox fayl. Növbədəkiləri emal edənə qədər gözləyin, sonra qalanını göndərin.'
+    album_progress: '⏳ Albom əlavə olunur: ${current}/${total}'
+    album_done: '✅ ${total} fayldan ${added} ədədi <a href="${link}">${title}</a> paketinə əlavə olundu'
+    album_converting: '⏳ Daha ${count} ədədi videodur: çevirirəm, hər biri hazır olanda cavab verəcəyəm.'
+    album_duplicates: '♻️ Artıq paketdə var: ${count}.'
+    album_failed: '⚠️ Əlavə etmək alınmadı: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Kanala abunə olun</a> — xəbərlər, yeniləmələr, yeni funksiyalar.
@@ -539,6 +603,7 @@ scenes:
       <b>Paketin adı</b>
 
       Onu hamı görür. Öz adınızı yazın və ya aşağıdakı təkliflərdən seçin.
+      <i>Paketin ünvanını addan düzəldəcəyəm.</i>
     pack_name: |
       <b>Paketin ünvanı</b>
 
@@ -562,6 +627,9 @@ scenes:
           Bot stikerləri Telegram-a yükləyə bilmir.
 
           Bir az sonra yenidən cəhd edin.
+    btn:
+      custom_link: '🔗 Öz paket ünvanım'
+    custom_link_on: 'Oldu — adı göndərin, sonra ünvanı soruşacağam.'
   copy:
     enter: |
       Əvvəlcə kopya üçün yeni paket yaradaq.
@@ -599,6 +667,16 @@ scenes:
         Təəssüf ki, bu funksiya yalnız botu dəstəkləyənlər üçün əlçatandır.
 
         Bunu /donate əmrini göndərməklə edə bilərsiniz.
+    title: |
+      <b>📋 <a href="${originalLink}">${originalTitle}</a> kopyalanır</b> (${count})
+
+      Kopyanın adı — öz adınızı yazın və ya aşağıdan seçin.
+    btn:
+      change_type: '🔄 Paket növünü dəyiş'
+    created: |
+      ✅ Paket yaradıldı: <a href="${link}">${title}</a>
+
+      Stikerləri kopyalayıram — bitəndə xəbər verəcəyəm.
   original:
     enter: |
       <b>🔎 Stiker haradandır</b>
@@ -614,7 +692,7 @@ scenes:
     enter: |
       <b>🗑 Stikerin silinməsi</b>
 
-      Silmək istədiyiniz stikeri göndərin. Paketi seçməyə ehtiyac yoxdur — onun harada olduğunu özüm tapacağam.
+      Stiker göndərin — onu dərhal paketindən siləcəyəm (bərpa etmək olar). İstədiyiniz qədər göndərə bilərsiniz.
     confirm: |
       Bu stiker paketdən silinsin?
     error:
@@ -660,6 +738,7 @@ scenes:
     btn:
       yes: '⚡ Gücləndir'
       no: Ləğv et
+      buy: '⭐ Kredit al'
     canceled: |
       Ləğv edildi
     success: |
@@ -713,6 +792,10 @@ scenes:
 
         <i>Kateqoriyalara ayırmaq üçün heşteqlərdən istifadə edə bilərsiniz [#]</i>
         <i>Məsələn: #anime #meme #animals #cute #kpop #funny #cat #game</i>
+      current_description: |
+
+        <b>Hazırkı təsvir:</b> <i>${description}</i>
+      keep_description: '✅ Hazırkı təsviri saxla'
       select_language: |
         <b>Paketinizin hansı dillər üçün nəzərdə tutulduğunu seçin:</b>
         <i>Bir neçəsini seçə bilərsiniz</i>
@@ -746,7 +829,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> həmişəlik silinsin?
 
-      Təsdiqləmək üçün <code>${confirm}</code> göndərin və ya «Ləğv et» düyməsini basın.
+      Təsdiqləmək üçün «${confirm}» və ya «Ləğv et» düyməsinə basın.
     confirm: Bəli, sil
     success: |
       🗑 Paket silindi
@@ -780,7 +863,7 @@ scenes:
       <b>✂️ Fonun silinməsi</b>
 
       Foto göndərin — fonsuz PNG alacaqsınız.
-      <i>İnsan fotoları ilə daha yaxşı işləyir.</i>
+      <i>Fotolarınız üçün model:</i>
     enter_anime: |
       <b>✂️ Fonun silinməsi</b>
 
@@ -801,6 +884,7 @@ scenes:
       ⏱ Emal çox uzun çəkdi. Bir az sonra və ya daha kiçik foto ilə yenidən cəhd edin.
     error_queue_disabled: |
       Bu funksiya müvəqqəti olaraq əlçatan deyil. Bir az sonra yenidən cəhd edin.
+    not_image: 'Foto və ya fayl kimi şəkil göndərin (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Dairəvi video</b>
@@ -832,6 +916,7 @@ scenes:
     Ləğv edildi
   btn:
     cancel: '← Ləğv et'
+  unexpected: 'Hazırda başqa şey gözləyirəm — yuxarıdakı addımı yerinə yetirin və ya «← Ləğv et» düyməsinə basın.'
 error:
   stickerset_invalid: |
     Paket əlçatan deyil. Ola bilsin ki, Telegram-da silinib.
