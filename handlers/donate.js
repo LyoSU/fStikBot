@@ -1,5 +1,4 @@
 const Composer = require('telegraf/composer')
-const { match } = require('telegraf-i18n')
 
 const composer = new Composer()
 
@@ -57,7 +56,7 @@ composer.on('successful_payment', async (ctx) => {
   }))
 })
 
-composer.hears(['/donate', '/boost', '/start boost', match('cmd.start.btn.club')], Composer.privateChat(donateMenu))
+composer.hears(['/donate', '/boost', '/start boost'],Composer.privateChat(donateMenu))
 
 composer.action('donate:topup', async (ctx) => {
   return ctx.scene.enter('donate')
