@@ -1,6 +1,18 @@
 const Markup = require('telegraf/markup')
 const { escapeHTML, userName } = require('../utils')
+const packLink = require('../utils/pack-link')
 const { sendBanner } = require('../banners')
+
+// "Stickers go to: <pack>" — the one thing a returning user needs to know
+// before sending a photo.
+const currentPackLine = (ctx) => {
+  const pack = ctx.session.userInfo?.stickerSet
+  if (!pack?.name || pack.inline) return ''
+  return '\n\n' + ctx.i18n.t('cmd.start.current_pack', {
+    title: escapeHTML(pack.title),
+    link: packLink(pack)
+  })
+}
 
 module.exports = async (ctx) => {
   if (ctx.chat.type === 'private' && ctx.from.is_bot) {
@@ -21,50 +33,27 @@ module.exports = async (ctx) => {
     })
   }
 
-  // Only "has at least one pack" matters here. Model.exists() stops at the
-  // first match instead of counting every pack the user ever made.
-  // (Mongoose 5: countDocuments(filter, <2nd arg>) treats the 2nd arg as a
-  // callback — passing { limit: 1 } there threw on every /start.)
+  // Only "has at least one pack" matters here; exists() stops at the first match.
   const hasStickerSets = await ctx.db.StickerSet.exists({ owner: ctx.session.userInfo.id })
 
-  const isNewUser = !hasStickerSets
+  const keyboard = [
+    hasStickerSets
+      ? [
+          Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null'),
+          Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
+        ]
+      : [Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')],
+    [
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'pack_about')
+    ],
+    [
+      Markup.urlButton(ctx.i18n.t('cmd.start.commands.guide'), 'https://fstik.app/guides'),
+      Markup.urlButton(ctx.i18n.t('cmd.start.commands.add_to_group'), `https://t.me/${ctx.botInfo.username}?startgroup=bot`)
+    ]
+  ]
 
-  const keyboard = []
-
-  // Adaptive menu based on user experience
-  if (isNewUser) {
-    // For new users - focus on creating first pack
-    keyboard.push([
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
-    ])
-  } else {
-    // For experienced users - both manage and create
-    keyboard.push([
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null'),
-      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
-    ])
-  }
-
-  // Discovery row — find packs & identify stickers
-  keyboard.push([
-    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.search_catalog'), 'search_catalog'),
-    Markup.callbackButton(ctx.i18n.t('cmd.start.commands.info'), 'pack_about')
-  ])
-
-  // Help row
-  keyboard.push([
-    Markup.urlButton(ctx.i18n.t('cmd.start.commands.guide'), 'https://fstik.app/guides')
-  ])
-
-  // Add to group
-  keyboard.push([
-    Markup.urlButton(ctx.i18n.t('cmd.start.commands.add_to_group'), `https://t.me/${ctx.botInfo.username}?startgroup=bot`)
-  ])
-
-  // Build message text with optional advertising
-  let messageText = ctx.i18n.t('cmd.start.enter', {
-    name: userName(ctx.from)
-  })
+  let messageText = ctx.i18n.t('cmd.start.enter', { name: userName(ctx.from) }) + currentPackLine(ctx)
 
   if (ctx.config?.advertising?.text && ctx.config?.advertising?.link) {
     messageText += `\n\n<a href="${ctx.config.advertising.link}">${ctx.config.advertising.text}</a>`
@@ -74,40 +63,31 @@ module.exports = async (ctx) => {
     reply_markup: Markup.inlineKeyboard(keyboard)
   })
 
-  if (ctx.config.catalogUrl && ctx.startPayload === 'catalog') {
-    await sendBanner(ctx, 'catalog', ctx.i18n.t('cmd.start.catalog'), {
-      reply_markup: JSON.stringify({
-        inline_keyboard: [
-          [
-            {
-              text: ctx.i18n.t('cmd.start.btn.catalog'),
-              url: ctx.config.catalogUrl
-            }
-          ],
-          [
-            {
-              text: ctx.i18n.t('cmd.start.btn.catalog_app'),
-              url: ctx.config.catalogAppUrl
-            }
-          ]
-          // [
-          //   {
-          //     text: ctx.i18n.t('cmd.start.btn.catalog_browser'),
-          //     login_url: {
-          //       url: ctx.config.catalogUrl,
-          //       request_write_access: true
-          //     }
-          //   }
-          // ]
-        ]
-      })
-    })
-  }
-
   ctx.telegram.callApi('deleteMyCommands', {
     scope: {
       type: 'chat',
       chat_id: ctx.chat.id
     }
   }).catch(err => console.error('Failed to delete chat commands:', err.message))
+}
+
+// A private message nothing else understood. Someone with a pack gets a short
+// reminder of what to send and where it goes; the whole welcome banner used to
+// be re-sent for every stray message.
+module.exports.hint = async (ctx) => {
+  const pack = ctx.session.userInfo?.stickerSet
+  if (!pack?.name) return module.exports(ctx)
+
+  return ctx.replyWithHTML(ctx.i18n.t('cmd.start.hint', {
+    title: escapeHTML(pack.title),
+    link: pack.inline ? `t.me/${ctx.options.username}` : packLink(pack)
+  }), {
+    reply_to_message_id: ctx.message?.message_id,
+    allow_sending_without_reply: true,
+    disable_web_page_preview: true,
+    reply_markup: Markup.inlineKeyboard([[
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.packs'), 'packs:null'),
+      Markup.callbackButton(ctx.i18n.t('cmd.start.commands.new'), 'new_pack:null')
+    ]])
+  })
 }

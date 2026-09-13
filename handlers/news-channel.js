@@ -1,81 +1,53 @@
 const Composer = require('telegraf/composer')
-const handleStart = require('./start')
+
+const DAY_MS = 24 * 60 * 60 * 1000
+// Only users who have been around a while are asked, and at most once a week.
+const MIN_ACCOUNT_AGE_MS = 14 * DAY_MS
+const PROMPT_INTERVAL_MS = 7 * DAY_MS
 
 const composer = new Composer()
 
-composer.on('message', Composer.optional((ctx) => ctx?.chat?.type === 'private', async (ctx, next) => {
-  // if ru locale
-  if (ctx.session.userInfo.locale !== 'ru' || ctx.from.language_code !== 'ru') {
-    return next()
-  }
+const isSubscribed = async (ctx) => {
+  const member = await ctx.telegram.getChatMember(ctx.config.ruNewsChannel.id, ctx.from.id).catch(() => null)
+  return ['member', 'administrator', 'creator'].includes(member?.status)
+}
 
-  if (!ctx?.config?.ruNewsChannel?.id) return next()
+const shouldAsk = (ctx) => {
+  const user = ctx.session.userInfo
+  if (!ctx.config?.ruNewsChannel?.id) return false
+  if (user?.locale !== 'ru' || ctx.from.language_code !== 'ru') return false
+  if (ctx.message.text?.startsWith('/')) return false
+  if (user.createdAt > Date.now() - MIN_ACCOUNT_AGE_MS) return false
+  return !(user.newsSubscribedDate > Date.now() - PROMPT_INTERVAL_MS)
+}
 
-  // if not command
-  if (ctx.message.text && ctx.message.text.indexOf('/') === 0) return next()
+// A subscription invite for the Russian-speaking audience. It never gets in
+// the way: the message is handled as usual, and the invite is an extra reply
+// at most once a week. It used to swallow every non-command message — photos
+// included — until the user subscribed.
+composer.on('message', Composer.privateChat(async (ctx, next) => {
+  await next()
 
-  // if createdAt < 14 days
-  if (ctx.session.userInfo.createdAt > new Date().getTime() - 1000 * 60 * 60 * 24 * 14) {
-    return next()
-  }
+  if (!shouldAsk(ctx)) return
 
-  if (ctx.session.userInfo.newsSubscribedDate > new Date().getTime() - 1000 * 60 * 60 * 24 * 7) {
-    return next()
-  }
+  // Marks this week as done whether or not they're subscribed.
+  ctx.session.userInfo.newsSubscribedDate = new Date()
+  if (await isSubscribed(ctx)) return
 
-  // check subscribe to channel
-  const getChatMember = await ctx.telegram.getChatMember(ctx?.config?.ruNewsChannel?.id, ctx.from.id).catch((error) => {
-    console.error('getChatMember error', error)
-    return {
-      status: 'error',
-      error
+  await ctx.replyWithHTML(ctx.i18n.t('news.join', { link: ctx.config.ruNewsChannel.link }), {
+    disable_web_page_preview: true,
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: ctx.i18n.t('news.join_btn'), url: ctx.config.ruNewsChannel.link }],
+        [{ text: ctx.i18n.t('news.continue'), callback_data: 'news:close' }]
+      ]
     }
-  })
-
-  if (['member', 'administrator', 'creator'].indexOf(getChatMember.status) === -1) {
-    await ctx.replyWithHTML(ctx.i18n.t('news.join', {
-      link: ctx?.config?.ruNewsChannel?.link
-    }), {
-      disable_web_page_preview: true,
-      reply_markup: {
-        inline_keyboard: [
-          [{
-            text: ctx.i18n.t('news.join_btn'),
-            url: ctx?.config?.ruNewsChannel?.link
-          }],
-          [{
-            text: ctx.i18n.t('news.continue'),
-            callback_data: 'start'
-          }]
-        ]
-      }
-    })
-
-    // return next()
-  } else {
-    ctx.session.userInfo.newsSubscribedDate = new Date()
-    return next()
-  }
+  }).catch(() => {})
 }))
 
-composer.action('start', async (ctx, next) => {
-  if (!ctx?.config?.ruNewsChannel?.id) return next()
-
-  const getChatMember = await ctx.telegram.getChatMember(ctx?.config?.ruNewsChannel?.id, ctx.from.id).catch((error) => {
-    console.error('getChatMember error', error)
-    return {
-      status: 'error',
-      error
-    }
-  })
-
-  if (['member', 'administrator', 'creator'].indexOf(getChatMember.status) === -1) {
-    return ctx.answerCbQuery(ctx.i18n.t('news.not_joined'), true)
-  } else {
-    ctx.session.userInfo.newsSubscribedDate = new Date()
-    await ctx.deleteMessage().catch(err => console.error('Failed to delete message:', err.message))
-    return handleStart(ctx)
-  }
+composer.action(/^(news:close|start)$/, async (ctx) => {
+  await ctx.answerCbQuery()
+  await ctx.deleteMessage().catch(() => {})
 })
 
 module.exports = composer

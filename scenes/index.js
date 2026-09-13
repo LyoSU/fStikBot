@@ -1,8 +1,6 @@
 const Stage = require('telegraf/stage')
+const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
-const {
-  handleStart
-} = require('../handlers')
 
 const { match } = I18n
 
@@ -40,43 +38,66 @@ const stage = new Stage([].concat(
   mosaic
 ))
 
+const leaveScene = async (ctx) => {
+  ctx.session.scene = null
+  await ctx.scene.leave()
+}
+
 stage.use((ctx, next) => {
   if (!ctx.session.scene) ctx.session.scene = {}
   return next()
 })
 
-stage.hears(([
-  '/cancel',
-  match('scenes.btn.cancel')
-]), async (ctx) => {
-  ctx.session.scene = null
+stage.hears([/^\/cancel(@\w+)?$/, match('scenes.btn.cancel')], async (ctx) => {
+  await leaveScene(ctx)
 
-  await ctx.reply(ctx.i18n.t('scenes.leave'), {
-    reply_markup: {
-      remove_keyboard: true
-    },
+  // One short message. It used to be followed by the whole welcome banner.
+  return ctx.reply(ctx.i18n.t('scenes.leave'), {
+    reply_markup: { remove_keyboard: true },
     reply_to_message_id: ctx.message.message_id,
     allow_sending_without_reply: true
   })
-  await ctx.scene.leave()
-
-  return handleStart(ctx)
 })
 
-// Commands that abandon whatever scene is running.
-//
-// Was a list of exact strings, so anything with an argument or a @botname
-// suffix ("/start s_<passcode>", "/new fill", "/packs@fStikBot") fell through
-// and became scene input — a /boost typed at the "pack name" step literally
-// became the pack title. A single anchored regex covers the arguments and adds
-// the three commands that were missing: /boost, /public, /ss.
-const EXIT_COMMANDS = /^\/(start|admin|help|packs|new|emoji|lang|donate|publish|delete|frame|catalog|mosaic|round|clear|copy|restore|original|about|report|privacy|paysupport|boost|public|ss)(@\w+)?(\s|$)/
-
-stage.hears(EXIT_COMMANDS, async (ctx, next) => {
-  await ctx.scene.leave()
-  ctx.session.scene = null
-  await next()
+// Any command abandons the running scene and is then handled as usual. This
+// was a hand-kept list of command names that had already drifted from the
+// commands that exist.
+stage.use(async (ctx, next) => {
+  const entity = ctx.message?.entities?.[0]
+  if (entity?.type === 'bot_command' && entity.offset === 0 && ctx.scene.current) {
+    await leaveScene(ctx)
+  }
+  return next()
 })
-stage.middleware()
+
+// Buttons that work the same inside a scene, so pressing one doesn't abandon it
+// — including the ones scenes put on their own results (/about's download and
+// "all packs", /clear's and /round's "Add to pack").
+const SCENE_SAFE_CALLBACK = /^(delete_sticker|restore_sticker|donate:buy|news:close|add_sticker|download_original|show_all_packs)(:|$)/
+
+// Runs after the stage (see bot/commands.js): whatever the current scene didn't
+// handle arrives here. Telegraf would pass it on to the global handlers while
+// the scene stays active — a photo sent during /round went into the pack, and
+// a menu button pressed during /new left the next message to be read as the
+// pack title.
+stage.guard = async (ctx, next) => {
+  if (ctx.chat?.type !== 'private' || !ctx.scene?.current) return next()
+
+  if (ctx.callbackQuery) {
+    // A button from another message: the user moved on.
+    if (!SCENE_SAFE_CALLBACK.test(ctx.callbackQuery.data || '')) await leaveScene(ctx)
+    return next()
+  }
+
+  if (!ctx.message || ctx.message.successful_payment) return next()
+
+  return ctx.replyWithHTML(ctx.i18n.t('scenes.unexpected'), {
+    reply_to_message_id: ctx.message.message_id,
+    allow_sending_without_reply: true,
+    reply_markup: Markup.keyboard([
+      [{ text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }]
+    ]).resize()
+  })
+}
 
 module.exports = stage

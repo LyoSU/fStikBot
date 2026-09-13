@@ -4,152 +4,108 @@ const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
 
-module.exports = async (ctx) => {
-  let packBotUsername
-  let deleteSticker
-  let dbStickerSet
+const isOwnerOf = (ctx, stickerSet) => String(stickerSet.owner) === String(ctx.session.userInfo.id)
 
-  const { message } = ctx.callbackQuery
+const canDeleteInGroup = async (ctx, stickerSet) => {
+  const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id })
+  if (!group?.stickerSet || String(group.stickerSet._id || group.stickerSet) !== String(stickerSet._id)) return false
+  if (group.settings?.rights?.delete === 'all') return true
 
-  const sticker = await ctx.db.Sticker.findOne({
-    fileUniqueId: ctx.match[2]
-  }).populate('stickerSet', '_id name title owner inline passcode placeholderFileUniqueId')
+  const member = await ctx.telegram.getChatMember(ctx.chat.id, ctx.from.id).catch(() => null)
+  return ['creator', 'administrator'].includes(member?.status)
+}
 
-  if (!sticker) {
-    let setName
+// Which sticker to delete, and whether this user may. `telegramSticker` is
+// the sticker as Telegram sent it, for stickers of this bot's packs that
+// predate the database.
+const resolveTarget = async (ctx, fileUniqueId, telegramSticker) => {
+  const sticker = await ctx.db.Sticker.findOne({ fileUniqueId })
+    .populate('stickerSet', '_id name title owner inline passcode placeholderFileUniqueId packType')
 
-    const replyTo = message.reply_to_message
+  if (sticker?.stickerSet) {
+    const selected = ctx.session.userInfo?.stickerSet
+    const allowed = isOwnerOf(ctx, sticker.stickerSet) ||
+      // A co-editor works on the pack they selected through the co-edit link.
+      String(selected?._id || selected || '') === String(sticker.stickerSet._id) ||
+      (ctx.chat.type !== 'private' && await canDeleteInGroup(ctx, sticker.stickerSet))
 
-    if (replyTo?.sticker) {
-      setName = replyTo.sticker.set_name
+    return allowed ? { sticker, stickerSet: sticker.stickerSet, fileId: sticker.getFileId() } : null
+  }
 
-      deleteSticker = replyTo.sticker.file_id
-    } else if (replyTo?.entities?.[0]?.type === 'custom_emoji') {
-      const customEmoji = replyTo.entities.find((e) => e.type === 'custom_emoji')
+  const setName = telegramSticker?.set_name
+  if (!setName || setName.split('_').pop() !== ctx.options.username) return null
 
-      if (!customEmoji) return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
+  const stickerSet = await ctx.db.StickerSet.findOne({ name: setName, owner: ctx.session.userInfo.id })
+  return stickerSet ? { sticker: null, stickerSet, fileId: telegramSticker.file_id } : null
+}
 
-      const emojiStickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
-        custom_emoji_ids: [customEmoji.custom_emoji_id]
-      })
+/**
+ * Delete a sticker from its pack.
+ *
+ * @returns {Promise<{ok: {text: string, extra: Object}} | {error: string}>}
+ *   the success message to show, or the error text
+ */
+async function deleteSticker (ctx, fileUniqueId, telegramSticker) {
+  const target = await resolveTarget(ctx, fileUniqueId, telegramSticker)
+  if (!target) return { error: ctx.i18n.t('callback.sticker.error.not_found') }
 
-      if (!emojiStickers) return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
+  const { sticker, stickerSet, fileId } = target
 
-      setName = emojiStickers[0].set_name
-      deleteSticker = emojiStickers[0].file_id
-    }
-
-    if (!setName) {
-      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-    }
-
-    packBotUsername = setName.split('_').pop()
-
-    if (!message?.reply_to_message || !packBotUsername || packBotUsername !== ctx?.options?.username) {
-      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-    }
-
-    const stickerSet = await ctx.db.StickerSet.findOne({
-      name: setName,
-      owner: ctx.session.userInfo.id
-    })
-
-    if (!stickerSet) {
-      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-    }
-
-    dbStickerSet = stickerSet
-  } else {
-    if (!sticker.stickerSet) {
-      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-    }
-
-    // cat delete in group
-    let canDelete = false
-
-    if (ctx.chat.type === 'group' || ctx.chat.type === 'supergroup') {
-      const group = await ctx.db.Group.findOne({ telegram_id: ctx.chat.id })
-
-      if (group && group.stickerSet && group.stickerSet._id.toString() === sticker.stickerSet._id.toString()) {
-        if (group.settings.rights.delete === 'all') {
-          canDelete = true
-        } else {
-          const chatMember = await ctx.telegram.getChatMember(ctx.chat.id, ctx.from.id)
-
-          if (['creator', 'administrator'].includes(chatMember.status)) {
-            canDelete = true
-          }
-        }
-      } else {
-        return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-      }
-    }
-
-    if (
-      sticker.stickerSet.owner.toString() === ctx.session.userInfo.id.toString() || // if sticker owner is the same as the user
-      (ctx.session.userInfo?.stickerSet && sticker.stickerSet.id === ctx.session.userInfo?.stickerSet?.id) || // if selected sticker pack by user is the same as the sticker pack
-      canDelete // if user have rights to delete sticker
-    ) {
-      deleteSticker = sticker.getFileId()
-    } else {
-      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
+  // The shared public demo pack keeps its first sticker.
+  if (ctx.session.userInfo?.stickerSet?.passcode === 'public' && sticker) {
+    const set = await ctx.tg.getStickerSet(stickerSet.name).catch(() => null)
+    if (set?.stickers?.[0]?.file_unique_id === sticker.fileUniqueId) {
+      return { error: ctx.i18n.t('callback.sticker.error.not_found') }
     }
   }
 
-  if (!deleteSticker) {
-    return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-  }
-
-  if (ctx.session?.userInfo?.stickerSet?.passcode === 'public' && sticker?.stickerSet?.name) {
-    const stickerSet = await ctx.tg.getStickerSet(sticker.stickerSet.name).catch(() => null)
-
-    if (stickerSet?.stickers?.[0]?.file_unique_id === sticker.fileUniqueId) {
-      return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
-    }
-  }
-
-  if (!sticker?.stickerSet?.inline) {
+  if (!stickerSet.inline) {
     try {
-      await ctx.deleteStickerFromSet(deleteSticker)
+      await ctx.deleteStickerFromSet(fileId)
     } catch (error) {
-      const description = error?.description || error?.message || ''
-
-      // STICKER_INVALID means the sticker is already gone from the set (removed
-      // via a Telegram client or @Stickers). Our row said deleted:false, so the
-      // same file kept coming back as "already in the pack" with a button that
-      // could never work. Sync the DB and report success.
-      if (!description.includes('STICKER_INVALID')) {
-        return ctx.answerCbQuery(humanizeTelegramError(ctx, error), true)
+      // STICKER_INVALID: already gone from the set (removed in a Telegram
+      // client). Sync the database and report success.
+      if (!(error?.description || error?.message || '').includes('STICKER_INVALID')) {
+        return { error: humanizeTelegramError(ctx, error) }
       }
     }
 
-    // The user may have just deleted their last real sticker, leaving only the
-    // bootstrap placeholder behind — drop it too (allowEmpty: a 0-sticker set
-    // is valid, verified live; a pack whose only content is a throwaway isn't).
-    if (!dbStickerSet) dbStickerSet = sticker?.stickerSet
-    if (dbStickerSet?.placeholderFileUniqueId) {
-      const currentSet = await ctx.tg.getStickerSet(dbStickerSet.name).catch(() => null)
-      await removePlaceholderIfPending(ctx.telegram, dbStickerSet, currentSet, { allowEmpty: true })
+    // The last real sticker may be gone, leaving only the bootstrap placeholder.
+    if (stickerSet.placeholderFileUniqueId) {
+      const currentSet = await ctx.tg.getStickerSet(stickerSet.name).catch(() => null)
+      await removePlaceholderIfPending(ctx.telegram, stickerSet, currentSet, { allowEmpty: true })
     }
   }
-
-  await ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.delete'))
-
-  const packTitle = sticker?.stickerSet?.title
-  const successText = packTitle
-    ? `${ctx.i18n.t('callback.sticker.delete')}\n\n📦 <i>${escapeHTML(packTitle)}</i>`
-    : ctx.i18n.t('callback.sticker.delete')
-
-  await safeEditMessage(ctx, successText, {
-    parse_mode: 'HTML',
-    reply_markup: Markup.inlineKeyboard([
-      { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker?.fileUniqueId}`, !sticker), style: 'success' }
-    ])
-  })
 
   if (sticker) {
     sticker.deleted = true
     sticker.deletedAt = new Date()
     await sticker.save()
   }
+
+  // Restoring re-adds the sticker as the pack owner, so only the owner gets
+  // the button — a group admin used to get one that always failed.
+  const buttons = sticker && isOwnerOf(ctx, stickerSet)
+    ? [{ ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.restore'), `restore_sticker:${sticker.fileUniqueId}`), style: 'success' }]
+    : []
+
+  return {
+    ok: {
+      text: `${ctx.i18n.t('callback.sticker.delete')}\n\n📦 <i>${escapeHTML(stickerSet.title)}</i>`,
+      extra: { parse_mode: 'HTML', reply_markup: Markup.inlineKeyboard(buttons) }
+    }
+  }
 }
+
+// delete_sticker:<file_unique_id> — the "Delete" button.
+module.exports = async (ctx) => {
+  const replyTo = ctx.callbackQuery.message?.reply_to_message
+  const result = await deleteSticker(ctx, ctx.match[2], replyTo?.sticker)
+
+  if (result.error) return ctx.answerCbQuery(result.error, true)
+
+  await ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.delete'))
+  await safeEditMessage(ctx, result.ok.text, result.ok.extra)
+}
+
+module.exports.deleteSticker = deleteSticker

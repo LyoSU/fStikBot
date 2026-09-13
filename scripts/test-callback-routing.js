@@ -1,5 +1,5 @@
 // Regression tests for the callback_data / command regexes registered in
-// bot/commands.js and the scene exit-command list in scenes/index.js.
+// bot/commands.js and the scene guard in scenes/index.js.
 //
 // The routing bugs these cover were invisible in code review because telegraf
 // matches an unanchored regex anywhere in the string: /publish/ swallowed
@@ -67,11 +67,16 @@ function main () {
     ['catalog:unpublish:65f0000000000000000000aa', '/^catalog:unpublish:(.*)$/'],
     ['pack_about', '/^(about|pack_about)$/'],
     ['set_frame', '/^(frame|set_frame)$/'],
-    ['search_catalog', '/^search_catalog$/'],
+    ['search_catalog', '/^(catalog|search_catalog)$/'],
     ['add_sticker', '/^add_sticker$/'],
     ['delete_sticker', '/^delete_sticker$/'],
     ['original', '/^original$/'],
-    ['catalog', '/^catalog$/'],
+    ['catalog', '/^(catalog|search_catalog)$/'],
+    ['packs:null', '/^packs:/'],
+    ['packs:type:custom_emoji', '/^packs:/'],
+    ['packs:hidden:regular:0', '/^packs:/'],
+    ['set_pack:65f0000000000000000000aa', '/(set_pack):(.*)/'],
+    ['hide_pack:65f0000000000000000000aa', '/(hide_pack):(.*)/'],
     ['download_original', '/^download_original$/'],
     ['show_all_packs', '/^show_all_packs$/'],
     ['new_pack:inline', '/new_pack:(.*)/'],
@@ -121,27 +126,27 @@ function main () {
     }
   }
 
-  console.log('\nscene exit commands\n')
+  console.log('\nscene guard\n')
 
-  const exitMatch = scenesSrc.match(/const EXIT_COMMANDS = (\/\^[^\n]+?\/)\n/)
-  test('EXIT_COMMANDS regex is exported from scenes/index.js', () => {
-    assert.ok(exitMatch, 'found EXIT_COMMANDS')
+  test('any bot command leaves the running scene', () => {
+    assert.ok(/entity\?\.type === 'bot_command' && entity\.offset === 0/.test(scenesSrc), 'command exit middleware present')
   })
 
-  if (exitMatch) {
-    const exitRe = toRegExp(exitMatch[1])
+  const safeMatch = scenesSrc.match(/const SCENE_SAFE_CALLBACK = (\/\^[^\n]+?\/)\n/)
+  test('SCENE_SAFE_CALLBACK is defined in scenes/index.js', () => {
+    assert.ok(safeMatch, 'found SCENE_SAFE_CALLBACK')
+  })
 
-    const leaves = [
-      '/start', '/start s_deadbeef', '/packs', '/packs@fStikBot',
-      '/new', '/new fill', '/boost', '/public', '/ss', '/donate', '/mosaic'
-    ]
-    const stays = ['/boosted', 'my /start pack', 'ss', '/publicity', 'Cats :: @fStikBot']
+  if (safeMatch) {
+    const safeRe = toRegExp(safeMatch[1])
+    const keeps = ['delete_sticker:abc', 'restore_sticker:abc', 'donate:buy:5', 'news:close', 'add_sticker', 'download_original', 'show_all_packs']
+    const leaves = ['packs:null', 'set_pack:abc', 'new_pack:null', 'delete_stickers:x', 'boost:abc']
 
-    for (const text of leaves) {
-      test(`leaves the scene on ${JSON.stringify(text)}`, () => assert.strictEqual(exitRe.test(text), true))
+    for (const data of keeps) {
+      test(`stays in the scene on ${JSON.stringify(data)}`, () => assert.strictEqual(safeRe.test(data), true))
     }
-    for (const text of stays) {
-      test(`stays in the scene on ${JSON.stringify(text)}`, () => assert.strictEqual(exitRe.test(text), false))
+    for (const data of leaves) {
+      test(`leaves the scene on ${JSON.stringify(data)}`, () => assert.strictEqual(safeRe.test(data), false))
     }
   }
 

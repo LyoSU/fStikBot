@@ -16,7 +16,6 @@ module.exports = {
   handleCopyPack: require('./pack-copy'),
   handleCoedit: require('./coedit'),
   handleCatalog: require('./catalog'),
-  handleSearchCatalog: require('./search-catalog'),
   handleLanguage: require('./language'),
   handleEmoji: require('./emoji'),
   handleStickerUpdate: require('./sticker-update'),

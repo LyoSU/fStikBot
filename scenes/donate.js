@@ -57,9 +57,10 @@ donateScene.enter(async (ctx) => {
   const locale = ctx.i18n.locale()
 
   const buttons = PACKAGES.map((amount) => {
-    const label = amount === 1 ? '1 Credit' : `${amount} Credits`
+    // A credit is one boost, hence ⚡. Language-neutral — the label used to be
+    // "N Credits" in English for every locale.
     const price = calculateStarPrice(amount, locale)
-    return [Markup.callbackButton(`${label} — ${price} ⭐${discountLabel(amount)}`, `donate:buy:${amount}`)]
+    return [Markup.callbackButton(`⚡ ${amount} — ${price} ⭐${discountLabel(amount)}`, `donate:buy:${amount}`)]
   })
 
   await replyOrEditBanner(ctx, 'donate', ctx.i18n.t('donate.menu', {

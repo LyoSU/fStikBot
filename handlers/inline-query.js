@@ -205,6 +205,7 @@ composer.on('inline_query', async (ctx) => {
     }).catch(() => {})
 
     let searchStickers = []
+    let matchedPack = false
 
     // The queries run with maxTimeMS and throw on timeout. Nothing upstream
     // answers an inline query on error, so without this the user was left on
@@ -232,6 +233,7 @@ composer.on('inline_query', async (ctx) => {
 
         if (searchSet) {
           inlineSet = searchSet
+          matchedPack = true
         } else {
           // Search across all user's stickers
           const userSetIds = await ctx.db.StickerSet.find({
@@ -255,8 +257,9 @@ composer.on('inline_query', async (ctx) => {
         }
       }
 
-      // Fallback to inline set stickers
-      if (searchStickers.length === 0 && inlineSet) {
+      // The whole inline pack only for an empty query or a pack-name match: a
+      // search that found nothing used to show every sticker ("cat" → dogs).
+      if (searchStickers.length === 0 && inlineSet && (query.length === 0 || matchedPack)) {
         searchStickers = await ctx.db.Sticker.find({
           deleted: false,
           stickerSet: inlineSet._id || inlineSet

@@ -34,7 +34,6 @@ module.exports = (bot, privateMessage, {
     handleRestorePack,
     handleBoostPack,
     handleCatalog,
-    handleSearchCatalog,
     handleCopyPack,
     handleCoedit,
     handleLanguage,
@@ -58,8 +57,10 @@ module.exports = (bot, privateMessage, {
     return ctx.replyWithHTML('<code>' + escapeHTML(JSON.stringify(target, null, 2)) + '</code>')
   }))
 
-  // Scenes (Stage) mount — must come before any composer that uses ctx.scene.enter
+  // Scenes (Stage) mount — must come before any composer that uses ctx.scene.enter.
+  // The guard right behind it catches what the current scene didn't handle.
   bot.use(scenes)
+  bot.use(scenes.guard)
 
   // Admin panel + news-channel onboarding
   privateMessage.use(require('../handlers/admin'))
@@ -68,22 +69,26 @@ module.exports = (bot, privateMessage, {
   bot.use(handleStats)
   bot.use(handlePing)
 
-  // --- /start with merged startPayload routing ---
-  // Originally there were three separate bot.start() calls branching on
-  // different payload values — merged here for legibility. Falls through
-  // via next() so handleDonate (mounted later) can still intercept the
-  // 'donate' payload, and the final bot.start(handleStart) catches the rest.
-  bot.start(async (ctx, next) => {
-    const payload = ctx.startPayload
-
-    if (payload === 'inline_pack') {
+  // --- /start and its payloads ---
+  // One router. There used to be three /start handlers in different files, and
+  // their registration order decided which one answered.
+  const startRoutes = {
+    inline_pack: (ctx) => {
       ctx.state.type = 'inline'
       return handlePacks(ctx)
-    }
-    if (payload === 'pack' || payload === 'packs') return handlePacks(ctx)
-    if (payload && /^s_(.*)/.test(payload)) return handleSelectPack(ctx)
+    },
+    pack: handlePacks,
+    packs: handlePacks,
+    donate: (ctx) => ctx.scene.enter('donate'),
+    boost: (ctx) => ctx.scene.enter('donate'),
+    // Without a configured catalog the URL buttons would be rejected.
+    catalog: (ctx) => (ctx.config.catalogUrl ? handleCatalog(ctx) : handleStart(ctx))
+  }
 
-    return next()
+  bot.start((ctx) => {
+    const payload = ctx.startPayload || ''
+    if (/^s_./.test(payload)) return handleSelectPack(ctx)
+    return (startRoutes[payload] || handleStart)(ctx)
   })
 
   // Bot added to a new group → run start flow
@@ -100,8 +105,7 @@ module.exports = (bot, privateMessage, {
   bot.command('pack', handleSelectGroupPack)
   bot.use(handleGroupSettings)
 
-  privateMessage.action(/packs:(type):(.*)/, handlePacks)
-  privateMessage.action(/packs:(.*)/, handlePacks)
+  privateMessage.action(/^packs:/, handlePacks)
 
   // Support / legal
   privateMessage.command('paysupport', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.paysupport')))
@@ -143,8 +147,7 @@ module.exports = (bot, privateMessage, {
   privateMessage.command('delete', (ctx) => ctx.scene.enter('deleteSticker'))
   privateMessage.action(/^delete_sticker$/, (ctx) => ctx.scene.enter('deleteSticker'))
   privateMessage.command('catalog', handleCatalog)
-  privateMessage.action(/^search_catalog$/, handleSearchCatalog)
-  privateMessage.action(/^catalog$/, handleCatalog)
+  privateMessage.action(/^(catalog|search_catalog)$/, handleCatalog)
   privateMessage.command('public', handleSelectPack)
   privateMessage.command('emoji', handleEmoji)
   privateMessage.command('copy', (ctx) => ctx.replyWithHTML(ctx.i18n.t('cmd.copy')))
@@ -214,10 +217,10 @@ module.exports = (bot, privateMessage, {
   })
 
   // Media-edit scenes
-  privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClearSelect'))
+  privateMessage.command('clear', (ctx) => ctx.scene.enter('photoClear'))
   privateMessage.command('round', (ctx) => ctx.scene.enter('videoRound'))
   privateMessage.command('mosaic', (ctx) => ctx.scene.enter('mosaic'))
-  privateMessage.action(/^clear$/, (ctx) => ctx.scene.enter('photoClearSelect'))
+  privateMessage.action(/^clear$/, (ctx) => ctx.scene.enter('photoClear'))
   privateMessage.action(/^catalog:publish:(.*)$/, (ctx) => ctx.scene.enter('catalogPublish'))
   privateMessage.action(/^catalog:unpublish:(.*)$/, (ctx) => ctx.scene.enter('catalogUnpublish'))
 
@@ -240,10 +243,6 @@ module.exports = (bot, privateMessage, {
 
   // Inline queries (packs or GIFs)
   bot.use(handleInlineQuery)
-
-  // Final /start catch-all — if none of the startPayload branches matched
-  // AND handleDonate's composer didn't handle it, run the menu.
-  bot.start(handleStart)
 
   // Pack management callbacks
   privateMessage.action(/(set_pack):(.*)/, handlePacks)
@@ -269,7 +268,7 @@ module.exports = (bot, privateMessage, {
   // text and must be registered BEFORE bot.use(privateMessage) so the
   // composer is fully populated at mount time.
   privateMessage.on('text', handleStickerUpdate)
-  privateMessage.on('message', handleStart)
+  privateMessage.on('message', handleStart.hint)
 
   // Mount privateMessage only after every handler is attached
   bot.use(privateMessage)

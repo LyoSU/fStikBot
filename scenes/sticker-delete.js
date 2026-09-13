@@ -1,50 +1,41 @@
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
+const { deleteSticker } = require('../handlers/sticker-delete')
 
-const deleteSticker = new Scene('deleteSticker')
+const deleteStickerScene = new Scene('deleteSticker')
 
-deleteSticker.enter(async (ctx) => {
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.delete.enter'), {
-    reply_markup: Markup.keyboard([
-      [
-        { text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }
-      ]
-    ]).resize()
-  })
-})
+deleteStickerScene.enter((ctx) => ctx.replyWithHTML(ctx.i18n.t('scenes.delete.enter'), {
+  reply_markup: Markup.keyboard([
+    [{ text: ctx.i18n.t('scenes.btn.cancel'), style: 'danger' }]
+  ]).resize()
+}))
 
-deleteSticker.on(['sticker', 'message'], async (ctx, next) => {
-  let sticker
+// Every sticker sent here is deleted right away; the reply carries "Restore"
+// as the undo. It used to ask "Delete?" with a button for each one.
+const resolveSticker = async (ctx) => {
+  if (ctx.message.sticker) return ctx.message.sticker
 
-  if (ctx.message && ctx.message.entities && ctx.message.entities[0] && ctx.message.entities[0].type === 'custom_emoji') {
-    const customEmoji = ctx.message.entities.find((e) => e.type === 'custom_emoji')
+  const entity = ctx.message.entities?.find((e) => e.type === 'custom_emoji')
+  if (!entity) return null
 
-    if (!customEmoji) return next()
+  const stickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
+    custom_emoji_ids: [entity.custom_emoji_id]
+  }).catch(() => null)
+  return stickers?.[0] || null
+}
 
-    const emojiStickers = await ctx.telegram.callApi('getCustomEmojiStickers', {
-      custom_emoji_ids: [customEmoji.custom_emoji_id]
-    })
-
-    if (!emojiStickers) return next()
-
-    sticker = emojiStickers[0]
-  } else if (ctx.message && ctx.message.sticker) {
-    sticker = ctx.message.sticker
-  } else {
-    return next()
-  }
-
+deleteStickerScene.on(['sticker', 'text'], async (ctx, next) => {
+  const sticker = await resolveSticker(ctx)
   if (!sticker) return next()
 
-  await ctx.replyWithHTML(ctx.i18n.t('scenes.delete.confirm'), {
+  const result = await deleteSticker(ctx, sticker.file_unique_id, sticker)
+  const reply = {
     reply_to_message_id: ctx.message.message_id,
-    allow_sending_without_reply: true,
-    reply_markup: Markup.inlineKeyboard([
-      [
-        { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${sticker.file_unique_id}`), style: 'danger' }
-      ]
-    ])
-  })
+    allow_sending_without_reply: true
+  }
+
+  if (result.error) return ctx.replyWithHTML(result.error, reply)
+  return ctx.replyWithHTML(result.ok.text, { ...result.ok.extra, ...reply })
 })
 
-module.exports = deleteSticker
+module.exports = deleteStickerScene

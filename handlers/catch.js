@@ -38,6 +38,8 @@ function pickBlameFrame (errorInfo) {
   return null
 }
 
+const errorRef = (ctx) => (ctx.update?.update_id || Date.now()).toString(36)
+
 async function errorLog (error, ctx) {
   const errorInfo = errorStackParser.parse(error)
 
@@ -54,7 +56,11 @@ async function errorLog (error, ctx) {
     ).catch(() => null)
   }
 
-  let errorText = `<b>error for ${ctx.updateType}:</b>`
+  // A short reference shown to the user and tagged in the log post, so a
+  // "something went wrong" report can be matched to its stack trace.
+  const ref = errorRef(ctx)
+
+  let errorText = `<b>error for ${ctx.updateType}:</b> #err_${ref}`
   if (ctx.match) errorText += `\n<code>${escapeHTML(ctx.match[0])}</code>`
   if (ctx.from && ctx.from.id) errorText += `\n\nuser: <a href="tg://user?id=${ctx.from.id}">${escapeHTML(ctx.from.first_name)}</a> #user_${ctx.from.id}`
   if (ctx?.session?.chainActions && ctx?.session.chainActions.length > 0) errorText += '\n\n🔗 ' + ctx?.session.chainActions.map(v => `<code>${v}</code>`).join(' ➜ ')
@@ -82,7 +88,7 @@ async function errorLog (error, ctx) {
   })
 
   if (ctx?.chat?.type === 'private') {
-    await ctx.replyWithHTML(ctx.i18n.t('error.unknown')).catch(() => {})
+    await ctx.replyWithHTML(`${ctx.i18n.t('error.unknown')}\n<code>#err_${ref}</code>`).catch(() => {})
   }
 }
 

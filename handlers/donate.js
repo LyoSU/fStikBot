@@ -80,13 +80,9 @@ composer.on('successful_payment', async (ctx) => {
   }))
 })
 
-composer.hears(['/donate', '/boost', '/start boost'], Composer.privateChat(donateMenu))
+// "/start donate" and "/start boost" are routed in bot/commands.js.
+composer.hears(['/donate', '/boost'], Composer.privateChat(donateMenu))
 
 composer.action('donate:topup', donateMenu)
-
-composer.start((ctx, next) => {
-  if (ctx.startPayload === 'donate') return donateMenu(ctx)
-  return next()
-})
 
 module.exports = composer
