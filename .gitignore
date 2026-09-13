@@ -70,3 +70,15 @@ session
 config.json
 .superpowers/
 scripts/.prune-stickers-*-state.json
+docs/superpowers/
+
+# AI assistants and local tooling — never part of the project
+.claude/
+.codegraph/
+.cursor/
+.mcp.json
+CLAUDE.md
+AGENTS.md
+.playwright-mcp/
+.wrangler/
+.vscode/
