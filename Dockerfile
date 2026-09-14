@@ -8,10 +8,11 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
 FROM base
-RUN addgroup -S bot && adduser -S bot -G bot
+RUN addgroup -S bot && adduser -S bot -G bot && mkdir /app && chown bot:bot /app
 WORKDIR /app
 # Owned by the runtime user: the bot writes .mtproto-session and
 # .locale-sync-mtime next to the code, and a root-owned /app made both fail.
+# COPY --chown only covers the copied files, not /app itself — hence the chown above.
 COPY --from=builder --chown=bot:bot /install/node_modules ./node_modules
 COPY --chown=bot:bot . .
 # sharp and fs share libuv's pool (default 4); same value as ecosystem.config.js.

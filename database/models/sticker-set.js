@@ -168,6 +168,14 @@ stickerSetsSchema.index({ owner: 1, create: 1, hide: 1, inline: 1, packType: 1, 
 stickerSetsSchema.index({ owner: 1, inline: 1, updatedAt: -1 })
 // Note: { owner: 1, hide: 1 } removed - covered by the main compound index above
 // Packs shared with a user (/packs "Shared" tab).
-stickerSetsSchema.index({ 'editors.user': 1 })
+// Covers: find({ 'editors.user', create, deleted }).sort({ updatedAt: -1 }) and exists({ 'editors.user' }).
+// Partial: only packs that have editors are indexed — a tiny fraction of the
+// collection, so the index stays small and plain pack writes don't pay for it.
+// An equality match on 'editors.user' satisfies the $exists filter, so the
+// planner picks it up without extra predicates in the queries.
+stickerSetsSchema.index(
+  { 'editors.user': 1, updatedAt: -1 },
+  { partialFilterExpression: { 'editors.user': { $exists: true } } }
+)
 
 module.exports = stickerSetsSchema

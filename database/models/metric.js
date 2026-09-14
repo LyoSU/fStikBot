@@ -11,6 +11,9 @@ const metricSchema = mongoose.Schema({
   // TTL anchor — set on the day's first write; old days drop after 180 days.
   expireAt: Date
 }, {
+  // Not the default `metrics`: that collection belongs to fstikbot-api (the
+  // per-event react/view log, tens of millions of docs) and shares this database.
+  collection: 'product_metrics',
   versionKey: false,
   minimize: false
 })

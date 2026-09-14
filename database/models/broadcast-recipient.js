@@ -15,7 +15,9 @@ const mongoose = require('mongoose')
 // safety net for the rare case where explicit cleanup fails (e.g. Mongo
 // blip) — documents older than 30 days disappear on their own.
 const broadcastRecipientSchema = new mongoose.Schema({
-  broadcastId: { type: mongoose.Schema.Types.ObjectId, ref: 'Broadcast', required: true, index: true },
+  // No single-field index: { broadcastId, _id } and { broadcastId, telegram_id }
+  // below both start with broadcastId and serve deleteMany({ broadcastId }).
+  broadcastId: { type: mongoose.Schema.Types.ObjectId, ref: 'Broadcast', required: true },
   telegram_id: { type: Number, required: true },
   // Handled out of checkpoint order: a batch is sent concurrently, so when it
   // pauses at recipient N the ones after N may already have their message.
