@@ -14,6 +14,7 @@ const packLink = require('../utils/pack-link')
 const { parseCaption, extractMedia } = require('../utils/sticker-media')
 const log = require('../utils/logger').scope('sticker')
 const metrics = require('../utils/metrics')
+const { failureReason } = require('../utils/failure-reason')
 const coedit = require('../utils/coedit')
 const handleError = require('./catch')
 
@@ -119,6 +120,11 @@ const syncPackTitle = async (ctx, stickerSet) => {
   return stickerSetInfo
 }
 
+const trackFailed = (result, count = 1) => {
+  metrics.track('sticker_failed', count)
+  metrics.track(`sticker_failed_${failureReason(result)}`, count)
+}
+
 const findExisting = (ctx, stickerSet, file) => ctx.db.Sticker.findOne({
   stickerSet,
   deleted: false,
@@ -138,10 +144,12 @@ const addOne = async (ctx, stickerSet, file, { stickerSetInfo, replyTo }) => {
     return { error: { type: 'duplicate', sticker: existing } }
   }
 
-  const result = await addSticker(ctx, file, stickerSet, true, { stickerSetInfo, replyToMessageId: replyTo })
+  // `track` makes the convert worker count the video's outcome, so
+  // video_queued has a matching video_added / video_failed.
+  const result = await addSticker(ctx, file, stickerSet, true, { stickerSetInfo, replyToMessageId: replyTo, track: true })
   if (result.ok) metrics.track('sticker_added')
   else if (result.wait) metrics.track('video_queued')
-  else metrics.track('sticker_failed')
+  else trackFailed(result)
 
   if (result.wait && result.job && !stickerSet.boost) {
     await waitForJob(result.job, VIDEO_WAIT_MS)
@@ -220,7 +228,11 @@ const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
       if (!failReason) failReason = addStickerText(result, ctx.i18n.locale()).messageText
       // Nothing after this fits either.
       if (isPackFull(result)) {
-        counts.failed += total - index - 1
+        // Never attempted, but counted in sticker_received — count them here
+        // too, or they vanish from the funnel.
+        const skipped = total - index - 1
+        if (skipped) trackFailed(result, skipped)
+        counts.failed += skipped
         break
       }
     }

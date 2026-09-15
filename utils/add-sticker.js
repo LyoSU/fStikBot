@@ -19,6 +19,8 @@ const { getStickerCooldown, buildCooldownError } = require('./sticker-cooldown')
 const { matchTelegramErrorReason } = require('./telegram-error')
 const log = require('./logger').scope('add-sticker')
 const coedit = require('./coedit')
+const metrics = require('./metrics')
+const { failureReason } = require('./failure-reason')
 
 // Telegram pins the Lottie canvas per pack type. A TGS taken from a pack of
 // the other type has to be retargeted or Telegram rejects it.
@@ -48,6 +50,15 @@ const internalError = (reason) => {
 // load with no .catch — a Telegram hiccup at boot became an unhandled rejection.
 const BOT_ID = parseInt(String(process.env.BOT_TOKEN || '').split(':')[0], 10) || null
 const isForeignJob = (input) => !!(input.botId && BOT_ID && input.botId !== BOT_ID)
+
+// The outcome of a conversion the sticker handler counted as video_queued.
+// Copies and restores also convert but are not in that funnel (no `tracked`).
+const trackVideo = (input, result) => {
+  if (!input.tracked) return
+  if (result?.ok) return metrics.track('video_added')
+  metrics.track('video_failed')
+  metrics.track(`video_failed_${failureReason(result)}`)
+}
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -143,6 +154,7 @@ async function handleConvertCompleted (jobId, result) {
   // Handle case when conversion failed (no metadata/content)
   if (!metadata || !content) {
     log.warn(`convert job ${jobId} finished without output`)
+    trackVideo(input, { error: { i18nKey: 'sticker.add.error.convert' } })
     if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
     await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
@@ -159,6 +171,7 @@ async function handleConvertCompleted (jobId, result) {
   const stickerSet = await db.StickerSet.findById(input.stickerSet._id)
 
   if (!stickerSet) {
+    trackVideo(input, { error: { i18nKey: 'pack_deleted' } })
     await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
     return
   }
@@ -176,6 +189,7 @@ async function handleConvertCompleted (jobId, result) {
     if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
   }
 
+  trackVideo(input, uploadResult)
   if (uploadResult?.ok && input.actor) coedit.track(db, stickerSet, input.actor, 'add', { count: 1 })
 
   if (input.showResult) {
@@ -220,6 +234,8 @@ async function handleConvertFailed (jobId, errorData) {
   if (isForeignJob(input)) return
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
+
+  trackVideo(input, { error: { i18nKey: errorData === 'timeout' ? 'timeout' : 'convert' } })
 
   if (errorData === 'timeout') {
     await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), replyExtra(input)).catch(() => {})
@@ -868,6 +884,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
           actor: { id: ctx.from.id, first_name: ctx.from.first_name, last_name: ctx.from.last_name, username: ctx.from.username },
           locale: ctx.i18n.locale(),
           showResult,
+          tracked: !!options.track,
           convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
           stickerExtra,
           stickerSet,

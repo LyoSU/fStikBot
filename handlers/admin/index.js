@@ -130,11 +130,15 @@ const displayAdminPanel = async (ctx) => {
   await renderMessage(ctx, text, Markup.inlineKeyboard(buttons))
 }
 
-// Funnel pairs shown as a conversion rate: [label, from, to].
+// Conversion rates: [label, from events, to events] — each side is a sum.
+// Sticker and video rates count finished attempts only: duplicates are not
+// failures, and a queued video has no outcome until the worker reports it.
 const METRIC_FUNNELS = [
-  ['/new → pack created', 'new_pack_started', 'pack_created'],
-  ['copy → pack created', 'copy_started', 'copy_created'],
-  ['files → stickers added', 'sticker_received', 'sticker_added']
+  ['/new → pack created', ['new_pack_started'], ['pack_created']],
+  ['copy → pack created', ['copy_started'], ['copy_created']],
+  ['stickers added (non-video)', ['sticker_added', 'sticker_failed'], ['sticker_added']],
+  ['videos added', ['video_added', 'video_failed'], ['video_added']],
+  ['files → added, all', ['sticker_received'], ['sticker_added', 'video_added']]
 ]
 
 const displayMetrics = async (ctx) => {
@@ -145,9 +149,11 @@ const displayMetrics = async (ctx) => {
   }
   const today = days[0]?.day === new Date().toISOString().slice(0, 10) ? days[0].counts : {}
 
+  const sum = (names) => names.reduce((acc, name) => acc + (total[name] || 0), 0)
   const funnels = METRIC_FUNNELS
-    .filter(([, from]) => total[from])
-    .map(([label, from, to]) => `${label}: <b>${Math.round(((total[to] || 0) / total[from]) * 100)}%</b> (${total[to] || 0}/${total[from]})`)
+    .map(([label, from, to]) => [label, sum(from), sum(to)])
+    .filter(([, from]) => from)
+    .map(([label, from, to]) => `${label}: <b>${Math.round((to / from) * 100)}%</b> (${to}/${from})`)
 
   const rows = Object.keys(total).sort().map((name) => `<code>${name}</code> — ${total[name]} <i>(today ${today[name] || 0})</i>`)
 
