@@ -20,7 +20,8 @@ setInterval(() => {
 
   // Prevent memory accumulation: clean up old entries if too many
   if (keys.length > 60) {
-    const keysToDelete = keys.slice(0, keys.length - 60)
+    // splice (not slice) so `keys` below no longer lists the deleted entries
+    const keysToDelete = keys.splice(0, keys.length - 60)
     keysToDelete.forEach(key => delete stats.times[key])
   }
 
