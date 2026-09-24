@@ -15,8 +15,8 @@ services:
   redis:
     image: redis:7-alpine
     restart: always
-    ports:
-      - "6379:6379"
+    # No published port: the bot reaches it on the compose network, and a
+    # published port bypasses ufw (Docker writes its own iptables rules).
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
