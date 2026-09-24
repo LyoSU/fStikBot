@@ -9,6 +9,7 @@ const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const { runQueueJob } = require('./queue-job')
 const downloadFileByUrl = require('./download-file-by-url')
+const { MAX_INPUT_PIXELS } = require('./image-limits')
 const { removePlaceholderIfPending } = require('./placeholder')
 const escapeHTML = require('./html-escape')
 const { rescaleTgs } = require('./lottie-rescale')
@@ -934,7 +935,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
   const imageSharp = sharp(fileData, {
     failOnError: false,
-    limitInputPixels: 268402689,
+    limitInputPixels: MAX_INPUT_PIXELS,
     pages: 1
   })
 

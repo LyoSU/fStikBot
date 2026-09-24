@@ -1,9 +1,10 @@
 const sharp = require('sharp')
+const { MAX_INPUT_PIXELS } = require('./image-limits')
 
 const generatePreview = async (imageBuffer, rows, cols) => {
   const image = sharp(imageBuffer, {
     failOnError: false,
-    limitInputPixels: 268402689
+    limitInputPixels: MAX_INPUT_PIXELS
   })
 
   const metadata = await image.metadata()
