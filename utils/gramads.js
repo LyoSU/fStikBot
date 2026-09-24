@@ -1,7 +1,6 @@
 // GramAds ad post for ru-locale users of non-boosted packs. Optional: no
 // token → no request. Fire-and-forget at every call site, so failures only
 // log — but the request itself must not hang a libuv slot forever.
-const got = require('got')
 const log = require('./logger').scope('gramads')
 
 module.exports = async (chatId) => {
@@ -9,16 +8,18 @@ module.exports = async (chatId) => {
   if (!token) return
 
   try {
-    const response = await got.post('https://api.gramads.net/ad/SendPost', {
+    const response = await fetch('https://api.gramads.net/ad/SendPost', {
+      method: 'POST',
       headers: {
         Authorization: `bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      json: { SendToChatId: chatId },
-      timeout: { request: 5000 },
-      retry: 0
+      body: JSON.stringify({ SendToChatId: chatId }),
+      signal: AbortSignal.timeout(5000)
     })
-    return response.body
+    // got threw on non-2xx; keep that, so a rejected post still logs below.
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    return await response.text()
   } catch (err) {
     log.warn(`SendPost failed for ${chatId}: ${err.message}`)
   }

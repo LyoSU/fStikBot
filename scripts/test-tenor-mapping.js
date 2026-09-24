@@ -6,7 +6,7 @@
 // and the request is rejected with 403 unless client_key matches the key.
 //
 // Everything here runs against a hardcoded v2-shaped fixture and a stubbed
-// got.get — no network.
+// fetch — no network.
 
 const assert = require('assert')
 
@@ -60,26 +60,24 @@ const V2_FIXTURE = {
   next: '20'
 }
 
-// Stub got.get before utils/tenor.js pulls it in, so search()/trending() can be
-// exercised without touching the network.
-const got = require('got')
+// Stub fetch, so search()/trending() can be exercised without touching the
+// network. nextResponse is the parsed body; nextError is a status code (the
+// response comes back !ok) or an Error (the request itself fails).
 const calls = []
-let nextResponse = { body: JSON.stringify({ results: [], next: '20' }) }
+let nextResponse = { results: [], next: '20' }
 let nextError = null
 
-got.get = async (url) => {
+globalThis.fetch = async (url) => {
   calls.push(url)
-  if (nextError) throw nextError
-  return nextResponse
+  if (nextError instanceof Error) throw nextError
+  if (typeof nextError === 'number') return { ok: false, status: nextError, json: async () => ({}) }
+  const body = nextResponse
+  return { ok: true, status: 200, json: async () => body }
 }
 
 const tenor = require('../utils/tenor')
 
-function httpError (statusCode) {
-  const err = new Error(`Response code ${statusCode}`)
-  err.response = { statusCode }
-  return err
-}
+const httpError = (statusCode) => statusCode
 
 async function main () {
   process.env.TENOR_KEY = 'TEST_KEY'
@@ -176,14 +174,27 @@ async function main () {
     }
   })
 
+  await test('a network failure rejects the call instead of escaping it', async () => {
+    const failure = new Error('connect ETIMEDOUT')
+    nextError = failure
+    try {
+      await tenor.search('cats', 10, 0)
+      throw new Error('expected a throw')
+    } catch (err) {
+      assert.strictEqual(err, failure)
+    } finally {
+      nextError = null
+    }
+  })
+
   console.log('\nv2 fixture mapping\n')
 
   await test('search returns the v2 payload verbatim ({ results, next })', async () => {
-    nextResponse = { body: JSON.stringify(V2_FIXTURE) }
+    nextResponse = V2_FIXTURE
     const result = await tenor.search('cats', 50, 0)
     assert.strictEqual(result.next, '20')
     assert.strictEqual(result.results.length, 3)
-    nextResponse = { body: JSON.stringify({ results: [], next: '20' }) }
+    nextResponse = { results: [], next: '20' }
   })
 
   await test('a full item maps to thumb / mp4 / transparent-gif caption + dims', () => {

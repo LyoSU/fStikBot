@@ -1,5 +1,3 @@
-const got = require('got')
-
 // Tenor API v2. v1 (g.tenor.com/v1) was shut down and answers 403
 // "Tenor API is discontinued" — every GIF inline query died on it.
 //
@@ -24,14 +22,11 @@ const clientKey = () => process.env.TENOR_CLIENT_KEY || 'gboard'
 // caption URL back), and tinygif_transparent is the thumbnail.
 const MEDIA_FILTER = 'gif,mp4,gif_transparent,tinygif_transparent'
 
-const TIMEOUT = {
-  lookup: 1000,
-  connect: 1000,
-  secureConnect: 1000,
-  socket: 10000,
-  send: 10000,
-  response: 8000
-}
+// One budget for the whole request. got's per-phase timeouts (1 s for DNS,
+// connect and TLS) raced its own retries on a CPU-starved host: a socket error
+// arriving after the promise had settled escaped as an uncaughtException and
+// restarted the bot (four times in three days, 2026-09).
+const TIMEOUT_MS = 8000
 
 // Raised when Tenor cannot serve us at all: no key configured, or the key /
 // client_key combination was rejected. Callers treat every instance the same —
@@ -57,22 +52,23 @@ const request = async (path, params) => {
     ...params
   })
 
-  let response
-  try {
-    response = await got.get(`${API_BASE}/${path}?${query.toString()}`, {
-      timeout: TIMEOUT
-    })
-  } catch (err) {
-    const statusCode = err?.response?.statusCode
-    if (REJECTED_STATUSES.has(statusCode)) {
+  const response = await fetch(`${API_BASE}/${path}?${query.toString()}`, {
+    signal: AbortSignal.timeout(TIMEOUT_MS)
+  })
+
+  if (!response.ok) {
+    if (REJECTED_STATUSES.has(response.status)) {
       // Rotated/expired key, or a client_key Tenor doesn't accept. Same class of
       // problem as "no key at all" — nothing the request can do differently.
-      throw new TenorDisabledError(`Tenor rejected the request (HTTP ${statusCode})`, statusCode)
+      throw new TenorDisabledError(`Tenor rejected the request (HTTP ${response.status})`, response.status)
     }
+    const err = new Error(`Tenor answered HTTP ${response.status}`)
+    // Same shape got used, so handlers/inline-query.js logs the status as before.
+    err.response = { statusCode: response.status }
     throw err
   }
 
-  return JSON.parse(response.body)
+  return response.json()
 }
 
 const search = async (query, limit, pos) => {
