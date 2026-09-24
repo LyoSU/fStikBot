@@ -248,8 +248,8 @@ module.exports = (bot, privateMessage, {
   privateMessage.action(/(set_pack):(.*)/, handlePacks)
   privateMessage.action(/(hide_pack):(.*)/, handleHidePack)
   privateMessage.action(/(rename_pack):(.*)/, (ctx) => ctx.scene.enter('packRename'))
-  privateMessage.action(/(delete_sticker):(.*)/, limitPublicPack, handleDeleteSticker)
-  privateMessage.action(/(restore_sticker):(.*)/, limitPublicPack, handleRestoreSticker)
+  privateMessage.action(/(delete_sticker):(.*)/, handleDeleteSticker)
+  privateMessage.action(/(restore_sticker):(.*)/, handleRestoreSticker)
 
   // /ss — quote-reply style sticker creation (works in groups too)
   bot.command('ss', handleSticker)

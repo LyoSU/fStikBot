@@ -4,6 +4,7 @@ const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
 const coedit = require('../utils/coedit')
+const publicPackLimit = require('../utils/public-pack-limit')
 
 const isOwnerOf = (ctx, stickerSet) => String(stickerSet.owner) === String(ctx.session.userInfo.id)
 
@@ -53,12 +54,17 @@ async function deleteSticker (ctx, fileUniqueId, telegramSticker) {
 
   const { sticker, stickerSet, fileId } = target
 
-  // The shared public demo pack keeps its first sticker.
-  if (ctx.session.userInfo?.stickerSet?.passcode === 'public' && sticker) {
-    const set = await ctx.tg.getStickerSet(stickerSet.name).catch(() => null)
-    if (set?.stickers?.[0]?.file_unique_id === sticker.fileUniqueId) {
-      return { error: ctx.i18n.t('callback.sticker.error.not_found') }
+  // The shared public demo pack keeps its first sticker and takes one write a
+  // minute. Both follow the target pack: anyone may delete from it, with any
+  // pack of their own selected.
+  if (publicPackLimit.isPublic(stickerSet)) {
+    if (sticker) {
+      const set = await ctx.tg.getStickerSet(stickerSet.name).catch(() => null)
+      if (set?.stickers?.[0]?.file_unique_id === sticker.fileUniqueId) {
+        return { error: ctx.i18n.t('callback.sticker.error.not_found') }
+      }
     }
+    if (!publicPackLimit.take(ctx.from.id)) return { error: ctx.i18n.t('ratelimit') }
   }
 
   if (!stickerSet.inline) {

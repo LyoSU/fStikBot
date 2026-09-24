@@ -5,11 +5,12 @@ const {
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
 const coedit = require('../utils/coedit')
+const publicPackLimit = require('../utils/public-pack-limit')
 
 module.exports = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
-  }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner placeholderFileUniqueId')
+  }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner placeholderFileUniqueId passcode')
 
   if (!sticker || !sticker.stickerSet) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
@@ -18,6 +19,10 @@ module.exports = async (ctx) => {
   // The owner, or a co-editor allowed to delete (restore undoes a delete).
   if (!coedit.can(await coedit.getAccess(ctx, sticker.stickerSet), 'delete')) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
+  }
+
+  if (publicPackLimit.isPublic(sticker.stickerSet) && !publicPackLimit.take(ctx.from.id)) {
+    return ctx.answerCbQuery(ctx.i18n.t('ratelimit'), true)
   }
 
   let newFileUniqueId

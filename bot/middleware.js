@@ -1,10 +1,10 @@
 // All `bot.use(...)` middleware + the privateMessage composer construction.
 // Order matters — preserves the exact chain from the original bot.js.
 const Composer = require('telegraf/composer')
-const rateLimit = require('telegraf-ratelimit')
 
 const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
 const { touchLastSeen } = require('../utils/last-seen')
+const publicPackLimit = require('../utils/public-pack-limit')
 const { wrapAnswerCbQuery } = require('../utils/callback-text')
 const log = require('../utils/logger').scope('middleware')
 
@@ -38,16 +38,14 @@ module.exports = (bot, {
   // in the Telegram.prototype patch, utils/retry-api.js).
   bot.use(retryMiddleware())
 
-  // Rate-limit writes to public packs (1 sticker per minute) to prevent
-  // vandalism on shared "public" sets.
-  const limitPublicPack = Composer.optional(
-    (ctx) => ctx?.session?.userInfo?.stickerSet?.passcode === 'public',
-    rateLimit({
-      window: 1000 * 60,
-      limit: 1,
-      onLimitExceeded: (ctx) => ctx.reply(ctx.i18n.t('ratelimit'))
-    })
-  )
+  // Adding goes into the selected pack, so with the public pack selected every
+  // add is a write to it. Deletes and restores check the pack they act on
+  // (handlers/sticker-delete.js, sticker-restore.js); all share one budget.
+  const limitPublicPack = (ctx, next) => {
+    if (!publicPackLimit.isPublic(ctx?.session?.userInfo?.stickerSet)) return next()
+    if (!ctx.from || publicPackLimit.take(ctx.from.id)) return next()
+    return ctx.reply(ctx.i18n.t('ratelimit'))
+  }
 
   // Response-time stats
   bot.use(stats)
