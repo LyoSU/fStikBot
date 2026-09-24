@@ -9,15 +9,7 @@ const mongoose = require('mongoose')
 const { db } = require('../database')
 const { escapeHTML, escapeRegex, telegramApi, deriveStickerFlags } = require('../utils')
 const telegram = require('../utils/telegram')
-
-function stickerSetIdToOwnerId (u64) {
-  const u32 = u64 >> 32n
-
-  if ((u64 >> 24n & 0xffn) === 0xffn) {
-    return parseInt((u64 >> 32n) + 0x100000000n)
-  }
-  return parseInt(u32)
-}
+const decodeStickerSetId = require('../utils/decode-sticker-set-id')
 
 const { match } = I18n
 const i18n = new I18n({
@@ -151,7 +143,7 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
   //   }
   // })
 
-  const packOwner = stickerSetIdToOwnerId(getStickerSetInfo.set.id.value)
+  const packOwner = decodeStickerSetId(getStickerSetInfo.set.id.value).ownerId
 
   if (
     ctx.session.userInfo.moderator !== true &&
