@@ -24,7 +24,7 @@ module.exports = async (ctx, next) => {
     })
   }
 
-  if (getStickerSet.name.split('_').pop() === ctx.options.username) {
+  if (getStickerSet.name.endsWith(`_by_${ctx.options.username}`)) {
     if (findStickerSet) {
       findStickerSet.title = getStickerSet.title
       if (findStickerSet.create === true) {

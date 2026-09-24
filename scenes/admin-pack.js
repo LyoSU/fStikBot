@@ -79,7 +79,7 @@ adminPackFind.on(['sticker', 'text'], async (ctx) => {
     return ctx.replyWithHTML(`❌ Pack/emoji set <code>${escapeHTML(packName)}</code> not found. Check the name and try again.`)
   }
 
-  if (packName.split('_').pop() !== ctx.options.username) {
+  if (!packName.endsWith(`_by_${ctx.options.username}`)) {
     return ctx.replyWithHTML('⚠️ This pack/set is not managed by this bot. You can only manage packs/sets created with this bot.')
   }
 

@@ -1,5 +1,6 @@
 module.exports = (user, url = false) => {
-  let name = user.first_name
+  // Deleted accounts can come without first_name; it read "undefined".
+  let name = user.first_name || (user.username ? `@${user.username}` : String(user.id || ''))
 
   if (user.last_name) name += ` ${user.last_name}`
   name = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')

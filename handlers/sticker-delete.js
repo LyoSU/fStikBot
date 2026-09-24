@@ -35,7 +35,7 @@ const resolveTarget = async (ctx, fileUniqueId, telegramSticker) => {
   }
 
   const setName = telegramSticker?.set_name
-  if (!setName || setName.split('_').pop() !== ctx.options.username) return null
+  if (!setName || !setName.endsWith(`_by_${ctx.options.username}`)) return null
 
   const stickerSet = await ctx.db.StickerSet.findOne({ name: setName, owner: ctx.session.userInfo.id })
   return stickerSet ? { sticker: null, stickerSet, fileId: telegramSticker.file_id } : null
