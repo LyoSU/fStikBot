@@ -50,7 +50,7 @@ async function sendStickerAsDocument (ctx, fileId, fileUniqueId, extra = {}) {
   // preview) and legacy file_paths without an extension.
   let buffer
   try {
-    buffer = await got(fileLink).buffer()
+    buffer = await got(fileLink, { timeout: 30000 }).buffer()
   } catch (err) {
     await ctx.replyWithHTML(ctx.i18n.t('error.download'), extra).catch(() => {})
     return false
