@@ -64,15 +64,15 @@ async function errorLog (error, ctx) {
   let errorText = `<b>error for ${ctx.updateType}:</b> #err_${ref}`
   if (ctx.match) errorText += `\n<code>${escapeHTML(ctx.match[0])}</code>`
   if (ctx.from && ctx.from.id) errorText += `\n\nuser: <a href="tg://user?id=${ctx.from.id}">${escapeHTML(ctx.from.first_name)}</a> #user_${ctx.from.id}`
-  if (ctx?.session?.chainActions && ctx?.session.chainActions.length > 0) errorText += '\n\n🔗 ' + ctx?.session.chainActions.map(v => `<code>${v}</code>`).join(' ➜ ')
+  if (ctx?.session?.chainActions && ctx?.session.chainActions.length > 0) errorText += '\n\n🔗 ' + ctx?.session.chainActions.map(v => `<code>${escapeHTML(v)}</code>`).join(' ➜ ')
 
   if (gitBlame && !gitBlame.stderr) {
     const parsedBlame = gitBlame.stdout.match(/^(?<SHA>[0-9a-f]+)\s+\((?<USER>.+)(?<DATE>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4}\s+)(?<line>\d+)\) ?(?<code>.*)$/m)
 
     if (parsedBlame?.groups) {
-      errorText += `\n\n<u>${parsedBlame.groups.USER.trim()}</u>`
+      errorText += `\n\n<u>${escapeHTML(parsedBlame.groups.USER.trim())}</u>`
       errorText += `\n<i>commit:</i> ${parsedBlame.groups.SHA}`
-      errorText += `\n\n<code>${parsedBlame.groups.code}</code>`
+      errorText += `\n\n<code>${escapeHTML(parsedBlame.groups.code)}</code>`
     }
   }
 

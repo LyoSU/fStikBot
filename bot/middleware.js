@@ -60,9 +60,16 @@ module.exports = (bot, {
     if (ctx.session && !ctx.session.chainActions) ctx.session.chainActions = []
     let action
 
-    if (ctx.message && ctx.message.text) action = ctx.message.text
-    else if (ctx.callbackQuery) action = ctx.callbackQuery.data
-    else if (ctx.updateType) action = `{${ctx.updateType}} `
+    // Only commands are kept verbatim: this trail goes to the log channel,
+    // and plain text is whatever the user wrote to the bot.
+    if (ctx.message && ctx.message.text) {
+      const { text } = ctx.message
+      action = text.startsWith('/') ? text.slice(0, 64) : `{text:${text.length}}`
+    } else if (ctx.callbackQuery) {
+      action = ctx.callbackQuery.data
+    } else if (ctx.updateType) {
+      action = `{${ctx.updateType}} `
+    }
 
     if (ctx.updateSubTypes) action += ` [${ctx.updateSubTypes.join(', ')}]`
 
