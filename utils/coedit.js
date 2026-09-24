@@ -69,8 +69,12 @@ async function addMember (db, pack, telegramUser, userId, role) {
 async function removeMember (db, pack, userId) {
   const result = await db.StickerSet.updateOne({ _id: idOf(pack) }, { $pull: { editors: { user: userId } } })
   // A removed member's next add re-checks access and finds nothing; this
-  // just stops the pack from staying selected in their saved profile.
-  await db.User.updateOne({ _id: userId, stickerSet: idOf(pack) }, { $set: { stickerSet: null } })
+  // just stops the pack from staying selected in their saved profile. The
+  // inline pack is read without an access check, so it is dropped too.
+  await Promise.all([
+    db.User.updateOne({ _id: userId, stickerSet: idOf(pack) }, { $set: { stickerSet: null } }),
+    db.User.updateOne({ _id: userId, inlineStickerSet: idOf(pack) }, { $set: { inlineStickerSet: null } })
+  ])
   return modified(result)
 }
 

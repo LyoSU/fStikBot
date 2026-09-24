@@ -272,6 +272,7 @@ composer.action(/^ce:leave:(\w+)$/, async (ctx) => {
 
   await coedit.removeMember(ctx.db, pack, ctx.session.userInfo._id)
   if (coedit.idOf(ctx.session.userInfo.stickerSet) === String(pack._id)) ctx.session.userInfo.stickerSet = null
+  if (coedit.idOf(ctx.session.userInfo.inlineStickerSet) === String(pack._id)) ctx.session.userInfo.inlineStickerSet = null
 
   coedit.track(ctx.db, pack, ctx.from, 'leave', { force: true })
   coedit.notify(ctx.db, ctx.telegram, pack.owner, 'coedit.left_notice', {
