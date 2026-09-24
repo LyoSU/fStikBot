@@ -188,6 +188,10 @@ Are you sure you want to proceed?
 adminPackEdit.action('admin:pack:edit:remove:confirm', async (ctx) => {
   const { editPack } = ctx.session.admin
 
+  // Answer before the per-sticker loop: a big pack outlives the callback
+  // query, and the button just spun until then.
+  await ctx.answerCbQuery('⏳ Removing…').catch(() => {})
+
   try {
     const stickerSet = await ctx.telegram.getStickerSet(editPack.name)
 
@@ -195,13 +199,13 @@ adminPackEdit.action('admin:pack:edit:remove:confirm', async (ctx) => {
       await ctx.telegram.deleteStickerFromSet(sticker.file_id).catch(() => {})
       await ctx.db.Sticker.deleteOne({ fileUniqueId: sticker.file_unique_id })
     }
+    // Otherwise the emptied pack stayed listed in the owner's /packs and the catalog.
+    await ctx.db.StickerSet.updateOne({ name: editPack.name }, { $set: { deleted: true } })
 
-    await ctx.answerCbQuery(`✅ ${editPack.is_emoji ? 'Custom emoji set' : 'Sticker pack'} has been successfully removed`, true)
     await ctx.replyWithHTML(`✅ The ${editPack.is_emoji ? 'custom emoji set' : 'sticker pack'} "${escapeHTML(editPack.title)}" has been removed.`)
     return ctx.scene.enter('adminPackFind')
   } catch (error) {
     console.error('Error removing sticker pack or custom emoji set:', error)
-    await ctx.answerCbQuery('❌ There was an error removing the pack/set', true).catch(() => {})
     await ctx.replyWithHTML('❌ An error occurred while removing the pack/set. Please try again later.')
   }
 })

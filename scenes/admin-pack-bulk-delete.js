@@ -84,6 +84,9 @@ adminPackBulkDelete.action('admin:pack:bulk_delete:confirm', async (ctx) => {
     return ctx.answerCbQuery('❌ No sticker sets to delete. Operation cancelled.', true)
   }
 
+  // Answer before the loop: it can run for minutes, far past the callback query.
+  await ctx.answerCbQuery('⏳ Deleting…').catch(() => {})
+
   let deletedCount = 0
   let errorCount = 0
 
@@ -96,8 +99,17 @@ adminPackBulkDelete.action('admin:pack:bulk_delete:confirm', async (ctx) => {
         if (ok) removed++
       }
       // Every deleteStickerFromSet failing used to still count as a success.
-      if (removed > 0 || stickerSet.stickers.length === 0) deletedCount++
-      else errorCount++
+      if (removed > 0 || stickerSet.stickers.length === 0) {
+        deletedCount++
+        // The database was left untouched: deleted packs stayed in /packs
+        // and the catalog.
+        const pack = await ctx.db.StickerSet.findOneAndUpdate({ name: setName }, { $set: { deleted: true } })
+        if (pack) {
+          await ctx.db.Sticker.updateMany({ stickerSet: pack._id }, { $set: { deleted: true, deletedAt: new Date() } })
+        }
+      } else {
+        errorCount++
+      }
     } catch (error) {
       console.error(`Error deleting sticker set ${setName}:`, error)
       errorCount++
@@ -112,7 +124,6 @@ Operation completed:
 Total packs processed: ${stickerSetNames.length}
   `
 
-  await ctx.answerCbQuery()
   await ctx.replyWithHTML(resultText)
   delete ctx.session.stickerSetsToDelete
   return ctx.scene.leave()

@@ -85,7 +85,8 @@ async function renderList (ctx, view) {
   const shared = view.packType === 'shared'
   const query = shared
     ? { 'editors.user': userInfo._id, create: true, deleted: { $ne: true } }
-    : { owner: userInfo.id, create: true, hide: view.hidden ? true : { $ne: true }, ...typeFilter(view.packType) }
+    // Deleted packs keep their row (deleted: true) and used to stay listed.
+    : { owner: userInfo.id, create: true, deleted: { $ne: true }, hide: view.hidden ? true : { $ne: true }, ...typeFilter(view.packType) }
 
   // limit+1 tells whether there is a next page without a count query.
   const stickerSets = await ctx.db.StickerSet.find(query)
@@ -142,7 +143,7 @@ async function renderList (ctx, view) {
 
     const [hasShared, hasHidden] = await Promise.all([
       ctx.db.StickerSet.exists({ 'editors.user': userInfo._id, deleted: { $ne: true } }),
-      !shared && ctx.db.StickerSet.exists({ owner: userInfo.id, create: true, hide: true, ...typeFilter(view.packType) })
+      !shared && ctx.db.StickerSet.exists({ owner: userInfo.id, create: true, deleted: { $ne: true }, hide: true, ...typeFilter(view.packType) })
     ])
     if (hasShared) {
       keyboard.push([Markup.callbackButton((shared ? '✅ ' : '') + t('cmd.packs.types.shared'), 'packs:type:shared')])
