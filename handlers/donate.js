@@ -1,6 +1,7 @@
 const Composer = require('telegraf/composer')
 const { calculateStarPrice, CREDIT_PACKAGES } = require('../scenes/donate')
 const log = require('../utils/logger').scope('donate')
+const { syncBalance } = require('../utils/session-balance')
 
 const composer = new Composer()
 
@@ -61,18 +62,25 @@ composer.on('successful_payment', async (ctx) => {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
   }
 
+  // The Stars are already taken. A failed credit is marked on the payment so
+  // it can be found (status: 'credit_failed') and credited by hand.
   const updatedUser = await ctx.db.User.findByIdAndUpdate(
     ctx.session.userInfo._id,
     { $inc: { balance: updated.amount } },
-    { new: true }
-  )
+    { new: true, projection: { balance: 1 } }
+  ).catch((error) => {
+    log.error('credit failed for payment', updated._id.toString(), error)
+    return null
+  })
 
   if (!updatedUser) {
-    log.error('user not found after payment:', ctx.session.userInfo._id)
-    return ctx.replyWithHTML(ctx.i18n.t('donate.error.user_not_found'))
+    log.error('payment paid but not credited:', updated._id.toString(), 'user:', ctx.session.userInfo._id)
+    await ctx.db.Payment.updateOne({ _id: updated._id }, { $set: { status: 'credit_failed' } })
+      .catch((error) => log.error('could not mark payment credit_failed:', updated._id.toString(), error))
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
   }
 
-  ctx.session.userInfo.balance = updatedUser.balance
+  syncBalance(ctx.session.userInfo, updatedUser.balance)
 
   return ctx.replyWithHTML(ctx.i18n.t('donate.update', {
     amount: updated.amount,

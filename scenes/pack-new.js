@@ -21,6 +21,7 @@ const { sendPackMenu } = require('../handlers/pack-menu')
 const { flushPendingStickers } = require('../handlers/sticker')
 const log = require('../utils/logger').scope('pack-new')
 const metrics = require('../utils/metrics')
+const { syncBalance } = require('../utils/session-balance')
 
 const { match } = I18n
 
@@ -376,18 +377,25 @@ const uploadPlaceholder = (ctx, packType, copy) => {
 // something.
 const chargeCopy = async (ctx) => {
   const userId = ctx.session.userInfo._id
-  const result = await ctx.db.User.updateOne({ _id: userId, balance: { $gte: 1 } }, { $inc: { balance: -1 } })
-  if (!result.modifiedCount) return null
+  const charged = await ctx.db.User.findOneAndUpdate(
+    { _id: userId, balance: { $gte: 1 } },
+    { $inc: { balance: -1 } },
+    { new: true, projection: { balance: 1 } }
+  )
+  if (!charged) return null
 
-  ctx.session.userInfo.balance -= 1
+  syncBalance(ctx.session.userInfo, charged.balance)
   let refunded = false
   return {
     refund: async () => {
       if (refunded) return
       refunded = true
-      await ctx.db.User.updateOne({ _id: userId }, { $inc: { balance: 1 } })
-        .catch((error) => log.error('failed to refund copy credit:', error))
-      ctx.session.userInfo.balance += 1
+      const refundedUser = await ctx.db.User.findOneAndUpdate(
+        { _id: userId },
+        { $inc: { balance: 1 } },
+        { new: true, projection: { balance: 1 } }
+      ).catch((error) => log.error('failed to refund copy credit:', error))
+      syncBalance(ctx.session.userInfo, refundedUser?.balance)
     }
   }
 }

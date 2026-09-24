@@ -3,6 +3,7 @@ const Markup = require('telegraf/markup')
 const rateLimit = require('telegraf-ratelimit')
 const escapeHTML = require('../utils/html-escape')
 const packLink = require('../utils/pack-link')
+const { syncBalance } = require('../utils/session-balance')
 const { editPackMenu, isOwner } = require('./pack-menu')
 
 const composer = new Composer()
@@ -44,11 +45,12 @@ composer.action(/^boost:(yes|no):(.+)$/, rateLimit({
 
   // Charge first, atomically and only when the balance covers it — the
   // session balance can be stale.
-  const charged = await ctx.db.User.updateOne(
+  const charged = await ctx.db.User.findOneAndUpdate(
     { _id: ctx.session.userInfo._id, balance: { $gte: 1 } },
-    { $inc: { balance: -1 } }
+    { $inc: { balance: -1 } },
+    { new: true, projection: { balance: 1 } }
   )
-  if (!charged.modifiedCount) {
+  if (!charged) {
     return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.not_enough_credits'), true)
   }
 
@@ -62,7 +64,7 @@ composer.action(/^boost:(yes|no):(.+)$/, rateLimit({
     return ctx.answerCbQuery(ctx.i18n.t('scenes.boost.error.already_boosted'), true)
   }
 
-  ctx.session.userInfo.balance -= 1
+  syncBalance(ctx.session.userInfo, charged.balance)
   stickerSet.boost = true
 
   await ctx.answerCbQuery()

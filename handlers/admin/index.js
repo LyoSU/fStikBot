@@ -389,29 +389,45 @@ const handleRefundPayment = async (ctx, paymentId) => {
   const refundUser = await ctx.db.User.findOne({ _id: payment.user })
   if (!refundUser) return ctx.replyWithHTML('❌ User attached to that payment was not found.')
 
+  // Claim the payment before refunding: only one refund gets past this, and
+  // the Stars go back before any database write. The status flip used to
+  // come after refundStarPayment, so a database error there left a refunded
+  // payment marked paid, with the credits still on the balance.
+  const claimed = await ctx.db.Payment.findOneAndUpdate(
+    { _id: payment._id, status: payment.status },
+    { $set: { status: 'refunding' } }
+  )
+  if (!claimed) {
+    return ctx.replyWithHTML('❌ Payment is being refunded or changed by another operation.')
+  }
+
   try {
     await ctx.telegram.callApi('refundStarPayment', {
       user_id: refundUser.telegram_id,
       telegram_payment_charge_id: trimmed
     })
-
-    // Idempotency guard: only one concurrent refund flips status.
-    const refunded = await ctx.db.Payment.findOneAndUpdate(
-      { _id: payment._id, status: { $ne: 'refunded' } },
-      { $set: { status: 'refunded' } },
-      { new: true }
-    )
-    if (!refunded) {
-      return ctx.replyWithHTML('❌ Payment was already refunded by another operation.')
-    }
-
-    await ctx.db.User.findByIdAndUpdate(refundUser._id, { $inc: { balance: -payment.amount } })
-
-    await ctx.replyWithHTML(`✅ Payment <code>${escape(trimmed)}</code> refunded successfully.`)
   } catch (error) {
+    await ctx.db.Payment.updateOne({ _id: payment._id }, { $set: { status: payment.status } })
+      .catch((err) => console.error('Could not release refund claim:', payment._id.toString(), err))
     console.error('Refund failed:', error)
-    await ctx.replyWithHTML(`❌ Refund failed: <code>${escape(error.description || error.message || 'unknown error')}</code>`)
+    return ctx.replyWithHTML(`❌ Refund failed: <code>${escape(error.description || error.message || 'unknown error')}</code>`)
   }
+
+  try {
+    await ctx.db.Payment.updateOne({ _id: payment._id }, { $set: { status: 'refunded' } })
+    // A payment whose credit failed never reached the balance.
+    if (payment.status !== 'credit_failed') {
+      await ctx.db.User.updateOne({ _id: refundUser._id }, { $inc: { balance: -payment.amount } })
+    }
+  } catch (error) {
+    console.error('Refunded but not recorded:', payment._id.toString(), error)
+    return ctx.replyWithHTML(
+      `⚠️ Stars refunded, but the database update failed: <code>${escape(error.message)}</code>. ` +
+      `Payment <code>${escape(payment._id.toString())}</code> is left as <code>refunding</code>; fix it and the balance by hand.`
+    )
+  }
+
+  await ctx.replyWithHTML(`✅ Payment <code>${escape(trimmed)}</code> refunded successfully.`)
 }
 
 const handleViewUserInfo = async (ctx, input) => {
