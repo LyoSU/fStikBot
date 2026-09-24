@@ -6,6 +6,7 @@ const I18n = require('telegraf-i18n')
 const { escapeHTML: escape } = require('../../utils')
 const {
   ADMIN_RIGHTS,
+  banRefusal,
   isMainAdmin,
   isAnyAdmin,
   hasRight,
@@ -303,13 +304,24 @@ const findUser = async (ctx, input) => {
 
 // --- Mutations --------------------------------------------------------------
 
-const handleBanUser = async (ctx, input) => {
+// mode: 'ban' | 'unban' for the commands; 'toggle' for the menu prompt, which
+// says "ban / unban". /ban used to toggle too and quietly unbanned on a repeat.
+const handleBanUser = async (ctx, input, mode = 'toggle') => {
   const user = await findUser(ctx, input)
   if (!user) return ctx.replyWithHTML('❌ User not found. Check the ID or username and try again.')
 
+  const ban = mode === 'toggle' ? !user.banned : mode === 'ban'
+  if (ban === !!user.banned) {
+    return ctx.replyWithHTML(`User <code>${escape(user.telegram_id)}</code> is already ${ban ? 'banned' : 'not banned'}.`)
+  }
+  if (ban) {
+    const refusal = banRefusal(ctx, user)
+    if (refusal) return ctx.replyWithHTML(refusal)
+  }
+
   const updated = await ctx.db.User.findByIdAndUpdate(
     user._id,
-    { $set: { banned: !user.banned } },
+    { $set: { banned: ban } },
     { new: true }
   )
 
@@ -511,12 +523,14 @@ composer.command('admincancel', (ctx) => {
 })
 
 // Direct commands
-composer.command('ban', requireRight('users'), async (ctx) => {
-  const userId = ctx.message.text.split(' ').slice(1).join(' ').trim()
-  if (!userId) {
-    return ctx.replyWithHTML('Usage: <code>/ban &lt;user_id or @username&gt;</code>')
-  }
-  await handleBanUser(ctx, userId)
+;['ban', 'unban'].forEach((mode) => {
+  composer.command(mode, requireRight('users'), async (ctx) => {
+    const userId = ctx.message.text.split(' ').slice(1).join(' ').trim()
+    if (!userId) {
+      return ctx.replyWithHTML(`Usage: <code>/${mode} &lt;user_id or @username&gt;</code>`)
+    }
+    await handleBanUser(ctx, userId, mode)
+  })
 })
 composer.hears(/^\/credit\s+(\S+)\s+(-?\d+)$/, requireRight('finance'), async (ctx) => {
   const [, userId, amount] = ctx.match

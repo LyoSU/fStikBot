@@ -5,7 +5,7 @@
 //   messaging — broadcast wizard
 //   pack      — pack/emoji-set management (transfer, remove, bulk-delete)
 //   finance   — /credit, /refund, financial ops menu, stars/outgoing CSV
-//   users     — /ban, View User Info, user management menu
+//   users     — /ban, /unban, View User Info, user management menu
 // Main admin (config.mainAdminId) implicitly has all rights.
 
 const ADMIN_RIGHTS = ['messaging', 'pack', 'finance', 'users']
@@ -54,8 +54,21 @@ const requireMainAdmin = async (ctx, next) => {
   }
 }
 
+// Why `user` may not be banned by the current admin, or null if they may.
+// A ban is checked before the admin commands run, so a banned main admin
+// could only be unbanned in the database.
+const banRefusal = (ctx, user) => {
+  if (user.telegram_id === ctx.config.mainAdminId) return '⛔ The main admin cannot be banned.'
+  if (user.telegram_id === ctx.from?.id) return '⛔ You cannot ban yourself.'
+  if (user.adminRights?.length && !isMainAdmin(ctx)) {
+    return '⛔ Only the main admin can ban another admin.'
+  }
+  return null
+}
+
 module.exports = {
   ADMIN_RIGHTS,
+  banRefusal,
   isMainAdmin,
   isAnyAdmin,
   hasRight,

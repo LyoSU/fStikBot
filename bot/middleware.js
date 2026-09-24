@@ -113,9 +113,11 @@ module.exports = (bot, {
     return next()
   })
 
-  // Banned user guard — runs after updateUser so the flag is fresh.
+  // Banned user guard — runs after updateUser so the flag is fresh. Never
+  // stops the main admin: it runs before the admin commands, so a banned main
+  // admin could not unban themselves.
   bot.use((ctx, next) => {
-    if (ctx?.session?.userInfo?.banned) {
+    if (ctx?.session?.userInfo?.banned && ctx.from?.id !== ctx.config.mainAdminId) {
       // An inline_query has no chat to reply into: replyWithHTML threw on
       // every request from a banned user and filled the log channel. Telegram
       // wants answerInlineQuery here.
