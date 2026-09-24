@@ -165,15 +165,31 @@ const needsRetry = (result) => {
   return isPauseTrigger(code) || code === CODE.RATE_LIMIT
 }
 
+// A short 429 that send.js could not absorb does not pause the campaign, but
+// it is not a failure either: the checkpoint stops before the first such
+// recipient, so the next batch sends to them again. They used to be counted
+// failed and skipped for good.
+const isRateLimited = (result) => !result.ok && classify(result.err) === CODE.RATE_LIMIT
+
 const applyBatchResults = async (broadcast, recipients, results) => {
   const pauseIdx = findPauseTriggerIdx(results)
-  const processable = pauseIdx >= 0
-    ? results.filter((result, index) => index < pauseIdx || (index > pauseIdx && !needsRetry(result)))
+  const retryIdx = results.findIndex(isRateLimited)
+  const stops = [pauseIdx, retryIdx].filter((index) => index >= 0)
+  const stopIdx = stops.length ? Math.min(...stops) : -1
+  const stopped = stopIdx >= 0
+  const processable = stopped
+    ? results.filter((result, index) => index < stopIdx || (index > stopIdx && !needsRetry(result)))
     : results
-  const doneAfterPause = pauseIdx >= 0
-    ? recipients.filter((recipient, index) => index > pauseIdx && !needsRetry(results[index])).map((recipient) => recipient._id)
+  const doneAfterPause = stopped
+    ? recipients.filter((recipient, index) => index > stopIdx && !needsRetry(results[index])).map((recipient) => recipient._id)
     : []
   const pauseReason = pauseIdx >= 0 ? buildPauseReason(results[pauseIdx].err) : null
+
+  for (const result of results) {
+    const retryAfter = isRateLimited(result) && result.err.parameters.retry_after
+    // Cool the shared limiter so the retried recipients and later batches wait.
+    if (retryAfter) rateLimiter.cooldown(retryAfter)
+  }
 
   const inc = { 'progress.sent': 0, 'progress.failed': 0 }
   const samples = []
@@ -191,13 +207,6 @@ const applyBatchResults = async (broadcast, recipients, results) => {
 
     if (isSoftBan(code)) softBans.push(r.telegramId)
 
-    if (code === CODE.RATE_LIMIT) {
-      const retryAfter = r.err && r.err.parameters && r.err.parameters.retry_after
-      // Short backoff that send.js couldn't absorb — cool the shared limiter
-      // so subsequent batches breathe.
-      if (retryAfter) rateLimiter.cooldown(retryAfter)
-    }
-
     if (samples.length < ERROR_SAMPLES_PER_BATCH) {
       samples.push({
         telegram_id: r.telegramId,
@@ -210,7 +219,7 @@ const applyBatchResults = async (broadcast, recipients, results) => {
 
   // Checkpoint advances only past results we definitively processed. If pause
   // hit at index 0, lastRecipientId stays unchanged — the whole batch retries.
-  const checkpointIdx = (pauseIdx >= 0 ? pauseIdx : results.length) - 1
+  const checkpointIdx = (stopped ? stopIdx : results.length) - 1
   const nextLastRecipientId = checkpointIdx >= 0
     ? recipients[checkpointIdx]._id
     : broadcast.progress.lastRecipientId
@@ -332,4 +341,4 @@ const runBroadcast = async (broadcast, { shouldStop = () => false } = {}) => {
 const cleanupRecipients = (broadcastId) =>
   db.BroadcastRecipient.deleteMany({ broadcastId })
 
-module.exports = { runBroadcast, cleanupRecipients }
+module.exports = { runBroadcast, cleanupRecipients, applyBatchResults }

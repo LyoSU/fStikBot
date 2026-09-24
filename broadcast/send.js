@@ -1,5 +1,6 @@
 const telegram = require('../utils/telegram').get(process.env.MAIN_BOT_TOKEN)
 const { buildSendCall } = require('./capture')
+const { shared: rateLimiter } = require('./rate-limiter')
 
 // True 1:1 message dispatch.
 //
@@ -18,11 +19,11 @@ const { buildSendCall } = require('./capture')
 // stricter Telegram limits than send* and is not appropriate for broadcasts.
 
 // Bounded retry for short 429s. Longer waits surface to the runner which
-// pauses the campaign — see broadcast/runner.js.
+// pauses the campaign — see broadcast/runner.js. A 429 is a flood limit on
+// the whole bot, so the wait goes through the shared limiter: sleeping here
+// alone let every send of the batch wake at once and fire together.
 const SHORT_RETRY_AFTER_S = parseInt(process.env.BROADCAST_SHORT_RETRY_AFTER_S, 10) || 30
 const MAX_RETRIES = 2
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const sendToRecipient = async (broadcast, chatId) => {
   const { method, payload } = buildSendCall(broadcast, chatId)
@@ -34,7 +35,8 @@ const sendToRecipient = async (broadcast, chatId) => {
       const retryAfter = err && err.parameters && err.parameters.retry_after
       const canRetry = retryAfter && retryAfter <= SHORT_RETRY_AFTER_S && attempt <= MAX_RETRIES
       if (!canRetry) throw err
-      await delay((retryAfter + 1) * 1000)
+      rateLimiter.cooldown(retryAfter + 1)
+      await rateLimiter.acquire()
     }
   }
 }
