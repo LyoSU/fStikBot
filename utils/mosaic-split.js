@@ -3,7 +3,7 @@ const { MAX_INPUT_PIXELS } = require('./image-limits')
 
 const splitImage = async (imageBuffer, rows, cols) => {
   const image = sharp(imageBuffer, {
-    failOnError: false,
+    failOn: 'none',
     limitInputPixels: MAX_INPUT_PIXELS
   })
 
@@ -34,7 +34,7 @@ const splitImage = async (imageBuffer, rows, cols) => {
     left: cropLeft, top: cropTop, width: cropWidth, height: cropHeight
   }).toBuffer()
 
-  const croppedImg = sharp(croppedBuf, { failOnError: false, limitInputPixels: false })
+  const croppedImg = sharp(croppedBuf, { failOn: 'none', limitInputPixels: false })
   const cellWidth = Math.floor(cropWidth / cols)
   const cellHeight = Math.floor(cropHeight / rows)
 

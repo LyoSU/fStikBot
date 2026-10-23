@@ -3,7 +3,7 @@ const { MAX_INPUT_PIXELS } = require('./image-limits')
 
 const generatePreview = async (imageBuffer, rows, cols) => {
   const image = sharp(imageBuffer, {
-    failOnError: false,
+    failOn: 'none',
     limitInputPixels: MAX_INPUT_PIXELS
   })
 

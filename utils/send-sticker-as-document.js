@@ -60,7 +60,7 @@ async function sendStickerAsDocument (ctx, fileId, fileUniqueId, extra = {}) {
 
   try {
     if (sniffed === 'webp') {
-      const pngBuffer = await sharp(buffer, { failOnError: false }).png().toBuffer()
+      const pngBuffer = await sharp(buffer, { failOn: 'none' }).png().toBuffer()
       await ctx.replyWithDocument({ source: pngBuffer, filename: `${fileUniqueId}.png` }, extra)
       return true
     }
