@@ -1,3 +1,4 @@
+const path = require('path')
 const crypto = require('crypto')
 const got = require('got')
 const slug = require('limax')
@@ -38,9 +39,11 @@ const COPY_PACE_MS = parseInt(process.env.COPY_PACE_MS, 10) || 1000
 // createNewStickerSet takes at most 50 stickers.
 const SEED_BATCH = 50
 
+// Absolute: Telegraf resolves a string source with fs.existsSync, so a bare
+// filename only worked while the process happened to start in the repo root.
 const placeholder = {
-  regular: 'sticker_placeholder.webm',
-  custom_emoji: 'emoji_placeholder.webm'
+  regular: path.join(__dirname, '..', 'sticker_placeholder.webm'),
+  custom_emoji: path.join(__dirname, '..', 'emoji_placeholder.webm')
 }
 
 // Resolve the placeholder's *canonical* file_unique_id — the one Telegram

@@ -32,8 +32,11 @@ function resolveBanner (name) {
   return { file, cacheKey: `${name}:${Math.floor(mtimeMs)}` }
 }
 
+// A cached file_id, or the PNG by path. Telegraf 3 runs fs.existsSync() on
+// every media source: a path opens the file there, while a stream we opened
+// ourselves trips Node 22's DEP0187 (invalid argument type).
 function photoInput (banner) {
-  return cache.get(banner.cacheKey) || { source: fs.createReadStream(banner.file) }
+  return cache.get(banner.cacheKey) || { source: banner.file }
 }
 
 function rememberFileId (banner, message) {
@@ -101,11 +104,7 @@ async function editBanner (ctx, name, caption = '', extra = {}) {
     }
   }
 
-  const source = photoInput(banner)
-  const media = {
-    type: 'photo',
-    media: typeof source === 'string' ? source : { source: fs.createReadStream(banner.file) }
-  }
+  const media = { type: 'photo', media: photoInput(banner) }
   try {
     const edited = await ctx.editMessageMedia(media, {
       caption,
