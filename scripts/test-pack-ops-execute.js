@@ -230,6 +230,50 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.strictEqual(tg.calls.length, 0)
   })
 
+  await test('the pack lock outlives a call that waits longer than its TTL', async () => {
+    const world = { faultAt: -1 }
+    const t0 = Date.now()
+    const virtualNow = () => (Date.now() - t0) * 3000 // 40 ms of real time = the 2 min TTL
+    const rows = new Map()
+    const lock = {
+      async acquire (name, ttl) {
+        const row = rows.get(name)
+        if (row && row.expiresAt > virtualNow()) return null
+        rows.set(name, { token: 't' + rows.size, expiresAt: virtualNow() + ttl })
+        return rows.get(name).token
+      },
+      async extend (name, token, ttl) {
+        const row = rows.get(name)
+        if (!row || row.token !== token || row.expiresAt < virtualNow()) return false
+        row.expiresAt = virtualNow() + ttl
+        return true
+      },
+      async release (name, token) { if (rows.get(name)?.token === token) rows.delete(name) }
+    }
+    const tg = fakeTelegram(['x'], world)
+    const real = tg.callApi.bind(tg)
+    let slow = true
+    tg.callApi = async (method, params) => {
+      if (method === 'addStickerToSet' && slow) {
+        slow = false
+        await new Promise((resolve) => setTimeout(resolve, 120)) // 6 virtual minutes
+      }
+      return real(method, params)
+    }
+    const draft = [{ assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
+    const first = runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store: fakeStore(world), lock, lockRenewMs: 10 })
+
+    await new Promise((resolve) => setTimeout(resolve, 80)) // well past the TTL, mid-call
+    const callsBefore = tg.calls.length
+    const second = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store: fakeStore(world), lock })
+    assert.strictEqual(second.status, 'pending', 'no lock: the second run did nothing')
+    assert.strictEqual(tg.calls.length, callsBefore)
+
+    const done = await first
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.strictEqual(rows.size, 0, 'the lock is released and the renewal stopped')
+  })
+
   await test('a refused step fails the commit and keeps what ran before it', async () => {
     const world = { faultAt: -1 }
     const tg = fakeTelegram(['x', 'y'], world)

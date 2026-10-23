@@ -57,13 +57,20 @@ class Interrupted extends Error {}
  * @param {{save: Function}} deps.store persists the whole commit
  * @param {{acquire: Function, extend: Function, release: Function}} deps.lock
  * @param {Function} [deps.onProgress] (commit) after every step
+ * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
  * @returns {Promise<Object>} the commit, with its final status
  */
-async function runCommit (commit, { telegram, store, lock, onProgress }) {
+async function runCommit (commit, { telegram, store, lock, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
   if (commit.status === 'succeeded' || commit.status === 'conflict' || commit.status === 'failed') return commit
 
   const token = await lock.acquire(commit.name, LOCK_TTL_MS)
   if (!token) return commit // another run holds the pack; it will finish this
+
+  // A single call can wait out a 429 for minutes, longer than the lock lives.
+  // Keep extending it meanwhile; if it is lost anyway, the extend before the
+  // next step notices and stops the run.
+  const renewal = setInterval(() => { lock.extend(commit.name, token, LOCK_TTL_MS).catch(() => {}) }, lockRenewMs)
+  renewal.unref()
 
   const call = (method, params) => telegram.callApi(method, params)
   const getSet = () => call('getStickerSet', { name: commit.name })
@@ -150,6 +157,7 @@ async function runCommit (commit, { telegram, store, lock, onProgress }) {
     commit.error = errorText(err)
     return commit
   } finally {
+    clearInterval(renewal)
     await save().catch(() => {})
     await lock.release(commit.name, token).catch(() => {})
   }
