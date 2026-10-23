@@ -53,7 +53,8 @@ def strip_markup(s):
     s = re.sub(r'<[^>]+>', '', s)
     s = PLACEHOLDER_RE.sub(' ', s)
     s = re.sub(r'https?://\S+|\S+\.\S+/\S*|@\w+|/\w+|#\w+', ' ', s)
-    s = re.sub(r'\b(fStik\w*|Unicode|Telegram|Stars?|GIF|WebM|TGS|MP4|PNG|WEBP|Android|WebApp|BiRefNet|Inline|lite|medium|rounded|circle)\b', ' ', s, flags=re.I)
+    # Latin-letter boundaries, not \b: Japanese has no spaces, so "Boostで" has no \b
+    s = re.sub(r'(?<![A-Za-z])(fStik\w*|Boost|Unicode|Telegram|Stars?|GIF|WebM|TGS|MP4|PNG|WEBP|Android|WebApp|BiRefNet|Inline|lite|medium|rounded|circle)(?![A-Za-z])', ' ', s, flags=re.I)
     return s
 
 

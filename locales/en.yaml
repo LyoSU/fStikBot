@@ -15,7 +15,7 @@ description:
     Search stickers: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     Create stickers and emoji from photos, videos, GIFs. Sticker catalog and search. 🇺🇦
-ratelimit: Too often!
+ratelimit: Slow down!
 cmd:
   start:
     enter: |
@@ -31,9 +31,9 @@ cmd:
       <b>🔍 Sticker catalog</b>
 
       Search packs by keywords or browse popular ones.
-      Rate packs to help others find great ones.
+      Rate packs to help others find the best ones.
     search_catalog: |
-      <b>🌐 Pack catalog</b>
+      <b>🌐 Sticker catalog</b>
 
       Browse other users' packs or publish your own:
     commands:
@@ -50,9 +50,9 @@ cmd:
       restore: '♻️ Restore pack'
       copy: '📋 Copy pack'
       emoji: '😀 Change emoji'
-      round: '⭕ Round video'
+      round: '⭕ Video message'
       clear: '✂️ Remove background'
-      info: '🔎 Whose sticker'
+      info: '🔎 Sticker info'
       user_about: '👤 About creator'
       lang: '🌐 Language'
       report: '🚨 Report'
@@ -66,9 +66,9 @@ cmd:
       catalog_mini: '🔍 Catalog'
       catalog_browser: '🌐 Open in browser'
       catalog_browser_mini: '🌐 In browser'
-      catalog_app: '📱 Download for Android'
+      catalog_app: '📱 Get Android app'
       catalog_app_mini: '📱 Android app'
-    current_pack: '📦 Stickers go to: <a href="${link}">${title}</a>'
+    current_pack: '📦 Adding stickers to: <a href="${link}">${title}</a>'
     hint: 'Send a photo, video, GIF or sticker — I''ll add it to <a href="${link}">${title}</a>.'
   guide:
     web: |
@@ -105,8 +105,8 @@ cmd:
       • /packs — list of your packs
       • /delete — delete a sticker
       • /copy — copy a pack
-      • /restore — bring back hidden packs
-      • /original — find a sticker's original
+      • /restore — restore hidden packs
+      • /original — find a sticker's source
       • /about — pack and creator info
 
       <b>Change emoji:</b>
@@ -114,7 +114,7 @@ cmd:
       Or send an emoji right after adding.
 
       <b>Default emoji:</b>
-      /emoji 🔥 — all new stickers will get this one.
+      /emoji 🔥 — all new stickers will use this emoji.
 
       <b>In groups:</b>
       /ss (in reply to media) — quick add to the group pack.
@@ -126,13 +126,13 @@ cmd:
       • Create one in /packs → "Inline" tab
       • Also has a GIF search mode (via Tenor)
 
-      <b>Co-editing (Co-edit):</b>
-      Tap a pack → Co-edit → get a link.
-      Anyone with the link can add/delete stickers.
-      Reset the link to remove all editors.
+      <b>Collaboration:</b>
+      Tap a pack → Collaborate → get a link.
+      Anyone with the link can add or delete stickers.
+      Reset the link to remove access.
 
       <b>Pack options:</b>
-      Tap a pack in /packs → rename, boost, co-edit, delete.
+      Tap a pack in /packs → rename, boost, collaborate, or delete.
     catalog: |
       <b>🔍 Catalog</b>
 
@@ -144,10 +144,10 @@ cmd:
 
       • No "${titleSuffix}" in the title
       • Priority video processing
-      • Videos up to 35 sec
+      • Videos up to 35 seconds
       • Multiple stickers at once
 
-      <b>🎨 Adaptive emoji</b> — a separate pack type in /new: the emoji change color to match the text
+      <b>🎨 Adaptive emoji</b> — a separate pack type in /new: emoji automatically adapt to the text color
 
       Get it → /donate
     problems: |
@@ -180,8 +180,8 @@ cmd:
       <b>More questions?</b> @fStikCommunity
     btn:
       open: '📖 Open guide'
-      create: '🎨 Creating stickers'
-      manage: '📁 Managing packs'
+      create: '🎨 Create stickers'
+      manage: '📁 Manage packs'
       catalog: '🔍 Search & publish'
       boost: '⚡ Boost & features'
       problems: '❓ Problems?'
@@ -214,29 +214,29 @@ cmd:
       inline: Inline
       shared: '👥 Shared'
     empty: |
-      No packs yet. Create your first → /new
+      No packs yet. Create your first one → /new
     inline_title: Inline pack
     select_group_pack_info: |
       <b>📁 Select pack</b>
 
-      Admins can select a pack for the group with the button below.
+      Admins can choose a pack for this group using the button below.
     select_group_pack: Select pack
     hidden_btn: '🗄 Hidden'
     hidden_info: |
       <b>🗄 Hidden packs</b>
 
       Tap a pack to restore or delete it.
-    hidden_empty: 'No hidden packs here.'
+    hidden_empty: 'No hidden packs.'
     group_admin_only: 'Only group admins can choose the group pack.'
   emoji:
     info: |
-      To change the default emoji for the current pack, send <code>/emoji</code> followed by the emoji, separated by a space
+      To change the default emoji for the current pack, send <code>/emoji</code> followed by an emoji
 
       For example — <code>/emoji 🌟</code>
     no_pack_selected: |
       Select a pack with /packs first — then /emoji 🌟
-    done: Emoji changed successfully.
-    error: An error occurred while changing the emoji!
+    done: Default emoji updated.
+    error: Couldn't change the emoji. Please try again.
   round_video:
     enabled: |
       Videos will now have rounded corners
@@ -250,25 +250,25 @@ cmd:
     enter: |
       🧩 Mosaic for <b>${packTitle}</b>
 
-      Send a photo — I'll cut it into a grid of emoji.
+      Send a photo — I'll split it into a grid of emoji.
     no_pack: |
-      Mosaic works with a custom emoji pack.
-      Pick one of yours below or create a new one.
+      Mosaic requires a custom emoji pack.
+      Choose one of yours below or create a new one.
     choose_grid: |
       📐 Choose grid size:
     btn:
       recommended: "✅ ${rows}×${cols}"
-      option: "${rows}×${cols} · ${total} pcs"
+      option: "${rows}×${cols} · ${total} emoji"
       custom: "✏️ Custom size"
       cancel: "← Cancel"
-      exit: "🚪 Exit mosaic"
-      undo: "🗑 Delete this mosaic"
+      exit: "🚪 Exit"
+      undo: "🗑 Delete mosaic"
     custom_prompt: |
       Enter grid size (e.g. 3x4):
     custom_invalid: |
-      Incorrect format. Example: 3x4. Rows 1-10, columns 1-10, up to 50 total.
+      Invalid format. Example: 3x4. Rows 1-10, columns 1-10, up to 50 total.
     no_space: |
-      Not enough space in the pack. ${freeSlots} slots free, ${total} needed.
+      Not enough space in the pack: ${freeSlots} slots free, ${total} needed.
       Choose a smaller grid or create a new pack with /new.
     blurry_warning: |
       ⚠️ The image is too small — the result may be blurry at this grid size.
@@ -283,11 +283,11 @@ cmd:
     wait_photo: |
       Send another photo or tap "Exit".
     reject_animated: |
-      Animated and video stickers aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+      Animated and video stickers aren't supported. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
     reject_document: |
       Only images are supported (JPEG/PNG/WebP). Send a file in one of these formats.
     reject_media: |
-      Animations and videos aren't supported yet. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
+      Animations and videos aren't supported. Send a static sticker, a photo, or a PNG/JPEG/WebP file.
 donate:
   menu: |
     <b>⭐ Support the bot</b>
@@ -308,53 +308,53 @@ donate:
   btn:
     donate: '☕ Donate'
   topup: |
-    <b>Enter the number of Credits you want to buy:</b>
+    <b>Enter the number of credits you want to buy:</b>
   description: |
-    By buying Credits, you support the bot's development and unlock additional features
+    By buying credits, you support the bot's development and unlock extra features.
   update: |
-    <b>🔄 Balance update</b>
+    <b>🔄 Balance updated</b>
 
-    Balance: <code>${balance}</code> Credits (added <code>${amount}</code> Credits)
+    Balance: <code>${balance}</code> credits (added <code>${amount}</code> credits)
   error:
     already_donated: |
-      You have already received Credits for this payment
-    already_paid: Payment already completed
-    not_found: Payment not found
-    user_not_found: User not found
+      You have already received credits for this payment.
+    already_paid: Payment already completed.
+    not_found: Payment not found.
+    user_not_found: User not found.
     error: |
-      An error occurred while processing the payment
+      Couldn't process the payment. Please try again.
     canceled: |
-      Payment canceled
+      Payment canceled.
 coedit:
   info: |
-    <b>👥 Co-editing</b> <a href="${link}">${title}</a>
+    <b>👥 Collaborators</b> — <a href="${link}">${title}</a>
 
-    Anyone who opens this link joins the pack:
+    Anyone with this link can collaborate:
     <code>${colink}</code>
 
-    <b>New members:</b> ${defaultRole}
-    <b>Members:</b> ${count}
+    <b>New collaborators:</b> ${defaultRole}
+    <b>Collaborators:</b> ${count}
   no_editors: |
     none
   btn:
     send: '📤 Send link'
-    reset: '🔁 New link'
+    reset: '🔁 Reset link'
     activity: '🧾 Activity'
     default_role: '⚙️ New: ${role}'
-    clear: '🧹 Remove everyone'
-    clear_confirm: '⚠️ Yes, remove everyone'
-    role_editor: '✏️ Adds and deletes'
-    role_contributor: '➕ Only adds'
-    remove: '🚫 Remove from the pack'
-    leave: '🚪 Leave the pack'
+    clear: '🧹 Remove all'
+    clear_confirm: '⚠️ Yes, remove all'
+    role_editor: '✏️ Editor'
+    role_contributor: '➕ Add only'
+    remove: '🚫 Remove access'
+    leave: '🚪 Leave pack'
     back: '‹ Back'
   roles:
-    editor: 'adds and deletes'
-    contributor: 'only adds'
+    editor: editor
+    contributor: can only add
   share: |
-    Open the link and tap "Start" to co-edit the pack "${title}"
+    Open the link and tap "Start" to collaborate on the pack "${title}"
   reset: |
-    <b>🔁 New link.</b> The old one no longer works; current members keep their access.
+    <b>🔁 Link reset.</b> The old link no longer works; existing collaborators keep their access.
   member: |
     <b>👤 ${name}</b>
 
@@ -362,16 +362,16 @@ coedit:
     <b>Joined:</b> ${date}
     <b>Actions in the last 30 days:</b> ${actions}
   clear_confirm: |
-    Remove all members (${count}) from <b>${title}</b>? The link will be replaced too.
-  cleared: 'Everyone was removed, and the link was replaced.'
+    Remove all collaborators (${count}) from <b>${title}</b>? The invite link will be reset too.
+  cleared: 'All collaborators were removed, and the invite link was reset.'
   joined: '👥 You joined <b>${title}</b>. Your role: ${role}.'
   joined_notice: |
-    👥 ${name} joined <a href="${link}">${title}</a> via the co-edit link.
+    👥 ${name} joined <a href="${link}">${title}</a> via the invite link.
 
-    Manage members: /packs → the pack → 👥 Co-edit
+    Manage collaborators: /packs → the pack → 👥 Collaborate
   left: '🚪 You left <b>${title}</b>.'
   left_notice: '🚪 ${name} left <b>${title}</b>.'
-  removed_notice: 'You were removed from co-editing <b>${title}</b>.'
+  removed_notice: 'Your access to <b>${title}</b> was removed.'
   role_notice: 'Your role in <b>${title}</b> is now: ${role}.'
   no_access: 'You no longer have access to this pack. Pick another one in /packs.'
   no_rights: "Your role in this pack doesn't allow this."
@@ -390,13 +390,13 @@ coedit:
     leave: '🚪 left'
     removed: '🚫 removed ${target}'
     role: '🔧 ${target}: ${role}'
-    reset: '🔁 replaced the link'
-    clear: '🧹 removed everyone (${count})'
+    reset: '🔁 reset the link'
+    clear: '🧹 removed all collaborators (${count})'
 callback:
   pack:
     answerCbQuer:
       not_found: Pack not found
-      not_owner: This is not your pack
+      not_owner: This isn't your pack
       hidden: Pack hidden
       restored: Pack restored
     set_pack: |
@@ -421,10 +421,10 @@ callback:
       restore: '✅ Restore'
       use_pack: '📦 Use pack'
       boost: '⚡ Boost'
-      frame: '🖼 Frame'
+      frame: '🖼 Shape'
       rename: '✏️ Rename'
       search_gif: '🔎 Search GIF'
-      coedit: '👥 Co-edit'
+      coedit: '👥 Collaborate'
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Edit in catalog'
       catalog_delete: '🗑 Remove from catalog'
@@ -435,17 +435,17 @@ callback:
       not_found: |
         Couldn't find the sticker.
       invalid_png: |
-        The file is not a valid PNG image. Convert it to PNG before sending.
+        This file isn't a valid PNG image. Convert it to PNG before sending.
       invalid_dimensions: |
         Invalid sticker dimensions. Stickers must be 512x512 pixels.
       invalid_animated: |
         Telegram accepts animated stickers only in TGS format. Send GIFs or MP4s as videos — the bot will turn them into a video sticker.
       invalid_video: |
-        The video file has the wrong format (WEBM required).
+        Invalid video format (WEBM required).
       restore: |
-        Can't restore the pack.
+        Couldn't restore the pack.
       copy: |
-        Can't find the pack.
+        Couldn't find the pack.
     select_group:
       success: |
         Pack <a href="${link}">${title}</a> selected for the group.
@@ -471,13 +471,13 @@ callback:
       not_found: |
         Couldn't find the sticker.
       invalid_png: |
-        The file is not a valid PNG image. Convert it to PNG before sending.
+        This file isn't a valid PNG image. Convert it to PNG before sending.
       invalid_dimensions: |
         Invalid sticker dimensions. Stickers must be 512x512 pixels.
       invalid_animated: |
         Telegram accepts animated stickers only in TGS format. Send GIFs or MP4s as videos — the bot will turn them into a video sticker.
       invalid_video: |
-        The video file has the wrong format (WEBM required).
+        Invalid video format (WEBM required).
   group_settings:
     success: |
       Group settings updated.
@@ -490,7 +490,7 @@ sticker:
     ok_inline: |
       ✅ Added to <u>${title}</u>
     ok_repainting_notice: |
-      ⚠️ This is a monochrome emoji: in a regular pack it stays white and is barely visible on a light background.
+      ⚠️ This is a monochrome emoji: in a regular pack it stays white and may be hard to see on light backgrounds.
       To make it adapt to the text color, create a separate "🎨 Adaptive emoji" pack via /new.
     send_emoji: Send an emoji for this sticker
     converting_process: |
@@ -499,7 +499,7 @@ sticker:
       <i>Boost = priority → /donate</i>
     catalog_offer: |
       Want to share <a href="${link}">${title}</a>?
-      Add it to the catalog so others can find it.
+      Publish it to the catalog so others can find it.
     quote: |
       Use @QuotlyBot to create a quote from this message
     error:
@@ -510,7 +510,7 @@ sticker:
 
         Create one — and I'll add this file to it right away.
       no_selected_group_pack: |
-        <b>You haven't selected a group pack</b>
+        <b>No group pack selected</b>
 
         Select a pack with /packs
       no_rights: |
@@ -528,7 +528,7 @@ sticker:
 
         Create (/new) or select (/packs) another sticker pack.
       invalid_png: |
-        The file is not a valid PNG image. Convert it to PNG before sending.
+        This file isn't a valid PNG image. Convert it to PNG before sending.
       invalid_dimensions: |
         Invalid sticker dimensions. Stickers must be 512x512 pixels.
       invalid_animated: |
@@ -536,7 +536,7 @@ sticker:
       animated_too_big: |
         After fitting to the pack's size, this animated sticker exceeds Telegram's 64 KB limit, so it can't be transferred.
       invalid_video: |
-        The video file has the wrong format (WEBM required).
+        Invalid video format (WEBM required).
       file_type:
         unknown: |
           This file type isn't supported.
@@ -559,32 +559,32 @@ sticker:
       invalid_image: |
 
         Couldn't process this image. Try sending a different file or format.
-      queue_full: '⏳ Too many files at once. Wait until I''ve handled the ones in the queue, then send the rest.'
+      queue_full: '⏳ Too many files at once. Wait until current files are processed, then send the rest.'
     album_progress: '⏳ Adding album: ${current}/${total}'
     album_done: '✅ Added ${added} of ${total} to <a href="${link}">${title}</a>'
-    album_converting: '⏳ ${count} more are videos: converting, I''ll reply to each one when it''s ready.'
+    album_converting: '⏳ ${count} more are videos: converting now, I''ll reply to each when it''s ready.'
     album_duplicates: '♻️ Already in the pack: ${count}.'
     album_failed: '⚠️ Couldn''t add: ${count}.'
 news:
   join: |
     📢 <a href="${link}">Subscribe to the channel</a> — news, updates, new features.
   join_btn: '📢 Subscribe'
-  not_joined: '🙅 You are not subscribed to the channel'
+  not_joined: '🙅 You haven''t subscribed to the channel yet'
   continue: '✅ Continue'
 userAbout:
   help: |
-    <b>🧑‍🎨 About user</b>
+    <b>🧑‍🎨 User info</b>
 
-    This menu shows information about a user and their sticker packs
+    View information about a user and their sticker packs.
 
-    To get info about a user, use the button below or forward one of their messages
+    Use the button below or forward one of their messages.
   result: |
     <b>🧑‍🎨 User info</b>
     <b>🆔 User ID:</b> <code>${userId}</code>
     <b>🎨 Packs by this user:</b>
     ${packs}
   no_packs: |
-    <i>We have no information about this owner's packs</i>
+    <i>No packs found for this user</i>
   forward_hidden: |
     This user has restricted message forwarding. Use the button below to view their sticker packs.
   select_user: '🧑‍🎨 Select user'
@@ -593,17 +593,17 @@ scenes:
     pack_type: |
       <b>What kind of pack are we creating?</b>
 
-      <b>🖼 Stickers</b> — classic stickers you send in chats.
-      <b>✨ Emoji</b> — custom emoji used inside text. Only Telegram Premium users can send them.
-      <b>🎨 Adaptive emoji</b> — monochrome: drawn in a single color and automatically adapt to the text color.
+      <b>🖼 Stickers</b> — classic stickers for chats.
+      <b>✨ Emoji</b> — custom emoji for text. Requires Telegram Premium to send.
+      <b>🎨 Adaptive emoji</b> — monochrome emoji that automatically adapt to text color.
     regular: '🖼 Stickers'
     custom_emoji: '✨ Emoji'
     custom_emoji_adaptive: '🎨 Adaptive emoji'
     pack_title: |
       <b>Pack title</b>
 
-      Everyone will see it. Type your own or pick one of the suggestions below.
-      <i>I'll make the pack link from the title.</i>
+      Everyone will see this. Type your own or pick a suggestion below.
+      <i>I'll generate the pack link from the title.</i>
     pack_name: |
       <b>Pack link</b>
 
@@ -628,8 +628,8 @@ scenes:
 
           Try again later.
     btn:
-      custom_link: '🔗 My own pack link'
-    custom_link_on: 'OK — send the title, then I''ll ask for the link.'
+      custom_link: '🔗 Custom link'
+    custom_link_on: 'Got it — send the title, then I''ll ask for the link.'
   copy:
     enter: |
       First, let's create a new pack for the copy.
@@ -652,11 +652,11 @@ scenes:
     pay: |
       <b>Pack conversion</b>
 
-      Converting a pack from one type to another costs 1 Credit
+      Converting a pack from one type to another costs 1 credit.
 
-      <b>Current balance:</b> ${balance} Credits
+      <b>Current balance:</b> ${balance} credits
 
-      Buy Credits: /donate
+      Buy credits: /donate
     pay_btn: '✅ Confirm'
     error:
       all_failed: |
@@ -664,9 +664,9 @@ scenes:
 
         The pack was not created.
       premium: |
-        Sorry, this feature is only available to those who have supported the bot.
+        This feature is only available to bot supporters.
 
-        You can do that by sending /donate.
+        Support the bot with /donate.
     title: |
       <b>📋 Copying <a href="${originalLink}">${originalTitle}</a></b> (${count})
 
@@ -682,12 +682,12 @@ scenes:
       <b>🔎 Find source</b>
 
       Send a sticker — I'll show which pack it was copied from.
-      If the original isn't found — you'll get the file (PNG/WEBM).
+      If the original pack isn't found, you'll get the original file (PNG/WEBM).
     source_found: |
       🔎 Copied from: <a href="${link}">${title}</a>
     error:
       not_found: |
-        Original not found. Here's the sticker file:
+        Original pack not found. Here's the original file:
   delete:
     enter: |
       <b>🗑 Delete sticker</b>
@@ -697,7 +697,7 @@ scenes:
       Delete this sticker from the pack?
     error:
       not_found: |
-        Sticker not found in the database. It may not have been created with this bot.
+        Sticker not found in the database. It might not have been created with this bot.
   rename:
     enter_name: |
       New title for <a href="${link}">${title}</a>:
@@ -707,14 +707,14 @@ scenes:
       Boost removes "${titleSuffix}" → /donate
   packAbout:
     enter: |
-      <b>🔎 Whose sticker</b>
+      <b>🔎 Sticker info</b>
 
       Send a sticker — I'll show the pack, its creator, and their other packs.
       Or forward a message — I'll show that person's packs.
     not_found: |
       Sticker not found.
     btn:
-      download: '📎 Download file'
+      download: '📎 Original file'
       show_all_packs: '📦 All packs (${count})'
     result: |
       <b>📦 Pack:</b> <a href="${link}">${name}</a>
@@ -726,7 +726,7 @@ scenes:
       <b>🎨 Other packs by this owner:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>We have no information about other packs by this owner</i>
+      <i>No other packs found for this creator</i>
     unknown_owner: '<i>Unknown</i>'
     hidden: '<i>[hidden]</i>'
   boost:
@@ -773,9 +773,9 @@ scenes:
       publish_new_access_denied: |
         This is not your pack.
 
-        You can only publish your own packs
+        You can only publish your own packs.
       banned: |
-        You are banned from using this feature.
+        You've been banned from this feature.
         Contact the administrator.
       enter: |
         Publish <a href="${link}">${title}</a> to the catalog?
@@ -783,19 +783,19 @@ scenes:
         Other users will be able to find your pack by title or tags.
 
         <b>Rules:</b>
-        • Only quality packs for a wide audience
+        • Only high-quality packs for a broad audience
         • No personal photos or private content
         • Nothing illegal
       continue_button: Continue
       enter_description: |
         <b>Briefly describe your pack so others can find it</b>
 
-        <i>You can use hashtags to categorize it [#]</i>
+        <i>You can use hashtags [#]</i>
         <i>For example: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
         <b>Current description:</b> <i>${description}</i>
-      keep_description: '✅ Keep the current description'
+      keep_description: '✅ Keep description'
       select_language: |
         <b>Choose the languages your pack is meant for:</b>
         <i>You can select several</i>
@@ -803,10 +803,10 @@ scenes:
       button_confirm_language: Confirm
       set_safe: |
         <b>Is your pack safe for everyone?</b>
-        <i>That is, it has no erotica, violence or other 18+ content</i>
+        <i>Make sure it has no nudity, violence, or other 18+ content</i>
       button_safe:
         safe: '✅ Yes, no 18+'
-        not_safe: '🔞 No, has 18+ content'
+        not_safe: '🔞 No, has 18+'
       no_tags: not specified
       confirm: |
         <b>Confirm publishing the sticker pack "<a href="${link}">${title}</a>"</b>
@@ -815,9 +815,9 @@ scenes:
 
         <b>Tags:</b> ${tags}
         <b>Languages:</b> ${languages}
-      button_confirm: '✅ Confirm publication'
+      button_confirm: '✅ Publish'
       success: |
-        Congratulations! Your pack is now published in the catalog, and other users can find it!
+        Your pack is now published in the catalog where others can find it!
 
         You can edit the pack info via /packs.
 
@@ -829,7 +829,7 @@ scenes:
     enter: |
       ⚠️ Delete <a href="${link}">${title}</a> forever?
 
-      Tap «${confirm}» to confirm, or «Cancel».
+      Tap "${confirm}" to confirm, or "Cancel".
     confirm: Yes, delete
     success: |
       🗑 Pack deleted
@@ -839,17 +839,17 @@ scenes:
     no_sticker_set: |
       You haven't selected a pack yet. Select one with /packs and run the command again.
     no_video: |
-      Frames can only be added to video packs.
+      Sticker shape can only be set for video packs.
     select_type: |
       <a href="${example}">&#8203;</a><b>Choose the sticker shape:</b>
 
-      <code>lite</code> — almost no rounding
+      <code>lite</code> — minimal rounding
       <code>medium</code> — slightly rounded corners
-      <code>rounded</code> — strongly rounded corners
-      <code>square</code> — sharp corners, no rounding
-      <code>circle</code> — circle-shaped sticker
+      <code>rounded</code> — fully rounded corners
+      <code>square</code> — sharp corners (no rounding)
+      <code>circle</code> — circular sticker
 
-      <i>You can change the shape with the /frame command</i>
+      <i>You can change the shape anytime with /frame</i>
     types:
       lite: '1. Lite'
       medium: '2. Medium'
@@ -857,7 +857,7 @@ scenes:
       square: '4. Square'
       circle: '5. Circle'
     selected: |
-      <b>Selected frame type:</b> ${type}
+      <b>Selected shape:</b> ${type}
   photoClear:
     enter: |
       <b>✂️ Remove background</b>
@@ -874,12 +874,12 @@ scenes:
     web_app: WebApp — for photos of people
     model:
       ordinary: Standard — for photos of people
-      general: General — for any photos
-      anime: Anime — for anime images
-      birefnet_general: BirefNet — for any photos
+      general: General — for any photo
+      anime: Anime — for anime illustrations
+      birefnet_general: BirefNet — for any photo
     add_to_set_btn: '🌟 Add to pack'
     error: |
-      Oops, something went wrong. Try again.
+      Something went wrong. Please try again.
     error_timeout: |
       ⏱ Processing took too long. Try again later or with a smaller photo.
     error_queue_disabled: |
@@ -887,7 +887,7 @@ scenes:
     not_image: 'Send a photo or an image as a file (PNG, JPEG, WebP).'
   videoRound:
     enter: |
-      <b>⭕ Video to circle</b>
+      <b>⭕ Video message</b>
 
       Send a video — I'll turn it into a video message (circle).
     not_video: |
@@ -916,7 +916,7 @@ scenes:
     Canceled
   btn:
     cancel: '← Cancel'
-  unexpected: 'I''m waiting for something else right now — follow the step above, or tap «← Cancel».'
+  unexpected: 'I''m waiting for something else right now — follow the step above, or tap "← Cancel".'
 error:
   stickerset_invalid: |
     The pack is unavailable. It may have been deleted in Telegram.
@@ -932,15 +932,15 @@ error:
     not_pack_owner: |
       This pack belongs to another user — you can't modify it.
     pack_name_taken: |
-      This pack link is already taken. Choose a different name.
+      This pack link is already taken. Choose a different one.
     pack_name_invalid: |
-      The pack link has an invalid format. Only Latin letters, digits and underscore (_) are allowed.
+      Invalid pack link format. Only Latin letters, digits, and underscores (_) are allowed.
     invalid_sticker_format: |
       This file can't be used as a sticker: wrong format or dimensions.
     invalid_emoji: |
       Invalid emoji. Send a standard Unicode emoji.
     rate_limited: |
-      Telegram asks to wait — try again in a few seconds.
+      Too many requests to Telegram — try again in a few seconds.
     cannot_reach_user: |
       Can't message the user: the bot is blocked or the chat is unavailable.
   answerCbQuery:

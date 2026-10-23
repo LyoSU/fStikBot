@@ -3,39 +3,39 @@ language_name: '🇦🇿 Azərbaycanca'
 name: fStik — Stikerlər və emoji
 description:
   long: |
-    Foto, video və GIF-lərdən stikerlər və emoji yaradın. Əl ilə çevirməyə ehtiyac yoxdur — bot hər şeyi özü edir. @Stickers botundan daha asandır.
+    Foto, video və GIF-lərdən stiker və emoji yarat. Əl ilə çevirməyə ehtiyac yoxdur — bot hər şeyi özü edir. @Stickers botundan daha asandır.
 
     İmkanlar:
-    • Paketlərin idarə olunması
-    • Video stikerlər və fərdi emojilər
-    • Orijinal faylların yüklənməsi
-    • Stiker/video/GIF-in şəklə çevrilməsi
+    • Paketlərin idarə edilməsi
+    • Video stikerlər və fərdi emoji
+    • Orijinal faylları yükləmə
+    • Stiker, video və GIF-i şəklə çevirmə
     • Stiker kataloqu
 
     Stiker axtarışı: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Foto, video və GIF-lərdən stiker və emoji yaradın. Stiker kataloqu və axtarış. 🇺🇦
+    Foto, video və GIF-lərdən stiker və emoji yarat. Stiker kataloqu və axtarış. 🇺🇦
 ratelimit: Çox tez-tez!
 cmd:
   start:
     enter: |
       Salam, ${name}!
-      Foto, video və GIF-lərdən stikerlər və emoji yaradıram.
+      Foto, video və GIF-lərdən stiker və emoji yaradıram.
 
       💬 @fStikCommunity
     group: |
-      Salam, ${groupTitle}! Mən stikerlər və emoji yaradıram.
+      Salam, ${groupTitle}! Mən stiker və emoji yaradıram.
 
-      Qrup paketinə stiker əlavə etmək üçün foto, video, GIF və ya stikerə cavab olaraq /ss yazın.
+      Qrup paketinə stiker əlavə etmək üçün foto, video, GIF və ya stikerə cavab olaraq /ss yaz.
     catalog: |
       <b>🔍 Stiker kataloqu</b>
 
-      Paketləri açar sözlərlə axtarın və ya populyar paketlərə baxın.
-      Başqalarının maraqlı paketlər tapmasına kömək etmək üçün qiymət verin.
+      Paketləri açar sözlərlə axtar və ya populyar olanlara bax.
+      Əla paketləri başqalarının da tapması üçün qiymətləndir.
     search_catalog: |
       <b>🌐 Paket kataloqu</b>
 
-      Başqalarının paketlərinə baxın və ya öz paketlərinizi dərc edin:
+      Başqalarının paketlərinə bax və ya öz paketini dərc et:
     commands:
       ss: '➕ Qrup paketinə əlavə et'
       start: '📜 Menyu'
@@ -66,156 +66,156 @@ cmd:
       catalog_mini: '🔍 Kataloq'
       catalog_browser: '🌐 Brauzerdə aç'
       catalog_browser_mini: '🌐 Brauzerdə'
-      catalog_app: 'Android üçün yüklə'
+      catalog_app: '📱 Android-ə yüklə'
       catalog_app_mini: '📱 Android tətbiqi'
-    current_pack: '📦 Stikerlər buraya əlavə olunur: <a href="${link}">${title}</a>'
-    hint: 'Foto, video, GIF və ya stiker göndərin — onu <a href="${link}">${title}</a> paketinə əlavə edəcəyəm.'
+    current_pack: '📦 Stikerlər bura əlavə olunur: <a href="${link}">${title}</a>'
+    hint: 'Foto, video, GIF və ya stiker göndər — onu <a href="${link}">${title}</a> paketinə əlavə edim.'
   guide:
     web: |
       <b>📖 Necə işləyir</b>
 
-      1. /new — paket yaradın
-      2. Foto, video, GIF və ya stikerlər göndərin — hətta bütöv albom
-      3. /packs — paketləriniz və onların ayarları
+      1. /new — paket yarat
+      2. Foto, video, GIF və ya stiker göndər — hətta bütöv albom
+      3. /packs — paketlərin və onların parametrləri
 
       Bələdçilər, məsləhətlər və FAQ saytdadır.
     menu: |
       <b>❓ Kömək</b>
 
-      Mövzu seçin:
+      Mövzu seç:
     create: |
-      <b>🎨 Stikerlərin yaradılması</b>
+      <b>🎨 Stiker yaratmaq</b>
 
-      1. Paket yaratmaq üçün /new göndərin
-      2. Növü seçin: adi, video və ya emoji
-      3. Foto, video və ya GIF göndərin
+      1. Paket yaratmaq üçün /new göndər
+      2. Növü seç: adi, video və ya emoji
+      3. Foto, video və ya GIF göndər
       4. Hazırdır! Bot hər şeyi özü çevirir
 
       <b>Faydalı əmrlər:</b>
-      • /clear — fotodan fonu silmək
-      • /round — videodan dairəvi video düzəltmək
+      • /clear — fotodan fonu sil
+      • /round — videodan dairəvi video mesaj düzəlt
       • /frame — video stikerin forması:
         └ lite, medium, rounded, square, circle
 
-      <b>💡 Məsləhət:</b> Şəffaflığı qorumaq üçün PNG-ni <b>Fayl</b> kimi (📎) göndərin. «Foto» rejimi şəkli sıxır və şəffaflığı silir.
+      <b>💡 Məsləhət:</b> Şəffaflığı qorumaq üçün PNG-ni <b>Fayl</b> kimi (📎) göndər. «Foto» rejimi şəkli sıxır və şəffaflığı silir.
     manage: |
-      <b>📁 Paketlərin idarə olunması</b>
+      <b>📁 Paketləri idarə etmək</b>
 
       <b>Əmrlər:</b>
-      • /packs — paketlərinizin siyahısı
-      • /delete — stikeri silmək
-      • /copy — paketi kopyalamaq
-      • /restore — gizlədilmiş paketləri qaytarmaq
-      • /original — stikerin orijinalını tapmaq
+      • /packs — paketlərinin siyahısı
+      • /delete — stikeri sil
+      • /copy — paketi kopyala
+      • /restore — gizli paketləri bərpa et
+      • /original — stikerin orijinalını tap
       • /about — paket və müəllif haqqında məlumat
 
-      <b>Emojini dəyişmək:</b>
-      Stikeri göndərin → yeni emojini göndərin.
-      Və ya stikeri əlavə etdikdən dərhal sonra emoji göndərin.
+      <b>Emojini dəyiş:</b>
+      Stikeri göndər → yeni emojini göndər.
+      Və ya stikeri əlavə etdikdən dərhal sonra emoji göndər.
 
       <b>Standart emoji:</b>
       /emoji 🔥 — bütün yeni stikerlər bu emojini alacaq.
 
       <b>Qruplarda:</b>
-      /ss (mediaya cavab olaraq) — qrup paketinə tez əlavə etmək.
+      /ss (mediaya cavab olaraq) — qrup paketinə tez əlavə et.
 
-      <b>İnline paketlər:</b>
-      Şəxsi kolleksiyanız: saxlanılmış stiker, GIF, foto və videoları istənilən söhbətdə göndərin — @bot_adı yazın və lazım olanı seçin.
+      <b>Inline paketlər:</b>
+      Şəxsi kolleksiyan: saxlanılmış stiker, GIF, foto və videoları istənilən söhbətdə göndər — @bot_adı yaz və lazım olanı seç.
       • Telegram stikerlərinə heç nə əlavə olunmur — hər şey botda saxlanılır
       • Stiker, foto, GIF və video saxlaya bilər
-      • /packs → «İnline» bölməsində yaradın
-      • GIF axtarışı rejimi də var (Tenor vasitəsilə)
+      • /packs → «Inline» bölməsində yarat
+      • Həmçinin GIF axtarışı rejimi var (Tenor vasitəsilə)
 
       <b>Birgə redaktə:</b>
-      Paketə toxunun → «Birgə redaktə» → link alın.
+      Paketə toxun → «Birgə redaktə» → link al.
       Linki olan hər kəs stiker əlavə edə və silə bilər.
-      Bütün redaktorları çıxarmaq üçün linki sıfırlayın.
+      Bütün redaktorları çıxarmaq üçün linki sıfırla.
 
-      <b>Paket ayarları:</b>
-      /packs-da paketə toxunun → adını dəyişmək, gücləndirmə, birgə redaktə, silmək.
+      <b>Paket parametrləri:</b>
+      /packs bölməsində paketə toxun → adını dəyiş, Boost, birgə redaktə, sil.
     catalog: |
       <b>🔍 Kataloq</b>
 
       • /catalog — populyar paketlər
-      • /publish — öz paketinizi dərc edin
-      • Yaxşı paketləri önə çıxarmaq üçün qiymət verin
+      • /publish — öz paketini dərc et
+      • Yaxşı paketləri önə çıxarmaq üçün qiymətləndir
     boost: |
-      <b>⚡ Gücləndirmə</b>
+      <b>⚡ Boost</b>
 
       • Adda "${titleSuffix}" olmur
       • Videolar prioritetlə emal olunur
       • 35 saniyəyə qədər video
       • Eyni anda bir neçə stiker
 
-      <b>🎨 Adaptiv emojilər</b> — /new-da ayrıca paket növü: emojilər mətnin rənginə uyğunlaşır
+      <b>🎨 Adaptiv emoji</b> — /new-da ayrıca paket növü: emojilər mətnin rənginə uyğunlaşır
 
-      Əldə etmək → /donate
+      Əldə et → /donate
     problems: |
       <b>❓ FAQ</b>
 
       <b>⚫ Fon qara oldu?</b>
       «Foto» kimi göndərdikdə Telegram şəffaflığı silir.
-      → PNG-ni <b>Fayl</b> kimi göndərin (📎 ikonu).
+      → PNG-ni <b>Fayl</b> kimi göndər (📎 sancaq).
 
       <b>🔄 Dəyişikliklər görünmür?</b>
-      Telegram stikerləri keşdə saxlayır. ~1 saat gözləyin və ya tətbiqi yenidən başladın.
+      Telegram stikerləri keşdə saxlayır. ~1 saat gözlə və ya tətbiqi yenidən başlat.
 
       <b>📹 Video hərəkət etmir?</b>
-      Çox güman ki, format qeyri-adidir. MP4-ə çevirməyə çalışın və ya Video əvəzinə Fayl kimi göndərin.
+      Çox güman ki, format qeyri-adidir. MP4-ə çevirməyə çalış və ya Video əvəzinə Fayl kimi göndər.
 
       <b>🗑 Stikeri necə silmək olar?</b>
-      /delete göndərin, sonra stikerə toxunun.
+      /delete göndər, sonra stikerə toxun.
 
       <b>🤏 Stiker çox kiçikdir?</b>
-      Göndərməzdən əvvəl şəkli kvadrat (1:1) formada kəsin.
+      Göndərməzdən əvvəl şəkli kvadrat (1:1) formasında kəs.
 
       <b>🔗 Linkdən "_by_fStikBot" necə silinir?</b>
-      Heç cür. Telegram paketin hansı botla yaradıldığını müəyyən etmək üçün bu sonluğu tələb edir. Bu, bizim deyil, platformanın qaydasıdır.
+      Heç cür. Telegram paketin hansı botla yaradıldığını bilmək üçün bu şəkilçini tələb edir. Bu bizim deyil, platformanın qaydasıdır.
 
       <b>💎 Premium lazımdır?</b>
       • Paket yaratmaq: pulsuz
       • Stikerlərdən istifadə: pulsuz
       • Fərdi emoji göndərmək: yalnız Premium (Telegram qaydası)
 
-      <b>Başqa sualınız var?</b> @fStikCommunity
+      <b>Başqa sualın var?</b> @fStikCommunity
     btn:
       open: '📖 Bələdçini aç'
-      create: '🎨 Stiker yaratmaq'
-      manage: '📁 Paketlərin idarəsi'
+      create: '🎨 Stiker yarat'
+      manage: '📁 Paket idarəsi'
       catalog: '🔍 Axtarış və dərc'
-      boost: '⚡ Gücləndirmə və imkanlar'
+      boost: '⚡ Boost və imkanlar'
       problems: '❓ Problem var?'
       back: '← Geri'
   inline:
     switch_pm: '📁 Paket seç'
   lang:
     choose: |
-      🌐 Dil seçin
+      🌐 Dil seç
 
-      Tərcüməyə kömək edin: https://crwd.in/fStikBot
+      Tərcüməyə kömək et: https://crwd.in/fStikBot
   restore: |
-    <b>♻️ Paketin bərpası</b>
+    <b>♻️ Paketi bərpa et</b>
 
-    Bərpa etmək istədiyiniz paketin linkini göndərin.
+    Bərpa etmək istədiyin paketin linkini göndər.
   copy: |
-    <b>📋 Paketin kopyalanması</b>
+    <b>📋 Paketi kopyala</b>
 
-    Kopyalamaq istədiyiniz paketin linkini göndərin.
+    Kopyalamaq istədiyin paketin linkini göndər.
   report: |
     <b>🚨 Şikayət</b>
 
-    Qaydaları pozan paket tapmısınız? Linkini @StickersReportBot botuna göndərin
+    Qaydaları pozan paket tapmısan? Linkini @StickersReportBot botuna göndər
   packs:
     info: |
       <b>📁 Paketlərim</b>
     types:
       regular: Stikerlər
-      custom_emoji: Emojilər
-      inline: İnline
+      custom_emoji: Emoji
+      inline: Inline
       shared: '👥 Ortaq'
     empty: |
-      Hələ paket yoxdur. İlk paketinizi yaradın → /new
-    inline_title: İnline paket
+      Hələ paket yoxdur. İlk paketini yarat → /new
+    inline_title: Inline paket
     select_group_pack_info: |
       <b>📁 Paket seçimi</b>
 
@@ -225,100 +225,100 @@ cmd:
     hidden_info: |
       <b>🗄 Gizli paketlər</b>
 
-      Bərpa etmək və ya silmək üçün paketə toxunun.
+      Bərpa etmək və ya silmək üçün paketə toxun.
     hidden_empty: 'Burada gizli paket yoxdur.'
     group_admin_only: 'Qrup paketini yalnız qrup adminləri seçə bilər.'
   emoji:
     info: |
-      Cari paketin standart emojisini dəyişmək üçün <code>/emoji</code> əmrini boşluqdan sonra emoji ilə göndərin
+      Cari paketin standart emojisini dəyişmək üçün <code>/emoji</code> əmrindən sonra boşluq qoyub emoji göndər
 
       Məsələn — <code>/emoji 🌟</code>
     no_pack_selected: |
-      Əvvəlcə /packs ilə paket seçin — sonra /emoji 🌟
-    done: Emoji uğurla dəyişdirildi.
+      Əvvəlcə /packs ilə paket seç — sonra /emoji 🌟
+    done: Emoji dəyişdirildi.
     error: Emojini dəyişərkən xəta baş verdi!
   round_video:
     enabled: |
-      Bundan sonra videolar yuvarlaq formada olacaq
+      Bundan sonra videoların küncləri yuvarlaq olacaq
     disabled: |
-      Videolar artıq yuvarlaq formada olmayacaq
+      Videoların küncləri artıq yuvarlaq olmayacaq
   paysupport: |
     <b>💳 Ödənişlə bağlı suallar</b>
 
-    Tərtibatçıya yazın: @ly_oBot
+    Tərtibatçıya yaz: @ly_oBot
   mosaic:
     enter: |
       🧩 <b>${packTitle}</b> üçün mozaika
 
-      Foto göndərin — onu emoji şəbəkəsinə bölüm.
+      Foto göndər — onu emoji şəbəkəsinə kəsim.
     no_pack: |
       Mozaika fərdi emoji paketi ilə işləyir.
-      Aşağıdan paketlərinizdən birini seçin və ya yenisini yaradın.
+      Aşağıdan paketlərindən birini seç və ya yenisini yarat.
     choose_grid: |
-      📐 Şəbəkə ölçüsünü seçin:
+      📐 Şəbəkə ölçüsünü seç:
     btn:
       recommended: "✅ ${rows}×${cols}"
       option: "${rows}×${cols} · ${total} əd."
       custom: "✏️ Öz ölçün"
       cancel: "← Ləğv et"
       exit: "🚪 Mozaikadan çıx"
-      undo: "🗑 Bu mozaikanı sil"
+      undo: "🗑 Mozaikanı sil"
     custom_prompt: |
-      Şəbəkə ölçüsünü daxil edin (məs. 3x4):
+      Şəbəkə ölçüsünü daxil et (məs. 3x4):
     custom_invalid: |
       Yanlış format. Nümunə: 3x4. Sətirlər 1-10, sütunlar 1-10, cəmi 50-yə qədər.
     no_space: |
       Paketdə kifayət qədər yer yoxdur. Boş yer: ${freeSlots}, lazımdır: ${total}.
-      Daha kiçik şəbəkə seçin və ya /new ilə yeni paket yaradın.
+      Daha kiçik şəbəkə seç və ya /new ilə yeni paket yarat.
     blurry_warning: |
       ⚠️ Şəkil çox kiçikdir — bu şəbəkə ölçüsündə nəticə bulanıq ola bilər.
     uploading: "⏳ Yüklənir ${current}/${total}..."
     done: |
       ✅ ${rows}×${cols} mozaika paketə əlavə edildi!
-    done_link: "📦 Paketdən istifadə et"
+    done_link: "📦 Paketi əlavə et"
     undo_done: |
       🗑 Mozaika silindi (paketdən ${count} emoji silindi).
     undo_failed: |
-      ❌ Bəzi emojiləri silmək alınmadı. Əl ilə silməyə çalışın.
+      ❌ Bəzi emojiləri silmək alınmadı. Əllə silməyə çalış.
     wait_photo: |
-      Başqa foto göndərin və ya «Mozaikadan çıx» düyməsinə toxunun.
+      Başqa foto göndər və ya «Mozaikadan çıx» düyməsinə toxun.
     reject_animated: |
-      Animasiyalı və video stikerlər hələ dəstəklənmir. Statik stiker, foto və ya PNG/JPEG/WebP faylı göndərin.
+      Animasiyalı və video stikerlər hələ dəstəklənmir. Statik stiker, foto və ya PNG/JPEG/WebP faylı göndər.
     reject_document: |
-      Yalnız şəkillər dəstəklənir (JPEG/PNG/WebP). Bu formatlardan birində fayl göndərin.
+      Yalnız şəkillər dəstəklənir (JPEG/PNG/WebP). Bu formatlardan birində fayl göndər.
     reject_media: |
-      Animasiyalar və videolar hələ dəstəklənmir. Statik stiker, foto və ya PNG/JPEG/WebP faylı göndərin.
+      Animasiyalar və videolar hələ dəstəklənmir. Statik stiker, foto və ya PNG/JPEG/WebP faylı göndər.
 donate:
   menu: |
     <b>⭐ Bota dəstək</b>
 
     <b>Balans:</b> ${balance} kredit
-    1 kredit = bir paketin gücləndirilməsi
+    1 kredit = bir paket üçün Boost
 
-    <b>Gücləndirmə nə verir:</b>
+    <b>Boost nə verir:</b>
     • Adda "<code>${titleSuffix}</code>" olmur
     • 64 simvola qədər ad (35 əvəzinə)
     • 35 saniyəyə qədər video
-    • Prioritet çevirmə növbəsi
+    • Prioritet çevrilmə növbəsi
     • Eyni anda bir neçə stiker
     • Reklamsız
 
-    <b>Neçə kredit almaq istəyirsiniz?</b>
+    <b>Neçə kredit almaq istəyirsən?</b>
   invoice_title: '${amount} kredit'
   btn:
-    donate: '☕ İanə et'
+    donate: '☕ Dəstək ol'
   topup: |
-    <b>Almaq istədiyiniz kredit sayını daxil edin:</b>
+    <b>Almaq istədiyin kredit sayını daxil et:</b>
   description: |
-    Kredit almaqla botun inkişafına dəstək olur və əlavə funksiyalardan istifadə imkanı qazanırsınız
+    Kredit almaqla botun inkişafına dəstək olur və əlavə imkanlar əldə edirsən
   update: |
     <b>🔄 Balans yeniləndi</b>
 
     Balans: <code>${balance}</code> kredit (<code>${amount}</code> kredit əlavə edildi)
   error:
     already_donated: |
-      Bu ödəniş üçün artıq kredit almısınız
-    already_paid: Ödəniş artıq edilib
+      Bu ödəniş üçün artıq kredit almısan
+    already_paid: Ödəniş artıq tamamlanıb
     not_found: Ödəniş tapılmadı
     user_not_found: İstifadəçi tapılmadı
     error: |
@@ -342,7 +342,7 @@ coedit:
     activity: '🧾 Fəaliyyət'
     default_role: '⚙️ Yenilər: ${role}'
     clear: '🧹 Hamını çıxar'
-    clear_confirm: '⚠️ Bəli, hamını çıxar'
+    clear_confirm: '⚠️ Bəli, çıxar'
     role_editor: '✏️ Əlavə edir və silir'
     role_contributor: '➕ Yalnız əlavə edir'
     remove: '🚫 Paketdən çıxar'
@@ -352,7 +352,7 @@ coedit:
     editor: 'əlavə edir və silir'
     contributor: 'yalnız əlavə edir'
   share: |
-    «${title}» paketini birgə redaktə etmək üçün linkə keçin və «Başlat» düyməsinə basın
+    «${title}» paketini birgə redaktə etmək üçün linki aç və «Başlat» düyməsinə toxun
   reset: |
     <b>🔁 Yeni link.</b> Köhnəsi artıq işləmir; hazırkı üzvlərin girişi qalır.
   member: |
@@ -364,18 +364,18 @@ coedit:
   clear_confirm: |
     Bütün üzvlər (${count}) <b>${title}</b> paketindən çıxarılsın? Link də dəyişdiriləcək.
   cleared: 'Hamı çıxarıldı və link dəyişdirildi.'
-  joined: '👥 <b>${title}</b> paketinə qoşuldunuz. Rolunuz: ${role}.'
+  joined: '👥 <b>${title}</b> paketinə qoşuldun. Rolun: ${role}.'
   joined_notice: |
     👥 ${name} birgə redaktə linki ilə <a href="${link}">${title}</a> paketinə qoşuldu.
 
-    Üzvləri idarə edin: /packs → paket → 👥 Birgə redaktə
-  left: '🚪 <b>${title}</b> paketindən çıxdınız.'
+    Üzvləri idarə et: /packs → paket → 👥 Birgə redaktə
+  left: '🚪 <b>${title}</b> paketindən çıxdın.'
   left_notice: '🚪 ${name} <b>${title}</b> paketindən çıxdı.'
-  removed_notice: 'Siz <b>${title}</b> paketinin birgə redaktəsindən çıxarıldınız.'
-  role_notice: '<b>${title}</b> paketində rolunuz indi: ${role}.'
-  no_access: 'Bu paketə artıq girişiniz yoxdur. /packs bölməsində başqasını seçin.'
-  no_rights: 'Bu paketdəki rolunuz buna icazə vermir.'
-  your_role: '👥 Rolunuz: ${role}'
+  removed_notice: '<b>${title}</b> paketinin birgə redaktəsindən çıxarıldın.'
+  role_notice: '<b>${title}</b> paketində rolun indi: ${role}.'
+  no_access: 'Bu paketə artıq girişin yoxdur. /packs bölməsində başqasını seç.'
+  no_rights: 'Bu paketdəki rolun buna icazə vermir.'
+  your_role: '👥 Rolun: ${role}'
   activity: |
     <b>🧾 Fəaliyyət</b> — <a href="${link}">${title}</a>
 
@@ -396,37 +396,37 @@ callback:
   pack:
     answerCbQuer:
       not_found: Paket tapılmadı
-      not_owner: Bu sizin paketiniz deyil
-      hidden: Paket uğurla gizlədildi
-      restored: Paket uğurla bərpa edildi
+      not_owner: Bu sənin paketin deyil
+      hidden: Paket gizlədildi
+      restored: Paket bərpa edildi
     set_pack: |
       ✅ <a href="${link}">${title}</a> seçildi
 
-      Əlavə etmək üçün foto, video və ya stiker göndərin.
+      Əlavə etmək üçün foto, video və ya stiker göndər.
     set_inline_pack: |
       ✅ <u>${title}</u> seçildi
 
-      İstənilən söhbətdə yazın: <code>@${botUsername} </code>
+      İstənilən söhbətdə yaz: <code>@${botUsername} </code>
     boost:
       info: |
-        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Gücləndirmə</a></b>: ${boostStatus}
+        \n⚡ <b><a href="https://t.me/${botUsername}?start=boost">Boost</a></b>: ${boostStatus}
       status:
         on: aktiv
         off: qeyri-aktiv
-    hidden: Paket <a href="${link}">${title}</a> siyahınızdan gizlədildi.
-    restored: Paket <a href="${link}">${title}</a> siyahınıza qaytarıldı.
+    hidden: <a href="${link}">${title}</a> paketi siyahından gizlədildi.
+    restored: <a href="${link}">${title}</a> paketi siyahında bərpa edildi.
     btn:
       hide: '👁 Paketi gizlət'
       delete: '🗑 Paketi sil'
       restore: '✅ Bərpa et'
-      use_pack: '📦 Paketdən istifadə et'
-      boost: '⚡ Gücləndirmə'
+      use_pack: '📦 Paketi əlavə et'
+      boost: '⚡ Boost'
       frame: '🖼 Çərçivə'
       rename: '✏️ Adını dəyiş'
       search_gif: '🔎 GIF axtar'
       coedit: '👥 Birgə redaktə'
       catalog_add: '🗂 Kataloqa əlavə et'
-      catalog_edit: '📝 Kataloqda redaktə et'
+      catalog_edit: '📝 Kataloqda redaktə'
       catalog_delete: '🗑 Kataloqdan sil'
       catalog_share: '🔗️️ Paylaş'
       catalog_open: '📂 Kataloqda aç'
@@ -435,11 +435,11 @@ callback:
       not_found: |
         Stikeri tapmaq alınmadı.
       invalid_png: |
-        Fayl düzgün PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevirin.
+        Fayl düzgün PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevir.
       invalid_dimensions: |
-        Stikerin ölçüləri yanlışdır. Stikerlər 512x512 piksel olmalıdır.
+        Stikerin ölçüləri yanlışdır. Stiker 512x512 piksel olmalıdır.
       invalid_animated: |
-        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndərin — bot onlardan video stiker hazırlayacaq.
+        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndər — bot onlardan video stiker hazırlayacaq.
       invalid_video: |
         Video faylın formatı yanlışdır (WEBM tələb olunur).
       restore: |
@@ -448,7 +448,7 @@ callback:
         Paketi tapmaq mümkün deyil.
     select_group:
       success: |
-        <a href="${link}">${title}</a> paketi qrup üçün uğurla seçildi.
+        <a href="${link}">${title}</a> paketi qrup üçün seçildi.
       access_rights:
         add: Qrup paketinə kim stiker əlavə edə bilər?
         delete: Qrup paketindən kim stiker silə bilər?
@@ -459,10 +459,10 @@ callback:
         Paket tapılmadı.
   sticker:
     answerCbQuery:
-      delete: Stiker paketdən uğurla silindi.
-      restored: Stiker cari paketdə uğurla saxlanıldı.
-    delete: Stiker paketdən uğurla silindi.
-    restored: Stiker cari paketdə uğurla saxlanıldı.
+      delete: Stiker paketdən silindi.
+      restored: Stiker cari paketdə saxlanıldı.
+    delete: Stiker paketdən silindi.
+    restored: Stiker cari paketdə saxlanıldı.
     btn:
       delete: '🗑 Sil'
       copy: '🌟 Kopyala'
@@ -471,68 +471,68 @@ callback:
       not_found: |
         Stikeri tapmaq alınmadı.
       invalid_png: |
-        Fayl düzgün PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevirin.
+        Fayl düzgün PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevir.
       invalid_dimensions: |
-        Stikerin ölçüləri yanlışdır. Stikerlər 512x512 piksel olmalıdır.
+        Stikerin ölçüləri yanlışdır. Stiker 512x512 piksel olmalıdır.
       invalid_animated: |
-        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndərin — bot onlardan video stiker hazırlayacaq.
+        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndər — bot onlardan video stiker hazırlayacaq.
       invalid_video: |
         Video faylın formatı yanlışdır (WEBM tələb olunur).
   group_settings:
     success: |
-      Qrup ayarları uğurla yeniləndi.
+      Qrup parametrləri yeniləndi.
 sticker:
   add:
     ok: |
       ✅ <a href="${link}">${title}</a> paketinə əlavə edildi
 
-      <i>Bu stiker üçün emoji göndərə bilərsiniz</i>
+      <i>Bu stiker üçün emoji göndərə bilərsən</i>
     ok_inline: |
       ✅ <u>${title}</u> paketinə əlavə edildi
     ok_repainting_notice: |
       ⚠️ Bu monoxrom emojidir: adi paketdə ağ rəngdə qalır və açıq fonda demək olar ki, görünmür.
-      Onun mətnin rənginə uyğunlaşması üçün /new vasitəsilə ayrıca «🎨 Adaptiv emojilər» paketi yaradın.
-    send_emoji: Bu stiker üçün emoji göndərin
+      Mətnin rənginə uyğunlaşması üçün /new vasitəsilə ayrıca «🎨 Adaptiv emoji» paketi yarat.
+    send_emoji: Bu stiker üçün emoji göndər
     converting_process: |
       ⏳ Çevrilir: ${progress}/${total}
 
-      <i>Gücləndirmə = prioritet → /donate</i>
+      <i>Boost = prioritet → /donate</i>
     catalog_offer: |
-      <a href="${link}">${title}</a> paketini paylaşmaq istəyirsiniz?
-      Kataloqa əlavə edin — başqaları onu tapa biləcək.
+      <a href="${link}">${title}</a> paketini paylaşmaq istəyirsən?
+      Kataloqa əlavə et — başqaları onu tapa bilsin.
     quote: |
-      Bu mesajdan sitat yaratmaq üçün @QuotlyBot botundan istifadə edin
+      Bu mesajdan sitat yaratmaq üçün @QuotlyBot botundan istifadə et
     error:
       reply: |
-        Stikerə cavab verin.
+        Stikerə cavab ver.
       no_selected_pack: |
-        <b>Əvvəlcə stikerləriniz üçün paket lazımdır</b>
+        <b>Əvvəlcə stikerlərin üçün paket lazımdır</b>
 
-        Paket yaradın — bu faylı dərhal ona əlavə edəcəyəm.
+        Paket yarat — bu faylı dərhal ona əlavə edim.
       no_selected_group_pack: |
-        <b>Qrup paketi seçməmisiniz</b>
+        <b>Qrup paketi seçməmisən</b>
 
-        /packs əmri ilə paket seçin
+        /packs əmri ilə paket seç
       no_rights: |
-        Bu paketə stiker əlavə etmək hüququnuz yoxdur.
+        Bu paketə stiker əlavə etməyə icazən yoxdur.
       stickers_too_much: |
-        Bu paketdə stikerlərin sayı maksimuma çatıb.
+        Bu paketdə stiker sayı maksimuma çatıb.
 
-        /new əmri ilə yeni paket yarada bilərsiniz.
+        /new əmri ilə yeni paket yarada bilərsən.
       have_already: |
         <b>Bu stiker artıq paketdədir</b>
 
-        Emojini dəyişmək istəyirsinizsə, onu növbəti mesajda göndərin.
+        Emojini dəyişmək istəyirsənsə, növbəti mesajda göndər.
       stickerset_invalid: |
         Bot seçilmiş stiker paketinə daxil ola bilmir.
 
-        Başqa stiker paketi yaradın (/new) və ya seçin (/packs).
+        Başqa stiker paketi yarat (/new) və ya seç (/packs).
       invalid_png: |
-        Fayl düzgün PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevirin.
+        Fayl düzgün PNG şəkli deyil. Göndərməzdən əvvəl onu PNG formatına çevir.
       invalid_dimensions: |
-        Stikerin ölçüləri yanlışdır. Stikerlər 512x512 piksel olmalıdır.
+        Stikerin ölçüləri yanlışdır. Stiker 512x512 piksel olmalıdır.
       invalid_animated: |
-        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndərin — bot onlardan video stiker hazırlayacaq.
+        Telegram animasiyalı stikerləri yalnız TGS formatında qəbul edir. GIF və ya MP4 fayllarını video kimi göndər — bot onlardan video stiker hazırlayacaq.
       animated_too_big: |
         Paketin ölçüsünə uyğunlaşdırıldıqdan sonra animasiyalı stiker Telegram-ın 64 KB limitini keçir — onu köçürmək mümkün deyil.
       invalid_video: |
@@ -541,25 +541,25 @@ sticker:
         unknown: |
           Bu fayl növü dəstəklənmir.
 
-          Foto, video, GIF, stiker və ya fayl kimi şəkil göndərin.
+          Foto, video, GIF, stiker və ya fayl kimi şəkil göndər.
       wait_load: |
         ⏳ Hələ əvvəlki faylı emal edirəm...
       timeout: |
-        ⚠️ Hazırda yüklənmə yüksəkdir. Bir neçə dəqiqədən sonra yenidən cəhd edin.
+        ⚠️ Hazırda yüklənmə yüksəkdir. Bir neçə dəqiqədən sonra yenidən cəhd et.
       convert: |
         Videonu çevirmək alınmadı.
 
-        MP4 formatını sınayın və ya yenidən göndərin.
+        MP4 formatını yoxla və ya yenidən göndər.
       too_big: |
 
-        Fayl emal üçün çox böyükdür. Göndərməzdən əvvəl faylın keyfiyyətini və müddətini azaldın.
+        Fayl emal üçün çox böyükdür. Göndərməzdən əvvəl faylın keyfiyyətini və müddətini azalt.
       sticker_not_found: |
 
-        Bu stikeri tapmaq alınmadı. Onun düzgün paketdə olduğuna əmin olun və ya yenidən əlavə etməyə çalışın.
+        Bu stikeri tapmaq alınmadı. Düzgün paketdə olduğuna əmin ol və ya yenidən əlavə etməyə çalış.
       invalid_image: |
 
-        Bu şəkli emal etmək alınmadı. Başqa fayl və ya format göndərməyə çalışın.
-      queue_full: '⏳ Eyni anda çox fayl. Növbədəkiləri emal edənə qədər gözləyin, sonra qalanını göndərin.'
+        Bu şəkli emal etmək alınmadı. Başqa fayl və ya format göndərməyə çalış.
+      queue_full: '⏳ Eyni anda çox fayl göndərildi. Növbədəkiləri emal edənə qədər gözlə, sonra qalanını göndər.'
     album_progress: '⏳ Albom əlavə olunur: ${current}/${total}'
     album_done: '✅ ${total} fayldan ${added} ədədi <a href="${link}">${title}</a> paketinə əlavə olundu'
     album_converting: '⏳ Daha ${count} ədədi videodur: çevirirəm, hər biri hazır olanda cavab verəcəyəm.'
@@ -567,72 +567,72 @@ sticker:
     album_failed: '⚠️ Əlavə etmək alınmadı: ${count}.'
 news:
   join: |
-    📢 <a href="${link}">Kanala abunə olun</a> — xəbərlər, yeniləmələr, yeni funksiyalar.
+    📢 <a href="${link}">Kanala abunə ol</a> — xəbərlər, yeniləmələr, yeni funksiyalar.
   join_btn: '📢 Abunə ol'
-  not_joined: '🙅 Kanala abunə deyilsiniz'
+  not_joined: '🙅 Kanala abunə deyilsən'
   continue: '✅ Davam et'
 userAbout:
   help: |
     <b>🧑‍🎨 İstifadəçi haqqında</b>
 
-    Bu menyu ilə istifadəçi və onun stiker paketləri haqqında məlumat ala bilərsiniz
+    Bu menyu istifadəçi və onun stiker paketləri haqqında məlumat göstərir
 
-    İstifadəçi haqqında məlumat almaq üçün aşağıdakı düymədən istifadə edin və ya onun mesajını yönləndirin
+    İstifadəçi haqqında məlumat almaq üçün aşağıdakı düyməyə toxun və ya onun mesajını yönləndir
   result: |
-    <b>🧑‍🎨 İstifadəçi haqqında məlumat</b>
+    <b>🧑‍🎨 İstifadəçi məlumatı</b>
     <b>🆔 İstifadəçi ID-si:</b> <code>${userId}</code>
     <b>🎨 Bu istifadəçinin paketləri:</b>
     ${packs}
   no_packs: |
-    <i>Bu sahibin paketləri haqqında məlumatımız yoxdur</i>
+    <i>Bu müəllifin paketləri haqqında məlumat yoxdur</i>
   forward_hidden: |
-    İstifadəçi mesajlarının yönləndirilməsini gizlədib. Onun stiker paketlərinə baxmaq üçün aşağıdakı düymədən istifadə edin.
+    İstifadəçi mesajların yönləndirilməsini məhdudlaşdırıb. Onun stiker paketlərinə baxmaq üçün aşağıdakı düymədən istifadə et.
   select_user: '🧑‍🎨 İstifadəçi seç'
 scenes:
   new_pack:
     pack_type: |
       <b>Hansı paketi yaradırıq?</b>
 
-      <b>🖼 Stikerlər</b> — klassik, söhbətdəki smayliklər kimi.
-      <b>✨ Emoji</b> — mətnin içində fərdi emojilər. Onları yalnız Telegram Premium istifadəçiləri göndərə bilər.
-      <b>🎨 Adaptiv emojilər</b> — monoxrom: tək rənglə çəkilir və mətnin rənginə özü uyğunlaşır.
+      <b>🖼 Stikerlər</b> — klassik, söhbətdə göndərilən stikerlər.
+      <b>✨ Emoji</b> — mətn daxilində fərdi emoji. Onları yalnız Telegram Premium istifadəçiləri göndərə bilər.
+      <b>🎨 Adaptiv emoji</b> — monoxrom: tək rənglə çəkilir və mətnin rənginə avtomatik uyğunlaşır.
     regular: '🖼 Stikerlər'
     custom_emoji: '✨ Emoji'
-    custom_emoji_adaptive: '🎨 Adaptiv emojilər'
+    custom_emoji_adaptive: '🎨 Adaptiv emoji'
     pack_title: |
       <b>Paketin adı</b>
 
-      Onu hamı görür. Öz adınızı yazın və ya aşağıdakı təkliflərdən seçin.
-      <i>Paketin ünvanını addan düzəldəcəyəm.</i>
+      Onu hamı görəcək. Öz adını yaz və ya aşağıdakı təkliflərdən birini seç.
+      <i>Paketin linkini addan hazırlayacağam.</i>
     pack_name: |
-      <b>Paketin ünvanı</b>
+      <b>Paketin linki</b>
 
-      Yalnız ingilis hərfləri, rəqəmlər və <code>_</code>. Məsələn: t.me/addstickers/<u>MeninStikerlerim</u>
+      Yalnız latın hərfləri, rəqəmlər və <code>_</code>. Məsələn: t.me/addstickers/<u>MenimStikerlerim</u>
     ok: |
       ✅ Paket yaradıldı: <a href="${link}">${title}</a>
 
-      Əlavə etmək üçün foto, video və ya stiker göndərin.
+      Əlavə etmək üçün foto, video və ya stiker göndər.
     error:
-      title_long: Ad ${max} simvoldan uzun olmamalıdır.
-      name_long: Ünvan ${max} simvoldan uzun olmamalıdır.
+      title_long: Ad ${max} simvoldan uzun ola bilməz.
+      name_long: Link ${max} simvoldan uzun ola bilməz.
       inline_exists: |
-        Artıq inline paketiniz var — <b>${title}</b>.
+        Artıq inline paketin var — <b>${title}</b>.
 
-        Yalnız bir inline paket ola bilər: yenisini yaratsanız, bu paket silinərdi.
-        O artıq seçilib, sadəcə stiker əlavə etməyə davam edin.
+        Yalnız bir inline paket ola bilər: yenisini yaratsan, bu paket silinər.
+        O artıq seçilib, sadəcə stiker əlavə etməyə davam et.
       telegram:
-        name_invalid: Bu ünvandan istifadə etmək olmaz.
-        name_occupied: Bu ünvan artıq tutulub. Başqasını sınayın.
+        name_invalid: Bu linkdən istifadə etmək olmaz.
+        name_occupied: Bu link artıq tutulub. Başqasını yoxla.
         upload_failed: |
           Bot stikerləri Telegram-a yükləyə bilmir.
 
-          Bir az sonra yenidən cəhd edin.
+          Bir az sonra yenidən cəhd et.
     btn:
-      custom_link: '🔗 Öz paket ünvanım'
-    custom_link_on: 'Oldu — adı göndərin, sonra ünvanı soruşacağam.'
+      custom_link: '🔗 Öz paket linkim'
+    custom_link_on: 'Oldu — adı göndər, sonra linki soruşacağam.'
   copy:
     enter: |
-      Əvvəlcə kopya üçün yeni paket yaradaq.
+      Əvvəlcə nüsxə üçün yeni paket yaradaq.
     progress: |
       ⏳ Kopyalanır: ${current}/${total}
     done: |
@@ -664,25 +664,25 @@ scenes:
 
         Paket yaradılmadı.
       premium: |
-        Təəssüf ki, bu funksiya yalnız botu dəstəkləyənlər üçün əlçatandır.
+        Təəssüf ki, bu funksiya yalnız bota dəstək olanlar üçün əlçatandır.
 
-        Bunu /donate əmrini göndərməklə edə bilərsiniz.
+        Bunu /donate əmrini göndərməklə edə bilərsən.
     title: |
       <b>📋 <a href="${originalLink}">${originalTitle}</a> kopyalanır</b> (${count})
 
-      Kopyanın adı — öz adınızı yazın və ya aşağıdan seçin.
+      Kopyanın adı — öz adını yaz və ya aşağıdan seç.
     btn:
-      change_type: '🔄 Paket növünü dəyiş'
+      change_type: '🔄 Növü dəyiş'
     created: |
       ✅ Paket yaradıldı: <a href="${link}">${title}</a>
 
-      Stikerləri kopyalayıram — bitəndə xəbər verəcəyəm.
+      Stikerləri kopyalayıram — hazır olanda xəbər verəcəyəm.
   original:
     enter: |
       <b>🔎 Stiker haradandır</b>
 
-      Stiker göndərin — hansı paketdən kopyalandığını göstərim.
-      Orijinal tapılmasa — faylı (PNG/WEBM) alacaqsınız.
+      Stiker göndər — hansı paketdən kopyalandığını göstərim.
+      Orijinal tapılmasa — faylı (PNG/WEBM) alacaqsan.
     source_found: |
       🔎 Kopyalandığı paket: <a href="${link}">${title}</a>
     error:
@@ -690,27 +690,27 @@ scenes:
         Orijinal tapılmadı. Budur stikerin faylı:
   delete:
     enter: |
-      <b>🗑 Stikerin silinməsi</b>
+      <b>🗑 Stikeri sil</b>
 
-      Stiker göndərin — onu dərhal paketindən siləcəyəm (bərpa etmək olar). İstədiyiniz qədər göndərə bilərsiniz.
+      Stiker göndər — onu dərhal paketdən silim (bərpa etmək olar). İstədiyin qədər göndərə bilərsən.
     confirm: |
       Bu stiker paketdən silinsin?
     error:
       not_found: |
-        Stiker bazada tapılmadı. Ola bilsin ki, o bu botla yaradılmayıb.
+        Stiker bazada tapılmadı. Ola bilsin ki, bu botla yaradılmayıb.
   rename:
     enter_name: |
       <a href="${link}">${title}</a> üçün yeni ad:
     success: |
-      ✅ Adı dəyişdirildi: <a href="${link}">${title}</a>
+      ✅ Ad dəyişdirildi: <a href="${link}">${title}</a>
     boost_notice: |
-      Gücləndirmə "${titleSuffix}" sonluğunu siləcək → /donate
+      Boost "${titleSuffix}" şəkilçisini siləcək → /donate
   packAbout:
     enter: |
       <b>🔎 Stiker kimindir</b>
 
-      Stiker göndərin — paketi, müəllifi və onun digər paketlərini göstərim.
-      Və ya mesajı yönləndirin — həmin şəxsin paketlərini göstərim.
+      Stiker göndər — paketi, müəllifi və onun digər paketlərini göstərim.
+      Və ya mesajı yönləndir — həmin şəxsin paketlərini göstərim.
     not_found: |
       Stiker tapılmadı.
     btn:
@@ -726,61 +726,61 @@ scenes:
       <b>🎨 Bu sahibin digər paketləri:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>Bu sahibin digər paketləri haqqında məlumatımız yoxdur</i>
+      <i>Bu sahibin digər paketləri haqqında məlumat yoxdur</i>
     unknown_owner: '<i>Naməlum</i>'
     hidden: '<i>[gizlədilib]</i>'
   boost:
     sure: |
-      <a href="${link}">${title}</a> paketi gücləndirilsin?
+      <a href="${link}">${title}</a> paketinə Boost tətbiq edilsin?
 
       <b>Qiymət:</b> 1 kredit
       <b>Balans:</b> ${balance}
     btn:
-      buy: '⭐ Kredit al'
-      yes: '⚡ Gücləndir'
+      yes: '⚡ Boost'
       no: Ləğv et
+      buy: '⭐ Kredit al'
     canceled: |
       Ləğv edildi
     success: |
-      ⚡ <a href="${link}">${title}</a> — gücləndirmə aktivləşdirildi!
+      ⚡ <a href="${link}">${title}</a> — Boost aktivləşdirildi!
 
       <b>Açılan imkanlar:</b>
-      • «${titleSuffix}» sonluğu olmayan ad — adı dəyişdikdən sonra
+      • «${titleSuffix}» şəkilçisi olmayan ad — adı dəyişdikdən sonra
       • Adda 64 simvola qədər (35 əvəzinə)
       • 35 saniyəyə qədər video
-      • Çevirmədə prioritet
+      • Çevrilmədə prioritet
       • Eyni anda bir neçə stiker
 
-      <i>Sonluğu silmək üçün paket menyusunda «✏️ Adını dəyiş» düyməsinə basın.</i>
+      <i>Şəkilçini silmək üçün paket menyusunda «✏️ Adını dəyiş» düyməsinə toxun.</i>
     error:
-      too_fast: Bir az yavaş — bir saniyədən sonra yenidən cəhd edin.
+      too_fast: Bir az yavaş — bir saniyədən sonra yenidən cəhd et.
       not_enough_credits: |
         Kifayət qədər kredit yoxdur. /donate
       already_boosted: |
-        Artıq gücləndirilib.
+        Artıq Boost edilib.
   catalog:
     publish:
       publish_new: |
-        👌 <b>Dərc etmək istədiyiniz paketdən bir stiker göndərin</b>
+        👌 <b>Dərc etmək istədiyin paketdən bir stiker göndər</b>
 
-        <i>Özünüzə məxsus istənilən paketi, hətta başqa yerdə yaradılıbsa belə, dərc edə bilərsiniz</i>
+        <i>Özünə məxsus istənilən paketi, hətta başqa yerdə yaradılıbsa belə, dərc edə bilərsən</i>
       owner_proof: |
-        <b>Bu paketin sizə məxsus olduğunu təsdiqləmək üçün bir neçə sadə addım atın:</b>
-        1. @Stickers botunu açın
-        2. <code>/packstats</code> əmrini göndərin
-        3. Lazım olan paketi tapıb seçin
-        4. Aldığınız mesajı mənə yönləndirin
+        <b>Bu paketin sənə məxsus olduğunu təsdiqləmək üçün bir neçə sadə addım:</b>
+        1. @Stickers botunu aç
+        2. <code>/packstats</code> əmrini göndər
+        3. Lazım olan paketi tap və seç
+        4. Aldığın mesajı mənə yönləndir
       publish_new_access_denied: |
-        Bu paket sizin deyil.
+        Bu paket sənin deyil.
 
-        Yalnız öz paketlərinizi dərc edə bilərsiniz
+        Yalnız öz paketlərini dərc edə bilərsən
       banned: |
-        Bu funksiyadan istifadə etməyiniz qadağandır.
-        Administratorla əlaqə saxlayın.
+        Bu funksiyadan istifadə etməyin qadağandır.
+        Administratorla əlaqə saxla.
       enter: |
         <a href="${link}">${title}</a> kataloqda dərc edilsin?
 
-        Digər istifadəçilər paketinizi adına və ya teqlərinə görə tapa biləcək.
+        Digər istifadəçilər paketini adına və ya teqlərinə görə tapa biləcək.
 
         <b>Qaydalar:</b>
         • Yalnız geniş auditoriya üçün keyfiyyətli paketlər
@@ -788,28 +788,28 @@ scenes:
         • Qanun pozuntusu olmamalıdır
       continue_button: Davam et
       enter_description: |
-        <b>Başqalarının tapa bilməsi üçün paketinizi qısaca təsvir edin</b>
+        <b>Başqalarının tapa bilməsi üçün paketini qısaca təsvir et</b>
 
-        <i>Kateqoriyalara ayırmaq üçün heşteqlərdən istifadə edə bilərsiniz [#]</i>
+        <i>Kateqoriyalara ayırmaq üçün heşteqlərdən istifadə edə bilərsən [#]</i>
         <i>Məsələn: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
         <b>Hazırkı təsvir:</b> <i>${description}</i>
-      keep_description: '✅ Hazırkı təsviri saxla'
+      keep_description: '✅ Təsviri saxla'
       select_language: |
-        <b>Paketinizin hansı dillər üçün nəzərdə tutulduğunu seçin:</b>
-        <i>Bir neçəsini seçə bilərsiniz</i>
+        <b>Paketinin hansı dillər üçün nəzərdə tutulduğunu seç:</b>
+        <i>Bir neçəsini seçə bilərsən</i>
       button_all_languages: İstənilən dil
       button_confirm_language: Təsdiqlə
       set_safe: |
-        <b>Paketiniz hamı üçün təhlükəsizdirmi?</b>
+        <b>Paketin hamı üçün təhlükəsizdirmi?</b>
         <i>Yəni onda erotika, zorakılıq və ya digər 18+ məzmun yoxdur</i>
       button_safe:
         safe: '✅ Bəli, 18+ yoxdur'
-        not_safe: '🔞 Xeyr, 18+ məzmun var'
+        not_safe: '🔞 18+ məzmun var'
       no_tags: göstərilməyib
       confirm: |
-        <b>«<a href="${link}">${title}</a>» stiker paketinin dərcini təsdiqləyin</b>
+        <b>«<a href="${link}">${title}</a>» stiker paketinin dərcini təsdiqlə</b>
 
         <b>Təsvir:</b> <i>${description}</i>
 
@@ -817,19 +817,19 @@ scenes:
         <b>Dillər:</b> ${languages}
       button_confirm: '✅ Dərci təsdiqlə'
       success: |
-        Təbriklər! Paketiniz kataloqda dərc olundu, indi digər istifadəçilər onu tapa biləcək!
+        Təbriklər! Paketin kataloqda dərc olundu, indi digər istifadəçilər onu tapa biləcək!
 
-        Paket haqqında məlumatı /packs vasitəsilə redaktə edə bilərsiniz.
+        Paket haqqında məlumatı /packs vasitəsilə redaktə edə bilərsən.
 
-        <i>Paketinizin statistikasına rəsmi @Stickers botu vasitəsilə baxa bilərsiniz</i>
+        <i>Paketinin statistikasına rəsmi @Stickers botu vasitəsilə baxa bilərsən</i>
     unpublish:
       success: |
-        Paket kataloqdan uğurla silindi.
+        Paket kataloqdan silindi.
   delete_pack:
     enter: |
       ⚠️ <a href="${link}">${title}</a> həmişəlik silinsin?
 
-      Təsdiqləmək üçün «${confirm}» və ya «Ləğv et» düyməsinə basın.
+      Təsdiqləmək üçün «${confirm}» və ya «Ləğv et» düyməsinə toxun.
     confirm: Bəli, sil
     success: |
       🗑 Paket silindi
@@ -837,86 +837,86 @@ scenes:
       - Nəsə səhv getdi.
   frame:
     no_sticker_set: |
-      Hələ paket seçməmisiniz. /packs ilə seçin və əmri təkrarlayın.
+      Hələ paket seçməmisən. /packs ilə seç və əmri yenidən göndər.
     no_video: |
       Çərçivəni yalnız video paketlərə əlavə etmək olar.
     select_type: |
-      <a href="${example}">&#8203;</a><b>Stikerin formasını seçin:</b>
+      <a href="${example}">&#8203;</a><b>Stikerin formasını seç:</b>
 
-      <code>yüngül</code> — demək olar ki, yuvarlaqlaşdırma yoxdur
-      <code>orta</code> — künclər bir az yuvarlaqlaşdırılıb
-      <code>yuvarlaq</code> — künclər güclü yuvarlaqlaşdırılıb
-      <code>kvadrat</code> — yuvarlaqlaşdırmasız düz künclər
-      <code>dairə</code> — dairə formalı stiker
+      <code>lite</code> — künclər demək olar ki, düzdür
+      <code>medium</code> — künclər bir az yuvarlaqdır
+      <code>rounded</code> — künclər çox yuvarlaqdır
+      <code>square</code> — iti künclər, yuvarlaqlaşdırma yoxdur
+      <code>circle</code> — dairəvi stiker
 
-      <i>Formanı /frame əmri ilə dəyişə bilərsiniz</i>
+      <i>Formanı /frame əmri ilə dəyişə bilərsən</i>
     types:
-      lite: '1. Yüngül'
-      medium: '2. Orta'
-      rounded: '3. Yuvarlaq'
-      square: '4. Kvadrat'
-      circle: '5. Dairə'
+      lite: '1. Lite'
+      medium: '2. Medium'
+      rounded: '3. Rounded'
+      square: '4. Square'
+      circle: '5. Circle'
     selected: |
       <b>Seçilmiş çərçivə növü:</b> ${type}
   photoClear:
     enter: |
-      <b>✂️ Fonun silinməsi</b>
+      <b>✂️ Fonu sil</b>
 
-      Foto göndərin — fonsuz PNG alacaqsınız.
-      <i>Fotolarınız üçün model:</i>
+      Foto göndər — fonsuz PNG alacaqsan.
+      <i>Fotoların üçün model:</i>
     enter_anime: |
-      <b>✂️ Fonun silinməsi</b>
+      <b>✂️ Fonu sil</b>
 
-      Foto göndərin — fonsuz PNG alacaqsınız.
+      Foto göndər — fonsuz PNG alacaqsan.
       <i>Anime ilə daha yaxşı işləyir.</i>
     choose_model: |
       Model:
     web_app: WebApp — insan fotoları üçün
     model:
-      ordinary: Adi — insan fotoları üçün
+      ordinary: Standart — insan fotoları üçün
       general: Ümumi — istənilən foto üçün
       anime: Anime — anime şəkilləri üçün
       birefnet_general: BirefNet — istənilən foto üçün
     add_to_set_btn: '🌟 Paketə əlavə et'
     error: |
-      Ups, nəsə səhv getdi. Yenidən cəhd edin.
+      Nəsə səhv getdi. Yenidən cəhd et.
     error_timeout: |
-      ⏱ Emal çox uzun çəkdi. Bir az sonra və ya daha kiçik foto ilə yenidən cəhd edin.
+      ⏱ Emal çox çəkdi. Bir az sonra və ya daha kiçik foto ilə yenidən cəhd et.
     error_queue_disabled: |
-      Bu funksiya müvəqqəti olaraq əlçatan deyil. Bir az sonra yenidən cəhd edin.
-    not_image: 'Foto və ya fayl kimi şəkil göndərin (PNG, JPEG, WebP).'
+      Bu funksiya müvəqqəti olaraq əlçatan deyil. Bir az sonra yenidən cəhd et.
+    not_image: 'Foto və ya fayl kimi şəkil göndər (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Dairəvi video</b>
 
-      Video göndərin — ondan dairəvi video düzəldim.
+      Video göndər — ondan dairəvi video mesaj düzəldim.
     not_video: |
-      Video, GIF, video stiker və ya animasiyalı şəkil göndərin.
+      Video, GIF, video stiker və ya animasiyalı şəkil göndər.
     error: |
-      Çevirmək alınmadı. Başqa video sınayın.
+      Çevirmək alınmadı. Başqa video yoxla.
     forbidden: |
-      Sizə dairəvi video göndərə bilmirəm. Məxfilik ayarlarını yoxlayın (səsli mesajlara icazə verilməlidir).
+      Sənə video mesaj göndərə bilmirəm. Məxfilik parametrlərini yoxla (səsli mesajlara icazə verilməlidir).
     processing: |
       ⏳ Çevrilir: ${position}/${total}
 
-      <i>Gücləndirmə = prioritet → /donate</i>
+      <i>Boost = prioritet → /donate</i>
     file_too_big: |
-      Fayl çox böyükdür (maks. 20 MB). Daha kiçik video göndərin.
+      Fayl çox böyükdür (maks. 20 MB). Daha kiçik video göndər.
   search:
     error:
       not_found: |
-        Heç nə tapılmadı. Başqa açar sözləri sınayın.
+        Heç nə tapılmadı. Başqa açar sözləri yoxla.
     enter: |
       <b>🔍 Stiker axtarışı</b>
 
-      Açar sözləri daxil edin — kataloqda paketləri tapım.
+      Açar sözləri daxil et — kataloqda paketləri tapım.
   error:
     notFound: Paket tapılmadı
   leave: |
     Ləğv edildi
   btn:
     cancel: '← Ləğv et'
-  unexpected: 'Hazırda başqa şey gözləyirəm — yuxarıdakı addımı yerinə yetirin və ya «← Ləğv et» düyməsinə basın.'
+  unexpected: 'Hazırda başqa addım gözləyirəm — yuxarıdakı addımı yerinə yetir və ya «← Ləğv et» düyməsinə toxun.'
 error:
   stickerset_invalid: |
     Paket əlçatan deyil. Ola bilsin ki, Telegram-da silinib.
@@ -928,36 +928,36 @@ error:
     pack_invalid: |
       Stiker paketi əlçatan deyil. Ola bilsin ki, Telegram-da silinib.
     pack_full: |
-      Paket doludur (Telegram limitinə çatılıb). Bir neçə stikeri silin və yenidən cəhd edin.
+      Paket doludur (Telegram limitinə çatılıb). Bir neçə stikeri sil və yenidən cəhd et.
     not_pack_owner: |
-      Bu paket başqa istifadəçiyə məxsusdur — onu dəyişmək olmaz.
+      Bu paket başqa istifadəçiyə məxsusdur — onu dəyişə bilməzsən.
     pack_name_taken: |
-      Bu paket ünvanı artıq tutulub. Başqa ad seçin.
+      Bu paket linki artıq tutulub. Başqa ad seç.
     pack_name_invalid: |
-      Paket ünvanının formatı yanlışdır. Yalnız latın hərfləri, rəqəmlər və alt xətt (_) istifadə edilə bilər.
+      Paket linkinin formatı yanlışdır. Yalnız latın hərfləri, rəqəmlər və alt xətt (_) istifadə edilə bilər.
     invalid_sticker_format: |
       Fayl stiker üçün uyğun deyil: format və ya ölçü yanlışdır.
     invalid_emoji: |
-      Emoji yanlışdır. Standart Unicode emoji göndərin.
+      Emoji yanlışdır. Standart Unicode emoji göndər.
     rate_limited: |
-      Telegram gözləməyi xahiş edir — bir neçə saniyədən sonra yenidən cəhd edin.
+      Telegram gözləməyi xahiş edir — bir neçə saniyədən sonra yenidən cəhd et.
     cannot_reach_user: |
-      İstifadəçiyə yaza bilmirəm: bot bloklanıb və ya söhbət əlçatan deyil.
+      İstifadəçiyə mesaj göndərmək olmur: bot bloklanıb və ya söhbət əlçatan deyil.
   answerCbQuery:
     telegram: |
       Xəta: ${error}
   file_too_big: |
     Fayl çox böyükdür (maks. 20 MB).
   download: |
-    Faylı yükləmək alınmadı. Yenidən cəhd edin.
+    Faylı yükləmək alınmadı. Yenidən cəhd et.
   banned: |
     🚫 Giriş qadağandır. Suallar → @ly_oBot
   access_denied: Giriş qadağandır
   unknown: |
-    Nəsə səhv getdi. Yenidən cəhd edin.
+    Nəsə səhv getdi. Yenidən cəhd et.
 
-    Kömək etmir? @Ly_oBot ünvanına yazın
+    Hələ də düzəlmir? @Ly_oBot ünvanına yaz
   rate_limit: |
-    ⏳ Çox sayda sorğu. Bir az gözləyin və yenidən cəhd edin.
+    ⏳ Çox sayda sorğu. Bir az gözlə və yenidən cəhd et.
   rate_limit_seconds: |
-    ⏳ Çox sayda sorğu. ${seconds} saniyə gözləyin.
+    ⏳ Çox sayda sorğu. ${seconds} saniyə gözlə.

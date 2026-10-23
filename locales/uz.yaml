@@ -15,7 +15,7 @@ description:
     Stikerlarni qidirish: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
     Rasm, video, GIF-lardan stiker va emoji yarating. Stikerlar katalogi va qidiruv. 🇺🇦
-ratelimit: Juda tez-tez!
+ratelimit: Juda tez!
 cmd:
   start:
     enter: |
@@ -30,8 +30,8 @@ cmd:
     catalog: |
       <b>🔍 Stikerlar katalogi</b>
 
-      Toʻplamlarni kalit soʻzlar boʻyicha qidiring yoki mashhurlarini koʻrib chiqing.
-      Baho bering — boshqalar ham zoʻr toʻplamlarni topa olsin.
+      Toʻplamlarni kalit soʻzlar boʻyicha qidiring yoki ommaboplarini koʻrib chiqing.
+      Boshqalar ham zoʻr toʻplamlarni topishi uchun baho bering.
     search_catalog: |
       <b>🌐 Toʻplamlar katalogi</b>
 
@@ -51,7 +51,7 @@ cmd:
       copy: '📋 Toʻplamdan nusxa olish'
       emoji: '😀 Emojini oʻzgartirish'
       round: '⭕ Dumaloq video'
-      clear: '✂️ Fonni olib tashlash'
+      clear: '✂️ Fonni tozalash'
       info: '🔎 Kimning stikeri'
       user_about: '👤 Muallif haqida'
       lang: '🌐 Til'
@@ -66,7 +66,7 @@ cmd:
       catalog_mini: '🔍 Katalog'
       catalog_browser: '🌐 Brauzerda ochish'
       catalog_browser_mini: '🌐 Brauzerda'
-      catalog_app: 'Android uchun yuklab olish'
+      catalog_app: '📱 Androidga yuklash'
       catalog_app_mini: '📱 Android ilovasi'
     current_pack: '📦 Stikerlar shu yerga qoʻshiladi: <a href="${link}">${title}</a>'
     hint: 'Rasm, video, GIF yoki stiker yuboring — uni <a href="${link}">${title}</a> toʻplamiga qoʻshaman.'
@@ -89,11 +89,11 @@ cmd:
       1. Toʻplam yaratish uchun /new yuboring
       2. Turini tanlang: oddiy, video yoki emoji
       3. Rasm, video yoki GIF yuboring
-      4. Tayyor! Bot hammasini oʻzi konvertatsiya qiladi
+      4. Tayyor! Bot hammasini oʻzi tayyorlaydi
 
       <b>Foydali buyruqlar:</b>
       • /clear — rasmdan fonni olib tashlash
-      • /round — videodan dumaloq video yasash
+      • /round — videoni videoxabarga (dumaloq) aylantirish
       • /frame — video stiker shakli:
         └ lite, medium, rounded, square, circle
 
@@ -105,7 +105,7 @@ cmd:
       • /packs — toʻplamlaringiz roʻyxati
       • /delete — stikerni oʻchirish
       • /copy — toʻplamdan nusxa olish
-      • /restore — yashirilgan toʻplamlarni qaytarish
+      • /restore — yashirilgan toʻplamlarni tiklash
       • /original — stikerning asl manbasini topish
       • /about — toʻplam va muallif haqida maʼlumot
 
@@ -122,28 +122,28 @@ cmd:
       <b>Inline toʻplamlar:</b>
       Shaxsiy kolleksiyangiz: saqlangan stiker, GIF, rasm va videolarni istalgan chatda yuboring — @bot_nomi deb yozing va keraklisini tanlang.
       • Telegram stikerlaringizga hech narsa qoʻshilmaydi — hammasi botda saqlanadi
-      • Stiker, rasm, GIF va video saqlashi mumkin
+      • Unda stiker, rasm, GIF va videolarni saqlash mumkin
       • /packs → «Inline» boʻlimida yarating
       • GIF qidiruv rejimi ham bor (Tenor orqali)
 
       <b>Birgalikda tahrirlash:</b>
       Toʻplamni bosing → Birgalikda tahrirlash → havola oling.
       Havolaga ega har kim stikerlarni qoʻshishi va oʻchirishi mumkin.
-      Barcha muharrirlarni olib tashlash uchun havolani yangilang.
+      Barcha aʼzolarni chiqarish uchun havolani yangilang.
 
       <b>Toʻplam sozlamalari:</b>
-      /packs roʻyxatida toʻplamni bosing → nomini oʻzgartirish, boost, birgalikda tahrirlash, oʻchirish.
+      /packs roʻyxatida toʻplamni bosing → qayta nomlash, boost, birgalikda tahrirlash, oʻchirish.
     catalog: |
       <b>🔍 Katalog</b>
 
-      • /catalog — mashhur toʻplamlar
+      • /catalog — ommabop toʻplamlar
       • /publish — oʻz toʻplamingizni eʼlon qilish
       • Zoʻr toʻplamlarni yuqoriga chiqarish uchun baho bering
     boost: |
       <b>⚡ Boost</b>
 
       • Nomda "${titleSuffix}" boʻlmaydi
-      • Videolar navbatsiz qayta ishlanadi
+      • Videolarni ustuvor navbatda qayta ishlash
       • 35 soniyagacha videolar
       • Bir vaqtda bir nechta stiker
 
@@ -161,7 +161,7 @@ cmd:
       Telegram stikerlarni keshlaydi. Taxminan 1 soat kuting yoki ilovani qayta ishga tushiring.
 
       <b>📹 Video harakatlanmayaptimi?</b>
-      Ehtimol, formati gʻalati. MP4 ga oʻgirib koʻring yoki Video emas, Fayl sifatida yuboring.
+      Katta ehtimol bilan noodatiy formatda. MP4 ga oʻgirib koʻring yoki Video emas, Fayl sifatida yuboring.
 
       <b>🗑 Stikerni qanday oʻchirish mumkin?</b>
       /delete yuboring, soʻng stikerni bosing.
@@ -180,10 +180,10 @@ cmd:
       <b>Yana savollar bormi?</b> @fStikCommunity
     btn:
       open: '📖 Qoʻllanmani ochish'
-      create: '🎨 Stikerlar yaratish'
-      manage: '📁 Toʻplamlarni boshqarish'
+      create: '🎨 Stiker yaratish'
+      manage: '📁 Toʻplam boshqaruvi'
       catalog: '🔍 Qidiruv va eʼlon'
-      boost: '⚡ Boost va imkoniyatlar'
+      boost: '⚡ Boost imkoniyatlari'
       problems: '❓ Muammolar?'
       back: '← Orqaga'
   inline:
@@ -204,7 +204,7 @@ cmd:
   report: |
     <b>🚨 Shikoyat</b>
 
-    Qoidalarni buzayotgan toʻplam topdingizmi? Havolasini @StickersReportBot ga yuboring
+    Qoidalarni buzayotgan toʻplam topdingizmi? Havolasini @StickersReportBot ga yuboring.
   packs:
     info: |
       <b>📁 Toʻplamlarim</b>
@@ -226,22 +226,22 @@ cmd:
       <b>🗄 Yashirin toʻplamlar</b>
 
       Toʻplamni tiklash yoki oʻchirish uchun ustiga bosing.
-    hidden_empty: 'Bu yerda yashirin toʻplamlar yoʻq.'
+    hidden_empty: 'Yashirin toʻplamlar yoʻq.'
     group_admin_only: 'Guruh toʻplamini faqat guruh adminlari tanlay oladi.'
   emoji:
     info: |
-      Joriy toʻplamning standart emojisini oʻzgartirish uchun <code>/emoji</code> buyrugʻini boʻsh joy bilan ajratilgan emoji bilan yuboring
+      Joriy toʻplamning standart emojisini oʻzgartirish uchun <code>/emoji</code> buyrugʻidan soʻng boʻsh joy qoldirib emojini yozing
 
       Masalan — <code>/emoji 🌟</code>
     no_pack_selected: |
       Avval /packs orqali toʻplamni tanlang — soʻng /emoji 🌟
-    done: Emoji muvaffaqiyatli oʻzgartirildi.
-    error: Emojini oʻzgartirishda xatolik yuz berdi!
+    done: Emoji oʻzgartirildi.
+    error: Emojini oʻzgartirishda xatolik yuz berdi.
   round_video:
     enabled: |
-      Endi videolar dumaloq shaklda boʻladi
+      Endi videolar burchaklari yumaloqlanadi
     disabled: |
-      Videolar endi dumaloq shaklda boʻlmaydi
+      Videolar burchaklari endi yumaloqlanmaydi
   paysupport: |
     <b>💳 Toʻlov boʻyicha savollar</b>
 
@@ -261,8 +261,8 @@ cmd:
       option: "${rows}×${cols} · ${total} ta"
       custom: "✏️ Oʻz oʻlchamim"
       cancel: "← Bekor qilish"
-      exit: "🚪 Mozaikadan chiqish"
-      undo: "🗑 Bu mozaikani oʻchirish"
+      exit: "🚪 Chiqish"
+      undo: "🗑 Mozaikani oʻchirish"
     custom_prompt: |
       Toʻr oʻlchamini kiriting (masalan, 3x4):
     custom_invalid: |
@@ -275,7 +275,7 @@ cmd:
     uploading: "⏳ Yuklanmoqda ${current}/${total}..."
     done: |
       ✅ ${rows}×${cols} mozaika toʻplamga qoʻshildi!
-    done_link: "📦 Toʻplamdan foydalanish"
+    done_link: "📦 Toʻplamni ochish"
     undo_done: |
       🗑 Mozaika oʻchirildi (toʻplamdan ${count} ta emoji oʻchirildi).
     undo_failed: |
@@ -310,7 +310,7 @@ donate:
   topup: |
     <b>Sotib olmoqchi boʻlgan kreditlar sonini kiriting:</b>
   description: |
-    Kredit sotib olib, siz bot rivojini qoʻllab-quvvatlaysiz va qoʻshimcha imkoniyatlardan foydalana olasiz
+    Kredit sotib olish orqali bot rivojini qoʻllab-quvvatlaysiz va qoʻshimcha imkoniyatlarga ega boʻlasiz
   update: |
     <b>🔄 Balans yangilandi</b>
 
@@ -332,8 +332,8 @@ coedit:
     Bu havolani ochgan har kim toʻplamga qoʻshiladi:
     <code>${colink}</code>
 
-    <b>Yangi ishtirokchilar:</b> ${defaultRole}
-    <b>Ishtirokchilar:</b> ${count}
+    <b>Yangi aʼzolar:</b> ${defaultRole}
+    <b>Aʼzolar:</b> ${count}
   no_editors: |
     yoʻq
   btn:
@@ -342,19 +342,19 @@ coedit:
     activity: '🧾 Faoliyat'
     default_role: '⚙️ Yangilar: ${role}'
     clear: '🧹 Hammani chiqarish'
-    clear_confirm: '⚠️ Ha, hammani chiqarish'
-    role_editor: '✏️ Qoʻshadi va oʻchiradi'
-    role_contributor: '➕ Faqat qoʻshadi'
+    clear_confirm: '⚠️ Ha, chiqarilsin'
+    role_editor: '✏️ Tahrirlovchi'
+    role_contributor: '➕ Faqat qoʻshish'
     remove: '🚫 Toʻplamdan chiqarish'
-    leave: '🚪 Toʻplamdan chiqish'
+    leave: '🚪 Tark etish'
     back: '‹ Orqaga'
   roles:
-    editor: 'qoʻshadi va oʻchiradi'
-    contributor: 'faqat qoʻshadi'
+    editor: 'tahrirlovchi'
+    contributor: 'faqat qoʻshish'
   share: |
     «${title}» toʻplamini birgalikda tahrirlash uchun havolaga oʻting va «Start» tugmasini bosing
   reset: |
-    <b>🔁 Yangi havola.</b> Eskisi endi ishlamaydi; hozirgi ishtirokchilar kirish huquqini saqlab qoladi.
+    <b>🔁 Yangi havola.</b> Eskisi endi ishlamaydi; hozirgi aʼzolar kirish huquqini saqlab qoladi.
   member: |
     <b>👤 ${name}</b>
 
@@ -362,15 +362,15 @@ coedit:
     <b>Qoʻshilgan sana:</b> ${date}
     <b>Soʻnggi 30 kundagi amallar:</b> ${actions}
   clear_confirm: |
-    Barcha ishtirokchilar (${count}) <b>${title}</b> toʻplamidan chiqarilsinmi? Havola ham almashtiriladi.
+    Barcha aʼzolar (${count}) <b>${title}</b> toʻplamidan chiqarilsinmi? Havola ham almashtiriladi.
   cleared: 'Hamma chiqarildi va havola almashtirildi.'
   joined: '👥 Siz <b>${title}</b> toʻplamiga qoʻshildingiz. Rolingiz: ${role}.'
   joined_notice: |
     👥 ${name} birgalikda tahrirlash havolasi orqali <a href="${link}">${title}</a> toʻplamiga qoʻshildi.
 
-    Ishtirokchilarni boshqarish: /packs → toʻplam → 👥 Birgalikda tahrirlash
-  left: '🚪 Siz <b>${title}</b> toʻplamidan chiqdingiz.'
-  left_notice: '🚪 ${name} <b>${title}</b> toʻplamidan chiqdi.'
+    Aʼzolarni boshqarish: /packs → toʻplam → 👥 Birgalikda tahrirlash
+  left: '🚪 Siz <b>${title}</b> toʻplamini tark etdingiz.'
+  left_notice: '🚪 ${name} <b>${title}</b> toʻplamini tark etdi.'
   removed_notice: 'Siz <b>${title}</b> toʻplamini birgalikda tahrirlashdan chiqarildingiz.'
   role_notice: '<b>${title}</b> toʻplamidagi rolingiz endi: ${role}.'
   no_access: 'Bu toʻplamga endi kirish huquqingiz yoʻq. /packs orqali boshqasini tanlang.'
@@ -387,7 +387,7 @@ coedit:
     restore: '♻️ stiker tiklandi'
     emoji: '😀 emoji oʻzgartirildi'
     join: '👋 qoʻshildi'
-    leave: '🚪 chiqdi'
+    leave: '🚪 tark etdi'
     removed: '🚫 chiqarildi: ${target}'
     role: '🔧 ${target}: ${role}'
     reset: '🔁 havola almashtirildi'
@@ -397,8 +397,8 @@ callback:
     answerCbQuer:
       not_found: Toʻplam topilmadi
       not_owner: Bu sizning toʻplamingiz emas
-      hidden: Toʻplam muvaffaqiyatli yashirildi
-      restored: Toʻplam muvaffaqiyatli tiklandi
+      hidden: Toʻplam yashirildi
+      restored: Toʻplam tiklandi
     set_pack: |
       ✅ <a href="${link}">${title}</a> tanlandi
 
@@ -414,15 +414,15 @@ callback:
         on: 'faol'
         off: 'nofaol'
     hidden: Toʻplam <a href="${link}">${title}</a> roʻyxatingizdan yashirildi.
-    restored: Toʻplam <a href="${link}">${title}</a> roʻyxatingizga qaytarildi.
+    restored: Toʻplam <a href="${link}">${title}</a> roʻyxatingizda tiklandi.
     btn:
-      hide: '👁 Toʻplamni yashirish'
-      delete: '🗑 Toʻplamni oʻchirish'
+      hide: '👁 Yashirish'
+      delete: '🗑 Oʻchirish'
       restore: '✅ Tiklash'
-      use_pack: '📦 Toʻplamdan foydalanish'
+      use_pack: '📦 Toʻplamni ochish'
       boost: '⚡ Boost'
-      frame: '🖼 Ramka'
-      rename: '✏️ Nomini oʻzgartirish'
+      frame: '🖼 Shakl'
+      rename: '✏️ Qayta nomlash'
       search_gif: '🔎 GIF qidirish'
       coedit: '👥 Birgalikda tahrirlash'
       catalog_add: '🗂 Katalogga qoʻshish'
@@ -448,7 +448,7 @@ callback:
         Toʻplamni topib boʻlmadi.
     select_group:
       success: |
-        <a href="${link}">${title}</a> toʻplami guruh uchun muvaffaqiyatli tanlandi.
+        <a href="${link}">${title}</a> toʻplami guruh uchun tanlandi.
       access_rights:
         add: Guruh toʻplamiga kim stiker qoʻsha oladi?
         delete: Guruh toʻplamidan kim stiker oʻchira oladi?
@@ -459,13 +459,13 @@ callback:
         Toʻplam topilmadi.
   sticker:
     answerCbQuery:
-      delete: Stiker toʻplamdan muvaffaqiyatli oʻchirildi.
-      restored: Stiker joriy toʻplamga muvaffaqiyatli saqlandi.
-    delete: Stiker toʻplamdan muvaffaqiyatli oʻchirildi.
-    restored: Stiker joriy toʻplamga muvaffaqiyatli saqlandi.
+      delete: Stiker toʻplamdan oʻchirildi.
+      restored: Stiker joriy toʻplamga tiklandi.
+    delete: Stiker toʻplamdan oʻchirildi.
+    restored: Stiker joriy toʻplamga tiklandi.
     btn:
       delete: '🗑 Oʻchirish'
-      copy: '🌟 Nusxalash'
+      copy: '🌟 Nusxa olish'
       restore: '✅ Tiklash'
     error:
       not_found: |
@@ -480,7 +480,7 @@ callback:
         Video fayl formati notoʻgʻri (WEBM kerak).
   group_settings:
     success: |
-      Guruh sozlamalari muvaffaqiyatli yangilandi.
+      Guruh sozlamalari yangilandi.
 sticker:
   add:
     ok: |
@@ -501,7 +501,7 @@ sticker:
       <a href="${link}">${title}</a> toʻplamini ulashmoqchimisiz?
       Katalogga qoʻshing — boshqalar ham uni topa oladi.
     quote: |
-      Bu xabardan iqtibos yaratish uchun @QuotlyBot dan foydalaning
+      Bu xabardan iqtibos yasash uchun @QuotlyBot dan foydalaning
     error:
       reply: |
         Stikerga javob yozing.
@@ -512,13 +512,13 @@ sticker:
       no_selected_group_pack: |
         <b>Siz guruh toʻplamini tanlamadingiz</b>
 
-        /packs buyrugʻi orqali toʻplamni tanlang
+        /packs orqali toʻplamni tanlang
       no_rights: |
         Sizda bu toʻplamga stiker qoʻshish huquqi yoʻq.
       stickers_too_much: |
-        Bu toʻplamdagi stikerlar soni maksimal darajaga yetgan.
+        Bu toʻplamdagi stikerlar soni limitga yetdi.
 
-        /new buyrugʻi orqali yangi toʻplam yaratishingiz mumkin.
+        /new orqali yangi toʻplam yaratishingiz mumkin.
       have_already: |
         <b>Bu stiker toʻplamda allaqachon bor</b>
 
@@ -534,14 +534,14 @@ sticker:
       invalid_animated: |
         Telegram animatsiyali stikerlarni faqat TGS formatida qabul qiladi. GIF yoki MP4 fayllarni video sifatida yuboring — bot ulardan video stiker yasaydi.
       animated_too_big: |
-        Toʻplam oʻlchamiga moslashtirilgandan soʻng animatsiyali stiker Telegramning 64 KB chegarasidan oshib ketadi — uni koʻchirib boʻlmaydi.
+        Toʻplam oʻlchamiga moslashtirilgandan soʻng animatsiyali stiker Telegramning 64 KB chegarasidan oshib ketadi — uni nusxalab boʻlmaydi.
       invalid_video: |
         Video fayl formati notoʻgʻri (WEBM kerak).
       file_type:
         unknown: |
           Bu fayl turi qoʻllab-quvvatlanmaydi.
 
-          Rasm, video, GIF, stiker yoki tasvirni fayl sifatida yuboring.
+          Rasm, video, GIF, stiker yoki fayl sifatida rasm yuboring.
       wait_load: |
         ⏳ Oldingi fayl hali qayta ishlanmoqda...
       timeout: |
@@ -562,7 +562,7 @@ sticker:
       queue_full: '⏳ Bir vaqtda juda koʻp fayl. Navbatdagilarni qayta ishlab boʻlishimni kuting, keyin qolganini yuboring.'
     album_progress: '⏳ Albom qoʻshilmoqda: ${current}/${total}'
     album_done: '✅ ${total} tadan ${added} tasi <a href="${link}">${title}</a> toʻplamiga qoʻshildi'
-    album_converting: '⏳ Yana ${count} tasi video: konvertatsiya qilyapman, har biri tayyor boʻlganda javob beraman.'
+    album_converting: '⏳ Yana ${count} tasi video: qayta ishlayapman, har biri tayyor boʻlganda xabar beraman.'
     album_duplicates: '♻️ Toʻplamda allaqachon bor: ${count}.'
     album_failed: '⚠️ Qoʻshib boʻlmadi: ${count}.'
 news:
@@ -584,9 +584,9 @@ userAbout:
     <b>🎨 Bu foydalanuvchining toʻplamlari:</b>
     ${packs}
   no_packs: |
-    <i>Bu egasining toʻplamlari haqida bizda maʼlumot yoʻq</i>
+    <i>Bu muallifning toʻplamlari haqida bizda maʼlumot yoʻq</i>
   forward_hidden: |
-    Foydalanuvchi xabarlarini uzatishni cheklab qoʻygan. Uning stikerlar toʻplamlarini koʻrish uchun quyidagi tugmadan foydalaning.
+    Foydalanuvchi xabarlar uzatilishini cheklagan. Uning stikerlar toʻplamlarini koʻrish uchun quyidagi tugmadan foydalaning.
   select_user: '🧑‍🎨 Foydalanuvchini tanlash'
 scenes:
   new_pack:
@@ -603,9 +603,9 @@ scenes:
       <b>Toʻplam nomi</b>
 
       Uni hamma koʻradi. Oʻzingiz yozing yoki quyidagi takliflardan tanlang.
-      <i>Toʻplam manzilini nomidan tuzaman.</i>
+      <i>Toʻplam havolasini nomidan tuzaman.</i>
     pack_name: |
-      <b>Toʻplam manzili</b>
+      <b>Toʻplam havolasi</b>
 
       Faqat lotin harflari, raqamlar va <code>_</code>. Masalan: t.me/addstickers/<u>MeningStikerlarim</u>
     ok: |
@@ -614,22 +614,22 @@ scenes:
       Qoʻshish uchun rasm, video yoki stiker yuboring.
     error:
       title_long: Nom ${max} belgidan uzun boʻlmasligi kerak.
-      name_long: Manzil ${max} belgidan uzun boʻlmasligi kerak.
+      name_long: Havola ${max} belgidan uzun boʻlmasligi kerak.
       inline_exists: |
         Sizda allaqachon inline toʻplam bor — <b>${title}</b>.
 
-        Inline toʻplam faqat bitta boʻlishi mumkin: yangisini yaratish buni oʻchirib yuboradi.
+        Inline toʻplam faqat bitta boʻlishi mumkin: yangisini yaratish eskisini oʻchirib yuboradi.
         U allaqachon tanlangan, shunchaki stikerlar qoʻshishda davom eting.
       telegram:
-        name_invalid: Bu manzildan foydalanib boʻlmaydi.
-        name_occupied: Bu manzil band. Boshqasini sinab koʻring.
+        name_invalid: Bu havoladan foydalanib boʻlmaydi.
+        name_occupied: Bu havola band. Boshqasini sinab koʻring.
         upload_failed: |
           Bot stikerlarni Telegramga yuklay olmayapti.
 
           Keyinroq urinib koʻring.
     btn:
-      custom_link: '🔗 Oʻz toʻplam manzilim'
-    custom_link_on: 'Yaxshi — nomini yuboring, keyin manzilini soʻrayman.'
+      custom_link: '🔗 Maxsus havola'
+    custom_link_on: 'Yaxshi — nomini yuboring, keyin havolasini soʻrayman.'
   copy:
     enter: |
       Avval nusxa uchun yangi toʻplam yaratamiz.
@@ -648,11 +648,11 @@ scenes:
     done_partial_pending: |
       ⚠️ <a href="${link}">${title}</a> toʻplamiga nusxalandi
 
-      ${success} ta stiker nusxalandi, ${failed} tasi muvaffaqiyatsiz, ${pending} ta video hali qayta ishlanmoqda.
+      ${success} ta stiker nusxalandi, ${failed} tasini nusxalab boʻlmadi, ${pending} ta video hali qayta ishlanmoqda.
     pay: |
-      <b>Toʻplamni konvertatsiya qilish</b>
+      <b>Toʻplam turini oʻzgartirish</b>
 
-      Toʻplamni bir turdan boshqasiga oʻtkazish 1 kredit turadi
+      Toʻplamni boshqa turga oʻtkazish 1 kredit turadi
 
       <b>Joriy balans:</b> ${balance} kredit
 
@@ -664,27 +664,27 @@ scenes:
 
         Toʻplam yaratilmadi.
       premium: |
-        Afsuski, bu funksiya faqat botni qoʻllab-quvvatlaganlar uchun mavjud.
+        Kechirasiz, bu imkoniyat faqat botni qoʻllab-quvvatlaganlar uchun mavjud.
 
-        Buni /donate buyrugʻini yuborib qilishingiz mumkin.
+        Buning uchun /donate buyrugʻidan foydalanishingiz mumkin.
     title: |
       <b>📋 <a href="${originalLink}">${originalTitle}</a> nusxalanmoqda</b> (${count})
 
       Nusxangiz uchun nom — oʻzingiz yozing yoki quyidan tanlang.
     btn:
-      change_type: '🔄 Toʻplam turini oʻzgartirish'
+      change_type: '🔄 Turini oʻzgartirish'
     created: |
       ✅ Toʻplam yaratildi: <a href="${link}">${title}</a>
 
       Stikerlarni nusxalayapman — tugagach xabar beraman.
   original:
     enter: |
-      <b>🔎 Stiker manbasi</b>
+      <b>🔎 Asl manba</b>
 
       Stiker yuboring — u qaysi toʻplamdan nusxalanganini koʻrsataman.
       Asl manba topilmasa — faylni olasiz (PNG/WEBM).
     source_found: |
-      🔎 Manba: <a href="${link}">${title}</a>
+      🔎 Nusxa olingan: <a href="${link}">${title}</a>
     error:
       not_found: |
         Asl manba topilmadi. Mana stiker fayli:
@@ -702,7 +702,7 @@ scenes:
     enter_name: |
       <a href="${link}">${title}</a> uchun yangi nom:
     success: |
-      ✅ Nomi oʻzgartirildi: <a href="${link}">${title}</a>
+      ✅ Qayta nomlandi: <a href="${link}">${title}</a>
     boost_notice: |
       Boost "${titleSuffix}" qoʻshimchasini olib tashlaydi → /donate
   packAbout:
@@ -714,19 +714,19 @@ scenes:
     not_found: |
       Stiker topilmadi.
     btn:
-      download: '📎 Faylni yuklab olish'
+      download: '📎 Yuklab olish'
       show_all_packs: '📦 Barcha toʻplamlar (${count})'
     result: |
       <b>📦 Toʻplam:</b> <a href="${link}">${name}</a>
       🔢 Stikerlar: <code>${stickerCount}</code> | 🏷 #<code>${setId}</code> | ${dcId}
 
-      🧑‍🎨 Egasining ID raqami: <code>${ownerId}</code>
+      🧑‍🎨 Muallif ID raqami: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Shu egasining boshqa toʻplamlari:</b>
+      <b>🎨 Ushbu muallifning boshqa toʻplamlari:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>Bu egasining boshqa toʻplamlari haqida bizda maʼlumot yoʻq</i>
+      <i>Ushbu muallifning boshqa toʻplamlari haqida bizda maʼlumot yoʻq</i>
     unknown_owner: '<i>Nomaʼlum</i>'
     hidden: '<i>[yashirilgan]</i>'
   boost:
@@ -737,7 +737,7 @@ scenes:
       <b>Balans:</b> ${balance}
     btn:
       buy: '⭐ Kredit sotib olish'
-      yes: '⚡ Boost qilish'
+      yes: '⚡ Boost'
       no: Bekor qilish
     canceled: |
       Bekor qilindi
@@ -745,15 +745,15 @@ scenes:
       ⚡ <a href="${link}">${title}</a> — boost yoqildi!
 
       <b>Ochildi:</b>
-      • «${titleSuffix}» qoʻshimchasisiz nom — nomini oʻzgartirgandan soʻng
+      • «${titleSuffix}» qoʻshimchasisiz nom — qayta nomlagandan soʻng
       • Nomda 64 belgigacha (35 oʻrniga)
       • 35 soniyagacha videolar
       • Konvertatsiyada ustuvorlik
       • Bir vaqtda bir nechta stiker
 
-      <i>Qoʻshimchani olib tashlash uchun toʻplam menyusida «✏️ Nomini oʻzgartirish» tugmasini bosing.</i>
+      <i>Qoʻshimchani olib tashlash uchun toʻplam menyusida «✏️ Qayta nomlash» tugmasini bosing.</i>
     error:
-      too_fast: Shoshmang — bir soniyadan soʻng urinib koʻring.
+      too_fast: Shoshilmang — bir soniyadan soʻng urinib koʻring.
       not_enough_credits: |
         Kredit yetarli emas. /donate
       already_boosted: |
@@ -776,7 +776,7 @@ scenes:
         Faqat oʻz toʻplamlaringizni eʼlon qilish mumkin
       banned: |
         Bu funksiyadan foydalanish sizga taqiqlangan.
-        Administratorga murojaat qiling.
+        Adminga murojaat qiling.
       enter: |
         <a href="${link}">${title}</a> katalogda eʼlon qilinsinmi?
 
@@ -788,14 +788,14 @@ scenes:
         • Qonunlarni buzmasin
       continue_button: Davom etish
       enter_description: |
-        <b>Boshqalar topa olishi uchun toʻplamingizni qisqacha taʼriflang</b>
+        <b>Boshqalar topa olishi uchun toʻplamingizga qisqacha tavsif yozing</b>
 
         <i>Turkumlash uchun heshteglardan foydalanishingiz mumkin [#]</i>
         <i>Masalan: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
-        <b>Joriy taʼrif:</b> <i>${description}</i>
-      keep_description: '✅ Joriy taʼrifni qoldirish'
+        <b>Joriy tavsif:</b> <i>${description}</i>
+      keep_description: '✅ Tavsifni saqlash'
       select_language: |
         <b>Toʻplamingiz qaysi tillar uchun moʻljallanganini tanlang:</b>
         <i>Bir nechtasini tanlash mumkin</i>
@@ -806,10 +806,10 @@ scenes:
         <i>Yaʼni unda erotika, zoʻravonlik yoki boshqa 18+ kontent yoʻq</i>
       button_safe:
         safe: '✅ Ha, 18+ yoʻq'
-        not_safe: '🔞 Yoʻq, 18+ kontent bor'
+        not_safe: '🔞 18+ kontent bor'
       no_tags: koʻrsatilmagan
       confirm: |
-        <b>«<a href="${link}">${title}</a>» stikerlar toʻplamini eʼlon qilishni tasdiqlang</b>
+        <b>«<a href="${link}">${title}</a>» stiker toʻplamini eʼlon qilishni tasdiqlang</b>
 
         <b>Tavsif:</b> <i>${description}</i>
 
@@ -824,12 +824,12 @@ scenes:
         <i>Toʻplamingiz statistikasini rasmiy @Stickers boti orqali koʻrishingiz mumkin</i>
     unpublish:
       success: |
-        Toʻplam katalogdan muvaffaqiyatli olib tashlandi.
+        Toʻplam katalogdan olib tashlandi.
   delete_pack:
     enter: |
       ⚠️ <a href="${link}">${title}</a> butunlay oʻchirilsinmi?
 
-      Tasdiqlash uchun «${confirm}» tugmasini yoki «Bekor qilish» tugmasini bosing.
+      Tasdiqlash uchun «${confirm}» yoki «Bekor qilish» tugmasini bosing.
     confirm: Ha, oʻchirilsin
     success: |
       🗑 Toʻplam oʻchirildi
@@ -839,14 +839,14 @@ scenes:
     no_sticker_set: |
       Siz hali toʻplam tanlamadingiz. Uni /packs orqali tanlang va buyruqni takrorlang.
     no_video: |
-      Ramkani faqat video stikerlar toʻplamlariga qoʻshish mumkin.
+      Shaklni faqat video toʻplamlarga qoʻllash mumkin.
     select_type: |
       <a href="${example}">&#8203;</a><b>Stiker shaklini tanlang:</b>
 
       <code>yengil</code> — deyarli yumaloqlanmagan
       <code>oʻrtacha</code> — burchaklari biroz yumaloqlangan
       <code>yumaloq</code> — burchaklari kuchli yumaloqlangan
-      <code>kvadrat</code> — tekis burchaklar, yumaloqlanmagan
+      <code>kvadrat</code> — oʻtkir burchaklar, yumaloqlanmagan
       <code>doira</code> — doira shaklidagi stiker
 
       <i>Shaklni /frame buyrugʻi bilan oʻzgartirish mumkin</i>
@@ -857,15 +857,15 @@ scenes:
       square: '4. Kvadrat'
       circle: '5. Doira'
     selected: |
-      <b>Tanlangan ramka turi:</b> ${type}
+      <b>Tanlangan stiker shakli:</b> ${type}
   photoClear:
     enter: |
-      <b>✂️ Fonni olib tashlash</b>
+      <b>✂️ Fonni tozalash</b>
 
       Rasm yuboring — fonsiz PNG olasiz.
-      <i>Rasmlaringiz uchun model:</i>
+      <i>Rasmlar uchun model:</i>
     enter_anime: |
-      <b>✂️ Fonni olib tashlash</b>
+      <b>✂️ Fonni tozalash</b>
 
       Rasm yuboring — fonsiz PNG olasiz.
       <i>Anime rasmlar bilan yaxshiroq ishlaydi.</i>
@@ -884,18 +884,18 @@ scenes:
       ⏱ Qayta ishlash juda uzoq davom etdi. Keyinroq yoki kichikroq rasm bilan urinib koʻring.
     error_queue_disabled: |
       Bu funksiya vaqtincha ishlamayapti. Keyinroq urinib koʻring.
-    not_image: 'Rasm yoki tasvirni fayl sifatida yuboring (PNG, JPEG, WebP).'
+    not_image: 'Rasm yuboring yoki fayl sifatida yuboring (PNG, JPEG, WebP).'
   videoRound:
     enter: |
       <b>⭕ Dumaloq video</b>
 
-      Video yuboring — undan dumaloq video yasayman.
+      Video yuboring — undan dumaloq videoxabar yasayman.
     not_video: |
       Video, GIF, video stiker yoki animatsiyali rasm yuboring.
     error: |
       Konvertatsiya qilib boʻlmadi. Boshqa video bilan urinib koʻring.
     forbidden: |
-      Sizga dumaloq video yubora olmayapman. Maxfiylik sozlamalarini tekshiring (ovozli xabarlarga ruxsat berilgan boʻlishi kerak).
+      Sizga videoxabar yuborib boʻlmadi. Maxfiylik sozlamalarini tekshiring (ovozli xabarlarga ruxsat berilgan boʻlishi kerak).
     processing: |
       ⏳ Konvertatsiya: ${position}/${total}
 
@@ -916,7 +916,7 @@ scenes:
     Bekor qilindi
   btn:
     cancel: '← Bekor qilish'
-  unexpected: 'Hozir boshqa narsani kutyapman — yuqoridagi qadamni bajaring yoki «← Bekor qilish» tugmasini bosing.'
+  unexpected: 'Hozir boshqa amal kutilmoqda — yuqoridagi qadamni bajaring yoki «← Bekor qilish» tugmasini bosing.'
 error:
   stickerset_invalid: |
     Toʻplam mavjud emas. Ehtimol, u Telegramda oʻchirilgan.
@@ -932,9 +932,9 @@ error:
     not_pack_owner: |
       Bu toʻplam boshqa foydalanuvchiga tegishli — uni oʻzgartirib boʻlmaydi.
     pack_name_taken: |
-      Bu toʻplam manzili band. Boshqa nom tanlang.
+      Bu toʻplam havolasi band. Boshqa nom tanlang.
     pack_name_invalid: |
-      Toʻplam manzili notoʻgʻri formatda. Faqat lotin harflari, raqamlar va pastki chiziq (_) ruxsat etiladi.
+      Toʻplam havolasi notoʻgʻri formatda. Faqat lotin harflari, raqamlar va pastki chiziq (_) kiritish mumkin.
     invalid_sticker_format: |
       Fayl stiker sifatida mos emas: formati yoki oʻlchami notoʻgʻri.
     invalid_emoji: |
