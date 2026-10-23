@@ -13,6 +13,7 @@ const { MAX_INPUT_PIXELS } = require('./image-limits')
 const { removePlaceholderIfPending } = require('./placeholder')
 const escapeHTML = require('./html-escape')
 const { rescaleTgs } = require('./lottie-rescale')
+const { fixStaticTgs } = require('./tgs-static-fix')
 const { fitStickerSize } = require('./sticker-geometry')
 const { isVideoContainer } = require('./sniff-media')
 const { isInCopyScope, getRetryAfter } = require('./retry-api')
@@ -549,8 +550,16 @@ const uploadRetargetedTgs = async (userId, stickerSet, stickerFile, stickerExtra
   const retargeted = retargetTgs(animatedData)
   if (retargeted.error) return retargeted
 
-  stickerExtra.sticker = { source: retargeted.buffer }
-  return uploadSticker(userId, stickerSet, stickerFile, stickerExtra, beforeStickers)
+  const extra = { ...stickerExtra, sticker: { source: retargeted.buffer } }
+  const result = await uploadSticker(userId, stickerSet, stickerFile, extra, beforeStickers)
+  if (!isFileRejection(result)) return result
+
+  // Telegram refuses a TGS it parses as static ("wrong file type"), typically
+  // one whose keyframes carry no interpolators and get dropped. Repair it only
+  // after a refusal, so files Telegram takes as they are stay untouched.
+  const repaired = fixStaticTgs(retargeted.buffer)
+  if (repaired.error || !repaired.changed) return result
+  return uploadSticker(userId, stickerSet, stickerFile, { ...stickerExtra, sticker: { source: repaired.buffer } }, beforeStickers)
 }
 
 // Per-user ordering and "one video at a time" for free users live in the
