@@ -258,7 +258,7 @@ module.exports = (bot, privateMessage, {
   privateMessage.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
   privateMessage.on('message', (ctx, next) => {
     if (ctx.message && ctx.message.entities && ctx.message.entities[0] && ctx.message.entities[0].type === 'custom_emoji') {
-      return handleSticker(ctx)
+      return handleSticker(ctx, next)
     }
     return next()
   })
