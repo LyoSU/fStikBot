@@ -425,6 +425,7 @@ callback:
       rename: '✏️ 重命名'
       search_gif: '🔎 搜索 GIF'
       coedit: '👥 协作'
+      open_studio: '🎨 在工作室中打开'
       catalog_add: '🗂 发布到目录'
       catalog_edit: '📝 在目录中编辑'
       catalog_delete: '🗑 从目录中移除'
