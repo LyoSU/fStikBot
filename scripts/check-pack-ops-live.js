@@ -12,6 +12,7 @@ require('dotenv').config()
 const sharp = require('sharp')
 const config = require('../config.json')
 const { hasConflict, planContent, mapAfterContent, planMoves } = require('../pack-ops/plan')
+const { runCommit, newCommit } = require('../pack-ops/execute')
 
 const TOKEN = process.env.BOT_TOKEN
 const PROD_BOT_ID = parseInt(String(process.env.MAIN_BOT_TOKEN || '').split(':')[0], 10) || null
@@ -41,7 +42,7 @@ async function call (method, params = {}, files) {
       await sleep(wait * 1000 + 500)
       continue
     }
-    throw new Error(`${method}: ${json.description}`)
+    throw Object.assign(new Error(`${method}: ${json.description}`), { code: json.error_code, description: json.description })
   }
 }
 
@@ -112,7 +113,7 @@ process.on('SIGINT', () => { cleanup().finally(() => process.exit(130)) })
   console.log(`bot @${me.username}, owner ${OWNER}`)
 
   const files = []
-  for (let i = 0; i < 16; i++) files.push(await uploadPng(i))
+  for (let i = 0; i < 18; i++) files.push(await uploadPng(i))
   console.log(`uploaded ${files.length} files`)
 
   packName = `packops_${Date.now().toString(36)}_by_${me.username}`
@@ -165,7 +166,65 @@ process.on('SIGINT', () => { cleanup().finally(() => process.exit(130)) })
   console.log(`${refused ? 'PASS' : 'FAIL'}  a sticker added outside the draft stops the publish${refused ? '' : ` (${stale})`}`)
   base = await uids(packName)
 
-  // 4. Delete everything: the pack stays, empty.
+  // 4. The executor against real Telegram, through a wrapper that can drop
+  // answers: Telegram applies the call, the reply never arrives.
+  const runExecutor = async (draft, lostMethods) => {
+    const lose = new Set(lostMethods)
+    const telegram = {
+      async callApi (method, params) {
+        const result = await call(method, params)
+        if (lose.has(method)) {
+          lose.delete(method)
+          throw Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' })
+        }
+        return result
+      }
+    }
+    let saved = null
+    const store = { async save (c) { saved = JSON.parse(JSON.stringify(c)) } }
+    const held = new Map()
+    const lock = {
+      async acquire (n) { if (held.has(n)) return null; held.set(n, 't'); return 't' },
+      async extend (n, t) { return held.get(n) === t },
+      async release (n) { held.delete(n) }
+    }
+    let commit = newCommit({ name: packName, ownerTelegramId: OWNER, base, draft })
+    const runs = []
+    for (let i = 0; i < 4 && !['succeeded', 'failed', 'conflict'].includes(commit.status); i++) {
+      commit = await runCommit(saved ? JSON.parse(JSON.stringify(saved)) : commit, { telegram, store, lock })
+      runs.push(commit.status)
+    }
+    return { commit, runs, final: await uids(packName) }
+  }
+
+  // 4a. Lost replies on a replace and an add, fresh files: a rerun settles
+  // both from getStickerSet — no second add, no second replace.
+  {
+    const draft = [
+      { assetId: 'n1', file: { fileId: files[16] }, emojiList: ['🧪'] },
+      ...base.slice(1).map((uid) => keep(uid)).reverse(),
+      { assetId: `a-${base[0]}`, fileUniqueId: base[0], file: { fileId: files[17] }, emojiList: ['🧪'] }
+    ]
+    const { commit, runs, final } = await runExecutor(draft, ['replaceStickerInSet', 'addStickerToSet'])
+    const target = draft.map((item) => commit.mapping?.[item.assetId])
+    const ok = commit.status === 'succeeded' && final.length === draft.length && final.every((id, i) => id === target[i])
+    if (!ok) failures++
+    console.log(`${ok ? 'PASS' : 'FAIL'}  executor settles lost replies from getStickerSet — runs: ${runs.join(' → ')}, ${final.length}/${draft.length} stickers${commit.error ? ` (${commit.error})` : ''}`)
+    base = final
+  }
+
+  // 4b. A file already in the pack: Telegram merges instead of adding, and
+  // the executor must stop with "duplicate" instead of guessing.
+  {
+    const draft = [...base.map((uid) => keep(uid)), { assetId: 'dup', file: { fileId: files[16] }, emojiList: ['🧪'] }]
+    const { commit, runs, final } = await runExecutor(draft, ['addStickerToSet'])
+    const ok = commit.status === 'failed' && /duplicate/.test(commit.error || '') && final.length === base.length
+    if (!ok) failures++
+    console.log(`${ok ? 'PASS' : 'FAIL'}  a file already in the pack stops the publish as a duplicate — runs: ${runs.join(' → ')}, ${final.length} stickers${commit.error ? ` (${commit.error})` : ''}`)
+    base = final
+  }
+
+  // 5. Delete everything: the pack stays, empty.
   result = await publish(packName, base, [])
   report('delete every sticker', result)
 

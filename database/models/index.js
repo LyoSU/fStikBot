@@ -8,6 +8,8 @@ const Payment = require('./payment')
 const DeepLink = require('./deeplink')
 const Metric = require('./metric')
 const PackActivity = require('./pack-activity')
+const PackCommit = require('./pack-commit')
+const PackLock = require('./pack-lock')
 
 module.exports = {
   User,
@@ -19,5 +21,7 @@ module.exports = {
   Payment,
   DeepLink,
   Metric,
-  PackActivity
+  PackActivity,
+  PackCommit,
+  PackLock
 }

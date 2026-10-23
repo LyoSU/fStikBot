@@ -172,7 +172,10 @@ behaviour no longer matches.
 Runs the publish planner (`pack-ops/plan.js`) against the real Bot API:
 builds a pack, publishes drafts with deletes, replaces, adds and reorders,
 and checks `getStickerSet` ends up exactly as planned. A stale draft must be
-refused. Same rules as above: test bot only, one `packops_*` pack deleted at
+refused. Then it runs the executor (`pack-ops/execute.js`) with replies
+dropped after Telegram applied the call — the rerun must settle them from
+`getStickerSet` — and with a file already in the pack, which must stop the
+commit as a duplicate. Same rules as above: test bot only, one `packops_*` pack deleted at
 the end. Run it after changing the planner; `test-pack-ops-plan.js` covers the
 logic offline against a simulated pack.
 
