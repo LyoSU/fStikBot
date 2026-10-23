@@ -46,8 +46,15 @@ function makeStubQueue (name) {
   }
 }
 
+// Every job.finished() waiter adds a global:completed and a global:failed
+// listener until its job settles, so >10 concurrent waits trip Node's leak
+// warning. Raised, not disabled: a real leak still shows up.
+const MAX_LISTENERS = 500
+
 function makeRealQueue (name) {
-  return new Queue(name, { redis: bullRedisConfig })
+  const queue = new Queue(name, { redis: bullRedisConfig })
+  queue.setMaxListeners(MAX_LISTENERS)
+  return queue
 }
 
 const make = REDIS_ENABLED ? makeRealQueue : makeStubQueue
