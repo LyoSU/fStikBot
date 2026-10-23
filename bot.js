@@ -3,7 +3,7 @@
 //   - bot/session-store.js  in-memory telegraf/session with bounded Map
 //   - bot/middleware.js     all bot.use(...) middleware
 //   - bot/commands.js       all commands / actions / hears registrations
-//   - bot/locale-sync.js    mtime-cached locale push to Telegram
+//   - bot/locale-sync.js    hash-cached locale push to Telegram
 //   - bot/launch.js         webhook vs polling, allowedUpdates
 const fs = require('fs')
 const path = require('path')
@@ -89,7 +89,7 @@ registerCommands(bot, privateMessage, {
   await launch(bot, { isShuttingDown })
 
   // Don't block startup on the locale sync — it's eventually consistent.
-  syncLocales(bot, i18n).catch((err) => log.error('[locale-sync] failed:', err.message))
+  syncLocales(bot, i18n, db.connection).catch((err) => log.error('[locale-sync] failed:', err.message))
 
   // Boot the broadcast worker — polls Broadcast collection for queued/stalled
   // campaigns and runs them in-process. Releases lock + drains on SIGTERM.

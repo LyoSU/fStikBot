@@ -1,41 +1,29 @@
 // Locale sync — pushes bot name/description/commands to Telegram for every
-// locale in locales/. This is idempotent but expensive: up to ~8 API calls
-// per locale × 18 locales = ~144 calls on every process start.
+// locale in locales/. Idempotent but expensive: up to ~8 API calls per locale
+// × 18 locales on every run.
 //
-// PM2 restarts the process every 6h, which used to trigger the whole sync.
-// We now cache a hash of the locales/ directory's max mtime in a dotfile;
-// if nothing changed since last run, sync is skipped entirely.
+// It runs only when the input changed: a hash of every locale file plus this
+// file (the command lists live here) is kept in MongoDB. A file-based mtime
+// cache never hit in Docker — the dotfile isn't in the image and a fresh
+// checkout gives every file a new mtime — so each deploy and restart used to
+// fire the whole sync.
+const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
 
 const LOCALES_DIR = path.resolve(__dirname, '..', 'locales')
-const CACHE_FILE = path.resolve(__dirname, '..', '.locale-sync-mtime')
+const STATE_ID = 'locale-sync'
 
-function computeMaxMtime () {
-  let max = 0
-  for (const name of fs.readdirSync(LOCALES_DIR)) {
-    const stat = fs.statSync(path.join(LOCALES_DIR, name))
-    if (stat.mtimeMs > max) max = stat.mtimeMs
+function computeHash () {
+  const hash = crypto.createHash('sha256')
+  for (const name of fs.readdirSync(LOCALES_DIR).sort()) {
+    hash.update(name).update('\0').update(fs.readFileSync(path.join(LOCALES_DIR, name))).update('\0')
   }
-  return Math.floor(max)
+  hash.update(fs.readFileSync(__filename))
+  return hash.digest('hex')
 }
 
-function readCachedMtime () {
-  try {
-    const raw = fs.readFileSync(CACHE_FILE, 'utf8').trim()
-    return parseInt(raw, 10) || 0
-  } catch {
-    return 0
-  }
-}
-
-function writeCachedMtime (mtime) {
-  try {
-    fs.writeFileSync(CACHE_FILE, String(mtime))
-  } catch (err) {
-    console.warn('[locale-sync] failed to persist mtime cache:', err.message)
-  }
-}
+const stateCollection = (connection) => connection.collection('bot_state')
 
 async function syncOneLocale (bot, i18n, localeName, enDescriptionLong, enDescriptionShort) {
   // NAME
@@ -155,32 +143,38 @@ async function syncOneLocale (bot, i18n, localeName, enDescriptionLong, enDescri
   }
 }
 
-module.exports = async function syncLocales (bot, i18n) {
-  const currentMtime = computeMaxMtime()
-  const cachedMtime = readCachedMtime()
+module.exports = async function syncLocales (bot, i18n, connection) {
+  const hash = computeHash()
+  const state = await stateCollection(connection).findOne({ _id: STATE_ID }).catch(() => null)
 
-  if (currentMtime === cachedMtime) {
-    console.log('[locale-sync] locales unchanged since last run — skipping')
+  if (state && state.hash === hash) {
+    console.log('[locale-sync] locales unchanged since last sync — skipping')
     return
   }
 
   console.log('[locale-sync] locales changed, running full sync')
 
-  const locales = fs.readdirSync(LOCALES_DIR)
   const enDescriptionLong = i18n.t('en', 'description.long')
   const enDescriptionShort = i18n.t('en', 'description.short')
 
-  const results = await Promise.allSettled(locales.map((locale) => {
-    const localeName = locale.split('.')[0]
-    return syncOneLocale(bot, i18n, localeName, enDescriptionLong, enDescriptionShort)
-  }))
+  // One locale at a time: a burst of ~140 calls at boot competes with real
+  // users for the bot's rate limits, and nothing waits on this sync.
+  let failed = 0
+  const locales = fs.readdirSync(LOCALES_DIR)
+  for (const locale of locales) {
+    await syncOneLocale(bot, i18n, locale.split('.')[0], enDescriptionLong, enDescriptionShort)
+      .catch((err) => {
+        failed++
+        console.warn('[locale-sync]', locale, err.description || err.message)
+      })
+  }
 
-  const failed = results.filter(r => r.status === 'rejected').length
   if (failed > 0) {
-    console.warn(`[locale-sync] ${failed}/${results.length} locale(s) failed — not caching mtime, will retry next boot`)
+    console.warn(`[locale-sync] ${failed}/${locales.length} locale(s) failed — not saving the hash, will retry next boot`)
     return
   }
 
-  writeCachedMtime(currentMtime)
+  await stateCollection(connection).updateOne({ _id: STATE_ID }, { $set: { hash, syncedAt: new Date() } }, { upsert: true })
+    .catch((err) => console.warn('[locale-sync] failed to save the hash:', err.message))
   console.log('[locale-sync] completed successfully')
 }

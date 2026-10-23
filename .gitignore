@@ -64,7 +64,6 @@ tmp
 tgsnake
 session
 .mtproto-session
-.locale-sync-mtime
 
 .DS_Store
 config.json

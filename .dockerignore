@@ -4,7 +4,6 @@ npm-debug.log
 # Secrets and per-host state — .env reaches the container via env_file.
 .env
 .mtproto-session
-.locale-sync-mtime
 session
 tgsnake
 scripts/.prune-stickers-*-state.json
