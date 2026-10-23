@@ -21,21 +21,33 @@ function mongoRepo (db) {
     async touchClaim (id, now) {
       await db.PackCommit.updateOne({ _id: id, status: 'preparing' }, { $set: { claimedAt: now } })
     },
-    // Ready to publish, or `running` with nobody refreshing it any more. The
-    // pack lock decides who actually runs it; this only finds candidates.
+    // Ready to publish, or `running` with nobody refreshing it any more. Packs
+    // whose lock is held are skipped: they are being run (maybe through a long
+    // 429 wait), and offering them again would starve the commits behind them.
     async findRunnable (now, staleMs) {
+      const locked = await db.PackLock.find({ expiresAt: { $gt: now } }).select('_id').lean()
       return db.PackCommit.findOne({
+        name: { $nin: locked.map((lock) => lock._id) },
         $or: [
           { status: 'pending' },
           { status: 'running', updatedAt: { $lt: new Date(now.getTime() - staleMs) } }
         ]
       }).sort({ createdAt: 1 }).lean()
     },
-    async findUnsynced () {
-      return db.PackCommit.findOne({ status: 'succeeded', synced: { $ne: true } }).sort({ createdAt: 1 }).lean()
+    // Succeeded but not synced, if its retry is due and it hasn't been given up.
+    async findUnsynced (now, maxAttempts) {
+      return db.PackCommit.findOne({
+        status: 'succeeded',
+        synced: { $ne: true },
+        syncAttempts: { $not: { $gte: maxAttempts } },
+        $or: [{ syncAfter: null }, { syncAfter: { $lte: now } }]
+      }).sort({ createdAt: 1 }).lean()
+    },
+    async recordSyncFailure (id, { attempts, after, error }) {
+      await db.PackCommit.updateOne({ _id: id }, { $set: { syncAttempts: attempts, syncAfter: after, syncError: error } })
     },
     async markSynced (id) {
-      await db.PackCommit.updateOne({ _id: id }, { $set: { synced: true } })
+      await db.PackCommit.updateOne({ _id: id }, { $set: { synced: true }, $unset: { syncError: '' } })
     },
 
     async loadAsset (id) {

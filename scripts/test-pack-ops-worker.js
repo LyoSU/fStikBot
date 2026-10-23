@@ -37,6 +37,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     uploads: [],
     uploadFails: [], // errors to throw on upload N (0-based), in order
     telegramSet: [], // [{ file_unique_id, file_id }]
+    locks: [], // names of packs whose lock is held
     published: []
   }
 
@@ -51,13 +52,17 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     },
     async touchClaim () {},
     async findRunnable (now, staleMs) {
-      const c = w.commits.find((x) => x.status === 'pending' ||
-        (x.status === 'running' && x.updatedAt < new Date(now.getTime() - staleMs)))
+      const c = w.commits.find((x) => !w.locks.includes(x.name) && (x.status === 'pending' ||
+        (x.status === 'running' && x.updatedAt < new Date(now.getTime() - staleMs))))
       return c ? clone(c) : null
     },
-    async findUnsynced () {
-      const c = w.commits.find((x) => x.status === 'succeeded' && !x.synced)
+    async findUnsynced (now, maxAttempts) {
+      const c = w.commits.find((x) => x.status === 'succeeded' && !x.synced &&
+        !((x.syncAttempts || 0) >= maxAttempts) && (!x.syncAfter || x.syncAfter <= now))
       return c ? clone(c) : null
+    },
+    async recordSyncFailure (id, { attempts, after, error }) {
+      Object.assign(w.commits.find((c) => c._id === id), { syncAttempts: attempts, syncAfter: after, syncError: error })
     },
     async markSynced (id) { w.commits.find((c) => c._id === id).synced = true },
     async loadAsset (id) { return w.assets.has(id) ? { ...clone(w.assets.get(id)), data: w.assets.get(id).data } : null },
@@ -173,6 +178,20 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     const w = world({ commits: [commit({ status: 'interrupted' }), commit({ _id: 'c2', status: 'failed' })] })
     assert.strictEqual(await w.worker.step(), false)
     assert.strictEqual(w.uploads.length, 0)
+  })
+
+  await test('a locked pack does not starve the commits behind it', async () => {
+    const stuck = commit({ _id: 'c1', name: 'busy_by_bot', status: 'running', updatedAt: new Date(w0() - 5 * 60 * 1000) })
+    const next = commit({ _id: 'c2', name: 'other_by_bot', status: 'pending' })
+    const w = world({ commits: [stuck, next] })
+    w.locks = ['busy_by_bot']
+    assert.strictEqual(await w.worker.step(), true)
+    assert.deepStrictEqual(w.published, ['c2'])
+    assert.strictEqual(await w.worker.step(), false, 'the locked one is left to its holder')
+
+    w.locks = [] // the holder is gone and the lock expired
+    assert.strictEqual(await w.worker.step(), true)
+    assert.deepStrictEqual(w.published, ['c2', 'c1'])
   })
 
   console.log('uploading')
@@ -326,6 +345,50 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     await w.worker.step()
     assert.strictEqual(w.commits[0].synced, true)
     assert.strictEqual(w.stickers.length, 4)
+  })
+
+  const failingSync = () => {
+    const w = synced()
+    w.telegram.callApi = async () => { throw new Error('socket hang up') }
+    return w
+  }
+
+  await test('a failing sync backs off, lets other commits sync, and is given up after 10 tries', async () => {
+    const w = failingSync()
+    const other = clone(w.commits[0])
+    other._id = 'c2'
+    w.commits.push(other)
+
+    assert.strictEqual(await w.worker.step(), true)
+    assert.strictEqual(w.commits[0].syncAttempts, 1)
+    assert.strictEqual(w.commits[0].syncError, 'socket hang up')
+    assert.strictEqual(w.commits[0].syncAfter.getTime(), w.clock.getTime() + 10000)
+
+    // c1 isn't due, so c2 is next (and fails on its own schedule).
+    assert.strictEqual(await w.worker.step(), true)
+    assert.strictEqual(w.commits[1].syncAttempts, 1)
+    assert.strictEqual(await w.worker.step(), false, 'nothing is due yet: no spam')
+
+    for (let n = 2; n <= 10; n++) {
+      w.clock = new Date(w.clock.getTime() + 11 * 60 * 1000)
+      await w.worker.step()
+      await w.worker.step()
+      assert.strictEqual(w.commits[0].syncAttempts, n)
+    }
+    assert.strictEqual(w.commits[0].syncAfter.getTime() - w.clock.getTime(), 10 * 60 * 1000, 'backoff is capped at 10 min')
+    w.clock = new Date(w.clock.getTime() + 60 * 60 * 1000)
+    assert.strictEqual(await w.worker.step(), false, 'given up')
+    assert.strictEqual(w.commits[0].synced, undefined)
+    assert.strictEqual(w.commits[0].syncError, 'socket hang up')
+  })
+
+  await test('a sync that recovers is marked synced', async () => {
+    const w = failingSync()
+    await w.worker.step()
+    w.clock = new Date(w.clock.getTime() + 60 * 1000)
+    w.telegram.callApi = async () => ({ stickers: w.telegramSet })
+    assert.strictEqual(await w.worker.step(), true)
+    assert.strictEqual(w.commits[0].synced, true)
   })
 
   await test('a failed publish is not synced', async () => {

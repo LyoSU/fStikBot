@@ -65,14 +65,16 @@ queued → preparing → pending → running → succeeded (+ synced)
   Telegram (not 429) fails it with Telegram's text; a network error or a 429
   beyond the wait leaves it `interrupted` for the API to requeue.
 - **Run**: `pending` commits, and `running` ones not touched for the lock TTL,
-  go to `publishCommit`. The pack lock keeps two processes from running one.
+  go to `publishCommit`, skipping packs whose lock is held (their holder is on it, maybe in a long 429 wait). The pack lock keeps two processes from running one; `runCommit` extends it every 30 s while it runs.
 - **Sync**: a `succeeded` commit with no `synced` has the bot's own sticker
   docs brought in line with `getStickerSet`: an upsert per final sticker
   (`emojis` joined with a space, like the bot stores it, `emojiList`,
   `keywords` only when the item has some, `fileId`, `stickerType: 'sticker'`),
   docs the pack no longer holds marked `deleted`, a gone placeholder unset on
-  the pack, `updatedAt` touched. Then `synced: true`. It runs last in a pass, so
-  a commit whose sync keeps failing doesn't hold up the others.
+  the pack, `updatedAt` touched. Then `synced: true`. It runs last in a pass. A
+  failing sync is retried after 10 s, 20 s … up to 10 min (`syncAttempts`,
+  `syncAfter`) and given up after 10 tries, leaving `synced` false and
+  `syncError` set; other commits are not held up.
 
 Co-edit activity is not logged and the actor is not notified yet.
 

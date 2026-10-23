@@ -26,6 +26,10 @@ const packCommitSchema = mongoose.Schema({
   claimedAt: Date,
   // The bot's own sticker docs reflect a succeeded commit.
   synced: Boolean,
+  // A failing sync is retried with a growing delay, then left (pack-ops/worker.js).
+  syncAttempts: Number,
+  syncAfter: Date,
+  syncError: String,
   createdAt: Date,
   updatedAt: Date
 }, {

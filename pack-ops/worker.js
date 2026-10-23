@@ -18,6 +18,10 @@ const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 20
 // A `preparing` claim older than this is a dead process's. Uploads refresh it.
 const CLAIM_STALE_MS = 2 * 60 * 1000
 const CLAIM_HEARTBEAT_MS = 30 * 1000
+// A failing sync is retried after 10 s, 20 s, 40 s … up to 10 min, and given up
+// after this many tries (synced stays false, syncError says why).
+const SYNC_MAX_ATTEMPTS = 10
+const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 1000)
 
 // Same split as the executor: an answer from Telegram is final, anything else
 // (a timeout, a reset connection) says nothing about what Telegram did.
@@ -132,9 +136,22 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     log.info(`commit ${commit._id}: synced ${stickers.length} stickers of ${commit.name}`)
   }
 
+  // A sync that fails is scheduled again later instead of retried every tick.
+  async function trySync (commit) {
+    try {
+      await sync(commit)
+    } catch (err) {
+      const attempts = (commit.syncAttempts || 0) + 1
+      const after = new Date(now().getTime() + syncBackoffMs(attempts))
+      await repo.recordSyncFailure(commit._id, { attempts, after, error: errorText(err) })
+      const outcome = attempts >= SYNC_MAX_ATTEMPTS ? 'giving up' : `retrying after ${after.toISOString()}`
+      log.warn(`commit ${commit._id}: sync failed (attempt ${attempts}), ${outcome}:`, errorText(err))
+    }
+  }
+
   async function run (commit) {
     const result = await publish(commit._id)
-    if (result?.status === 'succeeded') await sync(result)
+    if (result?.status === 'succeeded') await trySync(result)
     return result
   }
 
@@ -154,9 +171,9 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     }
 
     // Last, so a commit whose sync keeps failing doesn't hold up the others.
-    const unsynced = await repo.findUnsynced()
+    const unsynced = await repo.findUnsynced(now(), SYNC_MAX_ATTEMPTS)
     if (unsynced) {
-      await sync(unsynced)
+      await trySync(unsynced)
       return true
     }
     return false
