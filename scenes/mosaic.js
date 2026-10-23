@@ -9,6 +9,7 @@ const { removePlaceholderIfPending } = require('../utils/placeholder')
 const escapeHTML = require('../utils/html-escape')
 const downloadFileByUrl = require('../utils/download-file-by-url')
 const { resolveOwnerId } = require('../utils/add-sticker')
+const coedit = require('../utils/coedit')
 const sharp = require('sharp')
 
 const { match } = I18n
@@ -75,6 +76,17 @@ const replyNoEmojiPack = async (ctx) => {
 
 // --- Enter handler ---
 
+// Mosaic adds cells on behalf of the pack owner, so Telegram no longer stops a
+// non-owner: check the co-edit right here, as the regular add path does. The
+// shared public demo pack is refused outright — a grid would bypass its
+// one-write-a-minute limit.
+const canAddMosaic = async (ctx, stickerSet) => {
+  if (!stickerSet || stickerSet.deleted) return false
+  if (coedit.idOf(stickerSet.owner) === coedit.idOf(ctx.session.userInfo)) return true
+  const access = await coedit.getAccess(ctx, stickerSet)
+  return !!access && access.role !== 'public' && coedit.can(access, 'add')
+}
+
 mosaic.enter(async (ctx) => {
   if (!ctx.session.scene) ctx.session.scene = {}
   const state = ctx.session.scene.mosaic = {}
@@ -82,9 +94,13 @@ mosaic.enter(async (ctx) => {
   // Mosaic needs a custom emoji pack selected.
   const userInfo = ctx.session.userInfo
   const stickerSet = userInfo?.stickerSet && await ctx.db.StickerSet.findById(userInfo.stickerSet)
-  if (!stickerSet || stickerSet.packType !== 'custom_emoji') {
+  if (!stickerSet || stickerSet.deleted || stickerSet.packType !== 'custom_emoji') {
     await ctx.scene.leave()
     return replyNoEmojiPack(ctx)
+  }
+  if (!await canAddMosaic(ctx, stickerSet)) {
+    await ctx.scene.leave()
+    return ctx.replyWithHTML(ctx.i18n.t('coedit.no_access'))
   }
 
   state.packId = stickerSet.id
@@ -269,6 +285,13 @@ const processMosaic = async (ctx, rows, cols) => {
   activeUploads.add(ctx.from.id)
 
   try {
+    // Access may have changed since the scene was entered.
+    const stickerSet = await ctx.db.StickerSet.findById(state.packId)
+    if (!await canAddMosaic(ctx, stickerSet)) {
+      await ctx.replyWithHTML(ctx.i18n.t('coedit.no_access'))
+      return
+    }
+
     // Download photo again (not stored in session)
     const fileUrl = await ctx.telegram.getFileLink(state.photoFileId)
     const imageBuffer = await downloadFileByUrl(fileUrl.href || fileUrl)
@@ -282,7 +305,6 @@ const processMosaic = async (ctx, rows, cols) => {
     const cells = await splitImage(imageBuffer, rows, cols)
 
     // Upload all cells to the pack
-    const stickerSet = await ctx.db.StickerSet.findById(state.packId)
     // Telegram only accepts adds on behalf of the pack's owner.
     const ownerId = await resolveOwnerId(ctx, stickerSet)
     const uploadedIds = []
