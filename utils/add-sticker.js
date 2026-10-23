@@ -978,3 +978,5 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
   return uploadSticker(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
 }
+
+module.exports.resolveOwnerId = resolveOwnerId

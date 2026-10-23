@@ -8,6 +8,7 @@ const { getStickerCooldown } = require('../utils/sticker-cooldown')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
 const escapeHTML = require('../utils/html-escape')
 const downloadFileByUrl = require('../utils/download-file-by-url')
+const { resolveOwnerId } = require('../utils/add-sticker')
 const sharp = require('sharp')
 
 const { match } = I18n
@@ -76,7 +77,7 @@ const replyNoEmojiPack = async (ctx) => {
 
 mosaic.enter(async (ctx) => {
   if (!ctx.session.scene) ctx.session.scene = {}
-  ctx.session.scene.mosaic = {}
+  const state = ctx.session.scene.mosaic = {}
 
   // Mosaic needs a custom emoji pack selected.
   const userInfo = ctx.session.userInfo
@@ -86,8 +87,8 @@ mosaic.enter(async (ctx) => {
     return replyNoEmojiPack(ctx)
   }
 
-  ctx.session.scene.mosaic.packId = stickerSet.id
-  ctx.session.scene.mosaic.packName = stickerSet.name
+  state.packId = stickerSet.id
+  state.packName = stickerSet.name
 
   await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.enter', {
     // Unescaped, a pack title with < or & broke entity parsing: the user got
@@ -144,10 +145,13 @@ const getMosaicSource = (message) => {
 
 mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
   if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
+  // /cancel or any command nulls session.scene while the awaits below run,
+  // so the handler keeps its own reference to the wizard state.
+  const state = ctx.session.scene.mosaic
 
   // Block new input while uploading
-  if (ctx.session.scene.mosaic.uploading) {
-    const { current = 0, total = '…' } = ctx.session.scene.mosaic.progress || {}
+  if (state.uploading || activeUploads.has(ctx.from.id)) {
+    const { current = 0, total = '…' } = state.progress || {}
     return ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.uploading', { current, total }))
   }
 
@@ -174,7 +178,7 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
       height = meta.height
     }
 
-    stickerSet = await ctx.db.StickerSet.findById(ctx.session.scene.mosaic.packId)
+    stickerSet = await ctx.db.StickerSet.findById(state.packId)
     const currentCount = await ctx.db.Sticker.countDocuments({
       stickerSet: stickerSet.id,
       deleted: false
@@ -200,10 +204,10 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
   }
 
   // Store in scene state
-  ctx.session.scene.mosaic.photoFileId = source.fileId
-  ctx.session.scene.mosaic.photoWidth = width
-  ctx.session.scene.mosaic.photoHeight = height
-  ctx.session.scene.mosaic.freeSlots = freeSlots
+  state.photoFileId = source.fileId
+  state.photoWidth = width
+  state.photoHeight = height
+  state.freeSlots = freeSlots
 
   const { recommended } = suggestions
 
@@ -220,7 +224,7 @@ mosaic.on(['photo', 'document', 'sticker'], async (ctx) => {
     }
   )
 
-  ctx.session.scene.mosaic.previewMessageId = msg.message_id
+  state.previewMessageId = msg.message_id
 })
 
 // --- Reject animated/video inputs ---
@@ -233,12 +237,17 @@ mosaic.on(['animation', 'video', 'video_note'], async (ctx) => {
 
 // --- Shared processMosaic function ---
 
+// Users with a mosaic upload in flight. state.uploading alone isn't enough:
+// leaving and re-entering the scene mid-upload creates a fresh state, and a
+// second upload would interleave cells and break the rollback's slice(-n).
+const activeUploads = new Set()
+
 const processMosaic = async (ctx, rows, cols) => {
   const state = ctx.session.scene.mosaic
   const total = rows * cols
 
   // Lock: prevent concurrent processing
-  if (state.uploading) {
+  if (state.uploading || activeUploads.has(ctx.from.id)) {
     return
   }
 
@@ -257,6 +266,7 @@ const processMosaic = async (ctx, rows, cols) => {
   }
 
   state.uploading = true
+  activeUploads.add(ctx.from.id)
 
   try {
     // Download photo again (not stored in session)
@@ -273,6 +283,8 @@ const processMosaic = async (ctx, rows, cols) => {
 
     // Upload all cells to the pack
     const stickerSet = await ctx.db.StickerSet.findById(state.packId)
+    // Telegram only accepts adds on behalf of the pack's owner.
+    const ownerId = await resolveOwnerId(ctx, stickerSet)
     const uploadedIds = []
     const uploadedFileIds = []
     let uploadedCount = 0
@@ -289,13 +301,13 @@ const processMosaic = async (ctx, rows, cols) => {
         // just re-tried synthetic 429s 25× and burned ~3min of waits per
         // partial-failed mosaic.
         const uploaded = await ctx.telegram.callApi('uploadStickerFile', {
-          user_id: ctx.from.id,
+          user_id: ownerId,
           sticker_format: 'static',
           sticker: { source: cells[i] }
         })
 
         await ctx.telegram.callApi('addStickerToSet', {
-          user_id: ctx.from.id,
+          user_id: ownerId,
           name: stickerSet.name,
           sticker: {
             sticker: uploaded.file_id,
@@ -335,7 +347,7 @@ const processMosaic = async (ctx, rows, cols) => {
         return
       }
 
-      ctx.session.scene.mosaic.progress = { current: i + 1, total }
+      state.progress = { current: i + 1, total }
 
       // Update progress every 3 uploads
       if ((i + 1) % 3 === 0 || i === cells.length - 1) {
@@ -419,6 +431,7 @@ const processMosaic = async (ctx, rows, cols) => {
     await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.wait_photo'))
   } finally {
     state.uploading = false
+    activeUploads.delete(ctx.from.id)
   }
 }
 
@@ -450,17 +463,19 @@ mosaic.action(/^mosaic:grid:(\d+):(\d+)$/, async (ctx) => {
 // Custom size: prompt
 mosaic.action('mosaic:custom', async (ctx) => {
   if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
+  const state = ctx.session.scene.mosaic
   await ctx.answerCbQuery()
-  ctx.session.scene.mosaic.waitingCustom = true
+  state.waitingCustom = true
   await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.custom_prompt'))
 })
 
 // Cancel current photo
 mosaic.action('mosaic:cancel', async (ctx) => {
   if (!ctx.session.scene?.mosaic) return ctx.scene.leave()
+  const state = ctx.session.scene.mosaic
   await ctx.answerCbQuery()
-  ctx.session.scene.mosaic.photoFileId = null
-  ctx.session.scene.mosaic.waitingCustom = false
+  state.photoFileId = null
+  state.waitingCustom = false
   await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.wait_photo'))
 })
 
