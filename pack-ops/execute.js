@@ -336,4 +336,4 @@ function newCommit ({ name, ownerTelegramId, base, draft, known = {} }) {
   }
 }
 
-module.exports = { runCommit, newCommit }
+module.exports = { runCommit, newCommit, LOCK_TTL_MS }

@@ -1,0 +1,226 @@
+// Studio publish worker. The API queues a commit (a draft of a pack plus the
+// files it needs, stored as studioassets); this picks it up and carries it
+// through, one commit at a time per process:
+//
+//   queued → preparing   upload the draft's files to Telegram
+//          → pending     publishCommit (pack-ops/execute.js) runs it
+//          → succeeded   then the bot's own sticker docs are synced
+//
+// Several bot processes may run it side by side: the claim is one atomic
+// update, the publish takes the pack lock, and the sync is idempotent.
+// See pack-ops/README.md.
+
+const { runInCopyScope } = require('../utils/retry-api')
+const { LOCK_TTL_MS } = require('./execute')
+const log = require('../utils/logger').scope('pack-ops:worker')
+
+const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
+// A `preparing` claim older than this is a dead process's. Uploads refresh it.
+const CLAIM_STALE_MS = 2 * 60 * 1000
+const CLAIM_HEARTBEAT_MS = 30 * 1000
+
+// Same split as the executor: an answer from Telegram is final, anything else
+// (a timeout, a reset connection) says nothing about what Telegram did.
+const errorCode = (err) => err?.code ?? err?.response?.error_code
+const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
+const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >= 400 && errorCode(err) < 500 && errorCode(err) !== 429
+
+// Mongo hands back a Binary from lean queries (its buffer may be longer than
+// the data: `position` is the length), a Buffer from documents.
+const bytesOf = (data) => {
+  if (Buffer.isBuffer(data)) return data
+  if (data?.buffer) return Buffer.from(data.buffer.subarray(0, data.position ?? data.buffer.length))
+  return Buffer.from(data)
+}
+
+/**
+ * @param {Object} deps
+ * @param {Object} deps.repo database access (worker-repo.js)
+ * @param {{save: Function}} deps.store commit persistence (store.js)
+ * @param {{callApi: Function}} deps.telegram
+ * @param {Function} deps.publish (commitId) => commit, runs a pending commit
+ * @param {Function} [deps.now]
+ */
+function createWorker ({ repo, store, telegram, publish, now = () => new Date() }) {
+  let timer = null
+  let active = null
+  let stopping = false
+
+  const uploadsOf = (commit) => commit.draft.filter((item) => item.file)
+
+  // Uploads every file the draft still lacks a file_id for, saving the commit
+  // after each so a crash resumes with the rest. Returns the commit with its
+  // new status.
+  async function prepare (commit) {
+    const heartbeat = setInterval(() => {
+      repo.touchClaim(commit._id, now()).catch((err) => log.warn('claim heartbeat failed:', err.message))
+    }, CLAIM_HEARTBEAT_MS)
+    heartbeat.unref()
+
+    const settle = async (status, error = null) => {
+      commit.status = status
+      commit.error = error
+      commit.updatedAt = now()
+      await store.save(commit)
+      return commit
+    }
+
+    try {
+      for (const item of uploadsOf(commit)) {
+        if (item.file.fileId) continue
+        const asset = await repo.loadAsset(item.file.studioAssetId)
+        if (!asset) return await settle('failed', 'asset_missing')
+
+        // A file_id from an earlier attempt, if it was made for this owner.
+        let fileId = asset.fileId && asset.fileOwner === commit.ownerTelegramId ? asset.fileId : null
+        if (!fileId) {
+          const uploaded = await runInCopyScope(() => telegram.callApi('uploadStickerFile', {
+            user_id: commit.ownerTelegramId,
+            sticker: { source: bytesOf(asset.data) },
+            sticker_format: item.file.format || asset.format
+          }))
+          fileId = uploaded.file_id
+          await repo.setAssetFileId(asset._id, fileId, commit.ownerTelegramId)
+        }
+
+        item.file.fileId = fileId
+        commit.claimedAt = now()
+        commit.updatedAt = now()
+        await store.save(commit)
+      }
+      return await settle('pending')
+    } catch (err) {
+      log.warn(`commit ${commit._id} preparing stopped:`, errorText(err))
+      return settle(isRefusal(err) ? 'failed' : 'interrupted', errorText(err))
+    } finally {
+      clearInterval(heartbeat)
+    }
+  }
+
+  // Makes the bot's sticker docs match the pack as published. Reads the pack
+  // back from Telegram rather than trusting the commit: file_ids and the final
+  // order are Telegram's.
+  async function sync (commit) {
+    const pack = await repo.findPack(commit)
+    if (!pack) {
+      log.warn(`commit ${commit._id}: pack ${commit.name} is not in the database, nothing to sync`)
+      return repo.markSynced(commit._id)
+    }
+
+    const set = await telegram.callApi('getStickerSet', { name: commit.name })
+    const inPack = new Map(set.stickers.map((s) => [s.file_unique_id, s]))
+
+    const stickers = []
+    for (const item of commit.draft) {
+      const sticker = inPack.get(commit.mapping?.[item.assetId])
+      if (!sticker) continue
+      stickers.push({
+        fileUniqueId: sticker.file_unique_id,
+        fileId: sticker.file_id,
+        emojiList: item.emojiList,
+        keywords: item.keywords
+      })
+    }
+
+    const live = await repo.liveStickerUids(pack._id)
+    await repo.writeSync(pack._id, {
+      stickers,
+      deletedUids: live.filter((uid) => !inPack.has(uid)),
+      clearPlaceholder: !!pack.placeholderFileUniqueId && !inPack.has(pack.placeholderFileUniqueId)
+    }, now())
+    await repo.markSynced(commit._id)
+    log.info(`commit ${commit._id}: synced ${stickers.length} stickers of ${commit.name}`)
+  }
+
+  async function run (commit) {
+    const result = await publish(commit._id)
+    if (result?.status === 'succeeded') await sync(result)
+    return result
+  }
+
+  // One unit of work. Returns false when there was nothing to do.
+  async function step () {
+    const claimed = await repo.claimForPrepare(now(), CLAIM_STALE_MS)
+    if (claimed) {
+      const prepared = await prepare(claimed)
+      if (prepared.status === 'pending') await run(prepared)
+      return true
+    }
+
+    const runnable = await repo.findRunnable(now(), LOCK_TTL_MS)
+    if (runnable) {
+      await run(runnable)
+      return true
+    }
+
+    // Last, so a commit whose sync keeps failing doesn't hold up the others.
+    const unsynced = await repo.findUnsynced()
+    if (unsynced) {
+      await sync(unsynced)
+      return true
+    }
+    return false
+  }
+
+  async function tick () {
+    if (active || stopping) return
+    active = (async () => {
+      try {
+        // Keep going while there is work: no need to wait a tick between commits.
+        let worked
+        do {
+          worked = !stopping && await step()
+        } while (worked)
+      } catch (err) {
+        log.error('tick failed:', err.stack || err.message)
+      } finally {
+        active = null
+      }
+    })()
+    await active
+  }
+
+  function start () {
+    if (timer) return
+    log.info(`studio worker started (interval=${TICK_INTERVAL_MS}ms)`)
+    timer = setInterval(() => { tick() }, TICK_INTERVAL_MS)
+    timer.unref()
+  }
+
+  // Lets the commit in hand finish its current run (it is resumable anyway),
+  // starts no new one.
+  async function stop () {
+    stopping = true
+    if (timer) clearInterval(timer)
+    timer = null
+    if (active) await active.catch(() => {})
+  }
+
+  return { start, stop, tick, step, prepare, sync }
+}
+
+let instance = null
+
+// The bot's worker, wired to the real database and Telegram client. Built on
+// first use so requiring this file stays free of side effects.
+function getWorker () {
+  if (!instance) {
+    const { db } = require('../database')
+    const telegram = require('../utils/telegram')
+    const { publishCommit, mongoStore } = require('./index')
+    const { mongoRepo } = require('./worker-repo')
+    instance = createWorker({
+      repo: mongoRepo(db),
+      store: mongoStore(db),
+      telegram,
+      publish: (id) => publishCommit(db, telegram, id)
+    })
+  }
+  return instance
+}
+
+module.exports = {
+  createWorker,
+  start: () => getWorker().start(),
+  stop: () => (instance ? instance.stop() : Promise.resolve())
+}
