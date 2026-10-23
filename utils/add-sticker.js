@@ -23,14 +23,13 @@ const coedit = require('./coedit')
 const metrics = require('./metrics')
 const { failureReason } = require('./failure-reason')
 
-// Telegram pins the Lottie canvas per pack type. A TGS taken from a pack of
-// the other type has to be retargeted or Telegram rejects it.
-const TGS_CANVAS = { custom_emoji: 100, regular: 512 }
+// Telegram takes a TGS only on a 512×512 canvas, for custom emoji too:
+// measured against the Bot API, a 100×100 canvas is refused as "wrong file
+// type" in both pack types, and an emoji uploaded at 512 is stored and
+// served back byte-for-byte. Anything on another canvas is retargeted to 512.
+const TGS_CANVAS = 512
 
-const retargetTgs = (buffer, stickerSet) => {
-  const target = TGS_CANVAS[stickerSet.packType] || TGS_CANVAS.regular
-  return rescaleTgs(buffer, target)
-}
+const retargetTgs = (buffer) => rescaleTgs(buffer, TGS_CANVAS)
 
 // Bot API hard limit on InputSticker.emoji_list
 const MAX_EMOJI_LIST = 20
@@ -501,11 +500,14 @@ const isFileRejection = (result) => {
 // canvas this pack expects: a sticker taken from a set of the same type, or a
 // restore reusing this pack's own former file (sticker-restore sets
 // reuse_file_id). No download, and no upload under the bot-wide upload flood.
+// A TGS fits either pack type as is (both use the 512×512 canvas), so it goes
+// by file_id across types too; measured: regular ⇄ custom_emoji is accepted.
+// Static and video stickers still need the other type's size.
 const canAddByFileId = (stickerFile, stickerSet) => (
   typeof stickerFile.reuse_file_id === 'string' || (
     !!stickerFile.set_name &&
     !!stickerFile.file_id &&
-    stickerFile.type === (stickerSet.packType || 'regular')
+    (stickerFile.is_animated || stickerFile.type === (stickerSet.packType || 'regular'))
   )
 )
 
@@ -535,7 +537,7 @@ const resolveOwnerId = async (ctx, stickerSet) => {
   return owner?.telegram_id || ctx.from.id
 }
 
-// Download a TGS, fit its canvas to this pack's type and upload it.
+// Download a TGS, fit it to Telegram's canvas and upload it.
 const uploadRetargetedTgs = async (userId, stickerSet, stickerFile, stickerExtra, fileUrl, beforeStickers) => {
   let animatedData
   try {
@@ -544,7 +546,7 @@ const uploadRetargetedTgs = async (userId, stickerSet, stickerFile, stickerExtra
     return { error: { i18nKey: 'sticker.add.error.convert' } }
   }
 
-  const retargeted = retargetTgs(animatedData, stickerSet)
+  const retargeted = retargetTgs(animatedData)
   if (retargeted.error) return retargeted
 
   stickerExtra.sticker = { source: retargeted.buffer }
@@ -679,8 +681,8 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   }
 
   if (stickerFile.is_animated) {
-    // Same pack type (or a restore of this pack's own file) → the TGS canvas
-    // already fits, so add it by file_id: no download, no upload.
+    // A TGS from any pack (or a restore of this pack's own file) fits as is,
+    // so add it by file_id: no download, no upload.
     if (canAddByFileId(stickerFile, stickerSet)) {
       const byFileId = await tryAddByFileId(ownerId, stickerSet, stickerFile, stickerExtra, getStickerSetCheck.stickers)
       if (byFileId) return byFileId

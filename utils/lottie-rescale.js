@@ -1,8 +1,8 @@
 // Retarget a TGS (gzipped Lottie JSON) between Telegram canvases.
 //
-// Telegram pins the Lottie canvas per sticker type: 512×512 for regular
-// animated stickers, 100×100 for custom emoji. A TGS copied across pack types
-// is otherwise rejected outright. Lottie is vector, so the retarget is
+// Telegram accepts a TGS only on a 512×512 canvas, in regular and custom emoji
+// packs alike (a 100×100 canvas is refused as "wrong file type"), so a file
+// drawn on any other canvas is retargeted to 512. Lottie is vector, so the retarget is
 // lossless: we wrap every original layer in ONE precomp layer and scale that
 // layer by target/source. Nothing inside the animation is touched (no
 // per-layer transform math, no keyframe rewriting), which is what keeps this
@@ -51,7 +51,7 @@ function uniqueAssetId (assets) {
 
 /**
  * @param {Buffer} buffer      gzipped Lottie (TGS)
- * @param {number} targetSize  512 for stickers, 100 for custom emoji
+ * @param {number} targetSize  canvas side in px (Telegram wants 512)
  * @returns {{ buffer: Buffer } | { error: { i18nKey: string } }}
  *   Returns the SAME buffer instance when the canvas already matches.
  */
