@@ -425,6 +425,7 @@ callback:
       rename: '✏️ إعادة تسمية'
       search_gif: '🔎 صور متحركة'
       coedit: '👥 تحرير مشترك'
+      open_studio: '🎨 فتح في الاستوديو'
       catalog_add: '🗂 إضافة للكتالوج'
       catalog_edit: '📝 تعديل في الكتالوج'
       catalog_delete: '🗑 إزالة من الكتالوج'
