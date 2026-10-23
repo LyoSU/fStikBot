@@ -49,6 +49,8 @@ committing.
 pack. `bot.js` starts it (polling every 2 s, unref'd, drained on SIGTERM); it
 handles one commit at a time per process and is safe to run in several.
 
+`STUDIO_URL` (e.g. `https://studio.fstik.app`) enables the "Open in Studio" web_app button in the pack menu (private chats; owner and co-edit members only).
+
 ```
 queued → preparing → pending → running → succeeded (+ synced)
 ```

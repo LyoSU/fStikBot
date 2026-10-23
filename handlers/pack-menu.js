@@ -44,6 +44,19 @@ const catalogRows = async (ctx, stickerSet) => {
   return [[Markup.callbackButton(t('callback.pack.btn.catalog_add'), `catalog:publish:${stickerSet.id}`)]]
 }
 
+// Opens the Studio Mini App on the pack. web_app buttons only work in private
+// chats, and the Studio only accepts the owner and co-edit members — not the
+// shared demo pack, inline packs or deleted ones.
+const studioButton = (ctx, stickerSet, access, hidden) => {
+  const base = (process.env.STUDIO_URL || '').replace(/\/+$/, '')
+  if (!base || hidden || stickerSet.inline || stickerSet.deleted || stickerSet.passcode === 'public') return null
+  if (ctx.chat?.type !== 'private' || !['owner', 'editor', 'contributor'].includes(access?.role)) return null
+  return {
+    text: ctx.i18n.t('callback.pack.btn.open_studio'),
+    web_app: { url: `${base}/pack/${encodeURIComponent(stickerSet.name)}` }
+  }
+}
+
 /**
  * Text and keyboard for a pack's menu.
  *
@@ -87,6 +100,9 @@ async function buildPackMenu (ctx, stickerSet, { notice, text: textOverride } = 
     ? Markup.switchToChatButton(t('callback.pack.btn.use_pack'), '')
     : Markup.urlButton(t('callback.pack.btn.use_pack'), `https://${packLink(stickerSet)}`)
   ])
+
+  const studio = studioButton(ctx, stickerSet, access, hidden)
+  if (studio) keyboard.push([studio])
 
   if (owner && hidden) {
     keyboard.push([

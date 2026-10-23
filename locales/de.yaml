@@ -425,6 +425,7 @@ callback:
       rename: '✏️ Umbenennen'
       search_gif: '🔎 GIF-Suche'
       coedit: '👥 Freigabe'
+      open_studio: '🎨 Im Studio öffnen'
       catalog_add: '🗂 In den Katalog'
       catalog_edit: '📝 Katalog-Eintrag'
       catalog_delete: '🗑 Aus dem Katalog'

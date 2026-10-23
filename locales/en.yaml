@@ -425,6 +425,7 @@ callback:
       rename: '✏️ Rename'
       search_gif: '🔎 Search GIF'
       coedit: '👥 Collaborate'
+      open_studio: '🎨 Open in Studio'
       catalog_add: '🗂 Add to catalog'
       catalog_edit: '📝 Edit in catalog'
       catalog_delete: '🗑 Remove from catalog'
