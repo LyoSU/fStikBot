@@ -1,27 +1,15 @@
-// Derives sticker-set format from a Telegram getStickerSet response.
+// Sticker-set format flags from a getStickerSet response.
 //
-// Bot API 7.2 (April 2024) removed the top-level `is_animated` / `is_video`
-// fields from the StickerSet object. The format now lives only on each
-// individual Sticker (`sticker.is_animated` / `sticker.is_video`). Sets are
-// homogeneous in format, so the first sticker is authoritative.
+// Bot API 7.2 moved `is_animated` / `is_video` from the StickerSet onto each
+// Sticker, and a set can mix formats since then. So a flag means "the set
+// contains at least one such sticker", not "the set is of this format".
 
 function deriveStickerFlags (stickers) {
-  const first = Array.isArray(stickers) ? stickers[0] : null
+  const list = Array.isArray(stickers) ? stickers : []
   return {
-    animated: !!(first && first.is_animated),
-    video: !!(first && first.is_video)
+    animated: list.some((s) => s && s.is_animated),
+    video: list.some((s) => s && s.is_video)
   }
 }
 
-function flagsToType (flags) {
-  if (!flags) return 'image'
-  if (flags.animated) return 'animated'
-  if (flags.video) return 'video'
-  return 'image'
-}
-
-function stickerSetType (stickers) {
-  return flagsToType(deriveStickerFlags(stickers))
-}
-
-module.exports = { deriveStickerFlags, flagsToType, stickerSetType }
+module.exports = { deriveStickerFlags }
