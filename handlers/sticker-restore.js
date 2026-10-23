@@ -16,8 +16,10 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.error.not_found'), true)
   }
 
-  // The owner, or a co-editor allowed to delete (restore undoes a delete).
-  if (!coedit.can(await coedit.getAccess(ctx, sticker.stickerSet), 'delete')) {
+  // One button, two actions: on a deleted sticker it undoes the delete, so it
+  // takes the delete right; on a live one it is "copy", another add.
+  const action = sticker.deleted ? 'delete' : 'add'
+  if (!coedit.can(await coedit.getAccess(ctx, sticker.stickerSet), action)) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 
