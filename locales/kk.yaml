@@ -425,6 +425,7 @@ callback:
       rename: '✏️ Қайта атау'
       search_gif: '🔎 GIF іздеу'
       coedit: '👥 Бірлесіп өңдеу'
+      open_studio: '🎨 Студияда ашу'
       catalog_add: '🗂 Каталогқа қосу'
       catalog_edit: '📝 Каталогта өңдеу'
       catalog_delete: '🗑 Каталогтан жою'
