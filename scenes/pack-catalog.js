@@ -164,9 +164,15 @@ catalogPublishOwnerProof.enter(async (ctx) => {
   })
 })
 
+// The owner gets the proof from @Stickers' /packstats right now. A forward of
+// a forward keeps the original date, so an old proof someone once forwarded
+// publicly is refused instead of proving ownership for anyone.
+const OWNER_PROOF_MAX_AGE_S = 15 * 60
+
 catalogPublishOwnerProof.on('text', async (ctx) => {
   if (!ctx.session.scene?.publish) return ctx.scene.leave()
-  if (ctx.message.forward_from && ctx.message.forward_from.id === 429000) {
+  const proofAge = Date.now() / 1000 - (ctx.message.forward_date || 0)
+  if (ctx.message.forward_from?.id === 429000 && proofAge < OWNER_PROOF_MAX_AGE_S) {
     if (!ctx.message.entities) {
       return ctx.scene.reenter()
     }
