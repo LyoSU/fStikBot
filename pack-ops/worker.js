@@ -221,6 +221,7 @@ function getWorker () {
 
 module.exports = {
   createWorker,
+  getWorker,
   start: () => getWorker().start(),
   stop: () => (instance ? instance.stop() : Promise.resolve())
 }

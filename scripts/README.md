@@ -183,6 +183,24 @@ logic offline against a simulated pack.
 node scripts/check-pack-ops-live.js [owner_user_id]   # default: config.mainAdminId
 ```
 
+## `check-studio-worker-live.js`
+
+Runs the Studio publish worker (`pack-ops/worker.js`) end to end against the
+real Bot API and a throwaway MongoDB: seeds a pack with sticker docs, a queued
+commit and studioassets (delete one sticker, reorder, change an emoji, add two
+new files), runs the worker, then checks the pack in Telegram and the sticker
+docs (order, file_ids, `emojiList`, `keywords` only where set, deleted docs,
+placeholder unset). A commit with an expired asset must fail as
+`asset_missing`. The production `MONGODB_URI` from `.env` is never used: the
+database is `mongodb://127.0.0.1:27098/studio_worker_live` and gets dropped.
+Test bot only, one `packops_*` pack deleted at the end.
+
+```bash
+docker run -d --rm --name studio-worker-mongo -p 27098:27017 mongo:7
+node scripts/check-studio-worker-live.js [owner_user_id]   # default: config.mainAdminId
+docker stop studio-worker-mongo
+```
+
 ## A note on schema migration
 
 At 513M Sticker docs (94% in the legacy `info.*` shape) and ~101 GiB of data
