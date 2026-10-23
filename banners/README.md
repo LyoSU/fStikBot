@@ -19,7 +19,7 @@ banners/
 ├── dist/                   # committed PNG output
 │   └── *.png               # 2400×800 (retina), ship these
 ├── build.js                # Puppeteer → PNG export
-└── index.js                # bot runtime: sendBanner / editBanner / editMenu
+└── index.js                # bot runtime: sendBanner / editBanner / replyOrEditBanner
 ```
 
 ## Adding a new banner
@@ -37,7 +37,7 @@ refresh. Run `npm run banners:build` only when ready to export.
 ## Using in handlers
 
 ```js
-const { sendBanner, editBanner, editMenu } = require('../banners')
+const { sendBanner, editBanner, replyOrEditBanner } = require('../banners')
 
 // Fresh send (from /command or plain message)
 await sendBanner(ctx, 'welcome', captionHTML, {
@@ -49,8 +49,8 @@ await editBanner(ctx, 'catalog', captionHTML, {
   reply_markup: Markup.inlineKeyboard(keyboard)
 })
 
-// Stay on same banner, just update text/keyboard
-await editMenu(ctx, captionHTML, {
+// Reachable both as a command and as a callback: send or edit as fits
+await replyOrEditBanner(ctx, 'catalog', captionHTML, {
   reply_markup: Markup.inlineKeyboard(keyboard)
 })
 ```
@@ -71,7 +71,6 @@ Telegram allows **text → text+media** (`editMessageMedia`), but NOT the
 reverse. Once a message is a photo, it stays a photo; you can only swap the
 photo, caption, or buttons. Helpers respect this:
 
-- `editBanner` — uses `editMessageMedia`, works from either text or photo
-  source.
-- `editMenu` — auto-picks `editMessageCaption` (photo source) or
-  `editMessageText` (text source) to update text without touching the banner.
+- `editBanner` — when the message already shows this banner, edits only the
+  caption and keyboard; otherwise swaps the media with `editMessageMedia`.
+  Works from either a text or a photo source.
