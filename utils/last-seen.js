@@ -43,7 +43,4 @@ function touchLastSeen (User, userId) {
     .catch(err => console.error('[last-seen] updateOne failed:', err.message))
 }
 
-module.exports = {
-  touchLastSeen,
-  _cacheSize: () => lastWrite.size
-}
+module.exports = { touchLastSeen }

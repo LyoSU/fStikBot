@@ -128,21 +128,6 @@ catalogPublishNew.on(['sticker', 'text'], async (ctx) => {
     return ctx.scene.reenter()
   }
 
-  // const stickersKeywords = getStickerSetInfo.keywords.map((keyword) => {
-  //   const stickerFind = getStickerSetInfo.documents.find((sticker) => {
-  //     return sticker.id.toString() === keyword.documentId.toString()
-  //   })
-
-  //   if (!stickerFind) {
-  //     return
-  //   }
-
-  //   return {
-  //     sticker: stickerFind,
-  //     keywords: keyword.keyword
-  //   }
-  // })
-
   const packOwner = decodeStickerSetId(getStickerSetInfo.set.id.value).ownerId
 
   if (

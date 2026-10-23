@@ -140,6 +140,9 @@ npm test
 - `test-sticker-update.js` — emoji change by text against a fake ctx: a
   deleted `previousSticker` falls through to the last sticker in the set;
   `STICKER_ALREADY_DELETED` syncs the DB row.
+- `test-tgs-static-fix.js` — repair of a TGS Telegram refuses as static
+  (`utils/tgs-static-fix.js`): dropped keyframes get interpolators back, a
+  fully static file gets a micro-animation, real animations stay untouched.
 - `test-placeholder.js` — bootstrap-placeholder removal.
 - `test-retry-api.js` — 429 retry / cooldown policy.
 - `test-perf-timing.js` — perf-stage instrumentation.
@@ -149,7 +152,8 @@ npm test
 Not a unit test: it talks to the real Bot API and checks the sticker behaviour
 the bot relies on — TGS canvas (512×512 only, custom emoji included), TGS
 across pack types by `file_id`, `attach://` uploads, `setStickerPositionInSet`
-semantics, `replaceStickerInSet` on a one-sticker pack, a re-added sticker
+semantics, `replaceStickerInSet` on a one-sticker pack, an empty pack after
+deleting the last sticker, a re-added sticker
 getting a new `file_unique_id`, keyword/emoji limits. Run it when Telegram
 ships a Bot API update or before relying on one of these in new code:
 

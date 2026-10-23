@@ -157,6 +157,14 @@ async function main () {
     return after.length === 1 && after[0] !== before.file_unique_id
   })
 
+  await check('deleting the last sticker leaves an empty, still usable pack', 'ok', async () => {
+    const [only] = (await call('getStickerSet', { name: reg })).stickers
+    await call('deleteStickerFromSet', { sticker: only.file_id })
+    const empty = (await uids(reg)).length === 0
+    await call('addStickerToSet', { user_id: OWNER, name: reg, sticker: attached('static') }, file(await png(1), 'b.png'))
+    return empty && (await uids(reg)).length === 1
+  })
+
   for (let i = 2; i <= 6; i++) await call('addStickerToSet', { user_id: OWNER, name: reg, sticker: attached('static') }, file(await png(i), `${i}.png`))
   await check('added stickers land at the end in add order', 'ok', async () => (await uids(reg)).length === 6)
 

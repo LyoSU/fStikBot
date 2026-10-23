@@ -1,5 +1,6 @@
 // Unit tests for utils/lottie-rescale.js — retargeting a TGS (gzipped Lottie)
-// between the 512×512 sticker canvas and the 100×100 custom-emoji canvas.
+// to another canvas. The bot always targets 512×512 (Telegram's only accepted
+// TGS canvas, custom emoji included); 100 here is just a second size to test.
 // Pure: no network, no DB. Fixtures are built in-memory.
 
 const assert = require('assert')

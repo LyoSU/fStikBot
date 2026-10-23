@@ -120,25 +120,6 @@ async function editBanner (ctx, name, caption = '', extra = {}) {
   }
 }
 
-// In-place text/keyboard edit without touching the banner. Use when the user
-// navigates WITHIN the same banner section (e.g. paging through packs).
-// Auto-picks editMessageCaption (if current message is a photo) or
-// editMessageText (if it's still plain text) — this keeps legacy text-only
-// flows working while photo-based flows just work too.
-async function editMenu (ctx, text, extra = {}) {
-  const msg = ctx.callbackQuery?.message
-  const isPhoto = !!(msg && msg.photo)
-  const opts = { parse_mode: 'HTML', ...extra }
-  try {
-    if (isPhoto) {
-      return await ctx.editMessageCaption(text, opts)
-    }
-    return await ctx.editMessageText(text, opts)
-  } catch (err) {
-    // benign: message-not-modified / message-to-edit-not-found
-  }
-}
-
 // Convenience: pick sendBanner vs editBanner by trigger type. Use in handlers
 // that can be reached both as a command and as a callback from another menu.
 async function replyOrEditBanner (ctx, name, caption = '', extra = {}) {
@@ -146,4 +127,4 @@ async function replyOrEditBanner (ctx, name, caption = '', extra = {}) {
   return sendBanner(ctx, name, caption, extra)
 }
 
-module.exports = { sendBanner, editBanner, editMenu, replyOrEditBanner }
+module.exports = { sendBanner, editBanner, replyOrEditBanner }

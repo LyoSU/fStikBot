@@ -46,14 +46,6 @@ const requireRight = (right) => async (ctx, next) => {
   }
 }
 
-// Main-admin-only gate (e.g. dangerous global ops). Same fidelity pattern.
-const requireMainAdmin = async (ctx, next) => {
-  if (isMainAdmin(ctx)) return next()
-  if (isAnyAdmin(ctx)) {
-    return sendDeny(ctx, '⛔ This action is restricted to the main admin.')
-  }
-}
-
 // Why `user` may not be banned by the current admin, or null if they may.
 // A ban is checked before the admin commands run, so a banned main admin
 // could only be unbanned in the database.
@@ -75,6 +67,5 @@ module.exports = {
   getAdminRights,
   requireAnyAdmin,
   requireRight,
-  requireMainAdmin,
   sendDeny
 }
