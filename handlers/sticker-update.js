@@ -1,13 +1,27 @@
 const emojiRegex = require('emoji-regex')
 const coedit = require('../utils/coedit')
+const publicPackLimit = require('../utils/public-pack-limit')
 
-// An editor may change any emoji in the pack; a contributor only the one of
-// the sticker they just added.
-const mayChangeEmoji = async (ctx, sticker) => {
+// Why the emoji of `sticker` may not be changed (an i18n key), or null if it
+// may. An editor may change any emoji in the pack; a contributor only the one
+// of the sticker they just added themselves — not one the bot recognised as
+// already in the pack, which someone else may have added. Edits in the shared
+// demo pack count against its write limit.
+const emojiRefusal = async (ctx, sticker) => {
   const access = await coedit.getAccess(ctx, { _id: sticker.stickerSet })
-  if (coedit.can(access, 'emoji')) return true
-  return access?.role === 'contributor' && String(ctx.session.previousSticker?.id) === String(sticker._id)
+  const previous = ctx.session.previousSticker
+  const allowed = coedit.can(access, 'emoji') || (
+    access?.role === 'contributor' && previous?.own === true && String(previous.id) === String(sticker._id)
+  )
+  if (!allowed) return 'coedit.no_rights'
+  if (access.role === 'public' && !publicPackLimit.take(ctx.from.id)) return 'ratelimit'
+  return null
 }
+
+const replyTo = (ctx) => ({
+  reply_to_message_id: ctx.message.message_id,
+  allow_sending_without_reply: true
+})
 
 module.exports = async (ctx, next) => {
   if (ctx.session.previousSticker && ctx.session?.userInfo?.stickerSet?.inline) {
@@ -19,6 +33,9 @@ module.exports = async (ctx, next) => {
     const sticker = await ctx.db.Sticker.findById(ctx.session.previousSticker.id)
 
     if (sticker) {
+      const refusal = await emojiRefusal(ctx, sticker)
+      if (refusal) return ctx.replyWithHTML(ctx.i18n.t(refusal), replyTo(ctx))
+
       sticker.emojis = ctx.message.text
       await sticker.save()
 
@@ -86,12 +103,8 @@ module.exports = async (ctx, next) => {
   // error instead of just working.
   if (emojis.length > 20) emojis.length = 20
 
-  if (!await mayChangeEmoji(ctx, sticker)) {
-    return ctx.replyWithHTML(ctx.i18n.t('coedit.no_rights'), {
-      reply_to_message_id: ctx.message.message_id,
-      allow_sending_without_reply: true
-    })
-  }
+  const refusal = await emojiRefusal(ctx, sticker)
+  if (refusal) return ctx.replyWithHTML(ctx.i18n.t(refusal), replyTo(ctx))
 
   const updateResult = await ctx.tg.callApi('setStickerEmojiList', {
     sticker: sticker.getFileId(),

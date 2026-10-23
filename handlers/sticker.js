@@ -16,6 +16,7 @@ const log = require('../utils/logger').scope('sticker')
 const metrics = require('../utils/metrics')
 const { failureReason } = require('../utils/failure-reason')
 const coedit = require('../utils/coedit')
+const publicPackLimit = require('../utils/public-pack-limit')
 const handleError = require('./catch')
 
 // Adds for a boosted pack may run side by side ("multiple stickers at once");
@@ -176,8 +177,11 @@ const maybeOfferCatalog = async (ctx, stickerSet, added) => {
   }).catch(() => {})
 }
 
-const rememberSticker = (ctx, sticker) => {
-  if (sticker?._id) ctx.session.previousSticker = { id: String(sticker._id) }
+// The sticker a following emoji message applies to. `own` marks a sticker this
+// user just added, as opposed to one recognised as already in the pack: a
+// contributor may only re-emoji their own (handlers/sticker-update.js).
+const rememberSticker = (ctx, sticker, own) => {
+  if (sticker?._id) ctx.session.previousSticker = { id: String(sticker._id), own }
 }
 
 const addSingle = async (ctx, stickerSet, item, stickerSetInfo) => {
@@ -186,7 +190,8 @@ const addSingle = async (ctx, stickerSet, item, stickerSetInfo) => {
   // Queued for conversion: the worker replies when the video is ready.
   if (result.wait) return
 
-  rememberSticker(ctx, result.ok?.sticker || result.error?.sticker)
+  if (result.ok) rememberSticker(ctx, result.ok.sticker, true)
+  else rememberSticker(ctx, result.error?.sticker, false)
 
   const { messageText, replyMarkup } = addStickerText(result, ctx.i18n.locale())
   if (messageText) await reply(ctx, messageText, item.replyTo, { reply_markup: replyMarkup })
@@ -247,7 +252,7 @@ const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
 
   if (progress) await ctx.telegram.deleteMessage(ctx.chat.id, progress.message_id).catch(() => {})
 
-  rememberSticker(ctx, lastSticker)
+  rememberSticker(ctx, lastSticker, true)
 
   const lines = [ctx.i18n.t('sticker.add.album_done', {
     added: counts.added,
@@ -332,8 +337,15 @@ const flushPendingStickers = (ctx, stickerSet) => {
   if (!pending || Date.now() - pending.at > PENDING_TTL_MS || !pending.items.length) return
   if (pending.items[0].chatId !== ctx.chat?.id) return
 
+  // The shared demo pack takes one write a minute: only the first file.
+  let { items } = pending
+  if (publicPackLimit.isPublic(stickerSet)) {
+    if (!publicPackLimit.take(ctx.from.id)) return
+    items = items.slice(0, 1)
+  }
+
   metrics.track('pending_flushed')
-  schedule(ctx, stickerSet, () => pending.items, pending.items[0].replyTo)
+  schedule(ctx, stickerSet, () => items, items[0].replyTo)
 }
 
 const replyNoPack = async (ctx, replyTo) => {
@@ -434,6 +446,15 @@ module.exports = async (ctx, next) => {
         ctx.session.userInfo.stickerSet = null
         return reply(ctx, ctx.i18n.t('coedit.no_access'), replyTo)
       }
+    }
+
+    // The shared demo pack takes one write a minute per user, whatever the
+    // entry point (/ss, a custom emoji, the add button, an album) — of an
+    // album only the first file.
+    if (publicPackLimit.isPublic(stickerSet)) {
+      if (album && !album.first) return
+      if (!publicPackLimit.take(ctx.from.id)) return reply(ctx, ctx.i18n.t('ratelimit'), replyTo)
+      return schedule(ctx, stickerSet, () => [item], replyTo)
     }
 
     if (album) {

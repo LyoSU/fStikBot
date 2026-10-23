@@ -13,7 +13,6 @@ const PACK_LINK_RE = /(addstickers|addemoji)\/([^\s/?#]+)/
 
 module.exports = (bot, privateMessage, {
   handlers,
-  limitPublicPack,
   privacyHtml,
   db,
   scenes
@@ -255,7 +254,7 @@ module.exports = (bot, privateMessage, {
   bot.command('ss', handleSticker)
 
   // Sticker detection in private chats (images, videos, video notes, etc.)
-  privateMessage.on(['sticker', 'document', 'photo', 'video', 'video_note'], limitPublicPack, handleSticker)
+  privateMessage.on(['sticker', 'document', 'photo', 'video', 'video_note'], handleSticker)
   privateMessage.on('message', (ctx, next) => {
     if (ctx.message && ctx.message.entities && ctx.message.entities[0] && ctx.message.entities[0].type === 'custom_emoji') {
       return handleSticker(ctx, next)

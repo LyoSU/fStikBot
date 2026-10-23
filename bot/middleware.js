@@ -4,7 +4,6 @@ const Composer = require('telegraf/composer')
 
 const { perfStage, perfRecord, perfTick, ENABLED: PERF_TIMING_ENABLED } = require('../utils/perf-timing')
 const { touchLastSeen } = require('../utils/last-seen')
-const publicPackLimit = require('../utils/public-pack-limit')
 const { wrapAnswerCbQuery } = require('../utils/callback-text')
 const log = require('../utils/logger').scope('middleware')
 
@@ -37,15 +36,6 @@ module.exports = (bot, {
   // unblocked us can receive replies immediately (the 429 retry itself lives
   // in the Telegram.prototype patch, utils/retry-api.js).
   bot.use(retryMiddleware())
-
-  // Adding goes into the selected pack, so with the public pack selected every
-  // add is a write to it. Deletes and restores check the pack they act on
-  // (handlers/sticker-delete.js, sticker-restore.js); all share one budget.
-  const limitPublicPack = (ctx, next) => {
-    if (!publicPackLimit.isPublic(ctx?.session?.userInfo?.stickerSet)) return next()
-    if (!ctx.from || publicPackLimit.take(ctx.from.id)) return next()
-    return ctx.reply(ctx.i18n.t('ratelimit'))
-  }
 
   // Response-time stats
   bot.use(stats)
@@ -208,5 +198,5 @@ module.exports = (bot, {
     return false
   })
 
-  return { privateMessage, limitPublicPack }
+  return { privateMessage }
 }

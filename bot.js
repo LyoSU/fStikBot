@@ -62,7 +62,7 @@ const i18n = new I18n({
 // Cached at startup — privacy policy is static HTML.
 const privacyHtml = fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')
 
-const { privateMessage, limitPublicPack } = registerMiddleware(bot, {
+const { privateMessage } = registerMiddleware(bot, {
   i18n,
   sessionMiddleware: sessionMiddleware(),
   updateUser,
@@ -73,7 +73,6 @@ const { privateMessage, limitPublicPack } = registerMiddleware(bot, {
 
 registerCommands(bot, privateMessage, {
   handlers,
-  limitPublicPack,
   privacyHtml,
   db,
   scenes

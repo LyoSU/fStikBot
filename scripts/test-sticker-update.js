@@ -34,12 +34,13 @@ const fakeSticker = (id, fileId, extra = {}) => {
   return s
 }
 
-const makeCtx = ({ previousSticker, byId, setStickers, fromDb, callApi }) => {
+const makeCtx = ({ previousSticker, byId, setStickers, fromDb, callApi, userId = 'owner', pack = { owner: 'owner', editors: [] } }) => {
   const ctx = {
+    from: { id: 42 },
     message: { text: '😀', message_id: 1 },
     session: {
       previousSticker,
-      userInfo: { _id: 'owner', stickerSet: { name: 'set_by_bot', inline: false } }
+      userInfo: { _id: userId, stickerSet: { name: 'set_by_bot', inline: false } }
     },
     db: {
       Sticker: {
@@ -49,7 +50,7 @@ const makeCtx = ({ previousSticker, byId, setStickers, fromDb, callApi }) => {
       // The caller owns the pack (utils/coedit.js access check); no co-editors,
       // so nothing is written to the activity log.
       StickerSet: {
-        findById: () => ({ select: () => ({ lean: async () => ({ owner: 'owner', editors: [] }) }) }),
+        findById: () => ({ select: () => ({ lean: async () => pack }) }),
         async exists () { return null }
       }
     },
@@ -130,6 +131,38 @@ const tgError = (description) => {
     await handler(ctx, async () => { throw new Error('next() must not be called') })
     assert.strictEqual(live.emojis, '😀')
     assert.deepStrictEqual(ctx.replies, ['cmd.emoji.done'])
+  })
+
+  const contributorPack = { owner: 'owner', editors: [{ user: 'member', role: 'contributor' }] }
+
+  await test('contributor may re-emoji the sticker they just added', async () => {
+    const own = fakeSticker('own', 'file_own')
+    const calls = []
+    const ctx = makeCtx({
+      previousSticker: { id: 'own', own: true },
+      byId: own,
+      userId: 'member',
+      pack: contributorPack,
+      callApi: async (method) => { calls.push(method); return true }
+    })
+    await handler(ctx, async () => { throw new Error('next() must not be called') })
+    assert.deepStrictEqual(calls, ['setStickerEmojiList'])
+    assert.deepStrictEqual(ctx.replies, ['cmd.emoji.done'])
+  })
+
+  await test('contributor may not re-emoji a sticker only recognised as a duplicate', async () => {
+    const someoneElses = fakeSticker('dup', 'file_dup')
+    const calls = []
+    const ctx = makeCtx({
+      previousSticker: { id: 'dup', own: false },
+      byId: someoneElses,
+      userId: 'member',
+      pack: contributorPack,
+      callApi: async (method) => { calls.push(method); return true }
+    })
+    await handler(ctx, async () => { throw new Error('next() must not be called') })
+    assert.deepStrictEqual(calls, [], 'no Telegram call')
+    assert.deepStrictEqual(ctx.replies, ['coedit.no_rights'])
   })
 
   console.log(`\n${passed} passed, ${failed} failed`)
