@@ -425,6 +425,7 @@ callback:
       rename: '✏️ Վերանվանել'
       search_gif: '🔎 GIF որոնում'
       coedit: '👥 Համատեղ խմբագրում'
+      open_studio: '🎨 Բացել Studio-ում'
       catalog_add: '🗂 Ավելացնել կատալոգ'
       catalog_edit: '📝 Խմբագրել կատալոգում'
       catalog_delete: '🗑 Հեռացնել կատալոգից'
