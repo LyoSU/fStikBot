@@ -10,6 +10,7 @@ const Metric = require('./metric')
 const PackActivity = require('./pack-activity')
 const PackCommit = require('./pack-commit')
 const PackLock = require('./pack-lock')
+const StudioAsset = require('./studio-asset')
 
 module.exports = {
   User,
@@ -23,5 +24,6 @@ module.exports = {
   Metric,
   PackActivity,
   PackCommit,
-  PackLock
+  PackLock,
+  StudioAsset
 }

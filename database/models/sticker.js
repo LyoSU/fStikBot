@@ -19,6 +19,11 @@ const stickersSchema = mongoose.Schema({
     required: true
   },
   emojis: String,
+  // Set by Studio publishes. Both stay absent on other docs: keywords must
+  // not appear unless someone set them, and `default: undefined` stops
+  // mongoose from filling in [].
+  emojiList: { type: [String], default: undefined },
+  keywords: { type: [String], default: undefined },
 
   // NEW: Flat fields (used for new documents)
   fileId: String,

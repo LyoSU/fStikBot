@@ -9,6 +9,7 @@ const packCommitSchema = mongoose.Schema({
   stickerSet: { type: mongoose.Schema.Types.ObjectId, ref: 'StickerSet' },
   ownerTelegramId: { type: Number, required: true },
   actorTelegramId: Number,
+  packType: String,
   // Client-supplied: a double tap on "Publish" returns the same commit.
   idempotencyKey: String,
   status: { type: String, required: true },
@@ -21,6 +22,10 @@ const packCommitSchema = mongoose.Schema({
   steps: mongoose.Schema.Types.Mixed,
   mapping: mongoose.Schema.Types.Mixed,
   error: String,
+  // Set by the worker while it uploads files; a stale one means it died.
+  claimedAt: Date,
+  // The bot's own sticker docs reflect a succeeded commit.
+  synced: Boolean,
   createdAt: Date,
   updatedAt: Date
 }, {
