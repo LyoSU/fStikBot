@@ -425,6 +425,7 @@ callback:
       rename: '✏️ 名前を変更'
       search_gif: '🔎 GIF検索'
       coedit: '👥 共同編集'
+      open_studio: '🎨 スタジオで開く'
       catalog_add: '🗂 カタログに公開'
       catalog_edit: '📝 カタログで編集'
       catalog_delete: '🗑 カタログから削除'
