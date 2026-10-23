@@ -272,15 +272,6 @@ const processMosaic = async (ctx, rows, cols) => {
     return
   }
 
-  // Pre-check: if the user's sticker upload/add is in a 429 cooldown we'd
-  // get synthetic 429 on every single cell. Better to bail here with a
-  // clear "wait N seconds" than half-upload and roll back.
-  const cooldown = getStickerCooldown(ctx.from.id, { upload: true })
-  if (cooldown > 0) {
-    await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: cooldown }))
-    return
-  }
-
   state.uploading = true
   activeUploads.add(ctx.from.id)
 
@@ -291,6 +282,30 @@ const processMosaic = async (ctx, rows, cols) => {
       await ctx.replyWithHTML(ctx.i18n.t('coedit.no_access'))
       return
     }
+
+    // Telegram only accepts adds on behalf of the pack's owner, and the 429
+    // cooldowns are kept per that user id.
+    const ownerId = await resolveOwnerId(ctx, stickerSet)
+
+    // Pre-check: in a 429 cooldown every single cell would fail. Better to
+    // bail here with a clear "wait N seconds" than half-upload and roll back.
+    const cooldown = getStickerCooldown(ownerId, { upload: true })
+    if (cooldown > 0) {
+      await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: cooldown }))
+      return
+    }
+
+    // The cells can only be told apart from other stickers by being new since
+    // this snapshot: uploadStickerFile's file_unique_id differs from the one
+    // getStickerSet reports. In a shared pack someone else may add meanwhile,
+    // so "the last N stickers" is not proof — only an exact count of new ones.
+    const before = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name }).catch(() => null)
+    if (!before) {
+      await ctx.replyWithHTML(ctx.i18n.t('sticker.add.error.stickerset_invalid'))
+      return
+    }
+    const existing = new Set(before.stickers.map((s) => s.file_unique_id))
+    const newSince = (set) => set.stickers.filter((s) => !existing.has(s.file_unique_id))
 
     // Download photo again (not stored in session)
     const fileUrl = await ctx.telegram.getFileLink(state.photoFileId)
@@ -305,8 +320,6 @@ const processMosaic = async (ctx, rows, cols) => {
     const cells = await splitImage(imageBuffer, rows, cols)
 
     // Upload all cells to the pack
-    // Telegram only accepts adds on behalf of the pack's owner.
-    const ownerId = await resolveOwnerId(ctx, stickerSet)
     const uploadedIds = []
     const uploadedFileIds = []
     let uploadedCount = 0
@@ -340,12 +353,14 @@ const processMosaic = async (ctx, rows, cols) => {
         })
         uploadedCount++
       } catch (err) {
-        // Upload failed — rollback what succeeded via getStickerSet.
+        // Upload failed — roll back the cells that made it, but only when they
+        // are certainly ours; otherwise leave them rather than delete a
+        // sticker another member added in the meantime.
         if (uploadedCount > 0) {
           const partialSet = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name }).catch(() => null)
-          if (partialSet) {
-            const toRollback = partialSet.stickers.slice(-uploadedCount)
-            for (const s of toRollback) {
+          const added = partialSet ? newSince(partialSet) : []
+          if (added.length === uploadedCount) {
+            for (const s of added) {
               await ctx.telegram.callApi('deleteStickerFromSet', { sticker: s.file_id }).catch(() => {})
             }
           }
@@ -357,7 +372,7 @@ const processMosaic = async (ctx, rows, cols) => {
         const description = err?.description || err?.message || ''
         let replyKey = 'cmd.mosaic.undo_failed'
         if (err?.code === 429) {
-          const retryAfter = err?.parameters?.retry_after || getStickerCooldown(ctx.from.id, { upload: true })
+          const retryAfter = err?.parameters?.retry_after || getStickerCooldown(ownerId, { upload: true })
           await ctx.replyWithHTML(ctx.i18n.t('error.rate_limit_seconds', { seconds: retryAfter || 30 }))
           return
         } else if (description.includes('STICKERSET_INVALID')) {
@@ -383,26 +398,31 @@ const processMosaic = async (ctx, rows, cols) => {
       }
     }
 
-    // Get all sticker IDs in one API call (instead of N calls during upload)
+    // Get all sticker IDs in one API call (instead of N calls during upload).
+    // With an exact count the new stickers are the cells, in upload order.
+    // Otherwise someone else added in between: still show the grid from the
+    // tail, but record nothing and offer no undo — that could hit their sticker.
     const setInfo = await ctx.telegram.callApi('getStickerSet', { name: stickerSet.name })
-    const addedStickers = setInfo.stickers.slice(-total)
-    // Parallel DB writes — addSticker only creates a new doc per call, no
-    // shared counter, no race. Synchronous pushes to uploadedIds/Ids
-    // preserve mosaic position order regardless of resolution order.
-    await Promise.all(addedStickers.map((sticker) => {
+    const added = newSince(setInfo)
+    const certain = added.length === total
+    const addedStickers = certain ? added : setInfo.stickers.slice(-total)
+    for (const sticker of addedStickers) {
       uploadedIds.push(sticker.custom_emoji_id)
       uploadedFileIds.push(sticker.file_id)
-      return ctx.db.Sticker.addSticker(stickerSet.id, '🔲', {
+    }
+    // Parallel DB writes — addSticker only creates a new doc per call.
+    if (certain) {
+      await Promise.all(addedStickers.map((sticker) => ctx.db.Sticker.addSticker(stickerSet.id, '🔲', {
         file_id: sticker.file_id,
         file_unique_id: sticker.file_unique_id,
         stickerType: 'custom_emoji'
-      })
-    }))
+      })))
+    }
 
     // A brand-new pack still holds its bootstrap placeholder — the mosaic
     // cells are real content now, so drop it (the raw addStickerToSet calls
-    // above bypass uploadSticker's cleanup). setInfo predates any deletion,
-    // so the slice(-total) above is unaffected.
+    // above bypass uploadSticker's cleanup). It was in the snapshot, so it is
+    // never counted as a cell.
     await removePlaceholderIfPending(ctx.telegram, stickerSet, setInfo)
 
     // Delete progress message
@@ -437,15 +457,14 @@ const processMosaic = async (ctx, rows, cols) => {
 
     // Send pack link + undo as separate message
     const packLink = `${ctx.config.emojiLinkPrefix}${stickerSet.name}`
+    const buttons = [[Markup.urlButton(ctx.i18n.t('cmd.mosaic.done_link'), packLink)]]
+    if (certain) buttons.push([Markup.callbackButton(ctx.i18n.t('cmd.mosaic.btn.undo'), 'mosaic:undo')])
     await ctx.replyWithHTML(ctx.i18n.t('cmd.mosaic.done', { rows, cols }), {
-      reply_markup: Markup.inlineKeyboard([
-        [Markup.urlButton(ctx.i18n.t('cmd.mosaic.done_link'), packLink)],
-        [Markup.callbackButton(ctx.i18n.t('cmd.mosaic.btn.undo'), 'mosaic:undo')]
-      ])
+      reply_markup: Markup.inlineKeyboard(buttons)
     })
 
     // Store uploaded file IDs for undo
-    state.lastMosaicIds = uploadedFileIds
+    state.lastMosaicIds = certain ? uploadedFileIds : []
     state.lastMosaicCount = total
     state.waitingCustom = false
 
