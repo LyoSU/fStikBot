@@ -297,12 +297,22 @@ const addItems = async (ctx, stickerSet, items) => {
 
 // Reserve the user's place in the queue now and add once it's their turn.
 // `getItems` may resolve later (an album still arriving).
+// Access was checked when the file arrived, but a queued file can wait
+// minutes, and the owner may remove or limit the member meanwhile. Group
+// packs go by group rights, not co-editing.
+const mayStillAdd = async (ctx, stickerSet) => {
+  if (ctx.chat.type !== 'private') return true
+  if (coedit.idOf(stickerSet.owner) === coedit.idOf(ctx.session.userInfo)) return true
+  return coedit.can(await coedit.getAccess(ctx, coedit.idOf(stickerSet)), 'add')
+}
+
 const schedule = (ctx, stickerSet, getItems, replyTo) => {
   let reacted = null
 
   const queued = userQueue.enqueue(ctx.from.id, async () => {
     if (reacted) await reacted.then(() => setReaction(ctx, replyTo, null))
     try {
+      if (!await mayStillAdd(ctx, stickerSet)) return reply(ctx, ctx.i18n.t('coedit.no_access'), replyTo)
       await addItems(ctx, stickerSet, await getItems())
     } catch (err) {
       await handleError(err, ctx).catch((e) => log.error('handleError failed:', e))

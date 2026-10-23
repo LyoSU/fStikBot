@@ -177,6 +177,15 @@ async function handleConvertCompleted (jobId, result) {
     return
   }
 
+  // Uploads go out as the owner (input.userId); a co-editor's access was
+  // checked at enqueue, and the conversion may have taken minutes since.
+  const byMember = input.chatId > 0 && input.actor && input.actor.id !== input.userId
+  if (byMember && !await coedit.canStillAdd(db, stickerSet, input.actor.id)) {
+    if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
+    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'coedit.no_access'), replyExtra(input)).catch(() => {})
+    return
+  }
+
   let uploadResult
   try {
     uploadResult = await uploadSticker(input.userId, stickerSet, input.stickerFile, stickerExtra)

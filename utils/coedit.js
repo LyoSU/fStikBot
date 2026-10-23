@@ -108,6 +108,24 @@ async function getAccess (ctx, pack) {
   return null
 }
 
+/**
+ * Whether a co-editor may still add, read fresh from the database — for work
+ * that runs after its update is gone (the convert worker), where getAccess
+ * has no ctx. Members are matched by Telegram id; the owner never gets here.
+ *
+ * @param {Object} db
+ * @param {Object|string} pack
+ * @param {number} telegramId
+ * @returns {Promise<boolean>}
+ */
+async function canStillAdd (db, pack, telegramId) {
+  const full = await loadPack(db, pack)
+  if (!full || full.deleted) return false
+  if (full.passcode === 'public') return true
+  const member = (full.editors || []).find((entry) => entry.telegramId === telegramId)
+  return !!member && can({ role: member.role || DEFAULT_ROLE }, 'add')
+}
+
 // Adds by the same person within this window are one log entry with a count.
 const ADD_MERGE_MS = 10 * 60 * 1000
 
@@ -163,6 +181,7 @@ module.exports = {
   DEFAULT_ROLE,
   can,
   getAccess,
+  canStillAdd,
   addMember,
   removeMember,
   logActivity,
