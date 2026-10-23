@@ -1,34 +1,34 @@
 ---
 language_name: '🇹🇷 Türkçe'
-name: fStik — Çıkartmalar ve Emoji
+name: fStik — Çıkartmalar ve İfadeler
 description:
   long: |
-    Fotoğraf, video ve GIF'lerden çıkartma ve emoji oluştur. Elle dönüştürmeye gerek yok — bot her şeyi kendisi halleder. @Stickers'tan daha kolay.
+    Fotoğraf, video ve GIF'lerden çıkartma ve ifade oluştur. Elle dönüştürmeye gerek yok — bot her şeyi kendisi halleder. @Stickers'tan daha kolay.
 
     Özellikler:
     • Paket yönetimi
-    • Video çıkartmalar ve özel emojiler
+    • Video çıkartmalar ve özel ifadeler
     • Orijinal dosyaları indirme
-    • Çıkartma/video/GIF'i resme dönüştürme
+    • Çıkartma/video/GIF'i görsele dönüştürme
     • Çıkartma kataloğu
 
     Çıkartma ara: play.google.com/store/apps/details?id=app.fstik 🇺🇦
   short: |
-    Fotoğraf, video ve GIF'lerden çıkartma ve emoji oluştur. Çıkartma kataloğu ve arama. 🇺🇦
-ratelimit: Çok sık!
+    Fotoğraf, video ve GIF'lerden çıkartma ve ifade oluştur. Çıkartma kataloğu ve arama. 🇺🇦
+ratelimit: Biraz yavaşla!
 cmd:
   start:
     enter: |
-      Merhaba, ${name}!
-      Fotoğraf, video ve GIF'lerden çıkartma ve emoji oluşturuyorum.
+      Selam ${name}!
+      Fotoğraf, video ve GIF'lerden çıkartma ve ifade oluşturuyorum.
 
       💬 @fStikCommunity
     group: |
-      Merhaba, ${groupTitle}! Çıkartma ve emoji oluşturuyorum.
+      Selam ${groupTitle}! Çıkartma ve ifade oluşturuyorum.
 
       Grup paketine çıkartma eklemek için bir fotoğraf, video, GIF veya çıkartmaya yanıt olarak /ss kullan.
     catalog: |
-      <b>🔍 Çıkartma Kataloğu</b>
+      <b>🔍 Çıkartma kataloğu</b>
 
       Paketleri anahtar kelimelerle ara veya popüler olanlara göz at.
       Harika paketleri başkalarının da bulabilmesi için puan ver.
@@ -49,11 +49,11 @@ cmd:
       original: '🔎 Çıkartmanın kaynağı'
       restore: '♻️ Paketi geri yükle'
       copy: '📋 Paketi kopyala'
-      emoji: '😀 Emojiyi değiştir'
-      round: '⭕ Yuvarlak video'
+      emoji: '😀 İfadeyi değiştir'
+      round: '⭕ Görüntülü mesaj'
       clear: '✂️ Arka planı kaldır'
       info: '🔎 Çıkartma kimin'
-      user_about: '👤 Yaratıcı hakkında'
+      user_about: '👤 Sahibi hakkında'
       lang: '🌐 Dil'
       report: '🚨 Şikayet et'
       donate: '⭐ Destekle'
@@ -66,8 +66,8 @@ cmd:
       catalog_mini: '🔍 Katalog'
       catalog_browser: 'Tarayıcıda aç'
       catalog_browser_mini: '🌐 Tarayıcıda'
-      catalog_app: 'Android için indir'
-      catalog_app_mini: '📱 Android uygulaması'
+      catalog_app: '📱 Android''e indir'
+      catalog_app_mini: '📱 Android'
     current_pack: '📦 Çıkartmalar buraya ekleniyor: <a href="${link}">${title}</a>'
     hint: 'Fotoğraf, video, GIF veya çıkartma gönder — <a href="${link}">${title}</a> paketine eklerim.'
   guide:
@@ -75,7 +75,7 @@ cmd:
       <b>📖 Nasıl çalışır</b>
 
       1. /new — paket oluştur
-      2. Fotoğraf, video, GIF veya çıkartma gönder — tüm albümü bile
+      2. Fotoğraf, video, GIF veya çıkartma gönder — hatta albüm olarak bile
       3. /packs — paketlerin ve ayarları
 
       Rehberler, ipuçları ve SSS web sitesinde.
@@ -87,14 +87,14 @@ cmd:
       <b>🎨 Çıkartma oluşturma</b>
 
       1. Paket oluşturmak için /new gönder
-      2. Türü seç: normal, video veya emoji
+      2. Türü seç: normal, video veya ifade
       3. Fotoğraf, video veya GIF gönder
-      4. Hepsi bu! Bot her şeyi kendisi dönüştürür
+      4. Bitti! Bot her şeyi kendisi dönüştürür
 
       <b>Faydalı komutlar:</b>
       • /clear — fotoğrafın arka planını kaldır
-      • /round — videodan yuvarlak video yap
-      • /frame — video çıkartmanın şekli:
+      • /round — videoyu görüntülü mesaja dönüştür
+      • /frame — video çıkartma şekli:
         └ lite, medium, rounded, square, circle
 
       <b>💡 İpucu:</b> Şeffaflığı korumak için PNG'yi <b>Dosya</b> (📎) olarak gönder. "Fotoğraf" modu görseli sıkıştırır ve şeffaflığı kaldırır.
@@ -105,16 +105,16 @@ cmd:
       • /packs — paketlerinin listesi
       • /delete — çıkartma sil
       • /copy — paketi kopyala
-      • /restore — gizlenen paketleri geri getir
+      • /restore — gizlenen paketleri geri yükle
       • /original — çıkartmanın orijinalini bul
-      • /about — paket ve yaratıcısı hakkında bilgi
+      • /about — paket ve sahibi hakkında bilgi
 
-      <b>Emojiyi değiştirme:</b>
-      Çıkartmayı gönder → yeni emojiyi gönder.
-      Ya da ekledikten hemen sonra emojiyi gönder.
+      <b>İfade değiştirme:</b>
+      Çıkartmayı gönder → yeni ifadeyi gönder.
+      Ya da ekledikten hemen sonra ifadeyi gönder.
 
-      <b>Varsayılan emoji:</b>
-      /emoji 🔥 — tüm yeni çıkartmalar bu emojiyi alır.
+      <b>Varsayılan ifade:</b>
+      /emoji 🔥 — tüm yeni çıkartmalar bu ifadeyi alır.
 
       <b>Gruplarda:</b>
       /ss (bir medyaya yanıt olarak) — grup paketine hızlıca ekle.
@@ -129,10 +129,10 @@ cmd:
       <b>Ortak düzenleme:</b>
       Pakete dokun → Ortak düzenleme → bağlantıyı al.
       Bağlantıya sahip herkes çıkartma ekleyip silebilir.
-      Tüm editörleri kaldırmak için bağlantıyı sıfırla.
+      Tüm düzenleyenlerin erişimini kaldırmak için bağlantıyı sıfırla.
 
       <b>Paket seçenekleri:</b>
-      /packs içinde bir pakete dokun → yeniden adlandır, takviye et, ortak düzenleme, sil.
+      /packs içinde bir pakete dokun → yeniden adlandır, Boost, ortak düzenleme, sil.
     catalog: |
       <b>🔍 Katalog</b>
 
@@ -140,14 +140,14 @@ cmd:
       • /publish — kendi paketini yayınla
       • Harika paketleri öne çıkarmak için puan ver
     boost: |
-      <b>⚡ Takviye</b>
+      <b>⚡ Boost</b>
 
-      • Adda "${titleSuffix}" eki olmaz
+      • Paket adında "${titleSuffix}" eki olmaz
       • Videolar öncelikli işlenir
       • 35 saniyeye kadar videolar
       • Aynı anda birden fazla çıkartma
 
-      <b>🎨 Uyarlanabilir emoji</b> — /new içinde ayrı bir paket türü: emojilerin rengi metne uyum sağlar
+      <b>🎨 Uyarlanabilir ifade</b> — /new içinde ayrı bir paket türü: ifadeler metin rengine uyum sağlar
 
       Almak için → /donate
     problems: |
@@ -155,7 +155,7 @@ cmd:
 
       <b>⚫ Arka plan siyah mı oldu?</b>
       "Fotoğraf" olarak gönderdiğinde Telegram şeffaflığı kaldırır.
-      → PNG'yi <b>Dosya</b> (📎 ataç simgesi) olarak gönder.
+      → PNG'yi <b>Dosya</b> (📎 ataş) olarak gönder.
 
       <b>🔄 Değişiklikler görünmüyor mu?</b>
       Telegram çıkartmaları önbelleğe alır. ~1 saat bekle veya uygulamayı yeniden başlat.
@@ -175,15 +175,15 @@ cmd:
       <b>💎 Premium gerekli mi?</b>
       • Paket oluşturmak: ücretsiz
       • Çıkartma kullanmak: ücretsiz
-      • Özel emoji göndermek: yalnızca Premium (Telegram kuralı)
+      • Özel ifade göndermek: yalnızca Premium (Telegram kuralı)
 
-      <b>Başka sorun mu var?</b> @fStikCommunity
+      <b>Başka soruların mı var?</b> @fStikCommunity
     btn:
       open: '📖 Rehberi aç'
       create: '🎨 Çıkartma oluştur'
       manage: '📁 Paket yönetimi'
-      catalog: '🔍 Bul ve paylaş'
-      boost: '⚡ Takviye ve özellikler'
+      catalog: '🔍 Ara ve yayınla'
+      boost: '⚡ Boost özellikleri'
       problems: '❓ Sorun mu var?'
       back: '← Geri'
   inline:
@@ -204,20 +204,20 @@ cmd:
   report: |
     <b>🚨 Şikayet</b>
 
-    Kuralları ihlal eden bir paket mi buldun? Bağlantısını @StickersReportBot'a gönder
+    Kuralları ihlal eden bir paket mi buldun? Bağlantısını @StickersReportBot'a gönder.
   packs:
     info: |
       <b>📁 Paketlerim</b>
     types:
       regular: Çıkartmalar
-      custom_emoji: Emojiler
+      custom_emoji: İfadeler
       inline: Satır içi
       shared: '👥 Ortak'
     empty: |
       Henüz paketin yok. İlkini oluştur → /new
     inline_title: Satır içi paket
     select_group_pack_info: |
-      <b>📁 Paket seçimi</b>
+      <b>📁 Paket seç</b>
 
       Yöneticiler aşağıdaki düğmeyle grup için bir paket seçebilir.
     select_group_pack: Paket seç
@@ -230,18 +230,18 @@ cmd:
     group_admin_only: 'Grup paketini yalnızca grup yöneticileri seçebilir.'
   emoji:
     info: |
-      Mevcut paketin varsayılan emojisini değiştirmek için <code>/emoji</code> komutunu bir boşluk bırakıp emojiyle birlikte gönder
+      Mevcut paketin varsayılan ifadesini değiştirmek için <code>/emoji</code> komutunu bir boşluk bırakıp ifadeyle birlikte gönder
 
       Örneğin — <code>/emoji 🌟</code>
     no_pack_selected: |
       Önce /packs ile bir paket seç — sonra /emoji 🌟
-    done: Emoji başarıyla değiştirildi.
-    error: Emoji değiştirilirken bir hata oluştu!
+    done: İfade başarıyla değiştirildi.
+    error: İfade değiştirilirken bir hata oluştu!
   round_video:
     enabled: |
-      Videolar artık yuvarlatılmış şekilde olacak
+      Videolar artık yuvarlak köşeli olacak
     disabled: |
-      Videolar artık yuvarlatılmış şekilde olmayacak
+      Videolar artık yuvarlak köşeli olmayacak
   paysupport: |
     <b>💳 Ödeme soruları</b>
 
@@ -250,9 +250,9 @@ cmd:
     enter: |
       🧩 <b>${packTitle}</b> için mozaik
 
-      Bir fotoğraf gönder — onu emoji ızgarasına böleyim.
+      Bir fotoğraf gönder — onu ifade ızgarasına böleyim.
     no_pack: |
-      Mozaik, özel emoji paketiyle çalışır.
+      Mozaik, özel ifade paketiyle çalışır.
       Aşağıdan paketlerinden birini seç veya yenisini oluştur.
     choose_grid: |
       📐 Izgara boyutunu seç:
@@ -260,9 +260,9 @@ cmd:
       recommended: "✅ ${rows}×${cols}"
       option: "${rows}×${cols} · ${total} adet"
       custom: "✏️ Özel boyut"
-      cancel: "← İptal"
+      cancel: "← İptal et"
       exit: "🚪 Mozaikten çık"
-      undo: "🗑 Bu mozaiği sil"
+      undo: "🗑 Mozaiği sil"
     custom_prompt: |
       Izgara boyutunu gir (örn. 3x4):
     custom_invalid: |
@@ -277,13 +277,13 @@ cmd:
       ✅ ${rows}×${cols} mozaik pakete eklendi!
     done_link: "📦 Paketi kullan"
     undo_done: |
-      🗑 Mozaik silindi (paketten ${count} emoji kaldırıldı).
+      🗑 Mozaik silindi (paketten ${count} ifade kaldırıldı).
     undo_failed: |
-      ❌ Bazı emojiler silinemedi. Elle silmeyi dene.
+      ❌ Bazı ifadeler silinemedi. Elle silmeyi dene.
     wait_photo: |
       Başka bir fotoğraf gönder veya "Mozaikten çık" düğmesine dokun.
     reject_animated: |
-      Animasyonlu ve video çıkartmalar henüz desteklenmiyor. Statik bir çıkartma, fotoğraf ya da PNG/JPEG/WebP dosyası gönder.
+      Animasyonlu çıkartmalar ve video çıkartmaları henüz desteklenmiyor. Statik bir çıkartma, fotoğraf ya da PNG/JPEG/WebP dosyası gönder.
     reject_document: |
       Yalnızca görseller destekleniyor (JPEG/PNG/WebP). Bu formatlardan birinde bir dosya gönder.
     reject_media: |
@@ -293,11 +293,11 @@ donate:
     <b>⭐ Bota destek ol</b>
 
     <b>Bakiye:</b> ${balance} kredi
-    1 kredi = bir paketi takviye etme
+    1 kredi = 1 paket için Boost
 
-    <b>Takviye ile:</b>
-    • Adda "<code>${titleSuffix}</code>" olmaz
-    • 64 karaktere kadar ad (35 yerine)
+    <b>Boost ile:</b>
+    • Paket adında "<code>${titleSuffix}</code>" olmaz
+    • 64 karaktere kadar paket adı (35 yerine)
     • 35 saniyeye kadar videolar
     • Öncelikli dönüştürme kuyruğu
     • Aynı anda birden fazla çıkartma
@@ -308,16 +308,16 @@ donate:
   btn:
     donate: '☕ Bağış yap'
   topup: |
-    <b>Satın almak istediğin Kredi miktarını gir:</b>
+    <b>Satın almak istediğin kredi miktarını gir:</b>
   description: |
-    Kredi satın alarak botun gelişimine destek olur ve ek özellikleri kullanma imkânı elde edersin
+    Kredi satın alarak botun geliştirilmesine destek olur ve ek özelliklerin kilidini açarsın
   update: |
     <b>🔄 Bakiye güncellendi</b>
 
-    Bakiye: <code>${balance}</code> Kredi (<code>${amount}</code> Kredi eklendi)
+    Bakiye: <code>${balance}</code> kredi (<code>${amount}</code> kredi eklendi)
   error:
     already_donated: |
-      Bu ödeme için Kredilerini zaten aldın
+      Bu ödeme için kredilerini zaten aldın
     already_paid: Ödeme zaten tamamlandı
     not_found: Ödeme bulunamadı
     user_not_found: Kullanıcı bulunamadı
@@ -337,22 +337,22 @@ coedit:
   no_editors: |
     yok
   btn:
-    send: '📤 Bağlantıyı gönder'
+    send: '📤 Bağlantıyı paylaş'
     reset: '🔁 Yeni bağlantı'
     activity: '🧾 Etkinlik'
     default_role: '⚙️ Yeni: ${role}'
     clear: '🧹 Herkesi çıkar'
-    clear_confirm: '⚠️ Evet, herkesi çıkar'
+    clear_confirm: '⚠️ Evet, kaldır'
     role_editor: '✏️ Ekler ve siler'
     role_contributor: '➕ Sadece ekler'
-    remove: '🚫 Paketten çıkar'
+    remove: '🚫 Erişimi kaldır'
     leave: '🚪 Paketten ayrıl'
     back: '‹ Geri'
   roles:
-    editor: 'ekler ve siler'
-    contributor: 'sadece ekler'
+    editor: ekler ve siler
+    contributor: sadece ekler
   share: |
-    Bağlantıya git ve "${title}" paketini birlikte düzenlemek için "Başlat"a dokun
+    Bağlantıyı aç ve "${title}" paketini birlikte düzenlemek için "Başlat"a dokun
   reset: |
     <b>🔁 Yeni bağlantı.</b> Eskisi artık çalışmıyor; mevcut üyelerin erişimi devam ediyor.
   member: |
@@ -371,7 +371,7 @@ coedit:
     Üyeleri yönet: /packs → paket → 👥 Ortak düzenleme
   left: '🚪 <b>${title}</b> paketinden ayrıldın.'
   left_notice: '🚪 ${name}, <b>${title}</b> paketinden ayrıldı.'
-  removed_notice: '<b>${title}</b> ortak düzenlemesinden çıkarıldın.'
+  removed_notice: '<b>${title}</b> paketine erişimin kaldırıldı.'
   role_notice: '<b>${title}</b> paketindeki rolün artık: ${role}.'
   no_access: 'Bu pakete artık erişimin yok. /packs içinden başka bir paket seç.'
   no_rights: "Bu paketteki rolün buna izin vermiyor."
@@ -383,15 +383,15 @@ coedit:
   activity_empty: '<i>Henüz bir şey yok.</i>'
   actions:
     add: '➕ çıkartma ekledi: ${count}'
-    delete: '🗑 bir çıkartma sildi'
-    restore: '♻️ bir çıkartmayı geri yükledi'
-    emoji: '😀 bir emojiyi değiştirdi'
+    delete: '🗑 çıkartma sildi'
+    restore: '♻️ çıkartmayı geri yükledi'
+    emoji: '😀 ifade değiştirdi'
     join: '👋 katıldı'
     leave: '🚪 ayrıldı'
-    removed: '🚫 ${target} çıkarıldı'
+    removed: '🚫 ${target} adlı üyenin erişimini kaldırdı'
     role: '🔧 ${target}: ${role}'
-    reset: '🔁 bağlantıyı değiştirdi'
-    clear: '🧹 herkesi çıkardı (${count})'
+    reset: '🔁 bağlantıyı yeniledi'
+    clear: '🧹 herkesin erişimini kaldırdı (${count})'
 callback:
   pack:
     answerCbQuer:
@@ -421,14 +421,14 @@ callback:
       restore: '✅ Geri yükle'
       use_pack: '📦 Paketi kullan'
       boost: '⚡ Takviye'
-      frame: '🖼 Çerçeve'
+      frame: '🖼 Şekil'
       rename: '✏️ Yeniden adlandır'
       search_gif: '🔎 GIF ara'
       coedit: '👥 Ortak düzenleme'
       catalog_add: '🗂 Kataloğa ekle'
       catalog_edit: '📝 Katalogda düzenle'
       catalog_delete: '🗑 Katalogdan kaldır'
-      catalog_share: '🔗️️ Paylaş'
+      catalog_share: '🔗 Paylaş'
       catalog_open: '📂 Katalogda aç'
       mosaic: '🧩 Mozaik'
     error:
@@ -437,9 +437,9 @@ callback:
       invalid_png: |
         Dosya geçerli bir PNG görseli değil. Göndermeden önce PNG formatına dönüştür.
       invalid_dimensions: |
-        Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
+        Çıkartma boyutu geçersiz. Çıkartmalar 512x512 piksel olmalı.
       invalid_animated: |
-        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot bunlardan video çıkartma yapar.
+        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot onları video çıkartmaya dönüştürür.
       invalid_video: |
         Video dosyasının formatı hatalı (WEBM gerekli).
       restore: |
@@ -473,9 +473,9 @@ callback:
       invalid_png: |
         Dosya geçerli bir PNG görseli değil. Göndermeden önce PNG formatına dönüştür.
       invalid_dimensions: |
-        Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
+        Çıkartma boyutu geçersiz. Çıkartmalar 512x512 piksel olmalı.
       invalid_animated: |
-        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot bunlardan video çıkartma yapar.
+        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot onları video çıkartmaya dönüştürür.
       invalid_video: |
         Video dosyasının formatı hatalı (WEBM gerekli).
   group_settings:
@@ -486,17 +486,17 @@ sticker:
     ok: |
       ✅ <a href="${link}">${title}</a> paketine eklendi
 
-      <i>Bu çıkartma için emoji gönderebilirsin</i>
+      <i>Bu çıkartma için bir ifade gönderebilirsin</i>
     ok_inline: |
       ✅ <u>${title}</u> paketine eklendi
     ok_repainting_notice: |
-      ⚠️ Bu tek renkli bir emoji: normal bir pakette beyaz kalır ve açık arka planda neredeyse görünmez.
-      Metin rengine uyum sağlaması için /new ile ayrı bir "🎨 Uyarlanabilir emoji" paketi oluştur.
-    send_emoji: Bu çıkartma için emoji gönder
+      ⚠️ Bu tek renkli bir ifade: normal bir pakette beyaz kalır ve açık arka planda neredeyse görünmez.
+      Metin rengine uyum sağlaması için /new ile ayrı bir "🎨 Uyarlanabilir ifade" paketi oluştur.
+    send_emoji: Bu çıkartma için ifade gönder
     converting_process: |
       ⏳ Dönüştürülüyor: ${progress}/${total}
 
-      <i>Takviye = öncelik → /donate</i>
+      <i>Boost = öncelik → /donate</i>
     catalog_offer: |
       <a href="${link}">${title}</a> paketini paylaşmak ister misin?
       Kataloğa ekle — başkaları da bulabilsin.
@@ -504,7 +504,7 @@ sticker:
       Bu mesajdan alıntı oluşturmak için @QuotlyBot'u kullan
     error:
       reply: |
-        Bir çıkartmaya yanıt ver.
+        Bir çıkartmayı yanıtla.
       no_selected_pack: |
         <b>Önce çıkartmaların için bir paket</b>
 
@@ -516,13 +516,13 @@ sticker:
       no_rights: |
         Bu pakete çıkartma ekleme iznin yok.
       stickers_too_much: |
-        Bu paket maksimum çıkartma sayısına ulaştı.
+        Bu paketteki çıkartma sınırı doldu.
 
         /new komutuyla yeni bir paket oluşturabilirsin.
       have_already: |
         <b>Bu çıkartma zaten pakette</b>
 
-        Emojiyi değiştirmek istiyorsan bir sonraki mesajda gönder.
+        İfadeyi değiştirmek istiyorsan bir sonraki mesajda gönder.
       stickerset_invalid: |
         Bot seçtiğin çıkartma paketine erişemiyor.
 
@@ -530,9 +530,9 @@ sticker:
       invalid_png: |
         Dosya geçerli bir PNG görseli değil. Göndermeden önce PNG formatına dönüştür.
       invalid_dimensions: |
-        Çıkartma boyutları geçersiz. Çıkartmalar 512x512 piksel olmalıdır.
+        Çıkartma boyutu geçersiz. Çıkartmalar 512x512 piksel olmalı.
       invalid_animated: |
-        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot bunlardan video çıkartma yapar.
+        Telegram animasyonlu çıkartmaları yalnızca TGS formatında kabul eder. GIF veya MP4'ü video olarak gönder — bot onları video çıkartmaya dönüştürür.
       animated_too_big: |
         Paket boyutuna uyarlandıktan sonra bu animasyonlu çıkartma Telegram'ın 64 KB sınırını aşıyor — aktarılamaz.
       invalid_video: |
@@ -559,7 +559,7 @@ sticker:
       invalid_image: |
 
         Bu görsel işlenemedi. Farklı bir dosya veya format göndermeyi dene.
-      queue_full: '⏳ Aynı anda çok fazla dosya. Sıradakileri işlememi bekle, sonra kalanları gönder.'
+      queue_full: '⏳ Aynı anda çok fazla dosya. Kuyruktakileri işlememi bekle, sonra kalanları gönder.'
     album_progress: '⏳ Albüm ekleniyor: ${current}/${total}'
     album_done: '✅ ${total} dosyadan ${added} tanesi <a href="${link}">${title}</a> paketine eklendi'
     album_converting: '⏳ ${count} tanesi daha video: dönüştürüyorum, her biri hazır olunca yanıtlayacağım.'
@@ -584,28 +584,28 @@ userAbout:
     <b>🎨 Bu kullanıcının paketleri:</b>
     ${packs}
   no_packs: |
-    <i>Bu sahibin paketleri hakkında bilgimiz yok</i>
+    <i>Bu kullanıcının paketleri hakkında bilgi bulunmuyor</i>
   forward_hidden: |
     Kullanıcı mesajlarının iletilmesini kısıtlamış. Çıkartma paketlerini görmek için aşağıdaki düğmeyi kullan.
   select_user: '🧑‍🎨 Kullanıcı seç'
 scenes:
   new_pack:
     pack_type: |
-      <b>Hangi paketi oluşturuyoruz?</b>
+      <b>Ne tür bir paket oluşturuyoruz?</b>
 
       <b>🖼 Çıkartmalar</b> — sohbetlerde kullanılan klasik çıkartmalar.
-      <b>✨ Emoji</b> — metnin içinde kullanılan özel emojiler. Bunları yalnızca Telegram Premium kullanıcıları gönderebilir.
-      <b>🎨 Uyarlanabilir emoji</b> — tek renkli: tek bir renkle çizilir ve metin rengine kendiliğinden uyum sağlar.
+      <b>✨ İfade</b> — metnin içinde kullanılan özel ifadeler. Bunları yalnızca Telegram Premium kullanıcıları gönderebilir.
+      <b>🎨 Uyarlanabilir ifade</b> — tek renkli: tek bir renkle çizilir ve metin rengine kendiliğinden uyum sağlar.
     regular: '🖼 Çıkartmalar'
-    custom_emoji: '🌟 Emoji (premium)'
-    custom_emoji_adaptive: '🎨 Uyarlanabilir emoji'
+    custom_emoji: '✨ İfade'
+    custom_emoji_adaptive: '🎨 Uyarlanabilir ifade'
     pack_title: |
       <b>Paket adı</b>
 
-      Herkes görebilir. Kendin yaz veya aşağıdaki önerilerden birini seç.
-      <i>Paket adresini addan oluşturacağım.</i>
+      Bu adı herkes görecek. Kendin yaz veya aşağıdaki önerilerden birini seç.
+      <i>Paket bağlantısını bu addan oluşturacağım.</i>
     pack_name: |
-      <b>Paket adresi</b>
+      <b>Paket bağlantısı</b>
 
       Yalnızca Latin harfleri, rakamlar ve <code>_</code>. Örneğin: t.me/addstickers/<u>Cikartmalarim</u>
     ok: |
@@ -613,23 +613,23 @@ scenes:
 
       Eklemek için fotoğraf, video veya çıkartma gönder.
     error:
-      title_long: Ad en fazla ${max} karakter olabilir.
-      name_long: Adres en fazla ${max} karakter olabilir.
+      title_long: Paket adı en fazla ${max} karakter olabilir.
+      name_long: Bağlantı en fazla ${max} karakter olabilir.
       inline_exists: |
         Zaten bir satır içi paketin var — <b>${title}</b>.
 
-        Yalnızca bir satır içi paketin olabilir: yenisini oluşturmak bunu silerdi.
+        Yalnızca bir satır içi paketin olabilir: yenisini oluşturursan mevcut olan silinir.
         Şu anda seçili, çıkartma eklemeye devam edebilirsin.
       telegram:
-        name_invalid: Bu adres kullanılamaz.
-        name_occupied: Bu adres zaten alınmış. Başka bir tane dene.
+        name_invalid: Bu bağlantı kullanılamaz.
+        name_occupied: Bu bağlantı zaten alınmış. Başka bir tane dene.
         upload_failed: |
           Bot, çıkartmaları Telegram'a yükleyemiyor.
 
           Daha sonra tekrar dene.
     btn:
-      custom_link: '🔗 Kendi paket adresim'
-    custom_link_on: 'Tamam — adı gönder, ardından adresi soracağım.'
+      custom_link: '🔗 Kendi bağlantım'
+    custom_link_on: 'Tamam — önce adı gönder, ardından bağlantıyı soracağım.'
   copy:
     enter: |
       Önce kopya için yeni bir paket oluşturalım.
@@ -652,9 +652,9 @@ scenes:
     pay: |
       <b>Paket dönüştürme</b>
 
-      Bir paketi bir türden diğerine dönüştürmek 1 Kredi tutar
+      Bir paketi başka bir türe dönüştürmek 1 kredi gerektirir
 
-      <b>Mevcut bakiye:</b> ${balance} Kredi
+      <b>Mevcut bakiye:</b> ${balance} kredi
 
       Kredi satın al: /donate
     pay_btn: '✅ Onayla'
@@ -664,7 +664,7 @@ scenes:
 
         Paket oluşturulmadı.
       premium: |
-        Maalesef bu özellik yalnızca bota destek olanlar tarafından kullanılabilir.
+        Üzgünüm, bu özellik yalnızca bota destek olanlar içindir.
 
         Bunu /donate komutunu göndererek yapabilirsin.
     title: |
@@ -672,25 +672,25 @@ scenes:
 
       Kopyanın adı — kendin yaz veya aşağıdan birini seç.
     btn:
-      change_type: '🔄 Paket türünü değiştir'
+      change_type: '🔄 Türü değiştir'
     created: |
       ✅ Paket oluşturuldu: <a href="${link}">${title}</a>
 
       Çıkartmalar kopyalanıyor — bitince haber vereceğim.
   original:
     enter: |
-      <b>🔎 Çıkartmanın kaynağı</b>
+      <b>🔎 Orijinali bul</b>
 
       Bir çıkartma gönder — hangi paketten kopyalandığını göstereyim.
-      Orijinali bulunamazsa dosyayı (PNG/WEBM) alırsın.
+      Orijinali bulunamazsa dosyasını (PNG/WEBM) alırsın.
     source_found: |
       🔎 Kopyalandığı paket: <a href="${link}">${title}</a>
     error:
       not_found: |
-        Orijinal bulunamadı. İşte çıkartmanın dosyası:
+        Orijinali bulunamadı. İşte çıkartmanın dosyası:
   delete:
     enter: |
-      <b>🗑 Çıkartma silme</b>
+      <b>🗑 Çıkartmayı sil</b>
 
       Bir çıkartma gönder — onu hemen paketinden silerim (geri yükleyebilirsin). İstediğin kadar gönderebilirsin.
     confirm: |
@@ -704,17 +704,17 @@ scenes:
     success: |
       ✅ Yeniden adlandırıldı: <a href="${link}">${title}</a>
     boost_notice: |
-      Takviye "${titleSuffix}" ekini kaldırır → /donate
+      Boost "${titleSuffix}" ekini kaldırır → /donate
   packAbout:
     enter: |
       <b>🔎 Çıkartma kimin</b>
 
-      Bir çıkartma gönder — paketi, yaratıcısını ve diğer paketlerini göstereyim.
+      Bir çıkartma gönder — paketi, sahibini ve diğer paketlerini göstereyim.
       Ya da bir mesaj ilet — o kişinin paketlerini göstereyim.
     not_found: |
       Çıkartma bulunamadı.
     btn:
-      download: '📎 Dosyayı indir'
+      download: '📎 Orijinal dosya'
       show_all_packs: '📦 Tüm paketler (${count})'
     result: |
       <b>📦 Paket:</b> <a href="${link}">${name}</a>
@@ -723,41 +723,41 @@ scenes:
       🧑‍🎨 Sahip ID: <code>${ownerId}</code>
       ${mention}
 
-      <b>🎨 Bu sahibin diğer paketleri:</b>
+      <b>🎨 Bu kullanıcının diğer paketleri:</b>
       ${otherPacks}
     no_other_packs: |
-      <i>Bu sahibin diğer paketleri hakkında bilgimiz yok</i>
+      <i>Bu kullanıcının diğer paketleri hakkında bilgi bulunamadı</i>
     unknown_owner: '<i>Bilinmiyor</i>'
     hidden: '<i>[gizli]</i>'
   boost:
     sure: |
-      <a href="${link}">${title}</a> takviye edilsin mi?
+      <a href="${link}">${title}</a> paketine Boost uygulansın mı?
 
       <b>Fiyat:</b> 1 kredi
       <b>Bakiye:</b> ${balance}
     btn:
       yes: '⚡ Takviye et'
-      no: İptal
+      no: İptal et
       buy: '⭐ Kredi satın al'
     canceled: |
       İptal edildi
     success: |
-      ⚡ <a href="${link}">${title}</a> — takviye etkinleştirildi!
+      ⚡ <a href="${link}">${title}</a> — Boost etkinleştirildi!
 
       <b>Açılan özellikler:</b>
-      • "${titleSuffix}" eki olmayan ad — yeniden adlandırdıktan sonra
-      • Adda 64 karaktere kadar (35 yerine)
+      • Başlıkta "${titleSuffix}" eki olmaz — yeniden adlandırdıktan sonra
+      • Paket adı 64 karaktere kadar (35 yerine)
       • 35 saniyeye kadar videolar
       • Dönüştürmede öncelik
       • Aynı anda birden fazla çıkartma
 
       <i>Eki kaldırmak için paket menüsünde "✏️ Yeniden adlandır" düğmesine dokun.</i>
     error:
-      too_fast: Bu kadar hızlı değil — bir saniye sonra tekrar dene.
+      too_fast: Biraz yavaşla — bir saniye sonra tekrar dene.
       not_enough_credits: |
-        Yeterli kredin yok. /donate
+        Yeterli kredi yok. /donate
       already_boosted: |
-        Zaten takviye edilmiş.
+        Zaten Boost uygulanmış.
   catalog:
     publish:
       publish_new: |
@@ -780,22 +780,22 @@ scenes:
       enter: |
         <a href="${link}">${title}</a> katalogda yayınlansın mı?
 
-        Diğer kullanıcılar paketini adına veya etiketlerine göre bulabilecek.
+        Diğer kullanıcılar paketini adına veya etiketlerine göre bulabilir.
 
         <b>Kurallar:</b>
-        • Yalnızca geniş kitleye uygun kaliteli paketler
-        • Kişisel fotoğraf veya özel içerik yok
-        • Yasa dışı içerik yok
+        • Yalnızca geniş kitleye hitap eden kaliteli paketler
+        • Kişisel fotoğraf veya özel içerik olmamalı
+        • Yasa dışı içerik olmamalı
       continue_button: Devam et
       enter_description: |
-        <b>Başkalarının bulabilmesi için paketini kısaca tanımla</b>
+        <b>Başkalarının bulabilmesi için paketini kısaca açıkla</b>
 
         <i>Kategorilere ayırmak için hashtag de kullanabilirsin [#]</i>
         <i>Örneğin: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
         <b>Mevcut açıklama:</b> <i>${description}</i>
-      keep_description: '✅ Mevcut açıklamayı koru'
+      keep_description: '✅ Açıklamayı koru'
       select_language: |
         <b>Paketinin hangi diller için olduğunu seç:</b>
         <i>Birden fazla seçebilirsin</i>
@@ -803,19 +803,19 @@ scenes:
       button_confirm_language: Onayla
       set_safe: |
         <b>Paketin herkes için güvenli mi?</b>
-        <i>Yani erotik, şiddet veya başka 18+ içerik barındırmıyor</i>
+        <i>Yani erotizm, şiddet veya başka 18+ içerik barındırmıyor</i>
       button_safe:
         safe: '✅ Evet, 18+ yok'
-        not_safe: '🔞 Hayır, 18+ içerik var'
+        not_safe: '🔞 Hayır, 18+ var'
       no_tags: belirtilmedi
       confirm: |
-        <b>"<a href="${link}">${title}</a>" paketinin yayınlanmasını onayla</b>
+        <b>"<a href="${link}">${title}</a>" çıkartma paketini yayınlamayı onayla</b>
 
         <b>Açıklama:</b> <i>${description}</i>
 
         <b>Etiketler:</b> ${tags}
         <b>Diller:</b> ${languages}
-      button_confirm: '✅ Yayınlamayı onayla'
+      button_confirm: '✅ Yayını onayla'
       success: |
         Tebrikler! Paketin katalogda yayınlandı, artık diğer kullanıcılar onu bulabilir!
 
@@ -829,7 +829,7 @@ scenes:
     enter: |
       ⚠️ <a href="${link}">${title}</a> kalıcı olarak silinsin mi?
 
-      Onaylamak için "${confirm}"e ya da "İptal"e dokun.
+      Onaylamak için «${confirm}» veya «İptal et» düğmesine dokun.
     confirm: Evet, sil
     success: |
       🗑 Paket silindi
@@ -839,7 +839,7 @@ scenes:
     no_sticker_set: |
       Henüz bir paket seçmedin. /packs ile bir paket seç ve komutu tekrarla.
     no_video: |
-      Çerçeve yalnızca video paketlerine eklenebilir.
+      Şekil yalnızca video paketlerinde değiştirilebilir.
     select_type: |
       <a href="${example}">&#8203;</a><b>Çıkartma şeklini seç:</b>
 
@@ -857,23 +857,23 @@ scenes:
       square: '4. Kare'
       circle: '5. Daire'
     selected: |
-      <b>Seçilen çerçeve türü:</b> ${type}
+      <b>Seçilen çıkartma şekli:</b> ${type}
   photoClear:
     enter: |
-      <b>✂️ Arka plan kaldırma</b>
+      <b>✂️ Arka planı kaldır</b>
 
-      Bir fotoğraf gönder — arka planı olmayan bir PNG al.
+      Bir fotoğraf gönder — arka planı temizlenmiş bir PNG alırsın.
       <i>Fotoğrafların için model:</i>
     enter_anime: |
-      <b>✂️ Arka plan kaldırma</b>
+      <b>✂️ Arka planı kaldır</b>
 
-      Bir fotoğraf gönder — arka planı olmayan bir PNG al.
+      Bir fotoğraf gönder — arka planı temizlenmiş bir PNG alırsın.
       <i>Anime görsellerinde daha iyi çalışır.</i>
     choose_model: |
       <b>Modeli seçin:</b>
-    web_app: WebApp — insanlı fotoğraflar için
+    web_app: WebApp — insan fotoğrafları için
     model:
-      ordinary: Normal — insanlı fotoğraflar için
+      ordinary: Standart — insan fotoğrafları için
       general: Genel — her tür fotoğraf için
       anime: Anime — anime görselleri için
       birefnet_general: BirefNet — her tür fotoğraf için
@@ -887,19 +887,19 @@ scenes:
     not_image: 'Fotoğraf veya dosya olarak bir görsel gönder (PNG, JPEG, WebP).'
   videoRound:
     enter: |
-      <b>⭕ Videodan yuvarlak video</b>
+      <b>⭕ Görüntülü mesaj</b>
 
-      Bir video gönder — onu yuvarlak videoya çevireyim.
+      Bir video gönder — onu görüntülü mesaja (yuvarlak) dönüştüreyim.
     not_video: |
       Video, GIF, video çıkartma veya animasyonlu görsel gönder.
     error: |
       Dönüştürülemedi. Başka bir video dene.
     forbidden: |
-      Sana yuvarlak video gönderemiyorum. Gizlilik ayarlarını kontrol et (sesli mesajlara izin verilmiş olmalı).
+      Sana görüntülü mesaj gönderemiyorum. Gizlilik ayarlarını kontrol et (sesli mesajlara izin verilmiş olmalı).
     processing: |
       ⏳ Dönüştürülüyor: ${position}/${total}
 
-      <i>Takviye = öncelik → /donate</i>
+      <i>Boost = öncelik → /donate</i>
     file_too_big: |
       Dosya çok büyük (en fazla 20 MB). Daha küçük bir video gönder.
   search:
@@ -907,7 +907,7 @@ scenes:
       not_found: |
         Hiçbir şey bulunamadı. Başka anahtar kelimeler dene.
     enter: |
-      <b>🔍 Çıkartma arama</b>
+      <b>🔍 Çıkartma ara</b>
 
       Anahtar kelimeleri gir — katalogdaki paketleri bulayım.
   error:
@@ -915,8 +915,8 @@ scenes:
   leave: |
     İptal edildi
   btn:
-    cancel: '← İptal'
-  unexpected: 'Şu anda başka bir şey bekliyorum — yukarıdaki adımı izle veya "← İptal"e dokun.'
+    cancel: '← İptal et'
+  unexpected: 'Şu anda başka bir şey bekliyorum — yukarıdaki adımı izle veya «← İptal et» düğmesine dokun.'
 error:
   stickerset_invalid: |
     Paket kullanılamıyor. Telegram'da silinmiş olabilir.
@@ -932,17 +932,17 @@ error:
     not_pack_owner: |
       Bu paket başka bir kullanıcıya ait — değiştiremezsin.
     pack_name_taken: |
-      Bu paket adresi zaten alınmış. Başka bir ad seç.
+      Bu paket bağlantısı zaten alınmış. Farklı bir ad seç.
     pack_name_invalid: |
-      Paket adresinin formatı geçersiz. Yalnızca Latin harfleri, rakamlar ve alt çizgi (_) kullanılabilir.
+      Paket bağlantısının formatı geçersiz. Yalnızca Latin harfleri, rakamlar ve alt çizgi (_) kullanılabilir.
     invalid_sticker_format: |
-      Dosya çıkartma olarak kullanılamıyor: format veya boyut hatalı.
+      Bu dosya çıkartma olarak kullanılamaz: format veya boyut hatalı.
     invalid_emoji: |
-      Emoji geçersiz. Standart bir Unicode emoji gönder.
+      İfade geçersiz. Standart bir Unicode ifade gönder.
     rate_limited: |
-      Telegram beklemeni istiyor — birkaç saniye sonra tekrar dene.
+      Telegram biraz beklemeni istiyor — birkaç saniye sonra tekrar dene.
     cannot_reach_user: |
-      Bu kullanıcıya mesaj gönderemiyorum: bot engellenmiş veya sohbet kullanılamıyor.
+      Kullanıcıya mesaj gönderilemiyor: bot engellenmiş veya sohbet kullanılamıyor.
   answerCbQuery:
     telegram: |
       Hata: ${error}
