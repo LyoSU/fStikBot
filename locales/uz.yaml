@@ -425,6 +425,7 @@ callback:
       rename: '✏️ Qayta nomlash'
       search_gif: '🔎 GIF qidirish'
       coedit: '👥 Birgalikda tahrirlash'
+      open_studio: '🎨 Studiyada ochish'
       catalog_add: '🗂 Katalogga qoʻshish'
       catalog_edit: '📝 Katalogda tahrirlash'
       catalog_delete: '🗑 Katalogdan oʻchirish'
