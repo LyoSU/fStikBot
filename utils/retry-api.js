@@ -44,6 +44,10 @@ const BLOCKED_CACHE_TTL_MS = parseInt(process.env.BLOCKED_CACHE_TTL_MS, 10) || 6
 const BLOCKED_CACHE_MAX = parseInt(process.env.BLOCKED_CACHE_MAX, 10) || 10000
 const RETRY_JITTER_MAX_MS = parseInt(process.env.RETRY_JITTER_MAX_MS, 10) || 1500
 const RATE_LIMIT_CACHE_MAX = parseInt(process.env.RATE_LIMIT_CACHE_MAX, 10) || 5000
+// Telegram shows a chat action for ~5s, so one per chat per window is all
+// the user can ever see.
+const CHAT_ACTION_INTERVAL_MS = parseInt(process.env.CHAT_ACTION_INTERVAL_MS, 10) || 4000
+const CHAT_ACTION_CACHE_MAX = 10000
 
 // ────────────────────────────────────────────────────────────────
 // Copy scope
@@ -332,6 +336,28 @@ function describeCall (method, data) {
 }
 
 // ────────────────────────────────────────────────────────────────
+// Chat action throttle
+// ────────────────────────────────────────────────────────────────
+// A batch of files fires one sendChatAction per file, all at once — 20
+// "typing…" calls for one chat bought a 19s 429 and nothing visible.
+// Repeats inside the window resolve locally, as Telegram would (true).
+const chatActionSentAt = new Map()
+
+function isChatActionRepeat (chatId) {
+  const now = Date.now()
+  const last = chatActionSentAt.get(chatId)
+  if (last && now - last < CHAT_ACTION_INTERVAL_MS) return true
+  if (chatActionSentAt.size >= CHAT_ACTION_CACHE_MAX) {
+    for (const [id, at] of chatActionSentAt) {
+      if (now - at >= CHAT_ACTION_INTERVAL_MS) chatActionSentAt.delete(id)
+    }
+    if (chatActionSentAt.size >= CHAT_ACTION_CACHE_MAX) chatActionSentAt.clear()
+  }
+  chatActionSentAt.set(chatId, now)
+  return false
+}
+
+// ────────────────────────────────────────────────────────────────
 // Retry
 // ────────────────────────────────────────────────────────────────
 
@@ -442,6 +468,9 @@ function patchTelegramPrototype () {
       return Promise.reject(buildRateLimitError(method, scopeId))
     }
 
+    const isChatAction = method === 'sendChatAction'
+    if (isChatAction && scopeId && isChatActionRepeat(scopeId)) return Promise.resolve(true)
+
     // Short-circuit: this call uploads a file while the bot-wide upload
     // cooldown is on. Same copy-scope bypass as above.
     const isUpload = hasUpload(data)
@@ -451,9 +480,12 @@ function patchTelegramPrototype () {
     }
 
     const description = describeCall(method, data)
+    // A chat action is stale by the time a retry could land: never wait.
     const retryOptions = inCopyScope
       ? { method: description, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS, onWait: copyStore.onWait }
-      : { method: description }
+      : isChatAction
+        ? { method: description, maxRetries: 0 }
+        : { method: description }
 
     return withRetry(
       () => originalCallApi.call(this, method, data, ...rest),
@@ -474,7 +506,7 @@ function patchTelegramPrototype () {
       // and cascade-fail the rest of the copy.
       if (error?.code === 429) {
         const retryAfter = getRetryAfter(error)
-        if (retryAfter && retryAfter > RETRY_MAX_WAIT_S) {
+        if (retryAfter && (retryAfter > RETRY_MAX_WAIT_S || isChatAction)) {
           if (!inCopyScope) cacheRateLimit(method, scopeId, retryAfter)
           // Upload 429s feed bot-wide flood detection from every scope, the
           // copy included — its evidence can't short-circuit the copy itself.
@@ -560,5 +592,6 @@ module.exports = {
   getRateLimitRemaining,
   getUploadCooldownRemaining,
   _blockedCacheSize: () => blockedChats.size,
-  _rateLimitCacheSize: () => rateLimitedCalls.size
+  _rateLimitCacheSize: () => rateLimitedCalls.size,
+  _resetChatActions: () => chatActionSentAt.clear()
 }

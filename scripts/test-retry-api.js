@@ -27,7 +27,8 @@ const {
   retryMiddleware,
   runInCopyScope,
   _blockedCacheSize,
-  _rateLimitCacheSize
+  _rateLimitCacheSize,
+  _resetChatActions
 } = require('../utils/retry-api')
 
 const tg = new Telegram('fake-token')
@@ -52,6 +53,7 @@ async function test (name, fn) {
     calls.length = 0
     stubResponder = () => Promise.resolve({ ok: true })
     resetCache()
+    _resetChatActions()
     await fn()
     console.log(`  PASS  ${name}`)
   } catch (err) {
@@ -268,6 +270,36 @@ async function test (name, fn) {
     const result = await tg.callApi('sendMessage', { chat_id: 1234, text: 'x' })
     assert.strictEqual(result.ok, true)
     assert.strictEqual(attempts, 2, 'should retry using response.parameters.retry_after')
+  })
+
+  await test('a burst of chat actions for one chat makes one network call', async () => {
+    const burst = Array.from({ length: 20 }, () =>
+      tg.callApi('sendChatAction', { chat_id: 2001, action: 'upload_document' }))
+    const results = await Promise.all(burst)
+    assert.ok(results.every((r) => r !== undefined), 'every caller still gets a result')
+    assert.strictEqual(calls.length, 1, 'only the first action hits the network')
+
+    await tg.callApi('sendChatAction', { chat_id: 2002, action: 'upload_document' })
+    assert.strictEqual(calls.length, 2, 'another chat is throttled separately')
+  })
+
+  await test('a chat action 429 is not retried, and the cooldown is cached', async () => {
+    stubResponder = () => {
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.description = 'Too Many Requests: retry after 3'
+      err.parameters = { retry_after: 3 }
+      return Promise.reject(err)
+    }
+    const start = Date.now()
+    await assert.rejects(tg.callApi('sendChatAction', { chat_id: 2003, action: 'typing' }))
+    assert.strictEqual(calls.length, 1, 'no retry for a chat action')
+    assert.ok(Date.now() - start < 1000, 'no wait for a chat action')
+
+    _resetChatActions()
+    const cached = await tg.callApi('sendChatAction', { chat_id: 2003, action: 'typing' }).catch((e) => e)
+    assert.strictEqual(cached.__cachedRateLimit, true, 'short 429 still cached for chat actions')
+    assert.strictEqual(calls.length, 1)
   })
 
   await test('429 with retry_after > maxWait caches (method, chat) — siblings short-circuit', async () => {
