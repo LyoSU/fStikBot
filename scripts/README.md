@@ -167,6 +167,19 @@ users. It creates two `zz_contract_*` packs and deletes them at the end, and
 can sit in a 429 wait for a few minutes. Exit code 1 means Telegram's
 behaviour no longer matches.
 
+## `check-pack-ops-live.js`
+
+Runs the publish planner (`pack-ops/plan.js`) against the real Bot API:
+builds a pack, publishes drafts with deletes, replaces, adds and reorders,
+and checks `getStickerSet` ends up exactly as planned. A stale draft must be
+refused. Same rules as above: test bot only, one `packops_*` pack deleted at
+the end. Run it after changing the planner; `test-pack-ops-plan.js` covers the
+logic offline against a simulated pack.
+
+```bash
+node scripts/check-pack-ops-live.js [owner_user_id]   # default: config.mainAdminId
+```
+
 ## A note on schema migration
 
 At 513M Sticker docs (94% in the legacy `info.*` shape) and ~101 GiB of data
