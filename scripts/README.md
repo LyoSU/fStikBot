@@ -118,10 +118,11 @@ npm test
 - `test-tenor-mapping.js` — Tenor v2 URL building (key, `client_key=gboard`,
   `media_filter`) and the `media_formats` → inline-result mapping, against a
   hardcoded v2 fixture. Also pins that 400/401/403 degrade to `TENOR_DISABLED`.
-- `test-lottie-rescale.js` — retargeting a TGS between the 512×512 sticker
-  canvas and the 100×100 custom-emoji canvas (`utils/lottie-rescale.js`):
-  precomp wrapper + scale, untouched when the canvas already matches, the
-  64 KB cap, and malformed input → `invalid_animated`.
+- `test-lottie-rescale.js` — retargeting a TGS to another canvas
+  (`utils/lottie-rescale.js`; the bot always targets 512×512, which Telegram
+  requires for custom emoji too): precomp wrapper + scale, untouched when the
+  canvas already matches, the 64 KB cap, and malformed input →
+  `invalid_animated`.
 - `test-sticker-geometry.js` — output size of a static sticker
   (`utils/sticker-geometry.js`): longer side exactly 512, other side
   proportional, small sources scaled up instead of padded.
@@ -142,6 +143,25 @@ npm test
 - `test-placeholder.js` — bootstrap-placeholder removal.
 - `test-retry-api.js` — 429 retry / cooldown policy.
 - `test-perf-timing.js` — perf-stage instrumentation.
+
+## `check-bot-api-contract.js`
+
+Not a unit test: it talks to the real Bot API and checks the sticker behaviour
+the bot relies on — TGS canvas (512×512 only, custom emoji included), TGS
+across pack types by `file_id`, `attach://` uploads, `setStickerPositionInSet`
+semantics, `replaceStickerInSet` on a one-sticker pack, a re-added sticker
+getting a new `file_unique_id`, keyword/emoji limits. Run it when Telegram
+ships a Bot API update or before relying on one of these in new code:
+
+```bash
+node scripts/check-bot-api-contract.js [owner_user_id]   # default: config.mainAdminId
+```
+
+`BOT_TOKEN` must be a **test** bot (the script refuses the bot behind
+`MAIN_BOT_TOKEN`): uploads count against a bot-wide flood quota shared by all
+users. It creates two `zz_contract_*` packs and deletes them at the end, and
+can sit in a 429 wait for a few minutes. Exit code 1 means Telegram's
+behaviour no longer matches.
 
 ## A note on schema migration
 
