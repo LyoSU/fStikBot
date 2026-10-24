@@ -4,6 +4,14 @@
 
 const crypto = require('crypto')
 
+// Mongo hands back a Binary from lean queries (its buffer may be longer than
+// the data: `position` is the length), a Buffer from documents.
+const bytesOf = (data) => {
+  if (Buffer.isBuffer(data)) return data
+  if (data?.buffer) return Buffer.from(data.buffer.subarray(0, data.position ?? data.buffer.length))
+  return Buffer.from(data)
+}
+
 /**
  * @param {Object} db the bot's database (database/index.js)
  */
@@ -18,6 +26,19 @@ function mongoStore (db) {
     },
     async save (commit) {
       await db.PackCommit.replaceOne({ _id: commit._id }, commit)
+    }
+  }
+}
+
+/**
+ * Uploaded Studio files, for the steps that send one themselves.
+ * @param {Object} db the bot's database (database/index.js)
+ */
+function mongoAssets (db) {
+  return {
+    async load (id) {
+      const asset = await db.StudioAsset.findById(id).select('format data').lean()
+      return asset && { format: asset.format, data: bytesOf(asset.data) }
     }
   }
 }
@@ -54,4 +75,4 @@ function mongoLock (db) {
   }
 }
 
-module.exports = { mongoStore, mongoLock }
+module.exports = { mongoStore, mongoLock, mongoAssets, bytesOf }

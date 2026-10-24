@@ -7,7 +7,8 @@
 // Seeds a pack (with bot-side sticker docs) and a queued commit with
 // studioassets that deletes one sticker, reorders, changes an emoji and adds
 // two new files; runs the worker; checks the pack in Telegram and the sticker
-// docs. Also checks a commit with an expired asset fails as asset_missing.
+// docs. Also checks a commit with an expired asset fails as asset_missing, and
+// that settings-only commits set the pack's title and thumbnail (and drop it).
 //
 // Safety: MONGODB_URI from .env is never used (the production one lives
 // there) — the database is local, and a non-local STUDIO_LIVE_MONGODB_URI is
@@ -202,6 +203,57 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
   const missing = await db.PackCommit.findById(lost._id).lean()
   check(missing.status === 'failed' && missing.error === 'asset_missing', 'an expired asset fails the commit as asset_missing', `${missing.status}: ${missing.error}`)
+
+  // Settings only: the stickers stay, the title and the thumbnail change.
+  const settle = async (settings, key) => {
+    const current = (await call('getStickerSet', { name: packName })).stickers.map((s) => s.file_unique_id)
+    const created = await db.PackCommit.create({
+      name: packName,
+      stickerSet: pack._id,
+      ownerTelegramId: OWNER,
+      actorTelegramId: OWNER,
+      idempotencyKey: key,
+      packType: 'regular',
+      boost: false,
+      status: 'queued',
+      phase: null,
+      steps: [],
+      mapping: null,
+      error: null,
+      base: current,
+      draft: current.map((uid) => ({ assetId: `k:${uid}`, fileUniqueId: uid, emojiList: ['🧪'] })),
+      known: {},
+      settings,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+    for (let i = 0; i < 5; i++) {
+      await worker.tick()
+      const state = await db.PackCommit.findById(created._id).lean()
+      if (['failed', 'conflict'].includes(state.status) || (state.status === 'succeeded' && state.synced)) break
+      await sleep(2000)
+    }
+    return db.PackCommit.findById(created._id).lean()
+  }
+
+  const thumbData = await sharp({ create: { width: 100, height: 100, channels: 4, background: { r: 200, g: 60, b: 20, alpha: 1 } } }).webp().toBuffer()
+  const thumbAsset = await db.StudioAsset.create({
+    telegramId: OWNER, sha256: crypto.createHash('sha256').update(thumbData).digest('hex'), format: 'static', width: 100, height: 100, size: thumbData.length, data: thumbData
+  })
+  const before = await call('getStickerSet', { name: packName })
+  check(!before.thumbnail, 'a new pack has no thumbnail in getStickerSet')
+
+  const titled = await settle({ title: 'Studio live title', thumbnail: { assetId: String(thumbAsset._id) } }, 'live-2')
+  check(titled.status === 'succeeded' && titled.synced === true, 'the settings commit succeeded and synced', `${titled.status}: ${titled.error}`)
+  const after = await call('getStickerSet', { name: packName })
+  check(after.title === `Studio live title :: @${me.username}`, 'the title is set with the bot suffix', after.title)
+  check(!!after.thumbnail, 'the pack has a thumbnail')
+  check(same(after.stickers.map((s) => s.file_unique_id), got), 'the stickers did not move')
+  check((await db.StickerSet.findById(pack._id).lean()).title === after.title, 'the pack document carries the new title')
+
+  const dropped = await settle({ thumbnail: null }, 'live-3')
+  check(dropped.status === 'succeeded', 'dropping the thumbnail succeeded', `${dropped.status}: ${dropped.error}`)
+  check(!(await call('getStickerSet', { name: packName })).thumbnail, 'the thumbnail is gone')
 
   await cleanup()
   await db.connection.dropDatabase()

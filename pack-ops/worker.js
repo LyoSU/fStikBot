@@ -12,6 +12,7 @@
 
 const { runInCopyScope } = require('../utils/retry-api')
 const { LOCK_TTL_MS } = require('./execute')
+const { bytesOf } = require('./store')
 const log = require('../utils/logger').scope('pack-ops:worker')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
@@ -28,14 +29,6 @@ const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 100
 const errorCode = (err) => err?.code ?? err?.response?.error_code
 const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
 const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >= 400 && errorCode(err) < 500 && errorCode(err) !== 429
-
-// Mongo hands back a Binary from lean queries (its buffer may be longer than
-// the data: `position` is the length), a Buffer from documents.
-const bytesOf = (data) => {
-  if (Buffer.isBuffer(data)) return data
-  if (data?.buffer) return Buffer.from(data.buffer.subarray(0, data.position ?? data.buffer.length))
-  return Buffer.from(data)
-}
 
 /**
  * @param {Object} deps
@@ -130,7 +123,9 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     await repo.writeSync(pack._id, {
       stickers,
       deletedUids: live.filter((uid) => !inPack.has(uid)),
-      clearPlaceholder: !!pack.placeholderFileUniqueId && !inPack.has(pack.placeholderFileUniqueId)
+      clearPlaceholder: !!pack.placeholderFileUniqueId && !inPack.has(pack.placeholderFileUniqueId),
+      // The title as Telegram has it, suffix and all.
+      title: commit.settings?.title !== undefined ? set.title : undefined
     }, now())
     await repo.markSynced(commit._id)
     log.info(`commit ${commit._id}: synced ${stickers.length} stickers of ${commit.name}`)

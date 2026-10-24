@@ -44,12 +44,22 @@ class Crash extends Error {}
 // with it moves the existing sticker into place.
 function fakeTelegram (initial, world) {
   let fresh = 0
-  const pack = { stickers: initial.map((uid) => ({ uid, emoji: ['🙂'], keywords: [] })) }
+  const pack = { title: 'Old title', thumbnail: null, stickers: initial.map((uid) => ({ uid, emoji: ['🙂'], keywords: [] })) }
   const byFileId = (fileId) => pack.stickers.find((s) => `fid:${s.uid}` === fileId)
   const calls = []
 
   const apply = {
-    getStickerSet: () => ({ stickers: pack.stickers.map((s) => ({ file_unique_id: s.uid, file_id: `fid:${s.uid}`, format: 'static' })) }),
+    getStickerSet: () => ({
+      title: pack.title,
+      ...(pack.thumbnail ? { thumbnail: { file_id: 'thumb' } } : {}),
+      stickers: pack.stickers.map((s) => ({ file_unique_id: s.uid, file_id: `fid:${s.uid}`, custom_emoji_id: `ce:${s.uid}`, format: 'static' }))
+    }),
+    setStickerSetTitle: ({ title }) => { pack.title = title; return true },
+    setStickerSetThumbnail: ({ thumbnail, format }) => {
+      pack.thumbnail = thumbnail ? { format, bytes: thumbnail.source.toString(), filename: thumbnail.filename } : null
+      return true
+    },
+    setCustomEmojiStickerSetThumbnail: ({ custom_emoji_id: id }) => { pack.thumbnail = id ? { customEmojiId: id } : null; return true },
     deleteStickerFromSet: ({ sticker }) => {
       const s = byFileId(sticker)
       if (!s) throw telegramError(400, 'Bad Request: STICKER_INVALID')
@@ -377,6 +387,129 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
         }
       }
       assert.ok(runs > 500, `only ${runs} faulted runs`)
+    })
+  }
+
+  // Pack settings: title and thumbnail, set after the stickers are in place.
+  const keepAll = (base) => base.map((uid) => ({ assetId: `k:${uid}`, fileUniqueId: uid, emojiList: ['🙂'] }))
+  const assets = {
+    load: async (id) => (id === 'missing' ? null : { format: 'static', data: Buffer.from(`bytes of ${id}`) })
+  }
+  const formatTitle = async (commit, title) => `${title} :: @bot`
+  const settingsCommit = (settings, { base = ['x', 'y'], packType } = {}) =>
+    newCommit({ name: 'p', ownerTelegramId: 7, base, draft: keepAll(base), settings, packType })
+
+  await test('a settings-only commit sets the formatted title and uploads the thumbnail', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x', 'y'], world)
+    const commit = await runCommit(settingsCommit({ title: 'New', thumbnail: { assetId: 'a1' } }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), assets, formatTitle })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(tg.pack.title, 'New :: @bot')
+    assert.deepStrictEqual(tg.pack.thumbnail, { format: 'static', bytes: 'bytes of a1', filename: 'thumbnail.webp' })
+    assert.deepStrictEqual(tg.pack.stickers.map((s) => s.uid), ['x', 'y'])
+    assert.deepStrictEqual(commit.steps.filter((s) => s.phase === 'settings').map((s) => [s.phase, s.kind, s.state]), [['settings', 'title', 'succeeded'], ['settings', 'thumbnail', 'succeeded']])
+  })
+
+  await test('a title the pack already has is not sent again', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x'], world)
+    tg.pack.title = 'Same :: @bot'
+    const commit = await runCommit(settingsCommit({ title: 'Same' }, { base: ['x'] }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), formatTitle })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.ok(!tg.calls.includes('setStickerSetTitle'))
+  })
+
+  await test('Telegram saying "not modified" counts as done', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x'], world)
+    const real = fakeTelegram(['x'], world)
+    tg.callApi = (method, params) => method === 'setStickerSetTitle'
+      ? Promise.reject(telegramError(400, 'Bad Request: STICKERSET_NOT_MODIFIED'))
+      : real.callApi(method, params)
+    const commit = await runCommit(settingsCommit({ title: 'T' }, { base: ['x'] }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), formatTitle })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+  })
+
+  await test('dropping the thumbnail of a pack that has none sends nothing', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x'], world)
+    const commit = await runCommit(settingsCommit({ thumbnail: null }, { base: ['x'] }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.ok(!tg.calls.includes('setStickerSetThumbnail'))
+    tg.pack.thumbnail = { format: 'static' }
+    const again = await runCommit(settingsCommit({ thumbnail: null }, { base: ['x'] }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    assert.strictEqual(again.status, 'succeeded', again.error)
+    assert.strictEqual(tg.pack.thumbnail, null)
+  })
+
+  await test('a custom emoji pack takes its thumbnail from one of its stickers, and can drop it', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x', 'y'], world)
+    const run = (settings) => runCommit(settingsCommit(settings, { packType: 'custom_emoji' }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    assert.strictEqual((await run({ thumbnail: { fromSticker: 'y' } })).status, 'succeeded')
+    assert.deepStrictEqual(tg.pack.thumbnail, { customEmojiId: 'ce:y' })
+    assert.strictEqual((await run({ thumbnail: null })).status, 'succeeded')
+    assert.strictEqual(tg.pack.thumbnail, null)
+  })
+
+  await test('settings that cannot apply fail the commit with a reason', async () => {
+    for (const [label, settings, packType, want] of [
+      ['missing asset', { thumbnail: { assetId: 'missing' } }, 'regular', /asset_missing/],
+      ['sticker thumbnail on a regular pack', { thumbnail: { fromSticker: 'x' } }, 'regular', /uploaded file/],
+      ['upload on an emoji pack', { thumbnail: { assetId: 'a1' } }, 'custom_emoji', /takes its thumbnail from a sticker/],
+      ['sticker gone', { thumbnail: { fromSticker: 'gone' } }, 'custom_emoji', /no custom emoji id/]
+    ]) {
+      const world = { faultAt: -1 }
+      const tg = fakeTelegram(['x'], world)
+      const commit = await runCommit(settingsCommit(settings, { base: ['x'], packType }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), assets })
+      assert.strictEqual(commit.status, 'failed', label)
+      assert.match(commit.error, want, label)
+    }
+  })
+
+  await test('stickers and settings in one commit: settings run last, on the final pack', async () => {
+    const world = { faultAt: -1 }
+    const base = ['x', 'y']
+    const tg = fakeTelegram(base, world)
+    const draft = [{ assetId: 'a-y', fileUniqueId: 'y', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 7, base, draft, settings: { title: 'Mixed' }, packType: 'custom_emoji' }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), formatTitle })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(tg.pack.title, 'Mixed :: @bot')
+    assert.ok(tg.calls.indexOf('setStickerSetTitle') > tg.calls.lastIndexOf('addStickerToSet'))
+  })
+
+  for (const fault of ['lost', 'noreply', 'crash-before', 'crash-after']) {
+    await test(`a "${fault}" fault on every call of a settings publish recovers exactly`, async () => {
+      const mk = () => settingsCommit({ title: 'Faulty', thumbnail: { assetId: 'a1' } })
+      const probeWorld = { faultAt: -1 }
+      const probe = fakeTelegram(['x', 'y'], probeWorld)
+      await runCommit(mk(), { telegram: probe, store: fakeStore(probeWorld), lock: fakeLock(probeWorld), assets, formatTitle })
+      assert.ok(probe.calls.includes('setStickerSetThumbnail'))
+      for (let at = 0; at < probe.calls.length; at++) {
+        const world = { faultAt: at, fault }
+        const tg = fakeTelegram(['x', 'y'], world)
+        const label = `${fault} at call ${at} (${probe.calls[at]})`
+        let commit = mk()
+        const store = fakeStore(world)
+        const lock = fakeLock(world)
+        for (let run = 0; run < 10; run++) {
+          try {
+            commit = await runCommit(commit, { telegram: tg, store, lock, assets, formatTitle })
+          } catch (err) {
+            if (!(err instanceof Crash)) throw err
+          }
+          if (world.crashed) {
+            world.crashed = false
+            lock.expire(commit.name)
+            commit = JSON.parse(JSON.stringify(store.saved))
+          }
+          world.faultAt = -1
+          if (commit.status === 'succeeded') break
+        }
+        assert.strictEqual(commit.status, 'succeeded', `${label}: ${commit.status} ${commit.error}`)
+        assert.strictEqual(tg.pack.title, 'Faulty :: @bot', label)
+        assert.strictEqual(tg.pack.thumbnail?.bytes, 'bytes of a1', label)
+      }
     })
   }
 

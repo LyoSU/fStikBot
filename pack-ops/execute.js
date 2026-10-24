@@ -9,7 +9,7 @@
 // against an in-memory pack with faults on every step, and the bot runs it
 // against the real API and MongoDB.
 
-const { hasConflict, planContent, mapAfterContent, planMoves, planMetadata } = require('./plan')
+const { hasConflict, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
 
 // Commit status:
 //   pending      created, never run
@@ -46,6 +46,11 @@ const errorText = (err) => err?.description || err?.response?.description || err
 // A sticker that is already gone answers this way; for a delete that means done.
 const isGone = (err) => /STICKER_INVALID|sticker not found|STICKERSET_INVALID/i.test(errorText(err))
 
+// A title or thumbnail that is already what was asked for.
+const isNotModified = (err) => /not modified|NOT_MODIFIED/i.test(errorText(err))
+
+const THUMBNAIL_EXT = { static: 'webp', animated: 'tgs', video: 'webm' }
+
 class Interrupted extends Error {}
 
 /**
@@ -56,11 +61,13 @@ class Interrupted extends Error {}
  * @param {{callApi: Function}} deps.telegram
  * @param {{save: Function}} deps.store persists the whole commit
  * @param {{acquire: Function, extend: Function, release: Function}} deps.lock
+ * @param {{load: Function}} [deps.assets] (assetId) => { data, format }, for a pack thumbnail
+ * @param {Function} [deps.formatTitle] (commit, title) => the title as Telegram should get it
  * @param {Function} [deps.onProgress] (commit) after every step
  * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
  * @returns {Promise<Object>} the commit, with its final status
  */
-async function runCommit (commit, { telegram, store, lock, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
+async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
   if (commit.status === 'succeeded' || commit.status === 'conflict' || commit.status === 'failed') return commit
 
   const token = await lock.acquire(commit.name, LOCK_TTL_MS)
@@ -134,6 +141,23 @@ async function runCommit (commit, { telegram, store, lock, onProgress, lockRenew
         await save()
       }
       await runSteps(commit, 'arrange', { call, getSet, save, lock, token })
+      commit.phase = 'settings'
+      await save()
+    }
+
+    // Title and thumbnail go last: they need no part of the pack's order, and
+    // a thumbnail picked from a sticker needs the final stickers.
+    if (commit.phase === 'settings') {
+      if (commit.settings && !commit.steps.some((step) => step.phase === 'settings')) {
+        const steps = planSettings(commit.settings)
+        for (const step of steps) {
+          if (step.kind === 'title') step.title = await formatTitle(commit, step.title)
+          Object.assign(step, { phase: 'settings', state: 'pending' })
+        }
+        commit.steps.push(...steps)
+        await save()
+      }
+      await runSteps(commit, 'settings', { call, getSet, save, lock, token, assets })
       commit.phase = 'verify'
       await save()
     }
@@ -165,7 +189,7 @@ async function runCommit (commit, { telegram, store, lock, onProgress, lockRenew
 
 // Steps of one phase, in order. A step left `running`/`uncertain` by an
 // earlier run is reconciled against the pack before anything else happens.
-async function runSteps (commit, phase, { call, getSet, save, lock, token }) {
+async function runSteps (commit, phase, { call, getSet, save, lock, token, assets }) {
   // The pack as it stands, kept current: refetched after every add/replace
   // (to check what Telegram did) and patched locally after a delete.
   let set = await getSet()
@@ -175,6 +199,11 @@ async function runSteps (commit, phase, { call, getSet, save, lock, token }) {
     return sticker.file_id
   }
   const itemOf = (assetId) => commit.draft.find((item) => item.assetId === assetId)
+  const customEmojiIdOf = (uid) => {
+    const id = set.stickers.find((s) => s.file_unique_id === uid)?.custom_emoji_id
+    if (!id) throw Object.assign(new Error(`sticker ${uid} has no custom emoji id`), { code: 400 })
+    return id
+  }
   const refuse = async (step, message) => {
     step.state = 'failed'
     step.error = message
@@ -201,6 +230,14 @@ async function runSteps (commit, phase, { call, getSet, save, lock, token }) {
       if (effect === 'unexpected') await refuse(step, CHANGED)
     }
 
+    // A title or thumbnail the pack already has is done, whether a lost answer
+    // or an earlier edit got it there.
+    if (step.phase === 'settings' && settingDone(step, set)) {
+      step.state = 'succeeded'
+      await save()
+      continue
+    }
+
     if (!await lock.extend(commit.name, token, LOCK_TTL_MS)) throw new Interrupted('lost the pack lock')
 
     step.state = 'running'
@@ -209,12 +246,14 @@ async function runSteps (commit, phase, { call, getSet, save, lock, token }) {
 
     const prev = uidsOf(set)
     try {
-      await applyStep(commit, step, { call, fileIdOf, itemOf })
+      await applyStep(commit, step, { call, fileIdOf, itemOf, customEmojiIdOf, assets })
       step.error = null
     } catch (err) {
       step.error = errorText(err)
       if (step.kind === 'delete' && isTelegramAnswer(err) && isGone(err)) {
         // Already gone: done.
+      } else if (step.phase === 'settings' && isTelegramAnswer(err) && isNotModified(err)) {
+        // Already as asked: done.
       } else if (!isTelegramAnswer(err)) {
         // No answer: maybe applied, maybe not. Leave it for the reconcile.
         step.state = 'uncertain'
@@ -250,7 +289,37 @@ async function runSteps (commit, phase, { call, getSet, save, lock, token }) {
 const DUPLICATE = 'duplicate: Telegram keeps one sticker per file in a pack, and this file is already there'
 const CHANGED = 'the pack changed during the publish'
 
-function applyStep (commit, step, { call, fileIdOf, itemOf }) {
+// Whether the pack already shows what a settings step would set. A thumbnail
+// can only be compared when it is to be dropped; setting one again is harmless.
+function settingDone (step, set) {
+  if (step.kind === 'title') return set.title === step.title
+  if (step.kind === 'thumbnail' && !step.assetId && !step.fromSticker) return !set.thumbnail
+  return false
+}
+
+async function setThumbnail (commit, step, { call, customEmojiIdOf, assets }) {
+  if (commit.packType === 'custom_emoji') {
+    if (step.assetId) throw Object.assign(new Error('a custom emoji pack takes its thumbnail from a sticker'), { code: 400 })
+    // An empty id drops the thumbnail.
+    return call('setCustomEmojiStickerSetThumbnail', {
+      name: commit.name,
+      custom_emoji_id: step.fromSticker ? customEmojiIdOf(step.fromSticker) : ''
+    })
+  }
+
+  if (step.fromSticker) throw Object.assign(new Error('a thumbnail of a regular pack is an uploaded file'), { code: 400 })
+
+  const params = { name: commit.name, user_id: commit.ownerTelegramId, format: 'static' }
+  if (step.assetId) {
+    const asset = await assets?.load(step.assetId)
+    if (!asset) throw Object.assign(new Error('asset_missing'), { code: 400 })
+    params.format = asset.format
+    params.thumbnail = { source: asset.data, filename: `thumbnail.${THUMBNAIL_EXT[asset.format]}` }
+  }
+  return call('setStickerSetThumbnail', params)
+}
+
+function applyStep (commit, step, { call, fileIdOf, itemOf, customEmojiIdOf, assets }) {
   const userId = commit.ownerTelegramId
   switch (step.kind) {
     case 'delete':
@@ -270,6 +339,10 @@ function applyStep (commit, step, { call, fileIdOf, itemOf }) {
       return call('setStickerEmojiList', { sticker: fileIdOf(step.fileUniqueId), emoji_list: step.emojiList })
     case 'keywords':
       return call('setStickerKeywords', { sticker: fileIdOf(step.fileUniqueId), keywords: step.keywords })
+    case 'title':
+      return call('setStickerSetTitle', { name: commit.name, title: step.title })
+    case 'thumbnail':
+      return setThumbnail(commit, step, { call, customEmojiIdOf, assets })
     default:
       throw new Error(`unknown step ${step.kind}`)
   }
@@ -327,14 +400,18 @@ function effectOf (commit, step, uids, prev) {
  * @param {string[]} params.base file_unique_ids when the draft was opened
  * @param {Object[]} params.draft DraftItem[] (see plan.js)
  * @param {Object} [params.known] fileUniqueId → { emojiList, keywords } from our DB
+ * @param {Object} [params.settings] { title?, thumbnail? }, see plan.js planSettings
+ * @param {string} [params.packType] 'regular' | 'custom_emoji'
  */
-function newCommit ({ name, ownerTelegramId, base, draft, known = {} }) {
+function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, packType }) {
   return {
     name,
     ownerTelegramId,
     base,
     draft,
     known,
+    ...(settings ? { settings } : {}),
+    ...(packType ? { packType } : {}),
     status: 'pending',
     phase: null,
     steps: [],

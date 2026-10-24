@@ -68,7 +68,7 @@ function mongoRepo (db) {
     // `stickers`: [{ fileUniqueId, fileId, emojiList, keywords? }] as they are in
     // the pack now. Everything the pack no longer holds is marked deleted
     // (like the bot's own delete does), not removed.
-    async writeSync (packId, { stickers, deletedUids, clearPlaceholder }, now) {
+    async writeSync (packId, { stickers, deletedUids, clearPlaceholder, title }, now) {
       if (stickers.length) {
         await db.Sticker.bulkWrite(stickers.map((s) => {
           const set = {
@@ -94,6 +94,7 @@ function mongoRepo (db) {
         )
       }
       const update = { $set: { updatedAt: now } }
+      if (title) update.$set.title = title
       if (clearPlaceholder) update.$unset = { placeholderFileUniqueId: '' }
       await db.StickerSet.updateOne({ _id: packId }, update)
     }

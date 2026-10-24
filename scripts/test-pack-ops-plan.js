@@ -10,6 +10,7 @@ const {
   mapAfterContent,
   planMoves,
   planMetadata,
+  planSettings,
   longestIncreasing
 } = require('../pack-ops/plan')
 
@@ -244,6 +245,14 @@ test('metadata: keywords set over an unknown value are written', () => {
   const known = new Map([['b', { emojiList: ['🙂'] }]])
   const draft = [{ assetId: '1', fileUniqueId: 'b', emojiList: ['🙂'], keywords: [] }]
   assert.deepStrictEqual(planMetadata(draft, known), [{ fileUniqueId: 'b', keywords: [] }])
+})
+
+test('settings: a step per part that is present, a null thumbnail drops it', () => {
+  assert.deepStrictEqual(planSettings({}), [])
+  assert.deepStrictEqual(planSettings({ title: 'T' }), [{ kind: 'title', title: 'T' }])
+  assert.deepStrictEqual(planSettings({ title: 'T', thumbnail: { assetId: 'a' } }), [{ kind: 'title', title: 'T' }, { kind: 'thumbnail', assetId: 'a' }])
+  assert.deepStrictEqual(planSettings({ thumbnail: { fromSticker: 'u' } }), [{ kind: 'thumbnail', fromSticker: 'u' }])
+  assert.deepStrictEqual(planSettings({ thumbnail: null }), [{ kind: 'thumbnail' }])
 })
 
 console.log(`\n${passed} passed, ${failed} failed`)

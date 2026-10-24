@@ -10,6 +10,10 @@ const packCommitSchema = mongoose.Schema({
   ownerTelegramId: { type: Number, required: true },
   actorTelegramId: Number,
   packType: String,
+  // The pack has Boost: its title is longer and carries no bot suffix.
+  boost: Boolean,
+  // Pack title and thumbnail to set once the stickers are in place (pack-ops/plan.js planSettings).
+  settings: mongoose.Schema.Types.Mixed,
   // Client-supplied: a double tap on "Publish" returns the same commit.
   idempotencyKey: String,
   status: { type: String, required: true },

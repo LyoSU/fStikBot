@@ -69,7 +69,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     async setAssetFileId (id, fileId, owner) { Object.assign(w.assets.get(id), { fileId, fileOwner: owner }) },
     async findPack () { return clone(w.pack) },
     async liveStickerUids () { return w.stickers.filter((s) => !s.deleted).map((s) => s.fileUniqueId) },
-    async writeSync (packId, { stickers, deletedUids, clearPlaceholder }, now) {
+    async writeSync (packId, { stickers, deletedUids, clearPlaceholder, title }, now) {
       for (const s of stickers) {
         let doc = w.stickers.find((d) => d.fileUniqueId === s.fileUniqueId)
         if (!doc) w.stickers.push(doc = { fileUniqueId: s.fileUniqueId, stickerSet: packId })
@@ -79,6 +79,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
       }
       for (const doc of w.stickers) if (deletedUids.includes(doc.fileUniqueId)) Object.assign(doc, { deleted: true, deletedAt: now })
       w.pack.updatedAt = now
+      if (title) w.pack.title = title
       if (clearPlaceholder) delete w.pack.placeholderFileUniqueId
     }
   }
@@ -99,7 +100,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
         w.uploads.push(params)
         return { file_id: `fid:${params.sticker.source.toString()}` }
       }
-      if (method === 'getStickerSet') return { stickers: clone(w.telegramSet) }
+      if (method === 'getStickerSet') return { title: w.telegramTitle, stickers: clone(w.telegramSet) }
       throw new Error(`unexpected ${method}`)
     }
   }
@@ -329,6 +330,23 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.strictEqual(w.pack.updatedAt.getTime(), w.clock.getTime())
     assert.strictEqual(w.commits[0].synced, true)
     assert.strictEqual(await w.worker.step(), false, 'synced once')
+  })
+
+  await test('a published title lands on the pack document as Telegram has it', async () => {
+    const w = synced()
+    w.commits[0].settings = { title: 'Fresh' }
+    w.telegramTitle = 'Fresh :: @bot'
+    await w.worker.step()
+    assert.strictEqual(w.pack.title, 'Fresh :: @bot')
+  })
+
+  await test('a commit without a title leaves the pack title alone', async () => {
+    const w = synced()
+    w.pack.title = 'Mine'
+    w.commits[0].settings = { thumbnail: null }
+    w.telegramTitle = 'Other'
+    await w.worker.step()
+    assert.strictEqual(w.pack.title, 'Mine')
   })
 
   await test('a placeholder that is still in the pack stays set', async () => {

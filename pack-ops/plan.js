@@ -204,11 +204,31 @@ function planMetadata (draft, known) {
   return updates
 }
 
+/**
+ * Phase 3: the pack's own settings.
+ *
+ * @param {{title?: string, thumbnail?: {assetId?: string, fromSticker?: string}|null}} settings
+ *   `thumbnail` null drops the custom thumbnail; `assetId` is an uploaded
+ *   file (regular packs), `fromSticker` a file_unique_id of the pack (custom
+ *   emoji packs, whose thumbnail is one of their emoji)
+ * @returns {Object[]} steps; the title is still the user's, not yet formatted
+ */
+function planSettings (settings) {
+  const steps = []
+  if (settings.title !== undefined) steps.push({ kind: 'title', title: settings.title })
+  if (settings.thumbnail !== undefined) {
+    const { assetId, fromSticker } = settings.thumbnail || {}
+    steps.push({ kind: 'thumbnail', ...(assetId ? { assetId } : {}), ...(fromSticker ? { fromSticker } : {}) })
+  }
+  return steps
+}
+
 module.exports = {
   hasConflict,
   planContent,
   mapAfterContent,
   planMoves,
   planMetadata,
+  planSettings,
   longestIncreasing
 }

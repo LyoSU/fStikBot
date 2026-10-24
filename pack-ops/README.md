@@ -9,7 +9,8 @@ in section 7.1 there.
 |---|---|
 | `plan.js` | Pure planning: conflict check, content (delete / replace / add), mapping new stickers by position, LIS reorder, metadata diff |
 | `execute.js` | The commit state machine. Gets `telegram`, `store` and `lock` injected |
-| `store.js` | MongoDB store (`PackCommit`) and pack lock (`PackLock`) |
+| `store.js` | MongoDB store (`PackCommit`), pack lock (`PackLock`), uploaded files (`StudioAsset`) |
+| `title.js` | The title as Telegram gets it: cut to the tier's limit, bot suffix for packs without Boost |
 | `worker.js` | The Studio publish worker: claims queued commits, uploads their files, runs them, syncs the bot's sticker docs |
 | `worker-repo.js` | The worker's MongoDB queries |
 | `index.js` | `publishCommit(db, telegram, id)`: load and run a stored commit in a copy scope (waits out per-user 429s) |
@@ -22,6 +23,8 @@ in section 7.1 there.
   base: [file_unique_id],         // the pack when the draft was opened
   draft: [DraftItem],             // the pack as it should end up (plan.js)
   known: { [uid]: { emojiList, keywords } },  // our DB's metadata, for the diff
+  packType, boost,                // 'regular' | 'custom_emoji'; Boost decides the title rules
+  settings,                       // optional, see "Pack settings"
   status, phase, steps, mapping, contentBase, format, error
 }
 ```
@@ -32,7 +35,7 @@ in section 7.1 there.
 - `failed`: Telegram refused a step, merged a duplicate file, or the pack changed mid-publish. Steps before it stay applied.
 
 Phases run in order: content (deletes, replaces, adds), then arrange (moves,
-emoji, keywords), then verify. Each step is saved as `running` before its
+emoji, keywords), then settings (title, thumbnail), then verify. Each step is saved as `running` before its
 request and settled after. A step found `running` or `uncertain` on the next
 run is checked against `getStickerSet` before anything is sent again: a
 content step leaves a trace in the pack, and an arrange step is idempotent.
@@ -42,6 +45,35 @@ sticker in the pack, but merges it instead of adding one. So every add and
 replace is checked against `getStickerSet` right after it, and a merge stops
 the commit as `duplicate`. Studio should drop duplicate files (by hash) before
 committing.
+
+## Pack settings
+
+`commit.settings` is optional: `{ title?, thumbnail? }`. A commit may carry
+only settings (its draft then keeps every sticker as it is).
+
+- `title`: what the user typed. The `title` step sends `formatTitle(commit, title)`
+  (`title.js`): cut to `charTitleMax` (30) or, with `commit.boost`,
+  `premiumCharTitleMax` (64), and without Boost followed by ` :: @<bot>`, as the
+  bot's own rename does. `setStickerSetTitle`.
+- `thumbnail`:
+  - `{ assetId }` for a regular pack: the step reads the `studioassets` file and
+    uploads it as an InputFile (`setStickerSetThumbnail`, `format` from the asset;
+    a static one is a 100×100 WebP/PNG). Not through `uploadStickerFile`: this call takes the file itself.
+  - `{ fromSticker: file_unique_id }` for a custom emoji pack:
+    `setCustomEmojiStickerSetThumbnail` with that sticker's `custom_emoji_id`
+    from `getStickerSet`. The other combination (an asset on an emoji pack, a
+    sticker on a regular one) fails the commit.
+  - `null`: drop it (the first sticker is the thumbnail again).
+
+The steps run after arrange, so `fromSticker` finds the final pack. Each is
+checked against `getStickerSet` first: a title the pack already has, or a
+thumbnail to drop from a pack that has none, is done without a call, which also
+settles a step whose answer was lost. Setting a thumbnail again is harmless, so
+that one is simply repeated. A "not modified" answer counts as done. The sync
+copies the title Telegram reports onto the pack document.
+
+An older worker ignores `settings` and would report success, so deploy the bot
+before the API starts accepting them.
 
 ## Worker
 
@@ -82,8 +114,8 @@ Co-edit activity is not logged and the actor is not notified yet.
 
 ## Tests
 
-- `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves.
-- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates.
+- `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, and the settings steps.
+- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates; the settings phase.
 - `scripts/test-pack-ops-worker.js`: the worker on an in-memory repo and Telegram: claims (incl. a stale one), upload resume and reuse, the ways an upload ends, the sync.
-- `scripts/check-studio-worker-live.js`: the worker on a throwaway MongoDB and a test bot (not in `npm test`).
+- `scripts/check-studio-worker-live.js`: the worker on a throwaway MongoDB and a test bot, incl. a settings-only commit (title with suffix, thumbnail set and dropped; not in `npm test`).
 - `scripts/check-pack-ops-live.js`: the same against the real API on a test bot (not in `npm test`).
