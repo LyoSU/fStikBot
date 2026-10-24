@@ -10,7 +10,8 @@ in section 7.1 there.
 | `plan.js` | Pure planning: conflict check, content (delete / replace / add), mapping new stickers by position, LIS reorder, metadata diff |
 | `execute.js` | The commit state machine. Gets `telegram`, `store` and `lock` injected |
 | `store.js` | MongoDB store (`PackCommit`), pack lock (`PackLock`), uploaded files (`StudioAsset`) |
-| `title.js` | The title as Telegram gets it: cut to the tier's limit, bot suffix for packs without Boost |
+| `title.js` | The title as Telegram gets it: cut to the tier's limit, bot suffix for packs without Boost; the bot's username |
+| `names.js` | Short names for new packs (shared with the `/new` wizard) |
 | `worker.js` | The Studio publish worker: claims queued commits, uploads their files, runs them, syncs the bot's sticker docs |
 | `worker-repo.js` | The worker's MongoDB queries |
 | `index.js` | `publishCommit(db, telegram, id)`: load and run a stored commit in a copy scope (waits out per-user 429s) |
@@ -25,6 +26,8 @@ in section 7.1 there.
   known: { [uid]: { emojiList, keywords } },  // our DB's metadata, for the diff
   packType, boost,                // 'regular' | 'custom_emoji'; Boost decides the title rules
   settings,                       // optional, see "Pack settings"
+  create,                         // optional, see "Creating a pack"
+  lockName,                       // the pack lock's key when it isn't `name` (a new pack)
   status, phase, steps, mapping, contentBase, format, error
 }
 ```
@@ -34,7 +37,7 @@ in section 7.1 there.
 - `interrupted`: a 429 longer than the wait, a network error, a lost lock. Run it again to continue;
 - `failed`: Telegram refused a step, merged a duplicate file, or the pack changed mid-publish. Steps before it stay applied.
 
-Phases run in order: content (deletes, replaces, adds), then arrange (moves,
+Phases run in order: create (only for a new pack), content (deletes, replaces, adds), then arrange (moves,
 emoji, keywords), then settings (title, thumbnail), then verify. Each step is saved as `running` before its
 request and settled after. A step found `running` or `uncertain` on the next
 run is checked against `getStickerSet` before anything is sent again: a
@@ -74,6 +77,40 @@ copies the title Telegram reports onto the pack document.
 
 An older worker ignores `settings` and would report success, so deploy the bot
 before the API starts accepting them.
+
+## Creating a pack
+
+`commit.create` makes the pack first: `{ title, name?, needsRepainting? }` with
+`base: []`, `packType` set and every draft item a new file. `name` is the link
+the user typed (optional), `title` their part of the title. `commit.name` and
+`commit.lockName` start as a provisional `~new:<id>`; the pack lock stays under
+it, `commit.name` becomes the real name once Telegram has the set.
+
+`createPack` (`execute.js`) does what the wizard (`scenes/pack-new.js`) does:
+
+- names: `autoNameCandidates` (the title as a link, then two with a random tail)
+  or the one name the user typed, all with `_by_<bot>`; from `names.js`, which
+  the wizard uses too. A candidate is skipped when our database has a pack by
+  that name (`nameTaken`, like the wizard) or Telegram already has the set;
+  when `createNewStickerSet` answers "occupied"/"invalid" the next one is tried.
+  None left: the commit fails with `error: 'name_occupied'` (or `'name_invalid'`
+  when nothing usable is left of a typed link) and nothing was made;
+- title: `formatTitle` as for a rename: cut to 30, ` :: @<bot>`. A new pack has no Boost;
+- the first 50 draft items go into `createNewStickerSet` (Telegram takes no empty set,
+  so there is no placeholder as in the wizard); the rest are added by the content phase.
+  `sticker_type` is the commit's `packType`, `needs_repainting` the create's `needsRepainting`;
+- the bot's records (`register`, `mongoRegister` in `store.js`): the `StickerSet`
+  document through the same `newSet` (owner, ownerTelegramId, name, formatted title,
+  packType, `boost: false`, `emojiSuffix: '🌟'`, `create: true`), the owner's current
+  pack and `packsCount` reset. The document is reused if a retry finds it.
+
+Resuming: the name under attempt is written down (`create.state = 'creating'`,
+`create.attempt`) before the call. A name is only attempted after `getStickerSet`
+said nobody has it, so a run that finds the set under the attempted name and our
+title adopts it instead of creating another; a set with another title is
+somebody's and the next name is tried. After the create the seeded draft items
+become kept ones (`fileUniqueId`, `known`), `base` is the pack as made, and the
+normal phases go on. If the commit later fails, the pack stays (and is registered).
 
 ## Worker
 
@@ -115,7 +152,7 @@ Co-edit activity is not logged and the actor is not notified yet.
 ## Tests
 
 - `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, and the settings steps.
-- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates; the settings phase.
+- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates; the settings phase; creating a pack (names, the 50 limit, every fault).
 - `scripts/test-pack-ops-worker.js`: the worker on an in-memory repo and Telegram: claims (incl. a stale one), upload resume and reuse, the ways an upload ends, the sync.
 - `scripts/check-studio-worker-live.js`: the worker on a throwaway MongoDB and a test bot, incl. a settings-only commit (title with suffix, thumbnail set and dropped; not in `npm test`).
 - `scripts/check-pack-ops-live.js`: the same against the real API on a test bot (not in `npm test`).

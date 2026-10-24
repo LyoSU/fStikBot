@@ -28,6 +28,8 @@ function mongoRepo (db) {
       const locked = await db.PackLock.find({ expiresAt: { $gt: now } }).select('_id').lean()
       return db.PackCommit.findOne({
         name: { $nin: locked.map((lock) => lock._id) },
+        // A new pack changes its name once it is made; its lock keeps the first.
+        lockName: { $nin: locked.map((lock) => lock._id) },
         $or: [
           { status: 'pending' },
           { status: 'running', updatedAt: { $lt: new Date(now.getTime() - staleMs) } }

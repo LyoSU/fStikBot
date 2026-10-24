@@ -7,8 +7,11 @@
 // Seeds a pack (with bot-side sticker docs) and a queued commit with
 // studioassets that deletes one sticker, reorders, changes an emoji and adds
 // two new files; runs the worker; checks the pack in Telegram and the sticker
-// docs. Also checks a commit with an expired asset fails as asset_missing, and
-// that settings-only commits set the pack's title and thumbnail (and drop it).
+// docs. Also checks a commit with an expired asset fails as asset_missing,
+// that settings-only commits set the pack's title and thumbnail (and drop it),
+// that a create commit makes a new pack (name, title, documents), and that one
+// found after a crash right behind createNewStickerSet adopts the set instead
+// of making a second.
 //
 // Safety: MONGODB_URI from .env is never used (the production one lives
 // there) — the database is local, and a non-local STUDIO_LIVE_MONGODB_URI is
@@ -62,11 +65,12 @@ const png = (i) => sharp({
 }).png().toBuffer()
 
 let packName = null
+const madeNames = []
 async function cleanup () {
-  if (!packName) return
-  const name = packName
+  const names = [...madeNames, ...(packName ? [packName] : [])]
+  madeNames.length = 0
   packName = null
-  await call('deleteStickerSet', { name }).catch((err) => console.log(`  cleanup failed: ${err.message}`))
+  for (const name of names) await call('deleteStickerSet', { name }).catch((err) => console.log(`  cleanup failed: ${err.message}`))
 }
 process.on('SIGINT', () => { cleanup().finally(() => process.exit(130)) })
 
@@ -254,6 +258,99 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
   const dropped = await settle({ thumbnail: null }, 'live-3')
   check(dropped.status === 'succeeded', 'dropping the thumbnail succeeded', `${dropped.status}: ${dropped.error}`)
   check(!(await call('getStickerSet', { name: packName })).thumbnail, 'the thumbnail is gone')
+
+  // Creating a pack: two new files, auto name, the title with the bot suffix.
+  const newAssets = []
+  for (const i of [20, 21]) {
+    const data = await png(i)
+    newAssets.push(await db.StudioAsset.create({
+      telegramId: OWNER, sha256: crypto.createHash('sha256').update(data).digest('hex'), format: 'static', width: 512, height: 512, size: data.length, data
+    }))
+  }
+  const newDraft = () => newAssets.map((asset, i) => fresh(asset, [i ? '🤖' : '😀']))
+  const createCommit = (extra) => db.PackCommit.create({
+    name: `~new:${new db.connection.base.Types.ObjectId()}`,
+    ownerTelegramId: OWNER,
+    actorTelegramId: OWNER,
+    packType: 'regular',
+    boost: false,
+    status: 'queued',
+    phase: null,
+    steps: [],
+    mapping: null,
+    error: null,
+    base: [],
+    known: {},
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    ...extra
+  })
+  const settleCreate = async (id) => {
+    for (let i = 0; i < 6; i++) {
+      await worker.tick()
+      const state = await db.PackCommit.findById(id).lean()
+      if (['failed', 'conflict'].includes(state.status) || (state.status === 'succeeded' && state.synced)) break
+      await sleep(2000)
+    }
+    return db.PackCommit.findById(id).lean()
+  }
+
+  const title = `Studio live new ${Date.now().toString(36)}`
+  const made = await createCommit({
+    lockName: undefined,
+    idempotencyKey: 'live-create-1',
+    draft: newDraft(),
+    create: { title }
+  })
+  await db.PackCommit.updateOne({ _id: made._id }, { $set: { lockName: made.name } })
+  const created = await settleCreate(made._id)
+  check(created.status === 'succeeded' && created.synced === true, 'a create commit succeeded and synced', `${created.status}: ${created.error}`)
+  if (created.name && !created.name.startsWith('~')) madeNames.push(created.name)
+  check(created.name.endsWith(`_by_${me.username}`) && /^Studio_live_new_/i.test(created.name), 'the pack got a name from its title and the bot suffix', created.name)
+  const newSet = await call('getStickerSet', { name: created.name })
+  check(newSet.title === `${title} :: @${me.username}`, 'the new pack has the title with the bot suffix', newSet.title)
+  check(newSet.stickers.length === 2, 'the new pack holds both stickers', String(newSet.stickers.length))
+  const newPack = await db.StickerSet.findOne({ name: created.name }).lean()
+  check(!!newPack && newPack.create === true && newPack.packType === 'regular' && newPack.ownerTelegramId === OWNER && String(newPack.owner) === String(user._id), 'the pack document has owner, ownerTelegramId, packType and create', JSON.stringify(newPack))
+  check(newPack && newPack.title === newSet.title && newPack.boost === false && newPack.emojiSuffix === '🌟' && !newPack.placeholderFileUniqueId, 'the pack document has the title, no boost, the emoji suffix and no placeholder')
+  check(String(created.stickerSet) === String(newPack?._id), 'the commit points at the pack document')
+  const newDocs = await db.Sticker.find({ stickerSet: newPack?._id, deleted: { $ne: true } }).lean()
+  check(same(newDocs.map((d) => d.fileUniqueId).sort(), newSet.stickers.map((st) => st.file_unique_id).sort()), 'the sticker documents are exactly the new pack')
+  check(same(newSet.stickers.map((st) => st.emoji), ['😀', '🤖']), 'the stickers keep their emoji and order', newSet.stickers.map((st) => st.emoji).join(' '))
+  check((await db.User.findById(user._id).lean()).stickerSet?.equals(newPack._id), 'the owner\'s current pack is the new one')
+
+  // A crash right behind createNewStickerSet: the set exists, the commit still
+  // says `creating`. The run must adopt it, not create a second one.
+  const crashName = `studio_crash_${Date.now().toString(36)}_by_${me.username}`
+  const crashTitle = `Studio crash ${Date.now().toString(36)}`
+  // The files are already on Telegram's side (the first create uploaded them).
+  const uploaded = await db.StudioAsset.find({ _id: { $in: newAssets.map((a) => a._id) } }).lean()
+  const crashDraft = newDraft().map((item) => ({ ...item, file: { ...item.file, fileId: uploaded.find((a) => `a:${a._id}` === item.assetId).fileId } }))
+  check(crashDraft.every((item) => item.file.fileId), 'the first create left file_ids on its assets')
+  await call('createNewStickerSet', {
+    user_id: OWNER,
+    name: crashName,
+    title: `${crashTitle} :: @${me.username}`,
+    sticker_type: 'regular',
+    stickers: crashDraft.map((item) => ({ sticker: item.file.fileId, format: 'static', emoji_list: item.emojiList }))
+  })
+  madeNames.push(crashName)
+  const stale = new Date(Date.now() - 10 * 60 * 1000)
+  const crashed = await createCommit({
+    lockName: crashName,
+    name: crashName,
+    status: 'running',
+    updatedAt: stale,
+    idempotencyKey: 'live-create-2',
+    draft: crashDraft,
+    create: { title: crashTitle, names: [crashName], index: 0, formattedTitle: `${crashTitle} :: @${me.username}`, state: 'creating', attempt: crashName }
+  })
+  const resumed = await settleCreate(crashed._id)
+  check(resumed.status === 'succeeded' && resumed.synced === true, 'a create commit found `creating` adopts the existing set', `${resumed.status}: ${resumed.error}`)
+  check(resumed.name === crashName, 'it kept the name that was attempted', resumed.name)
+  check((await call('getStickerSet', { name: crashName })).stickers.length === 2, 'the pack still holds two stickers, none added twice')
+  check(await db.StickerSet.countDocuments({ name: crashName }) === 1, 'exactly one pack document')
+  check(await db.Sticker.countDocuments({ stickerSet: (await db.StickerSet.findOne({ name: crashName }).lean())?._id, deleted: { $ne: true } }) === 2, 'two sticker documents')
 
   await cleanup()
   await db.connection.dropDatabase()

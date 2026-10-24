@@ -1,14 +1,16 @@
 // pack-ops: publishing pack drafts (Studio) as resumable commits.
 //   plan.js     pure planning: conflicts, content, mapping, moves, metadata
 //   execute.js  the commit state machine, with injected telegram/store/lock
-//   store.js    MongoDB store, pack lock and uploaded files
+//   store.js    MongoDB store, pack lock, uploaded files, records of a new pack
+//   names.js    short names for new packs (shared with the /new wizard)
 //   title.js    the title as Telegram gets it (limit, bot suffix)
 // See pack-ops/README.md.
 
 const { runInCopyScope } = require('../utils/retry-api')
 const { runCommit, newCommit } = require('./execute')
-const { mongoStore, mongoLock, mongoAssets } = require('./store')
-const { createTitleFormatter } = require('./title')
+const { mongoStore, mongoLock, mongoAssets, mongoRegister } = require('./store')
+const { createTitleFormatter, createUsernameGetter } = require('./title')
+const metrics = require('../utils/metrics')
 const config = require('../config.json')
 const plan = require('./plan')
 
@@ -29,8 +31,16 @@ async function publishCommit (db, telegram, commitId, { onProgress } = {}) {
   const commit = await store.load(commitId)
   if (!commit) return null
   const assets = mongoAssets(db)
-  const formatTitle = createTitleFormatter(telegram, config)
-  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, onProgress }))
+  const botUsername = createUsernameGetter(telegram)
+  const formatTitle = createTitleFormatter(telegram, config, botUsername)
+  const makeRecords = mongoRegister(db)
+  const register = async (made) => {
+    const id = await makeRecords(made)
+    metrics.track('studio_pack_created')
+    return id
+  }
+  const nameTaken = (name) => db.StickerSet.exists({ name })
+  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, onProgress }))
 }
 
 module.exports = {

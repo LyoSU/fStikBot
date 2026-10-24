@@ -141,6 +141,49 @@ function fakeLock (world) {
   }
 }
 
+// A Telegram where the pack does not exist until createNewStickerSet makes it.
+// Pack methods go to an inner single-pack fake; `foreign` names belong to
+// someone else. Faults count over the outer calls.
+function fakeCreatingTelegram (world, { foreign = [] } = {}) {
+  const inner = fakeTelegram([], { faultAt: -1 })
+  const calls = []
+  const created = { name: null, times: 0 }
+  const taken = new Set(foreign)
+
+  return {
+    pack: inner.pack,
+    calls,
+    created,
+    async callApi (method, params) {
+      const index = calls.length
+      calls.push(method)
+      const fault = world.faultAt === index ? world.fault : null
+      if (fault === 'lost') throw networkError()
+      if (fault === 'crash-before') { world.crashed = true; throw new Crash('crash') }
+
+      let result
+      if (method === 'getStickerSet' && (taken.has(params.name) || params.name !== created.name)) {
+        if (!taken.has(params.name)) throw telegramError(400, 'Bad Request: STICKERSET_INVALID')
+        result = { title: 'Somebody else', stickers: [{ file_unique_id: 'foreign', file_id: 'fid:foreign', format: 'static' }] }
+      } else if (method === 'createNewStickerSet') {
+        if (taken.has(params.name) || created.name) throw telegramError(400, 'Bad Request: sticker set name is already occupied')
+        created.name = params.name
+        created.times++
+        created.params = params
+        inner.pack.title = params.title
+        inner.pack.stickers = params.stickers.map((st, i) => ({ uid: `c${i}`, from: st.sticker, emoji: st.emoji_list, keywords: st.keywords || [] }))
+        result = true
+      } else {
+        result = await inner.callApi(method, params)
+      }
+      result = JSON.parse(JSON.stringify(result))
+      if (fault === 'noreply') throw networkError()
+      if (fault === 'crash-after') { world.crashed = true; throw new Crash('crash') }
+      return result
+    }
+  }
+}
+
 const ids = (n, prefix) => Array.from({ length: n }, (_, i) => `${prefix}${i}`)
 
 function randomDraft (base, rand, tag) {
@@ -512,6 +555,180 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
       }
     })
   }
+
+  // Creating a pack
+  const botUsername = async () => 'bot'
+  const fresh = (n) => Array.from({ length: n }, (_, i) => ({ assetId: `a:${i}`, file: { studioAssetId: `s${i}`, format: 'static', fileId: `up${i}` }, emojiList: [i === 0 ? '😀' : '🙂'], ...(i === 1 ? { keywords: ['cat'] } : {}) }))
+  const createCommit = (n, create = {}) => newCommit({
+    name: '~new:1', ownerTelegramId: 7, base: [], draft: fresh(n), packType: 'regular', create: { title: 'My Cats', ...create }
+  })
+  const createDeps = (world, extra = {}) => {
+    const registered = []
+    return {
+      deps: { store: fakeStore(world), lock: fakeLock(world), formatTitle, botUsername, register: async (c) => { registered.push(c.name); return 'doc1' }, ...extra },
+      registered
+    }
+  }
+
+  await test('creating a pack: named like the wizard, titled with the bot suffix, first stickers in one call', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps, registered } = createDeps(world)
+    const commit = await runCommit(createCommit(3), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(commit.name, 'My_Cats_by_bot')
+    assert.strictEqual(tg.created.params.title, 'My Cats :: @bot')
+    assert.strictEqual(tg.created.params.sticker_type, 'regular')
+    assert.strictEqual(tg.created.params.user_id, 7)
+    assert.deepStrictEqual(tg.created.params.stickers.map((st) => st.sticker), ['up0', 'up1', 'up2'])
+    assert.deepStrictEqual(tg.created.params.stickers[1].keywords, ['cat'])
+    assert.ok(!tg.calls.includes('addStickerToSet'))
+    assert.deepStrictEqual(registered, ['My_Cats_by_bot'])
+    assert.strictEqual(commit.stickerSet, 'doc1')
+    assert.deepStrictEqual(commit.base, ['c0', 'c1', 'c2'])
+    assert.deepStrictEqual(commit.draft.map((item) => commit.mapping[item.assetId]), ['c0', 'c1', 'c2'])
+    // The seeded stickers already carry their emoji: nothing is set again.
+    assert.ok(!tg.calls.includes('setStickerEmojiList') && !tg.calls.includes('setStickerKeywords'))
+    assert.strictEqual(commit.lockName, '~new:1')
+    assert.strictEqual(commit.create.seeded, 3)
+  })
+
+  await test('creating a pack: more than 50 stickers, the rest are added in order', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const commit = await runCommit(createCommit(54), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(tg.created.params.stickers.length, 50)
+    assert.strictEqual(tg.calls.filter((m) => m === 'addStickerToSet').length, 4)
+    assert.deepStrictEqual(tg.pack.stickers.slice(50).map((st) => st.from), ['up50', 'up51', 'up52', 'up53'])
+  })
+
+  await test('creating a pack: an emoji pack and repainting go to Telegram', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const commit = await runCommit(newCommit({ name: '~new:2', ownerTelegramId: 7, base: [], draft: fresh(1), packType: 'custom_emoji', create: { title: 'Mono', needsRepainting: true } }), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(tg.created.params.sticker_type, 'custom_emoji')
+    assert.strictEqual(tg.created.params.needs_repainting, true)
+  })
+
+  await test('creating a pack: a title with a boost has no suffix and a long title is cut like the wizard cuts it', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const commit = createCommit(1, { title: 'A'.repeat(40) })
+    const done = await runCommit(commit, { telegram: tg, ...deps, formatTitle: async (c, t) => `${t.slice(0, 30)} :: @bot` })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.strictEqual(tg.created.params.title, `${'A'.repeat(30)} :: @bot`)
+  })
+
+  await test('creating a pack: a name taken in Telegram or in our database moves on to the next candidate', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world, { foreign: ['My_Cats_by_bot'] })
+    const taken = new Set()
+    const { deps } = createDeps(world, { nameTaken: async (name) => taken.has(name) })
+    // The second candidate is random; take whatever it is in our database too.
+    const commit = createCommit(1)
+    const probe = await runCommit(JSON.parse(JSON.stringify(commit)), { telegram: fakeCreatingTelegram({ faultAt: -1 }, { foreign: ['My_Cats_by_bot'] }), ...createDeps({ faultAt: -1 }).deps })
+    assert.match(probe.name, /^My_Cats_[0-9a-f]{4}_by_bot$/)
+    assert.strictEqual(probe.status, 'succeeded', probe.error)
+    taken.add(probe.create.names[1])
+    const done = await runCommit(commit, { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.match(done.name, /^My_Cats_[0-9a-f]{4}_by_bot$/)
+    assert.notStrictEqual(done.name, probe.create.names[1])
+  })
+
+  await test('creating a pack: every candidate taken fails the commit as name_occupied, nothing is made', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps, registered } = createDeps(world, { nameTaken: async () => true })
+    const commit = await runCommit(createCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'failed')
+    assert.strictEqual(commit.error, 'name_occupied')
+    assert.strictEqual(tg.created.times, 0)
+    assert.deepStrictEqual(registered, [])
+  })
+
+  await test('creating a pack: a custom link is used as given (plus the suffix) or the commit fails', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const ok = await runCommit(createCommit(1, { name: 'my_link' }), { telegram: tg, ...deps })
+    assert.strictEqual(ok.status, 'succeeded', ok.error)
+    assert.strictEqual(ok.name, 'my_link_by_bot')
+
+    const world2 = { faultAt: -1 }
+    const busy = await runCommit(createCommit(1, { name: 'my_link' }), { telegram: fakeCreatingTelegram(world2, { foreign: ['my_link_by_bot'] }), ...createDeps(world2).deps })
+    assert.strictEqual(busy.status, 'failed')
+    assert.strictEqual(busy.error, 'name_occupied')
+
+    const world3 = { faultAt: -1 }
+    const bad = await runCommit(createCommit(1, { name: '!!!' }), { telegram: fakeCreatingTelegram(world3), ...createDeps(world3).deps })
+    assert.strictEqual(bad.status, 'failed')
+    assert.strictEqual(bad.error, 'name_invalid')
+  })
+
+  await test('creating a pack: a refused sticker fails the commit and the pack is not registered', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const call = tg.callApi.bind(tg)
+    tg.callApi = (method, params) => (method === 'createNewStickerSet' ? Promise.reject(telegramError(400, 'Bad Request: STICKER_PNG_DIMENSIONS')) : call(method, params))
+    const { deps, registered } = createDeps(world)
+    const commit = await runCommit(createCommit(1), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'failed')
+    assert.match(commit.error, /STICKER_PNG_DIMENSIONS/)
+    assert.deepStrictEqual(registered, [])
+  })
+
+  for (const fault of ['lost', 'noreply', 'crash-before', 'crash-after']) {
+    await test(`a "${fault}" fault on every call of a create publish makes exactly one pack`, async () => {
+      const mk = () => createCommit(53)
+      const probeWorld = { faultAt: -1 }
+      const probe = fakeCreatingTelegram(probeWorld)
+      await runCommit(mk(), { telegram: probe, ...createDeps(probeWorld).deps })
+      for (let at = 0; at < probe.calls.length; at++) {
+        const world = { faultAt: at, fault }
+        const tg = fakeCreatingTelegram(world)
+        const label = `${fault} at call ${at} (${probe.calls[at]})`
+        const { deps, registered } = createDeps(world)
+        let commit = mk()
+        for (let run = 0; run < 10; run++) {
+          try {
+            commit = await runCommit(commit, { telegram: tg, ...deps })
+          } catch (err) {
+            if (!(err instanceof Crash)) throw err
+          }
+          if (world.crashed) {
+            world.crashed = false
+            deps.lock.expire(commit.lockName)
+            commit = JSON.parse(JSON.stringify(deps.store.saved))
+          }
+          world.faultAt = -1
+          if (['succeeded', 'failed', 'conflict'].includes(commit.status)) break
+        }
+        assert.strictEqual(commit.status, 'succeeded', `${label}: ${commit.status} ${commit.error}`)
+        assert.strictEqual(tg.created.times, 1, label)
+        assert.strictEqual(commit.name, 'My_Cats_by_bot', label)
+        assert.deepStrictEqual(tg.pack.stickers.map((st) => st.from), fresh(53).map((_, i) => `up${i}`), label)
+        assert.ok(registered.length >= 1 && registered.every((n) => n === commit.name), label)
+      }
+    })
+  }
+
+  await test('creating a pack: a set that appeared under the attempted name with another title is not adopted', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world, { foreign: ['My_Cats_by_bot'] })
+    const { deps } = createDeps(world)
+    const commit = createCommit(1)
+    // A run that wrote the attempt down and died before Telegram answered, after someone else took the name.
+    Object.assign(commit.create, { names: ['My_Cats_by_bot', 'My_Cats_2_by_bot'], index: 0, formattedTitle: 'My Cats :: @bot', state: 'creating', attempt: 'My_Cats_by_bot' })
+    const done = await runCommit(commit, { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.strictEqual(done.name, 'My_Cats_2_by_bot')
+  })
 
   console.log(`\n${passed} passed, ${failed} failed`)
   if (failed) process.exit(1)

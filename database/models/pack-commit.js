@@ -14,6 +14,10 @@ const packCommitSchema = mongoose.Schema({
   boost: Boolean,
   // Pack title and thumbnail to set once the stickers are in place (pack-ops/plan.js planSettings).
   settings: mongoose.Schema.Types.Mixed,
+  // Makes the pack first (pack-ops/execute.js createPack): { title, name?, needsRepainting?, ... }.
+  create: mongoose.Schema.Types.Mixed,
+  // The pack lock's key when it is not `name`: a new pack's name changes once it is made.
+  lockName: String,
   // Client-supplied: a double tap on "Publish" returns the same commit.
   idempotencyKey: String,
   status: { type: String, required: true },

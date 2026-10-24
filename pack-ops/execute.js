@@ -10,6 +10,7 @@
 // against the real API and MongoDB.
 
 const { hasConflict, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
+const { autoNameCandidates, customNameCandidates, NAME_REJECTED } = require('./names')
 
 // Commit status:
 //   pending      created, never run
@@ -49,6 +50,13 @@ const isGone = (err) => /STICKER_INVALID|sticker not found|STICKERSET_INVALID/i.
 // A title or thumbnail that is already what was asked for.
 const isNotModified = (err) => /not modified|NOT_MODIFIED/i.test(errorText(err))
 
+// createNewStickerSet takes at most this many stickers; the rest are added.
+const CREATE_BATCH = 50
+
+// Final errors of a create that the client explains in its own words.
+const NAME_OCCUPIED = 'name_occupied'
+const NAME_INVALID = 'name_invalid'
+
 const THUMBNAIL_EXT = { static: 'webp', animated: 'tgs', video: 'webm' }
 
 class Interrupted extends Error {}
@@ -63,20 +71,25 @@ class Interrupted extends Error {}
  * @param {{acquire: Function, extend: Function, release: Function}} deps.lock
  * @param {{load: Function}} [deps.assets] (assetId) => { data, format }, for a pack thumbnail
  * @param {Function} [deps.formatTitle] (commit, title) => the title as Telegram should get it
+ * @param {Function} [deps.botUsername] () => the bot's username, for a new pack's name
+ * @param {Function} [deps.nameTaken] (name) => whether our database already has a pack of that name
+ * @param {Function} [deps.register] (commit) => the new pack's document id; makes the bot's own records of it
  * @param {Function} [deps.onProgress] (commit) after every step
  * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
  * @returns {Promise<Object>} the commit, with its final status
  */
-async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
+async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
   if (commit.status === 'succeeded' || commit.status === 'conflict' || commit.status === 'failed') return commit
 
-  const token = await lock.acquire(commit.name, LOCK_TTL_MS)
+  // A new pack's name changes once it is made; the lock stays under the first.
+  const lockName = commit.lockName || commit.name
+  const token = await lock.acquire(lockName, LOCK_TTL_MS)
   if (!token) return commit // another run holds the pack; it will finish this
 
   // A single call can wait out a 429 for minutes, longer than the lock lives.
   // Keep extending it meanwhile; if it is lost anyway, the extend before the
   // next step notices and stops the run.
-  const renewal = setInterval(() => { lock.extend(commit.name, token, LOCK_TTL_MS).catch(() => {}) }, lockRenewMs)
+  const renewal = setInterval(() => { lock.extend(lockName, token, LOCK_TTL_MS).catch(() => {}) }, lockRenewMs)
   renewal.unref()
 
   const call = (method, params) => telegram.callApi(method, params)
@@ -91,6 +104,11 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     commit.status = 'running'
     commit.error = null
     await save()
+
+    if (commit.create && commit.create.state !== 'done') {
+      const made = await createPack(commit, { call, save, formatTitle, botUsername, nameTaken, register })
+      if (!made) return commit
+    }
 
     if (!commit.phase) {
       const set = await getSet()
@@ -112,7 +130,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     }
 
     if (commit.phase === 'content') {
-      await runSteps(commit, 'content', { call, getSet, save, lock, token })
+      await runSteps(commit, 'content', { call, getSet, save, lock, lockName, token })
       commit.phase = 'arrange'
       await save()
     }
@@ -140,7 +158,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
         for (const step of commit.steps) if (!step.phase) Object.assign(step, { phase: 'arrange', state: 'pending' })
         await save()
       }
-      await runSteps(commit, 'arrange', { call, getSet, save, lock, token })
+      await runSteps(commit, 'arrange', { call, getSet, save, lock, lockName, token })
       commit.phase = 'settings'
       await save()
     }
@@ -157,7 +175,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
         commit.steps.push(...steps)
         await save()
       }
-      await runSteps(commit, 'settings', { call, getSet, save, lock, token, assets })
+      await runSteps(commit, 'settings', { call, getSet, save, lock, lockName, token, assets })
       commit.phase = 'verify'
       await save()
     }
@@ -183,13 +201,13 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
   } finally {
     clearInterval(renewal)
     await save().catch(() => {})
-    await lock.release(commit.name, token).catch(() => {})
+    await lock.release(lockName, token).catch(() => {})
   }
 }
 
 // Steps of one phase, in order. A step left `running`/`uncertain` by an
 // earlier run is reconciled against the pack before anything else happens.
-async function runSteps (commit, phase, { call, getSet, save, lock, token, assets }) {
+async function runSteps (commit, phase, { call, getSet, save, lock, lockName, token, assets }) {
   // The pack as it stands, kept current: refetched after every add/replace
   // (to check what Telegram did) and patched locally after a delete.
   let set = await getSet()
@@ -238,7 +256,7 @@ async function runSteps (commit, phase, { call, getSet, save, lock, token, asset
       continue
     }
 
-    if (!await lock.extend(commit.name, token, LOCK_TTL_MS)) throw new Interrupted('lost the pack lock')
+    if (!await lock.extend(lockName, token, LOCK_TTL_MS)) throw new Interrupted('lost the pack lock')
 
     step.state = 'running'
     step.attempts = (step.attempts || 0) + 1
@@ -284,6 +302,114 @@ async function runSteps (commit, phase, { call, getSet, save, lock, token, asset
     step.state = 'succeeded'
     await save()
   }
+}
+
+// Makes the pack of a `create` commit, the way the /new wizard does: the first
+// names Telegram accepts wins, and the first stickers go into the same
+// createNewStickerSet call (it takes none empty). Resumable: the name under
+// attempt is written down before the call, so a run that finds it `creating`
+// asks Telegram whether the set is there before creating anything. A name is
+// only tried after getStickerSet says nobody has it, which is what makes an
+// existing set under the attempted name ours.
+//
+// On success the draft's first stickers become kept ones (they are in the
+// pack now), `base` is the pack as made, and the rest goes through the usual
+// content phase. Returns false when the commit has been settled as failed.
+async function createPack (commit, { call, save, formatTitle, botUsername, nameTaken, register }) {
+  const create = commit.create
+  const read = (name) => call('getStickerSet', { name }).catch((err) => {
+    if (isTelegramAnswer(err) && /STICKERSET_INVALID|not found/i.test(errorText(err))) return null
+    throw err
+  })
+
+  if (create.state !== 'created') {
+    if (!create.names) {
+      const suffix = `_by_${await botUsername()}`
+      create.names = create.name ? customNameCandidates(create.name, suffix) : autoNameCandidates(create.title, suffix)
+      if (!create.names) return refuseCreate(commit, NAME_INVALID, save)
+      create.formattedTitle = await formatTitle(commit, create.title)
+      create.index = 0
+      await save()
+    }
+
+    const seed = commit.draft.slice(0, CREATE_BATCH)
+    commit.known = commit.known || {}
+    let set = null
+    let reason = NAME_OCCUPIED
+
+    for (; create.index < create.names.length && !set; create.index++) {
+      const name = create.names[create.index]
+      const there = await read(name)
+
+      // Ours if the attempt was written down and the set carries our title.
+      if (there && create.state === 'creating' && create.attempt === name && there.title === create.formattedTitle) {
+        set = there
+        break
+      }
+      if (there || (nameTaken && await nameTaken(name))) continue
+
+      create.state = 'creating'
+      create.attempt = name
+      commit.name = name
+      await save()
+
+      try {
+        await call('createNewStickerSet', {
+          user_id: commit.ownerTelegramId,
+          name,
+          title: create.formattedTitle,
+          stickers: seed.map((item) => inputSticker(item, commit.format)),
+          sticker_type: commit.packType || 'regular',
+          needs_repainting: !!create.needsRepainting
+        })
+      } catch (err) {
+        // No answer: the set may exist. Stay `creating`; the next run asks.
+        if (!isTelegramAnswer(err) || !NAME_REJECTED.test(errorText(err))) throw err
+        reason = /invalid/i.test(errorText(err)) && !/occupied/i.test(errorText(err)) ? NAME_INVALID : NAME_OCCUPIED
+        create.state = 'pending'
+        continue
+      }
+      set = await read(name)
+      if (!set) throw Object.assign(new Error('the new pack is not visible yet'), { code: 'ENOTFOUND' })
+    }
+
+    if (!set) return refuseCreate(commit, reason, save)
+
+    const uids = uidsOf(set)
+    seed.forEach((item, i) => {
+      if (!uids[i]) return
+      item.fileUniqueId = uids[i]
+      delete item.file
+      commit.known[uids[i]] = { emojiList: item.emojiList, ...(item.keywords ? { keywords: item.keywords } : {}) }
+    })
+    commit.base = uids
+    commit.format = set.stickers[0]?.format
+    create.seeded = seed.length
+    create.state = 'created'
+    await save()
+
+    // Merged files shrink the set; the plan would be built on the wrong pack.
+    if (uids.length !== seed.length) {
+      commit.status = 'failed'
+      commit.error = `the pack was created, but ${DUPLICATE}`
+      return false
+    }
+  }
+
+  if (register && !create.registered) {
+    commit.stickerSet = await register(commit)
+    create.registered = true
+  }
+  create.state = 'done'
+  await save()
+  return true
+}
+
+function refuseCreate (commit, error, save) {
+  commit.status = 'failed'
+  commit.error = error
+  commit.create.state = 'pending'
+  return save().then(() => false)
 }
 
 const DUPLICATE = 'duplicate: Telegram keeps one sticker per file in a pack, and this file is already there'
@@ -402,8 +528,10 @@ function effectOf (commit, step, uids, prev) {
  * @param {Object} [params.known] fileUniqueId → { emojiList, keywords } from our DB
  * @param {Object} [params.settings] { title?, thumbnail? }, see plan.js planSettings
  * @param {string} [params.packType] 'regular' | 'custom_emoji'
+ * @param {Object} [params.create] makes the pack first: { title, name?, needsRepainting? };
+ *   `name` is the provisional one (and the lock's), `base` is []
  */
-function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, packType }) {
+function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, packType, create }) {
   return {
     name,
     ownerTelegramId,
@@ -412,6 +540,7 @@ function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, 
     known,
     ...(settings ? { settings } : {}),
     ...(packType ? { packType } : {}),
+    ...(create ? { create, lockName: name } : {}),
     status: 'pending',
     phase: null,
     steps: [],

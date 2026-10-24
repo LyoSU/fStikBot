@@ -75,4 +75,42 @@ function mongoLock (db) {
   }
 }
 
-module.exports = { mongoStore, mongoLock, mongoAssets, bytesOf }
+/**
+ * The bot's own records of a pack Studio has just made, the way the /new
+ * wizard leaves them: the pack document, the owner's current pack, and the
+ * cached pack counts reset so /packs recounts. Safe to repeat.
+ *
+ * @param {Object} db the bot's database (database/index.js)
+ * @returns {(commit: Object) => Promise<*>} the pack document's id
+ */
+function mongoRegister (db) {
+  return async (commit) => {
+    const owner = await db.User.findOne({ telegram_id: commit.ownerTelegramId }).select('_id').lean()
+    const packType = commit.packType || 'regular'
+
+    let pack = await db.StickerSet.findOne({ name: commit.name, ownerTelegramId: commit.ownerTelegramId }).select('_id').lean()
+    if (!pack) {
+      // Replaces a stale document of the same name, like the wizard does.
+      pack = await db.StickerSet.newSet({
+        owner: owner?._id,
+        ownerTelegramId: commit.ownerTelegramId,
+        name: commit.name,
+        title: commit.create.formattedTitle,
+        packType,
+        boost: false,
+        emojiSuffix: '🌟',
+        create: true
+      })
+    }
+
+    if (owner) {
+      await db.User.updateOne(
+        { _id: owner._id },
+        { $set: { stickerSet: pack._id, [`packsCount.${packType}`]: 0 } }
+      )
+    }
+    return pack._id
+  }
+}
+
+module.exports = { mongoStore, mongoLock, mongoAssets, mongoRegister, bytesOf }
