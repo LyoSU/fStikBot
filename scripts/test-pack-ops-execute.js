@@ -624,6 +624,24 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.strictEqual(tg.created.params.title, `${'A'.repeat(30)} :: @bot`)
   })
 
+  await test('creating a pack: a link Studio made from the title gets a random tail when taken', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world, { foreign: ['testovyi_pak_by_bot'] })
+    const { deps } = createDeps(world)
+    const commit = await runCommit(createCommit(1, { title: 'тестовий пак', name: 'testovyi_pak', nameAuto: true }), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.match(commit.name, /^testovyi_pak_[0-9a-f]{4}_by_bot$/)
+  })
+
+  await test('creating a pack: a link the user chose is the only one tried', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world, { foreign: ['my_pack_by_bot'] })
+    const { deps } = createDeps(world)
+    const commit = await runCommit(createCommit(1, { name: 'my_pack' }), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'failed')
+    assert.strictEqual(commit.error, 'name_occupied')
+  })
+
   await test('creating a pack: a name taken in Telegram or in our database moves on to the next candidate', async () => {
     const world = { faultAt: -1 }
     const tg = fakeCreatingTelegram(world, { foreign: ['My_Cats_by_bot'] })

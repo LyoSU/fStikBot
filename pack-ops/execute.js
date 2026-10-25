@@ -325,7 +325,11 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
   if (create.state !== 'created') {
     if (!create.names) {
       const suffix = `_by_${await botUsername()}`
-      create.names = create.name ? customNameCandidates(create.name, suffix) : autoNameCandidates(create.title, suffix)
+      // `nameAuto`: Studio made the link from the title itself (to show it); a
+      // taken one gets a random tail, as a link made here would.
+      create.names = create.name && !create.nameAuto
+        ? customNameCandidates(create.name, suffix)
+        : autoNameCandidates(create.name || create.title, suffix)
       if (!create.names) return refuseCreate(commit, NAME_INVALID, save)
       create.formattedTitle = await formatTitle(commit, create.title)
       create.index = 0
