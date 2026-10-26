@@ -61,7 +61,19 @@ function mongoRepo (db) {
 
     async findPack (commit) {
       const query = commit.stickerSet ? { _id: commit.stickerSet } : { name: commit.name }
-      return db.StickerSet.findOne(query).select('_id placeholderFileUniqueId').lean()
+      return db.StickerSet.findOne(query).select('_id placeholderFileUniqueId owner editors packType').lean()
+    },
+    // What scenes/pack-delete.js writes after deleteStickerSet: the pack and its
+    // stickers marked deleted, and nobody left with it as their current pack.
+    // The owner's cached pack count is reset so /packs recounts.
+    async writeRemoved (pack, now) {
+      await db.StickerSet.updateOne({ _id: pack._id }, { $set: { deleted: true } })
+      await db.Sticker.updateMany({ stickerSet: pack._id, deleted: { $ne: true } }, { $set: { deleted: true, deletedAt: now } })
+      const members = (pack.editors || []).map((entry) => entry.telegramId).filter((id) => id != null)
+      const users = { $or: [{ _id: pack.owner }, ...(members.length ? [{ telegram_id: { $in: members } }] : [])] }
+      await db.User.updateMany({ ...users, stickerSet: pack._id }, { $set: { stickerSet: null } })
+      await db.User.updateMany({ ...users, inlineStickerSet: pack._id }, { $set: { inlineStickerSet: null } })
+      await db.User.updateOne({ _id: pack.owner }, { $set: { [`packsCount.${pack.packType || 'regular'}`]: 0 } })
     },
     async liveStickerUids (packId) {
       const docs = await db.Sticker.find({ stickerSet: packId, deleted: { $ne: true } }).select('fileUniqueId').lean()
