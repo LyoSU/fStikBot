@@ -624,6 +624,18 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.strictEqual(tg.created.params.title, `${'A'.repeat(30)} :: @bot`)
   })
 
+  await test('creating a copy: it starts with Boost, yet its first title carries the suffix like the wizard\'s', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const boosted = async (c, t) => (c.boost ? t : `${t} :: @bot`)
+    const commit = { ...createCommit(2), boost: true }
+    const done = await runCommit(commit, { telegram: tg, ...deps, formatTitle: boosted })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.strictEqual(tg.created.params.title, 'My Cats :: @bot')
+    assert.strictEqual(done.boost, true)
+  })
+
   await test('creating a pack: a link Studio made from the title gets a random tail when taken', async () => {
     const world = { faultAt: -1 }
     const tg = fakeCreatingTelegram(world, { foreign: ['testovyi_pak_by_bot'] })

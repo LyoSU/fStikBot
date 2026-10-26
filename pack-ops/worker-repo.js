@@ -59,6 +59,17 @@ function mongoRepo (db) {
       await db.StudioAsset.updateOne({ _id: id }, { $set: { fileId, fileOwner: owner } })
     },
 
+    // Marks the charge refunded first, so two workers can't both pay it back.
+    async refundCharge (id, charge) {
+      const marked = await db.PackCommit.updateOne(
+        { _id: id, 'charge.refunded': { $ne: true } },
+        { $set: { 'charge.refunded': true } }
+      )
+      if (!marked.modifiedCount) return false
+      await db.User.updateOne({ _id: charge.user }, { $inc: { balance: charge.credits } })
+      return true
+    },
+
     async findPack (commit) {
       const query = commit.stickerSet ? { _id: commit.stickerSet } : { name: commit.name }
       return db.StickerSet.findOne(query).select('_id placeholderFileUniqueId owner editors packType').lean()
