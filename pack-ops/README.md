@@ -31,14 +31,21 @@ in section 7.1 there.
   create,                         // optional, see "Creating a pack"
   lockName,                       // the pack lock's key when it isn't `name` (a new pack)
   charge,                         // optional, see "Copies"
-  status, phase, steps, mapping, contentBase, format, error
+  status, phase, steps, mapping, contentBase, format, error,
+  rebased, outside, stale,        // set by the worker for a pack changed outside the draft
+  fresh, conflicts                // on a conflict: the pack as the server has it, and why
 }
 ```
 
 `status`: `pending` → `running` → `succeeded`, or stops at:
-- `conflict`: the pack changed since the draft was opened; nothing was done;
+- `conflict`: the pack changed outside the draft, touching what the draft changes; nothing was done;
 - `interrupted`: a 429 longer than the wait, a network error, a lost lock. Run it again to continue;
 - `failed`: Telegram refused a step, or the pack changed mid-publish. Steps before it stay applied.
+  `error` is Telegram's text, or one of the codes the client explains itself:
+  `bot_not_started` (the owner never started the bot: "user not found"),
+  `bot_blocked` (the owner blocked it), `pack_gone`, `name_occupied`,
+  `name_invalid`, `asset_missing`, `copy_missing`. The first two are the
+  owner's to fix and are not logged as worker faults.
 
 Phases run in order: create (only for a new pack), content (deletes, replaces, adds), then arrange (moves,
 emoji, keywords), then settings (title, thumbnail), then verify. Each step is saved as `running` before its
@@ -63,26 +70,63 @@ are whatever else the pack holds, in the order the content phase made them
 ## A pack edited elsewhere
 
 The Bot API answers `getStickerSet` from a copy it keeps, and a pack edited in
-a Telegram app or in @Stickers shows as it was for many minutes; only this
-bot's own next write that succeeds refreshes the copy (measured). The draft's
-`base` and the conflict check can stand on that old copy. So the conflict
-check also holds `base` against the server's own list (`freshUids`, `fresh.js`:
-MTProto, each document id turned into the file_unique_id the Bot API would
-show; tdlib's encoding, measured, not documented). It only stops a publish when
-that list matches some of `base` and differs otherwise; one that matches none
-is taken for a broken read (a warning, no check), and without MTProto there is
-none. A step may still meet a pack that is not what it read:
+a Telegram app or in @Stickers shows as it was for about 12 minutes; only this
+bot's own next write that succeeds refreshes the copy (measured). The API reads
+packs through the Bot API too, so the client's `base` can stand on that old
+copy, and reloading gives the same copy again. A conflict there would repeat on
+every publish until the copy expires (seen: one pack published 7 times in 7
+minutes, each a conflict).
 
-- a delete of a sticker already gone answers `STICKERSET_NOT_MODIFIED`. It is
-  done once `getStickerSet` no longer shows the sticker (true after any earlier
-  write of the commit); otherwise the commit fails as
-  `the pack changed outside the draft: <uid> was already deleted from it`;
-- a step on a set that is gone answers `STICKERSET_INVALID`, as does one on a
-  set another bot made. `readFresh` (`fresh.js`: MTProto `messages.getStickerSet`,
-  falling back to the Bot API) decides: a set the server doesn't know ends the
-  commit as `failed`, `packGone: true`, `error: 'pack_gone: … (STICKERSET_INVALID)'`,
-  and the worker marks the pack deleted as the bot's own delete does
-  (`writeRemoved`). A set that is there keeps Telegram's error and is not touched.
+So the worker plans on the pack as the server has it: `freshUids` (`fresh.js`,
+MTProto, each document id turned into the file_unique_id the Bot API would
+show; tdlib's encoding, measured, not documented). A read that matches none of
+`base` is taken for a broken one (a warning, and the copy is used), as is one
+that fails or a bot without MTProto.
+
+When that pack is not `base`, the draft is carried over to it by a three-way
+merge (`plan.js` `mergeOutside`: base → fresh is what changed outside, base →
+draft what the user changed):
+
+| Outside | In the draft | Result |
+|---|---|---|
+| deleted | kept as it was | stays deleted |
+| deleted | replaced, or other emoji/keywords | conflict |
+| deleted | deleted | nothing to do |
+| kept | deleted | deleted |
+| added | (not in it) | kept: right before the sticker that follows it in fresh (the nearest one left), else after the last sticker the pack already had |
+| | added | where the draft has it among the kept stickers |
+| moved | not moved | fresh's order |
+| not moved | moved | the draft's order |
+| moved | moved | the same order: that; another: conflict |
+| emoji/keywords | emoji/keywords | the draft's changes against our database are applied; Telegram doesn't show the outside ones in full |
+
+The merged draft is `commit.rebased` (the draft as sent stays: the job view
+counts on it), with an item `{ assetId: 'o:<uid>', fileUniqueId }` for each
+sticker added outside; it is never relabelled and the sync leaves it alone.
+`commit.outside` lists what was deleted and added. A conflict ends the commit
+with nothing done, `error: 'the pack changed outside the draft'`, `fresh` (the
+pack's file_unique_ids as the server has them) and `conflicts`
+(`[{ fileUniqueId?, reason }]`). A client can't rebase by sending `fresh` as
+its base unless its draft keeps every sticker in it: one it leaves out is a
+delete. It drops or redoes the conflicting edits and publishes again on its
+base, and the merge carries the rest.
+
+While the copy still lags (`commit.stale`), the steps read the pack's order and
+counts from `freshUids` and only file_ids from the copy; a sticker the copy
+doesn't have yet is looked up again after a write, when it has caught up.
+
+A delete of a sticker already gone (deleted elsewhere since the plan, or by an
+attempt whose answer got lost) answers `STICKERSET_NOT_MODIFIED`, or the copy no
+longer has it. Either way the delete has done what it was for: it is settled
+(`alreadyGone`) and the publish goes on. A deleted sticker has nothing else
+planned on it.
+
+A step on a set that is gone answers `STICKERSET_INVALID`, as does one on a
+set another bot made. `readFresh` (`fresh.js`: MTProto `messages.getStickerSet`,
+falling back to the Bot API) decides: a set the server doesn't know ends the
+commit as `failed`, `packGone: true`, `error: 'pack_gone: … (STICKERSET_INVALID)'`,
+and the worker marks the pack deleted as the bot's own delete does
+(`writeRemoved`). A set that is there keeps Telegram's error and is not touched.
 
 ## Pack settings
 
@@ -236,8 +280,8 @@ Co-edit activity is not logged and the actor is not notified yet.
 
 ## Tests
 
-- `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, and the settings steps.
-- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates left out; a file that comes back as its old sticker; a pack edited or deleted elsewhere; the settings phase; creating a pack (names, the 50 limit, every fault).
+- `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, the settings steps, and each merge rule plus 2000 random merges.
+- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates left out; a file that comes back as its old sticker; a pack edited or deleted elsewhere, incl. 60 random merges with a fault on every call; owners who never started or blocked the bot; the settings phase; creating a pack (names, the 50 limit, every fault).
 - `scripts/test-pack-ops-fresh.js`: the MTProto read and its fallback to the Bot API; file_unique_ids from document ids, and the guard against a read that matches nothing.
 - `scripts/test-pack-ops-remove.js`: deleting a pack: faults before and after the call, a set already gone, a set the bot can't delete, an older worker, the sync.
 - `scripts/test-pack-ops-worker.js`: the worker on an in-memory repo and Telegram: claims (incl. a stale one), upload resume and reuse, the ways an upload ends, the sync.

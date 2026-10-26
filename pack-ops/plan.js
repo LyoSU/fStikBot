@@ -228,8 +228,85 @@ function planSettings (settings) {
   return steps
 }
 
+/**
+ * A draft carried over to a pack that changed outside it since it was opened
+ * (a Telegram app, @Stickers, the bot's chat): a three-way merge of the
+ * outside changes (base → fresh) and the draft's (base → draft). Returns the
+ * draft as it applies to `fresh`, or the conflicts when both touched the same
+ * thing. The rules:
+ *
+ * - deleted outside, kept untouched in the draft: it stays deleted (dropped);
+ * - deleted outside, replaced or given other emoji/keywords in the draft: conflict;
+ * - deleted in both: nothing left to do (not in fresh, so no delete is planned);
+ * - deleted in the draft only: deleted, as planned against fresh;
+ * - added outside: kept, right before the sticker that follows it in fresh
+ *   (the nearest one left); with none, after the last sticker the pack
+ *   already had, so before the draft's new stickers at the end;
+ * - added in the draft: where the draft has it, among the kept stickers;
+ * - order of the stickers both keep: the draft's if it moved any of them,
+ *   else fresh's; moved on both sides into different orders: conflict;
+ * - emoji and keywords of a sticker both keep: the draft's changes (against
+ *   our database's values) are applied; Telegram doesn't show the outside
+ *   ones in full, so they can't be told apart.
+ *
+ * An added sticker becomes an item `{ assetId: 'o:<uid>', fileUniqueId }`
+ * without emoji: kept as it is, never relabelled.
+ *
+ * @param {string[]} base file_unique_ids the draft was opened on
+ * @param {string[]} fresh file_unique_ids in the pack now
+ * @param {DraftItem[]} draft
+ * @param {Map<string, {emojiList?: string[], keywords?: string[]}>} known
+ * @returns {{draft: DraftItem[]} | {conflicts: {fileUniqueId?: string, reason: string}[]}}
+ */
+function mergeOutside (base, fresh, draft, known) {
+  const inBase = new Set(base)
+  const inFresh = new Set(fresh)
+  const conflicts = []
+
+  const items = draft.filter((item) => {
+    if (!item.fileUniqueId || inFresh.has(item.fileUniqueId)) return true
+    if (item.file) conflicts.push({ fileUniqueId: item.fileUniqueId, reason: 'replaced in the draft, deleted outside' })
+    else if (planMetadata([item], known).length) conflicts.push({ fileUniqueId: item.fileUniqueId, reason: 'edited in the draft, deleted outside' })
+    return false
+  })
+
+  const kept = items.filter((item) => item.fileUniqueId).map((item) => item.fileUniqueId)
+  const keeps = new Set(kept)
+  const baseOrder = base.filter((id) => keeps.has(id))
+  const freshOrder = fresh.filter((id) => keeps.has(id))
+  const draftMoved = !sameList(kept, baseOrder)
+  const outsideMoved = !sameList(freshOrder, baseOrder)
+  if (draftMoved && outsideMoved && !sameList(kept, freshOrder)) {
+    conflicts.push({ reason: 'reordered in the draft and outside' })
+  }
+  if (conflicts.length) return { conflicts }
+
+  // The kept stickers fill the places they hold in the draft, in the order
+  // that won; the draft's new stickers keep theirs.
+  const byUid = new Map(items.filter((item) => item.fileUniqueId).map((item) => [item.fileUniqueId, item]))
+  const order = draftMoved ? kept : freshOrder
+  let next = 0
+  const result = items.map((item) => (item.fileUniqueId ? byUid.get(order[next++]) : item))
+
+  // Last to first, so each one's follower is already placed.
+  for (let i = fresh.length - 1; i >= 0; i--) {
+    const uid = fresh[i]
+    if (inBase.has(uid)) continue
+    let at = -1
+    for (let j = i + 1; j < fresh.length && at === -1; j++) {
+      at = result.findIndex((item) => item.fileUniqueId === fresh[j])
+    }
+    if (at === -1) at = result.map((item) => !!item.fileUniqueId).lastIndexOf(true) + 1
+    result.splice(at, 0, { assetId: `o:${uid}`, fileUniqueId: uid })
+  }
+
+  return { draft: result }
+}
+
 module.exports = {
   hasConflict,
+  sameList,
+  mergeOutside,
   planContent,
   mapAfterContent,
   planMoves,

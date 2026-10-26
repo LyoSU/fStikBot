@@ -11,7 +11,7 @@
 // See pack-ops/README.md.
 
 const { runInCopyScope } = require('../utils/retry-api')
-const { LOCK_TTL_MS } = require('./execute')
+const { LOCK_TTL_MS, ownerProblem } = require('./execute')
 const { bytesOf } = require('./store')
 const log = require('../utils/logger').scope('pack-ops:worker')
 const { logError } = require('../utils/error-line')
@@ -146,6 +146,12 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       }
       return await settle('pending')
     } catch (err) {
+      // An owner who hasn't started the bot, or blocked it, is theirs to fix.
+      const owner = isRefusal(err) && ownerProblem(err)
+      if (owner) {
+        log.info(`commit ${commit._id} preparing stopped: ${owner}`)
+        return settle('failed', owner)
+      }
       log.warn(`commit ${commit._id} preparing stopped:`, errorText(err))
       return settle(isRefusal(err) ? 'failed' : 'interrupted', errorText(err))
     } finally {
