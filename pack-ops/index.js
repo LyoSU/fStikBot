@@ -11,7 +11,7 @@ const { runInCopyScope } = require('../utils/retry-api')
 const { runCommit, newCommit } = require('./execute')
 const { mongoStore, mongoLock, mongoAssets, mongoRegister } = require('./store')
 const { createTitleFormatter, createUsernameGetter } = require('./title')
-const { createFreshReader } = require('./fresh')
+const { createFreshReader, createFreshUids } = require('./fresh')
 const telegramApi = require('../utils/telegram-api')
 const metrics = require('../utils/metrics')
 const config = require('../config.json')
@@ -44,7 +44,8 @@ async function publishCommit (db, telegram, commitId, { onProgress } = {}) {
   }
   const nameTaken = (name) => db.StickerSet.exists({ name })
   const readFresh = createFreshReader(telegram, telegramApi.getClient, telegramApi.Api)
-  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, readFresh, onProgress }))
+  const freshUids = createFreshUids(readFresh)
+  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, readFresh, freshUids, onProgress }))
 }
 
 module.exports = {
