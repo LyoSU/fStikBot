@@ -140,5 +140,15 @@ test('a failed or conflicting commit is one pack_commit line, a published one no
   assert.ok(!lines.join(' ').includes('cats_by') && !lines.join(' ').includes('123456789'))
 })
 
+test('an owner who has to start or unblock the bot is a warning, not a fault', () => {
+  const lines = capture(() => {
+    logOutcome({ _id: 'a', status: 'failed', create: {}, error: 'bot_not_started' })
+    logOutcome({ _id: 'b', status: 'failed', error: 'bot_blocked' })
+  })
+
+  assert.deepStrictEqual(lines.map(([level]) => level), ['warn', 'warn'])
+  assert.deepStrictEqual(lines.map(([, line]) => JSON.parse(line).code), ['bot_not_started', 'bot_blocked'])
+})
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)

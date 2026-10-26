@@ -47,8 +47,12 @@ function commitCode (error) {
   return normalize(text.replace(/\b\w+_by_\w+\b/gi, '<pack>')).slice(0, 80)
 }
 
+// The owner's to fix (start or unblock the bot), not the worker's fault.
+const OWNER_CODES = new Set(['bot_not_started', 'bot_blocked'])
+
 // A commit that ended without publishing, as one JSON line. A conflict is the
-// pack changing under the draft, so a warning; a failure is an error.
+// pack changing under the draft and an owner code the owner's to fix, so
+// warnings; any other failure is an error.
 function logOutcome (commit) {
   if (!commit || (commit.status !== 'failed' && commit.status !== 'conflict')) return
   const code = commitCode(commit.error)
@@ -56,7 +60,7 @@ function logOutcome (commit) {
   logError(code, {
     kind: 'pack_commit',
     where: `pack_commit:${op}`,
-    level: commit.status === 'conflict' ? 'warn' : 'error',
+    level: commit.status === 'conflict' || OWNER_CODES.has(code) ? 'warn' : 'error',
     fields: { status: commit.status, code, op, phase: commit.phase || 'prepare', commitId: String(commit._id) }
   })
 }
