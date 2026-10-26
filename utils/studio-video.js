@@ -12,6 +12,7 @@
 
 const { convertPriority, maxVideoDuration, queueTooBusy } = require('./video-convert-rules')
 const log = require('./logger').scope('studio-video')
+const { logError } = require('./error-line')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_VIDEO_TICK_MS, 10) || 1000
 // The converter drops a job older than this (CONVERT_MAX_JOB_AGE_MS there).
@@ -150,7 +151,7 @@ function createVideoConverter ({ repo, queue, runJob, now = () => new Date(), he
 
     const run = convert(claim)
       .catch(async (err) => {
-        log.error(`video ${video._id}:`, err.stack || err.message)
+        logError(err, { where: 'studio-video:convert' })
         await fail(claim, 'convert').catch(() => {})
       })
       .finally(() => {
@@ -174,7 +175,7 @@ function createVideoConverter ({ repo, queue, runJob, now = () => new Date(), he
           track(video)
         }
       } catch (err) {
-        log.error('tick failed:', err.stack || err.message)
+        logError(err, { where: 'studio-video:tick' })
       } finally {
         ticking = null
       }

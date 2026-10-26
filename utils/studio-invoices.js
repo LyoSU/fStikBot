@@ -14,6 +14,7 @@ const path = require('path')
 const I18n = require('telegraf-i18n')
 const { calculateStarPrice, CREDIT_PACKAGES } = require('../scenes/donate')
 const log = require('./logger').scope('studio-invoices')
+const { logError } = require('./error-line')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_INVOICE_TICK_MS, 10) || 1000
 // Studio stops waiting for a link after this long (the API's INVOICE_WAIT_MS);
@@ -100,7 +101,7 @@ function createInvoiceMaker ({ repo, telegram, i18n = defaultI18n(), now = () =>
       await repo.settle(payment, { price, 'invoice.state': 'ready', 'invoice.link': link })
       log.info(`payment ${payment._id}: invoice link for ${amount} credits (${price} XTR)`)
     } catch (err) {
-      log.warn(`payment ${payment._id}: createInvoiceLink failed:`, errorText(err))
+      logError(err, { where: 'studio-invoices:invoice' })
       await repo.settle(payment, { 'invoice.state': 'failed', 'invoice.error': errorText(err).slice(0, 200) })
     }
   }
@@ -123,7 +124,7 @@ function createInvoiceMaker ({ repo, telegram, i18n = defaultI18n(), now = () =>
           worked = !stopping && await step()
         } while (worked)
       } catch (err) {
-        log.error('tick failed:', err.stack || err.message)
+        logError(err, { where: 'studio-invoices:tick' })
       } finally {
         active = null
       }

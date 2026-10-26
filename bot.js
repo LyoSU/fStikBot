@@ -28,6 +28,7 @@ const launch = require('./bot/launch')
 const syncLocales = require('./bot/locale-sync')
 const { runPreflight } = require('./bot/preflight')
 const log = require('./utils/logger').scope('bot')
+const { logError } = require('./utils/error-line')
 
 const MONITOR_INTERVAL_MS = 25 * 1000
 
@@ -181,11 +182,11 @@ process.on('SIGINT', (signal) => { gracefulShutdown(signal || 'SIGINT') })
 // forgot to .catch — restarting the bot for those cost far more than it saved.
 // Genuinely corrupted state surfaces as an uncaughtException below.
 process.on('unhandledRejection', (reason) => {
-  log.error('Unhandled rejection:', reason instanceof Error ? reason.stack : reason)
+  logError(reason, { where: 'process:unhandledRejection' })
 })
 
 process.on('uncaughtException', (err, origin) => {
-  log.error(`Uncaught exception (origin=${origin}):`, err?.stack || err)
+  logError(err, { where: 'process:uncaughtException', fields: { origin } })
   // Don't try to clean up — state is unknown. PM2 will restart us.
   process.exit(1)
 })

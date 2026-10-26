@@ -8,6 +8,7 @@ const { isRateLimitError, getRetryAfter } = require('../utils/retry-api')
 const { redactErrorToken } = require('../utils/telegram-error')
 const log = require('../utils/logger').scope('error-handler')
 const { isExpectedNoise } = require('../utils/expected-noise')
+const { logError, contextOf } = require('../utils/error-line')
 const metrics = require('../utils/metrics')
 
 // Probe once at module load: is .git available at project root?
@@ -96,13 +97,14 @@ async function errorLog (error, ctx) {
 }
 
 module.exports = async (error, ctx) => {
-  if (isExpectedNoise(error)) return
-
   // Network-level errors carry the request URL — and with it the bot token —
   // in their message. Never let that reach stdout or the log channel.
   redactErrorToken(error)
 
-  log.error(error?.stack || error)
+  // A warning for what users and Telegram cause, an error otherwise.
+  logError(error, { where: 'bot', context: contextOf(ctx) })
+
+  if (isExpectedNoise(error)) return
 
   // Handle 429 rate limit errors gracefully.
   // Note: withRetry already logs `[Retry] 429 on <method>` — no dup here.
