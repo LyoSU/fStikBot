@@ -4,12 +4,15 @@
 //   store.js    MongoDB store, pack lock, uploaded files, records of a new pack
 //   names.js    short names for new packs (shared with the /new wizard)
 //   title.js    the title as Telegram gets it (limit, bot suffix)
+//   fresh.js    a set as Telegram's servers hold it now (MTProto), past the Bot API's copy
 // See pack-ops/README.md.
 
 const { runInCopyScope } = require('../utils/retry-api')
 const { runCommit, newCommit } = require('./execute')
 const { mongoStore, mongoLock, mongoAssets, mongoRegister } = require('./store')
 const { createTitleFormatter, createUsernameGetter } = require('./title')
+const { createFreshReader } = require('./fresh')
+const telegramApi = require('../utils/telegram-api')
 const metrics = require('../utils/metrics')
 const config = require('../config.json')
 const plan = require('./plan')
@@ -40,7 +43,8 @@ async function publishCommit (db, telegram, commitId, { onProgress } = {}) {
     return id
   }
   const nameTaken = (name) => db.StickerSet.exists({ name })
-  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, onProgress }))
+  const readFresh = createFreshReader(telegram, telegramApi.getClient, telegramApi.Api)
+  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, readFresh, onProgress }))
 }
 
 module.exports = {
