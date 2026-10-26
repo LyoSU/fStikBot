@@ -8,6 +8,7 @@ const addStickerText = require('./add-sticker-text')
 const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const { runQueueJob } = require('./queue-job')
+const { convertPriority, maxVideoDuration, queueTooBusy } = require('./video-convert-rules')
 const downloadFileByUrl = require('./download-file-by-url')
 const { MAX_INPUT_PIXELS } = require('./image-limits')
 const { removePlaceholderIfPending } = require('./placeholder')
@@ -865,14 +866,11 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
       video: true
     })
 
-    let priority = Math.round(stickerSetsCount / 3)
-    if (ctx.i18n.locale() === 'ru') priority += 40
-    if (stickerSet?.boost) priority = 5
-
-    const maxDuration = stickerSet?.boost ? 35 : 4
+    const priority = convertPriority({ videoPacks: stickerSetsCount, locale: ctx.i18n.locale(), boost: stickerSet?.boost })
+    const maxDuration = maxVideoDuration(stickerSet?.boost)
     const total = await convertQueue.getJobCounts()
 
-    if (total.waiting > 200 && priority > 50) {
+    if (queueTooBusy(total.waiting, priority)) {
       return { error: { i18nKey: 'sticker.add.error.timeout' } }
     }
 

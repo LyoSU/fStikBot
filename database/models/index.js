@@ -11,6 +11,7 @@ const PackActivity = require('./pack-activity')
 const PackCommit = require('./pack-commit')
 const PackLock = require('./pack-lock')
 const StudioAsset = require('./studio-asset')
+const StudioVideo = require('./studio-video')
 
 module.exports = {
   User,
@@ -25,5 +26,6 @@ module.exports = {
   PackActivity,
   PackCommit,
   PackLock,
-  StudioAsset
+  StudioAsset,
+  StudioVideo
 }
