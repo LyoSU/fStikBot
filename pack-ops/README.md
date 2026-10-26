@@ -216,7 +216,10 @@ bot's suffix (`formatTitle` as for a pack without Boost). A copy into the
 other pack type costs a credit, which the API takes before it queues the
 commit and writes down as `charge: { credits, user }`. When the commit ends
 `failed` (or `conflict`) before the pack was made, the worker gives it back
-once (`charge.refunded`, set atomically by `refundCharge`). Once the pack
+once: `refundCharge` adds the credit and marks the commit on the user
+(`refundedCommits`) in one update, so no second run pays it again, then sets
+`charge.refunded`. A refund that failed, or whose process died before that
+mark, is picked up again by `findUnrefunded` a minute later. Once the pack
 exists the credit stays spent, as in the wizard. An `interrupted` commit keeps
 it until it ends.
 

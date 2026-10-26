@@ -65,15 +65,31 @@ function mongoRepo (db) {
       })
     },
 
-    // Marks the charge refunded first, so two workers can't both pay it back.
+    // The credit and a mark of it on the user are one update, so it is paid
+    // once however often this runs (two workers, a retry after a crash); the
+    // commit is marked after. A crash in between leaves the commit unmarked,
+    // and findUnrefunded brings it back. True when this call paid it.
     async refundCharge (id, charge) {
-      const marked = await db.PackCommit.updateOne(
-        { _id: id, 'charge.refunded': { $ne: true } },
-        { $set: { 'charge.refunded': true } }
+      const paid = await db.User.updateOne(
+        { _id: charge.user, refundedCommits: { $ne: id } },
+        { $inc: { balance: charge.credits }, $push: { refundedCommits: { $each: [id], $slice: -100 } } }
       )
-      if (!marked.modifiedCount) return false
-      await db.User.updateOne({ _id: charge.user }, { $inc: { balance: charge.credits } })
-      return true
+      await db.PackCommit.updateOne({ _id: id }, { $set: { 'charge.refunded': true } })
+      return paid.modifiedCount > 0
+    },
+    // A charge still owed back: the commit ended without making the pack, and
+    // the refund didn't get marked (the process died, or the database failed).
+    async findUnrefunded (now, afterMs) {
+      return db.PackCommit.findOne({
+        status: { $in: ['failed', 'conflict'] },
+        'charge.credits': { $gt: 0 },
+        'charge.refunded': { $ne: true },
+        'create.state': { $nin: ['created', 'done'] },
+        updatedAt: { $lt: new Date(now.getTime() - afterMs) }
+      }).lean()
+    },
+    async touch (id, now) {
+      await db.PackCommit.updateOne({ _id: id }, { $set: { updatedAt: now } })
     },
 
     async findPack (commit) {
