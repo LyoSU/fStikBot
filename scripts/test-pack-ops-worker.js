@@ -70,7 +70,10 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     },
     async markSynced (id) { w.commits.find((c) => c._id === id).synced = true },
     async loadAsset (id) { return w.assets.has(id) ? { ...clone(w.assets.get(id)), data: w.assets.get(id).data } : null },
-    async setAssetFileId (id, fileId, owner) { Object.assign(w.assets.get(id), { fileId, fileOwner: owner }) },
+    async setAssetFileId (id, fileId, owner, { keepData } = {}) {
+      Object.assign(w.assets.get(id), { fileId, fileOwner: owner })
+      if (!keepData) delete w.assets.get(id).data
+    },
     async findPack () { return clone(w.pack) },
     async writeRemoved (pack) { w.removed.push(pack._id) },
     async refundCharge (id, charge) {
@@ -297,6 +300,26 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
       assert.strictEqual(w.commits[0].status, 'failed')
       assert.strictEqual(w.commits[0].error, code)
     }
+  })
+
+  await test('an uploaded file leaves the database, unless the commit still sends it as the thumbnail', async () => {
+    const w = world({ commits: [commit({ settings: { thumbnail: { assetId: 'y' } } })], assets: threeAssets() })
+    await w.worker.step()
+    assert.strictEqual(w.assets.get('x').data, undefined)
+    assert.ok(w.assets.get('y').data, 'the thumbnail keeps its bytes')
+    assert.strictEqual(w.assets.get('x').fileId, 'fid:x')
+  })
+
+  await test('a file whose bytes are gone is reused by its file_id, or for another owner asked for again', async () => {
+    const same = world({ commits: [commit()], assets: ['x', 'y', 'z'].map((id) => ({ ...asset(id, { fileId: `old:${id}`, fileOwner: OWNER }), data: undefined })) })
+    await same.worker.step()
+    assert.strictEqual(same.uploads.length, 0)
+    assert.strictEqual(same.published.length, 1)
+
+    const other = world({ commits: [commit()], assets: ['x', 'y', 'z'].map((id) => ({ ...asset(id, { fileId: `old:${id}`, fileOwner: 999 }), data: undefined })) })
+    await other.worker.step()
+    assert.strictEqual(other.commits[0].status, 'failed')
+    assert.strictEqual(other.commits[0].error, 'asset_missing')
   })
 
   await test('a lean Binary from Mongo is turned into a Buffer', async () => {

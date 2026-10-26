@@ -134,13 +134,19 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
         // A file_id from an earlier attempt, if it was made for this owner.
         let fileId = asset.fileId && asset.fileOwner === commit.ownerTelegramId ? asset.fileId : null
         if (!fileId) {
+          // Its bytes went once Telegram had it for another owner; Studio
+          // sends the file again for this one.
+          if (!asset.data) return await settle('failed', 'asset_missing')
           const uploaded = await runInCopyScope(() => telegram.callApi('uploadStickerFile', {
             user_id: commit.ownerTelegramId,
             sticker: { source: bytesOf(asset.data) },
             sticker_format: item.file.format || asset.format
           }))
           fileId = uploaded.file_id
-          await repo.setAssetFileId(asset._id, fileId, commit.ownerTelegramId)
+          // Telegram has the file now: its bytes leave the database, unless
+          // this commit still sends them itself, as the pack's thumbnail.
+          const keepData = commit.settings?.thumbnail?.assetId === String(asset._id)
+          await repo.setAssetFileId(asset._id, fileId, commit.ownerTelegramId, { keepData })
         }
 
         item.file.fileId = fileId

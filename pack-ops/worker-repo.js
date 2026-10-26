@@ -55,8 +55,14 @@ function mongoRepo (db) {
     async loadAsset (id) {
       return db.StudioAsset.findById(id).lean()
     },
-    async setAssetFileId (id, fileId, owner) {
-      await db.StudioAsset.updateOne({ _id: id }, { $set: { fileId, fileOwner: owner } })
+    // The bytes are dropped with it unless `keepData`: a retry finds the
+    // file_id on the commit, and Studio sends the file again if it is needed
+    // for another owner.
+    async setAssetFileId (id, fileId, owner, { keepData = false } = {}) {
+      await db.StudioAsset.updateOne({ _id: id }, {
+        $set: { fileId, fileOwner: owner },
+        ...(keepData ? {} : { $unset: { data: '' } })
+      })
     },
 
     // Marks the charge refunded first, so two workers can't both pay it back.

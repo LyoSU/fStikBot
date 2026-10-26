@@ -264,7 +264,10 @@ queued → preparing → pending → running → succeeded (+ synced)
   The `file_id` goes onto the item and the commit is saved after each upload,
   so a restart doesn't repeat finished ones; it is also kept on the
   `studioassets` doc (with `fileOwner`: a file_id is reused only for the same
-  owner). A missing asset fails the commit as `asset_missing`; a 4xx from
+  owner), and the file's bytes leave that doc (unless the commit sends them
+  itself as its thumbnail): a retry finds the file_id on the commit, and a
+  file asked for by another owner is one Studio uploads again (the API stores
+  the bytes anew; without them the commit fails as `asset_missing`). A missing asset fails the commit as `asset_missing`; a 4xx from
   Telegram (not 429) fails it with Telegram's text; a network error or a 429
   beyond the wait leaves it `interrupted` for the API to requeue.
 - **Run**: `pending` commits, and `running` ones not touched for the lock TTL,
