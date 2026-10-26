@@ -1,6 +1,8 @@
 // Enqueue a Bull job and wait for its result — the "add, race against a
 // timeout, handle a disabled queue" dance that photo-clear, video-round and
 // the sticker remove-bg path each used to spell out slightly differently.
+const { logError } = require('./error-line')
+
 const TIMEOUT = Symbol('timeout')
 
 /**
@@ -59,6 +61,15 @@ async function runQueueJob (queue, data, { timeoutMs, priority = 10, onQueued } 
 
   const outcome = await waitForJob(job, timeoutMs)
   if (outcome.result && !outcome.result.content) return { error: 'failed' }
+  // A worker that gave up or never answered; whoever waits handles the user.
+  if (outcome.error) {
+    logError(outcome.cause || outcome.error, {
+      kind: 'queue_failed',
+      where: `queue:${queue.name}`,
+      level: outcome.error === 'timeout' ? 'warn' : 'error',
+      fields: { outcome: outcome.error }
+    })
+  }
   return outcome
 }
 

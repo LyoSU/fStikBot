@@ -8,6 +8,7 @@ const addStickerText = require('./add-sticker-text')
 const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const { runQueueJob } = require('./queue-job')
+const { logError } = require('./error-line')
 const { convertPriority, maxVideoDuration, queueTooBusy } = require('./video-convert-rules')
 const downloadFileByUrl = require('./download-file-by-url')
 const { MAX_INPUT_PIXELS } = require('./image-limits')
@@ -229,7 +230,7 @@ function replyExtra (input) {
 
 convertQueue.on('global:failed', (jobId, errorData) => {
   handleConvertFailed(jobId, errorData).catch((err) => {
-    console.error('convertQueue global:failed handler failed:', err?.stack || err)
+    logError(err, { where: 'queue:convert:failed_handler' })
   })
 })
 
@@ -243,6 +244,12 @@ async function handleConvertFailed (jobId, errorData) {
   // Same reason as global:completed — one owner per job, or every replica
   // messages the user.
   if (isForeignJob(input)) return
+
+  logError(String(errorData), {
+    kind: 'queue_failed',
+    where: 'queue:convert',
+    level: errorData === 'timeout' ? 'warn' : 'error'
+  })
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 

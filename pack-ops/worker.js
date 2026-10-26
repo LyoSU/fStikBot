@@ -14,6 +14,8 @@ const { runInCopyScope } = require('../utils/retry-api')
 const { LOCK_TTL_MS } = require('./execute')
 const { bytesOf } = require('./store')
 const log = require('../utils/logger').scope('pack-ops:worker')
+const { logError } = require('../utils/error-line')
+const { normalize } = require('../utils/fingerprint')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
 // A `preparing` claim older than this is a dead process's. Uploads refresh it.
@@ -30,6 +32,34 @@ const errorCode = (err) => err?.code ?? err?.response?.error_code
 const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
 const formatOf = (sticker) => (sticker.is_animated ? 'animated' : sticker.is_video ? 'video' : 'static')
 const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >= 400 && errorCode(err) < 500 && errorCode(err) !== 429
+
+// What a commit did, for the log line: never its pack's name or its owner.
+const opOf = (commit) => (commit.remove ? 'remove' : commit.create ? 'create' : 'edit')
+
+// A failure's reason as a code that stays the same between two commits: the
+// worker's own (copy_missing), Telegram's (STICKERSET_INVALID), or else the
+// text without ids and numbers.
+function commitCode (error) {
+  const text = String(error || 'unknown')
+  if (/^[a-z][a-z_]*$/.test(text)) return text
+  const token = text.match(/\b[A-Z][A-Z0-9_]{3,}\b/)
+  if (token) return token[0]
+  return normalize(text.replace(/\b\w+_by_\w+\b/gi, '<pack>')).slice(0, 80)
+}
+
+// A commit that ended without publishing, as one JSON line. A conflict is the
+// pack changing under the draft, so a warning; a failure is an error.
+function logOutcome (commit) {
+  if (!commit || (commit.status !== 'failed' && commit.status !== 'conflict')) return
+  const code = commitCode(commit.error)
+  const op = opOf(commit)
+  logError(code, {
+    kind: 'pack_commit',
+    where: `pack_commit:${op}`,
+    level: commit.status === 'conflict' ? 'warn' : 'error',
+    fields: { status: commit.status, code, op, phase: commit.phase || 'prepare', commitId: String(commit._id) }
+  })
+}
 
 /**
  * @param {Object} deps
@@ -194,7 +224,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       if (await repo.refundCharge(commit._id, charge)) log.info(`commit ${commit._id}: ${charge.credits} credit(s) refunded`)
       charge.refunded = true
     } catch (err) {
-      log.error(`commit ${commit._id}: refund failed:`, errorText(err))
+      logError(err, { where: 'pack_commit:refund', fields: { commitId: String(commit._id) } })
     }
   }
 
@@ -208,7 +238,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       if (pack) await repo.writeRemoved(pack, now())
       log.info(`commit ${commit._id}: ${commit.name} is gone from Telegram, marked deleted`)
     } catch (err) {
-      log.error(`commit ${commit._id}: marking ${commit.name} deleted failed:`, errorText(err))
+      logError(err, { where: 'pack_commit:mark_deleted', fields: { commitId: String(commit._id) } })
     }
   }
 
@@ -217,6 +247,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     if (result?.status === 'succeeded') {
       await trySync(result)
     } else {
+      logOutcome(result)
       if (result?.packGone) await writeGone(result)
       await refundIfUnmade(result)
     }
@@ -229,7 +260,10 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     if (claimed) {
       const prepared = await prepare(claimed)
       if (prepared.status === 'pending') await run(prepared)
-      else await refundIfUnmade(prepared)
+      else {
+        logOutcome(prepared)
+        await refundIfUnmade(prepared)
+      }
       return true
     }
 
@@ -258,7 +292,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
           worked = !stopping && await step()
         } while (worked)
       } catch (err) {
-        log.error('tick failed:', err.stack || err.message)
+        logError(err, { where: 'pack-ops:tick' })
       } finally {
         active = null
       }
@@ -307,6 +341,8 @@ function getWorker () {
 
 module.exports = {
   createWorker,
+  commitCode,
+  logOutcome,
   getWorker,
   start: () => getWorker().start(),
   stop: () => (instance ? instance.stop() : Promise.resolve())
