@@ -47,9 +47,16 @@ const catalogRows = async (ctx, stickerSet) => {
 // Opens the Studio Mini App on the pack. web_app buttons only work in private
 // chats, and the Studio only accepts the owner and co-edit members — not the
 // shared demo pack, inline packs or deleted ones.
+// STUDIO_BETA_USERS (comma-separated Telegram ids) limits the button to a
+// closed beta; unset, everyone who qualifies sees it.
+const studioBetaUser = (ctx) => {
+  const list = (process.env.STUDIO_BETA_USERS || '').split(',').map(id => id.trim()).filter(Boolean)
+  return list.length === 0 || list.includes(String(ctx.from?.id))
+}
+
 const studioButton = (ctx, stickerSet, access, hidden) => {
   const base = (process.env.STUDIO_URL || '').replace(/\/+$/, '')
-  if (!base || hidden || stickerSet.inline || stickerSet.deleted || stickerSet.passcode === 'public') return null
+  if (!base || !studioBetaUser(ctx) || hidden || stickerSet.inline || stickerSet.deleted || stickerSet.passcode === 'public') return null
   if (ctx.chat?.type !== 'private' || !['owner', 'editor', 'contributor'].includes(access?.role)) return null
   return {
     text: ctx.i18n.t('callback.pack.btn.open_studio'),
