@@ -7,12 +7,22 @@
 // tokens and initData out of whatever is logged.
 const crypto = require('node:crypto')
 
+// Names under which a credential travels, as a query field or a JSON key.
+const CREDENTIALS = 'user_token|access_token|refresh_token|id_token|token|session_id|sessionid|session|' +
+  'hash|signature|query_id|auth_date|authorization|auth|initData|tgWebAppData|password|secret|api_key|apikey'
+
 // What could identify a user or a session, wherever it ends up in a message
 // or a stack: a bot token, an initData or login field, any long opaque run.
 const SECRETS = [
   // No \b: in a URL the token follows "/bot" with no boundary before it.
   [/\d{6,}:[\w-]{30,}/g, '<token>'],
-  [/\b(user_token|token|hash|signature|query_id|auth_date|user|initData|tgWebAppData)=[^&\s"')]+/gi, '$1=<redacted>'],
+  [new RegExp(`\\b(${CREDENTIALS}|user)=[^&\\s"')]+`, 'gi'), '$1=<redacted>'],
+  // The same names as keys of a JSON body or a JS object, quoted or quoted
+  // inside a string (\"token\":\"...\"): a value of any length goes, short
+  // ones too, which the opaque-run rule below would let through.
+  [new RegExp(`(\\\\?["'])(${CREDENTIALS})\\1(\\s*:\\s*)\\1(?:(?!\\1)[^\\\\])*`, 'gi'), '$1$2$1$3$1<redacted>'],
+  // An Authorization header's value (Bearer, or Telegram's "tma <initData>").
+  [/\b(Bearer|tma)\s+[^\s"',;]+/gi, '$1 <redacted>'],
   // Letters and digits mixed: a long identifier or a run of one letter is not a secret.
   [/(?=[A-Za-z0-9+_-]*\d)(?=[A-Za-z0-9+_-]*[A-Za-z])[A-Za-z0-9+_-]{40,}={0,2}/g, '<redacted>']
 ]
