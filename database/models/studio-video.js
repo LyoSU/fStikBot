@@ -24,6 +24,9 @@ const studioVideoSchema = mongoose.Schema({
   width: Number,
   height: Number,
   size: Number,
+  // The convert queue's job for it: a process that takes the video over after
+  // a restart waits on this job instead of converting the video again.
+  jobId: String,
   claimedAt: Date,
   attempts: Number,
   updatedAt: Date,

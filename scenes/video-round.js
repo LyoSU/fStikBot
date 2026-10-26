@@ -40,7 +40,9 @@ async function processVideo (ctx, fileUrl) {
 
   const outcome = await runQueueJob(videoNoteQueue, {
     fileUrl: typeof fileUrl === 'string' ? fileUrl : fileUrl.href,
-    maxDuration: 60
+    maxDuration: 60,
+    // Nobody waits longer than this: the converter drops the job past it.
+    maxAgeMs: TIMEOUT_MS
   }, {
     priority: ctx.i18n.locale() === 'ru' ? 15 : 10,
     timeoutMs: TIMEOUT_MS,

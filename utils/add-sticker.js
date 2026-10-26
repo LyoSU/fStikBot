@@ -9,7 +9,7 @@ const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const { runQueueJob } = require('./queue-job')
 const { logError } = require('./error-line')
-const { convertPriority, maxVideoDuration, queueTooBusy } = require('./video-convert-rules')
+const { convertPriority, convertRank, maxVideoDuration, queueTooBusy, convertFailure, jobFields } = require('./video-convert-rules')
 const downloadFileByUrl = require('./download-file-by-url')
 const { MAX_INPUT_PIXELS } = require('./image-limits')
 const { removePlaceholderIfPending } = require('./placeholder')
@@ -245,25 +245,28 @@ async function handleConvertFailed (jobId, errorData) {
   // messages the user.
   if (isForeignJob(input)) return
 
+  // A job that waited too long is load, not the video: no message to the log
+  // chat for it, the JSON line is the record (a burst used to post hundreds).
+  const failure = convertFailure(errorData)
+
   logError(String(errorData), {
     kind: 'queue_failed',
     where: 'queue:convert',
-    level: errorData === 'timeout' ? 'warn' : 'error'
+    level: failure.level,
+    fields: { code: failure.code, ...jobFields(job) }
   })
 
   if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
-  trackVideo(input, { error: { i18nKey: errorData === 'timeout' ? 'timeout' : 'convert' } })
+  trackVideo(input, { error: { i18nKey: failure.metric } })
 
-  if (errorData === 'timeout') {
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.timeout'), replyExtra(input)).catch(() => {})
-  } else {
+  if (failure.logChat) {
     await telegram.sendMessage(config.logChatId, `<b>Convert error</b>\n\n<code>${escapeHTML(JSON.stringify(errorData))}</code>`, {
       parse_mode: 'HTML'
     }).catch(() => {})
-
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
   }
+
+  await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', failure.i18nKey), replyExtra(input)).catch(() => {})
 
   await job.remove().catch(() => {})
 }
@@ -873,11 +876,12 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
       video: true
     })
 
-    const priority = convertPriority({ videoPacks: stickerSetsCount, locale: ctx.i18n.locale(), boost: stickerSet?.boost })
+    const owner = { videoPacks: stickerSetsCount, locale: ctx.i18n.locale(), boost: stickerSet?.boost }
+    const priority = convertPriority(owner)
     const maxDuration = maxVideoDuration(stickerSet?.boost)
     const total = await convertQueue.getJobCounts()
 
-    if (queueTooBusy(total.waiting, priority)) {
+    if (queueTooBusy(total.waiting, convertRank(owner))) {
       return { error: { i18nKey: 'sticker.add.error.timeout' } }
     }
 
