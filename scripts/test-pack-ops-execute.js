@@ -10,6 +10,7 @@
 
 const assert = require('assert')
 const { runCommit, newCommit } = require('../pack-ops/execute')
+const { mergeOutside } = require('../pack-ops/plan')
 
 let passed = 0
 let failed = 0
@@ -255,11 +256,11 @@ function assertPackMatches (pack, draft, label) {
 
 // Runs the commit, resuming after every fault from the last saved state,
 // until it settles. Returns the final commit.
-async function runToEnd (initialCommit, tg, store, lock, world) {
+async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
   let commit = initialCommit
   for (let run = 0; run < 10; run++) {
     try {
-      commit = await runCommit(commit, { telegram: tg, store, lock })
+      commit = await runCommit(commit, { telegram: tg, store, lock, ...deps })
     } catch (err) {
       if (!(err instanceof Crash)) throw err
     }
@@ -286,14 +287,6 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.strictEqual(commit.status, 'succeeded', commit.error)
     assert.ok(commit.steps.every((s) => s.state === 'succeeded'))
     assertPackMatches(tg.pack, draft, 'clean')
-  })
-
-  await test('a pack changed since the draft opened is refused untouched', async () => {
-    const world = { faultAt: -1 }
-    const tg = fakeTelegram(['x', 'y', 'z'], world)
-    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x', 'y'], draft: [] }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
-    assert.strictEqual(commit.status, 'conflict')
-    assert.deepStrictEqual(tg.pack.stickers.map((s) => s.uid), ['x', 'y', 'z'])
   })
 
   await test('a second run while the pack is locked does nothing', async () => {
@@ -485,28 +478,128 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['c'])
   })
 
-  await test('a sticker deleted in a Telegram app while the bot sees the old pack stops the publish as changed', async () => {
+  // A pack edited outside (a Telegram app) after the draft was opened, while
+  // the Bot API's copy still shows it as it was: the draft is carried over to
+  // the pack as the server has it (plan.js mergeOutside).
+  const serverUids = (tg) => async () => tg.pack.stickers.map((st) => st.uid)
+
+  await test('a pack changed outside: the draft goes onto the pack as the server has it', async () => {
     const world = { faultAt: -1 }
-    const tg = fakeTelegram(['a', 'b'], world)
-    tg.outOfBand((pack) => pack.stickers.splice(1, 1))
-    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }]
-    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
-    assert.strictEqual(commit.status, 'failed')
-    assert.match(commit.error, /^the pack changed outside the draft: b was already deleted/)
-    assert.strictEqual(commit.steps[0].state, 'failed')
-    assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['a'])
+    const tg = fakeTelegram(['a', 'b', 'c', 'd'], world)
+    tg.outOfBand((pack) => {
+      pack.stickers.splice(1, 1) // b deleted in the app
+      pack.stickers.push({ uid: 'o1', from: 'outside', emoji: ['🐶'], keywords: [] }) // and one added
+    })
+    // The user, on the old copy: drops d, moves c first, relabels a, adds one at the end.
+    const draft = [
+      { assetId: 'a-c', fileUniqueId: 'c', emojiList: ['🙂'] },
+      { assetId: 'a-a', fileUniqueId: 'a', emojiList: ['😀'] },
+      { assetId: 'a-b', fileUniqueId: 'b', emojiList: ['🙂'] },
+      { assetId: 'n', file: { fileId: 'up:n' }, emojiList: ['🐱'] }
+    ]
+    const known = { a: { emojiList: ['🙂'] }, b: { emojiList: ['🙂'] }, c: { emojiList: ['🙂'] }, d: { emojiList: ['🙂'] } }
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b', 'c', 'd'], draft, known }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), freshUids: serverUids(tg) })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    // o1 was last: it stays after the pack's own stickers, before the new one.
+    assert.deepStrictEqual(tg.pack.stickers.map((st) => (st.from && st.from !== 'outside' ? st.from : st.uid)), ['c', 'a', 'o1', 'up:n'])
+    assert.deepStrictEqual(tg.pack.stickers.find((st) => st.uid === 'a').emoji, ['😀'])
+    assert.deepStrictEqual(tg.pack.stickers.find((st) => st.uid === 'o1').emoji, ['🐶'], 'an outside sticker is left as it is')
+    assert.deepStrictEqual(commit.outside, { deleted: ['b'], added: ['o1'] })
+    assert.deepStrictEqual(commit.draft, draft, 'the draft as sent stays for the job view')
   })
 
-  await test('a pack the server holds otherwise than the Bot API\'s copy stops as a conflict, untouched', async () => {
+  await test('a pack changed outside where the draft touched the same sticker: a conflict with the fresh pack, untouched', async () => {
     const world = { faultAt: -1 }
     const tg = fakeTelegram(['a', 'b'], world)
-    tg.outOfBand((pack) => pack.stickers.splice(1, 1)) // b, deleted in the app
-    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }]
-    const freshUids = async () => tg.pack.stickers.map((st) => st.uid)
-    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), freshUids })
+    tg.outOfBand((pack) => pack.stickers.splice(1, 1)) // b deleted in the app
+    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }, { assetId: 'a-b', fileUniqueId: 'b', file: { fileId: 'up:b' }, emojiList: ['🙂'] }]
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), freshUids: serverUids(tg) })
     assert.strictEqual(commit.status, 'conflict')
+    assert.strictEqual(commit.error, 'the pack changed outside the draft')
+    assert.deepStrictEqual(commit.fresh, ['a'])
+    assert.deepStrictEqual(commit.conflicts, [{ fileUniqueId: 'b', reason: 'replaced in the draft, deleted outside' }])
     assert.deepStrictEqual(tg.calls, ['getStickerSet'])
   })
+
+  await test('the same draft published again over a lagging copy now succeeds instead of looping', async () => {
+    // Prod: 7 publishes in 7 minutes with one base, each a conflict, because
+    // reloading through the API gave the same old copy every time.
+    const world = { faultAt: -1 }
+    const base = ['a', 'b', 'c', 'd', 'e']
+    const tg = fakeTelegram(base, world)
+    tg.outOfBand((pack) => pack.stickers.push({ uid: 'o1', from: 'outside', emoji: ['🐶'], keywords: [] }))
+    const draft = base.map((uid) => ({ assetId: `a-${uid}`, fileUniqueId: uid, emojiList: ['🙂'] }))
+    draft.push({ assetId: 'n', file: { fileId: 'up:n' }, emojiList: ['🐱'] })
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), freshUids: serverUids(tg) })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['a', 'b', 'c', 'd', 'e', 'o1', commit.mapping.n])
+  })
+
+  for (const fresh of [false, true]) {
+    await test(`a delete of a sticker already gone is done, and the publish goes on${fresh ? ' (with a fresh read)' : ''}`, async () => {
+      const world = { faultAt: -1 }
+      const tg = fakeTelegram(['a', 'b', 'c'], world)
+      // Deleted elsewhere after the plan saw it: the delete meets it gone,
+      // while the copy goes on showing it.
+      const real = tg.callApi.bind(tg)
+      tg.callApi = async (method, params) => {
+        if (method === 'deleteStickerFromSet' && params.sticker === 'fid:b') tg.outOfBand((pack) => pack.stickers.splice(1, 1))
+        return real(method, params)
+      }
+      const draft = [{ assetId: 'a-c', fileUniqueId: 'c', emojiList: ['🙂'] }, { assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }]
+      const deps = { telegram: tg, store: fakeStore(world), lock: fakeLock(world), ...(fresh ? { freshUids: serverUids(tg) } : {}) }
+      const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b', 'c'], draft }), deps)
+      assert.strictEqual(commit.status, 'succeeded', commit.error)
+      assert.strictEqual(commit.steps.find((step) => step.kind === 'delete').alreadyGone, true)
+      assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['c', 'a'])
+    })
+  }
+
+  for (const fault of ['lost', 'noreply', 'crash-before', 'crash-after']) {
+    await test(`a "${fault}" fault on every call of 60 publishes over packs changed outside ends as the merge says`, async () => {
+      const rand = rng(fault.length * 7919)
+      let runs = 0
+      let conflicts = 0
+      for (let round = 0; round < 60; round++) {
+        const base = ids(2 + Math.floor(rand() * 6), `m${round}-`)
+        const draft = randomDraft(base, rand, `${fault}m${round}`)
+        // One outside change per round: some deleted, some added anywhere.
+        const changed = base.filter(() => rand() >= 0.2).map((uid) => ({ uid, emoji: ['🙂'], keywords: [] }))
+        const added = Math.floor(rand() * 3)
+        for (let i = 0; i < added; i++) {
+          changed.splice(Math.floor(rand() * (changed.length + 1)), 0, { uid: `o${round}-${i}`, from: `outside:${round}:${i}`, emoji: ['🐶'], keywords: [] })
+        }
+        const known = Object.fromEntries(base.map((uid) => [uid, { emojiList: ['🙂'] }]))
+        const merged = mergeOutside(base, changed.map((st) => st.uid), draft, new Map(Object.entries(known)))
+        const setup = (world) => {
+          const tg = fakeTelegram(base, world)
+          tg.outOfBand((pack) => { pack.stickers = changed.map((st) => ({ ...st })) })
+          return tg
+        }
+
+        const probeWorld = { faultAt: -1 }
+        const probe = setup(probeWorld)
+        const plain = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base, draft, known }), { telegram: probe, store: fakeStore(probeWorld), lock: fakeLock(probeWorld), freshUids: serverUids(probe) })
+        if (merged.conflicts) {
+          assert.strictEqual(plain.status, 'conflict', `round ${round}`)
+          conflicts++
+          continue
+        }
+        const want = merged.draft.map((item) => (item.file ? item.file.fileId : item.fileUniqueId))
+
+        for (let at = 0; at < probe.calls.length; at++) {
+          const world = { faultAt: at, fault }
+          const tg = setup(world)
+          const commit = await runToEnd(newCommit({ name: 'p', ownerTelegramId: 1, base, draft, known }), tg, fakeStore(world), fakeLock(world), world, { freshUids: serverUids(tg) })
+          const label = `round ${round}, ${fault} at call ${at} (${probe.calls[at]})`
+          assert.strictEqual(commit.status, 'succeeded', `${label}: ${commit.status} ${commit.error}`)
+          assert.deepStrictEqual(tg.pack.stickers.map((st) => (st.from && !st.from.startsWith('outside') ? st.from : st.uid)), want, label)
+          runs++
+        }
+      }
+      assert.ok(runs > 100 && conflicts < 60, `${runs} faulted runs, ${conflicts} conflicts`)
+    })
+  }
 
   await test('a fresh read that is unknown or fails leaves the conflict check to the Bot API\'s copy', async () => {
     for (const freshUids of [async () => null, async () => { throw new Error('mtproto down') }]) {
@@ -838,6 +931,20 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.strictEqual(bad.status, 'failed')
     assert.strictEqual(bad.error, 'name_invalid')
   })
+
+  for (const [description, code] of [['Bad Request: user not found', 'bot_not_started'], ['Forbidden: bot was blocked by the user', 'bot_blocked']]) {
+    await test(`creating a pack for an owner Telegram won't serve: ${code}`, async () => {
+      const world = { faultAt: -1 }
+      const tg = fakeCreatingTelegram(world)
+      const call = tg.callApi.bind(tg)
+      tg.callApi = (method, params) => (method === 'createNewStickerSet' ? Promise.reject(telegramError(description.startsWith('Forbidden') ? 403 : 400, description)) : call(method, params))
+      const { deps, registered } = createDeps(world)
+      const commit = await runCommit(createCommit(1), { telegram: tg, ...deps })
+      assert.strictEqual(commit.status, 'failed')
+      assert.strictEqual(commit.error, code)
+      assert.deepStrictEqual(registered, [])
+    })
+  }
 
   await test('creating a pack: a refused sticker fails the commit and the pack is not registered', async () => {
     const world = { faultAt: -1 }

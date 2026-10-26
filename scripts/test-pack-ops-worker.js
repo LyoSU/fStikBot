@@ -286,6 +286,19 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.deepStrictEqual(w.published, [])
   })
 
+  await test('an owner who never started the bot, or blocked it, fails the commit with a stable code', async () => {
+    for (const [error, code] of [
+      [telegramError(400, 'Bad Request: user not found'), 'bot_not_started'],
+      [telegramError(403, 'Forbidden: bot was blocked by the user'), 'bot_blocked']
+    ]) {
+      const w = world({ commits: [commit()], assets: threeAssets() })
+      w.uploadFails[0] = error
+      await w.worker.step()
+      assert.strictEqual(w.commits[0].status, 'failed')
+      assert.strictEqual(w.commits[0].error, code)
+    }
+  })
+
   await test('a lean Binary from Mongo is turned into a Buffer', async () => {
     const w = world({ commits: [commit()], assets: threeAssets() })
     for (const a of w.assets.values()) a.data = { buffer: Buffer.concat([Buffer.from(a._id), Buffer.alloc(16)]), position: a._id.length } // a Binary with spare room

@@ -8,6 +8,7 @@ const {
   hasConflict,
   planContent,
   mapAfterContent,
+  mergeOutside,
   planMoves,
   planMetadata,
   planSettings,
@@ -245,6 +246,73 @@ test('mapping: new stickers in the order the content phase made them', () => {
   // y replaced in place by p, then n1 and n2 appended in draft order.
   const mapped = mapAfterContent(draft, ['x', 'y'], content, ['x', 'p', 'q', 'r'])
   assert.deepStrictEqual(Object.fromEntries(mapped.ok), { 'r-y': 'p', 'a-x': 'x', n1: 'q', n2: 'r' })
+})
+
+// mergeOutside: base → fresh changed outside, base → draft in the draft.
+const merge = (base, fresh, draft, known = new Map()) => mergeOutside(base, fresh, draft, known)
+const order = (result) => result.draft.map((item) => item.fileUniqueId || item.assetId)
+
+// What our database holds for every base sticker, as the API sends it.
+const knownAll = (base) => new Map(base.map((uid) => [uid, { emojiList: ['🙂'] }]))
+
+test('merge: deleted outside and kept untouched stays deleted; deleted on both sides is nothing to do', () => {
+  const result = merge(['a', 'b', 'c'], ['a', 'c'], [keep('a'), keep('b')], knownAll(['a', 'b', 'c']))
+  assert.deepStrictEqual(order(result), ['a'])
+  // c, dropped from the draft, is what planContent deletes from fresh.
+  assert.deepStrictEqual(planContent(result.draft, ['a', 'c']).deletes, ['c'])
+  assert.deepStrictEqual(planContent(merge(['a', 'b'], ['a'], [keep('a')]).draft, ['a']).deletes, [])
+  // Nothing known of its emoji: the draft's can't be told from an edit.
+  assert.ok(merge(['a', 'b'], ['a'], [keep('a'), keep('b')]).conflicts)
+})
+
+test('merge: deleted outside but replaced, relabelled or given keywords in the draft is a conflict', () => {
+  const known = new Map([['b', { emojiList: ['🙂'] }]])
+  assert.deepStrictEqual(merge(['a', 'b'], ['a'], [keep('a'), { ...keep('b'), file: {} }], known).conflicts, [{ fileUniqueId: 'b', reason: 'replaced in the draft, deleted outside' }])
+  assert.deepStrictEqual(merge(['a', 'b'], ['a'], [keep('a'), { ...keep('b'), emojiList: ['😡'] }], known).conflicts, [{ fileUniqueId: 'b', reason: 'edited in the draft, deleted outside' }])
+  assert.deepStrictEqual(merge(['a', 'b'], ['a'], [keep('a'), { ...keep('b'), keywords: ['x'] }], known).conflicts, [{ fileUniqueId: 'b', reason: 'edited in the draft, deleted outside' }])
+  assert.ok(!merge(['a', 'b'], ['a'], [keep('a'), keep('b')], known).conflicts)
+})
+
+test('merge: added outside lands before the sticker that follows it in fresh, else after the pack\'s last', () => {
+  const n = { assetId: 'n', file: {}, emojiList: ['😀'] }
+  assert.deepStrictEqual(order(merge(['a', 'b'], ['a', 'b', 'x'], [keep('a'), keep('b'), n])), ['a', 'b', 'x', 'n'])
+  assert.deepStrictEqual(order(merge(['a', 'b'], ['x', 'a', 'b'], [keep('a'), keep('b')])), ['x', 'a', 'b'])
+  assert.deepStrictEqual(order(merge(['a', 'b', 'c'], ['a', 'x', 'b', 'c'], [keep('a'), keep('c')])), ['a', 'x', 'c'], 'its follower deleted in the draft: the next one')
+  assert.deepStrictEqual(order(merge(['a', 'b'], ['a', 'b', 'x', 'y'], [keep('a'), keep('b')])), ['a', 'b', 'x', 'y'])
+  const added = merge(['a'], ['a', 'x'], [keep('a')]).draft[1]
+  assert.deepStrictEqual(added, { assetId: 'o:x', fileUniqueId: 'x' })
+})
+
+test('merge: the order of the kept stickers is the side that moved them', () => {
+  // Moved in the draft only.
+  assert.deepStrictEqual(order(merge(['a', 'b', 'c'], ['a', 'b', 'c', 'x'], [keep('c'), keep('a'), keep('b')])), ['c', 'a', 'b', 'x'])
+  // Moved outside only: the draft's new sticker keeps its place among them.
+  const n = { assetId: 'n', file: {}, emojiList: ['😀'] }
+  assert.deepStrictEqual(order(merge(['a', 'b', 'c'], ['c', 'a', 'b'], [keep('a'), n, keep('b'), keep('c')])), ['c', n.assetId, 'a', 'b'])
+  // Moved alike on both sides.
+  assert.ok(!merge(['a', 'b'], ['b', 'a'], [keep('b'), keep('a')]).conflicts)
+  // Moved differently.
+  assert.deepStrictEqual(merge(['a', 'b', 'c'], ['c', 'a', 'b'], [keep('b'), keep('a'), keep('c')]).conflicts, [{ reason: 'reordered in the draft and outside' }])
+})
+
+test('merge: 2000 random merges keep exactly the draft\'s new stickers and fresh\'s survivors', () => {
+  let seed = 11
+  const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32)
+  for (let round = 0; round < 2000; round++) {
+    const base = Array.from({ length: 1 + Math.floor(rand() * 8) }, (_, i) => `b${i}`)
+    const draft = base.filter(() => rand() > 0.3).map((uid) => keep(uid))
+    if (rand() < 0.5) draft.splice(Math.floor(rand() * (draft.length + 1)), 0, { assetId: 'n', file: {}, emojiList: ['😀'] })
+    const fresh = base.filter(() => rand() > 0.3)
+    if (rand() < 0.5) fresh.splice(Math.floor(rand() * (fresh.length + 1)), 0, 'x')
+    const result = merge(base, fresh, draft, knownAll(base))
+    assert.ok(!result.conflicts, 'untouched stickers never conflict')
+    const ids = order(result)
+    const expected = new Set([...draft.filter((item) => !item.fileUniqueId || fresh.includes(item.fileUniqueId)).map((item) => item.fileUniqueId || item.assetId), ...fresh.filter((uid) => !base.includes(uid))])
+    assert.deepStrictEqual(new Set(ids), expected, `round ${round}`)
+    assert.strictEqual(ids.length, expected.size)
+    // Carried out on fresh, it plans without complaint.
+    planContent(result.draft, fresh)
+  }
 })
 
 test('metadata: only changed emoji, keywords only when the draft sets them', () => {

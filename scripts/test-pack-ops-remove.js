@@ -131,14 +131,14 @@ const run = (commit, telegram, deps = {}) => runCommit(commit, { telegram, store
     assert.strictEqual(telegram.exists, true)
   })
 
-  await test('a worker that predates removes stops at a conflict and deletes nothing', async () => {
-    // What an older runCommit sees: no `remove`, an empty base and draft.
+  await test('without `remove` (as a worker that predates it reads one) nothing is deleted', async () => {
+    // An empty base and draft: whatever the pack holds came after the draft
+    // and is kept.
     const telegram = fakeTelegram()
     const { remove: _ignored, ...old } = removeCommit()
-    const commit = await run(old, telegram)
-    assert.strictEqual(commit.status, 'conflict')
+    await run(old, telegram)
     assert.strictEqual(telegram.exists, true)
-    assert.deepStrictEqual(telegram.calls, ['getStickerSet'])
+    assert.ok(!telegram.calls.includes('deleteStickerSet'))
   })
 
   await test('the worker marks a removed pack deleted instead of syncing stickers', async () => {

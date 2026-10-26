@@ -9,7 +9,7 @@
 // against an in-memory pack with faults on every step, and the bot runs it
 // against the real API and MongoDB.
 
-const { hasConflict, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
+const { hasConflict, sameList, mergeOutside, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
 const { autoNameCandidates, customNameCandidates, NAME_REJECTED } = require('./names')
 
 // Commit status:
@@ -17,8 +17,9 @@ const { autoNameCandidates, customNameCandidates, NAME_REJECTED } = require('./n
 //   running      a run holds the pack lock
 //   interrupted  stopped by something that may pass (429 beyond the wait,
 //                network); run again to continue
-//   conflict     the pack changed outside the draft before anything ran;
-//                nothing was changed
+//   conflict     the pack changed outside the draft in a way the draft
+//                can't be carried over (plan.js mergeOutside); nothing was
+//                changed
 //   failed       Telegram refused a step outright; steps before it stay
 //                applied, the commit can't continue as planned
 //   succeeded    the pack matches the draft
@@ -52,6 +53,18 @@ const isStickerGone = (err) => /STICKER_INVALID|sticker not found|STICKERSET_NOT
 // didn't make; a second deleteStickerSet of a set says STICKERPACK_NOT_FOUND.
 const isSetInvalid = (err) => /STICKERSET_INVALID|STICKERPACK_NOT_FOUND/i.test(errorText(err))
 
+// The owner never started the bot (Telegram knows no such user for it), or
+// blocked it: Telegram makes no pack for them and touches none of theirs.
+// Stable codes, so the client can say what to do; not a fault of the worker.
+const BOT_NOT_STARTED = 'bot_not_started'
+const BOT_BLOCKED = 'bot_blocked'
+function ownerProblem (err) {
+  const text = errorText(err)
+  if (/bot was blocked by the user/i.test(text)) return BOT_BLOCKED
+  if (/user not found|PEER_ID_INVALID/i.test(text)) return BOT_NOT_STARTED
+  return null
+}
+
 // A title or thumbnail that is already what was asked for.
 const isNotModified = (err) => /not modified|NOT_MODIFIED/i.test(errorText(err))
 
@@ -65,6 +78,8 @@ const NAME_INVALID = 'name_invalid'
 const THUMBNAIL_EXT = { static: 'webp', animated: 'tgs', video: 'webm' }
 
 class Interrupted extends Error {}
+// A sticker a step needs that the pack doesn't have (not even in a reread copy).
+class StickerMissing extends Interrupted {}
 
 /**
  * Run (or resume) a commit until it succeeds or can't go on.
@@ -81,8 +96,8 @@ class Interrupted extends Error {}
  * @param {Function} [deps.register] (commit) => the new pack's document id; makes the bot's own records of it
  * @param {Function} [deps.readFresh] (name) => the set as Telegram's servers hold it now, or a 400 for none;
  *   getStickerSet answers from the Bot API's copy, which can be minutes behind a pack edited in a Telegram app
- * @param {Function} [deps.freshUids] (name, base) => the pack's file_unique_ids as the server has them, or null
- *   when unknown; the conflict check also holds the draft against these
+ * @param {Function} [deps.freshUids] (name, expected) => the pack's file_unique_ids as the server has them, or
+ *   null when unknown; the draft is planned on these, and they stand in for the Bot API's copy while it lags
  * @param {Function} [deps.onProgress] (commit) after every step
  * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
  * @returns {Promise<Object>} the commit, with its final status
@@ -110,6 +125,20 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     if (isTelegramAnswer(err) && errorCode(err) === 400) return true
     throw err
   })
+  // The pack as it is now: the Bot API's copy for file_ids, and its
+  // file_unique_ids unless the copy lags behind the server (`commit.stale`,
+  // seen when the commit was planned). Then the server's list stands in until
+  // the copy shows the same, which this bot's first write brings about.
+  // A sticker a delete found already gone is gone, whatever the copy shows.
+  const readPack = async () => {
+    const set = await getSet()
+    const gone = new Set(commit.steps.filter((step) => step.alreadyGone).map((step) => step.fileUniqueId))
+    const copy = uidsOf(set).filter((id) => !gone.has(id))
+    if (!commit.stale) return { set, uids: copy }
+    const fresh = freshUids ? await freshUids(commit.name, commit.contentBase || commit.base).catch(() => null) : null
+    if (fresh && sameList(fresh, uidsOf(set))) commit.stale = false
+    return { set, uids: fresh || copy }
+  }
   const save = async () => {
     commit.updatedAt = new Date()
     await store.save(commit)
@@ -134,18 +163,29 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     if (!commit.phase) {
       const set = await getSet()
       // The Bot API's copy can be minutes behind an edit made in a Telegram
-      // app, and the draft may stand on that copy too; the server's own list
-      // catches it before anything is sent. A fresh read that fails is no
-      // reason to stop: the copy is all the check had before.
+      // app, and the draft (opened through the API) may stand on that copy too.
+      // The server's own list is the pack the steps will meet. A fresh read
+      // that fails is no reason to stop: the copy is all there is then.
       const fresh = freshUids && !commit.create ? await freshUids(commit.name, commit.base).catch(() => null) : null
-      if (hasConflict(commit.base, uidsOf(set)) || (fresh && hasConflict(commit.base, fresh))) {
-        commit.status = 'conflict'
-        commit.error = 'the pack changed outside the draft'
-        return commit
+      const now = fresh || uidsOf(set)
+      commit.stale = !sameList(now, uidsOf(set))
+      if (hasConflict(commit.base, now)) {
+        const merged = mergeOutside(commit.base, now, commit.draft, new Map(Object.entries(commit.known || {})))
+        if (merged.conflicts) {
+          commit.status = 'conflict'
+          commit.error = CHANGED_OUTSIDE
+          // What the client rebases on: the Bot API it reads may still show the
+          // pack as it was.
+          commit.fresh = now
+          commit.conflicts = merged.conflicts
+          return commit
+        }
+        commit.rebased = merged.draft
+        commit.outside = { deleted: commit.base.filter((id) => !now.includes(id)), added: now.filter((id) => !commit.base.includes(id)) }
       }
-      const content = planContent(commit.draft, uidsOf(set))
+      const content = planContent(draftOf(commit), now)
       commit.format = commit.format || set.stickers[0]?.format || 'static'
-      commit.contentBase = uidsOf(set)
+      commit.contentBase = now
       commit.steps = [
         ...content.deletes.map((fileUniqueId) => ({ kind: 'delete', fileUniqueId })),
         ...content.replaces.map((item) => ({ kind: 'replace', fileUniqueId: item.fileUniqueId, assetId: item.assetId })),
@@ -156,17 +196,17 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     }
 
     if (commit.phase === 'content') {
-      await runSteps(commit, 'content', { call, getSet, save, lock, lockName, token })
+      await runSteps(commit, 'content', { call, getSet, readPack, save, lock, lockName, token })
       commit.phase = 'arrange'
       await save()
     }
 
     if (commit.phase === 'arrange') {
-      const set = await getSet()
+      const { uids: now } = await readPack()
       if (!commit.mapping) {
         const draft = publishedDraft(commit)
         const content = planContent(draft, commit.contentBase)
-        const mapped = mapAfterContent(draft, commit.contentBase, content, uidsOf(set))
+        const mapped = mapAfterContent(draft, commit.contentBase, content, now)
         if (mapped.error) {
           commit.status = 'failed'
           commit.error = `${CHANGED}: ${mapped.error}`
@@ -176,7 +216,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
         const target = draft.map((item) => commit.mapping[item.assetId])
         const known = new Map(Object.entries(commit.known || {}))
         commit.steps.push(
-          ...planMoves(uidsOf(set), target).map((move) => ({ kind: 'move', ...move })),
+          ...planMoves(now, target).map((move) => ({ kind: 'move', ...move })),
           ...planMetadata(draft, known).flatMap((update) => [
             update.emojiList && { kind: 'emoji', fileUniqueId: update.fileUniqueId, emojiList: update.emojiList },
             update.keywords && { kind: 'keywords', fileUniqueId: update.fileUniqueId, keywords: update.keywords }
@@ -185,7 +225,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
         for (const step of commit.steps) if (!step.phase) Object.assign(step, { phase: 'arrange', state: 'pending' })
         await save()
       }
-      await runSteps(commit, 'arrange', { call, getSet, save, lock, lockName, token })
+      await runSteps(commit, 'arrange', { call, getSet, readPack, save, lock, lockName, token })
       commit.phase = 'settings'
       await save()
     }
@@ -202,12 +242,12 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
         commit.steps.push(...steps)
         await save()
       }
-      await runSteps(commit, 'settings', { call, getSet, save, lock, lockName, token, assets })
+      await runSteps(commit, 'settings', { call, getSet, readPack, save, lock, lockName, token, assets })
       commit.phase = 'verify'
       await save()
     }
 
-    const final = uidsOf(await getSet())
+    const { uids: final } = await readPack()
     const target = publishedDraft(commit).map((item) => commit.mapping[item.assetId])
     if (final.length !== target.length || final.some((id, i) => id !== target[i])) {
       commit.status = 'failed'
@@ -223,6 +263,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
       commit.status = 'interrupted'
     } else {
       commit.status = 'failed'
+      commit.error = ownerProblem(err) || commit.error
       // The pack was deleted in Telegram (@Stickers, a Telegram app). The
       // worker then marks it deleted, as after the bot's own delete. A remove
       // has asked already.
@@ -241,16 +282,22 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
 
 // Steps of one phase, in order. A step left `running`/`uncertain` by an
 // earlier run is reconciled against the pack before anything else happens.
-async function runSteps (commit, phase, { call, getSet, save, lock, lockName, token, assets }) {
-  // The pack as it stands, kept current: refetched after every add/replace
-  // (to check what Telegram did) and patched locally after a delete.
-  let set = await getSet()
-  const fileIdOf = (uid) => {
-    const sticker = set.stickers.find((s) => s.file_unique_id === uid)
-    if (!sticker) throw new Interrupted(`sticker ${uid} is not in the pack`)
+async function runSteps (commit, phase, { call, getSet, readPack, save, lock, lockName, token, assets }) {
+  // The pack as it stands, kept current: reread after every add/replace (to
+  // check what Telegram did) and patched locally after a delete. `set` is the
+  // Bot API's copy, for file_ids; `now` the file_unique_ids in order.
+  let { set, uids: now } = await readPack()
+  const fileIdOf = async (uid) => {
+    let sticker = set.stickers.find((s) => s.file_unique_id === uid)
+    if (!sticker) {
+      // A sticker added outside shows in the copy once it has caught up.
+      set = await getSet()
+      sticker = set.stickers.find((s) => s.file_unique_id === uid)
+    }
+    if (!sticker) throw new StickerMissing(`sticker ${uid} is not in the pack`)
     return sticker.file_id
   }
-  const itemOf = (assetId) => commit.draft.find((item) => item.assetId === assetId)
+  const itemOf = (assetId) => draftOf(commit).find((item) => item.assetId === assetId)
   const customEmojiIdOf = (uid) => {
     const id = set.stickers.find((s) => s.file_unique_id === uid)?.custom_emoji_id
     if (!id) throw Object.assign(new Error(`sticker ${uid} has no custom emoji id`), { code: 400 })
@@ -280,11 +327,10 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
     // same), so an unanswered one is simply repeated. Content steps leave a
     // trace in the pack, read before anything is repeated.
     if ((step.state === 'running' || step.state === 'uncertain') && step.phase === 'content') {
-      set = await getSet()
-      const uids = uidsOf(set)
-      const effect = effectOf(commit, step, uids)
+      ;({ set, uids: now } = await readPack())
+      const effect = effectOf(commit, step, now)
       if (effect === 'applied') {
-        if (step.kind === 'add') step.newFileUniqueId = uids[uids.length - 1]
+        if (step.kind === 'add') step.newFileUniqueId = now[now.length - 1]
         step.state = 'succeeded'
         await save()
         continue
@@ -310,21 +356,19 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
     step.attempts = (step.attempts || 0) + 1
     await save()
 
-    const prev = uidsOf(set)
+    const prev = now
     try {
       await applyStep(commit, step, { call, fileIdOf, itemOf, customEmojiIdOf, assets })
       step.error = null
     } catch (err) {
       step.error = errorText(err)
-      if (step.kind === 'delete' && isTelegramAnswer(err) && isStickerGone(err)) {
-        // Not in the set any more: deleted in a Telegram app, or by an attempt
-        // whose answer got lost. Done once the pack agrees. getStickerSet can
-        // keep showing a pack edited elsewhere as it was, for minutes; nothing
-        // can be planned on that copy, so the publish stops instead.
-        set = await getSet()
-        if (uidsOf(set).includes(step.fileUniqueId)) {
-          await refuse(step, `${CHANGED_OUTSIDE}: ${step.fileUniqueId} was already deleted from it`)
-        }
+      if (step.kind === 'delete' && (err instanceof StickerMissing || (isTelegramAnswer(err) && isStickerGone(err)))) {
+        // Not in the set any more (deleted elsewhere since the plan, or by an
+        // attempt whose answer got lost): what the step was for. A deleted
+        // sticker has nothing else planned on it, so the publish goes on. The
+        // copy may lag behind whatever deleted it.
+        step.alreadyGone = true
+        commit.stale = true
       } else if (step.phase === 'settings' && isTelegramAnswer(err) && isNotModified(err)) {
         // Already as asked: done.
       } else if (!isTelegramAnswer(err)) {
@@ -344,17 +388,16 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
     // "ok" from Telegram is not proof of a new sticker: a file already in the
     // pack is merged instead (plan 7.1). Check what actually happened.
     if (step.kind === 'add' || step.kind === 'replace') {
-      set = await getSet()
-      const uids = uidsOf(set)
-      const effect = effectOf(commit, step, uids, prev)
+      ;({ set, uids: now } = await readPack())
+      const effect = effectOf(commit, step, now, prev)
       if (effect === 'duplicate') {
         await merged(step)
         continue
       }
       if (effect !== 'applied') await refuse(step, CHANGED)
-      step.newFileUniqueId = step.kind === 'add' ? uids[uids.length - 1] : uids[prev.indexOf(step.fileUniqueId)]
+      step.newFileUniqueId = step.kind === 'add' ? now[now.length - 1] : now[prev.indexOf(step.fileUniqueId)]
     } else if (step.kind === 'delete') {
-      set = { ...set, stickers: set.stickers.filter((s) => s.file_unique_id !== step.fileUniqueId) }
+      now = now.filter((id) => id !== step.fileUniqueId)
     }
 
     step.state = 'succeeded'
@@ -483,11 +526,16 @@ const CHANGED_OUTSIDE = 'the pack changed outside the draft'
 // client reads STICKERSET_INVALID as a pack that is gone.
 const PACK_GONE = 'pack_gone: the pack is no longer in Telegram (STICKERSET_INVALID)'
 
-// The draft without the items Telegram merged into a sticker already in the
+// The draft the steps carry out: as sent, or carried over to a pack that
+// changed outside it (`commit.rebased`, plan.js mergeOutside).
+const draftOf = (commit) => commit.rebased || commit.draft
+
+// That draft without the items Telegram merged into a sticker already in the
 // pack: what the pack is to hold, in order.
 function publishedDraft (commit) {
   const merged = new Set(commit.steps.filter((step) => step.merged).map((step) => step.assetId))
-  return merged.size ? commit.draft.filter((item) => !merged.has(item.assetId)) : commit.draft
+  const draft = draftOf(commit)
+  return merged.size ? draft.filter((item) => !merged.has(item.assetId)) : draft
 }
 
 // Whether the pack already shows what a settings step would set. A thumbnail
@@ -520,26 +568,26 @@ async function setThumbnail (commit, step, { call, customEmojiIdOf, assets }) {
   return call('setStickerSetThumbnail', params)
 }
 
-function applyStep (commit, step, { call, fileIdOf, itemOf, customEmojiIdOf, assets }) {
+async function applyStep (commit, step, { call, fileIdOf, itemOf, customEmojiIdOf, assets }) {
   const userId = commit.ownerTelegramId
   switch (step.kind) {
     case 'delete':
-      return call('deleteStickerFromSet', { sticker: fileIdOf(step.fileUniqueId) })
+      return call('deleteStickerFromSet', { sticker: await fileIdOf(step.fileUniqueId) })
     case 'replace':
       return call('replaceStickerInSet', {
         user_id: userId,
         name: commit.name,
-        old_sticker: fileIdOf(step.fileUniqueId),
+        old_sticker: await fileIdOf(step.fileUniqueId),
         sticker: inputSticker(itemOf(step.assetId), commit.format)
       })
     case 'add':
       return call('addStickerToSet', { user_id: userId, name: commit.name, sticker: inputSticker(itemOf(step.assetId), commit.format) })
     case 'move':
-      return call('setStickerPositionInSet', { sticker: fileIdOf(step.fileUniqueId), position: step.position })
+      return call('setStickerPositionInSet', { sticker: await fileIdOf(step.fileUniqueId), position: step.position })
     case 'emoji':
-      return call('setStickerEmojiList', { sticker: fileIdOf(step.fileUniqueId), emoji_list: step.emojiList })
+      return call('setStickerEmojiList', { sticker: await fileIdOf(step.fileUniqueId), emoji_list: step.emojiList })
     case 'keywords':
-      return call('setStickerKeywords', { sticker: fileIdOf(step.fileUniqueId), keywords: step.keywords })
+      return call('setStickerKeywords', { sticker: await fileIdOf(step.fileUniqueId), keywords: step.keywords })
     case 'title':
       return call('setStickerSetTitle', { name: commit.name, title: step.title })
     case 'thumbnail':
@@ -665,4 +713,4 @@ function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, 
   }
 }
 
-module.exports = { runCommit, newCommit, LOCK_TTL_MS }
+module.exports = { runCommit, newCommit, ownerProblem, LOCK_TTL_MS }
