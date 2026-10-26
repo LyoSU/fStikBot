@@ -29,6 +29,7 @@ in section 7.1 there.
   remove,                         // optional, see "Deleting a pack"
   create,                         // optional, see "Creating a pack"
   lockName,                       // the pack lock's key when it isn't `name` (a new pack)
+  charge,                         // optional, see "Copies"
   status, phase, steps, mapping, contentBase, format, error
 }
 ```
@@ -112,6 +113,35 @@ title adopts it instead of creating another; a set with another title is
 somebody's and the next name is tried. After the create the seeded draft items
 become kept ones (`fileUniqueId`, `known`), `base` is the pack as made, and the
 normal phases go on. If the commit later fails, the pack stays (and is registered).
+
+## Copies
+
+A draft item may be a sticker of another set instead of an uploaded file:
+`file: { copy: { set, fileUniqueId }, format, fileId: null }` (`assetId` is
+`c:<fileUniqueId>`). Studio's "Copy a pack" and "Add from my packs" queue
+these; the API checked with its own token that the set has that sticker and
+that it fits the pack (the same type, or a TGS, which fits both).
+
+The worker's prepare reads the set with `getStickerSet` (once per set) and
+puts this bot's `file_id` and the sticker's format on the item, nothing is
+uploaded: a file_id is only good for the bot it was issued to, so the API's
+ids can't be used, while `file_unique_id` is the same for every bot. Telegram
+takes a sticker of another set by file_id, as the bot's own add does. A sticker
+no longer in its set (or a set that is gone) fails the commit as
+`copy_missing`.
+
+A copied pack is a `create` commit with `boost: true`, like the wizard's copy:
+`register` writes the pack with Boost, while its first title still gets the
+bot's suffix (`formatTitle` as for a pack without Boost). A copy into the
+other pack type costs a credit, which the API takes before it queues the
+commit and writes down as `charge: { credits, user }`. When the commit ends
+`failed` (or `conflict`) before the pack was made, the worker gives it back
+once (`charge.refunded`, set atomically by `refundCharge`). Once the pack
+exists the credit stays spent, as in the wizard. An `interrupted` commit keeps
+it until it ends.
+
+A worker that predates copies would try to upload a copied item as an asset
+and fail it as `asset_missing` (no refund): deploy the bot before the API.
 
 ## Deleting a pack
 

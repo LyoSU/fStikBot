@@ -16,6 +16,9 @@ const packCommitSchema = mongoose.Schema({
   settings: mongoose.Schema.Types.Mixed,
   // Makes the pack first (pack-ops/execute.js createPack): { title, name?, needsRepainting?, ... }.
   create: mongoose.Schema.Types.Mixed,
+  // Credits taken for the commit (a copy into another pack type): { credits, user, refunded? }.
+  // The worker gives them back when the commit ends without making the pack.
+  charge: mongoose.Schema.Types.Mixed,
   // Deletes the whole set instead of publishing a draft (pack-ops/execute.js removePack).
   // Queued with an empty base and draft, so a worker that predates it stops at a conflict.
   remove: Boolean,

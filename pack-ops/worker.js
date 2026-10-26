@@ -28,6 +28,7 @@ const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 100
 // (a timeout, a reset connection) says nothing about what Telegram did.
 const errorCode = (err) => err?.code ?? err?.response?.error_code
 const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
+const formatOf = (sticker) => (sticker.is_animated ? 'animated' : sticker.is_video ? 'video' : 'static')
 const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >= 400 && errorCode(err) < 500 && errorCode(err) !== 429
 
 /**
@@ -44,6 +45,21 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   let stopping = false
 
   const uploadsOf = (commit) => commit.draft.filter((item) => item.file)
+
+  // A sticker copied from another set goes in by the file_id this bot is
+  // given for it: the API reads sets with a token of its own, and a file_id is
+  // only good for the bot it was issued to. file_unique_id is the same for both.
+  async function copiedSticker (sets, copy) {
+    if (!sets.has(copy.set)) {
+      const set = await runInCopyScope(() => telegram.callApi('getStickerSet', { name: copy.set }))
+        .catch((err) => {
+          if (isRefusal(err)) return { stickers: [] }
+          throw err
+        })
+      sets.set(copy.set, set)
+    }
+    return sets.get(copy.set).stickers.find((sticker) => sticker.file_unique_id === copy.fileUniqueId)
+  }
 
   // Uploads every file the draft still lacks a file_id for, saving the commit
   // after each so a crash resumes with the rest. Returns the commit with its
@@ -62,9 +78,22 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       return commit
     }
 
+    const sets = new Map()
+
     try {
       for (const item of uploadsOf(commit)) {
         if (item.file.fileId) continue
+
+        if (item.file.copy) {
+          const sticker = await copiedSticker(sets, item.file.copy)
+          if (!sticker) return await settle('failed', 'copy_missing')
+          item.file.fileId = sticker.file_id
+          item.file.format = formatOf(sticker)
+          commit.updatedAt = now()
+          await store.save(commit)
+          continue
+        }
+
         const asset = await repo.loadAsset(item.file.studioAssetId)
         if (!asset) return await settle('failed', 'asset_missing')
 
@@ -152,9 +181,27 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     }
   }
 
+  // A copy into another pack type is paid for when the API takes it. A commit
+  // that ends without making the pack gives the credit back, as the /new
+  // wizard does when its copy fails.
+  async function refundIfUnmade (commit) {
+    const { charge } = commit || {}
+    if (!charge?.credits || charge.refunded) return
+    if (commit.status !== 'failed' && commit.status !== 'conflict') return
+    if (commit.create && ['created', 'done'].includes(commit.create.state)) return
+
+    try {
+      if (await repo.refundCharge(commit._id, charge)) log.info(`commit ${commit._id}: ${charge.credits} credit(s) refunded`)
+      charge.refunded = true
+    } catch (err) {
+      log.error(`commit ${commit._id}: refund failed:`, errorText(err))
+    }
+  }
+
   async function run (commit) {
     const result = await publish(commit._id)
     if (result?.status === 'succeeded') await trySync(result)
+    else await refundIfUnmade(result)
     return result
   }
 
@@ -164,6 +211,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     if (claimed) {
       const prepared = await prepare(claimed)
       if (prepared.status === 'pending') await run(prepared)
+      else await refundIfUnmade(prepared)
       return true
     }
 

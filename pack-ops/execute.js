@@ -336,7 +336,9 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
         ? customNameCandidates(create.name, suffix)
         : autoNameCandidates(create.name || create.title, suffix)
       if (!create.names) return refuseCreate(commit, NAME_INVALID, save)
-      create.formattedTitle = await formatTitle(commit, create.title)
+      // The first title carries the bot's suffix even on a pack that starts
+      // with Boost (a copy), like the wizard's; a later rename can drop it.
+      create.formattedTitle = await formatTitle({ ...commit, boost: false }, create.title)
       create.index = 0
       await save()
     }

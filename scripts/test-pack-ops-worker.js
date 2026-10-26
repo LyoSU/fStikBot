@@ -38,7 +38,10 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     uploadFails: [], // errors to throw on upload N (0-based), in order
     telegramSet: [], // [{ file_unique_id, file_id }]
     locks: [], // names of packs whose lock is held
-    published: []
+    published: [],
+    sources: {}, // other sets, as this bot's getStickerSet shows them: name -> stickers
+    sourceReads: [],
+    refunds: []
   }
 
   w.repo = {
@@ -68,6 +71,13 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     async loadAsset (id) { return w.assets.has(id) ? { ...clone(w.assets.get(id)), data: w.assets.get(id).data } : null },
     async setAssetFileId (id, fileId, owner) { Object.assign(w.assets.get(id), { fileId, fileOwner: owner }) },
     async findPack () { return clone(w.pack) },
+    async refundCharge (id, charge) {
+      const c = w.commits.find((x) => x._id === id)
+      if (c.charge.refunded) return false
+      c.charge.refunded = true
+      w.refunds.push({ id, ...charge })
+      return true
+    },
     async liveStickerUids () { return w.stickers.filter((s) => !s.deleted).map((s) => s.fileUniqueId) },
     async writeSync (packId, { stickers, deletedUids, clearPlaceholder, title }, now) {
       for (const s of stickers) {
@@ -99,6 +109,11 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
         if (fail) throw fail
         w.uploads.push(params)
         return { file_id: `fid:${params.sticker.source.toString()}` }
+      }
+      if (method === 'getStickerSet' && params.name in w.sources) {
+        w.sourceReads.push(params.name)
+        if (!w.sources[params.name]) throw telegramError(400, 'Bad Request: STICKERSET_INVALID')
+        return { stickers: clone(w.sources[params.name]) }
       }
       if (method === 'getStickerSet') return { title: w.telegramTitle, stickers: clone(w.telegramSet) }
       throw new Error(`unexpected ${method}`)
@@ -415,6 +430,99 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     await w.worker.step()
     assert.strictEqual(w.commits[0].synced, undefined)
     assert.strictEqual(w.stickers.length, 0)
+  })
+
+  console.log('copies')
+
+  const copyItem = (set, uid, emoji = '🙂') => ({ assetId: `c:${uid}`, file: { copy: { set, fileUniqueId: uid }, format: 'static', fileId: null }, emojiList: [emoji] })
+  const copyCommit = (extra = {}) => commit({
+    base: [],
+    draft: [copyItem('cats', 's1'), copyItem('cats', 's2'), copyItem('dogs', 'd1'), { assetId: 'a:x', file: { studioAssetId: 'x', format: 'static', fileId: null }, emojiList: ['😀'] }],
+    ...extra
+  })
+  const sources = () => ({
+    cats: [{ file_unique_id: 's1', file_id: 'BOT-s1', is_animated: true }, { file_unique_id: 's2', file_id: 'BOT-s2', is_video: true }],
+    dogs: [{ file_unique_id: 'd1', file_id: 'BOT-d1' }]
+  })
+
+  await test('copied stickers take this bot\'s file_ids, one read per set, and are not uploaded', async () => {
+    const w = world({ commits: [copyCommit()], assets: [asset('x')] })
+    w.sources = sources()
+    await w.worker.step()
+    const draft = w.commits[0].draft
+    assert.deepStrictEqual(draft.map((i) => i.file.fileId), ['BOT-s1', 'BOT-s2', 'BOT-d1', 'fid:x'])
+    assert.deepStrictEqual(draft.map((i) => i.file.format), ['animated', 'video', 'static', 'static'])
+    assert.deepStrictEqual(w.sourceReads, ['cats', 'dogs'])
+    assert.deepStrictEqual(w.uploads.map((u) => u.sticker.source.toString()), ['x'])
+    assert.deepStrictEqual(w.published, ['c1'])
+  })
+
+  await test('a copied sticker that left its set, or a set that is gone, fails the commit as copy_missing', async () => {
+    const w = world({ commits: [copyCommit()], assets: [asset('x')] })
+    w.sources = { ...sources(), dogs: [] }
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'failed')
+    assert.strictEqual(w.commits[0].error, 'copy_missing')
+
+    const gone = world({ commits: [copyCommit()], assets: [asset('x')] })
+    gone.sources = { ...sources(), cats: null }
+    await gone.worker.step()
+    assert.strictEqual(gone.commits[0].error, 'copy_missing')
+    assert.deepStrictEqual(gone.published, [])
+  })
+
+  await test('a resumed commit keeps the file_ids it already has', async () => {
+    const c = copyCommit()
+    c.draft[0].file.fileId = 'BOT-s1'
+    c.draft[1].file.fileId = 'BOT-s2'
+    const w = world({ commits: [c], assets: [asset('x')] })
+    w.sources = sources()
+    await w.worker.step()
+    assert.deepStrictEqual(w.sourceReads, ['dogs'])
+  })
+
+  console.log('refunds')
+
+  const paid = (extra = {}) => copyCommit({ create: { title: 'Copy' }, charge: { credits: 1, user: 'u1' }, ...extra })
+
+  await test('a paid copy that fails before the pack exists is refunded once', async () => {
+    const w = world({ commits: [paid()], assets: [asset('x')] })
+    w.sources = sources()
+    w.publishAs = 'failed'
+    await w.worker.step()
+    assert.deepStrictEqual(w.refunds, [{ id: 'c1', credits: 1, user: 'u1' }])
+    assert.strictEqual(w.commits[0].charge.refunded, true)
+
+    await w.worker.step()
+    assert.strictEqual(w.refunds.length, 1)
+  })
+
+  await test('a paid copy that fails while preparing is refunded', async () => {
+    const w = world({ commits: [paid()], assets: [asset('x')] })
+    w.sources = { ...sources(), dogs: [] }
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'failed')
+    assert.strictEqual(w.refunds.length, 1)
+  })
+
+  await test('no refund once the pack is made, for an interrupted commit, or for one that cost nothing', async () => {
+    const made = world({ commits: [paid({ create: { title: 'Copy', state: 'done' } })], assets: [asset('x')] })
+    made.sources = sources()
+    made.publishAs = 'failed'
+    await made.worker.step()
+    assert.strictEqual(made.refunds.length, 0)
+
+    const stopped = world({ commits: [paid()], assets: [asset('x')] })
+    stopped.sources = sources()
+    stopped.publishAs = 'interrupted'
+    await stopped.worker.step()
+    assert.strictEqual(stopped.refunds.length, 0)
+
+    const free = world({ commits: [copyCommit({ create: { title: 'Copy' } })], assets: [asset('x')] })
+    free.sources = sources()
+    free.publishAs = 'failed'
+    await free.worker.step()
+    assert.strictEqual(free.refunds.length, 0)
   })
 
   console.log(`\n${passed} passed, ${failed} failed`)
