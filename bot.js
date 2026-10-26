@@ -97,6 +97,9 @@ registerCommands(bot, privateMessage, {
   // Publishes Studio drafts queued by the API (pack-ops/worker.js).
   require('./pack-ops/worker').start()
 
+  // Makes invoice links for credits bought in Studio (utils/studio-invoices.js).
+  require('./utils/studio-invoices').start()
+
   const monitorInterval = setInterval(() => updateMonitor(), MONITOR_INTERVAL_MS)
   if (monitorInterval.unref) monitorInterval.unref()
 })().catch((err) => {
@@ -141,7 +144,8 @@ const gracefulShutdown = async (signal) => {
     bot.stop(),
     require('./utils/metrics').flush(),
     require('./broadcast').stopWorker(),
-    require('./pack-ops/worker').stop()
+    require('./pack-ops/worker').stop(),
+    require('./utils/studio-invoices').stop()
   ]).then((results) => {
     for (const r of results) {
       if (r.status === 'rejected') log.error('shutdown error:', r.reason?.stack || r.reason)

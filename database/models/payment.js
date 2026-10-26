@@ -32,6 +32,18 @@ const paymentsSchema = mongoose.Schema({
   },
   resultData: {
     type: Object
+  },
+  // 'studio' for a purchase started in Studio, which asks for its invoice link
+  // through `invoice` (utils/studio-invoices.js); absent for one from the chat.
+  source: {
+    type: String
+  },
+  invoice: {
+    // requested → creating → ready | failed | expired
+    state: String,
+    link: String,
+    error: String,
+    claimedAt: Date
   }
 }, {
   timestamps: true
@@ -45,6 +57,12 @@ paymentsSchema.index({ 'resultData.telegram_payment_charge_id': 1 })
 paymentsSchema.index(
   { createdAt: 1 },
   { expireAfterSeconds: 30 * 24 * 60 * 60, partialFilterExpression: { status: 'pending' } }
+)
+
+// The invoice maker's queue: only Studio's requests carry invoice.state.
+paymentsSchema.index(
+  { 'invoice.state': 1, createdAt: 1 },
+  { partialFilterExpression: { 'invoice.state': { $exists: true } } }
 )
 
 module.exports = paymentsSchema
