@@ -6,7 +6,7 @@
 process.env.LOG_LEVEL = 'error'
 const assert = require('assert')
 const { createVideoConverter, CLAIM_STALE_MS, HEARTBEAT_MS, MAX_ATTEMPTS } = require('../utils/studio-video')
-const { convertPriority, maxVideoDuration, queueTooBusy } = require('../utils/video-convert-rules')
+const { convertDelay, maxVideoDuration } = require('../utils/video-convert-rules')
 
 let passed = 0
 let failed = 0
@@ -31,8 +31,8 @@ const DONE = { result: { content: WEBM.toString('base64'), metadata: { streams: 
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk' }], videoPacks = 0, outcome = DONE, waiting = 0, disabled = false, heartbeatMs } = {}) {
-  const w = { videos, jobs: [], renewals: 0 }
+function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk' }], videoPacks = 0, outcome = DONE, waiting = 0, disabled = false, heartbeatMs, redisJobs = {} } = {}) {
+  const w = { videos, jobs: [], followed: [], renewals: 0 }
   // Every claim and renewal is a moment later than the one before.
   let clock = NOW.getTime()
   const now = () => new Date(++clock)
@@ -55,6 +55,10 @@ function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk
       row.claimedAt = at
       return true
     },
+    setJob: async (video, jobId) => {
+      const row = videos.find((v) => v._id === video._id)
+      if (row.claimedAt.getTime() === video.claimedAt.getTime()) row.jobId = jobId
+    },
     settle: async (video, set) => {
       const row = videos.find((v) => v._id === video._id)
       if (row.status !== 'converting' || row.claimedAt.getTime() !== video.claimedAt.getTime()) return
@@ -63,12 +67,19 @@ function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk
       delete row.sourceUrl
     }
   }
-  w.queue = { disabled, getJobCounts: async () => ({ waiting }) }
+  // Jobs Redis still has, by id: what a restarted process finds again.
+  w.queue = { disabled, getJobCounts: async () => ({ waiting }), getJob: async (id) => redisJobs[id] || null }
   w.runJob = async (queue, data, options) => {
+    const job = { id: `job${w.jobs.length + 1}`, opts: { priority: options.priority } }
     w.jobs.push({ data, options })
+    if (options.onQueued) await options.onQueued(job)
     return typeof outcome === 'function' ? outcome(data) : outcome
   }
-  w.converter = createVideoConverter({ repo: w.repo, queue: w.queue, runJob: w.runJob, now, heartbeatMs })
+  w.followJob = async (queue, job) => {
+    w.followed.push(job.id)
+    return typeof outcome === 'function' ? outcome() : outcome
+  }
+  w.converter = createVideoConverter({ repo: w.repo, queue: w.queue, runJob: w.runJob, followJob: w.followJob, now, heartbeatMs })
   w.run = async () => {
     await w.converter.tick()
     await w.converter.settled()
@@ -93,14 +104,9 @@ const queued = (patch = {}) => ({
   console.log('studio-video')
 
   await test('the chat\'s rules: Boost first and longer, the rest by video packs and language', () => {
-    assert.strictEqual(convertPriority({ videoPacks: 9, locale: 'uk', boost: true }), 5)
-    assert.strictEqual(convertPriority({ videoPacks: 9, locale: 'uk' }), 3)
-    assert.strictEqual(convertPriority({ videoPacks: 9, locale: 'ru' }), 43)
+    // The ordering itself is tested in test-convert-rules.js.
     assert.strictEqual(maxVideoDuration(true), 35)
     assert.strictEqual(maxVideoDuration(false), 4)
-    assert.strictEqual(queueTooBusy(201, 51), true)
-    assert.strictEqual(queueTooBusy(201, 50), false)
-    assert.strictEqual(queueTooBusy(200, 99), false)
   })
 
   await test('a sticker video goes to the converter like a chat video and comes back as WebM', async () => {
@@ -116,7 +122,13 @@ const queued = (patch = {}) => ({
     assert.strictEqual(data.maxDuration, 4)
     // No `input`: the chat's completed/failed handlers must skip this job.
     assert.strictEqual('input' in data, false)
-    assert.strictEqual(options.priority, 2)
+    // A deadline: added now, with the tier's head start given away.
+    const deadline = options.priority - Math.floor((Date.now() - Date.UTC(2026, 0, 1)) / 1000)
+    assert.ok(Math.abs(deadline - convertDelay({ videoPacks: 6, locale: 'uk' })) <= 1, `delay ${deadline}`)
+    assert.strictEqual(options.keepSeconds, 600)
+    assert.strictEqual(data.maxAgeMs, 10 * 60 * 1000)
+    // The job's id is on the row, for whoever takes the video over.
+    assert.strictEqual(w.videos[0].jobId, 'job1')
 
     const v = w.videos[0]
     assert.strictEqual(v.status, 'done')
@@ -138,7 +150,7 @@ const queued = (patch = {}) => ({
     assert.strictEqual(data.forceCrop, true)
     assert.strictEqual(data.frameType, 'square')
     assert.strictEqual(data.maxDuration, 35)
-    assert.strictEqual(options.priority, 5)
+    assert.ok(Math.abs(options.priority - Math.floor((Date.now() - Date.UTC(2026, 0, 1)) / 1000)) <= 1, 'Boost gives no head start away')
   })
 
   await test('a failed, lost or timed-out conversion fails with its reason', async () => {
@@ -228,6 +240,36 @@ const queued = (patch = {}) => ({
     assert.strictEqual(w.videos[0].status, 'converting')
     assert.strictEqual(w.videos[0].result, undefined)
     assert.ok(w.videos[0].source, 'the other process still needs the file')
+  })
+
+  await test('after a restart the video waits on its own job, not a new one', async () => {
+    const live = { id: 'job7', opts: { priority: 1 } }
+    const w = world({
+      videos: [queued({ status: 'converting', claimedAt: ago(CLAIM_STALE_MS + 1), attempts: 1, jobId: 'job7' })],
+      redisJobs: { job7: live }
+    })
+    await w.run()
+
+    assert.strictEqual(w.jobs.length, 0)
+    assert.deepStrictEqual(w.followed, ['job7'])
+    assert.strictEqual(w.videos[0].status, 'done')
+  })
+
+  await test('a job Redis no longer has is started anew, and its id replaces the old one', async () => {
+    const w = world({ videos: [queued({ status: 'converting', claimedAt: ago(CLAIM_STALE_MS + 1), attempts: 1, jobId: 'gone' })] })
+    await w.run()
+
+    assert.strictEqual(w.jobs.length, 1)
+    assert.strictEqual(w.videos[0].jobId, 'job1')
+    assert.strictEqual(w.videos[0].status, 'done')
+  })
+
+  await test('a job the converter dropped as too old fails as a timeout, not as the video', async () => {
+    for (const reason of ['host ::: too_old: waited 700000 ms, limit 600000 ms', 'host ::: Job timeout - older than 600000ms']) {
+      const w = world({ videos: [queued()], outcome: { error: 'failed', cause: new Error(reason) } })
+      await w.run()
+      assert.strictEqual(w.videos[0].error, 'timeout')
+    }
   })
 
   await test('every waiting video starts in one tick, oldest first', async () => {

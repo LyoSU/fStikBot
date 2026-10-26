@@ -10,24 +10,28 @@
 // Telegram here, that is the publish's job. The job carries no `input`, so the
 // chat's completed/failed handlers in utils/add-sticker.js leave it alone.
 
-const { convertPriority, maxVideoDuration, queueTooBusy } = require('./video-convert-rules')
+const { convertPriority, convertRank, maxVideoDuration, queueTooBusy, isTooOld } = require('./video-convert-rules')
 const log = require('./logger').scope('studio-video')
 const { logError } = require('./error-line')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_VIDEO_TICK_MS, 10) || 1000
-// The converter drops a job older than this (CONVERT_MAX_JOB_AGE_MS there).
+// How long Studio's video waits on its job. The job asks the converter to drop
+// it past the same age (maxAgeMs), so nothing converts for a waiter gone.
 const CONVERT_TIMEOUT_MS = 10 * 60 * 1000
 // While a conversion runs, its process renews the claim this often...
 const HEARTBEAT_MS = 20 * 1000
 // ...so a claim not renewed for this long is a dead process's (a deploy
-// restarts the bot): its video is taken again within a minute. The job is
-// lost with that process, since a finished job's result lives only in its waiter.
+// restarts the bot): its video is taken again within a minute, and the new
+// process waits on the same job (jobId) rather than converting it again.
 const CLAIM_STALE_MS = 60 * 1000
 // A video that killed or outlived two claims is not tried a third time.
 const MAX_ATTEMPTS = 2
 // Conversions one process waits on at once; the converter's own workers and
 // the queue's priorities decide what actually runs.
 const MAX_IN_FLIGHT = parseInt(process.env.STUDIO_VIDEO_IN_FLIGHT, 10) || 10
+// A finished job stays in Redis this long, so a process that took the video
+// over after a restart can still read its result.
+const KEEP_JOB_S = 600
 
 const OUTCOME_ERROR = { disabled: 'unavailable', timeout: 'timeout', enqueue: 'convert', failed: 'convert' }
 
@@ -51,6 +55,11 @@ function mongoRepo (db) {
       { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
       { $set: { claimedAt: at, updatedAt: at } }
     ).then((result) => result.matchedCount > 0),
+    // The job converting the video, on our own claim.
+    setJob: (video, jobId) => db.StudioVideo.updateOne(
+      { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
+      { $set: { jobId } }
+    ),
     // Only our own claim is settled; the source and its link go either way.
     settle: (video, set) => db.StudioVideo.updateOne(
       { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
@@ -70,10 +79,11 @@ function videoSize (metadata) {
  * @param {Object} deps.repo database access (mongoRepo)
  * @param {Object} deps.queue the convert queue (utils/queues.js)
  * @param {Function} deps.runJob utils/queue-job.js runQueueJob
+ * @param {Function} deps.followJob utils/queue-job.js followQueueJob
  * @param {Function} [deps.now]
  * @param {number} [deps.heartbeatMs]
  */
-function createVideoConverter ({ repo, queue, runJob, now = () => new Date(), heartbeatMs = HEARTBEAT_MS }) {
+function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new Date(), heartbeatMs = HEARTBEAT_MS }) {
   let timer = null
   let ticking = null
   let stopping = false
@@ -105,32 +115,51 @@ function createVideoConverter ({ repo, queue, runJob, now = () => new Date(), he
     log.warn(`video ${claim.video._id}: claim lost`)
   })
 
+  // The video's job: the one an earlier claim started, while Redis still has
+  // it (after a restart), else a new one, whose id goes on the row at once.
+  async function attach (claim) {
+    const { video } = claim
+    const known = video.jobId ? await queue.getJob(video.jobId).catch(() => null) : null
+
+    if (known) return followJob(queue, known, { timeoutMs: CONVERT_TIMEOUT_MS })
+
+    const isEmoji = video.packType === 'custom_emoji'
+    const user = await repo.findUser(video.telegramId)
+    const owner = { videoPacks: user ? await repo.countVideoPacks(user._id) : 0, locale: user?.locale, boost: video.boost }
+
+    const counts = await queue.getJobCounts().catch(() => ({ waiting: 0 }))
+    if (queueTooBusy(counts.waiting, convertRank(owner))) return { busy: true }
+
+    // The job the chat sends, minus `input`: the same frame, crop and length.
+    return runJob(queue, {
+      fileUrl: video.sourceUrl,
+      timestamp: Date.now(),
+      isEmoji,
+      frameType: video.frameType || 'square',
+      forceCrop: isEmoji,
+      maxDuration: maxVideoDuration(video.boost),
+      maxAgeMs: CONVERT_TIMEOUT_MS
+    }, {
+      priority: convertPriority(owner),
+      timeoutMs: CONVERT_TIMEOUT_MS,
+      keepSeconds: KEEP_JOB_S,
+      onQueued: (job) => write(claim, () => repo.setJob(video, String(job.id)))
+    })
+  }
+
   async function convert (claim) {
     const { video } = claim
 
     if ((video.attempts || 0) > MAX_ATTEMPTS) return fail(claim, 'timeout')
     if (queue.disabled) return fail(claim, 'unavailable')
 
-    const isEmoji = video.packType === 'custom_emoji'
-    const user = await repo.findUser(video.telegramId)
-    const videoPacks = user ? await repo.countVideoPacks(user._id) : 0
-    const priority = convertPriority({ videoPacks, locale: user?.locale, boost: video.boost })
+    const outcome = await attach(claim)
 
-    const counts = await queue.getJobCounts().catch(() => ({ waiting: 0 }))
-    if (queueTooBusy(counts.waiting, priority)) return fail(claim, 'busy')
-
-    // The job the chat sends, minus `input`: the same frame, crop and length.
-    const outcome = await runJob(queue, {
-      fileUrl: video.sourceUrl,
-      timestamp: Date.now(),
-      isEmoji,
-      frameType: video.frameType || 'square',
-      forceCrop: isEmoji,
-      maxDuration: maxVideoDuration(video.boost)
-    }, { priority, timeoutMs: CONVERT_TIMEOUT_MS })
-
+    if (outcome.busy) return fail(claim, 'busy')
     if (outcome.error) {
       log.warn(`video ${video._id}: ${outcome.error}`, outcome.cause?.message || '')
+      // Waited too long in the converter's queue: load, not the video.
+      if (outcome.error === 'failed' && isTooOld(outcome.cause?.message)) return fail(claim, 'timeout')
       return fail(claim, OUTCOME_ERROR[outcome.error] || 'convert')
     }
 
@@ -210,8 +239,8 @@ function getVideoConverter () {
   if (!instance) {
     const { db } = require('../database')
     const { convertQueue } = require('./queues')
-    const { runQueueJob } = require('./queue-job')
-    instance = createVideoConverter({ repo: mongoRepo(db), queue: convertQueue, runJob: runQueueJob })
+    const { runQueueJob, followQueueJob } = require('./queue-job')
+    instance = createVideoConverter({ repo: mongoRepo(db), queue: convertQueue, runJob: runQueueJob, followJob: followQueueJob })
   }
   return instance
 }
