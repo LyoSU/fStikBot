@@ -41,19 +41,35 @@ class Crash extends Error {}
 
 // In-memory Telegram with the measured semantics (plan 7.1), including the
 // merge of a file already in the pack: an add of it does nothing, a replace
-// with it moves the existing sticker into place.
-function fakeTelegram (initial, world) {
+// with it moves the existing sticker into place. An uploaded file makes the
+// same sticker every time: added again after its sticker was deleted, it comes
+// back under the old file_unique_id (measured). `sources` names the file each
+// initial sticker was made from.
+//
+// `outOfBand(change)` edits the pack the way a Telegram app does: getStickerSet
+// keeps answering with the pack as it was until this bot's next write that
+// succeeds (the Bot API's copy, measured), and a delete of a sticker that is
+// gone answers STICKERSET_NOT_MODIFIED. `pack.gone` is a deleted set.
+function fakeTelegram (initial, world, { sources = {} } = {}) {
   let fresh = 0
-  const pack = { title: 'Old title', thumbnail: null, stickers: initial.map((uid) => ({ uid, emoji: ['🙂'], keywords: [] })) }
+  const pack = { title: 'Old title', thumbnail: null, gone: false, stickers: initial.map((uid) => ({ uid, from: sources[uid], emoji: ['🙂'], keywords: [] })) }
   const byFileId = (fileId) => pack.stickers.find((s) => `fid:${s.uid}` === fileId)
+  const madeFrom = new Map(Object.entries(sources).map(([uid, from]) => [from, uid]))
+  const stickerOf = (from) => {
+    if (!madeFrom.has(from)) madeFrom.set(from, `new${++fresh}`)
+    return madeFrom.get(from)
+  }
   const calls = []
+  let cached = null
+
+  const read = () => ({
+    title: pack.title,
+    ...(pack.thumbnail ? { thumbnail: { file_id: 'thumb' } } : {}),
+    stickers: pack.stickers.map((s) => ({ file_unique_id: s.uid, file_id: `fid:${s.uid}`, custom_emoji_id: `ce:${s.uid}`, format: 'static' }))
+  })
 
   const apply = {
-    getStickerSet: () => ({
-      title: pack.title,
-      ...(pack.thumbnail ? { thumbnail: { file_id: 'thumb' } } : {}),
-      stickers: pack.stickers.map((s) => ({ file_unique_id: s.uid, file_id: `fid:${s.uid}`, custom_emoji_id: `ce:${s.uid}`, format: 'static' }))
-    }),
+    getStickerSet: () => cached || read(),
     setStickerSetTitle: ({ title }) => { pack.title = title; return true },
     setStickerSetThumbnail: ({ thumbnail, format }) => {
       pack.thumbnail = thumbnail ? { format, bytes: thumbnail.source.toString(), filename: thumbnail.filename } : null
@@ -62,25 +78,26 @@ function fakeTelegram (initial, world) {
     setCustomEmojiStickerSetThumbnail: ({ custom_emoji_id: id }) => { pack.thumbnail = id ? { customEmojiId: id } : null; return true },
     deleteStickerFromSet: ({ sticker }) => {
       const s = byFileId(sticker)
-      if (!s) throw telegramError(400, 'Bad Request: STICKER_INVALID')
+      if (!s) throw telegramError(400, 'Bad Request: STICKERSET_NOT_MODIFIED')
       pack.stickers.splice(pack.stickers.indexOf(s), 1)
       return true
     },
     replaceStickerInSet: ({ old_sticker: old, sticker }) => {
       const s = byFileId(old)
       if (!s) throw telegramError(400, 'Bad Request: STICKER_INVALID')
+      if (s.from === sticker.sticker) return true
       const same = pack.stickers.find((x) => x.from === sticker.sticker)
       if (same) {
         pack.stickers.splice(pack.stickers.indexOf(same), 1)
         pack.stickers[pack.stickers.indexOf(s)] = same
         return true
       }
-      pack.stickers[pack.stickers.indexOf(s)] = { uid: `new${++fresh}`, from: sticker.sticker, emoji: sticker.emoji_list, keywords: sticker.keywords || [] }
+      pack.stickers[pack.stickers.indexOf(s)] = { uid: stickerOf(sticker.sticker), from: sticker.sticker, emoji: sticker.emoji_list, keywords: sticker.keywords || [] }
       return true
     },
     addStickerToSet: ({ sticker }) => {
       if (pack.stickers.some((x) => x.from === sticker.sticker)) return true
-      pack.stickers.push({ uid: `new${++fresh}`, from: sticker.sticker, emoji: sticker.emoji_list, keywords: sticker.keywords || [] })
+      pack.stickers.push({ uid: stickerOf(sticker.sticker), from: sticker.sticker, emoji: sticker.emoji_list, keywords: sticker.keywords || [] })
       return true
     },
     setStickerPositionInSet: ({ sticker, position }) => {
@@ -97,13 +114,19 @@ function fakeTelegram (initial, world) {
   return {
     pack,
     calls,
+    outOfBand (change) {
+      cached = cached || read()
+      change(pack)
+    },
     async callApi (method, params) {
       const index = calls.length
       calls.push(method)
       const fault = world.faultAt === index ? world.fault : null
       if (fault === 'lost') throw networkError()
       if (fault === 'crash-before') { world.crashed = true; throw new Crash('crash') }
+      if (pack.gone && !(method === 'getStickerSet' && cached)) throw telegramError(400, 'Bad Request: STICKERSET_INVALID')
       const result = JSON.parse(JSON.stringify(apply[method](params)))
+      if (method !== 'getStickerSet') cached = null
       if (fault === 'noreply') throw networkError()
       if (fault === 'crash-after') { world.crashed = true; throw new Crash('crash') }
       return result
@@ -363,27 +386,31 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assertPackMatches(tg.pack, draft, '429')
   })
 
-  // Two draft items with the same uploaded file: Telegram keeps one.
+  // Two draft items with the same uploaded file: Telegram keeps one sticker for
+  // both, and the publish goes on without the second.
   for (const kind of ['add', 'replace']) {
     for (const fault of [null, 'lost', 'noreply', 'crash-before', 'crash-after']) {
-      await test(`a duplicate file in a ${kind} stops the publish safely${fault ? ` (with a "${fault}" fault on it)` : ''}`, async () => {
+      await test(`a duplicate file in a ${kind} is left out and the rest is published${fault ? ` (with a "${fault}" fault on it)` : ''}`, async () => {
         const base = ['x', 'y', 'z']
         const draft = kind === 'add'
           ? [
-              { assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] },
               { assetId: 'first', file: { fileId: 'upload:same' }, emojiList: ['😀'] },
-              { assetId: 'second', file: { fileId: 'upload:same' }, emojiList: ['😀'] }
+              { assetId: 'a-x', fileUniqueId: 'x', emojiList: ['😎'] },
+              { assetId: 'second', file: { fileId: 'upload:same' }, emojiList: ['😀'] },
+              { assetId: 'third', file: { fileId: 'upload:other' }, emojiList: ['🐱'] }
             ]
           : [
+              { assetId: 'a-z', fileUniqueId: 'z', emojiList: ['😎'] },
               { assetId: 'a-x', fileUniqueId: 'x', file: { fileId: 'upload:same' }, emojiList: ['😀'] },
-              { assetId: 'a-y', fileUniqueId: 'y', file: { fileId: 'upload:same' }, emojiList: ['😀'] }
+              { assetId: 'a-y', fileUniqueId: 'y', file: { fileId: 'upload:same' }, emojiList: ['😀'] },
+              { assetId: 'third', file: { fileId: 'upload:other' }, emojiList: ['🐱'] }
             ]
+        const published = draft.filter((item) => item.assetId !== (kind === 'add' ? 'second' : 'a-y'))
         // Where is the call carrying the duplicate? Probe a clean run.
         const probeWorld = { faultAt: -1 }
         const probe = fakeTelegram(base, probeWorld)
         const plain = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), { telegram: probe, store: fakeStore(probeWorld), lock: fakeLock(probeWorld) })
-        assert.strictEqual(plain.status, 'failed')
-        assert.match(plain.error, /duplicate/)
+        assert.strictEqual(plain.status, 'succeeded', plain.error)
         // The duplicate is the second add / the second replace.
         const method = kind === 'add' ? 'addStickerToSet' : 'replaceStickerInSet'
         const target = probe.calls.map((m, i) => [m, i]).filter(([m]) => m === method)[1][1]
@@ -393,16 +420,106 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
         const store = fakeStore(world)
         const lock = fakeLock(world)
         const commit = await runToEnd(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), tg, store, lock, world)
-        assert.strictEqual(commit.status, 'failed', `${commit.status} ${commit.error}`)
-        assert.match(commit.error, /duplicate/)
-        // Nothing lost that the draft kept, nothing doubled: the file is there
-        // once (y and z, left out of the draft, were deleted before it).
-        if (kind === 'add') assert.ok(tg.pack.stickers.some((st) => st.uid === 'x'))
-        else assert.strictEqual(tg.pack.stickers.length, 1)
-        assert.strictEqual(tg.pack.stickers.filter((st) => st.from === 'upload:same').length, 1)
+        assert.strictEqual(commit.status, 'succeeded', `${commit.status} ${commit.error}`)
+        assert.deepStrictEqual(commit.steps.filter((step) => step.merged).map((step) => step.assetId), [kind === 'add' ? 'second' : 'a-y'])
+        assertPackMatches(tg.pack, published, 'merged')
+        assert.strictEqual(commit.mapping[kind === 'add' ? 'second' : 'a-y'], undefined, 'a merged item has no sticker of its own')
       })
     }
   }
+
+  for (const fault of [null, 'lost', 'noreply', 'crash-before', 'crash-after']) {
+    await test(`a deleted sticker's file added back returns under its old id${fault ? ` (a "${fault}" fault on every call)` : ''}`, async () => {
+      // The user dropped y and added the file y was made from (a replace done
+      // as delete + add): Telegram hands back y itself.
+      const base = ['x', 'y']
+      const draft = [
+        { assetId: 'n', file: { fileId: 'upload:y' }, emojiList: ['😀'] },
+        { assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] }
+      ]
+      const probeWorld = { faultAt: -1 }
+      const probe = fakeTelegram(base, probeWorld, { sources: { y: 'upload:y' } })
+      await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), { telegram: probe, store: fakeStore(probeWorld), lock: fakeLock(probeWorld) })
+      for (let at = 0; at < (fault ? probe.calls.length : 1); at++) {
+        const world = { faultAt: fault ? at : -1, fault }
+        const tg = fakeTelegram(base, world, { sources: { y: 'upload:y' } })
+        const commit = await runToEnd(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), tg, fakeStore(world), fakeLock(world), world)
+        assert.strictEqual(commit.status, 'succeeded', `at ${at}: ${commit.error}`)
+        assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['y', 'x'])
+        assert.strictEqual(commit.mapping.n, 'y')
+        assertPackMatches(tg.pack, draft, `at ${at}`)
+      }
+    })
+  }
+
+  for (const fault of [null, 'lost', 'noreply', 'crash-before', 'crash-after']) {
+    await test(`a sticker replaced with the file it was made from stays itself${fault ? ` (a "${fault}" fault on every call)` : ''}`, async () => {
+      const base = ['x', 'y']
+      const draft = [
+        { assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] },
+        { assetId: 'a-y', fileUniqueId: 'y', file: { fileId: 'upload:y' }, emojiList: ['🙂'] }
+      ]
+      const probeWorld = { faultAt: -1 }
+      const probe = fakeTelegram(base, probeWorld, { sources: { y: 'upload:y' } })
+      await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), { telegram: probe, store: fakeStore(probeWorld), lock: fakeLock(probeWorld) })
+      for (let at = 0; at < (fault ? probe.calls.length : 1); at++) {
+        const world = { faultAt: fault ? at : -1, fault }
+        const tg = fakeTelegram(base, world, { sources: { y: 'upload:y' } })
+        const commit = await runToEnd(newCommit({ name: 'p', ownerTelegramId: 1, base, draft }), tg, fakeStore(world), fakeLock(world), world)
+        assert.strictEqual(commit.status, 'succeeded', `at ${at}: ${commit.error}`)
+        assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['x', 'y'])
+        assert.strictEqual(commit.mapping['a-y'], 'y')
+      }
+    })
+  }
+
+  await test('a sticker deleted in a Telegram app: done once the pack shows it gone', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['a', 'b', 'c'], world)
+    tg.outOfBand((pack) => pack.stickers.splice(1, 1)) // b, deleted in the app
+    const draft = [{ assetId: 'a-c', fileUniqueId: 'c', emojiList: ['🙂'] }]
+    // The draft was opened on the old copy, which the bot still gets.
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b', 'c'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    // Deleting a refreshed the copy, so b's NOT_MODIFIED is confirmed.
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['c'])
+  })
+
+  await test('a sticker deleted in a Telegram app while the bot sees the old pack stops the publish as changed', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['a', 'b'], world)
+    tg.outOfBand((pack) => pack.stickers.splice(1, 1))
+    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }]
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    assert.strictEqual(commit.status, 'failed')
+    assert.match(commit.error, /^the pack changed outside the draft: b was already deleted/)
+    assert.strictEqual(commit.steps[0].state, 'failed')
+    assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['a'])
+  })
+
+  await test('a pack deleted in Telegram: confirmed by a fresh read, the commit says the pack is gone', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['a'], world)
+    tg.outOfBand((pack) => { pack.gone = true })
+    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
+    const readFresh = async () => { throw telegramError(400, 'Bad Request: STICKERSET_INVALID') }
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), readFresh })
+    assert.strictEqual(commit.status, 'failed')
+    assert.strictEqual(commit.packGone, true)
+    assert.match(commit.error, /^pack_gone: .*STICKERSET_INVALID/)
+  })
+
+  await test('STICKERSET_INVALID on a pack that is still there (another bot\'s, or not confirmed) is a plain failure', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['a'], world)
+    tg.outOfBand((pack) => { pack.gone = true })
+    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
+    // No fresh read: getStickerSet still serves the old copy.
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    assert.strictEqual(commit.status, 'failed')
+    assert.strictEqual(commit.packGone, undefined)
+    assert.strictEqual(commit.error, 'Bad Request: STICKERSET_INVALID')
+  })
 
   for (const fault of ['lost', 'noreply', 'crash-before', 'crash-after']) {
     await test(`a "${fault}" fault on every call of 150 random publishes recovers exactly`, async () => {

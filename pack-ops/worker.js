@@ -198,10 +198,28 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     }
   }
 
+  // A pack Telegram no longer has (deleted in @Stickers or a Telegram app) is
+  // marked deleted, as after the bot's own delete, so neither Studio nor the
+  // bot offers it again. The commit is final either way; a failed write here
+  // happens again on the next commit that finds the pack gone.
+  async function writeGone (commit) {
+    try {
+      const pack = await repo.findPack(commit)
+      if (pack) await repo.writeRemoved(pack, now())
+      log.info(`commit ${commit._id}: ${commit.name} is gone from Telegram, marked deleted`)
+    } catch (err) {
+      log.error(`commit ${commit._id}: marking ${commit.name} deleted failed:`, errorText(err))
+    }
+  }
+
   async function run (commit) {
     const result = await publish(commit._id)
-    if (result?.status === 'succeeded') await trySync(result)
-    else await refundIfUnmade(result)
+    if (result?.status === 'succeeded') {
+      await trySync(result)
+    } else {
+      if (result?.packGone) await writeGone(result)
+      await refundIfUnmade(result)
+    }
     return result
   }
 

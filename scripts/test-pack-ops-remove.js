@@ -28,8 +28,12 @@ const telegramError = (code, description) => Object.assign(new Error(description
 const invalid = () => telegramError(400, 'Bad Request: STICKERSET_INVALID')
 
 // One set; `ours: false` is a set some other bot made: deleting it answers
-// STICKERSET_INVALID although it is there.
-function fakeTelegram ({ exists = true, ours = true, faults = {} } = {}) {
+// STICKERSET_INVALID although it is there. A set this bot deleted answers a
+// second delete with STICKERPACK_NOT_FOUND (measured). `stale`: the set was
+// deleted in a Telegram app and getStickerSet still serves the Bot API's old
+// copy of it.
+function fakeTelegram ({ exists = true, ours = true, stale = false, faults = {} } = {}) {
+  let deletedByUs = false
   const t = {
     exists,
     calls: [],
@@ -39,11 +43,13 @@ function fakeTelegram ({ exists = true, ours = true, faults = {} } = {}) {
       if (faults[n] === 'lost') throw networkError()
       let result
       if (method === 'getStickerSet') {
-        if (!t.exists) throw invalid()
+        if (!t.exists && !stale) throw invalid()
         result = { name: params.name, stickers: [{ file_unique_id: 'a', file_id: 'fa' }] }
       } else if (method === 'deleteStickerSet') {
+        if (deletedByUs) throw telegramError(400, 'Bad Request: STICKERPACK_NOT_FOUND')
         if (!t.exists || !ours) throw invalid()
         t.exists = false
+        deletedByUs = true
         result = true
       } else {
         throw new Error(`unexpected ${method}`)
@@ -71,7 +77,7 @@ const removeCommit = () => ({
   mapping: null
 })
 
-const run = (commit, telegram) => runCommit(commit, { telegram, store: fakeStore(), lock: fakeLock() })
+const run = (commit, telegram, deps = {}) => runCommit(commit, { telegram, store: fakeStore(), lock: fakeLock(), ...deps })
 
 ;(async () => {
   await test('a remove commit deletes the set and succeeds', async () => {
@@ -105,6 +111,15 @@ const run = (commit, telegram) => runCommit(commit, { telegram, store: fakeStore
 
   await test('a set Telegram already lost counts as deleted', async () => {
     const commit = await run(removeCommit(), fakeTelegram({ exists: false }))
+    assert.strictEqual(commit.status, 'succeeded')
+  })
+
+  await test('a set deleted in a Telegram app while getStickerSet still shows it: a fresh read settles it', async () => {
+    const telegram = fakeTelegram({ exists: false, stale: true })
+    const stuck = await run(removeCommit(), telegram)
+    assert.strictEqual(stuck.status, 'failed', 'without a fresh read the old copy wins')
+    const readFresh = async () => { throw invalid() }
+    const commit = await run(removeCommit(), telegram, { readFresh })
     assert.strictEqual(commit.status, 'succeeded')
   })
 

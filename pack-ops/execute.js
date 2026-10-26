@@ -44,8 +44,13 @@ const isTelegramAnswer = (err) => Number.isInteger(err?.code) || Number.isIntege
 const errorCode = (err) => err?.code ?? err?.response?.error_code
 const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
 
-// A sticker that is already gone answers this way; for a delete that means done.
-const isGone = (err) => /STICKER_INVALID|sticker not found|STICKERSET_INVALID/i.test(errorText(err))
+// A delete of a sticker the set no longer holds (measured: a second delete of
+// one sticker is STICKERSET_NOT_MODIFIED).
+const isStickerGone = (err) => /STICKER_INVALID|sticker not found|STICKERSET_NOT_MODIFIED/i.test(errorText(err))
+
+// What Telegram answers about a set that is gone, and also about one this bot
+// didn't make; a second deleteStickerSet of a set says STICKERPACK_NOT_FOUND.
+const isSetInvalid = (err) => /STICKERSET_INVALID|STICKERPACK_NOT_FOUND/i.test(errorText(err))
 
 // A title or thumbnail that is already what was asked for.
 const isNotModified = (err) => /not modified|NOT_MODIFIED/i.test(errorText(err))
@@ -74,11 +79,13 @@ class Interrupted extends Error {}
  * @param {Function} [deps.botUsername] () => the bot's username, for a new pack's name
  * @param {Function} [deps.nameTaken] (name) => whether our database already has a pack of that name
  * @param {Function} [deps.register] (commit) => the new pack's document id; makes the bot's own records of it
+ * @param {Function} [deps.readFresh] (name) => the set as Telegram's servers hold it now, or a 400 for none;
+ *   getStickerSet answers from the Bot API's copy, which can be minutes behind a pack edited in a Telegram app
  * @param {Function} [deps.onProgress] (commit) after every step
  * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
  * @returns {Promise<Object>} the commit, with its final status
  */
-async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
+async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, readFresh, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
   if (commit.status === 'succeeded' || commit.status === 'conflict' || commit.status === 'failed') return commit
 
   // A new pack's name changes once it is made; the lock stays under the first.
@@ -94,6 +101,13 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
 
   const call = (method, params) => telegram.callApi(method, params)
   const getSet = () => call('getStickerSet', { name: commit.name })
+  // Whether Telegram has no such set, asked of the freshest source there is.
+  // Only a 400 says so; a set that is there (made by another bot, or a copy
+  // the Bot API still keeps) is not gone.
+  const packGone = () => (readFresh ? readFresh(commit.name) : getSet()).then(() => false, (err) => {
+    if (isTelegramAnswer(err) && errorCode(err) === 400) return true
+    throw err
+  })
   const save = async () => {
     commit.updatedAt = new Date()
     await store.save(commit)
@@ -106,7 +120,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     await save()
 
     if (commit.remove) {
-      await removePack(commit, { call, getSet, save })
+      await removePack(commit, { call, packGone, save })
       return commit
     }
 
@@ -143,19 +157,20 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     if (commit.phase === 'arrange') {
       const set = await getSet()
       if (!commit.mapping) {
-        const content = planContent(commit.draft, commit.contentBase)
-        const mapped = mapAfterContent(commit.draft, commit.contentBase, content, uidsOf(set))
+        const draft = publishedDraft(commit)
+        const content = planContent(draft, commit.contentBase)
+        const mapped = mapAfterContent(draft, commit.contentBase, content, uidsOf(set))
         if (mapped.error) {
           commit.status = 'failed'
-          commit.error = `the pack changed during the publish: ${mapped.error}`
+          commit.error = `${CHANGED}: ${mapped.error}`
           return commit
         }
         commit.mapping = Object.fromEntries(mapped.ok)
-        const target = commit.draft.map((item) => commit.mapping[item.assetId])
+        const target = draft.map((item) => commit.mapping[item.assetId])
         const known = new Map(Object.entries(commit.known || {}))
         commit.steps.push(
           ...planMoves(uidsOf(set), target).map((move) => ({ kind: 'move', ...move })),
-          ...planMetadata(commit.draft, known).flatMap((update) => [
+          ...planMetadata(draft, known).flatMap((update) => [
             update.emojiList && { kind: 'emoji', fileUniqueId: update.fileUniqueId, emojiList: update.emojiList },
             update.keywords && { kind: 'keywords', fileUniqueId: update.fileUniqueId, keywords: update.keywords }
           ].filter(Boolean)).map((step) => ({ ...step }))
@@ -186,7 +201,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     }
 
     const final = uidsOf(await getSet())
-    const target = commit.draft.map((item) => commit.mapping[item.assetId])
+    const target = publishedDraft(commit).map((item) => commit.mapping[item.assetId])
     if (final.length !== target.length || final.some((id, i) => id !== target[i])) {
       commit.status = 'failed'
       commit.error = 'the pack does not match the draft after the publish'
@@ -196,12 +211,19 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     commit.status = 'succeeded'
     return commit
   } catch (err) {
+    commit.error = errorText(err)
     if (err instanceof Interrupted || !isTelegramAnswer(err) || errorCode(err) === 429) {
       commit.status = 'interrupted'
     } else {
       commit.status = 'failed'
+      // The pack was deleted in Telegram (@Stickers, a Telegram app). The
+      // worker then marks it deleted, as after the bot's own delete. A remove
+      // has asked already.
+      if (!commit.remove && isSetInvalid(err) && await packGone().catch(() => false)) {
+        commit.packGone = true
+        commit.error = PACK_GONE
+      }
     }
-    commit.error = errorText(err)
     return commit
   } finally {
     clearInterval(renewal)
@@ -233,6 +255,15 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
     await save()
     throw Object.assign(new Error(message), { code: 400 })
   }
+  // Telegram keeps one sticker per file: this item's file is a sticker the
+  // pack already has, so that one sticker stands for both. The item is left
+  // out of the pack (arrange and the verify go without it) and the job says
+  // which it was; the rest of the draft goes on.
+  const merged = async (step) => {
+    step.merged = true
+    step.state = 'succeeded'
+    await save()
+  }
 
   for (const step of commit.steps) {
     if (step.phase !== phase || step.state === 'succeeded') continue
@@ -243,13 +274,18 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
     // trace in the pack, read before anything is repeated.
     if ((step.state === 'running' || step.state === 'uncertain') && step.phase === 'content') {
       set = await getSet()
-      const effect = effectOf(commit, step, uidsOf(set))
+      const uids = uidsOf(set)
+      const effect = effectOf(commit, step, uids)
       if (effect === 'applied') {
+        if (step.kind === 'add') step.newFileUniqueId = uids[uids.length - 1]
         step.state = 'succeeded'
         await save()
         continue
       }
-      if (effect === 'duplicate') await refuse(step, DUPLICATE)
+      if (effect === 'duplicate') {
+        await merged(step)
+        continue
+      }
       if (effect === 'unexpected') await refuse(step, CHANGED)
     }
 
@@ -273,8 +309,15 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
       step.error = null
     } catch (err) {
       step.error = errorText(err)
-      if (step.kind === 'delete' && isTelegramAnswer(err) && isGone(err)) {
-        // Already gone: done.
+      if (step.kind === 'delete' && isTelegramAnswer(err) && isStickerGone(err)) {
+        // Not in the set any more: deleted in a Telegram app, or by an attempt
+        // whose answer got lost. Done once the pack agrees. getStickerSet can
+        // keep showing a pack edited elsewhere as it was, for minutes; nothing
+        // can be planned on that copy, so the publish stops instead.
+        set = await getSet()
+        if (uidsOf(set).includes(step.fileUniqueId)) {
+          await refuse(step, `${CHANGED_OUTSIDE}: ${step.fileUniqueId} was already deleted from it`)
+        }
       } else if (step.phase === 'settings' && isTelegramAnswer(err) && isNotModified(err)) {
         // Already as asked: done.
       } else if (!isTelegramAnswer(err)) {
@@ -297,7 +340,10 @@ async function runSteps (commit, phase, { call, getSet, save, lock, lockName, to
       set = await getSet()
       const uids = uidsOf(set)
       const effect = effectOf(commit, step, uids, prev)
-      if (effect === 'duplicate') await refuse(step, DUPLICATE)
+      if (effect === 'duplicate') {
+        await merged(step)
+        continue
+      }
       if (effect !== 'applied') await refuse(step, CHANGED)
       step.newFileUniqueId = step.kind === 'add' ? uids[uids.length - 1] : uids[prev.indexOf(step.fileUniqueId)]
     } else if (step.kind === 'delete') {
@@ -425,6 +471,17 @@ function refuseCreate (commit, error, save) {
 
 const DUPLICATE = 'duplicate: Telegram keeps one sticker per file in a pack, and this file is already there'
 const CHANGED = 'the pack changed during the publish'
+const CHANGED_OUTSIDE = 'the pack changed outside the draft'
+// The pack is no longer in Telegram. Telegram's own word stays in it: the
+// client reads STICKERSET_INVALID as a pack that is gone.
+const PACK_GONE = 'pack_gone: the pack is no longer in Telegram (STICKERSET_INVALID)'
+
+// The draft without the items Telegram merged into a sticker already in the
+// pack: what the pack is to hold, in order.
+function publishedDraft (commit) {
+  const merged = new Set(commit.steps.filter((step) => step.merged).map((step) => step.assetId))
+  return merged.size ? commit.draft.filter((item) => !merged.has(item.assetId)) : commit.draft
+}
 
 // Whether the pack already shows what a settings step would set. A thumbnail
 // can only be compared when it is to be dropped; setting one again is harmless.
@@ -486,12 +543,13 @@ function applyStep (commit, step, { call, fileIdOf, itemOf, customEmojiIdOf, ass
 }
 
 // How many stickers the pack holds right before `step`. Steps run one at a
-// time, so every earlier content step is settled.
+// time, so every earlier content step is settled. A merged add left the pack
+// as it was; a merged replace took its old sticker out.
 function countBefore (commit, step) {
   const earlier = commit.steps.slice(0, commit.steps.indexOf(step)).filter((s) => s.phase === 'content')
   return commit.contentBase.length -
-    earlier.filter((s) => s.kind === 'delete').length +
-    earlier.filter((s) => s.kind === 'add').length
+    earlier.filter((s) => s.kind === 'delete' || (s.kind === 'replace' && s.merged)).length +
+    earlier.filter((s) => s.kind === 'add' && !s.merged).length
 }
 
 /**
@@ -518,7 +576,13 @@ function effectOf (commit, step, uids, prev) {
       if (uids.length === before) return prev ? 'duplicate' : 'none'
       return 'unexpected'
     case 'replace':
-      if (uids.includes(step.fileUniqueId)) return uids.length === before ? 'none' : 'unexpected'
+      if (uids.includes(step.fileUniqueId)) {
+        if (uids.length !== before) return 'unexpected'
+        // Answered, and the pack is as it was: the new file is the one this
+        // sticker was made from, and Telegram handed back the same sticker.
+        if (prev) return uids.every((id, i) => id === prev[i]) ? 'applied' : 'unexpected'
+        return 'none'
+      }
       if (uids.length === before - 1) return 'duplicate'
       if (uids.length !== before) return 'unexpected'
       if (prev && prev.includes(uids[prev.indexOf(step.fileUniqueId)])) return 'unexpected'
@@ -543,11 +607,11 @@ function effectOf (commit, step, uids, prev) {
  *   `name` is the provisional one (and the lock's), `base` is []
  */
 // Deletes the whole set (the bot's "Delete pack"), as one step. Telegram calls
-// a set it doesn't know STICKERSET_INVALID, and says the same to a bot that
-// didn't make the set, so that answer only counts as done once getStickerSet
-// can't find the set either. A step left `running` by a dead process is just
-// sent again: the second delete of a set gets that same answer.
-async function removePack (commit, { call, getSet, save }) {
+// a set it doesn't know STICKERSET_INVALID (STICKERPACK_NOT_FOUND once this bot
+// has deleted it), and says the same to a bot that didn't make the set, so that
+// answer only counts as done once Telegram can't find the set either. A step
+// left `running` by a dead process is just sent again.
+async function removePack (commit, { call, packGone, save }) {
   let step = commit.steps.find((entry) => entry.kind === 'remove')
   if (!step) {
     step = { kind: 'remove', phase: 'remove', state: 'pending' }
@@ -561,12 +625,8 @@ async function removePack (commit, { call, getSet, save }) {
     try {
       await call('deleteStickerSet', { name: commit.name })
     } catch (err) {
-      if (!isTelegramAnswer(err) || !/STICKERSET_INVALID/i.test(errorText(err))) throw err
-      const stillThere = await getSet().then(() => true, (getErr) => {
-        if (isTelegramAnswer(getErr) && errorCode(getErr) === 400) return false
-        throw getErr
-      })
-      if (stillThere) {
+      if (!isTelegramAnswer(err) || !isSetInvalid(err)) throw err
+      if (!await packGone()) {
         step.state = 'failed'
         step.error = errorText(err)
         throw err

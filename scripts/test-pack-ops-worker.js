@@ -41,7 +41,8 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     published: [],
     sources: {}, // other sets, as this bot's getStickerSet shows them: name -> stickers
     sourceReads: [],
-    refunds: []
+    refunds: [],
+    removed: [] // packs marked deleted
   }
 
   w.repo = {
@@ -71,6 +72,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     async loadAsset (id) { return w.assets.has(id) ? { ...clone(w.assets.get(id)), data: w.assets.get(id).data } : null },
     async setAssetFileId (id, fileId, owner) { Object.assign(w.assets.get(id), { fileId, fileOwner: owner }) },
     async findPack () { return clone(w.pack) },
+    async writeRemoved (pack) { w.removed.push(pack._id) },
     async refundCharge (id, charge) {
       const c = w.commits.find((x) => x._id === id)
       if (c.charge.refunded) return false
@@ -131,6 +133,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
       w.published.push(id)
       const c = w.commits.find((x) => x._id === id)
       c.status = w.publishAs
+      if (w.publishGone) c.packGone = true
       return clone(c)
     }
   })
@@ -523,6 +526,21 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     free.publishAs = 'failed'
     await free.worker.step()
     assert.strictEqual(free.refunds.length, 0)
+  })
+
+  console.log('a pack gone from Telegram')
+
+  await test('a commit that found the pack gone marks it deleted; a plain failure does not', async () => {
+    const gone = world({ commits: [commit()], assets: threeAssets() })
+    gone.publishAs = 'failed'
+    gone.publishGone = true
+    await gone.worker.step()
+    assert.deepStrictEqual(gone.removed, ['pack1'])
+
+    const failedOnly = world({ commits: [commit()], assets: threeAssets() })
+    failedOnly.publishAs = 'failed'
+    await failedOnly.worker.step()
+    assert.deepStrictEqual(failedOnly.removed, [])
   })
 
   console.log(`\n${passed} passed, ${failed} failed`)

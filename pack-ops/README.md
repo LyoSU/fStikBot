@@ -14,6 +14,7 @@ in section 7.1 there.
 | `names.js` | Short names for new packs (shared with the `/new` wizard) |
 | `worker.js` | The Studio publish worker: claims queued commits, uploads their files, runs them, syncs the bot's sticker docs |
 | `worker-repo.js` | The worker's MongoDB queries |
+| `fresh.js` | A set as Telegram's servers hold it now (MTProto), past the Bot API's copy |
 | `index.js` | `publishCommit(db, telegram, id)`: load and run a stored commit in a copy scope (waits out per-user 429s) |
 
 ## A commit
@@ -37,7 +38,7 @@ in section 7.1 there.
 `status`: `pending` → `running` → `succeeded`, or stops at:
 - `conflict`: the pack changed since the draft was opened; nothing was done;
 - `interrupted`: a 429 longer than the wait, a network error, a lost lock. Run it again to continue;
-- `failed`: Telegram refused a step, merged a duplicate file, or the pack changed mid-publish. Steps before it stay applied.
+- `failed`: Telegram refused a step, or the pack changed mid-publish. Steps before it stay applied.
 
 Phases run in order: create (only for a new pack), content (deletes, replaces, adds), then arrange (moves,
 emoji, keywords), then settings (title, thumbnail), then verify. Each step is saved as `running` before its
@@ -46,10 +47,37 @@ run is checked against `getStickerSet` before anything is sent again: a
 content step leaves a trace in the pack, and an arrange step is idempotent.
 
 Telegram answers `ok` to an add or replace with a file that already has a
-sticker in the pack, but merges it instead of adding one. So every add and
-replace is checked against `getStickerSet` right after it, and a merge stops
-the commit as `duplicate`. Studio should drop duplicate files (by hash) before
-committing.
+sticker in the pack, but merges it instead of adding one: the add does
+nothing, the replace takes its old sticker out and moves the existing one into
+its place. So every add and replace is checked against `getStickerSet` right
+after it. A merge leaves that item out (`step.merged`; the job lists it as a
+duplicate) and the rest goes on: the pack ends up as the draft without it.
+
+A file can also come back as the sticker it already made (measured): the
+upload a deleted sticker was made from, added again, is that sticker under its
+old `file_unique_id`, and a replace with a sticker's own upload leaves it as it
+is. So after the content phase kept stickers are found by id, and the new ones
+are whatever else the pack holds, in the order the content phase made them
+(`mapAfterContent`); arrange then puts everything in place.
+
+## A pack edited elsewhere
+
+The Bot API answers `getStickerSet` from a copy it keeps, and a pack edited in
+a Telegram app or in @Stickers shows as it was for many minutes; only this
+bot's own next write that succeeds refreshes the copy (measured). The draft's
+`base` and the conflict check can stand on that old copy, so a step may meet a
+pack that is not what it read:
+
+- a delete of a sticker already gone answers `STICKERSET_NOT_MODIFIED`. It is
+  done once `getStickerSet` no longer shows the sticker (true after any earlier
+  write of the commit); otherwise the commit fails as
+  `the pack changed outside the draft: <uid> was already deleted from it`;
+- a step on a set that is gone answers `STICKERSET_INVALID`, as does one on a
+  set another bot made. `readFresh` (`fresh.js`: MTProto `messages.getStickerSet`,
+  falling back to the Bot API) decides: a set the server doesn't know ends the
+  commit as `failed`, `packGone: true`, `error: 'pack_gone: … (STICKERSET_INVALID)'`,
+  and the worker marks the pack deleted as the bot's own delete does
+  (`writeRemoved`). A set that is there keeps Telegram's error and is not touched.
 
 ## Pack settings
 
@@ -150,9 +178,9 @@ and fail it as `asset_missing` (no refund): deploy the bot before the API.
 runs one step instead of the phases: `deleteStickerSet` for `commit.name`, then
 `succeeded`. Telegram answers `STICKERSET_INVALID` both for a set that is gone
 and for one another bot made, so that answer only counts as done when
-`getStickerSet` can't find the set either; otherwise the commit fails and
-nothing is touched. A step found `running` is sent again: a second delete of a
-deleted set gets that same answer.
+`readFresh` can't find the set either; otherwise the commit fails and nothing
+is touched. A step found `running` is sent again: a second delete of a set this
+bot deleted answers `STICKERPACK_NOT_FOUND`, settled the same way.
 
 The sync of a remove commit writes what the bot's own delete writes: the pack
 and its stickers `deleted` (the document stays, also for a set Telegram had
@@ -204,7 +232,8 @@ Co-edit activity is not logged and the actor is not notified yet.
 ## Tests
 
 - `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, and the settings steps.
-- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates; the settings phase; creating a pack (names, the 50 limit, every fault).
+- `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates left out; a file that comes back as its old sticker; a pack edited or deleted elsewhere; the settings phase; creating a pack (names, the 50 limit, every fault).
+- `scripts/test-pack-ops-fresh.js`: the MTProto read and its fallback to the Bot API.
 - `scripts/test-pack-ops-remove.js`: deleting a pack: faults before and after the call, a set already gone, a set the bot can't delete, an older worker, the sync.
 - `scripts/test-pack-ops-worker.js`: the worker on an in-memory repo and Telegram: claims (incl. a stale one), upload resume and reuse, the ways an upload ends, the sync.
 - `scripts/check-studio-worker-live.js`: the worker on a throwaway MongoDB and a test bot, incl. a settings-only commit (title with suffix, thumbnail set and dropped; not in `npm test`).

@@ -87,13 +87,21 @@ function expectAfterContent (draft, remote, content) {
 }
 
 /**
- * Map every draft asset to its file_unique_id after phase 1, by position:
- * a replaced sticker keeps its place, added ones land at the end in the
- * order they were added. Refuses when the pack doesn't have exactly the
- * expected stickers — someone changed it outside our lock, and guessing
- * would attach metadata or moves to the wrong sticker.
+ * Map every draft asset to its file_unique_id after phase 1. A kept sticker
+ * is itself; the new ones are the stickers the pack holds besides the kept,
+ * in the order phase 1 made them: a replaced sticker keeps its place, added
+ * ones land at the end in the order they were added.
  *
- * @param {DraftItem[]} draft
+ * A new sticker is not always a new id: the file a deleted sticker was made
+ * from comes back as that very sticker. And a kept sticker may have moved: a
+ * replace with a file already in the pack moves that sticker into place. So
+ * kept stickers are found by id, not by position; the order is arrange's job.
+ * Refuses when the pack doesn't hold exactly the kept stickers plus as many
+ * new ones — someone changed it outside our lock, and guessing would attach
+ * metadata or moves to the wrong sticker.
+ *
+ * @param {DraftItem[]} draft the items that are to be in the pack (without
+ *   the ones Telegram merged into a sticker already there)
  * @param {string[]} remoteBefore file_unique_ids before phase 1
  * @param {Object} content result of planContent
  * @param {string[]} remoteAfter file_unique_ids from getStickerSet after phase 1
@@ -105,20 +113,17 @@ function mapAfterContent (draft, remoteBefore, content, remoteAfter) {
     return { error: `expected ${slots.length} stickers, the pack has ${remoteAfter.length}` }
   }
 
-  const before = new Set(remoteBefore)
+  const kept = new Set(slots.filter((slot) => slot.fileUniqueId).map((slot) => slot.fileUniqueId))
+  const inPack = new Set(remoteAfter)
+  const missing = [...kept].find((id) => !inPack.has(id))
+  if (missing) return { error: `${missing} is no longer in the pack` }
+
+  // The counts match and every kept sticker is there, so the rest are
+  // exactly the new ones.
+  const fresh = remoteAfter.filter((id) => !kept.has(id))
   const map = new Map()
-  for (let i = 0; i < slots.length; i++) {
-    const slot = slots[i]
-    const actual = remoteAfter[i]
-    if (slot.fileUniqueId) {
-      if (slot.fileUniqueId !== actual) return { error: `position ${i}: expected ${slot.fileUniqueId}, found ${actual}` }
-    } else if (before.has(actual)) {
-      // A new or replaced sticker always gets a fresh id; an old one here
-      // means the slot shifted.
-      return { error: `position ${i}: expected a new sticker, found ${actual}` }
-    }
-    map.set(slot.assetId, actual)
-  }
+  let next = 0
+  for (const slot of slots) map.set(slot.assetId, slot.fileUniqueId || fresh[next++])
   return { ok: map }
 }
 

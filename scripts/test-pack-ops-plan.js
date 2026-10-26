@@ -208,19 +208,43 @@ test('mapping: refuses when someone added a sticker during the publish', () => {
   assert.ok(mapped.error, 'must not guess')
 })
 
-test('mapping: refuses when the kept stickers shifted', () => {
+test('mapping: kept stickers are found by id wherever they are', () => {
+  // A replace with a file already in the pack moves that sticker into place.
   const draft = [keep('x'), keep('y')]
   const content = planContent(draft, ['x', 'y'])
   const mapped = mapAfterContent(draft, ['x', 'y'], content, ['y', 'x'])
-  assert.ok(mapped.error)
+  assert.deepStrictEqual([...mapped.ok], [['a-x', 'x'], ['a-y', 'y']])
 })
 
-test('mapping: refuses an old sticker where a new one should be', () => {
-  const draft = [keep('x'), { assetId: 'a-y', fileUniqueId: 'y', file: {}, emojiList: ['🙂'] }]
+test('mapping: refuses when a kept sticker is gone', () => {
+  const draft = [keep('x'), { assetId: 'n', file: {}, emojiList: ['😀'] }]
   const content = planContent(draft, ['x', 'y'])
-  // The replace never happened: y still sits in its place.
+  // y was deleted, the add landed, and x vanished while z appeared.
+  const mapped = mapAfterContent(draft, ['x', 'y'], content, ['z', 'new'])
+  assert.match(mapped.error, /x is no longer in the pack/)
+})
+
+test('mapping: a deleted sticker\'s file added again comes back under its old id', () => {
+  // Telegram hands back the very sticker a file was made from: delete y, add
+  // y's file, and y is the new sticker.
+  const draft = [keep('x'), { assetId: 'n', file: {}, emojiList: ['😀'] }]
+  const content = planContent(draft, ['x', 'y'])
+  assert.deepStrictEqual(content.deletes, ['y'])
   const mapped = mapAfterContent(draft, ['x', 'y'], content, ['x', 'y'])
-  assert.ok(mapped.error)
+  assert.deepStrictEqual([...mapped.ok], [['a-x', 'x'], ['n', 'y']])
+})
+
+test('mapping: new stickers in the order the content phase made them', () => {
+  const draft = [
+    { assetId: 'n1', file: {}, emojiList: ['😀'] },
+    { assetId: 'r-y', fileUniqueId: 'y', file: {}, emojiList: ['😀'] },
+    keep('x'),
+    { assetId: 'n2', file: {}, emojiList: ['😀'] }
+  ]
+  const content = planContent(draft, ['x', 'y'])
+  // y replaced in place by p, then n1 and n2 appended in draft order.
+  const mapped = mapAfterContent(draft, ['x', 'y'], content, ['x', 'p', 'q', 'r'])
+  assert.deepStrictEqual(Object.fromEntries(mapped.ok), { 'r-y': 'p', 'a-x': 'x', n1: 'q', n2: 'r' })
 })
 
 test('metadata: only changed emoji, keywords only when the draft sets them', () => {
