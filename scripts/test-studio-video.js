@@ -31,8 +31,8 @@ const DONE = { result: { content: WEBM.toString('base64'), metadata: { streams: 
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk' }], videoPacks = 0, outcome = DONE, waiting = 0, disabled = false, heartbeatMs, redisJobs = {} } = {}) {
-  const w = { videos, jobs: [], followed: [], renewals: 0 }
+function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk' }], videoPacks = 0, outcome = DONE, waiting = 0, disabled = false, heartbeatMs, redisJobs = {}, jobState } = {}) {
+  const w = { videos, jobs: [], followed: [], renewals: 0, listeners: {} }
   // Every claim and renewal is a moment later than the one before.
   let clock = NOW.getTime()
   const now = () => new Date(++clock)
@@ -57,7 +57,16 @@ function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk
     },
     setJob: async (video, jobId) => {
       const row = videos.find((v) => v._id === video._id)
-      if (row.claimedAt.getTime() === video.claimedAt.getTime()) row.jobId = jobId
+      if (row.claimedAt.getTime() !== video.claimedAt.getTime()) return
+      row.jobId = jobId
+      row.waiting = true
+      delete row.startedAt
+    },
+    started: async (video, at) => {
+      const row = videos.find((v) => v._id === video._id)
+      if (row.status !== 'converting' || row.claimedAt.getTime() !== video.claimedAt.getTime()) return
+      row.startedAt = at
+      delete row.waiting
     },
     settle: async (video, set) => {
       const row = videos.find((v) => v._id === video._id)
@@ -68,9 +77,14 @@ function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk
     }
   }
   // Jobs Redis still has, by id: what a restarted process finds again.
-  w.queue = { disabled, getJobCounts: async () => ({ waiting }), getJob: async (id) => redisJobs[id] || null }
+  w.queue = {
+    disabled,
+    getJobCounts: async () => ({ waiting }),
+    getJob: async (id) => redisJobs[id] || null,
+    on: (event, fn) => { w.listeners[event] = fn }
+  }
   w.runJob = async (queue, data, options) => {
-    const job = { id: `job${w.jobs.length + 1}`, opts: { priority: options.priority } }
+    const job = { id: `job${w.jobs.length + 1}`, opts: { priority: options.priority }, ...(jobState ? { getState: async () => jobState() } : {}) }
     w.jobs.push({ data, options })
     if (options.onQueued) await options.onQueued(job)
     return typeof outcome === 'function' ? outcome(data) : outcome
@@ -277,6 +291,67 @@ const queued = (patch = {}) => ({
     await w.run()
     assert.deepStrictEqual(w.videos.map((v) => v.status), ['done', 'done'])
     assert.deepStrictEqual(w.jobs.length, 2)
+  })
+
+  await test('a job waits in the queue until the converter starts it, and the row says which', async () => {
+    let release
+    const w = world({ videos: [queued()], outcome: () => new Promise((resolve) => { release = () => resolve(DONE) }), jobState: () => 'waiting' })
+    w.converter.start()
+    await w.converter.tick()
+    await sleep(5)
+
+    // Behind other videos: taken by the bot, not converting yet.
+    assert.strictEqual(w.videos[0].status, 'converting')
+    assert.strictEqual(w.videos[0].waiting, true)
+    assert.strictEqual(w.videos[0].startedAt, undefined)
+
+    // Bull's global:active from whichever process runs the converter's queue.
+    w.listeners['global:active']('job1')
+    w.listeners['global:active']('someone-elses-job')
+    await sleep(5)
+    assert.strictEqual(w.videos[0].waiting, undefined)
+    assert.ok(w.videos[0].startedAt instanceof Date)
+
+    release()
+    await w.converter.settled()
+    await w.converter.stop()
+    assert.strictEqual(w.videos[0].status, 'done')
+  })
+
+  await test('a job the converter took before the event was heard is started on its state', async () => {
+    let release
+    const w = world({ videos: [queued()], outcome: () => new Promise((resolve) => { release = () => resolve(DONE) }), jobState: () => 'active' })
+    await w.converter.tick()
+    await sleep(5)
+    assert.ok(w.videos[0].startedAt instanceof Date)
+    assert.strictEqual(w.videos[0].waiting, undefined)
+    release()
+    await w.converter.settled()
+  })
+
+  await test('a missed event is caught up by the heartbeat', async () => {
+    let state = 'waiting'
+    const w = world({ videos: [queued()], heartbeatMs: 10, outcome: async () => { await sleep(60); return DONE }, jobState: () => state })
+    const run = w.run()
+    await sleep(5)
+    assert.strictEqual(w.videos[0].waiting, true)
+    state = 'active'
+    await sleep(30)
+    assert.ok(w.videos[0].startedAt instanceof Date)
+    await run
+  })
+
+  await test('after a restart the job found again says whether it started', async () => {
+    const live = { id: 'job7', opts: { priority: 1 }, getState: async () => 'active' }
+    const w = world({
+      videos: [queued({ status: 'converting', claimedAt: ago(CLAIM_STALE_MS + 1), attempts: 1, jobId: 'job7', waiting: true })],
+      redisJobs: { job7: live },
+      outcome: async () => { await sleep(10); return DONE }
+    })
+    const run = w.run()
+    await sleep(5)
+    assert.ok(w.videos[0].startedAt instanceof Date)
+    await run
   })
 
   await test('a stopped converter claims nothing', async () => {

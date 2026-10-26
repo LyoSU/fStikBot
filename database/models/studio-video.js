@@ -28,6 +28,10 @@ const studioVideoSchema = mongoose.Schema({
   // a restart waits on this job instead of converting the video again.
   jobId: String,
   claimedAt: Date,
+  // The job waits in the convert queue (true) until the converter starts it
+  // (startedAt): Studio says "in line" until then.
+  waiting: Boolean,
+  startedAt: Date,
   attempts: Number,
   updatedAt: Date,
   createdAt: { type: Date, default: Date.now }

@@ -5,6 +5,11 @@
 //
 //   queued → converting → done (result) | failed (error)
 //
+// While converting, the row says whether the job still waits in the convert
+// queue (`waiting`, behind the chat's videos: minutes in the evening) or the
+// converter has started it (`startedAt`), so Studio can tell a line from a
+// conversion.
+//
 // The converter downloads the file by its link to the API. The WebM goes back
 // into the row and Studio fetches it from there; nothing is uploaded to
 // Telegram here, that is the publish's job. The job carries no `input`, so the
@@ -55,10 +60,15 @@ function mongoRepo (db) {
       { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
       { $set: { claimedAt: at, updatedAt: at } }
     ).then((result) => result.matchedCount > 0),
-    // The job converting the video, on our own claim.
+    // The job converting the video, on our own claim: in the queue until the converter starts it.
     setJob: (video, jobId) => db.StudioVideo.updateOne(
       { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
-      { $set: { jobId } }
+      { $set: { jobId, waiting: true }, $unset: { startedAt: 1 } }
+    ),
+    // The converter started the job.
+    started: (video, at) => db.StudioVideo.updateOne(
+      { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
+      { $set: { startedAt: at }, $unset: { waiting: 1 } }
     ),
     // Only our own claim is settled; the source and its link go either way.
     settle: (video, set) => db.StudioVideo.updateOne(
@@ -87,7 +97,10 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
   let timer = null
   let ticking = null
   let stopping = false
+  let listening = false
   const inFlight = new Set()
+  // Job id → the claim waiting on it, for the queue's "active" events.
+  const byJob = new Map()
 
   // A claim's renewals and its settle go one after another, so a settle always
   // names the claimedAt the row has; once the claim is lost, nothing is written.
@@ -115,13 +128,44 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     log.warn(`video ${claim.video._id}: claim lost`)
   })
 
+  // Once per claim: the converter took the job off the queue.
+  const markStarted = (claim) => {
+    if (claim.started) return
+    claim.started = true
+    write(claim, () => repo.started(claim.video, now())).catch((err) => log.warn(`video ${claim.video._id}: started not saved:`, err.message))
+  }
+
+  // An "active" event can come before the job is known here, or be missed
+  // (Redis reconnect): the job's own state is read on watching and on each
+  // heartbeat until it starts.
+  async function checkStarted (claim) {
+    if (claim.started || !claim.job?.getState) return
+    const state = await claim.job.getState().catch(() => null)
+    if (state === 'active') markStarted(claim)
+  }
+
+  function watchJob (claim, job) {
+    claim.job = job
+    byJob.set(String(job.id), claim)
+    return checkStarted(claim)
+  }
+
+  /** The convert queue says a job started (Bull's global:active, from any process). */
+  function jobActive (jobId) {
+    const claim = byJob.get(String(jobId))
+    if (claim) markStarted(claim)
+  }
+
   // The video's job: the one an earlier claim started, while Redis still has
   // it (after a restart), else a new one, whose id goes on the row at once.
   async function attach (claim) {
     const { video } = claim
     const known = video.jobId ? await queue.getJob(video.jobId).catch(() => null) : null
 
-    if (known) return followJob(queue, known, { timeoutMs: CONVERT_TIMEOUT_MS })
+    if (known) {
+      await watchJob(claim, known)
+      return followJob(queue, known, { timeoutMs: CONVERT_TIMEOUT_MS })
+    }
 
     const isEmoji = video.packType === 'custom_emoji'
     const user = await repo.findUser(video.telegramId)
@@ -143,7 +187,10 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
       priority: convertPriority(owner),
       timeoutMs: CONVERT_TIMEOUT_MS,
       keepSeconds: KEEP_JOB_S,
-      onQueued: (job) => write(claim, () => repo.setJob(video, String(job.id)))
+      onQueued: async (job) => {
+        await write(claim, () => repo.setJob(video, String(job.id)))
+        await watchJob(claim, job)
+      }
     })
   }
 
@@ -175,6 +222,7 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
 
     claim.heartbeat = setInterval(() => {
       renew(claim).catch((err) => log.warn(`video ${video._id}: renew failed:`, err.message))
+      checkStarted(claim)
     }, heartbeatMs)
     claim.heartbeat.unref?.()
 
@@ -185,6 +233,7 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
       })
       .finally(() => {
         clearInterval(claim.heartbeat)
+        if (claim.job && byJob.get(String(claim.job.id)) === claim) byJob.delete(String(claim.job.id))
         inFlight.delete(run)
       })
 
@@ -216,6 +265,10 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
   const settled = () => Promise.allSettled([...inFlight])
 
   function start () {
+    if (!listening && queue.on) {
+      listening = true
+      queue.on('global:active', (jobId) => jobActive(jobId))
+    }
     if (timer) return
     timer = setInterval(() => { tick() }, TICK_INTERVAL_MS)
     timer.unref()
@@ -230,7 +283,7 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     if (ticking) await ticking.catch(() => {})
   }
 
-  return { start, stop, tick, settled }
+  return { start, stop, tick, settled, jobActive }
 }
 
 let instance = null
