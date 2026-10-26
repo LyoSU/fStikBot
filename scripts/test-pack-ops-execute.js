@@ -497,6 +497,27 @@ async function runToEnd (initialCommit, tg, store, lock, world) {
     assert.deepStrictEqual(tg.pack.stickers.map((st) => st.uid), ['a'])
   })
 
+  await test('a pack the server holds otherwise than the Bot API\'s copy stops as a conflict, untouched', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['a', 'b'], world)
+    tg.outOfBand((pack) => pack.stickers.splice(1, 1)) // b, deleted in the app
+    const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }]
+    const freshUids = async () => tg.pack.stickers.map((st) => st.uid)
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), freshUids })
+    assert.strictEqual(commit.status, 'conflict')
+    assert.deepStrictEqual(tg.calls, ['getStickerSet'])
+  })
+
+  await test('a fresh read that is unknown or fails leaves the conflict check to the Bot API\'s copy', async () => {
+    for (const freshUids of [async () => null, async () => { throw new Error('mtproto down') }]) {
+      const world = { faultAt: -1 }
+      const tg = fakeTelegram(['a', 'b'], world)
+      const draft = [{ assetId: 'a-a', fileUniqueId: 'a', emojiList: ['🙂'] }]
+      const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['a', 'b'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), freshUids })
+      assert.strictEqual(commit.status, 'succeeded', commit.error)
+    }
+  })
+
   await test('a pack deleted in Telegram: confirmed by a fresh read, the commit says the pack is gone', async () => {
     const world = { faultAt: -1 }
     const tg = fakeTelegram(['a'], world)

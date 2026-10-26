@@ -65,8 +65,13 @@ are whatever else the pack holds, in the order the content phase made them
 The Bot API answers `getStickerSet` from a copy it keeps, and a pack edited in
 a Telegram app or in @Stickers shows as it was for many minutes; only this
 bot's own next write that succeeds refreshes the copy (measured). The draft's
-`base` and the conflict check can stand on that old copy, so a step may meet a
-pack that is not what it read:
+`base` and the conflict check can stand on that old copy. So the conflict
+check also holds `base` against the server's own list (`freshUids`, `fresh.js`:
+MTProto, each document id turned into the file_unique_id the Bot API would
+show; tdlib's encoding, measured, not documented). It only stops a publish when
+that list matches some of `base` and differs otherwise; one that matches none
+is taken for a broken read (a warning, no check), and without MTProto there is
+none. A step may still meet a pack that is not what it read:
 
 - a delete of a sticker already gone answers `STICKERSET_NOT_MODIFIED`. It is
   done once `getStickerSet` no longer shows the sticker (true after any earlier
@@ -233,7 +238,7 @@ Co-edit activity is not logged and the actor is not notified yet.
 
 - `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, and the settings steps.
 - `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates left out; a file that comes back as its old sticker; a pack edited or deleted elsewhere; the settings phase; creating a pack (names, the 50 limit, every fault).
-- `scripts/test-pack-ops-fresh.js`: the MTProto read and its fallback to the Bot API.
+- `scripts/test-pack-ops-fresh.js`: the MTProto read and its fallback to the Bot API; file_unique_ids from document ids, and the guard against a read that matches nothing.
 - `scripts/test-pack-ops-remove.js`: deleting a pack: faults before and after the call, a set already gone, a set the bot can't delete, an older worker, the sync.
 - `scripts/test-pack-ops-worker.js`: the worker on an in-memory repo and Telegram: claims (incl. a stale one), upload resume and reuse, the ways an upload ends, the sync.
 - `scripts/check-studio-worker-live.js`: the worker on a throwaway MongoDB and a test bot, incl. a settings-only commit (title with suffix, thumbnail set and dropped; not in `npm test`).

@@ -81,11 +81,13 @@ class Interrupted extends Error {}
  * @param {Function} [deps.register] (commit) => the new pack's document id; makes the bot's own records of it
  * @param {Function} [deps.readFresh] (name) => the set as Telegram's servers hold it now, or a 400 for none;
  *   getStickerSet answers from the Bot API's copy, which can be minutes behind a pack edited in a Telegram app
+ * @param {Function} [deps.freshUids] (name, base) => the pack's file_unique_ids as the server has them, or null
+ *   when unknown; the conflict check also holds the draft against these
  * @param {Function} [deps.onProgress] (commit) after every step
  * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
  * @returns {Promise<Object>} the commit, with its final status
  */
-async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, readFresh, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
+async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, readFresh, freshUids, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
   if (commit.status === 'succeeded' || commit.status === 'conflict' || commit.status === 'failed') return commit
 
   // A new pack's name changes once it is made; the lock stays under the first.
@@ -131,7 +133,12 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
 
     if (!commit.phase) {
       const set = await getSet()
-      if (hasConflict(commit.base, uidsOf(set))) {
+      // The Bot API's copy can be minutes behind an edit made in a Telegram
+      // app, and the draft may stand on that copy too; the server's own list
+      // catches it before anything is sent. A fresh read that fails is no
+      // reason to stop: the copy is all the check had before.
+      const fresh = freshUids && !commit.create ? await freshUids(commit.name, commit.base).catch(() => null) : null
+      if (hasConflict(commit.base, uidsOf(set)) || (fresh && hasConflict(commit.base, fresh))) {
         commit.status = 'conflict'
         commit.error = 'the pack changed outside the draft'
         return commit

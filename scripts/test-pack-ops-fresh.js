@@ -3,7 +3,7 @@
 
 process.env.LOG_LEVEL = 'error'
 const assert = require('assert')
-const { createFreshReader } = require('../pack-ops/fresh')
+const { createFreshReader, createFreshUids, uniqueIdOf } = require('../pack-ops/fresh')
 
 let passed = 0
 let failed = 0
@@ -55,6 +55,35 @@ const botApi = (answer) => ({ calls: [], async callApi (method, params) { this.c
     await createFreshReader(telegram, async () => flood, Api)('cats')
     await createFreshReader(telegram, async () => { throw new Error('connect failed') }, Api)('cats')
     assert.strictEqual(telegram.calls.length, 3)
+  })
+
+  // Document ids and the file_unique_ids getStickerSet gave for them (test bot).
+  const A = { id: '5402482204490116943', uid: 'AgADT68AAvF4-Uo' }
+  const B = { id: '5402496004220037871', uid: 'AgAD76oAAn6F-Uo' }
+  const fromServer = (...docs) => async () => ({ documents: docs.map((doc) => ({ id: { toString: () => doc.id } })) })
+
+  await test('a document id gives the file_unique_id the Bot API shows', async () => {
+    assert.strictEqual(uniqueIdOf(A.id), A.uid)
+    assert.strictEqual(uniqueIdOf(B.id), B.uid)
+  })
+
+  await test('the fresh ids: the pack as the server has it, matched against the draft', async () => {
+    assert.deepStrictEqual(await createFreshUids(fromServer(A, B))('cats', [A.uid, B.uid]), [A.uid, B.uid])
+    // Some match, one is gone: a real difference, for the conflict check.
+    assert.deepStrictEqual(await createFreshUids(fromServer(A))('cats', [A.uid, B.uid]), [A.uid])
+    assert.deepStrictEqual(await createFreshUids(fromServer())('cats', []), [])
+  })
+
+  await test('ids that match none of the draft\'s are unknown, not a conflict', async () => {
+    // The encoding changed, or the read is broken: nothing can be told.
+    assert.strictEqual(await createFreshUids(fromServer({ id: '1' }, { id: '2' }))('cats', [A.uid, B.uid]), null)
+    assert.strictEqual(await createFreshUids(fromServer())('cats', [A.uid]), null)
+    assert.strictEqual(await createFreshUids(fromServer(A))('cats', []), null)
+  })
+
+  await test('a Bot API answer (no MTProto) is no fresh read', async () => {
+    const botApiSet = async () => ({ stickers: [{ file_unique_id: A.uid }] })
+    assert.strictEqual(await createFreshUids(botApiSet)('cats', [A.uid]), null)
   })
 
   console.log(`\n${passed} passed, ${failed} failed`)
