@@ -16,9 +16,12 @@ const log = require('./logger').scope('studio-video')
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_VIDEO_TICK_MS, 10) || 1000
 // The converter drops a job older than this (CONVERT_MAX_JOB_AGE_MS there).
 const CONVERT_TIMEOUT_MS = 10 * 60 * 1000
-// A `converting` claim older than this is a dead process's: the job is lost
-// with it, since a finished job's result lives only in its waiter.
-const CLAIM_STALE_MS = CONVERT_TIMEOUT_MS + 60 * 1000
+// While a conversion runs, its process renews the claim this often...
+const HEARTBEAT_MS = 20 * 1000
+// ...so a claim not renewed for this long is a dead process's (a deploy
+// restarts the bot): its video is taken again within a minute. The job is
+// lost with that process, since a finished job's result lives only in its waiter.
+const CLAIM_STALE_MS = 60 * 1000
 // A video that killed or outlived two claims is not tried a third time.
 const MAX_ATTEMPTS = 2
 // Conversions one process waits on at once; the converter's own workers and
@@ -42,6 +45,11 @@ function mongoRepo (db) {
     ).lean(),
     findUser: (telegramId) => db.User.findOne({ telegram_id: telegramId }).select('_id locale').lean(),
     countVideoPacks: (owner) => db.StickerSet.countDocuments({ owner, video: true }),
+    // Moves our own claim to `at`; false once another process has taken the video.
+    renew: (video, at) => db.StudioVideo.updateOne(
+      { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
+      { $set: { claimedAt: at, updatedAt: at } }
+    ).then((result) => result.matchedCount > 0),
     // Only our own claim is settled; the source and its link go either way.
     settle: (video, set) => db.StudioVideo.updateOne(
       { _id: video._id, status: 'converting', claimedAt: video.claimedAt },
@@ -62,18 +70,45 @@ function videoSize (metadata) {
  * @param {Object} deps.queue the convert queue (utils/queues.js)
  * @param {Function} deps.runJob utils/queue-job.js runQueueJob
  * @param {Function} [deps.now]
+ * @param {number} [deps.heartbeatMs]
  */
-function createVideoConverter ({ repo, queue, runJob, now = () => new Date() }) {
+function createVideoConverter ({ repo, queue, runJob, now = () => new Date(), heartbeatMs = HEARTBEAT_MS }) {
   let timer = null
   let ticking = null
   let stopping = false
   const inFlight = new Set()
 
-  const fail = (video, error) => repo.settle(video, { status: 'failed', error })
+  // A claim's renewals and its settle go one after another, so a settle always
+  // names the claimedAt the row has; once the claim is lost, nothing is written.
+  const write = (claim, fn) => {
+    const next = claim.chain.then(() => (claim.lost ? null : fn()))
+    // A failed write (Mongo hiccup) must not block the ones after it.
+    claim.chain = next.catch(() => {})
+    return next
+  }
 
-  async function convert (video) {
-    if ((video.attempts || 0) > MAX_ATTEMPTS) return fail(video, 'timeout')
-    if (queue.disabled) return fail(video, 'unavailable')
+  const settle = (claim, set) => write(claim, () => repo.settle(claim.video, set))
+  const fail = (claim, error) => settle(claim, { status: 'failed', error })
+
+  const renew = (claim) => write(claim, async () => {
+    const at = now()
+
+    if (await repo.renew(claim.video, at)) {
+      claim.video.claimedAt = at
+      return
+    }
+    // Another process took the video (this one stalled past CLAIM_STALE_MS):
+    // its conversion counts, this one's result is dropped.
+    claim.lost = true
+    clearInterval(claim.heartbeat)
+    log.warn(`video ${claim.video._id}: claim lost`)
+  })
+
+  async function convert (claim) {
+    const { video } = claim
+
+    if ((video.attempts || 0) > MAX_ATTEMPTS) return fail(claim, 'timeout')
+    if (queue.disabled) return fail(claim, 'unavailable')
 
     const isEmoji = video.packType === 'custom_emoji'
     const user = await repo.findUser(video.telegramId)
@@ -81,7 +116,7 @@ function createVideoConverter ({ repo, queue, runJob, now = () => new Date() }) 
     const priority = convertPriority({ videoPacks, locale: user?.locale, boost: video.boost })
 
     const counts = await queue.getJobCounts().catch(() => ({ waiting: 0 }))
-    if (queueTooBusy(counts.waiting, priority)) return fail(video, 'busy')
+    if (queueTooBusy(counts.waiting, priority)) return fail(claim, 'busy')
 
     // The job the chat sends, minus `input`: the same frame, crop and length.
     const outcome = await runJob(queue, {
@@ -95,23 +130,33 @@ function createVideoConverter ({ repo, queue, runJob, now = () => new Date() }) 
 
     if (outcome.error) {
       log.warn(`video ${video._id}: ${outcome.error}`, outcome.cause?.message || '')
-      return fail(video, OUTCOME_ERROR[outcome.error] || 'convert')
+      return fail(claim, OUTCOME_ERROR[outcome.error] || 'convert')
     }
 
     const result = Buffer.from(outcome.result.content, 'base64')
     const { width, height } = videoSize(outcome.result.metadata)
 
-    await repo.settle(video, { status: 'done', result, size: result.length, width, height })
+    await settle(claim, { status: 'done', result, size: result.length, width, height })
     log.info(`video ${video._id}: ${result.length} B, ${width}x${height}`)
   }
 
   function track (video) {
-    const run = convert(video)
+    const claim = { video, lost: false, chain: Promise.resolve() }
+
+    claim.heartbeat = setInterval(() => {
+      renew(claim).catch((err) => log.warn(`video ${video._id}: renew failed:`, err.message))
+    }, heartbeatMs)
+    claim.heartbeat.unref?.()
+
+    const run = convert(claim)
       .catch(async (err) => {
         log.error(`video ${video._id}:`, err.stack || err.message)
-        await fail(video, 'convert').catch(() => {})
+        await fail(claim, 'convert').catch(() => {})
       })
-      .finally(() => inFlight.delete(run))
+      .finally(() => {
+        clearInterval(claim.heartbeat)
+        inFlight.delete(run)
+      })
 
     inFlight.add(run)
   }
@@ -146,7 +191,8 @@ function createVideoConverter ({ repo, queue, runJob, now = () => new Date() }) 
     timer.unref()
   }
 
-  // A conversion cut short here is claimed again once its claim goes stale.
+  // A conversion cut short here stops renewing its claim, so another process
+  // takes the video once the claim goes stale.
   async function stop () {
     stopping = true
     if (timer) clearInterval(timer)
@@ -171,6 +217,7 @@ function getVideoConverter () {
 
 module.exports = {
   CLAIM_STALE_MS,
+  HEARTBEAT_MS,
   MAX_ATTEMPTS,
   createVideoConverter,
   mongoRepo,
