@@ -101,6 +101,8 @@ function mongoRegister (db) {
         // execute.js; a commit planned before it was there keeps its flag).
         boost: commit.create.copyBoost ?? !!commit.boost,
         emojiSuffix: '🌟',
+        // The shape picked in Studio before the pack was made (/frame).
+        ...(commit.create.frameType ? { frameType: commit.create.frameType } : {}),
         create: true
       })
     }
