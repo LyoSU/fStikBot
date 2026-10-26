@@ -207,8 +207,11 @@ takes a sticker of another set by file_id, as the bot's own add does. A sticker
 no longer in its set (or a set that is gone) fails the commit as
 `copy_missing`.
 
-A copied pack is a `create` commit with `boost: true`, like the wizard's copy:
-`register` writes the pack with Boost, while its first title still gets the
+A copied pack is a `create` commit with `boost: true` and `create.copyOf`, like
+the wizard's copy. It earns Boost only as a copy (`copyEarnsBoost`, written down
+as `create.copyBoost` before the first stickers go in): every item a sticker of
+`copyOf`, or the copy paid for (into the other type); the API refuses anything
+else, and the worker checks again. `register` writes the pack with that Boost, while its first title still gets the
 bot's suffix (`formatTitle` as for a pack without Boost). A copy into the
 other pack type costs a credit, which the API takes before it queues the
 commit and writes down as `charge: { credits, user }`. When the commit ends

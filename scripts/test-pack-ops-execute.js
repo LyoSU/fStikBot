@@ -867,6 +867,26 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.strictEqual(done.boost, true)
   })
 
+  await test('creating a copy: Boost only for a copy that is one (all from the set, or paid for)', async () => {
+    const { copyEarnsBoost } = require('../pack-ops/execute')
+    const copied = (n, set = 'cats') => Array.from({ length: n }, (_, i) => ({ assetId: `c:s${i}`, file: { copy: { set, fileUniqueId: `s${i}` }, format: 'static', fileId: `f${i}` }, emojiList: ['🙂'] }))
+    const copy = (draft, extra = {}) => ({ boost: true, create: { title: 'x', copyOf: 'Cats' }, draft, ...extra })
+    assert.strictEqual(copyEarnsBoost(copy(copied(2))), true, 'same type, every sticker from the set')
+    assert.strictEqual(copyEarnsBoost(copy(fresh(2))), false, 'own files under a copyOf: the free-Boost exploit')
+    assert.strictEqual(copyEarnsBoost(copy([...copied(1), ...fresh(1)])), false)
+    assert.strictEqual(copyEarnsBoost(copy(copied(1, 'dogs'))), false)
+    assert.strictEqual(copyEarnsBoost(copy(fresh(2), { charge: { credits: 1, user: 'u' } })), true, 'into the other type, paid')
+    assert.strictEqual(copyEarnsBoost({ ...copy(copied(1)), create: { title: 'x' } }), false, 'no copyOf')
+
+    // Run through: the decision is written down before the first stickers become kept ones.
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const forged = await runCommit({ ...createCommit(2, { copyOf: 'Cats' }), boost: true }, { telegram: tg, ...deps })
+    assert.strictEqual(forged.status, 'succeeded', forged.error)
+    assert.strictEqual(forged.create.copyBoost, false)
+  })
+
   await test('creating a pack: a link Studio made from the title gets a random tail when taken', async () => {
     const world = { faultAt: -1 }
     const tg = fakeCreatingTelegram(world, { foreign: ['testovyi_pak_by_bot'] })

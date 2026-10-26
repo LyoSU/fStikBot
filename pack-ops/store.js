@@ -97,8 +97,9 @@ function mongoRegister (db) {
         name: commit.name,
         title: commit.create.formattedTitle,
         packType,
-        // A copy starts with Boost, as the wizard's does.
-        boost: !!commit.boost,
+        // A copy starts with Boost, as the wizard's does (copyEarnsBoost in
+        // execute.js; a commit planned before it was there keeps its flag).
+        boost: commit.create.copyBoost ?? !!commit.boost,
         emojiSuffix: '🌟',
         create: true
       })
