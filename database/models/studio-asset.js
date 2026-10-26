@@ -11,7 +11,9 @@ const studioAssetSchema = mongoose.Schema({
   width: Number,
   height: Number,
   size: Number,
-  data: { type: Buffer, required: true },
+  // Dropped once uploadStickerFile has it (pack-ops/worker-repo.js), unless
+  // the commit sends it itself as a thumbnail; a repeat upload brings it back.
+  data: Buffer,
   fileId: { type: String, default: null },
   // uploadStickerFile ties the file_id to a user_id; reuse it only for the same one.
   fileOwner: Number,

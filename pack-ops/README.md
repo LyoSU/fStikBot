@@ -207,13 +207,19 @@ takes a sticker of another set by file_id, as the bot's own add does. A sticker
 no longer in its set (or a set that is gone) fails the commit as
 `copy_missing`.
 
-A copied pack is a `create` commit with `boost: true`, like the wizard's copy:
-`register` writes the pack with Boost, while its first title still gets the
+A copied pack is a `create` commit with `boost: true` and `create.copyOf`, like
+the wizard's copy. It earns Boost only as a copy (`copyEarnsBoost`, written down
+as `create.copyBoost` before the first stickers go in): every item a sticker of
+`copyOf`, or the copy paid for (into the other type); the API refuses anything
+else, and the worker checks again. `register` writes the pack with that Boost, while its first title still gets the
 bot's suffix (`formatTitle` as for a pack without Boost). A copy into the
 other pack type costs a credit, which the API takes before it queues the
 commit and writes down as `charge: { credits, user }`. When the commit ends
 `failed` (or `conflict`) before the pack was made, the worker gives it back
-once (`charge.refunded`, set atomically by `refundCharge`). Once the pack
+once: `refundCharge` adds the credit and marks the commit on the user
+(`refundedCommits`) in one update, so no second run pays it again, then sets
+`charge.refunded`. A refund that failed, or whose process died before that
+mark, is picked up again by `findUnrefunded` a minute later. Once the pack
 exists the credit stays spent, as in the wizard. An `interrupted` commit keeps
 it until it ends.
 
@@ -261,7 +267,10 @@ queued → preparing → pending → running → succeeded (+ synced)
   The `file_id` goes onto the item and the commit is saved after each upload,
   so a restart doesn't repeat finished ones; it is also kept on the
   `studioassets` doc (with `fileOwner`: a file_id is reused only for the same
-  owner). A missing asset fails the commit as `asset_missing`; a 4xx from
+  owner), and the file's bytes leave that doc (unless the commit sends them
+  itself as its thumbnail): a retry finds the file_id on the commit, and a
+  file asked for by another owner is one Studio uploads again (the API stores
+  the bytes anew; without them the commit fails as `asset_missing`). A missing asset fails the commit as `asset_missing`; a 4xx from
   Telegram (not 429) fails it with Telegram's text; a network error or a 429
   beyond the wait leaves it `interrupted` for the API to requeue.
 - **Run**: `pending` commits, and `running` ones not touched for the lock TTL,

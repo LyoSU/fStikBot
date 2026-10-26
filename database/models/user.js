@@ -36,6 +36,12 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
+  // Studio commits whose credit was given back (pack-ops/worker-repo.js). The
+  // refund and this mark are one update, so a retried refund can't pay twice.
+  refundedCommits: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: undefined
+  },
   locale: {
     type: String
     // Note: No separate index - covered by compound { locale: 1, blocked: 1 } below

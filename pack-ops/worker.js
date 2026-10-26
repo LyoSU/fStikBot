@@ -24,6 +24,8 @@ const CLAIM_HEARTBEAT_MS = 30 * 1000
 // A failing sync is retried after 10 s, 20 s, 40 s … up to 10 min, and given up
 // after this many tries (synced stays false, syncError says why).
 const SYNC_MAX_ATTEMPTS = 10
+// A refund left owed is tried again once its commit is this old.
+const REFUND_RETRY_MS = 60 * 1000
 const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 1000)
 
 // Same split as the executor: an answer from Telegram is final, anything else
@@ -134,13 +136,19 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
         // A file_id from an earlier attempt, if it was made for this owner.
         let fileId = asset.fileId && asset.fileOwner === commit.ownerTelegramId ? asset.fileId : null
         if (!fileId) {
+          // Its bytes went once Telegram had it for another owner; Studio
+          // sends the file again for this one.
+          if (!asset.data) return await settle('failed', 'asset_missing')
           const uploaded = await runInCopyScope(() => telegram.callApi('uploadStickerFile', {
             user_id: commit.ownerTelegramId,
             sticker: { source: bytesOf(asset.data) },
             sticker_format: item.file.format || asset.format
           }))
           fileId = uploaded.file_id
-          await repo.setAssetFileId(asset._id, fileId, commit.ownerTelegramId)
+          // Telegram has the file now: its bytes leave the database, unless
+          // this commit still sends them itself, as the pack's thumbnail.
+          const keepData = commit.settings?.thumbnail?.assetId === String(asset._id)
+          await repo.setAssetFileId(asset._id, fileId, commit.ownerTelegramId, { keepData })
         }
 
         item.file.fileId = fileId
@@ -235,6 +243,8 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       charge.refunded = true
     } catch (err) {
       logError(err, { where: 'pack_commit:refund', fields: { commitId: String(commit._id) } })
+      // findUnrefunded tries again once this has aged.
+      await repo.touch(commit._id, now()).catch(() => {})
     }
   }
 
@@ -280,6 +290,13 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     const runnable = await repo.findRunnable(now(), LOCK_TTL_MS)
     if (runnable) {
       await run(runnable)
+      return true
+    }
+
+    // A refund a dead process or a failed write left owed.
+    const owed = await repo.findUnrefunded(now(), REFUND_RETRY_MS)
+    if (owed) {
+      await refundIfUnmade(owed)
       return true
     }
 

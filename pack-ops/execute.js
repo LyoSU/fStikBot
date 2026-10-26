@@ -435,6 +435,8 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
       // The first title carries the bot's suffix even on a pack that starts
       // with Boost (a copy), like the wizard's; a later rename can drop it.
       create.formattedTitle = await formatTitle({ ...commit, boost: false }, create.title)
+      // Read now, before the first items become kept ones and lose their source.
+      create.copyBoost = copyEarnsBoost(commit)
       create.index = 0
       await save()
     }
@@ -510,6 +512,17 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
   create.state = 'done'
   await save()
   return true
+}
+
+// A new pack starts with Boost only as a copy, on the terms the API checks too:
+// every item a sticker of the copied set (a copy of the same type, free), or
+// the copy paid for (into the other type, whose converted files can't show
+// where they came from). Anything else asking for it doesn't get it.
+function copyEarnsBoost (commit) {
+  const from = commit.create?.copyOf
+  if (!commit.boost || !from) return false
+  if (commit.charge?.credits > 0) return true
+  return commit.draft.every((item) => item.file?.copy && String(item.file.copy.set).toLowerCase() === from.toLowerCase())
 }
 
 function refuseCreate (commit, error, save) {
@@ -713,4 +726,4 @@ function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, 
   }
 }
 
-module.exports = { runCommit, newCommit, ownerProblem, LOCK_TTL_MS }
+module.exports = { runCommit, newCommit, ownerProblem, copyEarnsBoost, LOCK_TTL_MS }

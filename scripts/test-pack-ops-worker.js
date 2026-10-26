@@ -42,6 +42,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     sources: {}, // other sets, as this bot's getStickerSet shows them: name -> stickers
     sourceReads: [],
     refunds: [],
+    refundedOnUser: new Set(), // commits marked on the user as refunded
     removed: [] // packs marked deleted
   }
 
@@ -70,16 +71,30 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     },
     async markSynced (id) { w.commits.find((c) => c._id === id).synced = true },
     async loadAsset (id) { return w.assets.has(id) ? { ...clone(w.assets.get(id)), data: w.assets.get(id).data } : null },
-    async setAssetFileId (id, fileId, owner) { Object.assign(w.assets.get(id), { fileId, fileOwner: owner }) },
+    async setAssetFileId (id, fileId, owner, { keepData } = {}) {
+      Object.assign(w.assets.get(id), { fileId, fileOwner: owner })
+      if (!keepData) delete w.assets.get(id).data
+    },
     async findPack () { return clone(w.pack) },
     async writeRemoved (pack) { w.removed.push(pack._id) },
+    // As mongoRepo's: the credit is marked on the user, then the commit.
     async refundCharge (id, charge) {
-      const c = w.commits.find((x) => x._id === id)
-      if (c.charge.refunded) return false
-      c.charge.refunded = true
-      w.refunds.push({ id, ...charge })
-      return true
+      if (w.refundFails) { w.refundFails--; throw new Error('db down') }
+      const paid = !w.refundedOnUser.has(id)
+      if (paid) {
+        w.refundedOnUser.add(id)
+        w.refunds.push({ id, ...charge })
+      }
+      if (w.crashBeforeMark) { w.crashBeforeMark = false; throw new Error('process died') }
+      w.commits.find((x) => x._id === id).charge.refunded = true
+      return paid
     },
+    async findUnrefunded (now, afterMs) {
+      const c = w.commits.find((x) => ['failed', 'conflict'].includes(x.status) && x.charge?.credits > 0 && !x.charge.refunded &&
+        !['created', 'done'].includes(x.create?.state) && (!x.updatedAt || x.updatedAt < new Date(now.getTime() - afterMs)))
+      return c ? clone(c) : null
+    },
+    async touch (id, now) { w.commits.find((x) => x._id === id).updatedAt = now },
     async liveStickerUids () { return w.stickers.filter((s) => !s.deleted).map((s) => s.fileUniqueId) },
     async writeSync (packId, { stickers, deletedUids, clearPlaceholder, title }, now) {
       for (const s of stickers) {
@@ -297,6 +312,26 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
       assert.strictEqual(w.commits[0].status, 'failed')
       assert.strictEqual(w.commits[0].error, code)
     }
+  })
+
+  await test('an uploaded file leaves the database, unless the commit still sends it as the thumbnail', async () => {
+    const w = world({ commits: [commit({ settings: { thumbnail: { assetId: 'y' } } })], assets: threeAssets() })
+    await w.worker.step()
+    assert.strictEqual(w.assets.get('x').data, undefined)
+    assert.ok(w.assets.get('y').data, 'the thumbnail keeps its bytes')
+    assert.strictEqual(w.assets.get('x').fileId, 'fid:x')
+  })
+
+  await test('a file whose bytes are gone is reused by its file_id, or for another owner asked for again', async () => {
+    const same = world({ commits: [commit()], assets: ['x', 'y', 'z'].map((id) => ({ ...asset(id, { fileId: `old:${id}`, fileOwner: OWNER }), data: undefined })) })
+    await same.worker.step()
+    assert.strictEqual(same.uploads.length, 0)
+    assert.strictEqual(same.published.length, 1)
+
+    const other = world({ commits: [commit()], assets: ['x', 'y', 'z'].map((id) => ({ ...asset(id, { fileId: `old:${id}`, fileOwner: 999 }), data: undefined })) })
+    await other.worker.step()
+    assert.strictEqual(other.commits[0].status, 'failed')
+    assert.strictEqual(other.commits[0].error, 'asset_missing')
   })
 
   await test('a lean Binary from Mongo is turned into a Buffer', async () => {
@@ -519,6 +554,42 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     await w.worker.step()
     assert.strictEqual(w.commits[0].status, 'failed')
     assert.strictEqual(w.refunds.length, 1)
+  })
+
+  await test('a refund a failure or a dead process left owed is paid later, once', async () => {
+    const w = world({ commits: [paid()], assets: [asset('x')] })
+    w.sources = sources()
+    w.publishAs = 'failed'
+    w.refundFails = 1
+    await w.worker.step()
+    assert.strictEqual(w.refunds.length, 0)
+    assert.notStrictEqual(w.commits[0].charge.refunded, true)
+
+    // Not before it has aged, then once.
+    await w.worker.step()
+    assert.strictEqual(w.refunds.length, 0)
+    w.clock = new Date(w.clock.getTime() + 2 * 60 * 1000)
+    await w.worker.step()
+    assert.strictEqual(w.refunds.length, 1)
+    assert.strictEqual(w.commits[0].charge.refunded, true)
+    w.clock = new Date(w.clock.getTime() + 2 * 60 * 1000)
+    assert.strictEqual(await w.worker.step(), false)
+    assert.strictEqual(w.refunds.length, 1)
+  })
+
+  await test('a crash between the credit and the commit\'s mark pays nothing twice', async () => {
+    const w = world({ commits: [paid()], assets: [asset('x')] })
+    w.sources = sources()
+    w.publishAs = 'failed'
+    w.crashBeforeMark = true
+    await w.worker.step()
+    assert.strictEqual(w.refunds.length, 1)
+    assert.notStrictEqual(w.commits[0].charge.refunded, true)
+
+    w.clock = new Date(w.clock.getTime() + 2 * 60 * 1000)
+    await w.worker.step()
+    assert.strictEqual(w.refunds.length, 1, 'the user already holds the mark')
+    assert.strictEqual(w.commits[0].charge.refunded, true)
   })
 
   await test('no refund once the pack is made, for an interrupted commit, or for one that cost nothing', async () => {
