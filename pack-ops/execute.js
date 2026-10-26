@@ -105,6 +105,11 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     commit.error = null
     await save()
 
+    if (commit.remove) {
+      await removePack(commit, { call, getSet, save })
+      return commit
+    }
+
     if (commit.create && commit.create.state !== 'done') {
       const made = await createPack(commit, { call, save, formatTitle, botUsername, nameTaken, register })
       if (!made) return commit
@@ -535,6 +540,43 @@ function effectOf (commit, step, uids, prev) {
  * @param {Object} [params.create] makes the pack first: { title, name?, needsRepainting? };
  *   `name` is the provisional one (and the lock's), `base` is []
  */
+// Deletes the whole set (the bot's "Delete pack"), as one step. Telegram calls
+// a set it doesn't know STICKERSET_INVALID, and says the same to a bot that
+// didn't make the set, so that answer only counts as done once getStickerSet
+// can't find the set either. A step left `running` by a dead process is just
+// sent again: the second delete of a set gets that same answer.
+async function removePack (commit, { call, getSet, save }) {
+  let step = commit.steps.find((entry) => entry.kind === 'remove')
+  if (!step) {
+    step = { kind: 'remove', phase: 'remove', state: 'pending' }
+    commit.steps.push(step)
+    commit.phase = 'remove'
+  }
+
+  if (step.state !== 'succeeded') {
+    step.state = 'running'
+    await save()
+    try {
+      await call('deleteStickerSet', { name: commit.name })
+    } catch (err) {
+      if (!isTelegramAnswer(err) || !/STICKERSET_INVALID/i.test(errorText(err))) throw err
+      const stillThere = await getSet().then(() => true, (getErr) => {
+        if (isTelegramAnswer(getErr) && errorCode(getErr) === 400) return false
+        throw getErr
+      })
+      if (stillThere) {
+        step.state = 'failed'
+        step.error = errorText(err)
+        throw err
+      }
+    }
+    step.state = 'succeeded'
+  }
+
+  commit.phase = 'done'
+  commit.status = 'succeeded'
+}
+
 function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, packType, create }) {
   return {
     name,

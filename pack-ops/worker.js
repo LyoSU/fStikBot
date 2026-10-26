@@ -104,6 +104,14 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       return repo.markSynced(commit._id)
     }
 
+    // A deleted set: the bot's records say so, as after its own "Delete pack".
+    if (commit.remove) {
+      await repo.writeRemoved(pack, now())
+      await repo.markSynced(commit._id)
+      log.info(`commit ${commit._id}: ${commit.name} deleted`)
+      return
+    }
+
     const set = await telegram.callApi('getStickerSet', { name: commit.name })
     const inPack = new Map(set.stickers.map((s) => [s.file_unique_id, s]))
 

@@ -26,6 +26,7 @@ in section 7.1 there.
   known: { [uid]: { emojiList, keywords } },  // our DB's metadata, for the diff
   packType, boost,                // 'regular' | 'custom_emoji'; Boost decides the title rules
   settings,                       // optional, see "Pack settings"
+  remove,                         // optional, see "Deleting a pack"
   create,                         // optional, see "Creating a pack"
   lockName,                       // the pack lock's key when it isn't `name` (a new pack)
   status, phase, steps, mapping, contentBase, format, error
@@ -112,6 +113,27 @@ somebody's and the next name is tried. After the create the seeded draft items
 become kept ones (`fileUniqueId`, `known`), `base` is the pack as made, and the
 normal phases go on. If the commit later fails, the pack stays (and is registered).
 
+## Deleting a pack
+
+`commit.remove: true` deletes the whole set (Studio's "Delete pack", the bot's
+`scenes/pack-delete.js`), queued by the API with `base: []`, `draft: []`. It
+runs one step instead of the phases: `deleteStickerSet` for `commit.name`, then
+`succeeded`. Telegram answers `STICKERSET_INVALID` both for a set that is gone
+and for one another bot made, so that answer only counts as done when
+`getStickerSet` can't find the set either; otherwise the commit fails and
+nothing is touched. A step found `running` is sent again: a second delete of a
+deleted set gets that same answer.
+
+The sync of a remove commit writes what the bot's own delete writes: the pack
+and its stickers `deleted` (the document stays, also for a set Telegram had
+already lost), the pack dropped as the current pack of its owner and members
+(`stickerSet`, `inlineStickerSet`), the owner's `packsCount` reset.
+
+A worker that predates `remove` runs it as an empty draft: the empty `base`
+never matches a live set, so it stops at `conflict` without a call that
+changes anything. Still, deploy the bot before the API starts queueing removes,
+or every Studio delete ends in that conflict.
+
 ## Worker
 
 `worker.js` is what turns a commit queued by the Studio API into a published
@@ -153,6 +175,7 @@ Co-edit activity is not logged and the actor is not notified yet.
 
 - `scripts/test-pack-ops-plan.js`: planning on a simulated pack, incl. 2000 random permutations for minimal moves, and the settings steps.
 - `scripts/test-pack-ops-execute.js`: the state machine on a simulated pack that fails on every call in turn (request lost, reply lost, process dies before/after), resuming each time; duplicates; the settings phase; creating a pack (names, the 50 limit, every fault).
+- `scripts/test-pack-ops-remove.js`: deleting a pack: faults before and after the call, a set already gone, a set the bot can't delete, an older worker, the sync.
 - `scripts/test-pack-ops-worker.js`: the worker on an in-memory repo and Telegram: claims (incl. a stale one), upload resume and reuse, the ways an upload ends, the sync.
 - `scripts/check-studio-worker-live.js`: the worker on a throwaway MongoDB and a test bot, incl. a settings-only commit (title with suffix, thumbnail set and dropped; not in `npm test`).
 - `scripts/check-pack-ops-live.js`: the same against the real API on a test bot (not in `npm test`).
