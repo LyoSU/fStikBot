@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     パックをご利用いただけません。Telegram側で削除された可能性があります。
-  telegram: |
-    Telegramエラー：<code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       このステッカーはパックに存在しません。すでに削除された可能性があります。
@@ -944,9 +942,6 @@ error:
       Telegramの制限がかかっています。数秒待ってから再試行してください。
     cannot_reach_user: |
       ユーザーにメッセージを送信できません。ボットがブロックされているか、チャットを利用できません。
-  answerCbQuery:
-    telegram: |
-      エラー：${error}
   file_too_big: |
     ファイルサイズが大きすぎます（最大20 MB）。
   download: |
