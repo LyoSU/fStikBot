@@ -25,9 +25,13 @@ const RATE_LIMIT_CODE = 429
 // the sinks that show or store error text strip it again.
 // A token anywhere: in a /bot<token>/ or /file/bot<token>/ path, or bare.
 const BOT_TOKEN_RE = /\d{6,12}:[A-Za-z0-9_-]{30,}/g
+// A Mongo connection error can quote the URI, password included.
+const MONGO_USERINFO_RE = /(mongodb(?:\+srv)?:\/\/)[^\s/@]+@/g
 
 const redactBotToken = (text) => (
-  typeof text === 'string' ? text.replace(BOT_TOKEN_RE, '<redacted>') : text
+  typeof text === 'string'
+    ? text.replace(BOT_TOKEN_RE, '<redacted>').replace(MONGO_USERINFO_RE, '$1<redacted>@')
+    : text
 )
 
 // Mutates message/stack/description in place — the error object is what gets

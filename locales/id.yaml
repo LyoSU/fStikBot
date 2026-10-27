@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     Paket tidak tersedia. Mungkin sudah dihapus di Telegram.
-  telegram: |
-    Kesalahan Telegram: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Stiker ini sudah tidak ada di dalam paket — mungkin sudah dihapus sebelumnya.
@@ -944,9 +942,6 @@ error:
       Telegram meminta untuk menunggu — coba lagi beberapa detik lagi.
     cannot_reach_user: |
       Tidak bisa mengirim pesan ke pengguna ini: bot diblokir atau chat tidak tersedia.
-  answerCbQuery:
-    telegram: |
-      Kesalahan: ${error}
   file_too_big: |
     Berkas terlalu besar (maks. 20 MB).
   download: |

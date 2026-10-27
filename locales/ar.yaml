@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     الحزمة غير متاحة. ربما حُذفت من Telegram.
-  telegram: |
-    خطأ من Telegram: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       لم يعد هذا الملصق موجودًا في الحزمة — ربما حُذف سابقًا.
@@ -944,9 +942,6 @@ error:
       يرجى الانتظار وفقًا لتعليمات Telegram — حاول مجددًا بعد بضع ثوانٍ.
     cannot_reach_user: |
       لا يمكن مراسلة المستخدم: البوت محظور أو المحادثة غير متاحة.
-  answerCbQuery:
-    telegram: |
-      خطأ: ${error}
   file_too_big: |
     الملف كبير جدًا (الحد الأقصى 20 ميغابايت).
   download: |
