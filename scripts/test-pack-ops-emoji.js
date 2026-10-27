@@ -31,6 +31,15 @@ test('emoji Telegram takes, with or without selectors', () => {
   }
 })
 
+test('an Emoji 17.0 Telegram refuses is blamed, a 16.0 one is not', () => {
+  for (const emoji of ['\u{1FAEA}', '\u{1FACD}', '\u{1F46F}\u{1F3FB}', '\u{1F93C}\u{1F3FF}']) {
+    assert.strictEqual(isEmoji(emoji), false, emoji)
+  }
+  assert.strictEqual(isEmoji('\u{1FAE9}'), true)
+  const commit = { error: 'Bad Request: can\'t parse InputSticker: expected a Unicode emoji', draft: [{ emojiList: ['😀'] }, { emojiList: ['😀', '\u{1FACD}'] }] }
+  assert.deepStrictEqual(emojiContext(commit), { sticker: 1, emoji: 'U+1FACD' })
+})
+
 test('code points name the symbol and nothing else', () => {
   assert.strictEqual(codePoints('❤️'), 'U+2764 U+FE0F')
   assert.strictEqual(codePoints('♡'), 'U+2661')

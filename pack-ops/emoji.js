@@ -26,7 +26,12 @@ function qualified (text) {
 // Node's ICU) is not blamed.
 const UNKNOWN_PICTOGRAPH = /(?=\p{Extended_Pictographic})\p{Cn}/u
 
-const isEmoji = (text) => typeof text === 'string' && text.length <= 64 &&
+// Emoji 17.0 that Telegram refuses (measured 2026-10-27; it takes 16.0): the
+// seven new code points (🫪 🫯 🫈 🫍 🛘 🪊 🪎), and a skin tone on 👯 or 🤼.
+// Node 22.21+ knows Unicode 17, so they pass the RGI test.
+const TOO_NEW = /[\u{1FAEA}\u{1FAEF}\u{1FAC8}\u{1FACD}\u{1F6D8}\u{1FA8A}\u{1FA8E}]|[\u{1F46F}\u{1F93C}]\p{Emoji_Modifier}/u
+
+const isEmoji = (text) => typeof text === 'string' && text.length <= 64 && !TOO_NEW.test(text) &&
   (RGI.test(qualified(text)) || UNKNOWN_PICTOGRAPH.test(text))
 
 const codePoints = (text) => [...String(text)].slice(0, 16)
