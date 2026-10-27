@@ -17,6 +17,7 @@ const log = require('../utils/logger').scope('pack-ops:worker')
 const { logError, logEvent } = require('../utils/error-line')
 const { logUid } = require('../utils/log-uid')
 const { normalize } = require('../utils/fingerprint')
+const { emojiContext } = require('./emoji')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
 // A `preparing` claim older than this is a dead process's. Uploads refresh it.
@@ -66,7 +67,17 @@ function logOutcome (commit) {
     kind: 'pack_commit',
     where: `pack_commit:${op}`,
     level: commit.status === 'conflict' || OWNER_CODES.has(code) ? 'warn' : 'error',
-    fields: { status: commit.status, code, op, phase: commit.phase || 'prepare', commitId: String(commit._id), packType: commit.packType, uid: uidOf(commit) }
+    fields: {
+      status: commit.status,
+      code,
+      op,
+      phase: commit.phase || 'prepare',
+      commitId: String(commit._id),
+      packType: commit.packType,
+      uid: uidOf(commit),
+      // Which sticker's emoji Telegram refused; its error doesn't say.
+      ...emojiContext(commit)
+    }
   })
 }
 
