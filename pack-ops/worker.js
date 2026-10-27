@@ -135,6 +135,20 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     return sets.get(copy.set).stickers.find((sticker) => sticker.file_unique_id === copy.fileUniqueId)
   }
 
+  // A sticker brought back from the pack's archive goes in by the file_id its
+  // row has; the original upload's is kept as the fallback for the executor.
+  // Null when the pack has no such archived sticker.
+  async function restoredSticker (commit, restore) {
+    const pack = await repo.findPack(commit)
+    const row = pack && await repo.findArchived(pack._id, restore.fileUniqueId, now())
+    if (!row?.fileId) return null
+    return {
+      fileId: row.fileId,
+      fallbackFileId: row.originalFileId && row.originalFileId !== row.fileId ? row.originalFileId : undefined,
+      format: row.format
+    }
+  }
+
   // Uploads every file the draft still lacks a file_id for, saving the commit
   // after each so a crash resumes with the rest. Returns the commit with its
   // new status.
@@ -163,6 +177,17 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
           if (!sticker) return await settle('failed', 'copy_missing')
           item.file.fileId = sticker.file_id
           item.file.format = formatOf(sticker)
+          commit.updatedAt = now()
+          await store.save(commit)
+          continue
+        }
+
+        if (item.file.restore) {
+          const sticker = await restoredSticker(commit, item.file.restore)
+          if (!sticker) return await settle('failed', 'restore_unavailable')
+          item.file.fileId = sticker.fileId
+          if (sticker.fallbackFileId) item.file.fallbackFileId = sticker.fallbackFileId
+          if (sticker.format) item.file.format = sticker.format
           commit.updatedAt = now()
           await store.save(commit)
           continue
@@ -237,19 +262,40 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       stickers.push({
         fileUniqueId: sticker.file_unique_id,
         fileId: sticker.file_id,
+        format: formatOf(sticker),
+        thumbFileId: sticker.thumbnail?.file_id,
         emojiList: item.emojiList,
         keywords: item.keywords
       })
     }
 
     const live = await repo.liveStickerUids(pack._id)
+    const deletedUids = live.filter((uid) => !inPack.has(uid))
+    // Where each removed sticker stood, for the archive: the pack as it was
+    // before the commit (`base`). One not in it has no known place.
+    const positions = {}
+    for (const uid of deletedUids) {
+      const at = (commit.base || []).indexOf(uid)
+      if (at >= 0) positions[uid] = { position: at, after: commit.base[at - 1] ?? null }
+    }
     await repo.writeSync(pack._id, {
       stickers,
-      deletedUids: live.filter((uid) => !inPack.has(uid)),
+      deletedUids,
+      positions,
+      placeholderUid: pack.placeholderFileUniqueId || undefined,
       clearPlaceholder: !!pack.placeholderFileUniqueId && !inPack.has(pack.placeholderFileUniqueId),
       // The title as Telegram has it, suffix and all.
       title: commit.settings?.title !== undefined ? set.title : undefined
     }, now())
+    // A restored sticker that came back as a different file sits in the pack
+    // under its new uid; the archived row is marked so it isn't offered again.
+    // (Under the same uid the upsert above has already flipped the row back.)
+    for (const item of commit.draft) {
+      const uid = item.file?.restore && commit.mapping?.[item.assetId]
+      if (uid && inPack.has(uid) && uid !== item.file.restore.fileUniqueId) {
+        await repo.markRestored(pack._id, item.file.restore.fileUniqueId, now())
+      }
+    }
     await repo.markSynced(commit._id)
     log.info(`commit ${commit._id}: synced ${stickers.length} stickers of ${commit.name}`)
   }
