@@ -101,9 +101,6 @@ registerCommands(bot, privateMessage, {
   // Makes invoice links for credits bought in Studio (utils/studio-invoices.js).
   require('./utils/studio-invoices').start()
 
-  // Converts videos picked in Studio (utils/studio-video.js).
-  require('./utils/studio-video').start()
-
   const monitorInterval = setInterval(() => updateMonitor(), MONITOR_INTERVAL_MS)
   if (monitorInterval.unref) monitorInterval.unref()
 })().catch((err) => {
@@ -149,8 +146,7 @@ const gracefulShutdown = async (signal) => {
     require('./utils/metrics').flush(),
     require('./broadcast').stopWorker(),
     require('./pack-ops/worker').stop(),
-    require('./utils/studio-invoices').stop(),
-    require('./utils/studio-video').stop()
+    require('./utils/studio-invoices').stop()
   ]).then((results) => {
     for (const r of results) {
       if (r.status === 'rejected') log.error('shutdown error:', r.reason?.stack || r.reason)

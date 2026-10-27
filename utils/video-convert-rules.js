@@ -1,5 +1,7 @@
 // How a video waits for the converter, for a video sent in the chat
-// (utils/add-sticker.js) and one picked in Studio (utils/studio-video.js) alike.
+// (utils/add-sticker.js) and one picked in Studio alike: fstikbot-api adds
+// Studio's jobs itself with a copy of these rules (utils/studio/convert-rules.js,
+// whose test compares the two); keep them in step.
 //
 // Bull serves the lowest priority number first, strictly, and can't change a
 // waiting job's priority. A plain tier number therefore starved the low tiers:
