@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     Paket əlçatan deyil. Ola bilsin ki, Telegram-da silinib.
-  telegram: |
-    Telegram xətası: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Stiker artıq paketdə yoxdur — ola bilsin ki, əvvəlcədən silinib.
@@ -944,9 +942,6 @@ error:
       Telegram gözləməyi xahiş edir — bir neçə saniyədən sonra yenidən cəhd et.
     cannot_reach_user: |
       İstifadəçiyə mesaj göndərmək olmur: bot bloklanıb və ya söhbət əlçatan deyil.
-  answerCbQuery:
-    telegram: |
-      Xəta: ${error}
   file_too_big: |
     Fayl çox böyükdür (maks. 20 MB).
   download: |
