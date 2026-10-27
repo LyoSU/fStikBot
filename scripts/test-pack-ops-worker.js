@@ -304,6 +304,7 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
   await test('an owner who never started the bot, or blocked it, fails the commit with a stable code', async () => {
     for (const [error, code] of [
       [telegramError(400, 'Bad Request: user not found'), 'bot_not_started'],
+      [telegramError(400, 'Bad Request: have no access to the user'), 'bot_not_started'],
       [telegramError(403, 'Forbidden: bot was blocked by the user'), 'bot_blocked']
     ]) {
       const w = world({ commits: [commit()], assets: threeAssets() })

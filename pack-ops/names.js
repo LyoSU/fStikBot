@@ -36,6 +36,8 @@ const customNameCandidates = (raw, suffix) => {
   return name ? [name + suffix] : null
 }
 
-const NAME_REJECTED = /STICKERSET_INVALID|name is already occupied|invalid sticker set name/i
+// SHORTNAME_OCCUPY_FAILED: Telegram could not register the name; another
+// one may go through.
+const NAME_REJECTED = /STICKERSET_INVALID|name is already occupied|invalid sticker set name|SHORTNAME_OCCUPY_FAILED/i
 
 module.exports = { normalizeName, fitName, autoNameCandidates, customNameCandidates, NAME_REJECTED }

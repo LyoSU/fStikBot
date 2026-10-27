@@ -53,15 +53,17 @@ const isStickerGone = (err) => /STICKER_INVALID|sticker not found|STICKERSET_NOT
 // didn't make; a second deleteStickerSet of a set says STICKERPACK_NOT_FOUND.
 const isSetInvalid = (err) => /STICKERSET_INVALID|STICKERPACK_NOT_FOUND/i.test(errorText(err))
 
-// The owner never started the bot (Telegram knows no such user for it), or
-// blocked it: Telegram makes no pack for them and touches none of theirs.
-// Stable codes, so the client can say what to do; not a fault of the worker.
+// The owner never started the bot (Telegram knows no such user for it, or
+// says it has no access to them), or blocked it: Telegram makes no pack for
+// them and touches none of theirs. Every call names the owner's user_id, so
+// it is always the owner, never the one who published. Stable codes, so the
+// client can say what to do; not a fault of the worker.
 const BOT_NOT_STARTED = 'bot_not_started'
 const BOT_BLOCKED = 'bot_blocked'
 function ownerProblem (err) {
   const text = errorText(err)
   if (/bot was blocked by the user/i.test(text)) return BOT_BLOCKED
-  if (/user not found|PEER_ID_INVALID/i.test(text)) return BOT_NOT_STARTED
+  if (/user not found|have no access to the user|PEER_ID_INVALID/i.test(text)) return BOT_NOT_STARTED
   return null
 }
 

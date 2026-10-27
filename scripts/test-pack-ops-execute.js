@@ -952,8 +952,38 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.strictEqual(bad.error, 'name_invalid')
   })
 
-  for (const [description, code] of [['Bad Request: user not found', 'bot_not_started'], ['Forbidden: bot was blocked by the user', 'bot_blocked']]) {
-    await test(`creating a pack for an owner Telegram won't serve: ${code}`, async () => {
+  await test('creating a pack: a name Telegram could not register (SHORTNAME_OCCUPY_FAILED) moves on to the next candidate', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const call = tg.callApi.bind(tg)
+    const tried = []
+    tg.callApi = (method, params) => {
+      if (method !== 'createNewStickerSet') return call(method, params)
+      tried.push(params.name)
+      return tried.length === 1 ? Promise.reject(telegramError(400, 'Bad Request: SHORTNAME_OCCUPY_FAILED')) : call(method, params)
+    }
+    const { deps } = createDeps(world)
+    const commit = await runCommit(createCommit(1), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(tried.length, 2)
+    assert.strictEqual(commit.name, tried[1])
+
+    // Every candidate refused so: name_occupied, which asks for another name.
+    const world2 = { faultAt: -1 }
+    const tg2 = fakeCreatingTelegram(world2)
+    const call2 = tg2.callApi.bind(tg2)
+    tg2.callApi = (method, params) => (method === 'createNewStickerSet' ? Promise.reject(telegramError(400, 'Bad Request: SHORTNAME_OCCUPY_FAILED')) : call2(method, params))
+    const refused = await runCommit(createCommit(1), { telegram: tg2, ...createDeps(world2).deps })
+    assert.strictEqual(refused.status, 'failed')
+    assert.strictEqual(refused.error, 'name_occupied')
+  })
+
+  for (const [description, code] of [
+    ['Bad Request: user not found', 'bot_not_started'],
+    ['Bad Request: have no access to the user', 'bot_not_started'],
+    ['Forbidden: bot was blocked by the user', 'bot_blocked']
+  ]) {
+    await test(`creating a pack for an owner Telegram won't serve (${description}): ${code}`, async () => {
       const world = { faultAt: -1 }
       const tg = fakeCreatingTelegram(world)
       const call = tg.callApi.bind(tg)

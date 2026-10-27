@@ -7,6 +7,13 @@ const mediaGroup = require('../utils/media-group')
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+// Waits for every queue to empty. Thirty 30 ms tasks in a row drift past any
+// fixed sleep on a loaded machine.
+const drained = async (ms = 5000) => {
+  const end = Date.now() + ms
+  while (userQueue._size() > 0 && Date.now() < end) await sleep(5)
+}
+
 let failed = 0
 const test = async (name, fn) => {
   try {
@@ -77,13 +84,18 @@ const test = async (name, fn) => {
     const block = () => sleep(30)
     for (let i = 0; i < userQueue.MAX_PENDING; i++) assert.ok(userQueue.enqueue(6, block))
     assert.strictEqual(userQueue.enqueue(6, block), null)
-    await sleep(30 * userQueue.MAX_PENDING + 50)
+    await drained()
     assert.ok(userQueue.enqueue(6, block))
-    await sleep(40)
+    await drained()
   })
 
   await test('queues are dropped once empty', async () => {
-    await sleep(20)
+    let done
+    const finished = new Promise((resolve) => { done = resolve })
+    userQueue.enqueue(7, async () => { await sleep(5); done() })
+    assert.strictEqual(userQueue._size(), 1)
+    await finished
+    await sleep(0)
     assert.strictEqual(userQueue._size(), 0)
   })
 
