@@ -67,7 +67,8 @@ async function followQueueJob (queue, job, { timeoutMs }) {
  * @param {number} [options.keepSeconds] keep the finished job (and its result)
  *   this long, for a waiter that comes back for it; by default it goes at once
  * @param {(job) => (void|Promise<void>)} [options.onQueued] runs right after
- *   the job is accepted, before waiting (e.g. to show a queue position)
+ *   the job is accepted, while it is waited on (e.g. to show a queue position);
+ *   the outcome comes after it, or without it once the job is over
  * @returns {Promise<{result: Object} | {error: 'disabled'|'enqueue'|'timeout'|'failed', cause?: Error}>}
  */
 async function runQueueJob (queue, data, { timeoutMs, priority = 10, keepSeconds, onQueued } = {}) {
@@ -86,9 +87,13 @@ async function runQueueJob (queue, data, { timeoutMs, priority = 10, keepSeconds
     return { error: cause.code === 'QUEUE_DISABLED' ? 'disabled' : 'enqueue', cause }
   }
 
-  if (onQueued) await Promise.resolve(onQueued(job)).catch(() => {})
+  // The wait, and its timeout, start with the job: an onQueued that hangs
+  // (Redis, Telegram) holds the outcome back only until the job is over.
+  const outcome = followQueueJob(queue, job, { timeoutMs })
 
-  return followQueueJob(queue, job, { timeoutMs })
+  if (onQueued) await Promise.race([Promise.resolve().then(() => onQueued(job)).catch(() => {}), outcome])
+
+  return outcome
 }
 
 module.exports = { runQueueJob, followQueueJob, waitForJob }
