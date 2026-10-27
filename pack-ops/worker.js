@@ -14,7 +14,8 @@ const { runInCopyScope } = require('../utils/retry-api')
 const { LOCK_TTL_MS, ownerProblem } = require('./execute')
 const { bytesOf } = require('./store')
 const log = require('../utils/logger').scope('pack-ops:worker')
-const { logError } = require('../utils/error-line')
+const { logError, logEvent } = require('../utils/error-line')
+const { logUid } = require('../utils/log-uid')
 const { normalize } = require('../utils/fingerprint')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
@@ -37,6 +38,8 @@ const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >=
 
 // What a commit did, for the log line: never its pack's name or its owner.
 const opOf = (commit) => (commit.remove ? 'remove' : commit.create ? 'create' : 'edit')
+// Who published it, as the salted hash Studio's API lines carry too.
+const uidOf = (commit) => logUid(commit.actorTelegramId ?? commit.ownerTelegramId)
 
 // A failure's reason as a code that stays the same between two commits: the
 // worker's own (copy_missing), Telegram's (STICKERSET_INVALID), or else the
@@ -63,7 +66,20 @@ function logOutcome (commit) {
     kind: 'pack_commit',
     where: `pack_commit:${op}`,
     level: commit.status === 'conflict' || OWNER_CODES.has(code) ? 'warn' : 'error',
-    fields: { status: commit.status, code, op, phase: commit.phase || 'prepare', commitId: String(commit._id) }
+    fields: { status: commit.status, code, op, phase: commit.phase || 'prepare', commitId: String(commit._id), packType: commit.packType, uid: uidOf(commit) }
+  })
+}
+
+// A published commit, as one info line beside the failures': how big it was
+// and how long it took from the tap on "Publish", queue and uploads included.
+function logDone (commit, at = new Date()) {
+  if (commit?.status !== 'succeeded') return
+  const op = opOf(commit)
+  const stickers = commit.remove ? 0 : (commit.draft || []).length
+  const ops = (commit.steps || []).length
+  const durationMs = commit.createdAt ? at - new Date(commit.createdAt) : undefined
+  logEvent('pack_commit', `${op} done: ${stickers} stickers, ${ops} steps`, {
+    fields: { status: 'done', op, packType: commit.packType, stickers, ops, durationMs, commitId: String(commit._id), uid: uidOf(commit) }
   })
 }
 
@@ -265,6 +281,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   async function run (commit) {
     const result = await publish(commit._id)
     if (result?.status === 'succeeded') {
+      logDone(result, now())
       await trySync(result)
     } else {
       logOutcome(result)
@@ -370,6 +387,7 @@ module.exports = {
   createWorker,
   commitCode,
   logOutcome,
+  logDone,
   getWorker,
   start: () => getWorker().start(),
   stop: () => (instance ? instance.stop() : Promise.resolve())

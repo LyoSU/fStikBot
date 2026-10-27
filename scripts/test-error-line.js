@@ -4,7 +4,8 @@
 const assert = require('assert')
 const { scrub, normalize, topFrame, fingerprint } = require('../utils/fingerprint')
 const { errorLine, logError, contextOf, isUserCaused } = require('../utils/error-line')
-const { commitCode, logOutcome } = require('../pack-ops/worker')
+const { commitCode, logOutcome, logDone } = require('../pack-ops/worker')
+const { logUid } = require('../utils/log-uid')
 
 let passed = 0
 let failed = 0
@@ -138,6 +139,53 @@ test('a failed or conflicting commit is one pack_commit line, a published one no
   const failure = JSON.parse(lines[1][1])
   assert.deepStrictEqual([lines[1][0], failure.code, failure.op], ['error', 'STICKERS_TOO_MUCH', 'create'])
   assert.ok(!lines.join(' ').includes('cats_by') && !lines.join(' ').includes('123456789'))
+})
+
+test('a published commit is one info pack_commit line: its size, its time, its user\'s hash', () => {
+  const commit = {
+    _id: 'c1',
+    status: 'succeeded',
+    name: 'cats_by_bot',
+    ownerTelegramId: 123456789,
+    actorTelegramId: 987654321,
+    packType: 'regular',
+    create: { title: 'Cats' },
+    draft: [{ assetId: 'a' }, { assetId: 'b' }, { assetId: 'c' }],
+    steps: [{ kind: 'add' }, { kind: 'add' }],
+    createdAt: new Date('2026-10-27T10:00:00Z')
+  }
+  const at = new Date('2026-10-27T10:00:04.5Z')
+  const logged = []
+  const saved = console.log
+  console.log = (line) => logged.push(line)
+  process.env.LOG_UID_SALT = 'test-salt'
+  let uid
+  try {
+    uid = logUid(987654321)
+    logDone(commit, at)
+    logDone({ ...commit, create: undefined, remove: true, draft: [], steps: [] }, at)
+    logDone({ ...commit, status: 'failed' }, at)
+  } finally {
+    console.log = saved
+    delete process.env.LOG_UID_SALT
+  }
+
+  assert.strictEqual(logged.length, 2)
+  const done = JSON.parse(logged[0])
+  assert.deepStrictEqual(
+    [done.level, done.kind, done.status, done.op, done.packType, done.stickers, done.ops, done.durationMs, done.commitId],
+    ['info', 'pack_commit', 'done', 'create', 'regular', 3, 2, 4500, 'c1'])
+  assert.match(uid, /^[0-9a-f]{12}$/)
+  assert.strictEqual(done.uid, uid)
+  assert.match(done.release, /\w/)
+  assert.deepStrictEqual([JSON.parse(logged[1]).op, JSON.parse(logged[1]).stickers], ['remove', 0])
+  const text = logged.join(' ')
+  assert.ok(!text.includes('cats_by') && !text.includes('Cats') && !text.includes('123456789') && !text.includes('987654321'))
+})
+
+test('a commit\'s user hash needs the salt', () => {
+  const lines = capture(() => logOutcome({ _id: 'a', status: 'failed', error: 'copy_missing', ownerTelegramId: 5 }))
+  assert.ok(!('uid' in JSON.parse(lines[0][1])))
 })
 
 test('an owner who has to start or unblock the bot is a warning, not a fault', () => {

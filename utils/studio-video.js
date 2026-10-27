@@ -17,7 +17,8 @@
 
 const { convertPriority, convertRank, maxVideoDuration, queueTooBusy, isTooOld } = require('./video-convert-rules')
 const log = require('./logger').scope('studio-video')
-const { logError } = require('./error-line')
+const { logError, logEvent } = require('./error-line')
+const { logUid } = require('./log-uid')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_VIDEO_TICK_MS, 10) || 1000
 // How long Studio's video waits on its job. The job asks the converter to drop
@@ -78,6 +79,30 @@ function mongoRepo (db) {
   }
 }
 
+// Since the row was made (the tap in Studio), when there is one.
+const sinceCreated = (video, at) => (video.createdAt ? at - new Date(video.createdAt) : undefined)
+
+// One studio_video line when the converter starts a video and one when it
+// ends: how long it waited in line, how long it converted, why it failed.
+function logVideo (claim, status, at, extra = {}) {
+  const { video } = claim
+  logEvent('studio_video', `video ${status}${extra.error ? `: ${extra.error}` : ''}`, {
+    level: status === 'failed' ? 'warn' : 'info',
+    fields: {
+      status,
+      videoId: String(video._id),
+      packType: video.packType,
+      boost: video.boost || undefined,
+      attempt: video.attempts,
+      waitMs: claim.startedAt ? sinceCreated(video, claim.startedAt) : undefined,
+      convertMs: claim.startedAt && status !== 'started' ? at - claim.startedAt : undefined,
+      totalMs: status !== 'started' ? sinceCreated(video, at) : undefined,
+      uid: logUid(video.telegramId),
+      ...extra
+    }
+  })
+}
+
 function videoSize (metadata) {
   const stream = metadata?.streams?.find((s) => s.codec_type === 'video')
 
@@ -112,7 +137,10 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
   }
 
   const settle = (claim, set) => write(claim, () => repo.settle(claim.video, set))
-  const fail = (claim, error) => settle(claim, { status: 'failed', error })
+  const fail = (claim, error) => {
+    if (!claim.lost) logVideo(claim, 'failed', now(), { error })
+    return settle(claim, { status: 'failed', error })
+  }
 
   const renew = (claim) => write(claim, async () => {
     const at = now()
@@ -132,7 +160,9 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
   const markStarted = (claim) => {
     if (claim.started) return
     claim.started = true
-    write(claim, () => repo.started(claim.video, now())).catch((err) => log.warn(`video ${claim.video._id}: started not saved:`, err.message))
+    claim.startedAt = now()
+    logVideo(claim, 'started', claim.startedAt)
+    write(claim, () => repo.started(claim.video, claim.startedAt)).catch((err) => log.warn(`video ${claim.video._id}: started not saved:`, err.message))
   }
 
   // An "active" event can come before the job is known here, or be missed
@@ -214,6 +244,7 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     const { width, height } = videoSize(outcome.result.metadata)
 
     await settle(claim, { status: 'done', result, size: result.length, width, height })
+    if (!claim.lost) logVideo(claim, 'done', now(), { sizeKb: Math.round(result.length / 102.4) / 10 })
     log.info(`video ${video._id}: ${result.length} B, ${width}x${height}`)
   }
 

@@ -354,6 +354,54 @@ const queued = (patch = {}) => ({
     await run
   })
 
+  await test('a start and an end are one studio_video line each, with the wait and the user\'s hash', async () => {
+    const lines = []
+    const saved = [console.log, console.warn]
+    console.log = console.warn = (line) => { if (String(line).startsWith('{')) lines.push(JSON.parse(line)) }
+    process.env.LOG_UID_SALT = 'test-salt'
+    try {
+      let release
+      const w = world({ videos: [queued()], outcome: () => new Promise((resolve) => { release = () => resolve(DONE) }), jobState: () => 'active' })
+      await w.converter.tick()
+      await sleep(5)
+      release()
+      await w.converter.settled()
+
+      const failing = world({ videos: [queued({ _id: 'v2' })], outcome: { error: 'timeout' } })
+      await failing.run()
+    } finally {
+      [console.log, console.warn] = saved
+      delete process.env.LOG_UID_SALT
+    }
+
+    assert.deepStrictEqual(lines.map((line) => [line.kind, line.status, line.level]), [
+      ['studio_video', 'started', 'info'],
+      ['studio_video', 'done', 'info'],
+      ['studio_video', 'failed', 'warn']
+    ])
+    const [started, done, failure] = lines
+    assert.ok(started.waitMs >= 1000 && started.convertMs === undefined)
+    assert.ok(done.waitMs === started.waitMs && done.convertMs >= 1 && done.totalMs >= done.waitMs)
+    assert.match(done.uid, /^[0-9a-f]{12}$/)
+    assert.strictEqual(failure.error, 'timeout')
+    assert.strictEqual(failure.waitMs, undefined)
+    const text = JSON.stringify(lines)
+    assert.ok(!text.includes('key=') && !text.includes('"telegramId"'))
+  })
+
+  await test('no salt, no uid', async () => {
+    const lines = []
+    const saved = console.log
+    console.log = (line) => lines.push(JSON.parse(line))
+    try {
+      await world({ videos: [queued()] }).run()
+    } finally {
+      console.log = saved
+    }
+    assert.strictEqual(lines[0].status, 'done')
+    assert.ok(!('uid' in lines[0]))
+  })
+
   await test('a stopped converter claims nothing', async () => {
     const w = world({ videos: [queued()] })
     await w.converter.stop()

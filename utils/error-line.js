@@ -1,7 +1,9 @@
 // The bot's errors as one JSON line each, for the log shipper (Vector →
 // VictoriaLogs), shaped like the API's: level, kind, release, fp, where,
 // message, stack and a little safe context. Never user ids, usernames,
-// message text, file ids, pack names or tokens.
+// message text, file ids, pack names or tokens (a user is at most the salted
+// hash of utils/log-uid.js). Events worth counting (a published commit) are
+// info lines of the same shape, from logEvent.
 //
 // Errors the world causes (a blocked bot, a message that was not modified, a
 // callback answered too late) are warnings with their Telegram code, not
@@ -85,4 +87,16 @@ function logError (error, options) {
   else console.error(line)
 }
 
-module.exports = { errorLine, logError, contextOf, isUserCaused, release, clean }
+// Something that went as it should, as one line: `message` reads as the
+// line's text in the log viewer, `fields` are safe ones as for errors.
+function eventLine (kind, message, { level = 'info', fields } = {}) {
+  return JSON.stringify(compact({ level, kind, release: release(), message, ...fields }))
+}
+
+function logEvent (kind, message, options) {
+  const line = eventLine(kind, message, options)
+  if (options?.level === 'warn') console.warn(line)
+  else console.log(line)
+}
+
+module.exports = { errorLine, logError, eventLine, logEvent, contextOf, isUserCaused, release, clean }
