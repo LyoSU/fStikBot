@@ -5,11 +5,21 @@
 
 process.env.LOG_LEVEL = 'error'
 const assert = require('assert')
-const { createVideoConverter, CLAIM_STALE_MS, HEARTBEAT_MS, MAX_ATTEMPTS } = require('../utils/studio-video')
+const { createVideoConverter, CLAIM_STALE_MS, HEARTBEAT_MS, MAX_ATTEMPTS, MAX_IN_FLIGHT, QUEUE_WAIT_MS } = require('../utils/studio-video')
+const { runQueueJob } = require('../utils/queue-job')
 const { convertDelay, maxVideoDuration } = require('../utils/video-convert-rules')
 
 let passed = 0
 let failed = 0
+let finished = false
+
+// A run that never settles empties the event loop (every timer here is
+// unref'd): the process would end quietly, as if every test had passed.
+process.on('exit', (code) => {
+  if (finished || code) return
+  console.log('  FAIL  exited before the tests finished: a conversion never settled')
+  process.exitCode = 1
+})
 
 async function test (name, fn) {
   try {
@@ -30,21 +40,40 @@ const WEBM = Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 7, 7, 7])
 const DONE = { result: { content: WEBM.toString('base64'), metadata: { streams: [{ codec_type: 'video', width: 512, height: 288 }] } } }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+// The converter's timers are unref'd: with nothing else pending, a test that
+// waits on its deadline needs the process kept up.
+async function awake (fn) {
+  const keep = setInterval(() => {}, 1000)
+  try {
+    return await fn()
+  } finally {
+    clearInterval(keep)
+  }
+}
 
-function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk' }], videoPacks = 0, outcome = DONE, waiting = 0, disabled = false, heartbeatMs, redisJobs = {}, jobState } = {}) {
+function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk' }], videoPacks = 0, outcome = DONE, waiting = 0, disabled = false, heartbeatMs, runDeadlineMs, queueLookMs, redisJobs = {}, jobState, setJob } = {}) {
   const w = { videos, jobs: [], followed: [], renewals: 0, listeners: {} }
   // Every claim and renewal is a moment later than the one before.
   let clock = NOW.getTime()
   const now = () => new Date(++clock)
 
   w.repo = {
-    claim: async (now, staleBefore) => {
+    claim: async (now, staleBefore, queuedAfter) => {
       const video = videos
-        .filter((v) => v.status === 'queued' || (v.status === 'converting' && v.claimedAt < staleBefore))
+        .filter((v) => (v.status === 'queued' && v.createdAt >= queuedAfter) || (v.status === 'converting' && v.claimedAt < staleBefore))
         .sort((a, b) => a.createdAt - b.createdAt)[0]
       if (!video) return null
       Object.assign(video, { status: 'converting', claimedAt: now, attempts: (video.attempts || 0) + 1 })
       return { ...video }
+    },
+    expire: async (queuedAfter, at) => {
+      const old = videos.filter((v) => v.status === 'queued' && v.createdAt < queuedAfter)
+      for (const row of old) {
+        Object.assign(row, { status: 'failed', error: 'timeout', updatedAt: at })
+        delete row.source
+        delete row.sourceUrl
+      }
+      return old.length
     },
     findUser: async (telegramId) => users.find((u) => u.telegram_id === telegramId) || null,
     countVideoPacks: async () => videoPacks,
@@ -56,6 +85,7 @@ function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk
       return true
     },
     setJob: async (video, jobId) => {
+      if (setJob) await setJob()
       const row = videos.find((v) => v._id === video._id)
       if (row.claimedAt.getTime() !== video.claimedAt.getTime()) return
       row.jobId = jobId
@@ -93,7 +123,7 @@ function world ({ videos = [], users = [{ _id: 'u1', telegram_id: 5, locale: 'uk
     w.followed.push(job.id)
     return typeof outcome === 'function' ? outcome() : outcome
   }
-  w.converter = createVideoConverter({ repo: w.repo, queue: w.queue, runJob: w.runJob, followJob: w.followJob, now, heartbeatMs })
+  w.converter = createVideoConverter({ repo: w.repo, queue: w.queue, runJob: w.runJob, followJob: w.followJob, now, heartbeatMs, runDeadlineMs, queueLookMs })
   w.run = async () => {
     await w.converter.tick()
     await w.converter.settled()
@@ -402,6 +432,95 @@ const queued = (patch = {}) => ({
     assert.ok(!('uid' in lines[0]))
   })
 
+  await test('a tick with every place taken does not stop the ticks after it', async () => {
+    const releases = []
+    const videos = Array.from({ length: MAX_IN_FLIGHT + 1 }, (_, i) => queued({ _id: `v${i}`, createdAt: ago(1000 - i) }))
+    const w = world({ videos, outcome: () => new Promise((resolve) => releases.push(() => resolve(DONE))) })
+
+    await w.converter.tick()
+    assert.strictEqual(videos.filter((v) => v.status === 'converting').length, MAX_IN_FLIGHT)
+    // No room: this tick has nothing to wait on.
+    await w.converter.tick()
+
+    while (releases.length < MAX_IN_FLIGHT) await sleep(1)
+    releases.splice(0).forEach((release) => release())
+    await w.converter.settled()
+    await w.converter.tick()
+    assert.strictEqual(videos[MAX_IN_FLIGHT].status, 'converting')
+    while (!releases.length) await sleep(1)
+    releases.splice(0).forEach((release) => release())
+    await w.converter.settled()
+    assert.deepStrictEqual(videos.map((v) => v.status), videos.map(() => 'done'))
+  })
+
+  await test('a job state Redis never gives holds nothing up', async () => {
+    const live = { id: 'job7', opts: { priority: 1 }, getState: () => new Promise(() => {}) }
+    const w = world({
+      videos: [queued(), queued({ _id: 'v2', status: 'converting', claimedAt: ago(CLAIM_STALE_MS + 1), attempts: 1, jobId: 'job7' })],
+      redisJobs: { job7: live },
+      jobState: () => new Promise(() => {}),
+      queueLookMs: 10,
+      heartbeatMs: 5
+    })
+    await w.run()
+    assert.deepStrictEqual(w.videos.map((v) => v.status), ['done', 'done'])
+  })
+
+  await test('an onQueued that never returns does not hold back the job\'s outcome', async () => {
+    const queue = { name: 'convert', add: async () => ({ id: 'j1', opts: {}, finished: async () => DONE.result }) }
+    const outcome = await runQueueJob(queue, {}, { timeoutMs: 1000, onQueued: () => new Promise(() => {}) })
+    assert.deepStrictEqual(outcome, DONE)
+  })
+
+  await test('a run past its deadline fails as a timeout and frees its place', () => awake(async () => {
+    let late
+    const w = world({
+      videos: [queued(), queued({ _id: 'v2', createdAt: ago(500) })],
+      runDeadlineMs: 20,
+      outcome: (data) => (data.fileUrl.includes('v1') ? new Promise((resolve) => { late = () => resolve(DONE) }) : DONE)
+    })
+    w.videos[1].sourceUrl = 'https://api.fstik.app/studio/video/source?id=v2&key=k'
+    await w.run()
+    assert.strictEqual(w.videos[0].status, 'failed')
+    assert.strictEqual(w.videos[0].error, 'timeout')
+    assert.strictEqual(w.videos[1].status, 'done')
+
+    // The conversion that finished after all settles nothing.
+    late()
+    await sleep(5)
+    assert.strictEqual(w.videos[0].status, 'failed')
+    assert.strictEqual(w.videos[0].result, undefined)
+  }))
+
+  await test('a database write that never returns still gives the place up by the deadline', () => awake(async () => {
+    const w = world({ videos: [queued(), queued({ _id: 'v2', createdAt: ago(500) })], runDeadlineMs: 20, setJob: () => new Promise(() => {}) })
+    await w.converter.tick()
+    await w.converter.settled()
+    // The row cannot be written: it stays claimed until the claim goes stale.
+    assert.strictEqual(w.videos[0].status, 'converting')
+    await w.converter.tick()
+    await w.converter.settled()
+    assert.strictEqual(w.videos[1].status, 'converting')
+    assert.strictEqual(w.jobs.length, 2)
+  }))
+
+  await test('a video Studio gave up on fails as a timeout, and the fresh one goes first', async () => {
+    const w = world({
+      videos: [
+        queued({ _id: 'abandoned', createdAt: ago(QUEUE_WAIT_MS + 1) }),
+        queued({ _id: 'fresh', createdAt: ago(1000) })
+      ]
+    })
+    await w.run()
+    assert.strictEqual(w.jobs.length, 1)
+    assert.match(w.jobs[0].data.fileUrl, /source/)
+    assert.deepStrictEqual(w.videos.map((v) => [v._id, v.status, v.error]), [
+      ['abandoned', 'failed', 'timeout'],
+      ['fresh', 'done', undefined]
+    ])
+    assert.strictEqual(w.videos[0].source, undefined)
+  })
+
   await test('a stopped converter claims nothing', async () => {
     const w = world({ videos: [queued()] })
     await w.converter.stop()
@@ -409,6 +528,7 @@ const queued = (patch = {}) => ({
     assert.strictEqual(w.videos[0].status, 'queued')
   })
 
+  finished = true
   console.log(`\n${passed} passed, ${failed} failed`)
   if (failed) process.exit(1)
 })()

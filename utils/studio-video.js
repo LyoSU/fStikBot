@@ -24,6 +24,17 @@ const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_VIDEO_TICK_MS, 10) || 1000
 // How long Studio's video waits on its job. The job asks the converter to drop
 // it past the same age (maxAgeMs), so nothing converts for a waiter gone.
 const CONVERT_TIMEOUT_MS = 10 * 60 * 1000
+// A run past this is cut short, whatever it waits on (Redis, Mongo): its video
+// fails as a timeout and its place goes to the next one.
+const RUN_DEADLINE_MS = CONVERT_TIMEOUT_MS + 2 * 60 * 1000
+// One look at the queue (a job, its state, the counts) gives up after this.
+const QUEUE_LOOK_MS = 5 * 1000
+// A tick whose database calls never answer lets the next one try.
+const TICK_DEADLINE_MS = 60 * 1000
+// Studio stops waiting on a video nobody took in this long (fstikbot-api
+// utils/studio/video.js QUEUE_WAIT_MS; keep the two in step): such a video
+// fails as a timeout instead of converting for nobody, ahead of fresh ones.
+const QUEUE_WAIT_MS = 15 * 60 * 1000
 // While a conversion runs, its process renews the claim this often...
 const HEARTBEAT_MS = 20 * 1000
 // ...so a claim not renewed for this long is a dead process's (a deploy
@@ -41,12 +52,26 @@ const KEEP_JOB_S = 600
 
 const OUTCOME_ERROR = { disabled: 'unavailable', timeout: 'timeout', enqueue: 'convert', failed: 'convert' }
 
+const EXPIRED = Symbol('expired')
+
+// `promise`, or `fallback` once `ms` pass; the timer is always cleared.
+async function within (promise, ms, fallback) {
+  let timer
+  const late = new Promise((resolve) => { timer = setTimeout(resolve, ms, fallback) })
+
+  try {
+    return await Promise.race([promise, late])
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 function mongoRepo (db) {
   return {
-    claim: (now, staleBefore) => db.StudioVideo.findOneAndUpdate(
+    claim: (now, staleBefore, queuedAfter) => db.StudioVideo.findOneAndUpdate(
       {
         $or: [
-          { status: 'queued' },
+          { status: 'queued', createdAt: { $gte: queuedAfter } },
           { status: 'converting', claimedAt: { $lt: staleBefore } }
         ]
       },
@@ -54,6 +79,11 @@ function mongoRepo (db) {
       // The file stays in the database: the converter fetches it by link.
       { sort: { createdAt: 1 }, new: true, projection: { source: 0, result: 0 } }
     ).lean(),
+    // Videos still queued since before `queuedAfter`: Studio gave up on them.
+    expire: (queuedAfter, at) => db.StudioVideo.updateMany(
+      { status: 'queued', createdAt: { $lt: queuedAfter } },
+      { $set: { status: 'failed', error: 'timeout', updatedAt: at }, $unset: { source: 1, sourceKey: 1, sourceUrl: 1 } }
+    ).then((result) => result.modifiedCount),
     findUser: (telegramId) => db.User.findOne({ telegram_id: telegramId }).select('_id locale').lean(),
     countVideoPacks: (owner) => db.StickerSet.countDocuments({ owner, video: true }),
     // Moves our own claim to `at`; false once another process has taken the video.
@@ -117,8 +147,10 @@ function videoSize (metadata) {
  * @param {Function} deps.followJob utils/queue-job.js followQueueJob
  * @param {Function} [deps.now]
  * @param {number} [deps.heartbeatMs]
+ * @param {number} [deps.runDeadlineMs]
+ * @param {number} [deps.queueLookMs]
  */
-function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new Date(), heartbeatMs = HEARTBEAT_MS }) {
+function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new Date(), heartbeatMs = HEARTBEAT_MS, runDeadlineMs = RUN_DEADLINE_MS, queueLookMs = QUEUE_LOOK_MS }) {
   let timer = null
   let ticking = null
   let stopping = false
@@ -136,8 +168,10 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     return next
   }
 
-  const settle = (claim, set) => write(claim, () => repo.settle(claim.video, set))
+  // Past its deadline a run settles nothing more: the timeout was its outcome.
+  const settle = (claim, set) => (claim.expired ? Promise.resolve() : write(claim, () => repo.settle(claim.video, set)))
   const fail = (claim, error) => {
+    if (claim.expired) return Promise.resolve()
     if (!claim.lost) logVideo(claim, 'failed', now(), { error })
     return settle(claim, { status: 'failed', error })
   }
@@ -167,17 +201,23 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
 
   // An "active" event can come before the job is known here, or be missed
   // (Redis reconnect): the job's own state is read on watching and on each
-  // heartbeat until it starts.
+  // heartbeat until it starts. Nothing waits on it: a state Redis does not
+  // give in time is read again on the next heartbeat.
   async function checkStarted (claim) {
-    if (claim.started || !claim.job?.getState) return
-    const state = await claim.job.getState().catch(() => null)
-    if (state === 'active') markStarted(claim)
+    if (claim.started || claim.checking || !claim.job?.getState) return
+    claim.checking = true
+    try {
+      const state = await within(claim.job.getState(), queueLookMs, null).catch(() => null)
+      if (state === 'active') markStarted(claim)
+    } finally {
+      claim.checking = false
+    }
   }
 
   function watchJob (claim, job) {
     claim.job = job
     byJob.set(String(job.id), claim)
-    return checkStarted(claim)
+    checkStarted(claim)
   }
 
   /** The convert queue says a job started (Bull's global:active, from any process). */
@@ -190,10 +230,10 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
   // it (after a restart), else a new one, whose id goes on the row at once.
   async function attach (claim) {
     const { video } = claim
-    const known = video.jobId ? await queue.getJob(video.jobId).catch(() => null) : null
+    const known = video.jobId ? await within(queue.getJob(video.jobId), queueLookMs, null).catch(() => null) : null
 
     if (known) {
-      await watchJob(claim, known)
+      watchJob(claim, known)
       return followJob(queue, known, { timeoutMs: CONVERT_TIMEOUT_MS })
     }
 
@@ -201,7 +241,7 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     const user = await repo.findUser(video.telegramId)
     const owner = { videoPacks: user ? await repo.countVideoPacks(user._id) : 0, locale: user?.locale, boost: video.boost }
 
-    const counts = await queue.getJobCounts().catch(() => ({ waiting: 0 }))
+    const counts = await within(queue.getJobCounts(), queueLookMs, { waiting: 0 }).catch(() => ({ waiting: 0 }))
     if (queueTooBusy(counts.waiting, convertRank(owner))) return { busy: true }
 
     // The job the chat sends, minus `input`: the same frame, crop and length.
@@ -219,7 +259,7 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
       keepSeconds: KEEP_JOB_S,
       onQueued: async (job) => {
         await write(claim, () => repo.setJob(video, String(job.id)))
-        await watchJob(claim, job)
+        watchJob(claim, job)
       }
     })
   }
@@ -240,12 +280,25 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
       return fail(claim, OUTCOME_ERROR[outcome.error] || 'convert')
     }
 
+    if (claim.expired) return
+
     const result = Buffer.from(outcome.result.content, 'base64')
     const { width, height } = videoSize(outcome.result.metadata)
 
     await settle(claim, { status: 'done', result, size: result.length, width, height })
+    if (claim.expired) return
     if (!claim.lost) logVideo(claim, 'done', now(), { sizeKb: Math.round(result.length / 102.4) / 10 })
     log.info(`video ${video._id}: ${result.length} B, ${width}x${height}`)
+  }
+
+  // A run with no outcome by its deadline (a Redis or Mongo call that never
+  // answers) fails its video as a timeout and gives its place up at once. The
+  // write is not waited on: if it hangs too, the claim, no longer renewed,
+  // goes stale and another tick takes the video up again.
+  function expire (claim) {
+    log.warn(`video ${claim.video._id}: no outcome in ${runDeadlineMs} ms`)
+    fail(claim, 'timeout').catch((err) => log.warn(`video ${claim.video._id}: timeout not saved:`, err.message))
+    claim.expired = true
   }
 
   function track (video) {
@@ -257,12 +310,20 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     }, heartbeatMs)
     claim.heartbeat.unref?.()
 
-    const run = convert(claim)
+    let deadline
+    const expired = new Promise((resolve) => { deadline = setTimeout(resolve, runDeadlineMs, EXPIRED) })
+    deadline.unref?.()
+
+    const converting = convert(claim)
       .catch(async (err) => {
         logError(err, { where: 'studio-video:convert' })
         await fail(claim, 'convert').catch(() => {})
       })
+
+    const run = Promise.race([converting, expired])
+      .then((outcome) => { if (outcome === EXPIRED) expire(claim) })
       .finally(() => {
+        clearTimeout(deadline)
         clearInterval(claim.heartbeat)
         if (claim.job && byJob.get(String(claim.job.id)) === claim) byJob.delete(String(claim.job.id))
         inFlight.delete(run)
@@ -271,24 +332,33 @@ function createVideoConverter ({ repo, queue, runJob, followJob, now = () => new
     inFlight.add(run)
   }
 
-  // Claims while there is room; each conversion is waited on apart.
+  // Fails the videos Studio gave up on, then claims while there is room,
+  // oldest first among the rest; each conversion is waited on apart.
+  async function claimWhileRoom () {
+    try {
+      const at = now()
+      const expired = await repo.expire(new Date(at.getTime() - QUEUE_WAIT_MS), at)
+      if (expired) log.warn(`${expired} queued video(s) waited past ${QUEUE_WAIT_MS} ms: failed as timeout`)
+
+      while (inFlight.size < MAX_IN_FLIGHT) {
+        if (stopping) break
+        const at = now()
+        const video = await repo.claim(at, new Date(at.getTime() - CLAIM_STALE_MS), new Date(at.getTime() - QUEUE_WAIT_MS))
+        if (!video) break
+        track(video)
+      }
+    } catch (err) {
+      logError(err, { where: 'studio-video:tick' })
+    }
+  }
+
   async function tick () {
     if (ticking || stopping) return
-    ticking = (async () => {
-      try {
-        while (inFlight.size < MAX_IN_FLIGHT) {
-          if (stopping) break
-          const at = now()
-          const video = await repo.claim(at, new Date(at.getTime() - CLAIM_STALE_MS))
-          if (!video) break
-          track(video)
-        }
-      } catch (err) {
-        logError(err, { where: 'studio-video:tick' })
-      } finally {
-        ticking = null
-      }
-    })()
+    // Cleared in a .finally, which always runs after this assignment. A
+    // finally inside an async body with nothing to await (no room: all
+    // MAX_IN_FLIGHT taken) ran before it, so `ticking` stayed set and no tick
+    // claimed anything again until a restart.
+    ticking = within(claimWhileRoom(), TICK_DEADLINE_MS).finally(() => { ticking = null })
     await ticking
   }
 
@@ -333,6 +403,8 @@ module.exports = {
   CLAIM_STALE_MS,
   HEARTBEAT_MS,
   MAX_ATTEMPTS,
+  MAX_IN_FLIGHT,
+  QUEUE_WAIT_MS,
   createVideoConverter,
   mongoRepo,
   start: () => getVideoConverter().start(),
