@@ -918,8 +918,6 @@ scenes:
 error:
   stickerset_invalid: |
     Pack indisponible. Il a peut-être été supprimé dans Telegram.
-  telegram: |
-    Erreur Telegram : <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Cet sticker n'est plus dans le pack — il a peut-être déjà été supprimé.
@@ -941,9 +939,6 @@ error:
       Telegram demande de patienter — réessaie dans quelques secondes.
     cannot_reach_user: |
       Impossible d'écrire à cet utilisateur : le bot est bloqué ou la discussion est indisponible.
-  answerCbQuery:
-    telegram: |
-      Erreur : ${error}
   file_too_big: |
     Fichier trop volumineux (20 Mo max).
   download: |
