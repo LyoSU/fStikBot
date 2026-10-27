@@ -25,6 +25,7 @@ test('emoji Telegram takes, with or without selectors', () => {
   for (const emoji of ['❤', '❤️', '☺', '1⃣', '1️⃣', '#️⃣', '🇺🇦', '👍🏻', '✌🏻', '👨‍👩‍👧', '©', '™', '🏳️‍🌈', '🏳‍🌈', '❤️‍🔥', '🙂‍↔️', '🏴󠁧󠁢󠁳󠁣󠁴󠁿', '👁‍🗨']) {
     assert.strictEqual(isEmoji(emoji), true, emoji)
   }
+  assert.strictEqual(isEmoji('\u{1FC00}'), true, 'a pictograph newer than ICU')
   for (const symbol of ['♡', '★', '♪', '⚘', '🀀', '1', 'a', '', '😀😀', ' 😀', '🇦🇦']) {
     assert.strictEqual(isEmoji(symbol), false, symbol)
   }

@@ -188,6 +188,21 @@ test('a commit\'s user hash needs the salt', () => {
   assert.ok(!('uid' in JSON.parse(lines[0][1])))
 })
 
+test('a create refused over an emoji names the phase, the sticker and the emoji, nothing else', () => {
+  const refused = "Bad Request: can't parse InputSticker: expected a Unicode emoji"
+  const create = { _id: 'c', status: 'failed', phase: null, create: { state: 'pending' }, error: refused, draft: [{ emojiList: ['😀'] }, { emojiList: ['♡'] }] }
+  const lines = capture(() => {
+    logOutcome(create, { ran: true })
+    logOutcome({ _id: 'p', status: 'failed', create: {}, error: 'asset_missing' })
+    logOutcome({ _id: 'e', status: 'failed', phase: null, error: 'Bad Request: STICKERSET_INVALID' }, { ran: true })
+  })
+
+  const [made, prepared, planned] = lines.map(([, line]) => JSON.parse(line))
+  assert.deepStrictEqual([made.phase, made.sticker, made.emoji], ['createPack', 1, 'U+2661'])
+  assert.deepStrictEqual([prepared.phase, prepared.sticker, prepared.emoji], ['prepare', undefined, undefined])
+  assert.strictEqual(planned.phase, 'plan')
+})
+
 test('an owner who has to start or unblock the bot is a warning, not a fault', () => {
   const lines = capture(() => {
     logOutcome({ _id: 'a', status: 'failed', create: {}, error: 'bot_not_started' })

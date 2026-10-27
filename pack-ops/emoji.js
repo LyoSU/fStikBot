@@ -20,7 +20,12 @@ function qualified (text) {
   )).join('')
 }
 
-const isEmoji = (text) => typeof text === 'string' && text.length <= 64 && RGI.test(qualified(text))
+// A pictograph code point this Unicode doesn't know yet (an emoji newer than
+// Node's ICU) is not blamed.
+const UNKNOWN_PICTOGRAPH = /(?=\p{Extended_Pictographic})\p{Cn}/u
+
+const isEmoji = (text) => typeof text === 'string' && text.length <= 64 &&
+  (RGI.test(qualified(text)) || UNKNOWN_PICTOGRAPH.test(text))
 
 const codePoints = (text) => [...String(text)].slice(0, 16)
   .map((point) => `U+${point.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')}`)

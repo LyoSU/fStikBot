@@ -56,10 +56,19 @@ function commitCode (error) {
 // The owner's to fix (start or unblock the bot), not the worker's fault.
 const OWNER_CODES = new Set(['bot_not_started', 'bot_blocked'])
 
+// Where a commit stopped: its phase once the run gave it one; before that,
+// uploading its files (prepare), or in the run, making the new pack
+// (createPack) or planning the steps (plan).
+function phaseOf (commit, ran) {
+  if (commit.phase) return commit.phase
+  if (!ran) return 'prepare'
+  return commit.create && commit.create.state !== 'done' ? 'createPack' : 'plan'
+}
+
 // A commit that ended without publishing, as one JSON line. A conflict is the
 // pack changing under the draft and an owner code the owner's to fix, so
-// warnings; any other failure is an error.
-function logOutcome (commit) {
+// warnings; any other failure is an error. `ran`: it got past prepare.
+function logOutcome (commit, { ran = false } = {}) {
   if (!commit || (commit.status !== 'failed' && commit.status !== 'conflict')) return
   const code = commitCode(commit.error)
   const op = opOf(commit)
@@ -71,7 +80,7 @@ function logOutcome (commit) {
       status: commit.status,
       code,
       op,
-      phase: commit.phase || 'prepare',
+      phase: phaseOf(commit, ran),
       commitId: String(commit._id),
       packType: commit.packType,
       uid: uidOf(commit),
@@ -295,7 +304,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       logDone(result, now())
       await trySync(result)
     } else {
-      logOutcome(result)
+      logOutcome(result, { ran: true })
       if (result?.packGone) await writeGone(result)
       await refundIfUnmade(result)
     }
