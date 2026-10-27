@@ -1,6 +1,9 @@
 // MongoDB side of the publish worker (pack-ops/worker.js): every query it
 // makes lives here, so the worker itself can be tested against a fake.
 
+// How long a deleted sticker stays restorable (the TTL index removes it after).
+const ARCHIVE_DAYS = 30
+
 const truncate = (str, max) => (str.length > max ? str.slice(0, max) : str)
 
 /**
@@ -113,9 +116,18 @@ function mongoRepo (db) {
       return docs.map((doc) => doc.fileUniqueId)
     },
     // The archived row of this pack that a Studio restore asks for, with the
-    // file_ids to try: the one the pack had, then the original upload.
-    async findArchived (packId, fileUniqueId) {
-      const doc = await db.Sticker.findOne({ stickerSet: packId, fileUniqueId, deleted: true })
+    // file_ids to try: the one the pack had, then the original upload. The
+    // same rows the API's archive lists: a sticker restored meanwhile (the bot's
+    // button), the placeholder and an expired delete are not there any more.
+    async findArchived (packId, fileUniqueId, now) {
+      const doc = await db.Sticker.findOne({
+        stickerSet: packId,
+        fileUniqueId,
+        deleted: true,
+        deletedAt: { $gte: new Date(now.getTime() - ARCHIVE_DAYS * 24 * 60 * 60 * 1000) },
+        restoredAt: { $exists: false },
+        placeholder: { $ne: true }
+      })
       if (!doc) return null
       return { fileId: doc.getFileId(), originalFileId: doc.getOriginalFileId(), format: doc.format }
     },

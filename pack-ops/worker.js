@@ -140,7 +140,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   // Null when the pack has no such archived sticker.
   async function restoredSticker (commit, restore) {
     const pack = await repo.findPack(commit)
-    const row = pack && await repo.findArchived(pack._id, restore.fileUniqueId)
+    const row = pack && await repo.findArchived(pack._id, restore.fileUniqueId, now())
     if (!row?.fileId) return null
     return {
       fileId: row.fileId,

@@ -96,8 +96,9 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     },
     async touch (id, now) { w.commits.find((x) => x._id === id).updatedAt = now },
     async liveStickerUids () { return w.stickers.filter((s) => !s.deleted).map((s) => s.fileUniqueId) },
-    async findArchived (packId, uid) {
-      const doc = w.stickers.find((d) => d.fileUniqueId === uid && d.deleted && d.stickerSet === packId)
+    async findArchived (packId, uid, now) {
+      const doc = w.stickers.find((d) => d.fileUniqueId === uid && d.deleted && d.stickerSet === packId &&
+        d.deletedAt >= new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000) && !('restoredAt' in d) && d.placeholder !== true)
       return doc ? { fileId: doc.fileId, originalFileId: doc.original?.fileId, format: doc.format } : null
     },
     async markRestored (packId, uid, now) {
@@ -585,9 +586,12 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
 
   const restoreItem = (uid, assetId = `r:${uid}`) => ({ assetId, file: { restore: { fileUniqueId: uid }, format: 'static', fileId: null }, emojiList: ['🙂'] })
   const archived = () => [
-    { stickerSet: 'pack1', fileUniqueId: 'a1', fileId: 'PACK-a1', original: { fileId: 'ORIG-a1' }, format: 'video', deleted: true, deletedAt: new Date(0) },
-    { stickerSet: 'pack1', fileUniqueId: 'a2', fileId: 'PACK-a2', deleted: true, deletedAt: new Date(0) },
-    { stickerSet: 'other', fileUniqueId: 'a3', fileId: 'OTHER-a3', deleted: true, deletedAt: new Date(0) }
+    { stickerSet: 'pack1', fileUniqueId: 'a1', fileId: 'PACK-a1', original: { fileId: 'ORIG-a1' }, format: 'video', deleted: true, deletedAt: new Date(w0() - 24 * 60 * 60 * 1000) },
+    { stickerSet: 'pack1', fileUniqueId: 'a2', fileId: 'PACK-a2', deleted: true, deletedAt: new Date(w0() - 24 * 60 * 60 * 1000) },
+    { stickerSet: 'other', fileUniqueId: 'a3', fileId: 'OTHER-a3', deleted: true, deletedAt: new Date(w0() - 24 * 60 * 60 * 1000) },
+    { stickerSet: 'pack1', fileUniqueId: 'r1', fileId: 'R-r1', deleted: true, deletedAt: new Date(w0() - 24 * 60 * 60 * 1000), restoredAt: new Date(w0()) },
+    { stickerSet: 'pack1', fileUniqueId: 'p1', fileId: 'P-p1', deleted: true, deletedAt: new Date(w0() - 24 * 60 * 60 * 1000), placeholder: true },
+    { stickerSet: 'pack1', fileUniqueId: 'e1', fileId: 'E-e1', deleted: true, deletedAt: new Date(w0() - 31 * 24 * 60 * 60 * 1000) }
   ]
   const restoreCommit = (items, extra = {}) => commit({ base: [], draft: items, stickerSet: 'pack1', ...extra })
 
@@ -611,6 +615,14 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.strictEqual(w.commits[0].status, 'failed')
     assert.strictEqual(w.commits[0].error, 'restore_unavailable')
     assert.deepStrictEqual(w.published, [])
+  })
+
+  await test('a restore of a sticker already restored, a placeholder or an expired delete is restore_unavailable', async () => {
+    for (const uid of ['r1', 'p1', 'e1']) {
+      const w = world({ commits: [restoreCommit([restoreItem(uid)])], stickers: archived() })
+      await w.worker.step()
+      assert.strictEqual(w.commits[0].error, 'restore_unavailable', uid)
+    }
   })
 
   await test('a restored sticker that came back under another uid marks its archived row; the same uid does not', async () => {

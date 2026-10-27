@@ -603,8 +603,9 @@ async function applyStep (commit, step, { call, fileIdOf, itemOf, customEmojiIdO
         return await call('addStickerToSet', { user_id: userId, name: commit.name, sticker: inputSticker(item, commit.format) })
       } catch (err) {
         // A restored sticker's file_id from the pack may be refused; the
-        // original upload's goes in as the bot's own restore does.
-        if (!item.file?.fallbackFileId || !isTelegramAnswer(err) || errorCode(err) === 429) throw err
+        // original upload's goes in as the bot's own restore does. Only a 400
+        // is a refusal: after a 5xx Telegram may have added it already.
+        if (!item.file?.fallbackFileId || errorCode(err) !== 400) throw err
         const again = { ...item, file: { ...item.file, fileId: item.file.fallbackFileId } }
         return call('addStickerToSet', { user_id: userId, name: commit.name, sticker: inputSticker(again, commit.format) })
       }

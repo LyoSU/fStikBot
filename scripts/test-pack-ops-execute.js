@@ -379,6 +379,25 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.strictEqual(tg.pack.stickers.length, 2)
   })
 
+  await test('a 5xx on a restored sticker is not retried with the fallback: it may have been added', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x'], world)
+    const realAdd = tg.callApi.bind(tg)
+    const sent = []
+    tg.callApi = (method, params) => {
+      if (method !== 'addStickerToSet') return realAdd(method, params)
+      sent.push(params.sticker.sticker)
+      return Promise.reject(telegramError(502, 'Bad Gateway'))
+    }
+    const draft = [
+      { assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] },
+      { assetId: 'r', file: { restore: { fileUniqueId: 'old' }, fileId: 'pack-fid', fallbackFileId: 'orig-fid' }, emojiList: ['😀'] }
+    ]
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world) })
+    assert.deepStrictEqual(sent, ['pack-fid'])
+    assert.notStrictEqual(commit.status, 'succeeded')
+  })
+
   await test('a 429 beyond the wait interrupts, and a rerun finishes', async () => {
     const world = { faultAt: -1 }
     const tg = fakeTelegram(['x'], world)
