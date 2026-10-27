@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     Փաթեթն անհասանելի է։ Հավանաբար այն ջնջվել է Telegram-ում։
-  telegram: |
-    Telegram-ի սխալ՝ <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Ստիկերն արդեն փաթեթում չէ՝ հավանաբար այն ավելի վաղ է ջնջվել։
@@ -944,9 +942,6 @@ error:
       Telegram-ը խնդրում է սպասել՝ փորձիր նորից մի քանի վայրկյանից։
     cannot_reach_user: |
       Չեմ կարող գրել օգտատիրոջը՝ բոտն արգելափակված է, կամ զրույցն անհասանելի է։
-  answerCbQuery:
-    telegram: |
-      Սխալ՝ ${error}
   file_too_big: |
     Ֆայլը չափազանց մեծ է (առավելագույնը՝ 20 ՄԲ)։
   download: |
