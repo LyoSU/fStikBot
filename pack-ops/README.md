@@ -207,6 +207,21 @@ takes a sticker of another set by file_id, as the bot's own add does. A sticker
 no longer in its set (or a set that is gone) fails the commit as
 `copy_missing`.
 
+## Restores
+
+A draft item may bring back a sticker from the pack's archive (deleted in the
+last 30 days): `file: { restore: { fileUniqueId }, format, fileId: null }`. The
+worker's prepare finds that sticker's deleted row in this pack and puts its
+`file_id` on the item; the original upload's goes along as `fallbackFileId`,
+which the add retries with when Telegram refuses the first. No row fails the
+commit as `restore_unavailable`. It is planned and run as any other add. The
+sync marks the archived row `restoredAt` when the sticker came back under a new
+`file_unique_id` (under the same one its row just turns live again).
+
+The sync also writes, for the archive: `format` and `thumbFileId` on live rows,
+and on rows it marks deleted `deletedPosition`/`deletedAfter` (the place in
+`base`) and `placeholder` for the removed bootstrap sticker.
+
 A copied pack is a `create` commit with `boost: true` and `create.copyOf`, like
 the wizard's copy. It earns Boost only as a copy (`copyEarnsBoost`, written down
 as `create.copyBoost` before the first stickers go in): every item a sticker of

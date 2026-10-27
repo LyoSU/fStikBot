@@ -25,6 +25,20 @@ const stickersSchema = mongoose.Schema({
   emojiList: { type: [String], default: undefined },
   keywords: { type: [String], default: undefined },
 
+  // Set by the Studio worker's sync (pack-ops/worker-repo.js writeSync) for the
+  // sticker archive. All optional and without defaults, so old docs stay as
+  // they are: 'static' | 'animated' | 'video' and Telegram's thumbnail file_id
+  // on live rows; where a deleted sticker stood (its index in the pack and the
+  // file_unique_id right before it, null when first); the placeholder's row
+  // once removed, which never belongs in the archive; and when a deleted
+  // sticker went back into the pack under another file_unique_id.
+  format: String,
+  thumbFileId: String,
+  deletedPosition: Number,
+  deletedAfter: { type: String, default: undefined },
+  placeholder: { type: Boolean, default: undefined },
+  restoredAt: Date,
+
   // NEW: Flat fields (used for new documents)
   fileId: String,
   stickerType: String,

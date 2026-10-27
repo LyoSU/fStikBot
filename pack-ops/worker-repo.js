@@ -112,33 +112,55 @@ function mongoRepo (db) {
       const docs = await db.Sticker.find({ stickerSet: packId, deleted: { $ne: true } }).select('fileUniqueId').lean()
       return docs.map((doc) => doc.fileUniqueId)
     },
-    // `stickers`: [{ fileUniqueId, fileId, emojiList, keywords? }] as they are in
-    // the pack now. Everything the pack no longer holds is marked deleted
-    // (like the bot's own delete does), not removed.
-    async writeSync (packId, { stickers, deletedUids, clearPlaceholder, title }, now) {
+    // The archived row of this pack that a Studio restore asks for, with the
+    // file_ids to try: the one the pack had, then the original upload.
+    async findArchived (packId, fileUniqueId) {
+      const doc = await db.Sticker.findOne({ stickerSet: packId, fileUniqueId, deleted: true })
+      if (!doc) return null
+      return { fileId: doc.getFileId(), originalFileId: doc.getOriginalFileId(), format: doc.format }
+    },
+    // The archived row went back into the pack as another sticker (a new
+    // file_unique_id), so it must not be offered again.
+    async markRestored (packId, fileUniqueId, now) {
+      await db.Sticker.updateOne({ stickerSet: packId, fileUniqueId, deleted: true }, { $set: { restoredAt: now } })
+    },
+    // `stickers`: [{ fileUniqueId, fileId, format, thumbFileId?, emojiList, keywords? }]
+    // as they are in the pack now. Everything the pack no longer holds is
+    // marked deleted (like the bot's own delete does), not removed.
+    // `positions`: { [fileUniqueId]: { position, after } } where those stood
+    // before, for the archive; `placeholderUid` marks the bootstrap sticker.
+    async writeSync (packId, { stickers, deletedUids, positions = {}, placeholderUid, clearPlaceholder, title }, now) {
       if (stickers.length) {
         await db.Sticker.bulkWrite(stickers.map((s) => {
           const set = {
             emojis: truncate(s.emojiList.join(' '), 150),
             emojiList: s.emojiList,
             fileId: s.fileId,
+            format: s.format,
             stickerType: 'sticker',
             deleted: false,
             deletedAt: null
           }
-          const update = { $set: set }
+          // A sticker that is back in the pack no longer looks archived.
+          const update = { $set: set, $unset: { deletedPosition: '', deletedAfter: '', restoredAt: '' } }
+          if (s.thumbFileId) set.thumbFileId = s.thumbFileId
+          else update.$unset.thumbFileId = ''
           if (s.keywords?.length) set.keywords = s.keywords
-          else if (s.keywords) update.$unset = { keywords: '' }
+          else if (s.keywords) update.$unset.keywords = ''
           return {
             updateOne: { filter: { stickerSet: packId, fileUniqueId: s.fileUniqueId }, update, upsert: true }
           }
         }))
       }
       if (deletedUids.length) {
-        await db.Sticker.updateMany(
-          { stickerSet: packId, fileUniqueId: { $in: deletedUids }, deleted: { $ne: true } },
-          { $set: { deleted: true, deletedAt: now } }
-        )
+        await db.Sticker.bulkWrite(deletedUids.map((uid) => {
+          const set = { deleted: true, deletedAt: now }
+          if (positions[uid]) Object.assign(set, { deletedPosition: positions[uid].position, deletedAfter: positions[uid].after })
+          if (uid === placeholderUid) set.placeholder = true
+          return {
+            updateOne: { filter: { stickerSet: packId, fileUniqueId: uid, deleted: { $ne: true } }, update: { $set: set } }
+          }
+        }))
       }
       const update = { $set: { updatedAt: now } }
       if (title) update.$set.title = title

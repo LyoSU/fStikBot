@@ -96,15 +96,30 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     },
     async touch (id, now) { w.commits.find((x) => x._id === id).updatedAt = now },
     async liveStickerUids () { return w.stickers.filter((s) => !s.deleted).map((s) => s.fileUniqueId) },
-    async writeSync (packId, { stickers, deletedUids, clearPlaceholder, title }, now) {
+    async findArchived (packId, uid) {
+      const doc = w.stickers.find((d) => d.fileUniqueId === uid && d.deleted && d.stickerSet === packId)
+      return doc ? { fileId: doc.fileId, originalFileId: doc.original?.fileId, format: doc.format } : null
+    },
+    async markRestored (packId, uid, now) {
+      w.stickers.find((d) => d.fileUniqueId === uid && d.deleted).restoredAt = now
+    },
+    async writeSync (packId, { stickers, deletedUids, positions = {}, placeholderUid, clearPlaceholder, title }, now) {
       for (const s of stickers) {
         let doc = w.stickers.find((d) => d.fileUniqueId === s.fileUniqueId)
         if (!doc) w.stickers.push(doc = { fileUniqueId: s.fileUniqueId, stickerSet: packId })
-        Object.assign(doc, { emojis: s.emojiList.join(' '), emojiList: s.emojiList, fileId: s.fileId, stickerType: 'sticker', deleted: false, deletedAt: null })
+        Object.assign(doc, { emojis: s.emojiList.join(' '), emojiList: s.emojiList, fileId: s.fileId, format: s.format, stickerType: 'sticker', deleted: false, deletedAt: null })
+        for (const key of ['deletedPosition', 'deletedAfter', 'restoredAt']) delete doc[key]
+        if (s.thumbFileId) doc.thumbFileId = s.thumbFileId
+        else delete doc.thumbFileId
         if (s.keywords?.length) doc.keywords = s.keywords
         else if (s.keywords) delete doc.keywords
       }
-      for (const doc of w.stickers) if (deletedUids.includes(doc.fileUniqueId)) Object.assign(doc, { deleted: true, deletedAt: now })
+      for (const doc of w.stickers) {
+        if (!deletedUids.includes(doc.fileUniqueId)) continue
+        Object.assign(doc, { deleted: true, deletedAt: now })
+        if (positions[doc.fileUniqueId]) Object.assign(doc, { deletedPosition: positions[doc.fileUniqueId].position, deletedAfter: positions[doc.fileUniqueId].after })
+        if (doc.fileUniqueId === placeholderUid) doc.placeholder = true
+      }
       w.pack.updatedAt = now
       if (title) w.pack.title = title
       if (clearPlaceholder) delete w.pack.placeholderFileUniqueId
@@ -381,7 +396,7 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
 
     assert.deepStrictEqual(
       { ...doc('n1'), stickerSet: undefined },
-      { fileUniqueId: 'n1', stickerSet: undefined, emojis: '😀 😁', emojiList: ['😀', '😁'], fileId: 'F-n1', stickerType: 'sticker', deleted: false, deletedAt: null, keywords: ['grin'] }
+      { fileUniqueId: 'n1', stickerSet: undefined, emojis: '😀 😁', emojiList: ['😀', '😁'], fileId: 'F-n1', format: 'static', stickerType: 'sticker', deleted: false, deletedAt: null, keywords: ['grin'] }
     )
     assert.strictEqual(doc('n2').fileId, 'F-n2')
     assert.strictEqual('keywords' in doc('n2'), false, 'keywords stay absent unless set')
@@ -397,6 +412,39 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.strictEqual(w.pack.updatedAt.getTime(), w.clock.getTime())
     assert.strictEqual(w.commits[0].synced, true)
     assert.strictEqual(await w.worker.step(), false, 'synced once')
+  })
+
+  await test('the sync writes format and thumbnail, and where each removed sticker stood', async () => {
+    const w = synced()
+    w.telegramSet = [
+      { file_unique_id: 'n1', file_id: 'F-n1', is_video: true, thumbnail: { file_id: 'T-n1' } },
+      { file_unique_id: 'u1', file_id: 'F-u1', is_animated: true },
+      { file_unique_id: 'u2', file_id: 'F-u2' },
+      { file_unique_id: 'n2', file_id: 'F-n2' }
+    ]
+    w.commits[0].base = ['u1', 'u2', 'u3', 'ph']
+    await w.worker.step()
+    const doc = (uid) => w.stickers.find((s) => s.fileUniqueId === uid)
+    assert.deepStrictEqual(['n1', 'u1', 'u2'].map((uid) => doc(uid).format), ['video', 'animated', 'static'])
+    assert.strictEqual(doc('n1').thumbFileId, 'T-n1')
+    assert.strictEqual('thumbFileId' in doc('u1'), false)
+    assert.strictEqual(doc('u3').deletedPosition, 2)
+    assert.strictEqual(doc('u3').deletedAfter, 'u2')
+    assert.strictEqual(doc('ph').deletedPosition, 3)
+    assert.strictEqual(doc('ph').placeholder, true)
+    assert.strictEqual('placeholder' in doc('u3'), false)
+  })
+
+  await test('a removed sticker that was first has no one before it; one outside base has no position', async () => {
+    const w = synced()
+    w.telegramSet = [{ file_unique_id: 'u2', file_id: 'F-u2' }, { file_unique_id: 'n1', file_id: 'F-n1' }, { file_unique_id: 'n2', file_id: 'F-n2' }]
+    w.commits[0].base = ['u1', 'u2']
+    await w.worker.step()
+    const doc = (uid) => w.stickers.find((s) => s.fileUniqueId === uid)
+    assert.strictEqual(doc('u1').deletedPosition, 0)
+    assert.strictEqual(doc('u1').deletedAfter, null)
+    assert.strictEqual('deletedPosition' in doc('u3'), false)
+    assert.strictEqual(doc('u3').deleted, true)
   })
 
   await test('a published title lands on the pack document as Telegram has it', async () => {
@@ -531,6 +579,54 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     w.sources = sources()
     await w.worker.step()
     assert.deepStrictEqual(w.sourceReads, ['dogs'])
+  })
+
+  console.log('restores')
+
+  const restoreItem = (uid, assetId = `r:${uid}`) => ({ assetId, file: { restore: { fileUniqueId: uid }, format: 'static', fileId: null }, emojiList: ['🙂'] })
+  const archived = () => [
+    { stickerSet: 'pack1', fileUniqueId: 'a1', fileId: 'PACK-a1', original: { fileId: 'ORIG-a1' }, format: 'video', deleted: true, deletedAt: new Date(0) },
+    { stickerSet: 'pack1', fileUniqueId: 'a2', fileId: 'PACK-a2', deleted: true, deletedAt: new Date(0) },
+    { stickerSet: 'other', fileUniqueId: 'a3', fileId: 'OTHER-a3', deleted: true, deletedAt: new Date(0) }
+  ]
+  const restoreCommit = (items, extra = {}) => commit({ base: [], draft: items, stickerSet: 'pack1', ...extra })
+
+  await test('a restore item takes its file_id from the archived row of this pack, with the original as fallback', async () => {
+    const w = world({ commits: [restoreCommit([restoreItem('a1'), restoreItem('a2')])], stickers: archived() })
+    await w.worker.step()
+    const [one, two] = w.commits[0].draft
+    assert.strictEqual(one.file.fileId, 'PACK-a1')
+    assert.strictEqual(one.file.fallbackFileId, 'ORIG-a1')
+    assert.strictEqual(one.file.format, 'video', 'the row knows its format')
+    assert.strictEqual(two.file.fileId, 'PACK-a2')
+    assert.strictEqual('fallbackFileId' in two.file, false)
+    assert.strictEqual(two.file.format, 'static', 'a legacy row keeps the one the API sent')
+    assert.deepStrictEqual(w.published, ['c1'])
+    assert.strictEqual(w.uploads.length, 0)
+  })
+
+  await test('a restore with no archived row in this pack fails the commit as restore_unavailable', async () => {
+    const w = world({ commits: [restoreCommit([restoreItem('a3')])], stickers: archived() })
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'failed')
+    assert.strictEqual(w.commits[0].error, 'restore_unavailable')
+    assert.deepStrictEqual(w.published, [])
+  })
+
+  await test('a restored sticker that came back under another uid marks its archived row; the same uid does not', async () => {
+    const c = restoreCommit([restoreItem('a1'), restoreItem('a2')], {
+      status: 'succeeded',
+      mapping: { 'r:a1': 'new1', 'r:a2': 'a2' }
+    })
+    const w = world({ commits: [c], stickers: archived() })
+    w.telegramSet = [{ file_unique_id: 'new1', file_id: 'F-new1' }, { file_unique_id: 'a2', file_id: 'F-a2' }]
+    await w.worker.step()
+    const doc = (uid) => w.stickers.find((s) => s.fileUniqueId === uid)
+    assert.ok(doc('a1').restoredAt instanceof Date)
+    assert.strictEqual(doc('a1').deleted, true)
+    assert.strictEqual(doc('new1').deleted, false)
+    assert.strictEqual(doc('a2').deleted, false, 'the same uid flips its own row back')
+    assert.strictEqual('restoredAt' in doc('a2'), false)
   })
 
   console.log('refunds')

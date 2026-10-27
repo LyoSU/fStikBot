@@ -597,8 +597,18 @@ async function applyStep (commit, step, { call, fileIdOf, itemOf, customEmojiIdO
         old_sticker: await fileIdOf(step.fileUniqueId),
         sticker: inputSticker(itemOf(step.assetId), commit.format)
       })
-    case 'add':
-      return call('addStickerToSet', { user_id: userId, name: commit.name, sticker: inputSticker(itemOf(step.assetId), commit.format) })
+    case 'add': {
+      const item = itemOf(step.assetId)
+      try {
+        return await call('addStickerToSet', { user_id: userId, name: commit.name, sticker: inputSticker(item, commit.format) })
+      } catch (err) {
+        // A restored sticker's file_id from the pack may be refused; the
+        // original upload's goes in as the bot's own restore does.
+        if (!item.file?.fallbackFileId || !isTelegramAnswer(err) || errorCode(err) === 429) throw err
+        const again = { ...item, file: { ...item.file, fileId: item.file.fallbackFileId } }
+        return call('addStickerToSet', { user_id: userId, name: commit.name, sticker: inputSticker(again, commit.format) })
+      }
+    }
     case 'move':
       return call('setStickerPositionInSet', { sticker: await fileIdOf(step.fileUniqueId), position: step.position })
     case 'emoji':

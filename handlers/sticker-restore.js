@@ -27,6 +27,7 @@ module.exports = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('ratelimit'), true)
   }
 
+  const wasDeleted = sticker.deleted
   let newFileUniqueId
 
   if (sticker.stickerSet.inline === true) {
@@ -122,6 +123,16 @@ module.exports = async (ctx) => {
 
   if (!newFileUniqueId) {
     return ctx.answerCbQuery(ctx.i18n.t('error.unknown'), true)
+  }
+
+  if (wasDeleted) {
+    // Back under another file_unique_id: the archived row is marked so Studio
+    // doesn't offer it again. Under the same one it is live again, so it
+    // keeps no place from its earlier delete.
+    const archive = newFileUniqueId !== sticker.fileUniqueId
+      ? { $set: { restoredAt: new Date() } }
+      : { $unset: { deletedPosition: '', deletedAfter: '', restoredAt: '' } }
+    await ctx.db.Sticker.updateOne({ _id: sticker._id }, archive).catch(() => {})
   }
 
   coedit.track(ctx.db, sticker.stickerSet, ctx.from, 'restore', { fileUniqueId: newFileUniqueId })
