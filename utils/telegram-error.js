@@ -17,38 +17,29 @@ const ERROR_PATTERNS = [
 
 const RATE_LIMIT_CODE = 429
 
-// Telegram error descriptions are usually short, but rare 400s come back
-// with a multi-kilobyte JSON dump. We render this string into i18n
-// templates that may feed answerCbQuery (200-char hard limit) or
-// replyWithHTML (4096-char limit). Clamp at the source so the sink
-// can't blow up with MESSAGE_TOO_LONG.
-const truncateDescription = (s, max) => (
-  s.length > max ? `${s.slice(0, max - 1)}…` : s
-)
-// Default fits answerCbQuery (200) once the i18n template wraps it in
-// "Telegram error: <code>…</code>" (~30 chars of prefix/suffix).
-const DEFAULT_MAX_DESCRIPTION_LEN = 150
-
 // telegraf builds every request URL as `.../bot<token>/<method>` and node-fetch
 // puts that URL into the message of every network-level error (ECONNRESET,
-// ETIMEDOUT, …). Strip the token before such text reaches a log or the admin
-// log channel.
-const BOT_TOKEN_RE = /\/bot\d+:[A-Za-z0-9_-]+\//g
+// ETIMEDOUT, …). That message used to reach the chat as "Telegram error:
+// request to https://api.telegram.org/bot<token>/uploadStickerFile failed"
+// (2026-10-27). retry-api strips it from every callApi error at the source;
+// the sinks that show or store error text strip it again.
+// A token anywhere: in a /bot<token>/ or /file/bot<token>/ path, or bare.
+const BOT_TOKEN_RE = /\d{6,12}:[A-Za-z0-9_-]{30,}/g
 
 const redactBotToken = (text) => (
-  typeof text === 'string' ? text.replace(BOT_TOKEN_RE, '/bot<redacted>/') : text
+  typeof text === 'string' ? text.replace(BOT_TOKEN_RE, '<redacted>') : text
 )
 
-// Mutates message/stack in place — the error object is what gets rethrown
-// and eventually logged, so the copy has to be the one callers see.
+// Mutates message/stack/description in place — the error object is what gets
+// rethrown, shown and logged, so the copy has to be the one callers see.
 const redactErrorToken = (error) => {
   if (!error || typeof error !== 'object') return error
   try {
-    if (typeof error.message === 'string' && BOT_TOKEN_RE.test(error.message)) {
-      error.message = redactBotToken(error.message)
-    }
-    if (typeof error.stack === 'string' && BOT_TOKEN_RE.test(error.stack)) {
-      error.stack = redactBotToken(error.stack)
+    for (const key of ['message', 'stack', 'description']) {
+      if (typeof error[key] === 'string') {
+        const clean = redactBotToken(error[key])
+        if (clean !== error[key]) error[key] = clean
+      }
     }
   } catch (_) { /* frozen error object — nothing to do */ }
   return error
@@ -74,7 +65,7 @@ const extractRetryAfterSeconds = (error) => {
   return match ? parseInt(match[1], 10) : null
 }
 
-const humanizeTelegramError = (ctx, error, opts = {}) => {
+const humanizeTelegramError = (ctx, error) => {
   const reason = matchTelegramErrorReason(error)
 
   if (reason === 'rate_limited') {
@@ -85,18 +76,15 @@ const humanizeTelegramError = (ctx, error, opts = {}) => {
 
   if (reason) return ctx.i18n.t(`error.telegram_reasons.${reason}`)
 
-  const description = error?.description || error?.message || 'Unknown error'
-  const maxLen = opts.maxDescriptionLen || DEFAULT_MAX_DESCRIPTION_LEN
-  return ctx.i18n.t(opts.fallbackKey || 'error.telegram', {
-    error: truncateDescription(description, maxLen)
-  })
+  // Raw text never reaches the user: a network error's message once carried
+  // the bot token into the chat (2026-10-27). The cause is in the log.
+  return ctx.i18n.t('error.unknown')
 }
 
 module.exports = {
   matchTelegramErrorReason,
   extractRetryAfterSeconds,
   humanizeTelegramError,
-  truncateDescription,
   redactBotToken,
   redactErrorToken
 }

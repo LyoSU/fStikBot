@@ -1,5 +1,6 @@
 const got = require('got')
 const sharp = require('sharp')
+const { humanizeTelegramError } = require('./telegram-error')
 
 // Download a sticker by file_id and reply with it as a regular document.
 // Re-uploading converts the file out of Telegram's "Sticker" type so it
@@ -26,7 +27,7 @@ async function sendStickerAsDocument (ctx, fileId, fileUniqueId, extra = {}) {
 
   const replyTelegramError = (error) =>
     ctx.replyWithHTML(
-      ctx.i18n.t('error.telegram', { error: error.description || error.message }),
+      humanizeTelegramError(ctx, error),
       extra
     ).catch(() => {})
 

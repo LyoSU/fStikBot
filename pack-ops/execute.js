@@ -11,6 +11,7 @@
 
 const { hasConflict, sameList, mergeOutside, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
 const { autoNameCandidates, customNameCandidates, NAME_REJECTED } = require('./names')
+const { redactBotToken } = require('../utils/telegram-error')
 
 // Commit status:
 //   pending      created, never run
@@ -43,7 +44,8 @@ const inputSticker = (item, format) => ({
 // timeout, a reset connection — may or may not have reached Telegram.
 const isTelegramAnswer = (err) => Number.isInteger(err?.code) || Number.isInteger(err?.response?.error_code)
 const errorCode = (err) => err?.code ?? err?.response?.error_code
-const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
+// Stored on the commit and shown in Studio: never with the bot token in it.
+const errorText = (err) => redactBotToken(err?.description || err?.response?.description || err?.message || String(err))
 
 // A delete of a sticker the set no longer holds (measured: a second delete of
 // one sticker is STICKERSET_NOT_MODIFIED).
