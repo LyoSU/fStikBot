@@ -2,12 +2,7 @@ const path = require('path')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const escapeHTML = require('./html-escape')
-const { truncateDescription, matchTelegramErrorReason, extractRetryAfterSeconds } = require('./telegram-error')
-
-// add-sticker-text feeds telegram.sendMessage (4096-char hard limit).
-// Truncate raw API descriptions well below that so a Telegram dump can't
-// push our final message past the limit and trigger MESSAGE_TOO_LONG.
-const SEND_MESSAGE_DESCRIPTION_MAX = 1000
+const { matchTelegramErrorReason, extractRetryAfterSeconds } = require('./telegram-error')
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -76,7 +71,7 @@ module.exports = (addStickerResult, lang) => {
       // Adding a new inline error = add an i18n key, no code change here.
       messageText = i18n.t(lang, addStickerResult.error.i18nKey)
     } else if (addStickerResult.error.telegram) {
-      const errDescription = addStickerResult.error.telegram.description || addStickerResult.error.telegram.message || ''
+      const errDescription = addStickerResult.error.telegram.description || ''
       if (matchTelegramErrorReason(addStickerResult.error.telegram) === 'rate_limited') {
         // addStickerToSet 429 with retry_after > maxWait fails fast; the user
         // used to read the raw "Too Many Requests: retry after 10".
@@ -84,26 +79,20 @@ module.exports = (addStickerResult, lang) => {
         messageText = seconds
           ? i18n.t(lang, 'error.rate_limit_seconds', { seconds })
           : i18n.t(lang, 'error.telegram_reasons.rate_limited')
-      } else if (!errDescription) {
-        messageText = i18n.t(lang, 'error.unknown')
       } else {
-        const hit = TELEGRAM_ERROR_MAP.find(([needle]) => errDescription.includes(needle))
+        // Only what we have words for reaches the user. Raw text never does:
+        // a network error's message once carried the bot token into the chat
+        // (2026-10-27), and Telegram's descriptions are not for people.
+        const hit = errDescription && TELEGRAM_ERROR_MAP.find(([needle]) => errDescription.includes(needle))
+        const reason = matchTelegramErrorReason(addStickerResult.error.telegram)
         messageText = hit
           ? i18n.t(lang, hit[1])
-          : i18n.t(lang, 'error.telegram', {
-            error: escapeHTML(truncateDescription(errDescription, SEND_MESSAGE_DESCRIPTION_MAX))
-          })
+          : reason ? i18n.t(lang, `error.telegram_reasons.${reason}`) : i18n.t(lang, 'error.unknown')
       }
-    } else if (addStickerResult.error.message) {
-      // uploadSticker's internal { error: { message } } shape. It used to fall
-      // into the String(error) branch below and render as "[object Object]".
-      messageText = i18n.t(lang, 'error.telegram', {
-        error: escapeHTML(truncateDescription(String(addStickerResult.error.message), SEND_MESSAGE_DESCRIPTION_MAX))
-      })
     } else {
-      messageText = i18n.t(lang, 'error.telegram', {
-        error: escapeHTML(truncateDescription(String(addStickerResult.error), SEND_MESSAGE_DESCRIPTION_MAX))
-      })
+      // uploadSticker's internal { error: { message } } and anything else
+      // unnamed: the cause is in the log, the user gets plain words.
+      messageText = i18n.t(lang, 'error.unknown')
     }
   }
 

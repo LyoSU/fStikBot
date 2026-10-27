@@ -18,6 +18,7 @@ const { logError, logEvent } = require('../utils/error-line')
 const { logUid } = require('../utils/log-uid')
 const { normalize } = require('../utils/fingerprint')
 const { emojiContext } = require('./emoji')
+const { redactBotToken } = require('../utils/telegram-error')
 
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
 // A `preparing` claim older than this is a dead process's. Uploads refresh it.
@@ -33,7 +34,8 @@ const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 100
 // Same split as the executor: an answer from Telegram is final, anything else
 // (a timeout, a reset connection) says nothing about what Telegram did.
 const errorCode = (err) => err?.code ?? err?.response?.error_code
-const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
+// Stored on the commit and shown in Studio: never with the bot token in it.
+const errorText = (err) => redactBotToken(err?.description || err?.response?.description || err?.message || String(err))
 const formatOf = (sticker) => (sticker.is_animated ? 'animated' : sticker.is_video ? 'video' : 'static')
 const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >= 400 && errorCode(err) < 500 && errorCode(err) !== 429
 

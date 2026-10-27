@@ -20,6 +20,7 @@
 const { AsyncLocalStorage } = require('async_hooks')
 const Telegram = require('telegraf/telegram')
 const log = require('./logger').scope('retry-api')
+const { redactErrorToken } = require('./telegram-error')
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -487,8 +488,11 @@ function patchTelegramPrototype () {
         ? { method: description, maxRetries: 0 }
         : { method: description }
 
+    // Every error leaves callApi without the bot token: a network error's
+    // message holds the request URL, token included, and it went from here
+    // to logs, the chat and stored commits (see redactErrorToken).
     return withRetry(
-      () => originalCallApi.call(this, method, data, ...rest),
+      () => originalCallApi.call(this, method, data, ...rest).catch((error) => { throw redactErrorToken(error) }),
       retryOptions
     ).catch((error) => {
       // 403 on a private chat (positive id = user_id / DM chat_id) →
