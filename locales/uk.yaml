@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     Пак недоступний. Можливо, його видалили в Telegram.
-  telegram: |
-    Помилка Telegram: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Стікера вже немає в паку — можливо, його видалили раніше.
@@ -944,9 +942,6 @@ error:
       Telegram просить зачекати — спробуй ще раз за кілька секунд.
     cannot_reach_user: |
       Не можу написати користувачу: бот заблокований або чат недоступний.
-  answerCbQuery:
-    telegram: |
-      Помилка: ${error}
   file_too_big: |
     Файл завеликий (макс. 20 МБ).
   download: |

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const log = require('../utils/logger').scope('mongo')
+const { redactErrorToken } = require('../utils/telegram-error')
 
 // Mongoose 5 never stripped unknown keys from query filters. Keep that
 // behaviour explicitly so an upgrade can't silently turn a filter on a
@@ -31,7 +32,8 @@ const connection = mongoose.createConnection(mainUri, {
   retryReads: true
 })
 
-connection.on('error', (error) => log.error('connection error:', error))
+// The URI's password stays out of the log.
+connection.on('error', (error) => log.error('connection error:', redactErrorToken(error)))
 connection.on('disconnected', () => log.warn('disconnected'))
 connection.on('reconnected', () => log.info('reconnected'))
 

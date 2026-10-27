@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     The pack is unavailable. It may have been deleted in Telegram.
-  telegram: |
-    Telegram error: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       This sticker is no longer in the pack — it may have been deleted earlier.
@@ -944,9 +942,6 @@ error:
       Too many requests to Telegram — try again in a few seconds.
     cannot_reach_user: |
       Can't message the user: the bot is blocked or the chat is unavailable.
-  answerCbQuery:
-    telegram: |
-      Error: ${error}
   file_too_big: |
     The file is too big (max 20 MB).
   download: |

@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     Жинақ қолжетімсіз. Мүмкін, ол Telegram-да жойылған.
-  telegram: |
-    Telegram қатесі: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Стикер енді жинақта жоқ — мүмкін, ол бұрын жойылған.
@@ -944,9 +942,6 @@ error:
       Telegram күте тұруды сұрап жатыр — бірнеше секундтан соң қайталап көр.
     cannot_reach_user: |
       Пайдаланушыға хабарлама жіберу мүмкін емес: бот бұғатталған немесе чат қолжетімсіз.
-  answerCbQuery:
-    telegram: |
-      Қате: ${error}
   file_too_big: |
     Файл тым үлкен (ең көбі 20 МБ).
   download: |

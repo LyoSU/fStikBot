@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     Toʻplam mavjud emas. Ehtimol, u Telegramda oʻchirilgan.
-  telegram: |
-    Telegram xatosi: <code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       Stiker endi toʻplamda yoʻq — ehtimol, u avvalroq oʻchirilgan.
@@ -944,9 +942,6 @@ error:
       Telegram kutishni soʻramoqda — bir necha soniyadan soʻng qayta urinib koʻring.
     cannot_reach_user: |
       Foydalanuvchiga yozib boʻlmayapti: bot bloklangan yoki chat mavjud emas.
-  answerCbQuery:
-    telegram: |
-      Xatolik: ${error}
   file_too_big: |
     Fayl juda katta (maks. 20 MB).
   download: |

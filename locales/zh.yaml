@@ -921,8 +921,6 @@ scenes:
 error:
   stickerset_invalid: |
     贴纸包不可用，可能已在 Telegram 中被删除。
-  telegram: |
-    Telegram 错误：<code>${error}</code>
   telegram_reasons:
     sticker_not_in_set: |
       该贴纸已不在贴纸包中，可能之前已被删除。
@@ -944,9 +942,6 @@ error:
       Telegram 要求稍候，请几秒后再试。
     cannot_reach_user: |
       无法给该用户发送消息：机器人已被屏蔽或聊天不可用。
-  answerCbQuery:
-    telegram: |
-      错误：${error}
   file_too_big: |
     文件过大（最大 20 MB）。
   download: |
