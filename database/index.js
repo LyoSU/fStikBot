@@ -69,6 +69,9 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.create = stickerSetInfo.create || false
   stickerSet.boost = stickerSetInfo.boost || false
   stickerSet.placeholderFileUniqueId = stickerSetInfo.placeholderFileUniqueId
+  if (stickerSetInfo.moderated) stickerSet.moderated = stickerSetInfo.moderated
+  if (stickerSetInfo.aiModeration) stickerSet.aiModeration = stickerSetInfo.aiModeration
+  if (stickerSetInfo.about) stickerSet.about = stickerSetInfo.about
   await stickerSet.save()
 
   // Increment user's pack count

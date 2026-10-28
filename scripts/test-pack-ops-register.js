@@ -24,10 +24,12 @@ const chain = (value) => ({ select: () => ({ lean: async () => value }), lean: a
 function fakeDb ({ old, extra = [] }) {
   const sets = [old, ...extra]
   const stickers = [
-    { stickerSet: 'old1', fileUniqueId: 'a', deleted: true },
-    { stickerSet: 'old1', fileUniqueId: 'b', deleted: true },
-    { stickerSet: 'old1', fileUniqueId: 'c', deleted: true, restoredAt: new Date() },
-    { stickerSet: 'old1', fileUniqueId: 'single', deleted: true } // deleted on its own, before the pack
+    { _id: 1, stickerSet: 'old1', fileUniqueId: 'a', deleted: true, deletedAt: new Date('2026-10-01') },
+    { _id: 2, stickerSet: 'old1', fileUniqueId: 'b', deleted: true, deletedAt: new Date('2026-10-01') },
+    { _id: 3, stickerSet: 'old1', fileUniqueId: 'c', deleted: true, deletedAt: new Date('2026-10-01'), restoredAt: new Date() },
+    { _id: 4, stickerSet: 'old1', fileUniqueId: 'single', deleted: true, deletedAt: new Date('2026-10-01') }, // deleted on its own, before the pack
+    { _id: 5, stickerSet: 'old1', fileUniqueId: 'a', deleted: true, deletedAt: new Date('2026-10-05') }, // a newer row of the same file
+    { _id: 6, stickerSet: 'old1', fileUniqueId: 'a', deleted: true, deletedAt: new Date('2026-09-20') }
   ]
   const db = {
     sets,
@@ -49,21 +51,18 @@ function fakeDb ({ old, extra = [] }) {
       },
       async updateOne ({ _id }, { $set }) {
         const doc = sets.find((s) => s._id === _id)
-        if (!doc) return
-        for (const [key, value] of Object.entries($set)) {
-          if (key === 'about.safe') doc.about = { ...doc.about, safe: value }
-          else doc[key] = value
-        }
+        if (doc) Object.assign(doc, $set)
       }
     },
     Sticker: {
+      find: (filter) => ({
+        select: () => ({
+          lean: async () => stickers.filter((s) => s.stickerSet === filter.stickerSet && filter.fileUniqueId.$in.includes(s.fileUniqueId) &&
+            s.deleted && !('restoredAt' in s)).map((s) => ({ ...s }))
+        })
+      }),
       async updateMany (filter, { $set }) {
-        for (const s of stickers) {
-          if (s.stickerSet !== filter.stickerSet || !filter.fileUniqueId.$in.includes(s.fileUniqueId)) continue
-          if (filter.deleted && !s.deleted) continue
-          if (filter.restoredAt && 'restoredAt' in s) continue
-          Object.assign(s, $set)
-        }
+        for (const s of stickers) if (filter._id.$in.includes(s._id)) Object.assign(s, $set)
       }
     }
   }
@@ -93,7 +92,7 @@ const draft = [
     assert.ok(old.restoredAt instanceof Date)
     assert.strictEqual(old.restoredTo, 'new1')
     const where = (uid) => db.stickers.find((s) => s.fileUniqueId === uid).stickerSet
-    assert.deepStrictEqual(['a', 'b'].map(where), ['new1', 'new1'])
+    assert.deepStrictEqual(db.stickers.filter((s) => s.stickerSet === 'new1').map((s) => s._id).sort(), [2, 5], 'one row per uid, the newest')
     assert.strictEqual(where('c'), 'old1', 'already restored: stays')
     assert.strictEqual(where('single'), 'old1', 'not in the draft: stays')
     const made = db.sets.find((s) => s._id === 'new1')
@@ -109,7 +108,7 @@ const draft = [
     assert.strictEqual(id, 'new1')
     assert.deepStrictEqual(db.sets.map((s) => s._id), ['new1'])
     assert.strictEqual(db.sets[0].moderated, true)
-    assert.strictEqual(db.stickers.find((s) => s.fileUniqueId === 'a').stickerSet, 'new1')
+    assert.strictEqual(db.stickers.find((s) => s._id === 5).stickerSet, 'new1')
   })
 
   await test('nothing is carried from a clean old pack', async () => {

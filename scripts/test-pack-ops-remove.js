@@ -7,6 +7,7 @@ process.env.LOG_LEVEL = 'error'
 const assert = require('assert')
 const { runCommit } = require('../pack-ops/execute')
 const { createWorker } = require('../pack-ops/worker')
+const { uniqueIdOf } = require('../pack-ops/fresh')
 
 let passed = 0
 let failed = 0
@@ -110,6 +111,25 @@ const run = (commit, telegram, deps = {}) => runCommit(commit, { telegram, store
     assert.strictEqual(commit.status, 'succeeded')
     assert.deepStrictEqual(telegram.calls, ['getStickerSet', 'deleteStickerSet', 'deleteStickerSet', 'getStickerSet'])
     assert.deepStrictEqual(commit.removedOrder, ['a'], 'kept: our own delete went through, only its answer was lost')
+  })
+
+  await test('the order comes from the server\'s read when it can be asked, the Bot API\'s copy otherwise', async () => {
+    // The Bot API's copy lags: it still has [a]; the server has [a, b] in another order.
+    const readFresh = async () => ({ documents: [{ id: 222 }, { id: 111 }] })
+    const telegram = fakeTelegram()
+    const real = telegram.callApi.bind(telegram)
+    telegram.callApi = async (method, params) => {
+      const set = await real(method, params)
+      if (method === 'getStickerSet') set.stickers = [{ file_unique_id: uniqueIdOf(111), file_id: 'f' }]
+      return set
+    }
+    const commit = await run(removeCommit(), telegram, { readFresh })
+    assert.deepStrictEqual(commit.removedOrder, [uniqueIdOf(222), uniqueIdOf(111)])
+
+    const unrelated = await run(removeCommit(), fakeTelegram(), { readFresh })
+    assert.deepStrictEqual(unrelated.removedOrder, ['a'], 'shares nothing with the copy: not trusted')
+    const failing = await run(removeCommit(), fakeTelegram(), { readFresh: async () => { throw networkError() } })
+    assert.deepStrictEqual(failing.removedOrder, ['a'])
   })
 
   await test('a set Telegram already lost counts as deleted', async () => {

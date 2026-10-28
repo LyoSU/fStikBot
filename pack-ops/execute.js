@@ -11,6 +11,7 @@
 
 const { hasConflict, sameList, mergeOutside, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
 const { autoNameCandidates, customNameCandidates, restoreNameCandidates, NAME_REJECTED } = require('./names')
+const { uniqueIdOf } = require('./fresh')
 const { redactBotToken } = require('../utils/telegram-error')
 
 // Commit status:
@@ -156,7 +157,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     await save()
 
     if (commit.remove) {
-      await removePack(commit, { call, packGone, save })
+      await removePack(commit, { call, packGone, save, readFresh })
       return commit
     }
 
@@ -725,7 +726,7 @@ function effectOf (commit, step, uids, prev) {
 // The order the pack has is written down first (`commit.removedOrder`, the
 // API sends no base for a remove): it is what makes the deleted pack
 // restorable, and only a set that was there when this delete was made gets one.
-async function removePack (commit, { call, packGone, save }) {
+async function removePack (commit, { call, packGone, save, readFresh }) {
   let step = commit.steps.find((entry) => entry.kind === 'remove')
   if (!step) {
     step = { kind: 'remove', phase: 'remove', state: 'pending' }
@@ -739,7 +740,7 @@ async function removePack (commit, { call, packGone, save }) {
     if (!resumed && commit.removedOrder === undefined && !step.alreadyGone) {
       try {
         const set = await call('getStickerSet', { name: commit.name })
-        commit.removedOrder = uidsOf(set)
+        commit.removedOrder = await freshOrder(commit.name, uidsOf(set), readFresh)
       } catch (err) {
         if (!isTelegramAnswer(err) || !isSetInvalid(err)) throw err
         step.alreadyGone = true
@@ -767,6 +768,21 @@ async function removePack (commit, { call, packGone, save }) {
 
   commit.phase = 'done'
   commit.status = 'succeeded'
+}
+
+// The pack's order from the server rather than the Bot API's copy, which can
+// lag minutes behind an edit; that copy stands when the server can't be asked
+// or its answer shares nothing with it (the uids are derived, see fresh.js).
+async function freshOrder (name, botApiOrder, readFresh) {
+  if (!readFresh) return botApiOrder
+  try {
+    const set = await readFresh(name)
+    if (!Array.isArray(set?.documents)) return botApiOrder
+    const uids = set.documents.map((doc) => uniqueIdOf(doc.id))
+    return uids.length && (!botApiOrder.length || uids.some((uid) => botApiOrder.includes(uid))) ? uids : botApiOrder
+  } catch (err) {
+    return botApiOrder
+  }
 }
 
 function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, packType, create }) {
