@@ -968,6 +968,39 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.match(done.name, /^Old_Cats(_[0-9a-f]{4})?_by_bot$/)
   })
 
+  await test('restoring a pack: a pack Telegram merged files in is still registered, so the old one is not restorable again', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const real = tg.callApi.bind(tg)
+    tg.callApi = async (method, params) => {
+      const result = await real(method, params)
+      // Telegram keeps one sticker per file: the two draft files became one.
+      if (method === 'getStickerSet' && result.stickers.length === 2) result.stickers.pop()
+      return result
+    }
+    const { deps, registered } = createDeps(world)
+    const done = await runCommit(restoreCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'failed')
+    assert.match(done.error, /duplicate/)
+    assert.deepStrictEqual(registered, ['Old_Cats_by_bot'])
+    assert.strictEqual(done.create.registered, true)
+  })
+
+  await test('creating a pack: a merged first batch is not registered unless it is a restore', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const real = tg.callApi.bind(tg)
+    tg.callApi = async (method, params) => {
+      const result = await real(method, params)
+      if (method === 'getStickerSet' && result.stickers.length === 2) result.stickers.pop()
+      return result
+    }
+    const { deps, registered } = createDeps(world)
+    const done = await runCommit(createCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'failed')
+    assert.deepStrictEqual(registered, [])
+  })
+
   await test('restoring a pack: Boost needs the charge', async () => {
     const { copyEarnsBoost } = require('../pack-ops/execute')
     const base = { boost: true, create: { title: 'x', restoreFrom: 'old1' }, draft: restoreDraft(1) }

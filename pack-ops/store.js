@@ -91,7 +91,11 @@ function mongoRegister (db) {
     // A deleted document of that name is no pack to reuse: a restore under its
     // old name replaces it (newSet), the archive rows stay with its id.
     let pack = await db.StickerSet.findOne({ name: commit.name, ownerTelegramId: commit.ownerTelegramId, deleted: { $ne: true } }).select('_id').lean()
+    const restoreFrom = commit.create.restoreFrom
     if (!pack) {
+      // What moderation decided about the old pack stays with it (read before
+      // newSet replaces the document of the same name).
+      const old = restoreFrom && await db.StickerSet.findById(restoreFrom).select('moderated aiModeration about.safe').lean()
       // Replaces a stale document of the same name, like the wizard does.
       pack = await db.StickerSet.newSet({
         owner: owner?._id,
@@ -107,14 +111,29 @@ function mongoRegister (db) {
         ...(commit.create.frameType ? { frameType: commit.create.frameType } : {}),
         create: true
       })
+      if (old) {
+        const carried = {}
+        if (old.moderated) carried.moderated = old.moderated
+        if (old.aiModeration?.checked) carried.aiModeration = old.aiModeration
+        if (old.about?.safe) carried['about.safe'] = old.about.safe
+        if (Object.keys(carried).length) await db.StickerSet.updateOne({ _id: pack._id }, { $set: carried })
+      }
     }
 
     // The deleted pack this one restores: gone from the "deleted" list, and
     // pointing at its successor. (Under the same name newSet removed it.)
-    if (commit.create.restoreFrom) {
+    if (restoreFrom) {
       await db.StickerSet.updateOne(
-        { _id: commit.create.restoreFrom },
+        { _id: restoreFrom },
         { $set: { restoredAt: new Date(), restoredTo: pack._id } }
+      )
+      // The rows of the stickers that made the trip go to the new pack, still
+      // archived: the sync flips the ones that came back live, and whatever
+      // didn't stays offered by its archive (and expires on its own date).
+      const uids = commit.draft.map((item) => item.file?.restore?.fileUniqueId || item.restoredUid).filter(Boolean)
+      await db.Sticker.updateMany(
+        { stickerSet: restoreFrom, fileUniqueId: { $in: uids }, deleted: true, restoredAt: { $exists: false } },
+        { $set: { stickerSet: pack._id } }
       )
     }
 

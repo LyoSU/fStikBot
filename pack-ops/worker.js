@@ -250,8 +250,9 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     // A deleted set: the bot's records say so, as after its own "Delete pack".
     if (commit.remove) {
       // The owner's own delete: restorable, with the order the pack had.
-      const order = (commit.base || []).filter((uid) => uid !== pack.placeholderFileUniqueId)
-      await repo.writeRemoved(pack, now(), { order })
+      // None for a pack that was already gone: nothing to restore.
+      const order = (commit.removedOrder || []).filter((uid) => uid !== pack.placeholderFileUniqueId)
+      await repo.writeRemoved(pack, now(), { order: order.length ? order : undefined })
       await repo.markSynced(commit._id)
       log.info(`commit ${commit._id}: ${commit.name} deleted`)
       return
@@ -295,14 +296,14 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     // A restored sticker that came back as a different file sits in the pack
     // under its new uid; the archived row is marked so it isn't offered again.
     // (Under the same uid the upsert above has already flipped the row back.)
-    // A restored pack's rows are the deleted pack's, not this one's. The first
-    // batch of a create lost its `file` when the pack was made (`restoredUid`).
-    const archivePack = commit.create?.restoreFrom || pack._id
+    // A restored pack's archived rows were moved to it when it was registered.
+    // The first batch of a create lost its `file` when the pack was made
+    // (`restoredUid`).
     for (const item of commit.draft) {
       const was = item.file?.restore?.fileUniqueId || item.restoredUid
       const uid = was && commit.mapping?.[item.assetId]
       if (uid && inPack.has(uid) && uid !== was) {
-        await repo.markRestored(archivePack, was, now())
+        await repo.markRestored(pack._id, was, now())
       }
     }
     await repo.markSynced(commit._id)

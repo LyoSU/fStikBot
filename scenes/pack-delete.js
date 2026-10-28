@@ -111,7 +111,7 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
   const deletedAt = new Date()
   await ctx.db.StickerSet.updateOne({ _id: id }, { deleted: true, ownerDeletedAt: deletedAt, deletedOrder: order })
   await ctx.db.Sticker.updateMany({
-    stickerSet: id
+    stickerSet: id, deleted: { $ne: true }
   }, {
     $set: { deleted: true, deletedAt }
   })

@@ -664,7 +664,7 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.strictEqual(w.commits[0].error, 'restore_unavailable')
   })
 
-  await test('the sync of a restored pack marks the rows of the deleted pack that came back under another uid, first batch included', async () => {
+  await test('the sync of a restored pack marks the rows (now the new pack\'s) that came back under another uid, first batch included', async () => {
     const c = restoreCreate([
       { assetId: 'r:a1', restoredUid: 'a1', fileUniqueId: 'new1', emojiList: ['🙂'] },
       restoreItem('a2')
@@ -674,14 +674,14 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     w.repo.markRestored = async (packId, uid) => marked.push([packId, uid])
     w.telegramSet = [{ file_unique_id: 'new1', file_id: 'F-new1' }, { file_unique_id: 'a2', file_id: 'F-a2' }]
     await w.worker.step()
-    assert.deepStrictEqual(marked, [['old1', 'a1']])
+    assert.deepStrictEqual(marked, [['pack1', 'a1']], 'the rows moved to the new pack when it was registered')
   })
 
   console.log('deleting a pack')
 
   await test('a pack Studio deletes is written with the order it had, without the placeholder', async () => {
     const w = world({
-      commits: [commit({ remove: true, status: 'succeeded', base: ['ph', 'u1', 'u2'], draft: [] })],
+      commits: [commit({ remove: true, status: 'succeeded', base: [], removedOrder: ['ph', 'u1', 'u2'], draft: [] })],
       pack: { _id: 'pack1', placeholderFileUniqueId: 'ph' }
     })
     await w.worker.step()

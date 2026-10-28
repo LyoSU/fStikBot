@@ -521,6 +521,13 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
 
     // Merged files shrink the set; the plan would be built on the wrong pack.
     if (uids.length !== seed.length) {
+      // A restore's pack exists: it is registered all the same, so the old one
+      // can't be restored (and paid for) again, and its rows move to this one.
+      if (register && create.restoreFrom && !create.registered) {
+        commit.stickerSet = await register(commit)
+        create.registered = true
+        await save()
+      }
       commit.status = 'failed'
       commit.error = `the pack was created, but ${DUPLICATE}`
       return false
@@ -714,6 +721,10 @@ function effectOf (commit, step, uids, prev) {
 // has deleted it), and says the same to a bot that didn't make the set, so that
 // answer only counts as done once Telegram can't find the set either. A step
 // left `running` by a dead process is just sent again.
+//
+// The order the pack has is written down first (`commit.removedOrder`, the
+// API sends no base for a remove): it is what makes the deleted pack
+// restorable, and only a set that was there when this delete was made gets one.
 async function removePack (commit, { call, packGone, save }) {
   let step = commit.steps.find((entry) => entry.kind === 'remove')
   if (!step) {
@@ -723,6 +734,17 @@ async function removePack (commit, { call, packGone, save }) {
   }
 
   if (step.state !== 'succeeded') {
+    // A delete sent by an earlier run may have gone through; its order is kept.
+    const resumed = step.state === 'running'
+    if (!resumed && commit.removedOrder === undefined && !step.alreadyGone) {
+      try {
+        const set = await call('getStickerSet', { name: commit.name })
+        commit.removedOrder = uidsOf(set)
+      } catch (err) {
+        if (!isTelegramAnswer(err) || !isSetInvalid(err)) throw err
+        step.alreadyGone = true
+      }
+    }
     step.state = 'running'
     await save()
     try {
@@ -733,6 +755,11 @@ async function removePack (commit, { call, packGone, save }) {
         step.state = 'failed'
         step.error = errorText(err)
         throw err
+      }
+      // Gone before this delete was made (a stale read had still shown it).
+      if (!resumed) {
+        step.alreadyGone = true
+        delete commit.removedOrder
       }
     }
     step.state = 'succeeded'
