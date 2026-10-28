@@ -652,7 +652,7 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     const w = world({ commits: [restoreCreate([restoreItem('a1'), restoreItem('a2')])], stickers: archivedOf('old1') })
     w.repo.findPack = async () => null
     await w.worker.step()
-    assert.strictEqual(w.commits[0].status, 'pending')
+    assert.deepStrictEqual(w.published, ['c1'])
     assert.deepStrictEqual(w.commits[0].draft.map((i) => i.file.fileId), ['PACK-a1', 'PACK-a2'])
     assert.strictEqual(w.commits[0].draft[0].file.fallbackFileId, 'ORIG-a1')
   })
