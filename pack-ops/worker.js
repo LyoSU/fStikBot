@@ -17,9 +17,11 @@ const log = require('../utils/logger').scope('pack-ops:worker')
 const { logError, logEvent } = require('../utils/error-line')
 const { logUid } = require('../utils/log-uid')
 const { normalize } = require('../utils/fingerprint')
-const { emojiContext } = require('./emoji')
+const { emojiContext, isEmoji } = require('./emoji')
 const { redactBotToken } = require('../utils/telegram-error')
 
+// What a sticker with no emoji gets (the bot's StickerSet emojiSuffix, Studio's source default).
+const DEFAULT_EMOJI = '🌟'
 const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 2000
 // A `preparing` claim older than this is a dead process's. Uploads refresh it.
 const CLAIM_STALE_MS = 2 * 60 * 1000
@@ -118,6 +120,12 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   let active = null
   let stopping = false
 
+  // The emoji Telegram takes, or the bot's default for a sticker left with none.
+  const takenEmoji = (list) => {
+    const taken = (Array.isArray(list) ? list : []).filter(isEmoji)
+    return taken.length ? taken : [DEFAULT_EMOJI]
+  }
+
   const uploadsOf = (commit) => commit.draft.filter((item) => item.file)
 
   // A sticker copied from another set goes in by the file_id this bot is
@@ -170,6 +178,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     }
 
     const sets = new Map()
+    const skipped = new Set()
 
     try {
       for (const item of uploadsOf(commit)) {
@@ -177,7 +186,18 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
 
         if (item.file.copy) {
           const sticker = await copiedSticker(sets, item.file.copy)
-          if (!sticker) return await settle('failed', 'copy_missing')
+          if (!sticker) {
+            // A copy of a whole pack, whose source lost a sticker after the
+            // preview: the pack is made without it. A source that is gone (no
+            // sticker found anywhere in it) still fails.
+            const wholeCopy = commit.create?.copyOf && sets.get(item.file.copy.set).stickers.length > 0
+            if (!wholeCopy) return await settle('failed', 'copy_missing')
+            skipped.add(item)
+            continue
+          }
+          // The source's emoji may be newer than Telegram's (Emoji 17.0 is
+          // refused): the sticker keeps the ones it takes, or the default.
+          item.emojiList = takenEmoji(item.emojiList)
           item.file.fileId = sticker.file_id
           item.file.format = formatOf(sticker)
           commit.updatedAt = now()
@@ -221,6 +241,11 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
         commit.claimedAt = now()
         commit.updatedAt = now()
         await store.save(commit)
+      }
+      if (skipped.size) {
+        commit.draft = commit.draft.filter((item) => !skipped.has(item))
+        if (!commit.draft.length) return await settle('failed', 'copy_missing')
+        log.warn(`commit ${commit._id}: ${skipped.size} sticker(s) left the copied set, skipped`)
       }
       return await settle('pending')
     } catch (err) {
