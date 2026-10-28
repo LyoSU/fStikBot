@@ -70,6 +70,42 @@ test('429 from addStickerToSet renders "wait N seconds", not the raw Telegram du
   assert.ok(!messageText.includes('Too Many Requests'))
 })
 
+// The user gets plain words; what Telegram said must reach the log.
+const captureLogs = (fn) => {
+  const lines = []
+  const { warn, error } = console
+  console.warn = (line) => lines.push(line)
+  console.error = (line) => lines.push(line)
+  try { fn() } finally { Object.assign(console, { warn, error }) }
+  return lines
+}
+
+test('an unmapped Telegram error says "unknown" and logs what Telegram said', () => {
+  const err = new Error('400: Bad Request: STICKER_SOMETHING_NEW')
+  err.code = 400
+  err.description = 'Bad Request: STICKER_SOMETHING_NEW'
+  let text
+  const lines = captureLogs(() => {
+    text = addStickerText({ error: { telegram: err } }, 'en', { where: 'queue:convert:add', format: 'video' }).messageText
+  })
+  assert.strictEqual(text, i18n.t('en', 'error.unknown'))
+  assert.strictEqual(lines.length, 1)
+  const line = JSON.parse(lines[0])
+  assert.strictEqual(line.kind, 'add_unknown')
+  assert.strictEqual(line.where, 'queue:convert:add')
+  assert.strictEqual(line.tgCode, 400)
+  assert.ok(line.tgDescription.includes('STICKER_SOMETHING_NEW'))
+  assert.strictEqual(line.format, 'video')
+})
+
+test('a mapped Telegram error logs nothing extra', () => {
+  const err = new Error('400: Bad Request: STICKERSET_INVALID')
+  err.code = 400
+  err.description = 'Bad Request: STICKERSET_INVALID'
+  const lines = captureLogs(() => addStickerText({ error: { telegram: err } }, 'en'))
+  assert.strictEqual(lines.length, 0)
+})
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)
 console.log('add-sticker-text test OK')

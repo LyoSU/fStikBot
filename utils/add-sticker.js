@@ -205,7 +205,11 @@ async function handleConvertCompleted (jobId, result) {
   if (uploadResult?.ok && input.actor) coedit.track(db, stickerSet, input.actor, 'add', { count: 1 })
 
   if (input.showResult) {
-    const textResult = addStickerText(uploadResult, input.locale || 'en')
+    const textResult = addStickerText(uploadResult, input.locale || 'en', {
+      userId: input.actor?.id || input.userId,
+      where: 'queue:convert:add',
+      format: input.stickerExtra?.sticker_format
+    })
 
     if (textResult.messageText) {
       await telegram.sendMessage(input.chatId, textResult.messageText, {
