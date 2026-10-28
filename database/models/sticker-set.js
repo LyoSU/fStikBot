@@ -85,11 +85,12 @@ const stickerSetsSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // (Not `deletedAt`: the API restamps that when it sees a pack gone in Telegram.)
   // Set only when the owner deleted the pack (the bot's "Delete pack" or Studio),
   // never for an admin removal or a pack Telegram dropped: it is what makes a
   // deleted pack restorable for 30 days. `deletedOrder` is its stickers'
   // file_unique_ids in Telegram's order at that moment, without the placeholder.
-  deletedAt: Date,
+  ownerDeletedAt: Date,
   deletedOrder: [String],
   // Set on the old document when Studio restored it as a new pack (`restoredTo`).
   restoredAt: Date,
