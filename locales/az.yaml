@@ -415,6 +415,7 @@ callback:
         off: 'qeyri-aktiv'
     hidden: <a href="${link}">${title}</a> paketi siyahından gizlədildi.
     restored: <a href="${link}">${title}</a> paketi siyahında bərpa edildi.
+    studio_hint: 'Studiya istəyə bağlıdır: bunların hamısını burada, botda da etmək olar.'
     btn:
       hide: '👁 Paketi gizlət'
       delete: '🗑 Paketi sil'
