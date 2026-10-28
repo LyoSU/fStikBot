@@ -16,6 +16,7 @@ const packLink = require('../utils/pack-link')
 const { normalizeName, fitName, autoNameCandidates, NAME_REJECTED } = require('../pack-ops/names')
 const { humanizeTelegramError } = require('../utils/telegram-error')
 const { runInCopyScope } = require('../utils/retry-api')
+const { buildSeedPlan, isFileRejectionError, stickerFormatOf, emojiListOf } = require('../utils/file-id-reuse')
 const { removePlaceholderIfPending } = require('../utils/placeholder')
 const { sendPackMenu } = require('../handlers/pack-menu')
 const { flushPendingStickers } = require('../handlers/sticker')
@@ -69,22 +70,34 @@ const resolvePlaceholderUniqueId = async (ctx, name) => {
   return null
 }
 
+// getFileLink fails now and then for a file that is fine a moment later
+// ("wrong file_id or the file is temporarily unavailable"): one more try.
+const FILE_LINK_RETRY_MS = 2000
+
+const getFileLinkWithRetry = async (ctx, fileId) => {
+  try {
+    return await ctx.telegram.getFileLink(fileId)
+  } catch (err) {
+    log.warn('copy: getFileLink failed, retrying:', err.message)
+  }
+  await delay(FILE_LINK_RETRY_MS)
+  try {
+    return await ctx.telegram.getFileLink(fileId)
+  } catch (err) {
+    log.error('copy: getFileLink failed:', err.message)
+    return null
+  }
+}
+
 // Download a source sticker and re-upload it via uploadStickerFile,
 // returning the InputSticker entry ({ sticker: file_id, format, emoji_list })
 // or null if it couldn't be fetched/uploaded. Runs in copy scope, so a 429
 // is waited out rather than failed fast.
 const uploadSourceSticker = async (ctx, sticker, onWait) => {
-  let stickerFormat = 'static'
-  if (sticker.is_animated) stickerFormat = 'animated'
-  else if (sticker.is_video) stickerFormat = 'video'
+  const stickerFormat = stickerFormatOf(sticker)
 
-  let fileLink
-  try {
-    fileLink = await ctx.telegram.getFileLink(sticker.file_id)
-  } catch (err) {
-    log.error('copy: getFileLink failed:', err.message)
-    return null
-  }
+  const fileLink = await getFileLinkWithRetry(ctx, sticker.file_id)
+  if (!fileLink) return null
 
   const buffer = await got(fileLink, { responseType: 'buffer' })
     .then((response) => response.body)
@@ -99,10 +112,18 @@ const uploadSourceSticker = async (ctx, sticker, onWait) => {
 
   if (!uploaded || uploaded.error) return null
 
+  return { sticker: uploaded.file_id, format: stickerFormat, emoji_list: emojiListOf(sticker) }
+}
+
+// A "⏳" message that turns into "rate limit, N seconds" while Telegram makes
+// a call wait, and goes away when the step is done.
+const startWaitMessage = async (ctx) => {
+  const message = await ctx.replyWithHTML('⏳', { reply_markup: { remove_keyboard: true } })
+  const edit = (text) => ctx.telegram.editMessageText(message.chat.id, message.message_id, null, text).catch(() => {})
   return {
-    sticker: uploaded.file_id,
-    format: stickerFormat,
-    emoji_list: sticker.emojis ? sticker.emojis : [sticker.emoji]
+    onWait: (seconds) => edit(ctx.i18n.t('error.rate_limit_seconds', { seconds })),
+    progress: (text) => edit(text),
+    done: () => ctx.telegram.deleteMessage(ctx.chat.id, message.message_id).catch(() => {})
   }
 }
 
@@ -286,8 +307,12 @@ newPackName.on('text', (ctx) => {
 
 // createNewStickerSet under the first name Telegram accepts. For a pack the
 // user named that's their name or nothing.
-const createSet = async (ctx, { names, title, packType, fillColor, stickers, copy }) => {
+// A seed made of file_ids that Telegram refuses for a file reason is retried
+// once with `reupload()` (which returns the whole seed, re-uploaded) — a file
+// that can't be reused still copies. Returns { name, stickers } on success.
+const createSet = async (ctx, { names, title, packType, fillColor, stickers, copy, reupload }) => {
   let lastError = null
+  let canReupload = !!reupload
 
   for (const name of names) {
     if (await ctx.db.StickerSet.exists({ name })) {
@@ -303,12 +328,23 @@ const createSet = async (ctx, { names, title, packType, fillColor, stickers, cop
       sticker_type: packType,
       needs_repainting: !!fillColor
     })
-    const created = await (copy ? runInCopyScope(call) : call()).then(() => true).catch((error) => {
+    let created = await (copy ? runInCopyScope(call) : call()).then(() => true).catch((error) => {
       lastError = error
       return false
     })
 
-    if (created) return { name }
+    if (!created && canReupload && !NAME_REJECTED.test(lastError?.description || '') && isFileRejectionError(lastError)) {
+      canReupload = false
+      log.info(`seed by file_id refused (${lastError.description}) — falling back to re-upload`)
+      stickers = await reupload()
+      if (stickers.length === 0) break
+      created = await runInCopyScope(call).then(() => true).catch((error) => {
+        lastError = error
+        return false
+      })
+    }
+
+    if (created) return { name, stickers }
     if (!NAME_REJECTED.test(lastError?.description || '')) break
   }
 
@@ -333,16 +369,31 @@ const handleCreateError = async (ctx, error, { customName, newPack }) => {
   return abandon(ctx, newPack)
 }
 
-const uploadPlaceholder = (ctx, packType, copy) => {
-  const call = () => ctx.telegram.callApi('uploadStickerFile', {
-    user_id: ctx.from.id,
-    sticker_format: 'video',
-    sticker: { source: placeholder[packType] || placeholder.regular }
-  })
-  return (copy ? runInCopyScope(call) : call()).catch((error) => {
+// Placeholder uploads hit the bot-wide upload flood (bursts of 429 with a
+// retry_after of tens of seconds), so they wait it out instead of failing the
+// whole pack. A copy waits like the rest of the copy; a plain /new has a user
+// staring at the chat, so it gets a bounded wait (3 tries, up to 60 s each —
+// about 3 minutes worst case) before giving up with the usual upload error.
+const PLACEHOLDER_WAIT = {
+  copy: { maxRetries: 5 },
+  plain: { maxWait: 60, maxRetries: 3 }
+}
+
+const uploadPlaceholder = async (ctx, packType, copy) => {
+  const wait = await startWaitMessage(ctx)
+  const options = { ...(copy ? PLACEHOLDER_WAIT.copy : PLACEHOLDER_WAIT.plain), onWait: wait.onWait }
+  try {
+    return await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
+      user_id: ctx.from.id,
+      sticker_format: 'video',
+      sticker: { source: placeholder[packType] || placeholder.regular }
+    }), options)
+  } catch (error) {
     log.error('placeholder upload failed:', error.description || error.message)
     return null
-  })
+  } finally {
+    await wait.done()
+  }
 }
 
 // Charging for a copy into another pack type: atomic, and only when the
@@ -455,31 +506,33 @@ const copyRemaining = async (ctx, { copyPack, userStickerSet, seeded, seedAttemp
   })
 }
 
-// Same-type copy: upload the first ≤50 source stickers for one ordered
-// createNewStickerSet. Uploads run one by one with pacing; a sticker that
-// fails is skipped (re-adding it later would break the order).
-const uploadSeed = async (ctx, copyPack) => {
-  const waitMessage = await ctx.replyWithHTML('⏳', { reply_markup: { remove_keyboard: true } })
-  const onWait = (seconds) => ctx.telegram.editMessageText(
-    waitMessage.chat.id, waitMessage.message_id, null,
-    ctx.i18n.t('error.rate_limit_seconds', { seconds })
-  ).catch(() => {})
-
+// Same-type copy: the first ≤50 source stickers for one ordered
+// createNewStickerSet. Stickers go in by file_id where possible; the rest are
+// uploaded one by one with pacing, and one that fails is skipped (re-adding it
+// later would break the order). `reupload` redoes the file_id entries as
+// uploads when Telegram refuses them, keeping the order.
+const uploadSeed = async (ctx, copyPack, packType) => {
   const batch = copyPack.stickers.slice(0, SEED_BATCH)
-  const stickers = []
-  for (const [index, sticker] of batch.entries()) {
-    const entry = await uploadSourceSticker(ctx, sticker, onWait)
-    if (entry) stickers.push(entry)
-    if ((index + 1) % 10 === 0) {
-      await ctx.telegram.editMessageText(waitMessage.chat.id, waitMessage.message_id, null,
-        `⏳ ${index + 1}/${copyPack.stickers.length}`
-      ).catch(() => {})
+  const plan = buildSeedPlan(batch, packType)
+
+  const upload = async (items) => {
+    const wait = await startWaitMessage(ctx)
+    const stickers = []
+    for (const [index, { source, entry }] of items.entries()) {
+      const result = entry || await uploadSourceSticker(ctx, source, wait.onWait)
+      if (result) stickers.push(result)
+      if ((index + 1) % 10 === 0) await wait.progress(`⏳ ${index + 1}/${copyPack.stickers.length}`)
+      if (!entry) await delay(COPY_PACE_MS)
     }
-    await delay(COPY_PACE_MS)
+    await wait.done()
+    return stickers
   }
 
-  await ctx.telegram.deleteMessage(ctx.chat.id, waitMessage.message_id).catch(() => {})
-  return { stickers, attempted: batch.length }
+  const stickers = await upload(plan)
+  const reupload = plan.some((item) => item.entry)
+    ? () => upload(plan.map(({ source }) => ({ source, entry: null })))
+    : null
+  return { stickers, attempted: batch.length, reupload }
 }
 
 const newPackConfirm = new Scene('newPackConfirm')
@@ -564,9 +617,11 @@ newPackConfirm.enter(async (ctx) => {
     await ctx.scene.leave()
 
     let stickers
+    let reupload = null
 
     if (copyPack && copyPack.sticker_type === packType) {
-      const seed = await uploadSeed(ctx, copyPack)
+      const seed = await uploadSeed(ctx, copyPack, packType)
+      reupload = seed.reupload
       stickers = seed.stickers
       seeded = seed.stickers.length
       seedAttempted = seed.attempted
@@ -589,13 +644,16 @@ newPackConfirm.enter(async (ctx) => {
       hasPlaceholder = true
     }
 
-    created = await createSet(ctx, { names, title, packType, fillColor, stickers, copy: !!copyPack })
+    created = await createSet(ctx, { names, title, packType, fillColor, stickers, copy: !!copyPack, reupload })
 
     if (created.error) {
       await charged.refund()
       if (!isCurrent()) return
       return handleCreateError(ctx, created.error, { customName, newPack })
     }
+
+    // A re-uploaded seed can be shorter than the one first built.
+    if (reupload) seeded = created.stickers.length
 
     if (hasPlaceholder) placeholderFileUniqueId = await resolvePlaceholderUniqueId(ctx, created.name)
   }

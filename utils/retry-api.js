@@ -483,7 +483,12 @@ function patchTelegramPrototype () {
     const description = describeCall(method, data)
     // A chat action is stale by the time a retry could land: never wait.
     const retryOptions = inCopyScope
-      ? { method: description, maxWait: COPY_RETRY_MAX_WAIT_S, maxRetries: COPY_RETRY_MAX_ATTEMPTS, onWait: copyStore.onWait }
+      ? {
+          method: description,
+          maxWait: copyStore.maxWait || COPY_RETRY_MAX_WAIT_S,
+          maxRetries: copyStore.maxRetries ?? COPY_RETRY_MAX_ATTEMPTS,
+          onWait: copyStore.onWait
+        }
       : isChatAction
         ? { method: description, maxRetries: 0 }
         : { method: description }
@@ -568,10 +573,13 @@ function retryMiddleware () {
  * @param {Object}   [options]
  * @param {Function} [options.onWait] called with (retryAfterSeconds) before
  *   each 429 wait, so the caller can show a "waiting Ns" indicator.
+ * @param {number}   [options.maxWait]    seconds; overrides the copy cap for
+ *   a caller that has a user waiting on one call (not a background copy)
+ * @param {number}   [options.maxRetries] overrides the copy attempt count
  * @returns {*} whatever `fn` returns (its promise, forwarded)
  */
 function runInCopyScope (fn, options = {}) {
-  return copyScope.run({ copy: true, onWait: options.onWait }, fn)
+  return copyScope.run({ copy: true, onWait: options.onWait, maxWait: options.maxWait, maxRetries: options.maxRetries }, fn)
 }
 
 /**

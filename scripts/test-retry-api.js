@@ -506,6 +506,38 @@ async function test (name, fn) {
     assert.deepStrictEqual(waits, [6], 'onWait must fire once with retry_after seconds')
   })
 
+  await test('copy scope: maxWait / maxRetries override the copy defaults', async () => {
+    // A plain /new placeholder passes a smaller cap: a 70s 429 (fine for a
+    // copy) must fail fast under maxWait=60, and maxRetries=0 must not retry.
+    let attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.parameters = { retry_after: 70 }
+      return Promise.reject(err)
+    }
+    await assert.rejects(runInCopyScope(
+      () => tg.callApi('uploadStickerFile', { user_id: 3005, sticker_format: 'video' }),
+      { maxWait: 60, maxRetries: 3 }
+    ))
+    assert.strictEqual(attempts, 1, 'retry_after above the override cap fails fast')
+
+    attempts = 0
+    stubResponder = () => {
+      attempts++
+      const err = new Error('Too Many Requests')
+      err.code = 429
+      err.parameters = { retry_after: 1 }
+      return Promise.reject(err)
+    }
+    await assert.rejects(runInCopyScope(
+      () => tg.callApi('uploadStickerFile', { user_id: 3006, sticker_format: 'video' }),
+      { maxRetries: 0 }
+    ))
+    assert.strictEqual(attempts, 1, 'maxRetries: 0 must not retry')
+  })
+
   await test('copy scope does NOT leak: after it returns, default fail-fast policy resumes', async () => {
     // A call made outside any copy scope must keep the strict 5s maxWait —
     // AsyncLocalStorage must not bleed the copy policy into later calls.
