@@ -415,7 +415,7 @@ callback:
         off: inactif
     hidden: Le pack <a href="${link}">${title}</a> a été masqué de ta liste.
     restored: Le pack <a href="${link}">${title}</a> a été restauré dans ta liste.
-    studio_hint: 'Studio est facultatif : tout se fait aussi bien ici, dans le bot.'
+    studio_hint: 'Studio est facultatif : tout cela se fait aussi ici, dans le bot.'
     btn:
       hide: '👁 Masquer le pack'
       delete: '🗑 Supprimer le pack'

@@ -415,7 +415,7 @@ callback:
         off: 未开启
     hidden: 贴纸包 <a href="${link}">${title}</a> 已从你的列表中隐藏。
     restored: 贴纸包 <a href="${link}">${title}</a> 已恢复到你的列表。
-    studio_hint: '工作室是可选的：同样的事情在这个机器人里也都能做。'
+    studio_hint: '工作室是可选的：这些在这个机器人里同样都能做。'
     btn:
       hide: '👁 隐藏贴纸包'
       delete: '🗑 删除贴纸包'
