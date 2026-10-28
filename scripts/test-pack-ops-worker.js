@@ -572,6 +572,29 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.deepStrictEqual(gone.published, [])
   })
 
+  await test('a whole copy is made without a sticker that left its source; a source with none left still fails', async () => {
+    const w = world({ commits: [copyCommit({ create: { title: 'Copy', copyOf: 'cats' } })], assets: [asset('x')] })
+    w.sources = { ...sources(), cats: [{ file_unique_id: 's1', file_id: 'BOT-s1' }] }
+    await w.worker.step()
+    assert.deepStrictEqual(w.commits[0].draft.map((i) => i.assetId), ['c:s1', 'c:d1', 'a:x'])
+    assert.deepStrictEqual(w.published, ['c1'])
+
+    const gone = world({ commits: [copyCommit({ create: { title: 'Copy', copyOf: 'cats' } })], assets: [asset('x')] })
+    gone.sources = { ...sources(), cats: [] }
+    await gone.worker.step()
+    assert.strictEqual(gone.commits[0].error, 'copy_missing')
+  })
+
+  await test('a copied sticker\'s emoji Telegram refuses are dropped, or replaced by the default', async () => {
+    const c = copyCommit()
+    c.draft[0].emojiList = ['\u{1FAEA}', '🙂']
+    c.draft[1].emojiList = ['\u{1FAEA}']
+    const w = world({ commits: [c], assets: [asset('x')] })
+    w.sources = sources()
+    await w.worker.step()
+    assert.deepStrictEqual(w.commits[0].draft.map((i) => i.emojiList), [['🙂'], ['🌟'], ['🙂'], ['😀']])
+  })
+
   await test('a resumed commit keeps the file_ids it already has', async () => {
     const c = copyCommit()
     c.draft[0].file.fileId = 'BOT-s1'

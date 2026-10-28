@@ -415,6 +415,7 @@ callback:
         off: 無効
     hidden: パック <a href="${link}">${title}</a> を一覧から非表示にしました。
     restored: パック <a href="${link}">${title}</a> を一覧に復元しました。
+    studio_hint: 'スタジオは任意です。これはすべてこのボットでもできます。'
     btn:
       hide: '👁 パックを非表示'
       delete: '🗑 パックを削除'

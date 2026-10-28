@@ -415,6 +415,7 @@ callback:
         off: inativo
     hidden: Pacote <a href="${link}">${title}</a> ocultado da sua lista.
     restored: Pacote <a href="${link}">${title}</a> restaurado na sua lista.
+    studio_hint: 'O Studio é opcional: tudo isso também dá para fazer aqui, no bot.'
     btn:
       hide: '👁 Ocultar pacote'
       delete: '🗑 Apagar pacote'

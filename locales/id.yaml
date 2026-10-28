@@ -415,6 +415,7 @@ callback:
         off: nonaktif
     hidden: Paket <a href="${link}">${title}</a> disembunyikan dari daftarmu.
     restored: Paket <a href="${link}">${title}</a> dipulihkan ke daftarmu.
+    studio_hint: 'Studio bersifat opsional: semua ini juga bisa dilakukan di sini, di bot.'
     btn:
       hide: '👁 Sembunyikan paket'
       delete: '🗑 Hapus paket'
