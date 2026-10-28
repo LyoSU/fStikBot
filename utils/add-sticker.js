@@ -25,6 +25,7 @@ const log = require('./logger').scope('add-sticker')
 const coedit = require('./coedit')
 const metrics = require('./metrics')
 const { failureReason } = require('./failure-reason')
+const { uploadStickerFile } = require('./upload-retry')
 
 // Telegram takes a TGS only on a 512×512 canvas, for custom emoji too:
 // measured against the Bot API, a 100×100 canvas is refused as "wrong file
@@ -396,20 +397,22 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
   const logContext = { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }
 
   if (sticker?.source) {
-    const uploadedSticker = await telegram.callApi('uploadStickerFile', {
+    const uploadedSticker = await uploadStickerFile(telegram, {
       user_id: userId,
       sticker_format: stickerExtra.sticker_format,
       sticker: {
         source: sticker.source
       }
-    }).catch((error) => {
-      logRateLimit('uploadStickerFile', error, logContext)
-      return {
-        error: {
-          telegram: error
-        }
-      }
+    }, {
+      onRetry: (error, attempt) => log.warn(
+        `network error on uploadStickerFile, retry ${attempt}: ${error.type || error.code || error.name} ` +
+        `pack_type=${stickerSet.packType || 'regular'} format=${stickerExtra.sticker_format} upload(${uploadBytes}B)`
+      )
     })
+
+    if (uploadedSticker.error) {
+      logRateLimit('uploadStickerFile', uploadedSticker.error.telegram, logContext)
+    }
 
     if (uploadedSticker.error) {
       return uploadedSticker
