@@ -42,7 +42,7 @@ async function publishCommit (db, telegram, commitId, { onProgress } = {}) {
     metrics.track('studio_pack_created')
     return id
   }
-  const nameTaken = (name) => db.StickerSet.exists({ name })
+  const nameTaken = (name, { except } = {}) => db.StickerSet.exists({ name, ...(except ? { _id: { $ne: except } } : {}) })
   const readFresh = createFreshReader(telegram, telegramApi.getClient, telegramApi.Api)
   const freshUids = createFreshUids(readFresh)
   return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, readFresh, freshUids, onProgress }))

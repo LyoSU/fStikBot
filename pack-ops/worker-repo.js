@@ -102,8 +102,10 @@ function mongoRepo (db) {
     // What scenes/pack-delete.js writes after deleteStickerSet: the pack and its
     // stickers marked deleted, and nobody left with it as their current pack.
     // The owner's cached pack count is reset so /packs recounts.
-    async writeRemoved (pack, now) {
-      await db.StickerSet.updateOne({ _id: pack._id }, { $set: { deleted: true } })
+    // `order` (the stickers' file_unique_ids as Telegram had them) is given
+    // only for a delete the owner asked for: it is what makes the pack restorable.
+    async writeRemoved (pack, now, { order } = {}) {
+      await db.StickerSet.updateOne({ _id: pack._id }, { $set: { deleted: true, ...(order ? { deletedAt: now, deletedOrder: order } : {}) } })
       await db.Sticker.updateMany({ stickerSet: pack._id, deleted: { $ne: true } }, { $set: { deleted: true, deletedAt: now } })
       const members = (pack.editors || []).map((entry) => entry.telegramId).filter((id) => id != null)
       const users = { $or: [{ _id: pack.owner }, ...(members.length ? [{ telegram_id: { $in: members } }] : [])] }

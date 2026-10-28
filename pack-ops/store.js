@@ -88,7 +88,9 @@ function mongoRegister (db) {
     const owner = await db.User.findOne({ telegram_id: commit.ownerTelegramId }).select('_id').lean()
     const packType = commit.packType || 'regular'
 
-    let pack = await db.StickerSet.findOne({ name: commit.name, ownerTelegramId: commit.ownerTelegramId }).select('_id').lean()
+    // A deleted document of that name is no pack to reuse: a restore under its
+    // old name replaces it (newSet), the archive rows stay with its id.
+    let pack = await db.StickerSet.findOne({ name: commit.name, ownerTelegramId: commit.ownerTelegramId, deleted: { $ne: true } }).select('_id').lean()
     if (!pack) {
       // Replaces a stale document of the same name, like the wizard does.
       pack = await db.StickerSet.newSet({
@@ -105,6 +107,15 @@ function mongoRegister (db) {
         ...(commit.create.frameType ? { frameType: commit.create.frameType } : {}),
         create: true
       })
+    }
+
+    // The deleted pack this one restores: gone from the "deleted" list, and
+    // pointing at its successor. (Under the same name newSet removed it.)
+    if (commit.create.restoreFrom) {
+      await db.StickerSet.updateOne(
+        { _id: commit.create.restoreFrom },
+        { $set: { restoredAt: new Date(), restoredTo: pack._id } }
+      )
     }
 
     if (owner) {

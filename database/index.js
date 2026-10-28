@@ -50,8 +50,9 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   const oldStickerSet = await db.StickerSet.findOneAndDelete({ name: stickerSetInfo.name })
 
   if (oldStickerSet) {
+    // Rows already deleted keep their date: a restore of the old pack reads them.
     await db.Sticker.updateMany(
-      { stickerSet: oldStickerSet._id },
+      { stickerSet: oldStickerSet._id, deleted: { $ne: true } },
       { $set: { deleted: true, deletedAt: new Date() } }
     )
   }

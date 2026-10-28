@@ -138,8 +138,11 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   // A sticker brought back from the pack's archive goes in by the file_id its
   // row has; the original upload's is kept as the fallback for the executor.
   // Null when the pack has no such archived sticker.
+  // A restored pack has no document yet (`~new:`): its stickers are the rows of
+  // the deleted one.
   async function restoredSticker (commit, restore) {
-    const pack = await repo.findPack(commit)
+    const from = commit.create?.restoreFrom
+    const pack = from ? { _id: from } : await repo.findPack(commit)
     const row = pack && await repo.findArchived(pack._id, restore.fileUniqueId, now())
     if (!row?.fileId) return null
     return {
@@ -246,7 +249,9 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
 
     // A deleted set: the bot's records say so, as after its own "Delete pack".
     if (commit.remove) {
-      await repo.writeRemoved(pack, now())
+      // The owner's own delete: restorable, with the order the pack had.
+      const order = (commit.base || []).filter((uid) => uid !== pack.placeholderFileUniqueId)
+      await repo.writeRemoved(pack, now(), { order })
       await repo.markSynced(commit._id)
       log.info(`commit ${commit._id}: ${commit.name} deleted`)
       return
@@ -290,10 +295,14 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     // A restored sticker that came back as a different file sits in the pack
     // under its new uid; the archived row is marked so it isn't offered again.
     // (Under the same uid the upsert above has already flipped the row back.)
+    // A restored pack's rows are the deleted pack's, not this one's. The first
+    // batch of a create lost its `file` when the pack was made (`restoredUid`).
+    const archivePack = commit.create?.restoreFrom || pack._id
     for (const item of commit.draft) {
-      const uid = item.file?.restore && commit.mapping?.[item.assetId]
-      if (uid && inPack.has(uid) && uid !== item.file.restore.fileUniqueId) {
-        await repo.markRestored(pack._id, item.file.restore.fileUniqueId, now())
+      const was = item.file?.restore?.fileUniqueId || item.restoredUid
+      const uid = was && commit.mapping?.[item.assetId]
+      if (uid && inPack.has(uid) && uid !== was) {
+        await repo.markRestored(archivePack, was, now())
       }
     }
     await repo.markSynced(commit._id)
