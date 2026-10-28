@@ -88,8 +88,18 @@ function mongoRegister (db) {
     const owner = await db.User.findOne({ telegram_id: commit.ownerTelegramId }).select('_id').lean()
     const packType = commit.packType || 'regular'
 
-    let pack = await db.StickerSet.findOne({ name: commit.name, ownerTelegramId: commit.ownerTelegramId }).select('_id').lean()
+    // A deleted document of that name is no pack to reuse: a restore under its
+    // old name replaces it (newSet), the archive rows stay with its id.
+    let pack = await db.StickerSet.findOne({ name: commit.name, ownerTelegramId: commit.ownerTelegramId, deleted: { $ne: true } }).select('_id').lean()
+    const restoreFrom = commit.create.restoreFrom
     if (!pack) {
+      // What moderation decided about the old pack stays with it (read before
+      // newSet replaces the document of the same name).
+      const old = restoreFrom && await db.StickerSet.findById(restoreFrom).select('moderated aiModeration about.safe').lean()
+      const carried = {}
+      if (old?.moderated) carried.moderated = old.moderated
+      if (old?.aiModeration?.checked) carried.aiModeration = old.aiModeration
+      if (old?.about?.safe) carried.about = { safe: old.about.safe }
       // Replaces a stale document of the same name, like the wizard does.
       pack = await db.StickerSet.newSet({
         owner: owner?._id,
@@ -103,8 +113,33 @@ function mongoRegister (db) {
         emojiSuffix: '🌟',
         // The shape picked in Studio before the pack was made (/frame).
         ...(commit.create.frameType ? { frameType: commit.create.frameType } : {}),
-        create: true
+        create: true,
+        ...carried
       })
+    }
+
+    // The deleted pack this one restores: gone from the "deleted" list, and
+    // pointing at its successor. (Under the same name newSet removed it.)
+    if (restoreFrom) {
+      await db.StickerSet.updateOne(
+        { _id: restoreFrom },
+        { $set: { restoredAt: new Date(), restoredTo: pack._id } }
+      )
+      // The rows of the stickers that made the trip go to the new pack, still
+      // archived: the sync flips the ones that came back live, and whatever
+      // didn't stays offered by its archive (and expires on its own date).
+      // One row per uid, the newest: a second would list a sticker that is live.
+      const uids = commit.draft.map((item) => item.file?.restore?.fileUniqueId || item.restoredUid).filter(Boolean)
+      const rows = await db.Sticker.find({ stickerSet: restoreFrom, fileUniqueId: { $in: uids }, deleted: true, restoredAt: { $exists: false } })
+        .select('_id fileUniqueId deletedAt').lean()
+      const newest = new Map()
+      for (const row of rows) {
+        const best = newest.get(row.fileUniqueId)
+        const later = !best || (row.deletedAt || 0) > (best.deletedAt || 0) ||
+          ((row.deletedAt || 0) === (best.deletedAt || 0) && String(row._id) > String(best._id))
+        if (later) newest.set(row.fileUniqueId, row)
+      }
+      if (newest.size) await db.Sticker.updateMany({ _id: { $in: [...newest.values()].map((row) => row._id) } }, { $set: { stickerSet: pack._id } })
     }
 
     if (owner) {

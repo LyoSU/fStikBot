@@ -76,7 +76,7 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
       if (!keepData) delete w.assets.get(id).data
     },
     async findPack () { return clone(w.pack) },
-    async writeRemoved (pack) { w.removed.push(pack._id) },
+    async writeRemoved (pack, now, opts = {}) { w.removed.push(pack._id); w.removedOrder = opts.order },
     // As mongoRepo's: the credit is marked on the user, then the commit.
     async refundCharge (id, charge) {
       if (w.refundFails) { w.refundFails--; throw new Error('db down') }
@@ -639,6 +639,62 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.strictEqual(doc('new1').deleted, false)
     assert.strictEqual(doc('a2').deleted, false, 'the same uid flips its own row back')
     assert.strictEqual('restoredAt' in doc('a2'), false)
+  })
+
+  // A restore commit: the pack is made first, so it has no document yet and
+  // its stickers are the rows of the deleted pack `old1`.
+  const archivedOf = (packId) => archived().map((row) => ({ ...row, stickerSet: packId }))
+  const restoreCreate = (items, extra = {}) => commit({
+    name: '~new:1', base: [], draft: items, stickerSet: undefined, create: { title: 'Old', restoreFrom: 'old1', restoreName: 'old_by_bot' }, ...extra
+  })
+
+  await test('a restore into a new pack reads the rows of the deleted pack, not of the (missing) new one', async () => {
+    const w = world({ commits: [restoreCreate([restoreItem('a1'), restoreItem('a2')])], stickers: archivedOf('old1') })
+    w.repo.findPack = async () => null
+    await w.worker.step()
+    assert.deepStrictEqual(w.published, ['c1'])
+    assert.deepStrictEqual(w.commits[0].draft.map((i) => i.file.fileId), ['PACK-a1', 'PACK-a2'])
+    assert.strictEqual(w.commits[0].draft[0].file.fallbackFileId, 'ORIG-a1')
+  })
+
+  await test('a restore whose deleted pack has no such row fails as restore_unavailable', async () => {
+    const w = world({ commits: [restoreCreate([restoreItem('a1')])], stickers: archivedOf('someone-else') })
+    w.repo.findPack = async () => null
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].error, 'restore_unavailable')
+  })
+
+  await test('the sync of a restored pack marks the rows (now the new pack\'s) that came back under another uid, first batch included', async () => {
+    const c = restoreCreate([
+      { assetId: 'r:a1', restoredUid: 'a1', fileUniqueId: 'new1', emojiList: ['🙂'] },
+      restoreItem('a2')
+    ], { status: 'succeeded', mapping: { 'r:a1': 'new1', 'r:a2': 'a2' } })
+    const w = world({ commits: [c], stickers: archivedOf('old1') })
+    const marked = []
+    w.repo.markRestored = async (packId, uid) => marked.push([packId, uid])
+    w.telegramSet = [{ file_unique_id: 'new1', file_id: 'F-new1' }, { file_unique_id: 'a2', file_id: 'F-a2' }]
+    await w.worker.step()
+    assert.deepStrictEqual(marked, [['pack1', 'a1']], 'the rows moved to the new pack when it was registered')
+  })
+
+  console.log('deleting a pack')
+
+  await test('a pack Studio deletes is written with the order it had, without the placeholder', async () => {
+    const w = world({
+      commits: [commit({ remove: true, status: 'succeeded', base: [], removedOrder: ['ph', 'u1', 'u2'], draft: [] })],
+      pack: { _id: 'pack1', placeholderFileUniqueId: 'ph' }
+    })
+    await w.worker.step()
+    assert.deepStrictEqual(w.removed, ['pack1'])
+    assert.deepStrictEqual(w.removedOrder, ['u1', 'u2'])
+  })
+
+  await test('a pack Telegram dropped is written without an order: it is not restorable', async () => {
+    const gone = world({ commits: [commit()], assets: threeAssets() })
+    gone.publishAs = 'failed'
+    gone.publishGone = true
+    await gone.worker.step()
+    assert.strictEqual(gone.removedOrder, undefined)
   })
 
   console.log('refunds')

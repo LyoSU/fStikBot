@@ -10,7 +10,8 @@
 // against the real API and MongoDB.
 
 const { hasConflict, sameList, mergeOutside, planContent, mapAfterContent, planMoves, planMetadata, planSettings } = require('./plan')
-const { autoNameCandidates, customNameCandidates, NAME_REJECTED } = require('./names')
+const { autoNameCandidates, customNameCandidates, restoreNameCandidates, NAME_REJECTED } = require('./names')
+const { uniqueIdOf } = require('./fresh')
 const { redactBotToken } = require('../utils/telegram-error')
 
 // Commit status:
@@ -96,7 +97,8 @@ class StickerMissing extends Interrupted {}
  * @param {{load: Function}} [deps.assets] (assetId) => { data, format }, for a pack thumbnail
  * @param {Function} [deps.formatTitle] (commit, title) => the title as Telegram should get it
  * @param {Function} [deps.botUsername] () => the bot's username, for a new pack's name
- * @param {Function} [deps.nameTaken] (name) => whether our database already has a pack of that name
+ * @param {Function} [deps.nameTaken] (name, { except }) => whether our database already has a pack of that name,
+ *   not counting the document `except` (the deleted pack a restore replaces)
  * @param {Function} [deps.register] (commit) => the new pack's document id; makes the bot's own records of it
  * @param {Function} [deps.readFresh] (name) => the set as Telegram's servers hold it now, or a 400 for none;
  *   getStickerSet answers from the Bot API's copy, which can be minutes behind a pack edited in a Telegram app
@@ -155,7 +157,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     await save()
 
     if (commit.remove) {
-      await removePack(commit, { call, packGone, save })
+      await removePack(commit, { call, packGone, save, readFresh })
       return commit
     }
 
@@ -432,9 +434,11 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
       const suffix = `_by_${await botUsername()}`
       // `nameAuto`: Studio made the link from the title itself (to show it); a
       // taken one gets a random tail, as a link made here would.
-      create.names = create.name && !create.nameAuto
-        ? customNameCandidates(create.name, suffix)
-        : autoNameCandidates(create.name || create.title, suffix)
+      create.names = create.restoreFrom
+        ? restoreNameCandidates(create.restoreName, create.title, suffix)
+        : create.name && !create.nameAuto
+          ? customNameCandidates(create.name, suffix)
+          : autoNameCandidates(create.name || create.title, suffix)
       if (!create.names) return refuseCreate(commit, NAME_INVALID, save)
       // The first title carries the bot's suffix even on a pack that starts
       // with Boost (a copy), like the wizard's; a later rename can drop it.
@@ -459,22 +463,35 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
         set = there
         break
       }
-      if (there || (nameTaken && await nameTaken(name))) continue
+      if (there || (nameTaken && await nameTaken(name, { except: create.restoreFrom }))) continue
 
       create.state = 'creating'
       create.attempt = name
       commit.name = name
       await save()
 
+      const make = (items) => call('createNewStickerSet', {
+        user_id: commit.ownerTelegramId,
+        name,
+        title: create.formattedTitle,
+        stickers: items.map((item) => inputSticker(item, commit.format)),
+        sticker_type: commit.packType || 'regular',
+        needs_repainting: !!create.needsRepainting
+      })
+
       try {
-        await call('createNewStickerSet', {
-          user_id: commit.ownerTelegramId,
-          name,
-          title: create.formattedTitle,
-          stickers: seed.map((item) => inputSticker(item, commit.format)),
-          sticker_type: commit.packType || 'regular',
-          needs_repainting: !!create.needsRepainting
-        })
+        try {
+          await make(seed)
+        } catch (err) {
+          // A restored sticker's file_id from the pack may be refused (as in the
+          // add step): once more with the original upload's. Only a 400 that is
+          // not about the name is a refusal of the file.
+          const refused = isTelegramAnswer(err) && errorCode(err) === 400 && !NAME_REJECTED.test(errorText(err))
+          if (!refused || !seed.some((item) => item.file?.fallbackFileId)) throw err
+          await make(seed.map((item) => item.file?.fallbackFileId
+            ? { ...item, file: { ...item.file, fileId: item.file.fallbackFileId } }
+            : item))
+        }
       } catch (err) {
         // No answer: the set may exist. Stay `creating`; the next run asks.
         if (!isTelegramAnswer(err) || !NAME_REJECTED.test(errorText(err))) throw err
@@ -492,6 +509,8 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
     seed.forEach((item, i) => {
       if (!uids[i]) return
       item.fileUniqueId = uids[i]
+      // The sync marks the archived row this came from, which `file` told.
+      if (item.file?.restore) item.restoredUid = item.file.restore.fileUniqueId
       delete item.file
       commit.known[uids[i]] = { emojiList: item.emojiList, ...(item.keywords ? { keywords: item.keywords } : {}) }
     })
@@ -503,6 +522,13 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
 
     // Merged files shrink the set; the plan would be built on the wrong pack.
     if (uids.length !== seed.length) {
+      // A restore's pack exists: it is registered all the same, so the old one
+      // can't be restored (and paid for) again, and its rows move to this one.
+      if (register && create.restoreFrom && !create.registered) {
+        commit.stickerSet = await register(commit)
+        create.registered = true
+        await save()
+      }
       commit.status = 'failed'
       commit.error = `the pack was created, but ${DUPLICATE}`
       return false
@@ -521,11 +547,13 @@ async function createPack (commit, { call, save, formatTitle, botUsername, nameT
 // A new pack starts with Boost only as a copy, on the terms the API checks too:
 // every item a sticker of the copied set (a copy of the same type, free), or
 // the copy paid for (into the other type, whose converted files can't show
-// where they came from). Anything else asking for it doesn't get it.
+// where they came from). Anything else asking for it doesn't get it. A restored
+// pack is paid for the same way, and has no set to compare its items with.
 function copyEarnsBoost (commit) {
   const from = commit.create?.copyOf
-  if (!commit.boost || !from) return false
+  if (!commit.boost || !(from || commit.create?.restoreFrom)) return false
   if (commit.charge?.credits > 0) return true
+  if (!from) return false
   return commit.draft.every((item) => item.file?.copy && String(item.file.copy.set).toLowerCase() === from.toLowerCase())
 }
 
@@ -694,7 +722,11 @@ function effectOf (commit, step, uids, prev) {
 // has deleted it), and says the same to a bot that didn't make the set, so that
 // answer only counts as done once Telegram can't find the set either. A step
 // left `running` by a dead process is just sent again.
-async function removePack (commit, { call, packGone, save }) {
+//
+// The order the pack has is written down first (`commit.removedOrder`, the
+// API sends no base for a remove): it is what makes the deleted pack
+// restorable, and only a set that was there when this delete was made gets one.
+async function removePack (commit, { call, packGone, save, readFresh }) {
   let step = commit.steps.find((entry) => entry.kind === 'remove')
   if (!step) {
     step = { kind: 'remove', phase: 'remove', state: 'pending' }
@@ -703,6 +735,17 @@ async function removePack (commit, { call, packGone, save }) {
   }
 
   if (step.state !== 'succeeded') {
+    // A delete sent by an earlier run may have gone through; its order is kept.
+    const resumed = step.state === 'running'
+    if (!resumed && commit.removedOrder === undefined && !step.alreadyGone) {
+      try {
+        const set = await call('getStickerSet', { name: commit.name })
+        commit.removedOrder = await freshOrder(commit.name, uidsOf(set), readFresh)
+      } catch (err) {
+        if (!isTelegramAnswer(err) || !isSetInvalid(err)) throw err
+        step.alreadyGone = true
+      }
+    }
     step.state = 'running'
     await save()
     try {
@@ -714,12 +757,32 @@ async function removePack (commit, { call, packGone, save }) {
         step.error = errorText(err)
         throw err
       }
+      // Gone before this delete was made (a stale read had still shown it).
+      if (!resumed) {
+        step.alreadyGone = true
+        delete commit.removedOrder
+      }
     }
     step.state = 'succeeded'
   }
 
   commit.phase = 'done'
   commit.status = 'succeeded'
+}
+
+// The pack's order from the server rather than the Bot API's copy, which can
+// lag minutes behind an edit; that copy stands when the server can't be asked
+// or its answer shares nothing with it (the uids are derived, see fresh.js).
+async function freshOrder (name, botApiOrder, readFresh) {
+  if (!readFresh) return botApiOrder
+  try {
+    const set = await readFresh(name)
+    if (!Array.isArray(set?.documents)) return botApiOrder
+    const uids = set.documents.map((doc) => uniqueIdOf(doc.id))
+    return uids.length && (!botApiOrder.length || uids.some((uid) => botApiOrder.includes(uid))) ? uids : botApiOrder
+  } catch (err) {
+    return botApiOrder
+  }
 }
 
 function newCommit ({ name, ownerTelegramId, base, draft, known = {}, settings, packType, create }) {

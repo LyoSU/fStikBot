@@ -1,7 +1,7 @@
 // Unit tests for pack-ops/names.js: the short names a new pack gets.
 
 const assert = require('assert')
-const { normalizeName, fitName, autoNameCandidates, customNameCandidates } = require('../pack-ops/names')
+const { normalizeName, fitName, autoNameCandidates, customNameCandidates, restoreNameCandidates } = require('../pack-ops/names')
 
 const suffix = '_by_fStikBot'
 
@@ -23,5 +23,13 @@ assert.ok(autoNameCandidates('x'.repeat(100), suffix).every((name) => name.lengt
 
 assert.deepStrictEqual(customNameCandidates('my_link', suffix), [`my_link${suffix}`])
 assert.strictEqual(customNameCandidates('!!!', suffix), null)
+
+const restored = restoreNameCandidates(`Old_Cats${suffix}`, 'My Cats', suffix)
+assert.strictEqual(restored.length, 4)
+assert.strictEqual(restored[0], `Old_Cats${suffix}`, 'the old name first')
+assert.strictEqual(restored[1], `My_Cats${suffix}`, 'then the title\'s')
+assert.strictEqual(restoreNameCandidates('Old_Cats_by_other', 'My Cats', suffix).length, 3, 'another bot\'s suffix')
+assert.strictEqual(restoreNameCandidates('Old__Cats' + suffix, 'My Cats', suffix).length, 3, 'a name Telegram would refuse')
+assert.strictEqual(restoreNameCandidates(undefined, 'My Cats', suffix).length, 3)
 
 console.log('pack names test OK')

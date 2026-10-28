@@ -36,8 +36,17 @@ const customNameCandidates = (raw, suffix) => {
   return name ? [name + suffix] : null
 }
 
+// A restored pack asks for the name it had (already with the bot's suffix) and
+// falls back to a name made from the title, like any new pack. The old name is
+// only offered when it is still a valid one for this bot.
+const restoreNameCandidates = (oldName, title, suffix) => {
+  const valid = typeof oldName === 'string' && oldName.length <= 64 && oldName.endsWith(suffix) &&
+    /^[a-z](?:[a-z0-9]|_(?!_))*$/i.test(oldName)
+  return [...(valid ? [oldName] : []), ...autoNameCandidates(title, suffix)]
+}
+
 // SHORTNAME_OCCUPY_FAILED: Telegram could not register the name; another
 // one may go through.
 const NAME_REJECTED = /STICKERSET_INVALID|name is already occupied|invalid sticker set name|SHORTNAME_OCCUPY_FAILED/i
 
-module.exports = { normalizeName, fitName, autoNameCandidates, customNameCandidates, NAME_REJECTED }
+module.exports = { normalizeName, fitName, autoNameCandidates, customNameCandidates, restoreNameCandidates, NAME_REJECTED }

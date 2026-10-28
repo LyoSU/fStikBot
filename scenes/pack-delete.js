@@ -21,6 +21,21 @@ const clearSelectedPack = (ctx, deletedId) => {
   }
 }
 
+// file_unique_ids of the pack's stickers in Telegram's order, without the
+// placeholder; from our own rows when Telegram can't be read.
+const packOrder = async (ctx, id, name) => {
+  const stickerSet = await ctx.db.StickerSet.findById(id).select('placeholderFileUniqueId').lean()
+  const placeholder = stickerSet?.placeholderFileUniqueId
+  try {
+    const set = await ctx.telegram.callApi('getStickerSet', { name })
+    return set.stickers.map((sticker) => sticker.file_unique_id).filter((uid) => uid !== placeholder)
+  } catch (error) {
+    const rows = await ctx.db.Sticker.find({ stickerSet: id, deleted: { $ne: true }, placeholder: { $ne: true } })
+      .sort({ _id: 1 }).select('fileUniqueId').lean()
+    return rows.map((row) => row.fileUniqueId).filter((uid) => uid !== placeholder)
+  }
+}
+
 const packDelete = new Scene('packDelete')
 
 packDelete.enter(async (ctx) => {
@@ -66,6 +81,9 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     ? `${ctx.i18n.t('scenes.delete_pack.success')}\n\n📦 <i>${escapeHTML(title)}</i>`
     : ctx.i18n.t('scenes.delete_pack.success')
 
+  // The order the pack has now, for a restore: read before it is gone.
+  const order = await packOrder(ctx, id, name)
+
   try {
     await ctx.telegram.callApi('deleteStickerSet', { name })
   } catch (error) {
@@ -90,11 +108,12 @@ packDelete.hears(match('scenes.delete_pack.confirm'), async (ctx) => {
     })
   }
 
-  await ctx.db.StickerSet.updateOne({ _id: id }, { deleted: true })
+  const deletedAt = new Date()
+  await ctx.db.StickerSet.updateOne({ _id: id }, { deleted: true, ownerDeletedAt: deletedAt, deletedOrder: order })
   await ctx.db.Sticker.updateMany({
-    stickerSet: id
+    stickerSet: id, deleted: { $ne: true }
   }, {
-    $set: { deleted: true, deletedAt: new Date() }
+    $set: { deleted: true, deletedAt }
   })
 
   clearSelectedPack(ctx, id)

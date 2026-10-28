@@ -928,6 +928,122 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.strictEqual(forged.create.copyBoost, false)
   })
 
+  const restoreDraft = (n) => Array.from({ length: n }, (_, i) => ({
+    assetId: `r:o${i}`, file: { restore: { fileUniqueId: `o${i}` }, format: 'static', fileId: `pack-o${i}`, fallbackFileId: `orig-o${i}` }, emojiList: ['🙂']
+  }))
+  const restoreCommit = (n, create = {}) => ({
+    ...newCommit({
+      name: '~new:9',
+      ownerTelegramId: 7,
+      base: [],
+      draft: restoreDraft(n),
+      packType: 'regular',
+      create: { title: 'Old Cats', restoreName: 'Old_Cats_by_bot', restoreFrom: 'old1', ...create }
+    }),
+    boost: true,
+    charge: { credits: 5, user: 'u' }
+  })
+
+  await test('restoring a pack: it asks for its old name first, and the deleted document does not make it taken', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const { deps } = createDeps(world)
+    const asked = []
+    const done = await runCommit(restoreCommit(2), { telegram: tg, ...deps, nameTaken: async (name, opts) => { asked.push([name, opts.except]); return false } })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.strictEqual(done.name, 'Old_Cats_by_bot')
+    assert.deepStrictEqual(asked, [['Old_Cats_by_bot', 'old1']])
+    assert.strictEqual(done.create.copyBoost, true, 'paid restore starts with Boost')
+    assert.strictEqual(done.create.formattedTitle, 'Old Cats :: @bot')
+    assert.deepStrictEqual(done.draft.map((item) => item.restoredUid), ['o0', 'o1'], 'the archived rows are remembered')
+  })
+
+  await test('restoring a pack: an old name somebody took falls back to a name from the title', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world, { foreign: ['Old_Cats_by_bot'] })
+    const { deps } = createDeps(world)
+    const done = await runCommit(restoreCommit(1), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.notStrictEqual(done.name, 'Old_Cats_by_bot')
+    assert.match(done.name, /^Old_Cats(_[0-9a-f]{4})?_by_bot$/)
+  })
+
+  await test('restoring a pack: a pack Telegram merged files in is still registered, so the old one is not restorable again', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const real = tg.callApi.bind(tg)
+    tg.callApi = async (method, params) => {
+      const result = await real(method, params)
+      // Telegram keeps one sticker per file: the two draft files became one.
+      if (method === 'getStickerSet' && result.stickers.length === 2) result.stickers.pop()
+      return result
+    }
+    const { deps, registered } = createDeps(world)
+    const done = await runCommit(restoreCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'failed')
+    assert.match(done.error, /duplicate/)
+    assert.deepStrictEqual(registered, ['Old_Cats_by_bot'])
+    assert.strictEqual(done.create.registered, true)
+  })
+
+  await test('creating a pack: a merged first batch is not registered unless it is a restore', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const real = tg.callApi.bind(tg)
+    tg.callApi = async (method, params) => {
+      const result = await real(method, params)
+      if (method === 'getStickerSet' && result.stickers.length === 2) result.stickers.pop()
+      return result
+    }
+    const { deps, registered } = createDeps(world)
+    const done = await runCommit(createCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'failed')
+    assert.deepStrictEqual(registered, [])
+  })
+
+  await test('restoring a pack: Boost needs the charge', async () => {
+    const { copyEarnsBoost } = require('../pack-ops/execute')
+    const base = { boost: true, create: { title: 'x', restoreFrom: 'old1' }, draft: restoreDraft(1) }
+    assert.strictEqual(copyEarnsBoost({ ...base, charge: { credits: 5, user: 'u' } }), true)
+    assert.strictEqual(copyEarnsBoost(base), false)
+    assert.strictEqual(copyEarnsBoost({ ...base, boost: false, charge: { credits: 5, user: 'u' } }), false)
+  })
+
+  await test('restoring a pack: a first batch Telegram refuses by file_id is sent once more with the originals', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const real = tg.callApi.bind(tg)
+    const sent = []
+    tg.callApi = (method, params) => {
+      if (method === 'createNewStickerSet') {
+        sent.push(params.stickers.map((st) => st.sticker))
+        if (params.stickers.some((st) => st.sticker.startsWith('pack-'))) return Promise.reject(telegramError(400, 'Bad Request: wrong file identifier'))
+      }
+      return real(method, params)
+    }
+    const { deps } = createDeps(world)
+    const done = await runCommit(restoreCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.deepStrictEqual(sent, [['pack-o0', 'pack-o1'], ['orig-o0', 'orig-o1']])
+    assert.strictEqual(done.name, 'Old_Cats_by_bot', 'the same name: the refusal was not about it')
+  })
+
+  await test('restoring a pack: a refusal that is about the name does not retry with the originals', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world, { foreign: [] })
+    const real = tg.callApi.bind(tg)
+    let creates = 0
+    tg.callApi = (method, params) => {
+      if (method === 'createNewStickerSet' && creates++ === 0) return Promise.reject(telegramError(400, 'Bad Request: sticker set name is already occupied'))
+      return real(method, params)
+    }
+    const { deps } = createDeps(world)
+    const done = await runCommit(restoreCommit(1), { telegram: tg, ...deps })
+    assert.strictEqual(done.status, 'succeeded', done.error)
+    assert.strictEqual(creates, 2)
+    assert.strictEqual(tg.created.params.stickers[0].sticker, 'pack-o0', 'next name, still the pack\'s own file_id')
+  })
+
   await test('creating a pack: a link Studio made from the title gets a random tail when taken', async () => {
     const world = { faultAt: -1 }
     const tg = fakeCreatingTelegram(world, { foreign: ['testovyi_pak_by_bot'] })
