@@ -415,6 +415,7 @@ callback:
         off: etkin değil
     hidden: <a href="${link}">${title}</a> paketi listenden gizlendi.
     restored: <a href="${link}">${title}</a> paketi listene geri yüklendi.
+    studio_hint: 'Studio isteğe bağlıdır: aynı her şeyi burada, botta da yapabilirsin.'
     btn:
       hide: '👁 Paketi gizle'
       delete: '🗑 Paketi sil'

@@ -415,6 +415,7 @@ callback:
         off: inaktiv
     hidden: Paket <a href="${link}">${title}</a> wurde aus deiner Liste ausgeblendet.
     restored: Paket <a href="${link}">${title}</a> wurde in deiner Liste wiederhergestellt.
+    studio_hint: 'Das Studio ist optional: Alles geht genauso hier im Bot.'
     btn:
       hide: '👁 Paket ausblenden'
       delete: '🗑 Paket löschen'

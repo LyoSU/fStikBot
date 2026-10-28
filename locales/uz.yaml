@@ -415,6 +415,7 @@ callback:
         off: 'nofaol'
     hidden: Toʻplam <a href="${link}">${title}</a> roʻyxatingizdan yashirildi.
     restored: Toʻplam <a href="${link}">${title}</a> roʻyxatingizda tiklandi.
+    studio_hint: 'Studiya ixtiyoriy: xuddi shu ishlarni shu yerda, botda ham qilish mumkin.'
     btn:
       hide: '👁 Yashirish'
       delete: '🗑 Oʻchirish'

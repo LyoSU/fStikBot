@@ -102,7 +102,10 @@ async function buildPackMenu (ctx, stickerSet, { notice, text: textOverride } = 
   ])
 
   const studio = studioButton(ctx, stickerSet, access, hidden)
-  if (studio) keyboard.push([studio])
+  if (studio) {
+    keyboard.push([studio])
+    if (!textOverride) text += `\n\n<i>${t('callback.pack.studio_hint')}</i>`
+  }
 
   if (owner && hidden) {
     keyboard.push([

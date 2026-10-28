@@ -415,6 +415,7 @@ callback:
         off: 'inactive'
     hidden: Pack <a href="${link}">${title}</a> hidden from your list.
     restored: Pack <a href="${link}">${title}</a> restored to your list.
+    studio_hint: 'Studio is optional: you can do all the same things right here in the bot.'
     btn:
       hide: '👁 Hide pack'
       delete: '🗑 Delete pack'
