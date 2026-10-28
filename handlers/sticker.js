@@ -193,7 +193,7 @@ const addSingle = async (ctx, stickerSet, item, stickerSetInfo) => {
   if (result.ok) rememberSticker(ctx, result.ok.sticker, true)
   else rememberSticker(ctx, result.error?.sticker, false)
 
-  const { messageText, replyMarkup } = addStickerText(result, ctx.i18n.locale())
+  const { messageText, replyMarkup } = addStickerText(result, ctx.i18n.locale(), { userId: ctx.from?.id, where: 'sticker' })
   if (messageText) await reply(ctx, messageText, item.replyTo, { reply_markup: replyMarkup })
 
   if (result.ok) {
@@ -230,7 +230,7 @@ const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
       counts.duplicates++
     } else {
       counts.failed++
-      if (!failReason) failReason = addStickerText(result, ctx.i18n.locale()).messageText
+      if (!failReason) failReason = addStickerText(result, ctx.i18n.locale(), { userId: ctx.from?.id, where: 'sticker:album' }).messageText
       // Nothing after this fits either.
       if (isPackFull(result)) {
         // Never attempted, but counted in sticker_received — count them here

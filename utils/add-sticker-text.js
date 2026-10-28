@@ -3,6 +3,8 @@ const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const escapeHTML = require('./html-escape')
 const { matchTelegramErrorReason, extractRetryAfterSeconds } = require('./telegram-error')
+const { logError } = require('./error-line')
+const { logUid } = require('./log-uid')
 
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../locales'),
@@ -25,7 +27,20 @@ const TELEGRAM_ERROR_MAP = [
   ['sticker not found', 'sticker.add.error.sticker_not_found']
 ]
 
-module.exports = (addStickerResult, lang) => {
+// The user only reads "something went wrong"; what Telegram actually said
+// goes to the log, so the cause can be counted instead of guessed.
+const logUnknown = (error, meta) => logError(error?.telegram || error?.message || 'unnamed add failure', {
+  kind: 'add_unknown',
+  where: meta.where || 'add-sticker',
+  level: 'warn',
+  fields: { uid: logUid(meta.userId), format: meta.format }
+})
+
+/**
+ * @param {Object} [meta] who and where, for the log line when the user gets
+ *   the generic error: `userId` (hashed), `where`, `format`
+ */
+module.exports = (addStickerResult, lang, meta = {}) => {
   let messageText = ''
   let replyMarkup = {}
 
@@ -88,11 +103,13 @@ module.exports = (addStickerResult, lang) => {
         messageText = hit
           ? i18n.t(lang, hit[1])
           : reason ? i18n.t(lang, `error.telegram_reasons.${reason}`) : i18n.t(lang, 'error.unknown')
+        if (!hit && !reason) logUnknown(addStickerResult.error, meta)
       }
     } else {
       // uploadSticker's internal { error: { message } } and anything else
       // unnamed: the cause is in the log, the user gets plain words.
       messageText = i18n.t(lang, 'error.unknown')
+      logUnknown(addStickerResult.error, meta)
     }
   }
 
