@@ -1,4 +1,5 @@
-FROM node:lts-alpine AS base
+# Pinned: Node 26 breaks telegraf 3 multipart uploads (socket hang up)
+FROM node:24-alpine AS base
 
 FROM base AS builder
 WORKDIR /install
