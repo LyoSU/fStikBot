@@ -36,8 +36,7 @@ photoClear.enter(async (ctx) => {
   await ctx.replyWithHTML(ctx.i18n.t('scenes.photoClear.enter'), {
     reply_markup: {
       inline_keyboard: [
-        ...modelButtons(ctx, 'clear_model', { markCurrent: true }),
-        [{ text: ctx.i18n.t('scenes.photoClear.web_app'), web_app: { url: 'https://bot.lyo.su/remove-background-web/' } }]
+        ...modelButtons(ctx, 'clear_model', { markCurrent: true })
       ]
     }
   })
@@ -49,8 +48,7 @@ photoClear.action(/^clear_model:(\w+)$/, async (ctx) => {
   await ctx.answerCbQuery()
   await ctx.editMessageReplyMarkup({
     inline_keyboard: [
-      ...modelButtons(ctx, 'clear_model', { markCurrent: true }),
-      [{ text: ctx.i18n.t('scenes.photoClear.web_app'), web_app: { url: 'https://bot.lyo.su/remove-background-web/' } }]
+      ...modelButtons(ctx, 'clear_model', { markCurrent: true })
     ]
   }).catch(() => {})
 })
