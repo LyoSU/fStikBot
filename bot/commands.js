@@ -56,6 +56,10 @@ module.exports = (bot, privateMessage, {
     return ctx.replyWithHTML('<code>' + escapeHTML(JSON.stringify(target, null, 2)) + '</code>')
   }))
 
+  // The Stars are already taken when this arrives, so it goes before the scenes:
+  // a scene with a catch-all on('message') would swallow it and credit nothing.
+  bot.on('successful_payment', handleDonate.onSuccessfulPayment)
+
   // Scenes (Stage) mount — must come before any composer that uses ctx.scene.enter.
   // The guard right behind it catches what the current scene didn't handle.
   bot.use(scenes)
