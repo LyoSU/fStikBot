@@ -43,6 +43,28 @@ function test (name, fn) {
     assert.strictEqual(bad.payment.status, 'mismatch')
   })
 
+  await test('a failed flip is reported as an error, never as already credited', async () => {
+    const { handlerOf, fakeCtx } = donateHarness()
+    const onPaid = handlerOf('successful_payment')
+    const replies = []
+    const failWith = (ctx, error) => {
+      ctx.replyWithHTML = async (text) => replies.push(text)
+      ctx.db.Payment.findOneAndUpdate = () => Promise.reject(error)
+    }
+
+    const down = fakeCtx({ price: 60 }, { currency: 'XTR', total_amount: 60 })
+    failWith(down, new Error('mongo is down'))
+    await onPaid(down)
+    assert.deepStrictEqual(replies, ['donate.error.error'])
+    assert.strictEqual(down.user.balance, 0)
+
+    replies.length = 0
+    const malformed = fakeCtx({ price: 60 }, { currency: 'XTR', total_amount: 60 })
+    failWith(malformed, Object.assign(new Error('bad id'), { name: 'CastError' }))
+    await onPaid(malformed)
+    assert.deepStrictEqual(replies, ['donate.error.already_donated'])
+  })
+
   await test('a checkout that does not match its payment is refused', async () => {
     const { handlerOf, fakeCtx } = donateHarness()
     const onCheckout = handlerOf('pre_checkout_query')

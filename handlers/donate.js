@@ -54,6 +54,9 @@ async function onPreCheckout (ctx) {
 
 composer.on('pre_checkout_query', onPreCheckout)
 
+const PAYMENT_NOT_RECORDED = Symbol('payment not recorded')
+
+// Mounted before the scenes in bot/commands.js, not on this composer.
 async function onSuccessfulPayment (ctx) {
   const { successful_payment: successfulPayment } = ctx.message
 
@@ -78,7 +81,18 @@ async function onSuccessfulPayment (ctx) {
     { _id: successfulPayment.invoice_payload, status: 'pending', currency: 'XTR', price: successfulPayment.total_amount },
     { $set: { status: 'paid', user: ctx.session.userInfo._id, resultData: successfulPayment } },
     { new: true }
-  ).catch(() => null)
+  ).catch((error) => {
+    // A malformed payload isn't one of our invoices. Any other failure means the
+    // Stars are taken and nothing was recorded: telling the payer they were
+    // already credited would be false, and only this line lets it be found.
+    if (error.name === 'CastError') return null
+    log.error('payment not recorded, credit by hand:', successfulPayment.invoice_payload, 'charge:', successfulPayment.telegram_payment_charge_id, 'user:', ctx.session.userInfo._id, error)
+    return PAYMENT_NOT_RECORDED
+  })
+
+  if (updated === PAYMENT_NOT_RECORDED) {
+    return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
+  }
 
   if (!updated) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
@@ -109,8 +123,6 @@ async function onSuccessfulPayment (ctx) {
     balance: updatedUser.balance
   }))
 }
-
-composer.on('successful_payment', onSuccessfulPayment)
 
 // "/start donate" and "/start boost" are routed in bot/commands.js.
 composer.hears(['/donate', '/boost'], Composer.privateChat(donateMenu))
