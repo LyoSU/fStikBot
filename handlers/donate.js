@@ -110,7 +110,7 @@ async function onSuccessfulPayment (ctx) {
   const credited = await flipAndCredit(ctx, successfulPayment).catch((error) => {
     // A malformed payload isn't one of our invoices.
     if (error.name === 'CastError') return null
-    log.error('payment not credited, credit by hand:', successfulPayment.invoice_payload, 'charge:', successfulPayment.telegram_payment_charge_id, 'user:', ctx.session.userInfo._id, error)
+    log.error('payment may not be credited, check the audit before crediting by hand:', successfulPayment.invoice_payload, 'charge:', successfulPayment.telegram_payment_charge_id, 'user:', ctx.session.userInfo._id, error)
     return PAYMENT_NOT_RECORDED
   })
 
