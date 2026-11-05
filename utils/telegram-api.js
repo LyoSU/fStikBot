@@ -17,6 +17,15 @@ const SESSION_FILE = path.join(__dirname, '../.mtproto-session')
 // retries internally, and a dead MTProto should not slow every /about.
 const RETRY_AFTER_FAILURE_MS = 60 * 1000
 
+// gram.js stores the users and chats of every result and every update pushed to
+// this connection, with no option to turn it off: session._entities is a Set of
+// freshly built arrays, so a user gets one more row per update, forever, and
+// _entityCache keeps one entry per user ever seen. Those stores only serve peer
+// lookups; this bot invokes GetStickerSet alone, which addresses a set by name.
+class NoEntitiesSession extends StringSession {
+  processEntities () {}
+}
+
 let client = null
 let connecting = null
 let lastFailureAt = 0
@@ -30,11 +39,12 @@ async function connect () {
   }
 
   const fresh = new TelegramClient(
-    new StringSession(savedSession),
+    new NoEntitiesSession(savedSession),
     parseInt(process.env.TELEGRAM_API_ID, 10),
     process.env.TELEGRAM_API_HASH,
     { connectionRetries: 5 }
   )
+  fresh._entityCache.add = () => {}
   fresh.setLogLevel('error')
 
   await fresh.start({ botAuthToken: process.env.BOT_TOKEN })
