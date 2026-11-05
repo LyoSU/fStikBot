@@ -85,7 +85,16 @@ async function getClient () {
   return connecting
 }
 
+// What gram.js keeps for the current client, for the [mem] line in bot.js.
+function _entityCounts () {
+  return {
+    rows: client?.session?._entities?.size ?? 0,
+    cached: client?._entityCache?.cacheMap?.size ?? 0
+  }
+}
+
 module.exports = {
   Api,
-  getClient
+  getClient,
+  _entityCounts
 }
