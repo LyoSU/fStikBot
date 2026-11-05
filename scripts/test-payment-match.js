@@ -57,12 +57,14 @@ function test (name, fn) {
     await onPaid(down)
     assert.deepStrictEqual(replies, ['donate.error.error'])
     assert.strictEqual(down.user.balance, 0)
+    assert.strictEqual(down.payment.status, 'credit_failed', 'found later and credited by hand')
 
     replies.length = 0
     const malformed = fakeCtx({ price: 60 }, { currency: 'XTR', total_amount: 60 })
     failWith(malformed, Object.assign(new Error('bad id'), { name: 'CastError' }))
     await onPaid(malformed)
     assert.deepStrictEqual(replies, ['donate.error.already_donated'])
+    assert.strictEqual(malformed.payment.status, 'pending')
   })
 
   await test('a checkout that does not match its payment is refused', async () => {
@@ -105,13 +107,14 @@ function donateHarness () {
       i18n: { t: (key) => key },
       replyWithHTML: async () => {},
       db: {
+        connection: { startSession: async () => ({ withTransaction: (fn) => fn(), endSession: async () => {} }) },
         Payment: {
           findOne: (query) => ({ catch: async () => (matches(doc, query) ? doc : null) }),
           updateOne: (query, update) => ({ catch: async () => apply(query, update) }),
-          findOneAndUpdate: (query, update) => ({ catch: async () => apply(query, update) })
+          findOneAndUpdate: async (query, update) => apply(query, update)
         },
         User: {
-          findByIdAndUpdate: (id, update) => ({ catch: async () => { user.balance += update.$inc.balance; return user } })
+          findByIdAndUpdate: async (id, update) => { user.balance += update.$inc.balance; return user }
         }
       }
     }

@@ -30,6 +30,7 @@ function setup (sceneId) {
   const user = { _id: 'u1', balance: 0 }
   const replies = []
   const fakeDb = {
+    connection: { startSession: async () => ({ withTransaction: (fn) => fn(), endSession: async () => {} }) },
     Payment: {
       findOne: async () => (payment.status === 'pending' ? payment : null),
       updateOne: async () => null,

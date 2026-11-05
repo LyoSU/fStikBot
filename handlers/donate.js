@@ -56,6 +56,39 @@ composer.on('pre_checkout_query', onPreCheckout)
 
 const PAYMENT_NOT_RECORDED = Symbol('payment not recorded')
 
+// The pending → paid flip and the credit commit together: a process dying
+// between them can't leave a paid payment with nothing on the balance, and a
+// death before the commit leaves it pending, where an audit finds it. The flip
+// matches only `pending`, so a duplicated update can't credit twice; the price
+// is part of the match, so a Payment changed since the check isn't credited.
+// Returns null when no pending payment matched. withTransaction reruns the
+// callback on a transient error, so its result starts empty on every attempt.
+async function flipAndCredit (ctx, successfulPayment) {
+  const session = await ctx.db.connection.startSession()
+  try {
+    let credited = null
+    await session.withTransaction(async () => {
+      credited = null
+      const payment = await ctx.db.Payment.findOneAndUpdate(
+        { _id: successfulPayment.invoice_payload, status: 'pending', currency: 'XTR', price: successfulPayment.total_amount },
+        { $set: { status: 'paid', user: ctx.session.userInfo._id, resultData: successfulPayment } },
+        { new: true, session }
+      )
+      if (!payment) return
+      const user = await ctx.db.User.findByIdAndUpdate(
+        ctx.session.userInfo._id,
+        { $inc: { balance: payment.amount } },
+        { new: true, projection: { balance: 1 }, session }
+      )
+      if (!user) throw new Error('payer not found')
+      credited = { payment, user }
+    })
+    return credited
+  } finally {
+    await session.endSession()
+  }
+}
+
 // Mounted before the scenes in bot/commands.js, not on this composer.
 async function onSuccessfulPayment (ctx) {
   const { successful_payment: successfulPayment } = ctx.message
@@ -72,49 +105,31 @@ async function onSuccessfulPayment (ctx) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
   }
 
-  // Atomic pending → paid flip: a duplicated update can't credit twice.
   // `user` is set to the payer — an invoice can be forwarded, and refunds
   // (handlers/admin) go to payment.user, so it must be whoever actually paid.
-  // The price is part of the match, so a Payment changed since the check above
-  // isn't credited either.
-  const updated = await ctx.db.Payment.findOneAndUpdate(
-    { _id: successfulPayment.invoice_payload, status: 'pending', currency: 'XTR', price: successfulPayment.total_amount },
-    { $set: { status: 'paid', user: ctx.session.userInfo._id, resultData: successfulPayment } },
-    { new: true }
-  ).catch((error) => {
-    // A malformed payload isn't one of our invoices. Any other failure means the
-    // Stars are taken and nothing was recorded: telling the payer they were
-    // already credited would be false, and only this line lets it be found.
+  const credited = await flipAndCredit(ctx, successfulPayment).catch((error) => {
+    // A malformed payload isn't one of our invoices.
     if (error.name === 'CastError') return null
-    log.error('payment not recorded, credit by hand:', successfulPayment.invoice_payload, 'charge:', successfulPayment.telegram_payment_charge_id, 'user:', ctx.session.userInfo._id, error)
+    log.error('payment may not be credited, check the audit before crediting by hand:', successfulPayment.invoice_payload, 'charge:', successfulPayment.telegram_payment_charge_id, 'user:', ctx.session.userInfo._id, error)
     return PAYMENT_NOT_RECORDED
   })
 
-  if (updated === PAYMENT_NOT_RECORDED) {
+  if (credited === PAYMENT_NOT_RECORDED) {
+    // The transaction rolled back, so the Stars are taken and nothing is
+    // credited. Marked so it can be found and credited by hand; if the commit
+    // did land after all, the status is no longer pending and this matches nothing.
+    await ctx.db.Payment.updateOne(
+      { _id: successfulPayment.invoice_payload, status: 'pending' },
+      { $set: { status: 'credit_failed', user: ctx.session.userInfo._id, resultData: successfulPayment } }
+    ).catch((error) => log.error('could not mark payment credit_failed:', successfulPayment.invoice_payload, error))
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
   }
 
-  if (!updated) {
+  if (!credited) {
     return ctx.replyWithHTML(ctx.i18n.t('donate.error.already_donated'))
   }
 
-  // The Stars are already taken. A failed credit is marked on the payment so
-  // it can be found (status: 'credit_failed') and credited by hand.
-  const updatedUser = await ctx.db.User.findByIdAndUpdate(
-    ctx.session.userInfo._id,
-    { $inc: { balance: updated.amount } },
-    { new: true, projection: { balance: 1 } }
-  ).catch((error) => {
-    log.error('credit failed for payment', updated._id.toString(), error)
-    return null
-  })
-
-  if (!updatedUser) {
-    log.error('payment paid but not credited:', updated._id.toString(), 'user:', ctx.session.userInfo._id)
-    await ctx.db.Payment.updateOne({ _id: updated._id }, { $set: { status: 'credit_failed' } })
-      .catch((error) => log.error('could not mark payment credit_failed:', updated._id.toString(), error))
-    return ctx.replyWithHTML(ctx.i18n.t('donate.error.error'))
-  }
+  const { payment: updated, user: updatedUser } = credited
 
   syncBalance(ctx.session.userInfo, updatedUser.balance)
 
