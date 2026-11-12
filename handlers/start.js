@@ -55,11 +55,7 @@ module.exports = async (ctx) => {
     ]
   ]
 
-  let messageText = ctx.i18n.t('cmd.start.enter', { name: userName(ctx.from) }) + currentPackLine(ctx)
-
-  if (ctx.config?.advertising?.text && ctx.config?.advertising?.link) {
-    messageText += `\n\n<a href="${ctx.config.advertising.link}">${ctx.config.advertising.text}</a>`
-  }
+  const messageText = ctx.i18n.t('cmd.start.enter', { name: userName(ctx.from) }) + currentPackLine(ctx)
 
   await sendBanner(ctx, 'welcome', messageText, {
     reply_markup: Markup.inlineKeyboard(keyboard)
