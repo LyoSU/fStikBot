@@ -21,6 +21,7 @@ module.exports = (bot, privateMessage, {
     handleStats,
     handlePing,
     handleStart,
+    handleStickerLink,
     handleHelp,
     handleDonate,
     handleSticker,
@@ -88,9 +89,14 @@ module.exports = (bot, privateMessage, {
     catalog: (ctx) => (ctx.config.catalogUrl ? handleCatalog(ctx) : handleStart(ctx))
   }
 
+  // "Add to my pack" from the catalog (handlers/sticker-link.js). A payload
+  // that only looks like one gets the welcome screen, as any unknown one does.
+  const openStickerLink = handleStickerLink(handleStart)
+
   bot.start((ctx) => {
     const payload = ctx.startPayload || ''
     if (/^s_./.test(payload)) return handleSelectPack(ctx)
+    if (/^[ab]_./.test(payload)) return openStickerLink(ctx)
     return (startRoutes[payload] || handleStart)(ctx)
   })
 

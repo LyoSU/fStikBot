@@ -3,6 +3,7 @@ module.exports = {
   handleStats: require('./stats'),
   handlePing: require('./ping'),
   handleStart: require('./start'),
+  handleStickerLink: require('./sticker-link'),
   handleHelp: require('./help'),
   handleDonate: require('./donate'),
   handleSticker: require('./sticker'),

@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ ${count} lainnya video: sedang dikonversi, akan kubalas satu per satu setelah siap.'
     album_duplicates: '♻️ Sudah ada di paket: ${count}.'
     album_failed: '⚠️ Gagal ditambahkan: ${count}.'
+  link:
+    btn_add: '➕ Tambah ke paket saya'
+    btn_pack: '📦 Seluruh paket'
+    pack_not_found: |
+      Paket ini sudah tidak ada: dihapus atau diganti namanya.
+    sticker_not_found: |
+      Stiker ini sudah tidak ada di <a href="${link}">${title}</a>.
 news:
   join: |
     📢 <a href="${link}">Ikuti saluran kami</a> — berita, pembaruan, fitur baru.
