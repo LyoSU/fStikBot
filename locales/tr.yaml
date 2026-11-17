@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ ${count} tanesi daha video: dönüştürüyorum, her biri hazır olunca yanıtlayacağım.'
     album_duplicates: '♻️ Zaten pakette: ${count}.'
     album_failed: '⚠️ Eklenemedi: ${count}.'
+  link:
+    btn_add: '➕ Paketime ekle'
+    btn_pack: '📦 Paketin tamamı'
+    pack_not_found: |
+      Bu paket artık yok: silindi ya da adı değiştirildi.
+    sticker_not_found: |
+      Bu çıkartma artık <a href="${link}">${title}</a> paketinde yok.
 news:
   join: |
     📢 <a href="${link}">Kanala abone ol</a> — haberler, güncellemeler, yeni özellikler.

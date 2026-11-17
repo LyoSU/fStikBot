@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ Yana ${count} tasi video: qayta ishlayapman, har biri tayyor boʻlganda xabar beraman.'
     album_duplicates: '♻️ Toʻplamda allaqachon bor: ${count}.'
     album_failed: '⚠️ Qoʻshib boʻlmadi: ${count}.'
+  link:
+    btn_add: '➕ Toʻplamimga qoʻshish'
+    btn_pack: '📦 Butun toʻplam'
+    pack_not_found: |
+      Bu toʻplam endi yoʻq: u oʻchirilgan yoki nomi oʻzgartirilgan.
+    sticker_not_found: |
+      Bu stiker endi <a href="${link}">${title}</a> toʻplamida yoʻq.
 news:
   join: |
     📢 <a href="${link}">Kanalga obuna boʻling</a> — yangiliklar, yangilanishlar va yangi imkoniyatlar.

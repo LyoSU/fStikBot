@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ 残り${count}件は動画です：変換が完了次第、1件ずつお知らせします。'
     album_duplicates: '♻️ すでにパックにあるもの：${count}件'
     album_failed: '⚠️ 追加できなかったもの：${count}件'
+  link:
+    btn_add: '➕ 自分のパックに追加'
+    btn_pack: '📦 パック全体'
+    pack_not_found: |
+      このパックはもうありません。削除されたか、名前が変わりました。
+    sticker_not_found: |
+      このステッカーは <a href="${link}">${title}</a> にもうありません。
 news:
   join: |
     📢 <a href="${link}">チャンネルを登録</a> — ニュース、最新情報、新機能をお届けします。

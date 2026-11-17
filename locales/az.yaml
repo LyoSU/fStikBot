@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ Daha ${count} ədədi videodur: çevirirəm, hər biri hazır olanda cavab verəcəyəm.'
     album_duplicates: '♻️ Artıq paketdə var: ${count}.'
     album_failed: '⚠️ Əlavə etmək alınmadı: ${count}.'
+  link:
+    btn_add: '➕ Paketimə əlavə et'
+    btn_pack: '📦 Bütün paket'
+    pack_not_found: |
+      Bu paket artıq yoxdur: silinib və ya adı dəyişdirilib.
+    sticker_not_found: |
+      Bu stiker artıq <a href="${link}">${title}</a> paketində yoxdur.
 news:
   join: |
     📢 <a href="${link}">Kanala abunə ol</a> — xəbərlər, yeniləmələr, yeni funksiyalar.

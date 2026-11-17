@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ 另有 ${count} 个视频：正在转换，处理完成后会逐一回复。'
     album_duplicates: '♻️ 已在贴纸包中：${count} 个。'
     album_failed: '⚠️ 未能添加：${count} 个。'
+  link:
+    btn_add: '➕ 添加到我的贴纸包'
+    btn_pack: '📦 整个贴纸包'
+    pack_not_found: |
+      这个贴纸包已不存在：已被删除或改名。
+    sticker_not_found: |
+      这张贴纸已不在 <a href="${link}">${title}</a> 中。
 news:
   join: |
     📢 <a href="${link}">订阅频道</a> — 获取新闻、更新和新功能。

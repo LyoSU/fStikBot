@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ Ще ${count} — відео: конвертую і відповім на кожне, щойно воно буде готове.'
     album_duplicates: '♻️ Уже є в паку: ${count}.'
     album_failed: '⚠️ Не вдалося додати: ${count}.'
+  link:
+    btn_add: '➕ Додати в мій пак'
+    btn_pack: '📦 Увесь пак'
+    pack_not_found: |
+      Цього паку вже немає: його видалили або перейменували.
+    sticker_not_found: |
+      Цього стікера вже немає в паку <a href="${link}">${title}</a>.
 news:
   join: |
     📢 <a href="${link}">Підпишись на канал</a> — новини, оновлення, нові функції.
