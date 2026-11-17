@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ ${count} ملفات أخرى هي مقاطع فيديو: جارٍ تحويلها، وسأخبرك فور جاهزية كل منها.'
     album_duplicates: '♻️ موجود في الحزمة بالفعل: ${count}.'
     album_failed: '⚠️ تعذّرت الإضافة: ${count}.'
+  link:
+    btn_add: '➕ إضافة إلى حزمتي'
+    btn_pack: '📦 الحزمة كاملة'
+    pack_not_found: |
+      هذه الحزمة لم تعد موجودة: حُذفت أو تغيّر اسمها.
+    sticker_not_found: |
+      هذا الملصق لم يعد في <a href="${link}">${title}</a>.
 news:
   join: |
     📢 <a href="${link}">اشترك في القناة</a> — للأخبار والتحديثات والميزات الجديدة.
