@@ -1,5 +1,4 @@
 const path = require('path')
-const got = require('got')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
@@ -99,8 +98,10 @@ const uploadSourceSticker = async (ctx, sticker, onWait) => {
   const fileLink = await getFileLinkWithRetry(ctx, sticker.file_id)
   if (!fileLink) return null
 
-  const buffer = await got(fileLink, { responseType: 'buffer' })
-    .then((response) => response.body)
+  // Native fetch: got 11 can crash the process with a late socket error
+  // (see utils/send-sticker-as-document.js).
+  const buffer = await fetch(fileLink, { signal: AbortSignal.timeout(30000) })
+    .then(async (response) => response.ok ? Buffer.from(await response.arrayBuffer()) : null)
     .catch(() => null)
   if (!buffer) return null
 
