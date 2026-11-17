@@ -567,6 +567,13 @@ sticker:
     album_converting: '⏳ Mais ${count} são vídeos: convertendo, respondo a cada um assim que ficar pronto.'
     album_duplicates: '♻️ Já estão no pacote: ${count}.'
     album_failed: '⚠️ Não foi possível adicionar: ${count}.'
+  link:
+    btn_add: '➕ Salvar no meu pacote'
+    btn_pack: '📦 Pacote inteiro'
+    pack_not_found: |
+      Este pacote não existe mais: foi excluído ou renomeado.
+    sticker_not_found: |
+      Este sticker não está mais em <a href="${link}">${title}</a>.
 news:
   join: |
     📢 <a href="${link}">Inscreva-se no canal</a> — novidades, atualizações e novos recursos.
