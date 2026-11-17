@@ -1,4 +1,3 @@
-const got = require('got')
 const sharp = require('sharp')
 const { humanizeTelegramError } = require('./telegram-error')
 
@@ -51,7 +50,12 @@ async function sendStickerAsDocument (ctx, fileId, fileUniqueId, extra = {}) {
   // preview) and legacy file_paths without an extension.
   let buffer
   try {
-    buffer = await got(fileLink, { timeout: 30000 }).buffer()
+    // Native fetch, not got: got 11 emits a late socket error after its own
+    // timeout has settled the promise, which escaped as an uncaughtException
+    // and restarted the bot (2026-11-17, same failure tenor.js hit in 09).
+    const response = await fetch(fileLink, { signal: AbortSignal.timeout(30000) })
+    if (!response.ok) throw new Error(`download failed: ${response.status}`)
+    buffer = Buffer.from(await response.arrayBuffer())
   } catch (err) {
     await ctx.replyWithHTML(ctx.i18n.t('error.download'), extra).catch(() => {})
     return false
