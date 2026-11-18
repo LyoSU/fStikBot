@@ -1,5 +1,6 @@
 const collections = require('./models')
 const { connection } = require('./connection')
+const { firstPlaceholderCheck } = require('../utils/placeholder-schedule')
 
 const db = {
   connection
@@ -69,6 +70,11 @@ db.StickerSet.newSet = async (stickerSetInfo) => {
   stickerSet.create = stickerSetInfo.create || false
   stickerSet.boost = stickerSetInfo.boost || false
   stickerSet.placeholderFileUniqueId = stickerSetInfo.placeholderFileUniqueId
+  if (stickerSetInfo.placeholderFileUniqueId) {
+    // First look by the sweeper (utils/placeholder-sweeper.js).
+    stickerSet.placeholderCheckAt = firstPlaceholderCheck()
+    stickerSet.placeholderChecks = 0
+  }
   if (stickerSetInfo.moderated) stickerSet.moderated = stickerSetInfo.moderated
   if (stickerSetInfo.aiModeration) stickerSet.aiModeration = stickerSetInfo.aiModeration
   if (stickerSetInfo.about) stickerSet.about = stickerSetInfo.about

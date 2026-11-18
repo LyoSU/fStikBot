@@ -69,6 +69,12 @@ const stickerSetsSchema = mongoose.Schema({
   // forbids deleting the last sticker of a set); cleared once the placeholder
   // is actually removed. Absent/null means "no pending placeholder".
   placeholderFileUniqueId: String,
+  // When utils/placeholder-sweeper.js looks at the placeholder next, and how
+  // many looks it has had. Set only while a placeholder is pending; a sticker
+  // added outside the bot (straight from a Telegram app) never runs the
+  // add-path cleanup, so without the sweeper its placeholder stayed for good.
+  placeholderCheckAt: Date,
+  placeholderChecks: Number,
   create: {
     type: Boolean,
     default: false
@@ -186,6 +192,13 @@ stickerSetsSchema.index({ owner: 1, inline: 1, updatedAt: -1 })
 stickerSetsSchema.index(
   { 'editors.user': 1, updatedAt: -1 },
   { partialFilterExpression: { 'editors.user': { $exists: true } } }
+)
+
+// The placeholder sweeper's queue: find({ placeholderCheckAt: { $lte: now } })
+// .sort({ placeholderCheckAt: 1 }). Partial — only packs with a pending check.
+stickerSetsSchema.index(
+  { placeholderCheckAt: 1 },
+  { partialFilterExpression: { placeholderCheckAt: { $exists: true } } }
 )
 
 module.exports = stickerSetsSchema
