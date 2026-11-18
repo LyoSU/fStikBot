@@ -13,7 +13,6 @@ const { rescaleTgs } = require('./lottie-rescale')
 const { fixStaticTgs } = require('./tgs-static-fix')
 const { getRetryAfter } = require('./retry-api')
 const { isFileRejection } = require('./file-id-reuse')
-const { uploadStickerFile } = require('./upload-retry')
 const { isTransientError } = require('./transient-error')
 const log = require('./logger').scope('add-sticker')
 
@@ -153,18 +152,14 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
   const logContext = { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }
 
   if (sticker?.source) {
-    const uploadedSticker = await uploadStickerFile(telegram, {
+    // retry-api repeats an upload on a 5xx or a dropped connection.
+    const uploadedSticker = await telegram.callApi('uploadStickerFile', {
       user_id: userId,
       sticker_format: stickerExtra.sticker_format,
       sticker: {
         source: sticker.source
       }
-    }, {
-      onRetry: (error, attempt) => log.warn(
-        `network error on uploadStickerFile, retry ${attempt}: ${error.type || error.code || error.name} ` +
-        `pack_type=${stickerSet.packType || 'regular'} format=${stickerExtra.sticker_format} upload(${uploadBytes}B)`
-      )
-    })
+    }).catch((error) => ({ error: { telegram: error } }))
 
     if (uploadedSticker.error) {
       logRateLimit('uploadStickerFile', uploadedSticker.error.telegram, logContext)

@@ -16,7 +16,8 @@
 // never deletes a sticker under a running publish: the executor would see the
 // pack change mid-way and fail the job as "changed outside". A pack that is
 // busy is looked at again a little later.
-const { removePlaceholderIfPending } = require('./placeholder')
+const { removePlaceholderIfPending, clearMarker } = require('./placeholder')
+const { matchTelegramErrorReason } = require('./telegram-error')
 const { nextPlaceholderCheck, CHECK_DELAYS_MS, RETRY_AFTER_ERROR_MS } = require('./placeholder-schedule')
 const { isTransientError } = require('./transient-error')
 
@@ -28,7 +29,7 @@ const GAP_MS = 150
 const LOCK_TTL_MS = 60 * 1000
 
 // Telegram no longer has the set: nothing left to clean.
-const isGone = (error) => /STICKERSET_INVALID|STICKERSET_NOT_FOUND/i.test(error?.description || error?.message || '')
+const isGone = (error) => matchTelegramErrorReason(error) === 'pack_invalid'
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -157,9 +158,7 @@ const mongoRepo = (db) => ({
     // Out of looks: leave the marker for the add path, stop sweeping.
     : { $unset: { placeholderCheckAt: '', placeholderChecks: '' } }),
 
-  clear: (pack) => db.StickerSet.updateOne({ _id: pack._id }, {
-    $unset: { placeholderFileUniqueId: '', placeholderCheckAt: '', placeholderChecks: '' }
-  })
+  clear: clearMarker
 })
 
 let instance = null

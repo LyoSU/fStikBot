@@ -428,22 +428,26 @@ async function withRetry (fn, options = {}) {
 // Transient failures on reads
 // ────────────────────────────────────────────────────────────────
 // A 502/504 or a dropped connection leaves the outcome unknown, so only a
-// call that changes nothing may be sent again. The Bot API names every such
-// call get* (getFile, getStickerSet, getChatMember, …) — a rule from the API's
-// own naming, not a method list. Writes are never repeated here: a repeated
-// addStickerToSet is a duplicate sticker. Prod 2026-11-17: 660+ adds failed on
-// a 502/504 from getFile / getStickerSet alone.
+// call that changes nothing may be sent again:
+// - every get* (getFile, getStickerSet, getChatMember, …), by the Bot API's
+//   own naming, not a method list;
+// - uploadStickerFile, which only returns a file_id. Every caller sends a
+//   Buffer or a file path, which telegraf reads again on each send.
+// Writes are never repeated here: a repeated addStickerToSet is a duplicate
+// sticker. Prod 2026-11-17: 660+ adds failed on a 502/504 from getFile /
+// getStickerSet alone.
 let transientDelaysMs = (process.env.TRANSIENT_RETRY_DELAYS_MS || '1000,3000')
   .split(',').map(Number).filter((ms) => Number.isFinite(ms) && ms >= 0)
 
-const isReadMethod = (method) => /^get[A-Z]/.test(method)
+const isSafeToRepeat = (method) => /^get[A-Z]/.test(method) || method === 'uploadStickerFile'
 
-async function withTransientRetry (fn) {
+async function withTransientRetry (fn, method) {
   for (let attempt = 0; ; attempt++) {
     try {
       return await fn()
     } catch (error) {
       if (attempt >= transientDelaysMs.length || !isTransientError(error)) throw error
+      log.warn(`${method}: ${error.code || error.type || error.name} from Telegram, retry ${attempt + 1}`)
       await delay(transientDelaysMs[attempt])
     }
   }
@@ -524,7 +528,7 @@ function patchTelegramPrototype () {
     // to logs, the chat and stored commits (see redactErrorToken).
     const send = () => originalCallApi.call(this, method, data, ...rest).catch((error) => { throw redactErrorToken(error) })
     return withRetry(
-      isReadMethod(method) ? () => withTransientRetry(send) : send,
+      isSafeToRepeat(method) ? () => withTransientRetry(send, method) : send,
       retryOptions
     ).catch((error) => {
       // 403 on a private chat (positive id = user_id / DM chat_id) →

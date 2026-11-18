@@ -127,4 +127,4 @@ async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { a
   return false
 }
 
-module.exports = { removePlaceholderIfPending }
+module.exports = { removePlaceholderIfPending, clearMarker }

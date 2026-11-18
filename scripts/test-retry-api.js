@@ -583,6 +583,21 @@ async function test (name, fn) {
     assert.strictEqual(attempts, 1)
   })
 
+  await test('an upload is repeated on a 502: it only returns a file_id', async () => {
+    let attempts = 0
+    stubResponder = () => ++attempts < 2 ? Promise.reject(serverError(502)) : Promise.resolve({ file_id: 'up' })
+    const result = await tg.callApi('uploadStickerFile', { user_id: 3011, sticker_format: 'static' })
+    assert.deepStrictEqual(result, { file_id: 'up' })
+    assert.strictEqual(attempts, 2)
+  })
+
+  await test('a dropped connection on a read is repeated too', async () => {
+    let attempts = 0
+    stubResponder = () => ++attempts < 2 ? Promise.reject(Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' })) : Promise.resolve({ ok: 1 })
+    assert.deepStrictEqual(await tg.callApi('getFile', { file_id: 'f' }), { ok: 1 })
+    assert.strictEqual(attempts, 2)
+  })
+
   await test('a read is not repeated on a 400', async () => {
     let attempts = 0
     stubResponder = () => { attempts++; return Promise.reject(Object.assign(new Error('400'), { code: 400, description: 'Bad Request' })) }
