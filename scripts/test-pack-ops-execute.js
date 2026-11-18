@@ -420,6 +420,29 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assertPackMatches(tg.pack, draft, '429')
   })
 
+  await test('a 502 after Telegram added the sticker interrupts; the rerun finds it there, no second add', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x'], world)
+    const real = tg.callApi.bind(tg)
+    let adds = 0
+    tg.callApi = async (method, params) => {
+      if (method !== 'addStickerToSet') return real(method, params)
+      adds++
+      const result = await real(method, params)
+      if (adds === 1) throw telegramError(502, 'Bad Gateway')
+      return result
+    }
+    const draft = [{ assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
+    const store = fakeStore(world)
+    const lock = fakeLock(world)
+    let commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store, lock })
+    assert.strictEqual(commit.status, 'interrupted', 'a 5xx is not a refusal')
+    commit = await runCommit(commit, { telegram: tg, store, lock })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(adds, 1, 'the landed sticker is not added again')
+    assertPackMatches(tg.pack, draft, '502')
+  })
+
   // Two draft items with the same uploaded file: Telegram keeps one sticker for
   // both, and the publish goes on without the second.
   for (const kind of ['add', 'replace']) {
@@ -863,6 +886,28 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.ok(!tg.calls.includes('setStickerEmojiList') && !tg.calls.includes('setStickerKeywords'))
     assert.strictEqual(commit.lockName, '~new:1')
     assert.strictEqual(commit.create.seeded, 3)
+  })
+
+  await test('creating a pack: a 502 after the set was made interrupts, and the rerun adopts that set', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeCreatingTelegram(world)
+    const real = tg.callApi.bind(tg)
+    tg.callApi = async (method, params) => {
+      const result = await real(method, params)
+      if (method === 'createNewStickerSet' && tg.created.times === 1 && !world.answered) {
+        world.answered = true
+        throw telegramError(502, 'Bad Gateway')
+      }
+      return result
+    }
+    const { deps, registered } = createDeps(world)
+    let commit = await runCommit(createCommit(2), { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'interrupted', commit.error)
+    commit = await runCommit(commit, { telegram: tg, ...deps })
+    assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(tg.created.times, 1, 'one set, not two')
+    assert.strictEqual(commit.name, 'My_Cats_by_bot')
+    assert.deepStrictEqual(registered, ['My_Cats_by_bot'])
   })
 
   await test('creating a pack: more than 50 stickers, the rest are added in order', async () => {

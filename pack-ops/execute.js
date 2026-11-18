@@ -13,6 +13,7 @@ const { hasConflict, sameList, mergeOutside, planContent, mapAfterContent, planM
 const { autoNameCandidates, customNameCandidates, restoreNameCandidates, NAME_REJECTED } = require('./names')
 const { uniqueIdOf } = require('./fresh')
 const { redactBotToken } = require('../utils/telegram-error')
+const { isServerError } = require('../utils/transient-error')
 
 // Commit status:
 //   pending      created, never run
@@ -42,8 +43,12 @@ const inputSticker = (item, format) => ({
 })
 
 // A Telegram answer (an error with a code) is final; anything else — a
-// timeout, a reset connection — may or may not have reached Telegram.
-const isTelegramAnswer = (err) => Number.isInteger(err?.code) || Number.isInteger(err?.response?.error_code)
+// timeout, a reset connection, a 5xx from Telegram's front (502/504 lose the
+// request mid-way; prod 2026-11-17 had a storm of them) — may or may not have
+// been carried out. Such a step is reconciled against the pack, never failed:
+// a create that "failed" on a 502 had often made the set, and the user's next
+// publish made a second one.
+const isTelegramAnswer = (err) => (Number.isInteger(err?.code) || Number.isInteger(err?.response?.error_code)) && !isServerError(err)
 const errorCode = (err) => err?.code ?? err?.response?.error_code
 // Stored on the commit and shown in Studio: never with the bot token in it.
 const errorText = (err) => redactBotToken(err?.description || err?.response?.description || err?.message || String(err))
