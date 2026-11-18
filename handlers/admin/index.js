@@ -16,6 +16,7 @@ const {
   sendDeny
 } = require('./_helpers')
 
+const { refundStarPayment } = require('../../utils/star-refund')
 const i18n = new I18n({
   directory: path.resolve(__dirname, '../../locales'),
   defaultLanguage: 'en',
@@ -379,55 +380,25 @@ const handleRefundPayment = async (ctx, paymentId) => {
   }
 
   const trimmed = paymentId.trim()
-  const payment = await ctx.db.Payment.findOne({
-    'resultData.telegram_payment_charge_id': trimmed
-  })
+  const { outcome, payment, error, debited, refundFrom } = await refundStarPayment({ db: ctx.db, telegram: ctx.telegram, chargeId: trimmed })
+  const id = payment ? escape(payment._id.toString()) : ''
 
-  if (!payment) return ctx.replyWithHTML('❌ Payment not found.')
-  if (payment.status === 'refunded') return ctx.replyWithHTML('❌ Payment already refunded.')
-
-  const refundUser = await ctx.db.User.findOne({ _id: payment.user })
-  if (!refundUser) return ctx.replyWithHTML('❌ User attached to that payment was not found.')
-
-  // Claim the payment before refunding: only one refund gets past this, and
-  // the Stars go back before any database write. The status flip used to
-  // come after refundStarPayment, so a database error there left a refunded
-  // payment marked paid, with the credits still on the balance.
-  const claimed = await ctx.db.Payment.findOneAndUpdate(
-    { _id: payment._id, status: payment.status },
-    { $set: { status: 'refunding' } }
-  )
-  if (!claimed) {
-    return ctx.replyWithHTML('❌ Payment is being refunded or changed by another operation.')
+  switch (outcome) {
+    case 'not_found': return ctx.replyWithHTML('❌ Payment not found.')
+    case 'already': return ctx.replyWithHTML('❌ Payment already refunded.')
+    case 'not_refundable': return ctx.replyWithHTML(`❌ Payment is <code>${escape(payment.status)}</code>: nothing to refund.`)
+    case 'no_user': return ctx.replyWithHTML('❌ User attached to that payment was not found.')
+    case 'busy': return ctx.replyWithHTML('❌ Payment is being refunded or changed by another operation.')
+    case 'refused': return ctx.replyWithHTML(`❌ Refund failed: <code>${escape(error)}</code>`)
+    case 'uncertain':
+      return ctx.replyWithHTML(`⚠️ Telegram did not answer (<code>${escape(error)}</code>): the Stars may or may not be back. Payment <code>${id}</code> stays <code>refunding</code>; run the refund again to finish it.`)
+    case 'not_recorded':
+      return ctx.replyWithHTML(`⚠️ Stars refunded, but the records were not updated (<code>${escape(error)}</code>). Payment <code>${id}</code> stays <code>refunding</code>; run the refund again to finish it.`)
   }
 
-  try {
-    await ctx.telegram.callApi('refundStarPayment', {
-      user_id: refundUser.telegram_id,
-      telegram_payment_charge_id: trimmed
-    })
-  } catch (error) {
-    await ctx.db.Payment.updateOne({ _id: payment._id }, { $set: { status: payment.status } })
-      .catch((err) => console.error('Could not release refund claim:', payment._id.toString(), err))
-    console.error('Refund failed:', error)
-    return ctx.replyWithHTML(`❌ Refund failed: <code>${escape(error.description || error.message || 'unknown error')}</code>`)
-  }
-
-  try {
-    await ctx.db.Payment.updateOne({ _id: payment._id }, { $set: { status: 'refunded' } })
-    // A payment whose credit failed never reached the balance.
-    if (payment.status !== 'credit_failed') {
-      await ctx.db.User.updateOne({ _id: refundUser._id }, { $inc: { balance: -payment.amount } })
-    }
-  } catch (error) {
-    console.error('Refunded but not recorded:', payment._id.toString(), error)
-    return ctx.replyWithHTML(
-      `⚠️ Stars refunded, but the database update failed: <code>${escape(error.message)}</code>. ` +
-      `Payment <code>${escape(payment._id.toString())}</code> is left as <code>refunding</code>; fix it and the balance by hand.`
-    )
-  }
-
-  await ctx.replyWithHTML(`✅ Payment <code>${escape(trimmed)}</code> refunded successfully.`)
+  await ctx.replyWithHTML(`✅ Payment <code>${escape(trimmed)}</code> refunded successfully.` + (debited
+    ? ` ${debited} credit(s) taken off the balance.`
+    : refundFrom ? ' It was never credited, so the balance is unchanged.' : ' Its status before the refund is unknown: check the balance by hand.'))
 }
 
 const handleViewUserInfo = async (ctx, input) => {

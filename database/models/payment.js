@@ -33,6 +33,8 @@ const paymentsSchema = mongoose.Schema({
   resultData: {
     type: Object
   },
+  // While `refunding`: the status the payment had before (utils/star-refund.js).
+  refundFrom: String,
   // 'studio' for a purchase started in Studio, which asks for its invoice link
   // through `invoice` (utils/studio-invoices.js); absent for one from the chat.
   source: {
