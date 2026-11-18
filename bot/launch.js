@@ -26,8 +26,14 @@ const ALLOWED_UPDATES = [
 // Now a 409 is waited out (polling stays up, the offset is kept) for up to
 // CONFLICT_MAX_MS; a conflict that lasts longer is a real second instance and
 // still ends the process.
+//
+// Two live pollers don't 409 on every call: they take turns, and each gets
+// some batches through. So one good batch doesn't end a conflict — only
+// CONFLICT_QUIET_MS without a 409 does. Otherwise a second instance left
+// running by mistake would never be noticed.
 const CONFLICT_RETRY_MS = 5000
 const CONFLICT_MAX_MS = 5 * 60 * 1000
+const CONFLICT_QUIET_MS = 60 * 1000
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -39,16 +45,18 @@ function withConflictWait (getUpdates, {
   isShuttingDown = () => false,
   retryMs = CONFLICT_RETRY_MS,
   maxMs = CONFLICT_MAX_MS,
+  quietMs = CONFLICT_QUIET_MS,
   now = () => Date.now(),
   wait = sleep,
   logger = log
 } = {}) {
   let conflictSince = null
+  let lastConflict = null
 
   return async (...args) => {
     try {
       const updates = await getUpdates(...args)
-      if (conflictSince !== null) {
+      if (conflictSince !== null && now() - lastConflict >= quietMs) {
         logger.info(`getUpdates conflict over after ${Math.round((now() - conflictSince) / 1000)}s`)
         conflictSince = null
       }
@@ -56,6 +64,7 @@ function withConflictWait (getUpdates, {
     } catch (error) {
       if (error?.code !== 409 || isShuttingDown()) throw error
       if (conflictSince === null) conflictSince = now()
+      lastConflict = now()
       if (now() - conflictSince > maxMs) throw error
       logger.warn(`409 on getUpdates: another instance is polling (deploy overlap?) — waiting ${retryMs / 1000}s`)
       await wait(retryMs)

@@ -43,15 +43,26 @@ const main = async () => {
     await assert.rejects(fn(), /409/)
   })
 
-  await test('the limit restarts after polling worked again', async () => {
+  await test('the limit restarts only after a quiet minute without a 409', async () => {
     let t = 0
     let fail = true
     const fn = withConflictWait(async () => { if (fail) throw conflict(); return [] },
-      { now: () => t, wait: async (ms) => { t += ms }, retryMs: 60000, maxMs: 120000, logger: quiet })
+      { now: () => t, wait: async (ms) => { t += ms }, retryMs: 60000, maxMs: 120000, quietMs: 60000, logger: quiet })
     await fn(); await fn()
-    fail = false; await fn()
+    fail = false; t += 60000; await fn()
     fail = true; await fn(); await fn(); await fn()
     await assert.rejects(fn(), /409/)
+  })
+
+  await test('two live pollers taking turns still hit the limit: one good batch is not the end', async () => {
+    let t = 0
+    let call = 0
+    const fn = withConflictWait(async () => { t += 1000; if (call++ % 2 === 0) throw conflict(); return [] },
+      { now: () => t, wait: async (ms) => { t += ms }, retryMs: 5000, maxMs: 120000, quietMs: 60000, logger: quiet })
+    let error = null
+    for (let i = 0; i < 200 && !error; i++) await fn().catch((e) => { error = e })
+    assert.ok(error && error.code === 409, 'a second instance is noticed')
+    assert.ok(t <= 130000, `noticed after ${t} ms`)
   })
 
   await test('other errors and shutdown pass straight through', async () => {
