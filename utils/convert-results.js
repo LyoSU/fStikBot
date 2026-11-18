@@ -1,8 +1,6 @@
 // Results of the video converter (convertQueue): the sticker it made goes into
 // the pack and the user gets the answer. Listens on the queue's global events
 // from the moment it is required (utils/add-sticker.js requires it).
-const path = require('path')
-const I18n = require('telegraf-i18n')
 const { db } = require('../database')
 const config = require('../config.json')
 const addStickerText = require('./add-sticker-text')
@@ -34,11 +32,7 @@ const trackVideo = (input, result) => {
   metrics.track(`video_failed_${failureReason(result)}`)
 }
 
-const i18n = new I18n({
-  directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
+const i18n = require('./i18n')
 
 // Update queue position messages when jobs complete (event-driven, not polling)
 //
@@ -118,13 +112,15 @@ async function handleConvertCompleted (jobId, result) {
 // handles the job. A Redis error lets the job through: a rare duplicate beats
 // a sticker that is never added.
 const DONE_KEY_TTL_S = 24 * 60 * 60
-const takeJob = (jobId) => stopping ? Promise.resolve(false) : convertQueue.client
-  .set(`fstik:convert-done:${jobId}`, String(process.pid), 'EX', DONE_KEY_TTL_S, 'NX')
-  .then((ok) => ok === 'OK')
-  .catch((err) => {
+const takeJob = async (jobId) => {
+  if (stopping) return false
+  try {
+    return await convertQueue.client.set(`fstik:convert-done:${jobId}`, String(process.pid), 'EX', DONE_KEY_TTL_S, 'NX') === 'OK'
+  } catch (err) {
     log.warn(`convert job ${jobId}: done-key check failed, handling it anyway:`, err.message)
     return true
-  })
+  }
+}
 
 // `seen.input` is set as soon as the job input is known, so the caller can
 // release its claim even when this throws.
