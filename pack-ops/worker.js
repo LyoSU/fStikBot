@@ -38,7 +38,7 @@ const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 100
 const errorCode = (err) => err?.code ?? err?.response?.error_code
 // Stored on the commit and shown in Studio: never with the bot token in it.
 const errorText = (err) => redactBotToken(err?.description || err?.response?.description || err?.message || String(err))
-const formatOf = (sticker) => (sticker.is_animated ? 'animated' : sticker.is_video ? 'video' : 'static')
+const { formatOfSticker: formatOf } = require('../utils/sticker-format')
 const isRefusal = (err) => Number.isInteger(errorCode(err)) && errorCode(err) >= 400 && errorCode(err) < 500 && errorCode(err) !== 429
 
 // What a commit did, for the log line: never its pack's name or its owner.

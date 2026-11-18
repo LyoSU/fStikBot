@@ -59,4 +59,11 @@ const formatFromPath = (format, pathname) => {
 
 const hasImageExtension = (pathname) => /\.(webp|png|jpe?g)$/i.test(pathname)
 
-module.exports = { isVideoInput, isVideoNoteInput, initialFormat, urlPathname, formatFromPath, hasImageExtension }
+/** The format of a sticker as Telegram describes it (a Sticker object). */
+const formatOfSticker = (sticker) => {
+  if (sticker.is_animated) return 'animated'
+  if (sticker.is_video) return 'video'
+  return 'static'
+}
+
+module.exports = { isVideoInput, isVideoNoteInput, initialFormat, urlPathname, formatFromPath, hasImageExtension, formatOfSticker }

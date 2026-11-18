@@ -35,11 +35,7 @@ const canAddByFileId = (stickerFile, stickerSet) => (
 // while isFileRejection reads an addSticker result — adapt one to the other.
 const isFileRejectionError = (error) => isFileRejection({ error: { telegram: error } })
 
-const stickerFormatOf = (sticker) => {
-  if (sticker.is_animated) return 'animated'
-  if (sticker.is_video) return 'video'
-  return 'static'
-}
+const { formatOfSticker: stickerFormatOf } = require('./sticker-format')
 
 const emojiListOf = (sticker) => (sticker.emojis ? sticker.emojis : [sticker.emoji])
 

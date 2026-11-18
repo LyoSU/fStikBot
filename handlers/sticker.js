@@ -364,7 +364,7 @@ const addItems = async (ctx, stickerSet, items) => {
 const mayStillAdd = async (ctx, stickerSet) => {
   if (ctx.chat.type !== 'private') return true
   if (coedit.idOf(stickerSet.owner) === coedit.idOf(ctx.session.userInfo)) return true
-  return coedit.can(await coedit.getAccess(ctx, coedit.idOf(stickerSet)), 'add')
+  return coedit.allowed(ctx, coedit.idOf(stickerSet), 'add')
 }
 
 const schedule = (ctx, stickerSet, getItems, replyTo) => {

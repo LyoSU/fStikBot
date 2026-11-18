@@ -4,7 +4,7 @@ const coedit = require('../utils/coedit')
 
 // The selected pack can belong to somebody else (a co-edit link, /public).
 // Pack-wide settings need the "settings" right: the owner and editors.
-const canEditPackSettings = async (ctx, stickerSet) => coedit.can(await coedit.getAccess(ctx, stickerSet), 'settings')
+const canEditPackSettings = (ctx, stickerSet) => coedit.allowed(ctx, stickerSet, 'settings')
 
 module.exports = async (ctx) => {
   const uncleanUserInput = ctx.message.text.substring(0, 15)

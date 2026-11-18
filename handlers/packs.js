@@ -185,7 +185,7 @@ async function openPack (ctx) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_found'), true)
   }
   const owner = isOwner(ctx, stickerSet)
-  if (!owner && !coedit.can(await coedit.getAccess(ctx, stickerSet), 'add')) {
+  if (!owner && !await coedit.allowed(ctx, stickerSet, 'add')) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 

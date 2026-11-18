@@ -31,7 +31,7 @@ module.exports = async (ctx) => {
   // One button, two actions: on a deleted sticker it undoes the delete, so it
   // takes the delete right; on a live one it is "copy", another add.
   const action = sticker.deleted ? 'delete' : 'add'
-  if (!coedit.can(await coedit.getAccess(ctx, sticker.stickerSet), action)) {
+  if (!await coedit.allowed(ctx, sticker.stickerSet, action)) {
     return ctx.answerCbQuery(ctx.i18n.t('callback.pack.answerCbQuer.not_owner'), true)
   }
 

@@ -170,10 +170,14 @@ async function notify (db, telegram, userRef, key, params) {
 
 const roleLabel = (t, role) => t(`coedit.roles.${ROLES.includes(role) ? role : DEFAULT_ROLE}`)
 
+/** Whether the user behind ctx may do `action` on the pack. */
+const allowed = async (ctx, stickerSet, action) => can(await getAccess(ctx, stickerSet), action)
+
 module.exports = {
   ROLES,
   DEFAULT_ROLE,
   can,
+  allowed,
   getAccess,
   canStillAdd,
   addMember,
