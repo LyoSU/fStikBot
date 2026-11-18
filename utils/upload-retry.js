@@ -1,25 +1,13 @@
-// uploadStickerFile with a retry on network-level failures. Uploading a file
-// only returns a file_id and has no side effects, so resending is safe —
-// unlike addStickerToSet, where a retried add can duplicate a sticker.
-// retry-api's withRetry covers 429 only; a connection dropped mid-upload
-// ("request to .../uploadStickerFile failed, reason: ") used to fail the add.
+// uploadStickerFile with a retry on transient failures. Uploading a file only
+// returns a file_id and has no side effects, so resending is safe — unlike
+// addStickerToSet, where a retried add can duplicate a sticker.
+// retry-api's withRetry covers 429 (and 5xx only for get* reads); a connection
+// dropped mid-upload ("request to .../uploadStickerFile failed, reason: ") or a
+// 502/504 from Telegram used to fail the add.
+const { isNetworkError, isTransientError } = require('./transient-error')
 
 // Wait before retry 1 and retry 2: 3 attempts in total.
 const RETRY_DELAYS_MS = [1000, 3000]
-
-const NETWORK_CODES = new Set(['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'EAI_AGAIN', 'EPIPE'])
-const NETWORK_MESSAGE = /socket hang up|Client network socket disconnected/i
-
-// No HTTP response from Telegram at all. Anything carrying a numeric Telegram
-// code (a TelegramError: 400, 429, 5xx) did get an answer and is not retried.
-const isNetworkError = (error) => {
-  if (!error) return false
-  if (Number.isInteger(error.code ?? error.response?.error_code)) return false
-  return error.type === 'system' ||
-    error.name === 'FetchError' ||
-    NETWORK_CODES.has(error.code) ||
-    NETWORK_MESSAGE.test(error.message || '')
-}
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -31,7 +19,7 @@ const uploadStickerFile = async (telegram, params, { delaysMs = RETRY_DELAYS_MS,
     try {
       return await telegram.callApi('uploadStickerFile', params)
     } catch (error) {
-      if (attempt >= delaysMs.length || !isNetworkError(error)) {
+      if (attempt >= delaysMs.length || !isTransientError(error)) {
         return { error: { telegram: error } }
       }
       if (onRetry) onRetry(error, attempt + 1)

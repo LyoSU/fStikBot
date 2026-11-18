@@ -28,8 +28,11 @@ const {
   runInCopyScope,
   _blockedCacheSize,
   _rateLimitCacheSize,
-  _resetChatActions
+  _resetChatActions,
+  _setTransientDelays
 } = require('../utils/retry-api')
+
+_setTransientDelays([0, 0])
 
 const tg = new Telegram('fake-token')
 
@@ -554,6 +557,37 @@ async function test (name, fn) {
     const elapsed = Date.now() - start
     assert.strictEqual(attempts, 1, 'outside copy scope must fail fast on a 6s 429')
     assert.ok(elapsed < 500, `must not wait — got ${elapsed}ms`)
+  })
+
+  const serverError = (code) => Object.assign(new Error(`${code}: Gateway`), { code, description: 'Bad Gateway' })
+
+  await test('a get* read is repeated on a 502/504 and returns the answer', async () => {
+    let attempts = 0
+    stubResponder = () => ++attempts < 3 ? Promise.reject(serverError(attempts === 1 ? 502 : 504)) : Promise.resolve({ file_path: 'x' })
+    const result = await tg.callApi('getFile', { file_id: 'f' })
+    assert.deepStrictEqual(result, { file_path: 'x' })
+    assert.strictEqual(attempts, 3)
+  })
+
+  await test('a read gives up after the transient budget', async () => {
+    let attempts = 0
+    stubResponder = () => { attempts++; return Promise.reject(serverError(502)) }
+    await assert.rejects(tg.callApi('getStickerSet', { name: 'a_by_bot' }), /502/)
+    assert.strictEqual(attempts, 3)
+  })
+
+  await test('a write is never repeated on a 504: the add may have landed', async () => {
+    let attempts = 0
+    stubResponder = () => { attempts++; return Promise.reject(serverError(504)) }
+    await assert.rejects(tg.callApi('addStickerToSet', { user_id: 3010, name: 'a_by_bot' }), /504/)
+    assert.strictEqual(attempts, 1)
+  })
+
+  await test('a read is not repeated on a 400', async () => {
+    let attempts = 0
+    stubResponder = () => { attempts++; return Promise.reject(Object.assign(new Error('400'), { code: 400, description: 'Bad Request' })) }
+    await assert.rejects(tg.callApi('getFile', { file_id: 'f' }))
+    assert.strictEqual(attempts, 1)
   })
 
   if (process.exitCode) {
