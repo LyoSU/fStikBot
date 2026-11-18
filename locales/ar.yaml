@@ -461,6 +461,8 @@ callback:
         الحزمة غير موجودة.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ جارٍ الإضافة…
       delete: تم حذف الملصق من الحزمة.
       restored: تم حفظ الملصق في الحزمة الحالية.
     delete: تم حذف الملصق من الحزمة.
@@ -485,6 +487,8 @@ callback:
       تم تحديث إعدادات المجموعة.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ يطلب Telegram الانتظار ${seconds} ثانية. سأضيفه بنفسي — لا داعي لإرساله مرة أخرى.
     ok: |
       ✅ تمت الإضافة إلى <a href="${link}">${title}</a>
 
@@ -505,6 +509,12 @@ sticker:
     quote: |
       استخدم @QuotlyBot لإنشاء اقتباس من هذه الرسالة
     error:
+      rate_limit_long: |
+        ⏳ أوقف Telegram مؤقتًا إضافة الملصقات إلى حزمك لمدة ${minutes} دقيقة تقريبًا. هذا حد من Telegram نفسه وليس من البوت. أرسل الملفات مرة أخرى لاحقًا.
+      in_progress: |
+        ⏳ يجري الآن إضافة هذا الملف إلى الحزمة — ستظهر النتيجة هنا. لا داعي لإرساله مرة أخرى.
+      unconfirmed: |
+        ⚠️ لم يؤكد Telegram الإضافة — ربما أصبح الملصق في حزمتك بالفعل. تحقق من الحزمة قبل إرسال الملف مرة أخرى.
       reply: |
         قم بالرد على ملصق.
       no_selected_pack: |
@@ -930,6 +940,8 @@ error:
   stickerset_invalid: |
     الحزمة غير متاحة. ربما حُذفت من Telegram.
   telegram_reasons:
+    telegram_unavailable: |
+      يواجه Telegram انقطاعات حاليًا، ولم تتم إضافة الملف. أرسله مرة أخرى بعد دقيقة.
     sticker_not_in_set: |
       لم يعد هذا الملصق موجودًا في الحزمة — ربما حُذف سابقًا.
     pack_invalid: |
