@@ -14,6 +14,9 @@ const failureReason = (result) => {
     return Number.isInteger(code) && code > 0 ? `telegram_${code}` : 'telegram_other'
   }
 
+  // Our own outcome types ("unconfirmed").
+  if (typeof error.type === 'string' && /^[a-z_]+$/.test(error.type)) return error.type
+
   // "sticker.add.error.too_big" → "too_big"
   if (typeof error.i18nKey === 'string') {
     return error.i18nKey.split('.').pop().replace(/[^a-z0-9_]/gi, '_') || 'other'

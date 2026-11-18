@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const Scene = require('telegraf/scenes/base')
 const Markup = require('telegraf/markup')
@@ -40,9 +41,11 @@ const SEED_BATCH = 50
 
 // Absolute: Telegraf resolves a string source with fs.existsSync, so a bare
 // filename only worked while the process happened to start in the repo root.
+// Buffers, not paths: telegraf turns a path into a read stream inside the
+// payload, and retry-api can only resend an upload whose bytes are still there.
 const placeholder = {
-  regular: path.join(__dirname, '..', 'sticker_placeholder.webm'),
-  custom_emoji: path.join(__dirname, '..', 'emoji_placeholder.webm')
+  regular: fs.readFileSync(path.join(__dirname, '..', 'sticker_placeholder.webm')),
+  custom_emoji: fs.readFileSync(path.join(__dirname, '..', 'emoji_placeholder.webm'))
 }
 
 // Resolve the placeholder's *canonical* file_unique_id — the one Telegram
@@ -387,7 +390,7 @@ const uploadPlaceholder = async (ctx, packType, copy) => {
     return await runInCopyScope(() => ctx.telegram.callApi('uploadStickerFile', {
       user_id: ctx.from.id,
       sticker_format: 'video',
-      sticker: { source: placeholder[packType] || placeholder.regular }
+      sticker: { source: placeholder[packType] || placeholder.regular, filename: 'placeholder.webm' }
     }), options)
   } catch (error) {
     log.error('placeholder upload failed:', error.description || error.message)

@@ -73,6 +73,14 @@ function createPlaceholderSweeper ({
   async function look (pack) {
     const checks = pack.placeholderChecks || 0
 
+    // The marker went elsewhere (a Studio publish clears it on its own): only
+    // the schedule is left. Left in place, the pack stayed due and came back
+    // at the head of every batch.
+    if (!pack.placeholderFileUniqueId) {
+      await repo.clear(pack)
+      return 'cleared'
+    }
+
     let set
     try {
       set = await telegram.getStickerSet(pack.name)
@@ -88,7 +96,7 @@ function createPlaceholderSweeper ({
     }
 
     // Clears the marker and the schedule itself when it resolves.
-    if (await removePlaceholder(telegram, pack, set)) return 'resolved'
+    if (await removePlaceholder(telegram, pack, set, { wait: false })) return 'resolved'
 
     // Real stickers are there but the delete failed (a long 429, or a refusal
     // that will repeat): soon again, and it counts as a look so a delete that
@@ -118,7 +126,7 @@ function createPlaceholderSweeper ({
         outcome[result] = (outcome[result] || 0) + 1
         if (gapMs) await sleep(gapMs)
       }
-      if (outcome.resolved || outcome.gone || outcome.failed) {
+      if (outcome.resolved || outcome.gone || outcome.cleared || outcome.failed) {
         log.info(`placeholder sweep: ${Object.entries(outcome).map(([k, v]) => `${k}=${v}`).join(' ')}`)
       }
       return outcome

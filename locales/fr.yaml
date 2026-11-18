@@ -513,6 +513,8 @@ sticker:
         ⏳ Telegram a suspendu l'ajout de stickers à tes packs pendant environ ${minutes} min. C'est une limite de Telegram, pas du bot. Renvoie les fichiers plus tard.
       in_progress: |
         ⏳ Ce fichier est déjà en cours d'ajout au pack — le résultat s'affichera ici. Inutile de le renvoyer.
+      unconfirmed: |
+        ⚠️ Telegram n'a pas confirmé l'ajout : le sticker est peut-être déjà dans le pack. Vérifie le pack avant de renvoyer le fichier.
       reply: |
         Réponds à un sticker.
       no_selected_pack: |

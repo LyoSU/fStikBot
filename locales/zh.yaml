@@ -513,6 +513,8 @@ sticker:
         ⏳ Telegram 暂时限制了向你的贴纸包添加贴纸，大约 ${minutes} 分钟。这是 Telegram 本身的限制，不是机器人的。请稍后再发送文件。
       in_progress: |
         ⏳ 这个文件正在添加到贴纸包中，结果会显示在这里。无需再次发送。
+      unconfirmed: |
+        ⚠️ Telegram 没有确认添加成功——贴纸可能已经在贴纸包里了。再次发送文件前，请先查看贴纸包。
       reply: |
         请回复一张贴纸。
       no_selected_pack: |

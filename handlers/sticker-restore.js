@@ -15,32 +15,11 @@ const plain = (text) => text.replace(/<[^>]+>/g, '').trim()
 // button. The callback is answered only once the add is done (seconds), so the
 // spinner looked stuck and people tapped again — three copies of one video in
 // one second — and the message kept a "Copy" button after every restore.
-// One add per (pack, file) at a time now; a restore that would re-add a file
-// already live in the pack is refused; a restored sticker offers no "Copy".
+// One add per (pack, file) at a time now — the same claim a sent file takes
+// (handlers/sticker.js), held through a conversion; a restore that would
+// re-add a file already live in the pack is refused; a restored sticker
+// offers no "Copy".
 module.exports = async (ctx) => {
-  const claimKey = inflight.claim(`restore:${ctx.from.id}`, ctx.match[2])
-  if (claimKey === false) {
-    return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.in_progress')).catch(() => {})
-  }
-  try {
-    return await restoreSticker(ctx)
-  } finally {
-    inflight.release(claimKey)
-  }
-}
-
-// A live sticker of this pack made from the same source file, if any.
-const findLiveCopy = (ctx, sticker, sourceUid) => ctx.db.Sticker.findOne({
-  stickerSet: sticker.stickerSet._id,
-  deleted: false,
-  _id: { $ne: sticker._id },
-  $or: [
-    { fileUniqueId: sourceUid },
-    { 'original.fileUniqueId': sourceUid }
-  ]
-}).select('_id').lean()
-
-const restoreSticker = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner placeholderFileUniqueId passcode')
@@ -60,14 +39,28 @@ const restoreSticker = async (ctx) => {
     return ctx.answerCbQuery(ctx.i18n.t('ratelimit'), true)
   }
 
+  const sourceUid = sticker.getOriginalFileUniqueId() || sticker.fileUniqueId
+  const claimKey = inflight.claim(sticker.stickerSet._id, sourceUid)
+  if (claimKey === false) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.in_progress')).catch(() => {})
+  }
+  const claim = { key: claimKey, handedOver: false }
+  try {
+    return await restoreClaimed(ctx, sticker, sourceUid, claim)
+  } finally {
+    // A queued conversion owns the claim from here (utils/convert-results.js).
+    if (!claim.handedOver) inflight.release(claimKey)
+  }
+}
+
+const restoreClaimed = async (ctx, sticker, sourceUid, claim) => {
   const wasDeleted = sticker.deleted
   let newFileUniqueId
 
   // Undoing a delete must not add a second copy: the user may have sent the
   // same file again since. ("Copy" on a live sticker is an explicit second copy.)
   if (wasDeleted) {
-    const sourceUid = sticker.getOriginalFileUniqueId() || sticker.fileUniqueId
-    if (await findLiveCopy(ctx, sticker, sourceUid)) {
+    if (await ctx.db.Sticker.findLiveBySource(sticker.stickerSet._id, sourceUid, { except: sticker._id })) {
       return ctx.answerCbQuery(plain(ctx.i18n.t('sticker.add.error.have_already')), true)
     }
   }
@@ -133,13 +126,15 @@ const restoreSticker = async (ctx) => {
     }
     // else: static — no additional flags needed
 
-    const result = await addSticker(ctx, fileForRestore, sticker.stickerSet)
+    const result = await addSticker(ctx, fileForRestore, sticker.stickerSet, true, { claimKey: claim.key })
 
     if (result?.error) {
       const description = result.error.telegram?.description || result.error.telegram?.message || ''
 
       if (result.error.type === 'duplicate') {
         return ctx.answerCbQuery(plain(ctx.i18n.t('sticker.add.error.have_already')), true)
+      } else if (result.error.type === 'unconfirmed') {
+        return ctx.answerCbQuery(plain(ctx.i18n.t('sticker.add.error.unconfirmed')), true)
       } else if (description.includes('STICKERSET_INVALID')) {
         return ctx.answerCbQuery(ctx.i18n.t('callback.pack.error.copy'), true)
       } else if (result.error.telegram) {
@@ -157,6 +152,7 @@ const restoreSticker = async (ctx) => {
     // convert worker adds it and sends its own reply. Reporting "unknown
     // error" here used to be followed seconds later by "sticker added".
     if (result?.wait) {
+      claim.handedOver = !!result.job
       return ctx.answerCbQuery()
     }
 

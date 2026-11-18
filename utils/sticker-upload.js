@@ -96,7 +96,8 @@ const findLandedSticker = async (stickerSet, stickerFile, stickerExtra, beforeSt
   if (!Array.isArray(beforeStickers) || beforeStickers.length === 0) return null
 
   const setInfo = await telegram.getStickerSet(stickerSet.name).catch(() => null)
-  if (!setInfo?.stickers) return null
+  // Couldn't look: the add may or may not be there.
+  if (!setInfo?.stickers) return { unknown: true }
 
   const beforeIds = new Set(beforeStickers.map((s) => s.file_unique_id))
   const fresh = setInfo.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
@@ -115,6 +116,14 @@ const findLandedSticker = async (stickerSet, stickerFile, stickerExtra, beforeSt
   return candidates.length === 1 ? { setInfo, sticker: candidates[0] } : null
 }
 
+const packLink = (stickerSet) =>
+  `${stickerSet.packType === 'custom_emoji' ? config.emojiLinkPrefix : config.stickerLinkPrefix}${stickerSet.name}`
+
+// The add may be in the pack and we couldn't check. Not a failure to resend
+// (that is how duplicates were made), not a success either: the user looks.
+// handlers/sticker.js never repeats an add on this.
+const unconfirmed = (stickerSet) => ({ error: { type: 'unconfirmed', link: packLink(stickerSet) } })
+
 // Everything after the sticker is confirmed in the set: placeholder cleanup,
 // DB row, success payload.
 const finalizeAdd = async (stickerSet, stickerFile, stickerExtra, setInfo, stickerInfo) => {
@@ -123,12 +132,10 @@ const finalizeAdd = async (stickerSet, stickerFile, stickerExtra, setInfo, stick
 
   const sticker = await db.Sticker.addSticker(stickerSet._id, stickerExtra.emojis, stickerInfo, stickerFile)
 
-  const linkPrefix = stickerSet.packType === 'custom_emoji' ? config.emojiLinkPrefix : config.stickerLinkPrefix
-
   return {
     ok: {
       title: stickerSet.title,
-      link: `${linkPrefix}${stickerSet.name}`,
+      link: packLink(stickerSet),
       stickerInfo,
       sticker,
       // A monochrome (needs_repainting) emoji dropped into a regular sticker
@@ -232,8 +239,9 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
       // Look before telling the user it failed — otherwise they resend and
       // get a duplicate. The add itself is never sent twice.
       const landed = await findLandedSticker(stickerSet, stickerFile, stickerExtra, beforeStickers)
-      log.warn(`addStickerToSet ${error?.code || error?.type || 'error'} on pack=${stickerSet.name}: sticker ${landed ? 'landed anyway' : 'not in set'}`)
+      log.warn(`addStickerToSet ${error?.code || error?.type || 'error'} on pack=${stickerSet.name}: sticker ${landed?.unknown ? 'unknown, set unreadable' : landed ? 'landed anyway' : 'not in set'}`)
 
+      if (landed?.unknown) return unconfirmed(stickerSet)
       if (!landed) return stickerAdd
       return finalizeAdd(stickerSet, stickerFile, stickerExtra, landed.setInfo, landed.sticker)
     }
@@ -247,8 +255,12 @@ const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, befo
         }
       }
     })
+    // Telegram said the add went through; only the read after it failed.
+    // Reporting that as a failure made people resend, and the handler
+    // repeated the whole add on a short 429 here.
     if (getStickerSet.error) {
-      return getStickerSet
+      log.warn(`getStickerSet after a confirmed add failed on pack=${stickerSet.name}: ${getStickerSet.error.telegram?.code || getStickerSet.error.telegram?.message}`)
+      return unconfirmed(stickerSet)
     }
 
     if (!getStickerSet.stickers || getStickerSet.stickers.length === 0) {

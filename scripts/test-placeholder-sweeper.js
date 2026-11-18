@@ -184,6 +184,30 @@ const main = async () => {
     assert.deepStrictEqual(held, [['acquire', 'pack_by_bot'], ['release', 'pack_by_bot', 't1'], ['acquire', 'pack_by_bot'], ['release', 'pack_by_bot', 't1']])
   })
 
+  await test('a pack whose marker went elsewhere (a Studio publish) leaves the sweep instead of staying due', async () => {
+    const pack = makePack({ placeholderFileUniqueId: undefined })
+    const repo = makeRepo([pack])
+    const telegram = makeTelegram({ set: { stickers: [real(1)] } })
+    assert.strictEqual(await sweeper(repo, telegram).checkOne(pack), 'cleared')
+    assert.deepStrictEqual(repo.cleared, [pack.name])
+    assert.strictEqual(telegram.calls.length, 0)
+  })
+
+  await test('the sweeper never sleeps out a 429 under the pack lock: one attempt, no wait', async () => {
+    const pack = makePack()
+    const seen = []
+    const s = createPlaceholderSweeper({
+      repo: makeRepo([pack]),
+      telegram: makeTelegram({ set: { stickers: [ph, real(1)] } }),
+      removePlaceholder: async (tg, p, set, options) => { seen.push(options); return false },
+      now: () => NOW,
+      gapMs: 0,
+      log: { info () {}, warn () {} }
+    })
+    assert.strictEqual(await s.checkOne(pack), 'retry')
+    assert.deepStrictEqual(seen, [{ wait: false }])
+  })
+
   console.log(`\n${passed} passed, ${failed} failed`)
   if (failed > 0) process.exit(1)
   console.log('placeholder-sweeper test OK')

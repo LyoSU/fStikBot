@@ -513,6 +513,8 @@ sticker:
         ⏳ Telegram, paketlerine çıkartma eklemeyi yaklaşık ${minutes} dk. süreyle durdurdu. Bu, botun değil Telegram'ın kendi sınırı. Dosyaları daha sonra tekrar gönder.
       in_progress: |
         ⏳ Bu dosya zaten pakete ekleniyor — sonuç buraya gelecek. Tekrar göndermene gerek yok.
+      unconfirmed: |
+        ⚠️ Telegram eklemeyi onaylamadı — çıkartma zaten pakette olabilir. Dosyayı tekrar göndermeden önce paketi kontrol et.
       reply: |
         Bir çıkartmayı yanıtla.
       no_selected_pack: |

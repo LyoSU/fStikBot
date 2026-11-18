@@ -145,4 +145,20 @@ stickersSchema.index({ 'original.fileUniqueId': 1 }, { sparse: true })
 //   }
 // )
 
+// A live sticker of the pack made from this source file, under any of the
+// fields a source uid has lived in (fileUniqueId; original.* for converted
+// files; file.* in legacy rows). The one duplicate check for adds and restores.
+stickersSchema.statics.findLiveBySource = function (stickerSet, sourceUid, { except } = {}) {
+  return this.findOne({
+    stickerSet,
+    deleted: false,
+    ...(except ? { _id: { $ne: except } } : {}),
+    $or: [
+      { fileUniqueId: sourceUid },
+      { 'original.fileUniqueId': sourceUid },
+      { 'file.file_unique_id': sourceUid }
+    ]
+  }).lean()
+}
+
 module.exports = stickersSchema

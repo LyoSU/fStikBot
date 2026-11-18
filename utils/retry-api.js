@@ -431,15 +431,18 @@ async function withRetry (fn, options = {}) {
 // call that changes nothing may be sent again:
 // - every get* (getFile, getStickerSet, getChatMember, …), by the Bot API's
 //   own naming, not a method list;
-// - uploadStickerFile, which only returns a file_id. Every caller sends a
-//   Buffer or a file path, which telegraf reads again on each send.
+// - uploadStickerFile, which only returns a file_id — when its file is a
+//   Buffer. telegraf 3 swaps a file path in the payload for a read stream
+//   (core/network/client.js attachFormMedia), so a second send of the same
+//   payload would carry an empty, already read stream.
 // Writes are never repeated here: a repeated addStickerToSet is a duplicate
 // sticker. Prod 2026-11-17: 660+ adds failed on a 502/504 from getFile /
 // getStickerSet alone.
 let transientDelaysMs = (process.env.TRANSIENT_RETRY_DELAYS_MS || '1000,3000')
   .split(',').map(Number).filter((ms) => Number.isFinite(ms) && ms >= 0)
 
-const isSafeToRepeat = (method) => /^get[A-Z]/.test(method) || method === 'uploadStickerFile'
+const isSafeToRepeat = (method, data) => /^get[A-Z]/.test(method) ||
+  (method === 'uploadStickerFile' && Buffer.isBuffer(data?.sticker?.source))
 
 async function withTransientRetry (fn, method) {
   for (let attempt = 0; ; attempt++) {
@@ -528,7 +531,7 @@ function patchTelegramPrototype () {
     // to logs, the chat and stored commits (see redactErrorToken).
     const send = () => originalCallApi.call(this, method, data, ...rest).catch((error) => { throw redactErrorToken(error) })
     return withRetry(
-      isSafeToRepeat(method) ? () => withTransientRetry(send, method) : send,
+      isSafeToRepeat(method, data) ? () => withTransientRetry(send, method) : send,
       retryOptions
     ).catch((error) => {
       // 403 on a private chat (positive id = user_id / DM chat_id) →

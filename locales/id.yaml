@@ -513,6 +513,8 @@ sticker:
         ⏳ Telegram menjeda penambahan stiker ke paketmu selama sekitar ${minutes} menit. Ini batas dari Telegram sendiri, bukan dari bot. Kirim file lagi nanti.
       in_progress: |
         ⏳ File ini sedang ditambahkan ke paket — hasilnya akan muncul di sini. Tidak perlu mengirim lagi.
+      unconfirmed: |
+        ⚠️ Telegram tidak mengonfirmasi penambahan — stiker mungkin sudah ada di paketmu. Periksa paketnya sebelum mengirim file lagi.
       reply: |
         Balas ke sebuah stiker.
       no_selected_pack: |

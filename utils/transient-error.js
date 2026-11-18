@@ -9,7 +9,6 @@
 
 const NETWORK_CODES = new Set(['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'EAI_AGAIN', 'EPIPE'])
 const NETWORK_MESSAGE = /socket hang up|Client network socket disconnected/i
-const TRANSIENT_HTTP = new Set([500, 502, 503, 504])
 
 // No HTTP response from Telegram at all. Anything carrying a numeric Telegram
 // code (a TelegramError: 400, 429, 5xx) did get an answer.
@@ -22,7 +21,11 @@ const isNetworkError = (error) => {
     NETWORK_MESSAGE.test(error.message || '')
 }
 
-const isServerError = (error) => TRANSIENT_HTTP.has(Number(error?.code ?? error?.response?.error_code))
+// Any 5xx: the server's failure, whatever it did with the request.
+const isServerError = (error) => {
+  const code = Number(error?.code ?? error?.response?.error_code)
+  return code >= 500 && code < 600
+}
 
 /** A dropped connection or a Telegram 5xx: the outcome of the call is unknown. */
 const isTransientError = (error) => isNetworkError(error) || isServerError(error)

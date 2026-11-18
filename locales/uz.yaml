@@ -513,6 +513,8 @@ sticker:
         ⏳ Telegram toʻplamlaringizga stiker qoʻshishni taxminan ${minutes} daqiqaga toʻxtatdi. Bu botning emas, Telegramning oʻz cheklovi. Fayllarni keyinroq qayta yuboring.
       in_progress: |
         ⏳ Bu fayl allaqachon toʻplamga qoʻshilmoqda — natija shu yerga keladi. Qayta yuborish shart emas.
+      unconfirmed: |
+        ⚠️ Telegram qoʻshilganini tasdiqlamadi — stiker toʻplamda allaqachon boʻlishi mumkin. Faylni qayta yuborishdan oldin toʻplamni tekshiring.
       reply: |
         Stikerga javob yozing.
       no_selected_pack: |

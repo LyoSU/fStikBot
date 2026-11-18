@@ -85,7 +85,9 @@ const clearMarker = async (stickerSet) => {
 
 // Returns true when the marker was resolved (deleted or confirmed absent),
 // false when it should be retried later.
-async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { allowEmpty = false } = {}) {
+// `wait: false` makes one attempt: the sweeper holds the pack lock, so it
+// reschedules instead of sleeping out a 429 under it.
+async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { allowEmpty = false, wait = true } = {}) {
   stickerSet = await withMarkerLoaded(stickerSet)
   if (!stickerSet.placeholderFileUniqueId) return true
   if (!currentSet || !currentSet.stickers) return false
@@ -114,7 +116,7 @@ async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { a
       return true
     } catch (error) {
       const retryAfter = getRetryAfter(error)
-      const canRetry = attempt < MAX_ATTEMPTS && (retryAfter || isTransientError(error))
+      const canRetry = wait && attempt < MAX_ATTEMPTS && (retryAfter || isTransientError(error))
       if (!canRetry) {
         // Keep the marker so the next added sticker retries the removal.
         log.warn('cleanup failed, will retry on next add:', error?.description || error?.message || error)

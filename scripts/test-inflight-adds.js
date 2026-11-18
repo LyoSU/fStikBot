@@ -51,6 +51,16 @@ test('nothing to key on: no claim and no refusal', () => {
   inflight.release(null)
 })
 
+test('a late release of an expired claim does not free the newer one', () => {
+  const old = inflight.claim('p', 'f', { now: 0, ttlMs: 10 })
+  const fresh = inflight.claim('p', 'f', { now: 20, ttlMs: 1000 })
+  assert.ok(old && fresh && old !== fresh)
+  inflight.release(old)
+  assert.strictEqual(inflight.claim('p', 'f', { now: 30 }), false, 'the newer claim still holds')
+  inflight.release(fresh)
+  assert.ok(inflight.claim('p', 'f', { now: 30 }))
+})
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)
 console.log('inflight-adds test OK')

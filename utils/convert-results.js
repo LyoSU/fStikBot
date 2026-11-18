@@ -90,18 +90,33 @@ convertQueue.on('global:completed', (jobId, result) => {
 })
 
 async function handleConvertCompleted (jobId, result) {
-  let input
+  const seen = {}
   try {
-    input = await finishConvertedAdd(jobId, result)
+    await finishConvertedAdd(jobId, result, seen)
   } finally {
     // The (pack, file) claim from handlers/sticker.js ends with the job,
-    // whatever the outcome.
-    if (input?.claimKey && !isForeignJob(input)) inflight.release(input.claimKey)
+    // whatever the outcome — a throw midway included.
+    if (seen.input?.claimKey && !isForeignJob(seen.input)) inflight.release(seen.input.claimKey)
   }
 }
 
-// Returns the job input once it is known, so the caller can release its claim.
-async function finishConvertedAdd (jobId, result) {
+// global:completed reaches every process on this queue. isForeignJob tells
+// another bot's jobs apart, but during a deploy the old and the new container
+// are the same bot and both used to add the sticker. The first to set this key
+// handles the job. A Redis error lets the job through: a rare duplicate beats
+// a sticker that is never added.
+const DONE_KEY_TTL_S = 24 * 60 * 60
+const takeJob = (jobId) => convertQueue.client
+  .set(`fstik:convert-done:${jobId}`, String(process.pid), 'EX', DONE_KEY_TTL_S, 'NX')
+  .then((ok) => ok === 'OK')
+  .catch((err) => {
+    log.warn(`convert job ${jobId}: done-key check failed, handling it anyway:`, err.message)
+    return true
+  })
+
+// `seen.input` is set as soon as the job input is known, so the caller can
+// release its claim even when this throws.
+async function finishConvertedAdd (jobId, result, seen = {}) {
   let parsed
   try {
     parsed = JSON.parse(result)
@@ -118,6 +133,8 @@ async function finishConvertedAdd (jobId, result) {
   // guard each replica ran uploadSticker for the same job — double adds and
   // duplicate failure replies.
   if (isForeignJob(input)) return
+  seen.input = input
+  if (!await takeJob(jobId)) return
 
   const stickerExtra = input.stickerExtra
 
@@ -128,7 +145,7 @@ async function finishConvertedAdd (jobId, result) {
     if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
 
     await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
-    return input
+    return
   }
 
   stickerExtra.sticker = {
@@ -143,7 +160,7 @@ async function finishConvertedAdd (jobId, result) {
   if (!stickerSet) {
     trackVideo(input, { error: { i18nKey: 'pack_deleted' } })
     await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
-    return input
+    return
   }
 
   // Uploads go out as the owner (input.userId); a co-editor's access was
@@ -152,7 +169,7 @@ async function finishConvertedAdd (jobId, result) {
   if (byMember && !await coedit.canStillAdd(db, stickerSet, input.actor.id)) {
     if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
     await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'coedit.no_access'), replyExtra(input)).catch(() => {})
-    return input
+    return
   }
 
   let uploadResult
@@ -192,8 +209,6 @@ async function finishConvertedAdd (jobId, result) {
       }).catch((err) => console.error('convert result reply failed:', err.message))
     }
   }
-
-  return input
 }
 
 // Worker results reply to the message that sent the video: with several videos
@@ -224,6 +239,8 @@ async function handleConvertFailed (jobId, errorData) {
   // Same reason as global:completed — one owner per job, or every replica
   // messages the user.
   if (isForeignJob(input)) return
+  inflight.release(input.claimKey)
+  if (!await takeJob(jobId)) return
 
   // A job that waited too long is load, not the video: no message to the log
   // chat for it, the JSON line is the record (a burst used to post hundreds).
@@ -248,7 +265,6 @@ async function handleConvertFailed (jobId, errorData) {
 
   await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', failure.i18nKey), replyExtra(input)).catch(() => {})
 
-  inflight.release(input.claimKey)
   await job.remove().catch(() => {})
 }
 

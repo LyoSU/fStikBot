@@ -513,6 +513,8 @@ sticker:
         ⏳ Telegram paketlərinə stiker əlavə etməyi təxminən ${minutes} dəq. müddətinə dayandırıb. Bu, botun deyil, Telegram-ın öz limitidir. Faylları sonra yenidən göndər.
       in_progress: |
         ⏳ Bu fayl artıq paketə əlavə olunur — nəticə bura gələcək. Yenidən göndərməyə ehtiyac yoxdur.
+      unconfirmed: |
+        ⚠️ Telegram əlavə olunmanı təsdiqləmədi — stiker artıq paketdə ola bilər. Faylı yenidən göndərməzdən əvvəl paketi yoxla.
       reply: |
         Stikerə cavab ver.
       no_selected_pack: |

@@ -73,7 +73,14 @@ module.exports = (addStickerResult, lang, meta = {}) => {
       ])
     }
   } else if (addStickerResult.error) {
-    if (addStickerResult.error.type === 'in_progress') {
+    if (addStickerResult.error.type === 'unconfirmed') {
+      messageText = i18n.t(lang, 'sticker.add.error.unconfirmed')
+      if (addStickerResult.error.link) {
+        replyMarkup = Markup.inlineKeyboard([
+          Markup.urlButton(i18n.t(lang, 'callback.pack.btn.use_pack'), addStickerResult.error.link)
+        ])
+      }
+    } else if (addStickerResult.error.type === 'in_progress') {
       // The same file is still on its way into this pack (a video converting).
       messageText = i18n.t(lang, 'sticker.add.error.in_progress')
     } else if (addStickerResult.error.type === 'duplicate') {

@@ -179,7 +179,8 @@ function mongoRepo (db) {
       }
       const update = { $set: { updatedAt: now } }
       if (title) update.$set.title = title
-      if (clearPlaceholder) update.$unset = { placeholderFileUniqueId: '' }
+      // The sweeper's schedule goes with the marker (utils/placeholder-sweeper.js).
+      if (clearPlaceholder) update.$unset = { placeholderFileUniqueId: '', placeholderCheckAt: '', placeholderChecks: '' }
       await db.StickerSet.updateOne({ _id: packId }, update)
     }
   }

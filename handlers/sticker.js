@@ -133,15 +133,7 @@ const trackFailed = (result, count = 1) => {
   metrics.track(`sticker_failed_${failureReason(result)}`, count)
 }
 
-const findExisting = (ctx, stickerSet, file) => ctx.db.Sticker.findOne({
-  stickerSet,
-  deleted: false,
-  $or: [
-    { fileUniqueId: file.file_unique_id },
-    { 'original.fileUniqueId': file.file_unique_id },
-    { 'file.file_unique_id': file.file_unique_id }
-  ]
-}).lean()
+const findExisting = (ctx, stickerSet, file) => ctx.db.Sticker.findLiveBySource(stickerSet, file.file_unique_id)
 
 // One file into the pack. A free user's video holds the queue until the
 // converter has finished it, so their files still go one at a time.

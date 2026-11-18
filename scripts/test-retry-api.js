@@ -586,7 +586,7 @@ async function test (name, fn) {
   await test('an upload is repeated on a 502: it only returns a file_id', async () => {
     let attempts = 0
     stubResponder = () => ++attempts < 2 ? Promise.reject(serverError(502)) : Promise.resolve({ file_id: 'up' })
-    const result = await tg.callApi('uploadStickerFile', { user_id: 3011, sticker_format: 'static' })
+    const result = await tg.callApi('uploadStickerFile', { user_id: 3011, sticker_format: 'static', sticker: { source: Buffer.from('png') } })
     assert.deepStrictEqual(result, { file_id: 'up' })
     assert.strictEqual(attempts, 2)
   })
@@ -596,6 +596,13 @@ async function test (name, fn) {
     stubResponder = () => ++attempts < 2 ? Promise.reject(Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' })) : Promise.resolve({ ok: 1 })
     assert.deepStrictEqual(await tg.callApi('getFile', { file_id: 'f' }), { ok: 1 })
     assert.strictEqual(attempts, 2)
+  })
+
+  await test('an upload from a file path is not repeated: telegraf has swapped it for a used stream', async () => {
+    let attempts = 0
+    stubResponder = () => { attempts++; return Promise.reject(serverError(502)) }
+    await assert.rejects(tg.callApi('uploadStickerFile', { user_id: 3012, sticker: { source: '/tmp/x.webm' } }), /502/)
+    assert.strictEqual(attempts, 1)
   })
 
   await test('a read is not repeated on a 400', async () => {

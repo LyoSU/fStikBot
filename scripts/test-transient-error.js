@@ -19,6 +19,7 @@ assert.ok(!isNetworkError(null))
 
 for (const code of [500, 502, 503, 504]) assert.ok(isServerError(telegramError(code)), String(code))
 assert.ok(isServerError({ response: { error_code: 502 } }))
+assert.ok(isServerError(telegramError(507)), 'any 5xx')
 assert.ok(!isServerError(telegramError(429)) && !isServerError(telegramError(400)))
 
 assert.ok(isTransientError(fetchError()) && isTransientError(telegramError(504)))

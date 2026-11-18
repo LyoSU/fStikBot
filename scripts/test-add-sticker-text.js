@@ -31,6 +31,12 @@ const okResult = (extra = {}) => ({
   ok: { title: 'My pack', link: 't.me/addstickers/my_pack', ...extra }
 })
 
+test('an unconfirmed add says to check the pack, not to resend, with a pack button', () => {
+  const { messageText, replyMarkup } = addStickerText({ error: { type: 'unconfirmed', link: 'https://t.me/addstickers/a_by_bot' } }, 'en')
+  assert.ok(/check the pack/i.test(messageText), messageText)
+  assert.ok(JSON.stringify(replyMarkup).includes('https://t.me/addstickers/a_by_bot'))
+})
+
 test('plain success has no monochrome notice', () => {
   const { messageText } = addStickerText(okResult(), 'en')
   assert.ok(messageText.includes('My pack'))
