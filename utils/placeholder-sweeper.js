@@ -11,6 +11,11 @@
 // worker takes due packs a batch at a time, looks at the set and removes the
 // placeholder once a real sticker is there (utils/placeholder-schedule.js has
 // the timing). It never deletes the last sticker of a set.
+//
+// It takes the pack's lock, the one a Studio publish holds (pack-ops), so it
+// never deletes a sticker under a running publish: the executor would see the
+// pack change mid-way and fail the job as "changed outside". A pack that is
+// busy is looked at again a little later.
 const { removePlaceholderIfPending } = require('./placeholder')
 const { nextPlaceholderCheck, CHECK_DELAYS_MS, RETRY_AFTER_ERROR_MS } = require('./placeholder-schedule')
 const { isTransientError } = require('./transient-error')
@@ -19,6 +24,8 @@ const TICK_INTERVAL_MS = parseInt(process.env.PLACEHOLDER_SWEEP_INTERVAL_MS, 10)
 const BATCH = parseInt(process.env.PLACEHOLDER_SWEEP_BATCH, 10) || 60
 // Space getStickerSet calls out; the sweep is never in a hurry.
 const GAP_MS = 150
+// Long enough for one getStickerSet + deleteStickerFromSet.
+const LOCK_TTL_MS = 60 * 1000
 
 // Telegram no longer has the set: nothing left to clean.
 const isGone = (error) => /STICKERSET_INVALID|STICKERSET_NOT_FOUND/i.test(error?.description || error?.message || '')
@@ -29,6 +36,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
  * @param {Object} deps
  * @param {Object} deps.repo       due(now, limit) / reschedule(pack, at, checks) / clear(pack)
  * @param {Object} deps.telegram   getStickerSet + callApi
+ * @param {Object} [deps.lock]     acquire(name, ttl) / release(name, token): the pack-ops lock
  */
 function createPlaceholderSweeper ({
   repo,
@@ -37,14 +45,31 @@ function createPlaceholderSweeper ({
   now = () => Date.now(),
   batch = BATCH,
   gapMs = GAP_MS,
+  lock = null,
   log = console
 }) {
   let timer = null
   let active = null
   let stopping = false
 
-  // One pack. Returns what happened, for tests and the tick's summary.
+  // One pack, under its lock. Returns what happened, for tests and the
+  // tick's summary.
   async function checkOne (pack) {
+    if (!lock) return look(pack)
+    const token = await lock.acquire(pack.name, LOCK_TTL_MS)
+    if (!token) {
+      // A publish is running on it: soon again, without using up a look.
+      await repo.reschedule(pack, new Date(now() + RETRY_AFTER_ERROR_MS), pack.placeholderChecks || 0)
+      return 'busy'
+    }
+    try {
+      return await look(pack)
+    } finally {
+      await lock.release(pack.name, token).catch(() => {})
+    }
+  }
+
+  async function look (pack) {
     const checks = pack.placeholderChecks || 0
 
     let set
@@ -159,7 +184,8 @@ async function start () {
     return
   }
   if (instance) return
-  instance = createPlaceholderSweeper({ repo: mongoRepo(db), telegram, log })
+  const { mongoLock } = require('../pack-ops/store')
+  instance = createPlaceholderSweeper({ repo: mongoRepo(db), telegram, lock: mongoLock(db), log })
   instance.start()
   log.info('started')
 }

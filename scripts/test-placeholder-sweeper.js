@@ -157,6 +157,33 @@ const main = async () => {
     assert.strictEqual(telegram.calls.length, 0)
   })
 
+  await test('a pack under a running publish is left alone and looked at again soon, without using a look', async () => {
+    const pack = makePack({ placeholderChecks: 1 })
+    const repo = makeRepo([pack])
+    const telegram = makeTelegram({ set: { stickers: [ph, real(1)] } })
+    const lock = { acquire: async () => null, release: async () => { throw new Error('nothing to release') } }
+    const s = createPlaceholderSweeper({ repo, telegram, lock, now: () => NOW, gapMs: 0, log: { info () {}, warn () {} } })
+    assert.strictEqual(await s.checkOne(pack), 'busy')
+    assert.strictEqual(telegram.calls.length, 0, 'no Telegram call under somebody else\'s lock')
+    assert.deepStrictEqual(repo.rescheduled, [{ name: pack.name, at: new Date(NOW + RETRY_AFTER_ERROR_MS), checks: 1 }])
+  })
+
+  await test('the lock is taken around the look and released after, even when the look throws', async () => {
+    const pack = makePack()
+    const held = []
+    const lock = {
+      acquire: async (name) => { held.push(['acquire', name]); return 't1' },
+      release: async (name, token) => { held.push(['release', name, token]) }
+    }
+    const ok = createPlaceholderSweeper({ repo: makeRepo([pack]), telegram: makeTelegram({ set: { stickers: [ph, real(1)] } }), lock, now: () => NOW, gapMs: 0, log: { info () {}, warn () {} } })
+    assert.strictEqual(await ok.checkOne(pack), 'resolved')
+    const broken = makeRepo([pack])
+    broken.reschedule = async () => { throw new Error('db down') }
+    const bad = createPlaceholderSweeper({ repo: broken, telegram: makeTelegram({ getError: Object.assign(new Error('Bad Gateway'), { code: 502 }) }), lock, now: () => NOW, gapMs: 0, log: { info () {}, warn () {} } })
+    await assert.rejects(bad.checkOne(makePack()), /db down/)
+    assert.deepStrictEqual(held, [['acquire', 'pack_by_bot'], ['release', 'pack_by_bot', 't1'], ['acquire', 'pack_by_bot'], ['release', 'pack_by_bot', 't1']])
+  })
+
   console.log(`\n${passed} passed, ${failed} failed`)
   if (failed > 0) process.exit(1)
   console.log('placeholder-sweeper test OK')
