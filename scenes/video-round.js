@@ -22,9 +22,23 @@ videoRound.enter(async (ctx) => {
   })
 })
 
+// Waiting job ids, in queue order, shared by everyone waiting and read at most
+// once per refresh. Each waiter used to load the whole queue, payloads and
+// all, every 5 s.
+let snapshot = { at: 0, ids: [], pending: null }
+const waitingIds = () => {
+  if (Date.now() - snapshot.at < POSITION_REFRESH_MS) return Promise.resolve(snapshot.ids)
+  if (!snapshot.pending) {
+    snapshot.pending = videoNoteQueue.getRanges(['wait', 'paused'], 0, -1, true)
+      .then((ids) => { snapshot = { at: Date.now(), ids: ids.map(String), pending: null }; return snapshot.ids })
+      .catch(() => { snapshot.pending = null; return snapshot.ids })
+  }
+  return snapshot.pending
+}
+
 const queuePosition = async (jobId) => {
-  const waiting = await videoNoteQueue.getWaiting().catch(() => [])
-  return { position: waiting.findIndex((job) => job.id === jobId) + 1, total: waiting.length || 1 }
+  const ids = await waitingIds()
+  return { position: ids.indexOf(String(jobId)) + 1, total: ids.length || 1 }
 }
 
 async function processVideo (ctx, fileUrl) {

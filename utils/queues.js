@@ -24,7 +24,7 @@ const bullRedisConfig = REDIS_ENABLED
   : null
 
 // Stub that mimics the Bull queue surface we actually use:
-// add, getWaiting, getJobCounts, getJob, on. Enqueue rejects loudly;
+// add, getWaiting(Count), getRanges, getJobCounts, getJob, on. Enqueue rejects loudly;
 // introspection returns empty. Nothing silently succeeds — callers that
 // depend on queue completion (video/removebg paths) will see a reply-level
 // error in the user-facing flow instead of a stalled handler.
@@ -39,6 +39,8 @@ function makeStubQueue (name) {
     disabled: true,
     add: () => Promise.reject(err()),
     getWaiting: () => Promise.resolve([]),
+    getWaitingCount: () => Promise.resolve(0),
+    getRanges: () => Promise.resolve([]),
     getJobCounts: () => Promise.resolve({ waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0 }),
     getJob: () => Promise.resolve(null),
     on: () => {},

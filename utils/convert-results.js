@@ -55,11 +55,14 @@ async function updateConvertQueueMessages () {
   lastQueueMessageUpdate = now
 
   try {
-    const waiting = await convertQueue.getWaiting()
+    // Only the jobs whose message is edited are loaded: getWaiting() with no
+    // range fetched every waiting job, payload and all, on each pass.
+    const [waiting, total] = await Promise.all([
+      convertQueue.getWaiting(0, QUEUE_MESSAGE_MAX - 1),
+      convertQueue.getWaitingCount()
+    ])
 
-    const limit = Math.min(waiting.length, QUEUE_MESSAGE_MAX)
-
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < waiting.length; i++) {
       const job = waiting[i]
       if (job?.data?.input?.convertingMessageId) {
         const { input } = job.data
@@ -69,7 +72,7 @@ async function updateConvertQueueMessages () {
 
         await telegram.editMessageText(input.chatId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
           progress: i + 1,
-          total: waiting.length
+          total
         }), {
           parse_mode: 'HTML'
         }).catch(() => {})
