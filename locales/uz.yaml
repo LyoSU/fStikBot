@@ -461,6 +461,8 @@ callback:
         Toʻplam topilmadi.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Qoʻshilmoqda…
       delete: Stiker toʻplamdan oʻchirildi.
       restored: Stiker joriy toʻplamga tiklandi.
     delete: Stiker toʻplamdan oʻchirildi.
@@ -485,6 +487,8 @@ callback:
       Guruh sozlamalari yangilandi.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram ${seconds} soniya kutishni soʻramoqda. Oʻzim qoʻshaman — qayta yuborish shart emas.
     ok: |
       ✅ <a href="${link}">${title}</a> toʻplamiga qoʻshildi
 
@@ -505,6 +509,12 @@ sticker:
     quote: |
       Bu xabardan iqtibos yasash uchun @QuotlyBot dan foydalaning
     error:
+      rate_limit_long: |
+        ⏳ Telegram toʻplamlaringizga stiker qoʻshishni taxminan ${minutes} daqiqaga toʻxtatdi. Bu botning emas, Telegramning oʻz cheklovi. Fayllarni keyinroq qayta yuboring.
+      in_progress: |
+        ⏳ Bu fayl allaqachon toʻplamga qoʻshilmoqda — natija shu yerga keladi. Qayta yuborish shart emas.
+      unconfirmed: |
+        ⚠️ Telegram qoʻshilganini tasdiqlamadi — stiker toʻplamda allaqachon boʻlishi mumkin. Faylni qayta yuborishdan oldin toʻplamni tekshiring.
       reply: |
         Stikerga javob yozing.
       no_selected_pack: |
@@ -930,6 +940,8 @@ error:
   stickerset_invalid: |
     Toʻplam mavjud emas. Ehtimol, u Telegramda oʻchirilgan.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram hozir uzilishlar bilan javob bermoqda, fayl qoʻshilmadi. Bir daqiqadan soʻng qayta yuboring.
     sticker_not_in_set: |
       Stiker endi toʻplamda yoʻq — ehtimol, u avvalroq oʻchirilgan.
     pack_invalid: |
