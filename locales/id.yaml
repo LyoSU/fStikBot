@@ -461,6 +461,8 @@ callback:
         Paket tidak ditemukan.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Sedang menambahkan…
       delete: Stiker dihapus dari paket.
       restored: Stiker disimpan ke paket saat ini.
     delete: Stiker dihapus dari paket.
@@ -485,6 +487,8 @@ callback:
       Pengaturan grup berhasil diperbarui.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram meminta menunggu ${seconds} detik. Aku akan menambahkannya sendiri — tidak perlu mengirim lagi.
     ok: |
       ✅ Ditambahkan ke <a href="${link}">${title}</a>
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Gunakan @QuotlyBot untuk membuat kutipan dari pesan ini
     error:
+      rate_limit_long: |
+        ⏳ Telegram menjeda penambahan stiker ke paketmu selama sekitar ${minutes} menit. Ini batas dari Telegram sendiri, bukan dari bot. Kirim file lagi nanti.
+      in_progress: |
+        ⏳ File ini sedang ditambahkan ke paket — hasilnya akan muncul di sini. Tidak perlu mengirim lagi.
       reply: |
         Balas ke sebuah stiker.
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     Paket tidak tersedia. Mungkin sudah dihapus di Telegram.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram sedang mengalami gangguan, file tidak ditambahkan. Kirim lagi dalam satu menit.
     sticker_not_in_set: |
       Stiker ini sudah tidak ada di dalam paket — mungkin sudah dihapus sebelumnya.
     pack_invalid: |

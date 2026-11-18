@@ -461,6 +461,8 @@ callback:
         Pack introuvable.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Ajout en cours…
       delete: Autocollant supprimé du pack.
       restored: Autocollant ajouté au pack actuel.
     delete: Autocollant supprimé du pack.
@@ -485,6 +487,8 @@ callback:
       Paramètres du groupe mis à jour.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram demande d'attendre ${seconds} s. Je l'ajouterai moi-même — inutile de le renvoyer.
     ok: |
       ✅ Ajouté à <a href="${link}">${title}</a>
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Utilise @QuotlyBot pour créer une citation à partir de ce message
     error:
+      rate_limit_long: |
+        ⏳ Telegram a suspendu l'ajout de stickers à tes packs pendant environ ${minutes} min. C'est une limite de Telegram, pas du bot. Renvoie les fichiers plus tard.
+      in_progress: |
+        ⏳ Ce fichier est déjà en cours d'ajout au pack — le résultat s'affichera ici. Inutile de le renvoyer.
       reply: |
         Réponds à un sticker.
       no_selected_pack: |
@@ -927,6 +935,8 @@ error:
   stickerset_invalid: |
     Pack indisponible. Il a peut-être été supprimé dans Telegram.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram rencontre des perturbations, le fichier n'a pas été ajouté. Renvoie-le dans une minute.
     sticker_not_in_set: |
       Cet sticker n'est plus dans le pack — il a peut-être déjà été supprimé.
     pack_invalid: |

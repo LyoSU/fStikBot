@@ -63,11 +63,18 @@ const main = async () => {
     assert.strictEqual(result.error.telegram, err)
   })
 
-  await test('429 and 5xx stay with retry-api: no retry here', async () => {
-    for (const code of [429, 502]) {
-      const fake = client(telegramError(code))
-      await uploadStickerFile(fake, {}, opts())
-      assert.strictEqual(fake.calls, 1)
+  await test('429 stays with retry-api: no retry here', async () => {
+    const fake = client(telegramError(429))
+    await uploadStickerFile(fake, {}, opts())
+    assert.strictEqual(fake.calls, 1)
+  })
+
+  await test('a Telegram 502/504 is retried: an upload has no side effects', async () => {
+    for (const code of [502, 504]) {
+      const fake = client(telegramError(code), { file_id: 'ok' })
+      const result = await uploadStickerFile(fake, {}, opts())
+      assert.strictEqual(fake.calls, 2)
+      assert.deepStrictEqual(result, { file_id: 'ok' })
     }
   })
 

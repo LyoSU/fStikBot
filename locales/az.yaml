@@ -461,6 +461,8 @@ callback:
         Paket tapılmadı.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Əlavə edirəm…
       delete: Stiker paketdən silindi.
       restored: Stiker cari paketdə saxlanıldı.
     delete: Stiker paketdən silindi.
@@ -485,6 +487,8 @@ callback:
       Qrup parametrləri yeniləndi.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram ${seconds} san. gözləməyi xahiş edir. Özüm əlavə edəcəyəm — yenidən göndərməyə ehtiyac yoxdur.
     ok: |
       ✅ <a href="${link}">${title}</a> paketinə əlavə edildi
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Bu mesajdan sitat yaratmaq üçün @QuotlyBot botundan istifadə et
     error:
+      rate_limit_long: |
+        ⏳ Telegram paketlərinə stiker əlavə etməyi təxminən ${minutes} dəq. müddətinə dayandırıb. Bu, botun deyil, Telegram-ın öz limitidir. Faylları sonra yenidən göndər.
+      in_progress: |
+        ⏳ Bu fayl artıq paketə əlavə olunur — nəticə bura gələcək. Yenidən göndərməyə ehtiyac yoxdur.
       reply: |
         Stikerə cavab ver.
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     Paket əlçatan deyil. Ola bilsin ki, Telegram-da silinib.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram hazırda fasilələrlə cavab verir, fayl əlavə olunmadı. Bir dəqiqədən sonra yenidən göndər.
     sticker_not_in_set: |
       Stiker artıq paketdə yoxdur — ola bilsin ki, əvvəlcədən silinib.
     pack_invalid: |

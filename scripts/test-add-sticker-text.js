@@ -106,6 +106,45 @@ test('a mapped Telegram error logs nothing extra', () => {
   assert.strictEqual(lines.length, 0)
 })
 
+const tgError = (code, description, extra = {}) => Object.assign(new Error(`${code}: ${description}`), { code, description, ...extra })
+
+test('a Telegram 502/504 says Telegram is having trouble, logs nothing as unknown', () => {
+  for (const code of [502, 504]) {
+    let text
+    const lines = captureLogs(() => {
+      text = addStickerText({ error: { telegram: tgError(code, 'Gateway Timeout') } }, 'ru').messageText
+    })
+    assert.strictEqual(text, i18n.t('ru', 'error.telegram_reasons.telegram_unavailable'))
+    assert.strictEqual(lines.length, 0)
+  }
+})
+
+test('a dropped connection reads the same as a 5xx', () => {
+  const err = Object.assign(new Error('request to https://api.telegram.org/bot<redacted>/getFile failed'), { name: 'FetchError', type: 'system' })
+  const { messageText } = addStickerText({ error: { telegram: err } }, 'en')
+  assert.strictEqual(messageText, i18n.t('en', 'error.telegram_reasons.telegram_unavailable'))
+})
+
+test('a long 429 is told in minutes as Telegram\'s limit, not "wait 2453 seconds"', () => {
+  const err = tgError(429, 'Too Many Requests: retry after 2453', { parameters: { retry_after: 2453 } })
+  const { messageText } = addStickerText({ error: { telegram: err } }, 'uk')
+  assert.strictEqual(messageText, i18n.t('uk', 'sticker.add.error.rate_limit_long', { minutes: 41 }))
+  assert.ok(!messageText.includes('2453'))
+})
+
+test('the same file still on its way into the pack has its own words', () => {
+  const { messageText } = addStickerText({ error: { type: 'in_progress' } }, 'en')
+  assert.strictEqual(messageText, i18n.t('en', 'sticker.add.error.in_progress'))
+})
+
+test('a full pack offers a new pack and the pack list, in a private chat only', () => {
+  const full = { error: { telegram: tgError(400, 'Bad Request: STICKERS_TOO_MUCH') } }
+  const inPrivate = addStickerText(full, 'en', { private: true }).replyMarkup
+  const callbacks = inPrivate.inline_keyboard.flat().map((b) => b.callback_data)
+  assert.deepStrictEqual(callbacks, ['new_pack:null', 'packs:null'])
+  assert.deepStrictEqual(addStickerText(full, 'en').replyMarkup, {})
+})
+
 console.log(`\n${passed} passed, ${failed} failed`)
 if (failed > 0) process.exit(1)
 console.log('add-sticker-text test OK')

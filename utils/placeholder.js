@@ -74,32 +74,43 @@ const withMarkerLoaded = async (stickerSet) => {
 //     only once the placeholder is truly gone, so any residual failure is
 //     retried on the next sticker add.
 //
+// The marker and the sweeper's schedule for it (utils/placeholder-sweeper.js)
+// go together: setting undefined and saving issues a Mongo $unset.
+const clearMarker = async (stickerSet) => {
+  stickerSet.placeholderFileUniqueId = undefined
+  stickerSet.placeholderCheckAt = undefined
+  stickerSet.placeholderChecks = undefined
+  await stickerSet.save().catch(() => {})
+}
+
 // Returns true when the marker was resolved (deleted or confirmed absent),
 // false when it should be retried later.
 async function removePlaceholderIfPending (telegram, stickerSet, currentSet, { allowEmpty = false } = {}) {
   stickerSet = await withMarkerLoaded(stickerSet)
   if (!stickerSet.placeholderFileUniqueId) return true
   if (!currentSet || !currentSet.stickers) return false
-  // Wait until a real sticker exists so removal never leaves the pack empty —
-  // unless the caller explicitly allows emptying the set (allowEmpty).
-  if (currentSet.stickers.length < 2 && !allowEmpty) return false
 
   const placeholder = currentSet.stickers.find(
     (s) => s.file_unique_id === stickerSet.placeholderFileUniqueId
   )
 
+  // Checked before the size rule below: a user who deleted the placeholder
+  // in Telegram and then added one sticker has a 1-sticker set, and the
+  // marker used to stay on it for good.
   if (!placeholder) {
     // Not in the set anymore (e.g. removed manually) — stop tracking it.
-    stickerSet.placeholderFileUniqueId = undefined // → Mongo $unset on save
-    await stickerSet.save().catch(() => {})
+    await clearMarker(stickerSet)
     return true
   }
+
+  // Wait until a real sticker exists so removal never leaves the pack empty —
+  // unless the caller explicitly allows emptying the set (allowEmpty).
+  if (currentSet.stickers.length < 2 && !allowEmpty) return false
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
       await telegram.callApi('deleteStickerFromSet', { sticker: placeholder.file_id })
-      stickerSet.placeholderFileUniqueId = undefined
-      await stickerSet.save().catch(() => {})
+      await clearMarker(stickerSet)
       return true
     } catch (error) {
       const retryAfter = getRetryAfter(error)

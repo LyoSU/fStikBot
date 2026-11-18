@@ -8,6 +8,9 @@ const {
   addStickerText
 } = require('../utils')
 const userQueue = require('../utils/user-queue')
+const inflight = require('../utils/inflight-adds')
+const sleep = require('../utils/sleep')
+const { matchTelegramErrorReason, extractRetryAfterSeconds } = require('../utils/telegram-error')
 const mediaGroup = require('../utils/media-group')
 const { waitForJob } = require('../utils/queue-job')
 const packLink = require('../utils/pack-link')
@@ -28,6 +31,10 @@ const VIDEO_WAIT_MS = 3 * 60 * 1000
 // one — if that happens within this window.
 const PENDING_TTL_MS = 10 * 60 * 1000
 const MAX_PENDING_ITEMS = 10
+// Telegram's short "wait N seconds" on an add is waited out once, and the
+// file added then — instead of an error the user had to act on. Longer waits
+// are Telegram's per-account limit (~40 min in prod) and are reported.
+const RATE_WAIT_MAX_S = 90
 // Stickers-in-pack counts at which an unpublished pack is offered the catalog.
 const CATALOG_OFFER_AT = [50, 90]
 
@@ -138,25 +145,67 @@ const findExisting = (ctx, stickerSet, file) => ctx.db.Sticker.findOne({
 
 // One file into the pack. A free user's video holds the queue until the
 // converter has finished it, so their files still go one at a time.
-const addOne = async (ctx, stickerSet, file, { stickerSetInfo, replyTo }) => {
-  const existing = await findExisting(ctx, stickerSet, file)
-  if (existing) {
-    metrics.track('sticker_duplicate')
-    return { error: { type: 'duplicate', sticker: existing } }
+//
+// The (pack, file) claim is taken before the duplicate check and held until
+// the sticker is in the pack — for a video, until the convert handler in
+// utils/add-sticker.js releases it. Without it the same video sent twice while
+// the first was converting passed the check and landed twice.
+// Seconds to wait before one more try, or null when the result isn't a short 429.
+const shortRateWait = (result) => {
+  const error = result?.error?.telegram
+  if (!error || matchTelegramErrorReason(error) !== 'rate_limited') return null
+  const seconds = extractRetryAfterSeconds(error)
+  return seconds && seconds <= RATE_WAIT_MAX_S ? seconds : null
+}
+
+const addOne = async (ctx, stickerSet, file, { stickerSetInfo, replyTo, onWait }) => {
+  const claimKey = inflight.claim(stickerSet._id || stickerSet.id, file.file_unique_id)
+  if (claimKey === false) {
+    metrics.track('sticker_in_progress')
+    return { error: { type: 'in_progress' } }
   }
 
-  // `track` makes the convert worker count the video's outcome, so
-  // video_queued has a matching video_added / video_failed.
-  const result = await addSticker(ctx, file, stickerSet, true, { stickerSetInfo, replyToMessageId: replyTo, track: true })
-  if (result.ok) metrics.track('sticker_added')
-  else if (result.wait) metrics.track('video_queued')
-  else trackFailed(result)
+  let handedOver = false
+  try {
+    const existing = await findExisting(ctx, stickerSet, file)
+    if (existing) {
+      metrics.track('sticker_duplicate')
+      return { error: { type: 'duplicate', sticker: existing } }
+    }
 
-  if (result.wait && result.job && !stickerSet.boost) {
-    await waitForJob(result.job, VIDEO_WAIT_MS)
+    // `track` makes the convert worker count the video's outcome, so
+    // video_queued has a matching video_added / video_failed.
+    const add = () => addSticker(ctx, file, stickerSet, true, {
+      stickerSetInfo,
+      replyToMessageId: replyTo,
+      track: true,
+      claimKey
+    })
+
+    let result = await add()
+    const wait = shortRateWait(result)
+    if (wait) {
+      metrics.track('sticker_rate_wait')
+      if (onWait) await onWait(wait).catch(() => {})
+      await sleep((wait + 1) * 1000)
+      result = await add()
+    }
+
+    if (result.ok) metrics.track('sticker_added')
+    else if (result.wait) metrics.track('video_queued')
+    else trackFailed(result)
+
+    // The convert handler owns the claim from here on.
+    if (result.wait && result.job) handedOver = true
+
+    if (result.wait && result.job && !stickerSet.boost) {
+      await waitForJob(result.job, VIDEO_WAIT_MS)
+    }
+
+    return result
+  } finally {
+    if (!handedOver) inflight.release(claimKey)
   }
-
-  return result
 }
 
 const isPackFull = (result) => /TOO_MUCH/.test(result?.error?.telegram?.description || '')
@@ -185,7 +234,15 @@ const rememberSticker = (ctx, sticker, own) => {
 }
 
 const addSingle = async (ctx, stickerSet, item, stickerSetInfo) => {
-  const result = await addOne(ctx, stickerSet, item.file, { stickerSetInfo, replyTo: item.replyTo })
+  let notice = null
+  const result = await addOne(ctx, stickerSet, item.file, {
+    stickerSetInfo,
+    replyTo: item.replyTo,
+    onWait: async (seconds) => {
+      notice = await reply(ctx, ctx.i18n.t('sticker.add.rate_limit_wait', { seconds }), item.replyTo).catch(() => null)
+    }
+  })
+  if (notice) ctx.telegram.deleteMessage(ctx.chat.id, notice.message_id).catch(() => {})
 
   // Queued for conversion: the worker replies when the video is ready.
   if (result.wait) return
@@ -193,7 +250,11 @@ const addSingle = async (ctx, stickerSet, item, stickerSetInfo) => {
   if (result.ok) rememberSticker(ctx, result.ok.sticker, true)
   else rememberSticker(ctx, result.error?.sticker, false)
 
-  const { messageText, replyMarkup } = addStickerText(result, ctx.i18n.locale(), { userId: ctx.from?.id, where: 'sticker' })
+  const { messageText, replyMarkup } = addStickerText(result, ctx.i18n.locale(), {
+    userId: ctx.from?.id,
+    where: 'sticker',
+    private: ctx.chat.type === 'private'
+  })
   if (messageText) await reply(ctx, messageText, item.replyTo, { reply_markup: replyMarkup })
 
   if (result.ok) {
@@ -218,7 +279,15 @@ const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
     const result = await addOne(ctx, stickerSet, item.file, {
       // The snapshot is only "before" for the first file.
       stickerSetInfo: index === 0 ? stickerSetInfo : null,
-      replyTo: item.replyTo
+      replyTo: item.replyTo,
+      onWait: async (seconds) => {
+        if (!progress) return
+        await ctx.telegram.editMessageText(ctx.chat.id, progress.message_id, null,
+          ctx.i18n.t('sticker.add.album_progress', { current: index, total }) + '\n\n' +
+          ctx.i18n.t('sticker.add.rate_limit_wait', { seconds }),
+          { parse_mode: 'HTML' }
+        )
+      }
     })
 
     if (result.ok) {
@@ -226,7 +295,7 @@ const addAlbum = async (ctx, stickerSet, items, stickerSetInfo) => {
       lastSticker = result.ok.sticker
     } else if (result.wait) {
       counts.converting++
-    } else if (result.error?.type === 'duplicate') {
+    } else if (result.error?.type === 'duplicate' || result.error?.type === 'in_progress') {
       counts.duplicates++
     } else {
       counts.failed++

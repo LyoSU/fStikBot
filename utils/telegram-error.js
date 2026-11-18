@@ -16,6 +16,7 @@ const ERROR_PATTERNS = [
 ]
 
 const RATE_LIMIT_CODE = 429
+const { isTransientError } = require('./transient-error')
 
 // telegraf builds every request URL as `.../bot<token>/<method>` and node-fetch
 // puts that URL into the message of every network-level error (ECONNRESET,
@@ -69,16 +70,30 @@ const extractRetryAfterSeconds = (error) => {
   return match ? parseInt(match[1], 10) : null
 }
 
+// Past this, a wait is Telegram's per-account limit on making stickers
+// (prod: most addStickerToSet 429s carry ~2450 s), not a moment's pause —
+// "wait 2453 seconds" read like a bot glitch.
+const LONG_WAIT_S = 120
+
+/**
+ * Words for a 429. `t(key, vars)` is the caller's translator.
+ * @returns {string}
+ */
+const rateLimitText = (t, seconds) => {
+  if (!seconds) return t('error.telegram_reasons.rate_limited')
+  if (seconds > LONG_WAIT_S) return t('sticker.add.error.rate_limit_long', { minutes: Math.ceil(seconds / 60) })
+  return t('error.rate_limit_seconds', { seconds })
+}
+
 const humanizeTelegramError = (ctx, error) => {
   const reason = matchTelegramErrorReason(error)
 
   if (reason === 'rate_limited') {
-    const seconds = extractRetryAfterSeconds(error)
-    if (seconds) return ctx.i18n.t('error.rate_limit_seconds', { seconds })
-    return ctx.i18n.t('error.telegram_reasons.rate_limited')
+    return rateLimitText((key, vars) => ctx.i18n.t(key, vars), extractRetryAfterSeconds(error))
   }
 
   if (reason) return ctx.i18n.t(`error.telegram_reasons.${reason}`)
+  if (isTransientError(error)) return ctx.i18n.t('error.telegram_reasons.telegram_unavailable')
 
   // Raw text never reaches the user: a network error's message once carried
   // the bot token into the chat (2026-10-27). The cause is in the log.
@@ -88,6 +103,8 @@ const humanizeTelegramError = (ctx, error) => {
 module.exports = {
   matchTelegramErrorReason,
   extractRetryAfterSeconds,
+  rateLimitText,
+  LONG_WAIT_S,
   humanizeTelegramError,
   redactBotToken,
   redactErrorToken

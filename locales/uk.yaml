@@ -461,6 +461,8 @@ callback:
         Пак не знайдено.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Уже додаю…
       delete: Стікер видалено з паку.
       restored: Стікер збережено в поточному паку.
     delete: Стікер видалено з паку.
@@ -485,6 +487,8 @@ callback:
       Налаштування групи оновлено.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram просить зачекати ${seconds} с. Я додам сам — надсилати ще раз не треба.
     ok: |
       ✅ Додано до <a href="${link}">${title}</a>
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Створи цитату з цього повідомлення за допомогою @QuotlyBot
     error:
+      rate_limit_long: |
+        ⏳ Telegram тимчасово обмежив додавання стікерів у твої паки — приблизно на ${minutes} хв. Це ліміт самого Telegram, не бота. Надішли файли знову пізніше.
+      in_progress: |
+        ⏳ Цей файл уже додається в пак — результат прийде сюди. Надсилати ще раз не треба.
       reply: |
         Відповідай на стікер.
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     Пак недоступний. Можливо, його видалили в Telegram.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram зараз відповідає з перебоями, файл не додано. Надішли його ще раз за хвилину.
     sticker_not_in_set: |
       Стікера вже немає в паку — можливо, його видалили раніше.
     pack_invalid: |

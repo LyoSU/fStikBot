@@ -1,74 +1,27 @@
-const path = require('path')
 const sharp = require('sharp')
-const I18n = require('telegraf-i18n')
 const emojiRegex = require('emoji-regex')
 const { db } = require('../database')
-const config = require('../config.json')
-const addStickerText = require('./add-sticker-text')
-const telegram = require('./telegram')
 const { convertQueue, removebgQueue } = require('./queues')
 const { runQueueJob } = require('./queue-job')
-const { logError } = require('./error-line')
-const { convertPriority, convertRank, maxVideoDuration, queueTooBusy, convertFailure, jobFields } = require('./video-convert-rules')
+const { convertPriority, convertRank, maxVideoDuration, queueTooBusy } = require('./video-convert-rules')
 const downloadFileByUrl = require('./download-file-by-url')
 const { MAX_INPUT_PIXELS } = require('./image-limits')
-const { removePlaceholderIfPending } = require('./placeholder')
-const escapeHTML = require('./html-escape')
-const { rescaleTgs } = require('./lottie-rescale')
-const { fixStaticTgs } = require('./tgs-static-fix')
 const { fitStickerSize } = require('./sticker-geometry')
-const { isVideoContainer } = require('./sniff-media')
-const { isInCopyScope, getRetryAfter } = require('./retry-api')
+const { isVideoContainer, sniffMedia } = require('./sniff-media')
+const { isInCopyScope } = require('./retry-api')
 const { getStickerCooldown, buildCooldownError } = require('./sticker-cooldown')
-const { canAddByFileId, isFileRejection } = require('./file-id-reuse')
+const { canAddByFileId } = require('./file-id-reuse')
+const { uploadSticker, tryAddByFileId, uploadRetargetedTgs, internalError } = require('./sticker-upload')
+const { isVideoInput, isVideoNoteInput, initialFormat, urlPathname: pathOf, formatFromPath, hasImageExtension } = require('./sticker-format')
+// Registers the convert-queue result handlers.
+require('./convert-results')
 const log = require('./logger').scope('add-sticker')
-const coedit = require('./coedit')
-const metrics = require('./metrics')
-const { failureReason } = require('./failure-reason')
-const { uploadStickerFile } = require('./upload-retry')
-
-// Telegram takes a TGS only on a 512×512 canvas, for custom emoji too:
-// measured against the Bot API, a 100×100 canvas is refused as "wrong file
-// type" in both pack types, and an emoji uploaded at 512 is stored and
-// served back byte-for-byte. Anything on another canvas is retargeted to 512.
-const TGS_CANVAS = 512
-
-const retargetTgs = (buffer) => rescaleTgs(buffer, TGS_CANVAS)
 
 // Bot API hard limit on InputSticker.emoji_list
 const MAX_EMOJI_LIST = 20
 
 // Background removal for a "!" caption shares the /clear queue.
 const REMOVEBG_TIMEOUT_MS = 60 * 1000
-
-// Something that isn't the user's fault and has no better message. The
-// details go to the log; the user used to read them as "Telegram error: …".
-const internalError = (reason) => {
-  log.error(reason)
-  return { error: { i18nKey: 'error.unknown' } }
-}
-
-// This bot's id, straight from the token (`<id>:<secret>`). The convert queue's
-// global:* events fire in every process attached to the queue, so each handler
-// skips jobs enqueued by another bot. It used to come from a getMe() at module
-// load with no .catch — a Telegram hiccup at boot became an unhandled rejection.
-const BOT_ID = parseInt(String(process.env.BOT_TOKEN || '').split(':')[0], 10) || null
-const isForeignJob = (input) => !!(input.botId && BOT_ID && input.botId !== BOT_ID)
-
-// The outcome of a conversion the sticker handler counted as video_queued.
-// Copies and restores also convert but are not in that funnel (no `tracked`).
-const trackVideo = (input, result) => {
-  if (!input.tracked) return
-  if (result?.ok) return metrics.track('video_added')
-  metrics.track('video_failed')
-  metrics.track(`video_failed_${failureReason(result)}`)
-}
-
-const i18n = new I18n({
-  directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
 
 // addSticker return contract (single shape — caller always renders via
 // addStickerText, addSticker never calls ctx.reply directly):
@@ -86,444 +39,6 @@ const i18n = new I18n({
 //                                         error = add an i18n key, no code
 //                                         change in addStickerText.
 
-// Update queue position messages when jobs complete (event-driven, not polling)
-//
-// Bounded on both axes: at most one pass every QUEUE_MESSAGE_THROTTLE_MS and at
-// most QUEUE_MESSAGE_MAX edits per pass. With 200 waiting jobs the unbounded
-// version issued up to 200 editMessageText per completed job and 429'd itself.
-const QUEUE_MESSAGE_THROTTLE_MS = 3000
-const QUEUE_MESSAGE_MAX = 20
-let lastQueueMessageUpdate = 0
-
-async function updateConvertQueueMessages () {
-  const now = Date.now()
-  if (now - lastQueueMessageUpdate < QUEUE_MESSAGE_THROTTLE_MS) return
-  lastQueueMessageUpdate = now
-
-  try {
-    const waiting = await convertQueue.getWaiting()
-
-    const limit = Math.min(waiting.length, QUEUE_MESSAGE_MAX)
-
-    for (let i = 0; i < limit; i++) {
-      const job = waiting[i]
-      if (job?.data?.input?.convertingMessageId) {
-        const { input } = job.data
-        // Message ids are per chat; editing another bot's (chat, message)
-        // pair could hit one of this bot's own messages.
-        if (isForeignJob(input)) continue
-
-        await telegram.editMessageText(input.chatId, input.convertingMessageId, null, i18n.t(input.locale || 'en', 'sticker.add.converting_process', {
-          progress: i + 1,
-          total: waiting.length
-        }), {
-          parse_mode: 'HTML'
-        }).catch(() => {})
-      }
-    }
-  } catch (err) {
-    console.error('updateConvertQueueMessages error:', err.message)
-  }
-}
-
-// A finished job adds its sticker and frees a slot, which moves every waiting
-// job up — so that's also the only moment queue positions are refreshed.
-convertQueue.on('global:completed', (jobId, result) => {
-  handleConvertCompleted(jobId, result).catch((err) => {
-    console.error('convertQueue global:completed handler failed:', err?.stack || err)
-  })
-  updateConvertQueueMessages().catch((err) => console.error('updateConvertQueueMessages error:', err.message))
-})
-
-async function handleConvertCompleted (jobId, result) {
-  let parsed
-  try {
-    parsed = JSON.parse(result)
-  } catch (err) {
-    console.error('convertQueue global:completed: bad payload:', err.message)
-    return
-  }
-
-  const { input, metadata, content } = parsed
-
-  if (!input) return
-
-  // global:* fires in EVERY process attached to this Redis queue. Without this
-  // guard each replica ran uploadSticker for the same job — double adds and
-  // duplicate failure replies.
-  if (isForeignJob(input)) return
-
-  const stickerExtra = input.stickerExtra
-
-  // Handle case when conversion failed (no metadata/content)
-  if (!metadata || !content) {
-    log.warn(`convert job ${jobId} finished without output`)
-    trackVideo(input, { error: { i18nKey: 'sticker.add.error.convert' } })
-    if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
-
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
-    return
-  }
-
-  stickerExtra.sticker = {
-    source: Buffer.from(content, 'base64')
-  }
-
-  // input.stickerSet is a plain object here — Bull serialized the job to JSON
-  // in Redis, so it lost its Mongoose document methods (e.g. .save()) that
-  // uploadSticker relies on. Re-fetch the live document before calling it.
-  const stickerSet = await db.StickerSet.findById(input.stickerSet._id)
-
-  if (!stickerSet) {
-    trackVideo(input, { error: { i18nKey: 'pack_deleted' } })
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'sticker.add.error.convert'), replyExtra(input)).catch(() => {})
-    return
-  }
-
-  // Uploads go out as the owner (input.userId); a co-editor's access was
-  // checked at enqueue, and the conversion may have taken minutes since.
-  const byMember = input.chatId > 0 && input.actor && input.actor.id !== input.userId
-  if (byMember && !await coedit.canStillAdd(db, stickerSet, input.actor.id)) {
-    if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
-    await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', 'coedit.no_access'), replyExtra(input)).catch(() => {})
-    return
-  }
-
-  let uploadResult
-  try {
-    uploadResult = await uploadSticker(input.userId, stickerSet, input.stickerFile, stickerExtra)
-  } catch (err) {
-    // A Mongo or network throw here used to escape to the event listener's
-    // .catch: the "converting" message stayed forever and the user never got
-    // a reply. Report it as a conversion failure instead.
-    log.error('convert upload failed:', err?.stack || err)
-    uploadResult = { error: { i18nKey: 'sticker.add.error.convert' } }
-  } finally {
-    if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
-  }
-
-  trackVideo(input, uploadResult)
-  if (uploadResult?.ok && input.actor) coedit.track(db, stickerSet, input.actor, 'add', { count: 1 })
-
-  if (input.showResult) {
-    const textResult = addStickerText(uploadResult, input.locale || 'en', {
-      userId: input.actor?.id || input.userId,
-      where: 'queue:convert:add',
-      format: input.stickerExtra?.sticker_format
-    })
-
-    if (textResult.messageText) {
-      await telegram.sendMessage(input.chatId, textResult.messageText, {
-        ...replyExtra(input),
-        reply_markup: textResult.replyMarkup
-      }).catch((err) => console.error('convert result reply failed:', err.message))
-    }
-  }
-}
-
-// Worker results reply to the message that sent the video: with several videos
-// converting, a bare "Added" didn't say which one it was about.
-function replyExtra (input) {
-  return {
-    parse_mode: 'HTML',
-    disable_web_page_preview: true,
-    ...(input.replyToMessageId
-      ? { reply_to_message_id: input.replyToMessageId, allow_sending_without_reply: true }
-      : {})
-  }
-}
-
-convertQueue.on('global:failed', (jobId, errorData) => {
-  handleConvertFailed(jobId, errorData).catch((err) => {
-    logError(err, { where: 'queue:convert:failed_handler' })
-  })
-})
-
-async function handleConvertFailed (jobId, errorData) {
-  const job = await convertQueue.getJob(jobId)
-  if (!job) return
-
-  const { input } = job.data || {}
-  if (!input) return
-
-  // Same reason as global:completed — one owner per job, or every replica
-  // messages the user.
-  if (isForeignJob(input)) return
-
-  // A job that waited too long is load, not the video: no message to the log
-  // chat for it, the JSON line is the record (a burst used to post hundreds).
-  const failure = convertFailure(errorData)
-
-  logError(String(errorData), {
-    kind: 'queue_failed',
-    where: 'queue:convert',
-    level: failure.level,
-    fields: { code: failure.code, ...jobFields(job) }
-  })
-
-  if (input.convertingMessageId) await telegram.deleteMessage(input.chatId, input.convertingMessageId).catch(() => {})
-
-  trackVideo(input, { error: { i18nKey: failure.metric } })
-
-  if (failure.logChat) {
-    await telegram.sendMessage(config.logChatId, `<b>Convert error</b>\n\n<code>${escapeHTML(JSON.stringify(errorData))}</code>`, {
-      parse_mode: 'HTML'
-    }).catch(() => {})
-  }
-
-  await telegram.sendMessage(input.chatId, i18n.t(input.locale || 'en', failure.i18nKey), replyExtra(input)).catch(() => {})
-
-  await job.remove().catch(() => {})
-}
-
-// A real Telegram 429 (not a cooldown we short-circuited ourselves), logged
-// with the sticker it happened on — so "flood on a specific file" can be told
-// apart from "the next file after a flood" in prod logs.
-const logRateLimit = (method, error, { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }) => {
-  if (error?.code !== 429 || error.__cachedRateLimit) return
-  const via = uploadBytes
-    ? `upload(${uploadBytes}B) reason=${uploadReason(stickerSet, stickerFile, stickerExtra)}`
-    : 'file_id'
-  log.warn(
-    `429 on ${method}: retry_after=${getRetryAfter(error)}s user=${userId} pack=${stickerSet.name} ` +
-    `pack_type=${stickerSet.packType || 'regular'} format=${stickerExtra.sticker_format} ` +
-    `file_unique_id=${stickerFile?.file_unique_id} src_set=${stickerFile?.set_name || '-'} ` +
-    `src_type=${stickerFile?.type || '-'} via=${via}`
-  )
-}
-
-// Why a sticker went through an upload instead of file_id — the question a
-// bare "via=upload" in the 429 log couldn't answer.
-const uploadReason = (stickerSet, stickerFile, stickerExtra) => {
-  if (stickerExtra.uploadReason) return stickerExtra.uploadReason
-  if (!stickerFile?.set_name) return 'no_source_set'
-  if (stickerFile.type !== (stickerSet.packType || 'regular')) return `retarget_from_${stickerFile.type}`
-  return 'other'
-}
-
-// getStickerSet reports "⭐" where emoji_list had "⭐️" (or the reverse).
-const normalizeEmoji = (emoji) => (emoji || '').replace(/\uFE0F/g, '')
-
-// `beforeStickers` is the set's sticker list as it looked immediately before
-// this add (the caller usually already has it). Passing it lets us identify the
-// sticker WE added instead of assuming it's the last one — with two concurrent
-// adds to the same pack, slice(-1)[0] mapped both DB rows onto the same file.
-const pickAddedSticker = (setInfo, beforeStickers, stickerFile) => {
-  const isOurs = (s) => s.file_unique_id === stickerFile?.file_unique_id
-  const beforeIds = new Set(
-    Array.isArray(beforeStickers) ? beforeStickers.map((s) => s.file_unique_id) : []
-  )
-  const added = beforeIds.size > 0
-    ? setInfo.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
-    : []
-
-  // 1. A new sticker with our exact document — only the file_id path keeps
-  //    file_unique_id, so this is the precise hit when concurrent adds landed.
-  // 2. Otherwise the newest new sticker (upload path gets a new file_unique_id).
-  // 3. Nothing new, but our document is in the set: Telegram left it unchanged
-  //    ("If exactly the same sticker had already been added to the set, then
-  //    the set isn't changed").
-  // 4. No before-snapshot (e.g. the convert-queue path): the last sticker.
-  // Checking the whole set for our document BEFORE the diff would map a fresh
-  // upload onto an older copy of the same source already in the pack.
-  return added.find(isOurs) ||
-    added[added.length - 1] ||
-    setInfo.stickers.find(isOurs) ||
-    setInfo.stickers.slice(-1)[0]
-}
-
-// After a 429 on addStickerToSet, check whether the sticker made it into the
-// set anyway. Accepts only an unambiguous match: the same file_unique_id
-// (file_id path), or exactly one new sticker with our emoji and format —
-// with up to three adds in flight per user, "any new sticker" could be a
-// sibling's.
-const findLandedSticker = async (stickerSet, stickerFile, stickerExtra, beforeStickers) => {
-  if (!Array.isArray(beforeStickers) || beforeStickers.length === 0) return null
-
-  const setInfo = await telegram.getStickerSet(stickerSet.name).catch(() => null)
-  if (!setInfo?.stickers) return null
-
-  const beforeIds = new Set(beforeStickers.map((s) => s.file_unique_id))
-  const fresh = setInfo.stickers.filter((s) => !beforeIds.has(s.file_unique_id))
-
-  const exact = fresh.find((s) => s.file_unique_id === stickerFile?.file_unique_id)
-  if (exact) return { setInfo, sticker: exact }
-
-  const format = stickerExtra.sticker_format
-  const emoji = normalizeEmoji(stickerExtra.emojis?.[0])
-  const candidates = fresh.filter((s) =>
-    normalizeEmoji(s.emoji) === emoji &&
-    !!s.is_animated === (format === 'animated') &&
-    !!s.is_video === (format === 'video')
-  )
-
-  return candidates.length === 1 ? { setInfo, sticker: candidates[0] } : null
-}
-
-// Everything after the sticker is confirmed in the set: placeholder cleanup,
-// DB row, success payload.
-const finalizeAdd = async (stickerSet, stickerFile, stickerExtra, setInfo, stickerInfo) => {
-  // A real sticker just landed — safe to drop the bootstrap placeholder now.
-  await removePlaceholderIfPending(telegram, stickerSet, setInfo)
-
-  const sticker = await db.Sticker.addSticker(stickerSet._id, stickerExtra.emojis, stickerInfo, stickerFile)
-
-  const linkPrefix = stickerSet.packType === 'custom_emoji' ? config.emojiLinkPrefix : config.stickerLinkPrefix
-
-  return {
-    ok: {
-      title: stickerSet.title,
-      link: `${linkPrefix}${stickerSet.name}`,
-      stickerInfo,
-      sticker,
-      // A monochrome (needs_repainting) emoji dropped into a regular sticker
-      // pack stays white-on-transparent — nothing repaints it there. Surface
-      // that in the success text so the user isn't puzzled by a "blank"
-      // sticker on a light background.
-      repainting: !!stickerFile?.needs_repainting && stickerSet.packType !== 'custom_emoji'
-    }
-  }
-}
-
-const uploadSticker = async (userId, stickerSet, stickerFile, stickerExtra, beforeStickers) => {
-  let stickerAdd
-
-  if (!stickerExtra || !stickerExtra.sticker) {
-    return internalError(`uploadSticker without sticker data (pack ${stickerSet.name})`)
-  }
-
-  const { sticker } = stickerExtra
-  const uploadBytes = sticker?.source ? sticker.source.length : 0
-  const logContext = { userId, stickerSet, stickerFile, stickerExtra, uploadBytes }
-
-  if (sticker?.source) {
-    const uploadedSticker = await uploadStickerFile(telegram, {
-      user_id: userId,
-      sticker_format: stickerExtra.sticker_format,
-      sticker: {
-        source: sticker.source
-      }
-    }, {
-      onRetry: (error, attempt) => log.warn(
-        `network error on uploadStickerFile, retry ${attempt}: ${error.type || error.code || error.name} ` +
-        `pack_type=${stickerSet.packType || 'regular'} format=${stickerExtra.sticker_format} upload(${uploadBytes}B)`
-      )
-    })
-
-    if (uploadedSticker.error) {
-      logRateLimit('uploadStickerFile', uploadedSticker.error.telegram, logContext)
-    }
-
-    if (uploadedSticker.error) {
-      return uploadedSticker
-    }
-
-    stickerExtra.sticker = uploadedSticker.file_id
-  }
-
-  if (!stickerExtra.sticker) {
-    return internalError(`uploadStickerFile returned no file_id (pack ${stickerSet.name})`)
-  }
-
-  if (stickerSet.create === false) {
-    stickerAdd = await telegram.callApi('createNewStickerSet', {
-      user_id: userId,
-      name: stickerSet.name,
-      title: stickerSet.title,
-      stickers: [{
-        sticker: stickerExtra.sticker,
-        format: stickerExtra.sticker_format,
-        emoji_list: stickerExtra.emojis
-      }],
-      sticker_type: stickerSet.packType === 'custom_emoji' ? 'custom_emoji' : 'regular'
-    }).catch((error) => {
-      logRateLimit('createNewStickerSet', error, logContext)
-      return {
-        error: {
-          telegram: error
-        }
-      }
-    })
-    if (stickerAdd.error) {
-      return stickerAdd
-    }
-    if (stickerAdd) {
-      stickerSet.create = true
-      await stickerSet.save()
-    }
-  } else {
-    stickerAdd = await telegram.callApi('addStickerToSet', {
-      user_id: userId,
-      name: stickerSet.name,
-      sticker: {
-        format: stickerExtra.sticker_format,
-        sticker: stickerExtra.sticker,
-        emoji_list: stickerExtra.emojis
-      }
-    }).catch((error) => {
-      return {
-        error: {
-          telegram: error
-        }
-      }
-    })
-
-    if (stickerAdd.error) {
-      const error = stickerAdd.error.telegram
-      if (error?.code !== 429 || error.__cachedRateLimit) return stickerAdd
-
-      logRateLimit('addStickerToSet', error, logContext)
-
-      // A 429 isn't always a refusal: the Bot API server's TDLib retries
-      // FLOOD_WAIT internally, and bulk importers (moe-sticker-bot) report
-      // stickers landing despite the error. Look before telling the user it
-      // failed — otherwise they resend and get a duplicate or a deeper wait.
-      const landed = await findLandedSticker(stickerSet, stickerFile, stickerExtra, beforeStickers)
-      log.warn(`addStickerToSet 429 on pack=${stickerSet.name}: sticker ${landed ? 'landed anyway' : 'not in set'}`)
-
-      if (!landed) return stickerAdd
-      return finalizeAdd(stickerSet, stickerFile, stickerExtra, landed.setInfo, landed.sticker)
-    }
-  }
-
-  if (stickerAdd) {
-    const getStickerSet = await telegram.getStickerSet(stickerSet.name).catch((error) => {
-      return {
-        error: {
-          telegram: error
-        }
-      }
-    })
-    if (getStickerSet.error) {
-      return getStickerSet
-    }
-
-    if (!getStickerSet.stickers || getStickerSet.stickers.length === 0) {
-      return internalError(`pack ${stickerSet.name} is empty right after an add`)
-    }
-
-    const stickerInfo = pickAddedSticker(getStickerSet, beforeStickers, stickerFile)
-
-    return finalizeAdd(stickerSet, stickerFile, stickerExtra, getStickerSet, stickerInfo)
-  }
-}
-
-// Add a sticker by file_id. Returns the add result, or null when Telegram
-// refused the file itself — the caller then re-uploads, and the reason is
-// kept for that upload's 429 log.
-const tryAddByFileId = async (userId, stickerSet, stickerFile, stickerExtra, beforeStickers) => {
-  const fileId = stickerFile.reuse_file_id || stickerFile.file_id
-  const result = await uploadSticker(userId, stickerSet, stickerFile, { ...stickerExtra, sticker: fileId }, beforeStickers)
-  if (!isFileRejection(result)) return result
-
-  log.info(
-    `file_id add refused for ${stickerFile.file_unique_id} ` +
-    `(${result.error.telegram.description}) — falling back to re-upload`
-  )
-  stickerExtra.uploadReason = 'file_id_refused'
-  return null
-}
-
 // Telegram adds stickers only on behalf of the pack's owner (user_id of
 // uploadStickerFile / addStickerToSet). A co-editor or a group member used
 // their own id, and Telegram refused the add.
@@ -532,30 +47,6 @@ const resolveOwnerId = async (ctx, stickerSet) => {
   const ownerRef = stickerSet?.owner?._id || stickerSet?.owner
   const owner = ownerRef && await db.User.findById(ownerRef).select('telegram_id').lean().catch(() => null)
   return owner?.telegram_id || ctx.from.id
-}
-
-// Download a TGS, fit it to Telegram's canvas and upload it.
-const uploadRetargetedTgs = async (userId, stickerSet, stickerFile, stickerExtra, fileUrl, beforeStickers) => {
-  let animatedData
-  try {
-    animatedData = await downloadFileByUrl(fileUrl)
-  } catch (err) {
-    return { error: { i18nKey: 'sticker.add.error.convert' } }
-  }
-
-  const retargeted = retargetTgs(animatedData)
-  if (retargeted.error) return retargeted
-
-  const extra = { ...stickerExtra, sticker: { source: retargeted.buffer } }
-  const result = await uploadSticker(userId, stickerSet, stickerFile, extra, beforeStickers)
-  if (!isFileRejection(result)) return result
-
-  // Telegram refuses a TGS it parses as static ("wrong file type"), typically
-  // one whose keyframes carry no interpolators and get dropped. Repair it only
-  // after a refusal, so files Telegram takes as they are stay untouched.
-  const repaired = fixStaticTgs(retargeted.buffer)
-  if (repaired.error || !repaired.changed) return result
-  return uploadSticker(userId, stickerSet, stickerFile, { ...stickerExtra, sticker: { source: repaired.buffer } }, beforeStickers)
 }
 
 // Per-user ordering and "one video at a time" for free users live in the
@@ -633,17 +124,9 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   // come back as a raw Telegram error instead of just working.
   if (emojis.length > MAX_EMOJI_LIST) emojis.length = MAX_EMOJI_LIST
 
-  // Unified video detection - check all possible sources
-  const stickerType = stickerFile.stickerType
-  let isVideo =
-    stickerFile.is_video ||
-    stickerType === 'video' ||
-    stickerType === 'video_note' ||
-    inputFile.is_video ||
-    !!(inputFile.mime_type && inputFile.mime_type.match('video')) ||
-    inputFile.mime_type === 'image/gif' ||
-    inputFile.duration > 0
-  const isVideoNote = inputFile.video_note || stickerType === 'video_note'
+  // Every source of "this is a video" in one place (utils/sticker-format.js).
+  let isVideo = isVideoInput(stickerFile, inputFile)
+  const isVideoNote = isVideoNoteInput(stickerFile, inputFile)
 
   if (!ctx.session.userInfo) ctx.session.userInfo = await ctx.db.User.getData(ctx.from)
 
@@ -677,13 +160,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
     emojis
   }
 
-  if (stickerFile.is_animated) {
-    stickerExtra.sticker_format = 'animated'
-  } else if (isVideo || isVideoNote) {
-    stickerExtra.sticker_format = 'video'
-  } else {
-    stickerExtra.sticker_format = 'static'
-  }
+  stickerExtra.sticker_format = initialFormat({ isAnimated: stickerFile.is_animated, isVideo, isVideoNote })
 
   if (stickerFile.is_animated) {
     // A TGS from any pack (or a restore of this pack's own file) fits as is,
@@ -738,26 +215,9 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
     }
   }
 
-  // Verify sticker_format matches actual file format (fallback check via URL extension)
-  // This catches cases where is_video/is_animated might be incorrectly set
-  const fileUrlStr = fileUrl?.href || fileUrl?.toString() || ''
-  // Extract pathname to handle URLs with query parameters
-  let urlPathname = fileUrlStr
-  try {
-    if (fileUrlStr.startsWith('http')) {
-      urlPathname = new URL(fileUrlStr).pathname
-    }
-  } catch (e) {
-    // Keep original string if URL parsing fails
-  }
-
-  if (urlPathname.endsWith('.webm') && stickerExtra.sticker_format !== 'video') {
-    stickerExtra.sticker_format = 'video'
-  } else if (urlPathname.endsWith('.tgs') && stickerExtra.sticker_format !== 'animated') {
-    stickerExtra.sticker_format = 'animated'
-  } else if ((urlPathname.endsWith('.webp') || urlPathname.endsWith('.png')) && stickerExtra.sticker_format !== 'static') {
-    stickerExtra.sticker_format = 'static'
-  }
+  // The file's extension wins over flags that may be wrong.
+  const urlPathname = pathOf(fileUrl)
+  stickerExtra.sticker_format = formatFromPath(stickerExtra.sticker_format, urlPathname)
 
   // Handle animated stickers that weren't caught by is_animated check (fallback from URL detection)
   if (stickerExtra.sticker_format === 'animated' && !stickerFile.is_animated) {
@@ -800,7 +260,7 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
   // — so an mp4 original used to reach the static branch and die in
   // sharp.metadata as "invalid image". When nothing above identified the
   // type, look at the bytes; the static branch reuses the download.
-  const urlHasImageExt = /\.(webp|png|jpe?g)$/i.test(urlPathname)
+  const urlHasImageExt = hasImageExtension(urlPathname)
   if (!isVideo && !isVideoNote && !fileData && !inputFile.mime_type &&
       stickerExtra.sticker_format === 'static' && !urlHasImageExt) {
     try {
@@ -891,6 +351,8 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
           locale: ctx.i18n.locale(),
           showResult,
           tracked: !!options.track,
+          // Released by the convert handlers (see handlers/sticker.js addOne).
+          claimKey: options.claimKey || null,
           convertingMessageId: convertingMessage ? convertingMessage.message_id : null,
           stickerExtra,
           stickerSet,
@@ -936,6 +398,15 @@ module.exports = async (ctx, inputFile, toStickerSet, showResult = true, options
 
   if (!fileData || fileData.length === 0) {
     return { error: { i18nKey: 'sticker.add.error.invalid_image' } }
+  }
+
+  // A TGS whose legacy file_path has no extension and that carries no
+  // is_animated flag (a stored original, a restore) got here and died in
+  // sharp as "invalid image" (prod: `head: 1f8b…`, a gzip). It is an animated
+  // sticker: send it down the TGS path with the bytes already downloaded.
+  if (sniffMedia(fileData) === 'tgs') {
+    stickerExtra.sticker_format = 'animated'
+    return uploadRetargetedTgs(ownerId, stickerSet, stickerFile, stickerExtra, fileUrl, getStickerSetCheck.stickers, fileData)
   }
 
   const imageSharp = sharp(fileData, {

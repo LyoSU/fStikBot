@@ -101,6 +101,11 @@ registerCommands(bot, privateMessage, {
   // Makes invoice links for credits bought in Studio (utils/studio-invoices.js).
   require('./utils/studio-invoices').start()
 
+  // Removes bootstrap placeholders the add path never reached
+  // (utils/placeholder-sweeper.js).
+  require('./utils/placeholder-sweeper').start()
+    .catch((err) => log.error('[placeholder-sweeper] failed to start:', err.message))
+
   const monitorInterval = setInterval(() => updateMonitor(), MONITOR_INTERVAL_MS)
   if (monitorInterval.unref) monitorInterval.unref()
 
@@ -162,7 +167,8 @@ const gracefulShutdown = async (signal) => {
     require('./utils/metrics').flush(),
     require('./broadcast').stopWorker(),
     require('./pack-ops/worker').stop(),
-    require('./utils/studio-invoices').stop()
+    require('./utils/studio-invoices').stop(),
+    require('./utils/placeholder-sweeper').stop()
   ]).then((results) => {
     for (const r of results) {
       if (r.status === 'rejected') log.error('shutdown error:', r.reason?.stack || r.reason)

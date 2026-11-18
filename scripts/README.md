@@ -25,6 +25,20 @@ already exists with different options (`unique`, `expireAfterSeconds`) is
 reported and left alone — fix those by hand. Builds run in the background, but
 on the big `stickers` collection pick a quiet hour anyway.
 
+## `backfill-placeholder-checks.js`
+
+One-off for the placeholder sweeper (`utils/placeholder-sweeper.js`). New packs
+get `placeholderCheckAt` when they are created; packs made before the sweeper
+still carry a placeholder marker and no check time. This gives each pack from
+the last `--days` a first look, spread evenly over `--spread-hours` (on
+2026-11-18: ~79k packs from 30 days). Run `ensure-indexes.js` first — the
+sweeper's queue needs its `placeholderCheckAt` index.
+
+```bash
+node scripts/backfill-placeholder-checks.js --dry-run
+node scripts/backfill-placeholder-checks.js --days 30 --spread-hours 72
+```
+
 ## `inspect-db.js`
 
 Read-only diagnostic of the `Sticker` and `StickerSet` collections. Dumps
@@ -199,6 +213,19 @@ Test bot only, one `packops_*` pack deleted at the end.
 docker run -d --rm --name studio-worker-mongo -p 27098:27017 mongo:7
 node scripts/check-studio-worker-live.js [owner_user_id]   # default: config.mainAdminId
 docker stop studio-worker-mongo
+```
+
+## `check-placeholder-live.js`
+
+Runs the placeholder sweeper against the real Bot API: creates a pack the way
+`/new` does (one placeholder), adds a sticker straight through the API — as a
+Telegram app would, with the bot's add path never involved — and checks one
+sweep removes the placeholder and nothing else; a second pack holding only the
+placeholder must stay as it is. Test bot only, both `phlive_*` packs deleted
+at the end.
+
+```bash
+node scripts/check-placeholder-live.js [owner_user_id]   # default: config.mainAdminId
 ```
 
 ## A note on schema migration
