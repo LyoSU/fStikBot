@@ -1,17 +1,11 @@
-const path = require('path')
 const Markup = require('telegraf/markup')
-const I18n = require('telegraf-i18n')
 const escapeHTML = require('./html-escape')
 const { matchTelegramErrorReason, extractRetryAfterSeconds, rateLimitText } = require('./telegram-error')
 const { isTransientError } = require('./transient-error')
 const { logError } = require('./error-line')
 const { logUid } = require('./log-uid')
 
-const i18n = new I18n({
-  directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
+const i18n = require('./i18n')
 
 // Known Telegram API error description substrings → i18n key.
 // Order matters only when substrings overlap — currently disjoint.

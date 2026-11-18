@@ -26,7 +26,6 @@
     "dotenv": "^16.4.7",
     "emoji-regex": "^10.2.1",
     "error-stack-parser": "^2.0.6",
-    "got": "^11.8.6",
     "limax": "^4.1.0",
     "moment": "^2.31.0",
     "mongoose": "^8.24.4",

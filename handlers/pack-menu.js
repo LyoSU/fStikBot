@@ -164,4 +164,4 @@ async function editPackMenu (ctx, stickerSet, options) {
   }
 }
 
-module.exports = { buildPackMenu, sendPackMenu, editPackMenu, isOwner }
+module.exports = { sendPackMenu, editPackMenu, isOwner }

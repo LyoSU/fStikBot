@@ -575,14 +575,10 @@ patchTelegramPrototype()
 // Middleware
 // ────────────────────────────────────────────────────────────────
 
-// Exposes ctx.withRetry for manual wrapping (e.g. explicit retry around
-// a non-Telegraf async call) and clears the blocked-chat cache the
-// moment we see an update from that chat — so users who unblock don't
-// have to wait out the TTL.
+// Clears the blocked-chat cache the moment we see an update from that chat,
+// so users who unblock don't have to wait out the TTL.
 function retryMiddleware () {
   return async (ctx, next) => {
-    ctx.withRetry = (fn, options) => withRetry(fn, options)
-
     const mcm = ctx?.update?.my_chat_member
     const isKick = mcm?.new_chat_member?.status === 'kicked'
 

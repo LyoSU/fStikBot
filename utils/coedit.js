@@ -10,8 +10,6 @@
 // co-edit menu (handlers/coedit.js). Before the member list existed, having
 // the pack selected through the link was the only grant — such users become
 // editors the first time they act, or when the owner opens the menu.
-const path = require('path')
-const I18n = require('telegraf-i18n')
 const log = require('./logger').scope('coedit')
 
 const ROLES = ['editor', 'contributor']
@@ -24,11 +22,7 @@ const PERMISSIONS = {
   public: ['add', 'delete', 'emoji']
 }
 
-const i18n = new I18n({
-  directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
+const i18n = require('./i18n')
 
 const idOf = (value) => String(value?._id || value || '')
 

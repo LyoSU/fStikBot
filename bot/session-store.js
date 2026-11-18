@@ -56,6 +56,5 @@ function sessionMiddleware () {
 
 module.exports = {
   sessionMiddleware,
-  getSessionKey,
   _sessionCount: () => store.size
 }

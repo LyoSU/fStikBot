@@ -8,7 +8,6 @@
 const fs = require('fs')
 const path = require('path')
 const Telegraf = require('telegraf')
-const I18n = require('telegraf-i18n')
 
 const { db } = require('./database')
 const handlers = require('./handlers')
@@ -54,11 +53,7 @@ bot.catch(handlers.handleError)
 bot.context.config = require('./config.json')
 bot.context.db = db
 
-const i18n = new I18n({
-  directory: path.resolve(__dirname, 'locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
+const i18n = require('./utils/i18n')
 
 // Cached at startup — privacy policy is static HTML.
 const privacyHtml = fs.readFileSync(path.resolve(__dirname, 'privacy.html'), 'utf-8')

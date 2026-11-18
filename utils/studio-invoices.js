@@ -10,8 +10,6 @@
 // purchase in the chat. Nothing here touches a balance. The price is ours too:
 // the bot's own regional table for the user's language, not the API's copy.
 
-const path = require('path')
-const I18n = require('telegraf-i18n')
 const { calculateStarPrice, CREDIT_PACKAGES } = require('../scenes/donate')
 const log = require('./logger').scope('studio-invoices')
 const { logError } = require('./error-line')
@@ -25,11 +23,7 @@ const CLAIM_STALE_MS = 15 * 1000
 
 const errorText = (err) => err?.description || err?.response?.description || err?.message || String(err)
 
-const defaultI18n = () => new I18n({
-  directory: path.resolve(__dirname, '../locales'),
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
+const defaultI18n = () => require('./i18n')
 
 function mongoRepo (db) {
   return {

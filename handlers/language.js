@@ -1,17 +1,12 @@
 const fs = require('fs')
 const path = require('path')
 const Markup = require('telegraf/markup')
-const I18n = require('telegraf-i18n')
 const handleStart = require('./start')
 const { sendBanner } = require('../banners')
 
 const LOCALES_DIR = path.resolve(__dirname, '../locales')
 
-const i18n = new I18n({
-  directory: LOCALES_DIR,
-  defaultLanguage: 'en',
-  defaultLanguageOnMissing: true
-})
+const i18n = require('../utils/i18n')
 
 // Built once: locale code → its own display name. A locale whose
 // `language_name` falls back to the default one is treated as untranslated
