@@ -461,6 +461,8 @@ callback:
         未找到贴纸包。
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ 正在添加…
       delete: 贴纸已从贴纸包中删除。
       restored: 贴纸已保存到当前贴纸包。
     delete: 贴纸已从贴纸包中删除。
@@ -485,6 +487,8 @@ callback:
       群组设置已更新。
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram 要求等待 ${seconds} 秒。我会自动添加，无需再次发送。
     ok: |
       ✅ 已添加到 <a href="${link}">${title}</a>
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       使用 @QuotlyBot 将这条消息制作成引用贴纸
     error:
+      rate_limit_long: |
+        ⏳ Telegram 暂时限制了向你的贴纸包添加贴纸，大约 ${minutes} 分钟。这是 Telegram 本身的限制，不是机器人的。请稍后再发送文件。
+      in_progress: |
+        ⏳ 这个文件正在添加到贴纸包中，结果会显示在这里。无需再次发送。
       reply: |
         请回复一张贴纸。
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     贴纸包不可用，可能已在 Telegram 中被删除。
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram 目前不稳定，文件未添加。请一分钟后再次发送。
     sticker_not_in_set: |
       该贴纸已不在贴纸包中，可能之前已被删除。
     pack_invalid: |

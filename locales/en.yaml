@@ -461,6 +461,8 @@ callback:
         Pack not found.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Adding…
       delete: Sticker deleted from the pack.
       restored: Sticker saved to the current pack.
     delete: Sticker deleted from the pack.
@@ -485,6 +487,8 @@ callback:
       Group settings updated.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram asks to wait ${seconds} s. I'll add it myself — no need to send it again.
     ok: |
       ✅ Added to <a href="${link}">${title}</a>
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Use @QuotlyBot to create a quote from this message
     error:
+      rate_limit_long: |
+        ⏳ Telegram has paused adding stickers to your packs for about ${minutes} min. This is Telegram's own limit, not the bot's. Send the files again later.
+      in_progress: |
+        ⏳ This file is already being added to the pack — the result will show up here. No need to send it again.
       reply: |
         Reply to a sticker.
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     The pack is unavailable. It may have been deleted in Telegram.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram is having trouble right now, so the file wasn't added. Send it again in a minute.
     sticker_not_in_set: |
       This sticker is no longer in the pack — it may have been deleted earlier.
     pack_invalid: |

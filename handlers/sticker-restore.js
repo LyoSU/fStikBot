@@ -6,8 +6,41 @@ const { humanizeTelegramError } = require('../utils/telegram-error')
 const { safeEditMessage } = require('../utils/safe-edit')
 const coedit = require('../utils/coedit')
 const publicPackLimit = require('../utils/public-pack-limit')
+const inflight = require('../utils/inflight-adds')
 
+// A callback alert shows text as is: no HTML.
+const plain = (text) => text.replace(/<[^>]+>/g, '').trim()
+
+// Prod 2026-11-17: 2076 of 2712 duplicate stickers in a day came through this
+// button. The callback is answered only once the add is done (seconds), so the
+// spinner looked stuck and people tapped again — three copies of one video in
+// one second — and the message kept a "Copy" button after every restore.
+// One add per (pack, file) at a time now; a restore that would re-add a file
+// already live in the pack is refused; a restored sticker offers no "Copy".
 module.exports = async (ctx) => {
+  const claimKey = inflight.claim(`restore:${ctx.from.id}`, ctx.match[2])
+  if (claimKey === false) {
+    return ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.in_progress')).catch(() => {})
+  }
+  try {
+    return await restoreSticker(ctx)
+  } finally {
+    inflight.release(claimKey)
+  }
+}
+
+// A live sticker of this pack made from the same source file, if any.
+const findLiveCopy = (ctx, sticker, sourceUid) => ctx.db.Sticker.findOne({
+  stickerSet: sticker.stickerSet._id,
+  deleted: false,
+  _id: { $ne: sticker._id },
+  $or: [
+    { fileUniqueId: sourceUid },
+    { 'original.fileUniqueId': sourceUid }
+  ]
+}).select('_id').lean()
+
+const restoreSticker = async (ctx) => {
   const sticker = await ctx.db.Sticker.findOne({
     fileUniqueId: ctx.match[2]
   }).populate('stickerSet', '_id name title inline animated video packType emojiSuffix frameType boost owner placeholderFileUniqueId passcode')
@@ -29,6 +62,15 @@ module.exports = async (ctx) => {
 
   const wasDeleted = sticker.deleted
   let newFileUniqueId
+
+  // Undoing a delete must not add a second copy: the user may have sent the
+  // same file again since. ("Copy" on a live sticker is an explicit second copy.)
+  if (wasDeleted) {
+    const sourceUid = sticker.getOriginalFileUniqueId() || sticker.fileUniqueId
+    if (await findLiveCopy(ctx, sticker, sourceUid)) {
+      return ctx.answerCbQuery(plain(ctx.i18n.t('sticker.add.error.have_already')), true)
+    }
+  }
 
   if (sticker.stickerSet.inline === true) {
     // Inline stickers - just mark as not deleted
@@ -97,7 +139,7 @@ module.exports = async (ctx) => {
       const description = result.error.telegram?.description || result.error.telegram?.message || ''
 
       if (result.error.type === 'duplicate') {
-        return ctx.answerCbQuery(ctx.i18n.t('sticker.add.error.have_already'), true)
+        return ctx.answerCbQuery(plain(ctx.i18n.t('sticker.add.error.have_already')), true)
       } else if (description.includes('STICKERSET_INVALID')) {
         return ctx.answerCbQuery(ctx.i18n.t('callback.pack.error.copy'), true)
       } else if (result.error.telegram) {
@@ -138,13 +180,11 @@ module.exports = async (ctx) => {
   coedit.track(ctx.db, sticker.stickerSet, ctx.from, 'restore', { fileUniqueId: newFileUniqueId })
   await ctx.answerCbQuery(ctx.i18n.t('callback.sticker.answerCbQuery.restored'))
 
+  // Only "Delete" from here: a "Copy" under every restored sticker made each
+  // extra tap one more duplicate. (Third arg of callbackButton is `hide`.)
   await safeEditMessage(ctx, ctx.i18n.t('callback.sticker.restored'), {
     reply_markup: Markup.inlineKeyboard([
-      // Third arg of callbackButton is `hide` — it was passed !!newFileUniqueId,
-      // so the buttons disappeared exactly when they were valid and showed
-      // `delete_sticker:undefined` when they weren't.
-      { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${newFileUniqueId}`), style: 'danger' },
-      { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.copy'), `restore_sticker:${newFileUniqueId}`), style: 'primary' }
+      { ...Markup.callbackButton(ctx.i18n.t('callback.sticker.btn.delete'), `delete_sticker:${newFileUniqueId}`), style: 'danger' }
     ])
   })
 }

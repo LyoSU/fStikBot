@@ -461,6 +461,8 @@ callback:
         Paket nicht gefunden.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Wird hinzugefügt…
       delete: Sticker aus dem Paket gelöscht.
       restored: Sticker im aktuellen Paket gespeichert.
     delete: Sticker aus dem Paket gelöscht.
@@ -485,6 +487,8 @@ callback:
       Gruppeneinstellungen aktualisiert.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram bittet, ${seconds} Sek. zu warten. Ich füge es selbst hinzu – du musst nichts erneut senden.
     ok: |
       ✅ Zu <a href="${link}">${title}</a> hinzugefügt
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Nutze @QuotlyBot, um aus dieser Nachricht ein Zitat zu erstellen
     error:
+      rate_limit_long: |
+        ⏳ Telegram hat das Hinzufügen von Stickern zu deinen Paketen für etwa ${minutes} Min. pausiert. Das ist ein Limit von Telegram selbst, nicht vom Bot. Sende die Dateien später erneut.
+      in_progress: |
+        ⏳ Diese Datei wird gerade zum Paket hinzugefügt – das Ergebnis erscheint hier. Du musst sie nicht erneut senden.
       reply: |
         Antworte auf einen Sticker.
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     Das Paket ist nicht verfügbar. Vielleicht wurde es in Telegram gelöscht.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram hat gerade Störungen, die Datei wurde nicht hinzugefügt. Sende sie in einer Minute erneut.
     sticker_not_in_set: |
       Der Sticker ist nicht mehr im Paket — vielleicht wurde er schon gelöscht.
     pack_invalid: |

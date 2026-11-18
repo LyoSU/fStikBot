@@ -461,6 +461,8 @@ callback:
         Paket bulunamadı.
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ Ekleniyor…
       delete: Çıkartma paketten silindi.
       restored: Çıkartma mevcut pakete kaydedildi.
     delete: Çıkartma paketten silindi.
@@ -485,6 +487,8 @@ callback:
       Grup ayarları güncellendi.
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegram ${seconds} sn. beklemeni istiyor. Kendim ekleyeceğim — tekrar göndermene gerek yok.
     ok: |
       ✅ <a href="${link}">${title}</a> paketine eklendi
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       Bu mesajdan alıntı oluşturmak için @QuotlyBot'u kullan
     error:
+      rate_limit_long: |
+        ⏳ Telegram, paketlerine çıkartma eklemeyi yaklaşık ${minutes} dk. süreyle durdurdu. Bu, botun değil Telegram'ın kendi sınırı. Dosyaları daha sonra tekrar gönder.
+      in_progress: |
+        ⏳ Bu dosya zaten pakete ekleniyor — sonuç buraya gelecek. Tekrar göndermene gerek yok.
       reply: |
         Bir çıkartmayı yanıtla.
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     Paket kullanılamıyor. Telegram'da silinmiş olabilir.
   telegram_reasons:
+    telegram_unavailable: |
+      Telegram şu anda aksaklık yaşıyor, dosya eklenmedi. Bir dakika sonra tekrar gönder.
     sticker_not_in_set: |
       Bu çıkartma artık pakette değil — daha önce silinmiş olabilir.
     pack_invalid: |

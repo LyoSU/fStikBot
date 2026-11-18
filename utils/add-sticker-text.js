@@ -2,7 +2,8 @@ const path = require('path')
 const Markup = require('telegraf/markup')
 const I18n = require('telegraf-i18n')
 const escapeHTML = require('./html-escape')
-const { matchTelegramErrorReason, extractRetryAfterSeconds } = require('./telegram-error')
+const { matchTelegramErrorReason, extractRetryAfterSeconds, rateLimitText } = require('./telegram-error')
+const { isTransientError } = require('./transient-error')
 const { logError } = require('./error-line')
 const { logUid } = require('./log-uid')
 
@@ -38,7 +39,8 @@ const logUnknown = (error, meta) => logError(error?.telegram || error?.message |
 
 /**
  * @param {Object} [meta] who and where, for the log line when the user gets
- *   the generic error: `userId` (hashed), `where`, `format`
+ *   the generic error: `userId` (hashed), `where`, `format`; `private` when the
+ *   reply goes to a private chat (enables the "new pack / my packs" buttons)
  */
 module.exports = (addStickerResult, lang, meta = {}) => {
   let messageText = ''
@@ -71,7 +73,10 @@ module.exports = (addStickerResult, lang, meta = {}) => {
       ])
     }
   } else if (addStickerResult.error) {
-    if (addStickerResult.error.type === 'duplicate') {
+    if (addStickerResult.error.type === 'in_progress') {
+      // The same file is still on its way into this pack (a video converting).
+      messageText = i18n.t(lang, 'sticker.add.error.in_progress')
+    } else if (addStickerResult.error.type === 'duplicate') {
       messageText = i18n.t(lang, 'sticker.add.error.have_already')
 
       if (addStickerResult.error.sticker) {
@@ -90,10 +95,12 @@ module.exports = (addStickerResult, lang, meta = {}) => {
       if (matchTelegramErrorReason(addStickerResult.error.telegram) === 'rate_limited') {
         // addStickerToSet 429 with retry_after > maxWait fails fast; the user
         // used to read the raw "Too Many Requests: retry after 10".
-        const seconds = extractRetryAfterSeconds(addStickerResult.error.telegram)
-        messageText = seconds
-          ? i18n.t(lang, 'error.rate_limit_seconds', { seconds })
-          : i18n.t(lang, 'error.telegram_reasons.rate_limited')
+        messageText = rateLimitText((key, vars) => i18n.t(lang, key, vars), extractRetryAfterSeconds(addStickerResult.error.telegram))
+      } else if (isTransientError(addStickerResult.error.telegram)) {
+        // A 502/504 or a dropped connection, with retries already spent (and,
+        // for the add itself, the set checked): Telegram's moment, not the
+        // file's — say so instead of "something went wrong".
+        messageText = i18n.t(lang, 'error.telegram_reasons.telegram_unavailable')
       } else {
         // Only what we have words for reaches the user. Raw text never does:
         // a network error's message once carried the bot token into the chat
@@ -104,6 +111,15 @@ module.exports = (addStickerResult, lang, meta = {}) => {
           ? i18n.t(lang, hit[1])
           : reason ? i18n.t(lang, `error.telegram_reasons.${reason}`) : i18n.t(lang, 'error.unknown')
         if (!hit && !reason) logUnknown(addStickerResult.error, meta)
+
+        // A full or vanished pack: the fix is another pack, one tap away.
+        // Private chats only: those callbacks are private-chat actions.
+        if (meta.private && (reason === 'pack_full' || reason === 'pack_invalid')) {
+          replyMarkup = Markup.inlineKeyboard([[
+            Markup.callbackButton(i18n.t(lang, 'cmd.start.btn.new'), 'new_pack:null'),
+            Markup.callbackButton(i18n.t(lang, 'cmd.start.commands.packs'), 'packs:null')
+          ]])
+        }
       }
     } else {
       // uploadSticker's internal { error: { message } } and anything else

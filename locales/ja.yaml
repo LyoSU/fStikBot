@@ -461,6 +461,8 @@ callback:
         パックが見つかりません。
   sticker:
     answerCbQuery:
+      in_progress: |
+        ⏳ 追加中…
       delete: パックからステッカーを削除しました。
       restored: 現在のパックにステッカーを保存しました。
     delete: パックからステッカーを削除しました。
@@ -485,6 +487,8 @@ callback:
       グループ設定を更新しました。
 sticker:
   add:
+    rate_limit_wait: |
+      ⏳ Telegramから${seconds}秒待つよう求められています。自動で追加するので、もう一度送る必要はありません。
     ok: |
       ✅ <a href="${link}">${title}</a> に追加しました
 
@@ -505,6 +509,10 @@ sticker:
     quote: |
       このメッセージから引用ステッカーを作成するには @QuotlyBot を使用してください
     error:
+      rate_limit_long: |
+        ⏳ Telegramがあなたのパックへのステッカー追加を約${minutes}分間一時停止しています。これはボットではなくTelegram自体の制限です。しばらくしてからファイルを送り直してください。
+      in_progress: |
+        ⏳ このファイルは現在パックに追加中です。結果はここに届きます。もう一度送る必要はありません。
       reply: |
         ステッカーに返信してください。
       no_selected_pack: |
@@ -930,6 +938,8 @@ error:
   stickerset_invalid: |
     パックをご利用いただけません。Telegram側で削除された可能性があります。
   telegram_reasons:
+    telegram_unavailable: |
+      Telegramが現在不安定なため、ファイルは追加されませんでした。1分後にもう一度送ってください。
     sticker_not_in_set: |
       このステッカーはパックに存在しません。すでに削除された可能性があります。
     pack_invalid: |
