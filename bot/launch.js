@@ -18,6 +18,52 @@ const ALLOWED_UPDATES = [
   'my_chat_member'
 ]
 
+// A 409 on getUpdates means another process is polling with this token. During
+// a deploy that is the old container for a few seconds: Coolify starts the new
+// one before it stops the old. Both used to exit on the 409, Docker restarted
+// the loser, which then knocked out the other — and telegraf drops its offset
+// when it stops, so a restart could handle the last, unconfirmed batch again.
+// Now a 409 is waited out (polling stays up, the offset is kept) for up to
+// CONFLICT_MAX_MS; a conflict that lasts longer is a real second instance and
+// still ends the process.
+const CONFLICT_RETRY_MS = 5000
+const CONFLICT_MAX_MS = 5 * 60 * 1000
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+/**
+ * Wrap getUpdates so a passing 409 returns an empty batch after a pause.
+ * @returns {Function} same signature as telegram.getUpdates
+ */
+function withConflictWait (getUpdates, {
+  isShuttingDown = () => false,
+  retryMs = CONFLICT_RETRY_MS,
+  maxMs = CONFLICT_MAX_MS,
+  now = () => Date.now(),
+  wait = sleep,
+  logger = log
+} = {}) {
+  let conflictSince = null
+
+  return async (...args) => {
+    try {
+      const updates = await getUpdates(...args)
+      if (conflictSince !== null) {
+        logger.info(`getUpdates conflict over after ${Math.round((now() - conflictSince) / 1000)}s`)
+        conflictSince = null
+      }
+      return updates
+    } catch (error) {
+      if (error?.code !== 409 || isShuttingDown()) throw error
+      if (conflictSince === null) conflictSince = now()
+      if (now() - conflictSince > maxMs) throw error
+      logger.warn(`409 on getUpdates: another instance is polling (deploy overlap?) — waiting ${retryMs / 1000}s`)
+      await wait(retryMs)
+      return []
+    }
+  }
+}
+
 module.exports = async function launch (bot, { isShuttingDown = () => false } = {}) {
   if (process.env.BOT_DOMAIN) {
     // Keep the original raw-token path — server nginx is configured to
@@ -46,6 +92,8 @@ module.exports = async function launch (bot, { isShuttingDown = () => false } = 
     return
   }
 
+  bot.telegram.getUpdates = withConflictWait(bot.telegram.getUpdates.bind(bot.telegram), { isShuttingDown })
+
   // telegraf 3 reads the polling options from config.polling — a top-level
   // `allowedUpdates` never made it to getUpdates.
   //
@@ -67,3 +115,4 @@ module.exports = async function launch (bot, { isShuttingDown = () => false } = 
 }
 
 module.exports.ALLOWED_UPDATES = ALLOWED_UPDATES
+module.exports.withConflictWait = withConflictWait
