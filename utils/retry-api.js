@@ -63,6 +63,11 @@ const CHAT_ACTION_CACHE_MAX = 10000
 // budget, so the copy paces itself instead of poisoning — or being
 // poisoned by — the shared cooldown cache.
 const copyScope = new AsyncLocalStorage()
+// Calls made inside runWithOwnRetry are never retried here: their caller
+// paces and retries them itself (the broadcast does, through its shared
+// limiter). Retrying in both places let every send of a batch sleep out its
+// own 429 and fire again together.
+const ownRetryScope = new AsyncLocalStorage()
 
 // ────────────────────────────────────────────────────────────────
 // Blocked-chat cache
@@ -522,7 +527,7 @@ function patchTelegramPrototype () {
           maxRetries: copyStore.maxRetries ?? COPY_RETRY_MAX_ATTEMPTS,
           onWait: copyStore.onWait
         }
-      : isChatAction
+      : isChatAction || ownRetryScope.getStore()
         ? { method: description, maxRetries: 0 }
         : { method: description }
 
@@ -612,6 +617,9 @@ function runInCopyScope (fn, options = {}) {
   return copyScope.run({ copy: true, onWait: options.onWait, maxWait: options.maxWait, maxRetries: options.maxRetries }, fn)
 }
 
+/** Run `fn` with no retry from this module on its Telegram calls (see ownRetryScope). */
+const runWithOwnRetry = (fn) => ownRetryScope.run(true, fn)
+
 /**
  * True when called (directly or through awaits) from inside runInCopyScope.
  * Callers that pre-check the cooldown cache must skip that check here — the
@@ -626,6 +634,7 @@ function isInCopyScope () {
 module.exports = {
   withRetry,
   runInCopyScope,
+  runWithOwnRetry,
   isInCopyScope,
   isRateLimitError,
   getRetryAfter,

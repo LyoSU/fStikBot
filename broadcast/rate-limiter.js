@@ -17,17 +17,25 @@ class RateLimiter {
     if (ratePerSec <= 0) throw new Error('ratePerSec must be > 0')
     this.intervalMs = 1000 / ratePerSec
     this.nextAvailable = 0
+    this.blockedUntil = 0
   }
 
   // Resolves once it's this caller's turn. Concurrent callers serialize
   // through the shared `nextAvailable` cursor — each reserves its slot
   // synchronously, then awaits the actual delay.
+  //
+  // A cooldown that starts while a caller sleeps on its slot holds it too:
+  // the slot is taken again past the cooldown. Before, callers already
+  // asleep sent right into the limit Telegram had just announced.
   async acquire () {
-    const now = Date.now()
-    const scheduled = Math.max(now, this.nextAvailable)
-    this.nextAvailable = scheduled + this.intervalMs
-    const wait = scheduled - now
-    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait))
+    for (;;) {
+      const now = Date.now()
+      const scheduled = Math.max(now, this.nextAvailable)
+      this.nextAvailable = scheduled + this.intervalMs
+      const wait = scheduled - now
+      if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait))
+      if (Date.now() >= this.blockedUntil) return
+    }
   }
 
   // Used by the runner when Telegram explicitly asks us to back off for
@@ -37,6 +45,7 @@ class RateLimiter {
     if (!seconds || seconds <= 0) return
     const until = Date.now() + (seconds * 1000)
     if (until > this.nextAvailable) this.nextAvailable = until
+    if (until > this.blockedUntil) this.blockedUntil = until
   }
 }
 
