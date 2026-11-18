@@ -70,15 +70,13 @@ module.exports = (bot, {
       ctx.session.chainActions.push(action)
     }
 
-    if (ctx.callbackQuery) ctx.state.answerCbQuery = []
-
     return next(ctx).then(() => {
-      // Auto-answer the callback. Silently swallow failures: a long-running
+      // Answer a callback no handler answered, so its spinner stops. One
+      // that was answered already isn't answered again: that was a wasted
+      // Telegram call on every tap. Failures are swallowed: a long-running
       // handler can outlive Telegram's ~5-10 min callback_query_id TTL.
-      // Propagating that would spam the global error handler with
-      // "query is too old" noise.
-      if (ctx.callbackQuery) {
-        return ctx.answerCbQuery(...ctx.state.answerCbQuery).catch(() => {})
+      if (ctx.callbackQuery && !ctx.state.cbAnswered) {
+        return ctx.answerCbQuery().catch(() => {})
       }
     })
   })

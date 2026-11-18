@@ -69,6 +69,13 @@ test('wrapAnswerCbQuery clamps the text and forwards the other args', () => {
   })
 })
 
+test('an answer is remembered, so the middleware does not answer again', () => {
+  const ctx = { callbackQuery: { id: '1' }, state: {}, answerCbQuery: () => Promise.resolve(true) }
+  wrapAnswerCbQuery(ctx)
+  assert.ok(!ctx.state.cbAnswered)
+  return ctx.answerCbQuery('ok').then(() => assert.strictEqual(ctx.state.cbAnswered, true))
+})
+
 test('wrapAnswerCbQuery is a no-op on a ctx without callbackQuery', () => {
   const ctx = { answerCbQuery: null }
   wrapAnswerCbQuery(ctx)

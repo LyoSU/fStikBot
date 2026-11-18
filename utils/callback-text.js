@@ -31,13 +31,18 @@ const clampCallbackText = (text) => {
 }
 
 /**
- * Wrap ctx.answerCbQuery so every alert text is clamped. Idempotent per ctx;
- * a ctx without a callbackQuery is left alone.
+ * Wrap ctx.answerCbQuery so every alert text is clamped and the answer is
+ * remembered (`ctx.state.cbAnswered`): the middleware's fallback answer is
+ * sent only when no handler answered. A ctx without a callbackQuery is left
+ * alone.
  */
 const wrapAnswerCbQuery = (ctx) => {
   if (!ctx?.callbackQuery || typeof ctx.answerCbQuery !== 'function') return
   const original = ctx.answerCbQuery
-  ctx.answerCbQuery = (text, ...rest) => original.call(ctx, clampCallbackText(text), ...rest)
+  ctx.answerCbQuery = (text, ...rest) => {
+    if (ctx.state) ctx.state.cbAnswered = true
+    return original.call(ctx, clampCallbackText(text), ...rest)
+  }
 }
 
 module.exports = { clampCallbackText, wrapAnswerCbQuery, CALLBACK_TEXT_MAX }
