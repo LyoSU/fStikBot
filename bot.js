@@ -111,6 +111,10 @@ registerCommands(bot, privateMessage, {
 
   // Memory, every 5 minutes: heap against the sizes of what can hold it. In MB.
   const mb = (bytes) => Math.round(bytes / 1048576)
+  const waitsNow = () => {
+    const { convertQueue, removebgQueue, videoNoteQueue } = require('./utils/queues')
+    return require('./utils/queue-job').pendingWaits(convertQueue, removebgQueue, videoNoteQueue)
+  }
   setInterval(() => {
     // A diagnostic must not be what takes the process down.
     try {
@@ -119,7 +123,7 @@ registerCommands(bot, privateMessage, {
       const updates = require('./utils/perf-timing').perfSnapshot().handler?.total || 0
       log.info(`[mem] heap=${mb(m.heapUsed)}/${mb(m.heapTotal)} rss=${mb(m.rss)} ext=${mb(m.external)} ` +
         `sessions=${require('./bot/session-store')._sessionCount()} mtRows=${mt.rows} mtCached=${mt.cached} ` +
-        `updates=${updates} uptime=${Math.round(process.uptime())}`)
+        `waits=${waitsNow()} updates=${updates} uptime=${Math.round(process.uptime())}`)
     } catch (err) {
       log.warn('[mem] failed:', err.message)
     }

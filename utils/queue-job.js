@@ -6,31 +6,95 @@ const { isTooOld, jobFields } = require('./video-convert-rules')
 
 const TIMEOUT = Symbol('timeout')
 
+// Waiting for a job without Bull's job.finished(). That one adds a
+// global:completed and a global:failed listener plus a 5 s watchdog interval
+// (a Redis call each tick) per wait, and drops them only when the job ends. A
+// wait that timed out on a job that never ends here — removed on completion
+// before the event arrived, stalled, an event lost in a pub/sub reconnect —
+// kept all three for the life of the process: a lead for the heap growth
+// that crashes the bot about once a day.
+//
+// Here each queue has one pair of listeners and a map of waiters by job id;
+// a wait leaves the map when it settles or times out, whatever happens to
+// the job.
+const registries = new WeakMap()
+
+const parseResult = (value) => {
+  if (typeof value !== 'string') return value
+  try {
+    return JSON.parse(value)
+  } catch (_) {
+    return undefined
+  }
+}
+
+function registryOf (queue) {
+  let waiters = registries.get(queue)
+  if (waiters) return waiters
+  waiters = new Map()
+  registries.set(queue, waiters)
+
+  const settle = (jobId, outcome) => {
+    const set = waiters.get(String(jobId))
+    if (!set) return
+    waiters.delete(String(jobId))
+    const value = outcome()
+    for (const resolve of set) resolve(value)
+  }
+  // Parsed only when somebody waits: a converter result is megabytes of base64.
+  queue.on('global:completed', (jobId, value) => settle(jobId, () => ({ result: parseResult(value) })))
+  queue.on('global:failed', (jobId, reason) => settle(jobId, () => ({ error: 'failed', cause: new Error(reason) })))
+  return waiters
+}
+
+// A job that ended before the wait began sends no more events: look it up.
+async function settledAlready (queue, id) {
+  const job = await queue.getJob(id)
+  if (!job) return null
+  if (await job.isCompleted()) return { result: job.returnvalue }
+  if (await job.isFailed()) return { error: 'failed', cause: new Error(job.failedReason) }
+  return null
+}
+
 /**
- * Wait for a job to finish, giving up after `timeoutMs`.
+ * Wait for a job to finish, giving up after `timeoutMs`. Never rejects.
  *
- * The timeout resolves with a sentinel instead of rejecting: Promise.race
- * losers keep running, and a rejecting loser becomes an unhandled rejection
- * once the race is decided. The timer is always cleared.
- *
+ * @param {Object} job a Bull job (its `queue` is used)
  * @returns {Promise<{result: Object} | {error: 'timeout'|'failed', cause?: Error}>}
  */
 async function waitForJob (job, timeoutMs) {
-  let timer
-  const timeout = new Promise((resolve) => {
-    timer = setTimeout(() => resolve(TIMEOUT), timeoutMs)
-  })
-  const finished = job.finished().then(
-    (result) => ({ result }),
-    (cause) => ({ error: 'failed', cause })
-  )
+  const waiters = registryOf(job.queue)
+  const id = String(job.id)
 
-  const outcome = await Promise.race([finished, timeout])
-  clearTimeout(timer)
+  let done
+  const settled = new Promise((resolve) => { done = resolve })
+  if (!waiters.has(id)) waiters.set(id, new Set())
+  waiters.get(id).add(done)
 
-  if (outcome === TIMEOUT) return { error: 'timeout' }
-  return outcome
+  const timer = setTimeout(() => done(TIMEOUT), timeoutMs)
+  // After subscribing, so an end between the two can't be missed.
+  settledAlready(job.queue, id).then((outcome) => { if (outcome) done(outcome) }, () => {})
+
+  try {
+    const outcome = await settled
+    return outcome === TIMEOUT ? { error: 'timeout' } : outcome
+  } finally {
+    clearTimeout(timer)
+    const set = waiters.get(id)
+    if (set) {
+      set.delete(done)
+      if (!set.size) waiters.delete(id)
+    }
+  }
 }
+
+/** Waits in progress across all queues, for the memory log. */
+const pendingWaits = (...queues) => queues.reduce((sum, queue) => {
+  const waiters = registries.get(queue)
+  if (!waiters) return sum
+  for (const set of waiters.values()) sum += set.size
+  return sum
+}, 0)
 
 /**
  * Waits for a job already in the queue, added here or found again by its id
@@ -93,4 +157,4 @@ async function runQueueJob (queue, data, { timeoutMs, priority = 10, keepSeconds
   return followQueueJob(queue, job, { timeoutMs })
 }
 
-module.exports = { runQueueJob, followQueueJob, waitForJob }
+module.exports = { runQueueJob, followQueueJob, waitForJob, pendingWaits }

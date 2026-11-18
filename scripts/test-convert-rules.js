@@ -100,10 +100,24 @@ const served = (jobs) => [...jobs].sort((a, b) => a.priority - b.priority || a.a
     assert.deepStrictEqual(jobFields({ id: 1, opts: {} }), { jobId: '1', priority: undefined, waitMs: undefined })
   })
 
+  // A Bull-like queue: global events from an emitter, jobs by id.
+  const EventEmitter = require('events')
+  const fakeQueue = (jobs = {}) => Object.assign(new EventEmitter(), {
+    name: 'convert',
+    getJob: async (id) => jobs[id] || null
+  })
+  const doneJob = (returnvalue) => ({ isCompleted: async () => true, isFailed: async () => false, returnvalue })
+
   await test('a job kept for a returning waiter stays in Redis; others go at once', async () => {
     const added = []
-    const done = { id: 1, opts: {}, finished: async () => ({ content: 'x' }) }
-    const queue = { name: 'convert', add: async (data, opts) => { added.push(opts); return done } }
+    let next = 1
+    const queue = fakeQueue()
+    queue.add = async (data, opts) => {
+      added.push(opts)
+      const job = { id: next++, opts: {}, queue }
+      setImmediate(() => queue.emit('global:completed', job.id, JSON.stringify({ content: 'x' })))
+      return job
+    }
 
     const kept = await runQueueJob(queue, {}, { timeoutMs: 1000, priority: 7, keepSeconds: 600 })
     await runQueueJob(queue, {}, { timeoutMs: 1000 })
@@ -115,16 +129,43 @@ const served = (jobs) => [...jobs].sort((a, b) => a.priority - b.priority || a.a
   })
 
   await test('following a found job: its result, or its failure with the converter\'s reason', async () => {
-    const queue = { name: 'convert' }
-    const ok = await followQueueJob(queue, { id: 2, opts: {}, finished: async () => ({ content: 'y' }) }, { timeoutMs: 1000 })
+    const queue = fakeQueue({ 2: doneJob({ content: 'y' }), 4: doneJob({}) })
+    const ok = await followQueueJob(queue, { id: 2, opts: {}, queue }, { timeoutMs: 1000 })
     assert.deepStrictEqual(ok, { result: { content: 'y' } })
 
-    const old = await followQueueJob(queue, { id: 3, opts: {}, finished: async () => { throw new Error('h ::: too_old: waited') } }, { timeoutMs: 1000 })
+    const pending = followQueueJob(queue, { id: 3, opts: {}, queue }, { timeoutMs: 1000 })
+    setImmediate(() => queue.emit('global:failed', 3, 'h ::: too_old: waited'))
+    const old = await pending
     assert.strictEqual(old.error, 'failed')
     assert.ok(isTooOld(old.cause.message))
 
-    const empty = await followQueueJob(queue, { id: 4, opts: {}, finished: async () => ({}) }, { timeoutMs: 1000 })
+    const empty = await followQueueJob(queue, { id: 4, opts: {}, queue }, { timeoutMs: 1000 })
     assert.deepStrictEqual(empty, { error: 'failed' })
+  })
+
+  await test('waits share one pair of listeners, and a timed-out wait leaves nothing behind', async () => {
+    const { waitForJob, pendingWaits } = require('../utils/queue-job')
+    const queue = fakeQueue()
+    const waits = Array.from({ length: 20 }, (_, i) => waitForJob({ id: 100 + i, queue }, 20))
+    assert.strictEqual(queue.listenerCount('global:completed'), 1)
+    assert.strictEqual(queue.listenerCount('global:failed'), 1)
+    assert.strictEqual(pendingWaits(queue), 20)
+    const outcomes = await Promise.all(waits)
+    assert.ok(outcomes.every((o) => o.error === 'timeout'))
+    assert.strictEqual(pendingWaits(queue), 0, 'a job that never ends keeps no waiter')
+  })
+
+  await test('two waits on one job both get its result; an unrelated event changes nothing', async () => {
+    const { waitForJob, pendingWaits } = require('../utils/queue-job')
+    const queue = fakeQueue()
+    const a = waitForJob({ id: 7, queue }, 1000)
+    const b = waitForJob({ id: 7, queue }, 1000)
+    queue.emit('global:completed', 8, '{}')
+    assert.strictEqual(pendingWaits(queue), 2)
+    queue.emit('global:completed', 7, JSON.stringify({ content: 'z' }))
+    assert.deepStrictEqual(await a, { result: { content: 'z' } })
+    assert.deepStrictEqual(await b, { result: { content: 'z' } })
+    assert.strictEqual(pendingWaits(queue), 0)
   })
 
   console.log(`\n${passed} passed, ${failed} failed`)
