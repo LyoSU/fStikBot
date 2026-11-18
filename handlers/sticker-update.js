@@ -56,6 +56,12 @@ module.exports = async (ctx, next) => {
     ctx.message.text.match(/[a-zA-Zа-яА-Я]/)
   ) return next()
 
+  // Text with no emoji at all (digits, punctuation, other scripts) is not an
+  // emoji edit: checked before the sticker lookup, which costs a DB read and
+  // often a getStickerSet.
+  const emojis = ctx.message.text.match(emojiRegex())
+  if (!emojis || emojis.length === 0) return next()
+
   let sticker
 
   if (ctx.session.previousSticker) {
@@ -89,13 +95,6 @@ module.exports = async (ctx, next) => {
       return next()
     }
   } else if (!sticker) {
-    return next()
-  }
-
-  const regex = emojiRegex()
-  const emojis = ctx.message.text.match(regex)
-
-  if (!emojis || emojis.length === 0) {
     return next()
   }
 

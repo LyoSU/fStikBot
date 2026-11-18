@@ -3,6 +3,8 @@ const Composer = require('telegraf/composer')
 const { tenor, escapeRegex } = require('../utils')
 
 const stegcloak = new StegCloak(false, false)
+// stegcloak's alphabet: U+200B..U+200E (components/message.js).
+const HIDDEN_CHARS = /[\u200b-\u200e]/
 
 const INLINE_QUERY_LIMIT = 50
 
@@ -182,12 +184,17 @@ composer.on('inline_query', async (ctx) => {
   let nextOffset = offset + limit
   const results = []
 
-  // Try to decode hidden data in query
+  // The pack menu's GIF button hides a marker in the query with zero-width
+  // characters (stegcloak). It matters only in pack mode, and only a query
+  // that has such characters can carry it: decoding every query was wasted
+  // work on the busiest update type.
   let hiddenData
-  try {
-    hiddenData = stegcloak.reveal(`: ${query}`, '')
-  } catch (err) {
-    // No hidden data
+  if (ctx.session.userInfo.inlineType === 'packs' && HIDDEN_CHARS.test(query)) {
+    try {
+      hiddenData = stegcloak.reveal(`: ${query}`, '')
+    } catch (err) {
+      // No hidden data
+    }
   }
 
   const isGifMode = ctx.session.userInfo.inlineType !== 'packs' || hiddenData === '{gif}'
