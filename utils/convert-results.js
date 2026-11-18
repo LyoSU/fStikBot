@@ -92,11 +92,20 @@ convertQueue.on('global:completed', (jobId, result) => {
   updateConvertQueueMessages().catch((err) => console.error('updateConvertQueueMessages error:', err.message))
 })
 
+// A process on its way out takes no new job (the other container, during a
+// deploy, gets it) and finishes the ones it took before exiting: the done key
+// is set before the add, so a job dropped halfway would be lost.
+let stopping = false
+const running = new Set()
+
 async function handleConvertCompleted (jobId, result) {
   const seen = {}
+  const work = finishConvertedAdd(jobId, result, seen)
+  running.add(work)
   try {
-    await finishConvertedAdd(jobId, result, seen)
+    await work
   } finally {
+    running.delete(work)
     // The (pack, file) claim from handlers/sticker.js ends with the job,
     // whatever the outcome — a throw midway included.
     if (seen.input?.claimKey && !isForeignJob(seen.input)) inflight.release(seen.input.claimKey)
@@ -109,7 +118,7 @@ async function handleConvertCompleted (jobId, result) {
 // handles the job. A Redis error lets the job through: a rare duplicate beats
 // a sticker that is never added.
 const DONE_KEY_TTL_S = 24 * 60 * 60
-const takeJob = (jobId) => convertQueue.client
+const takeJob = (jobId) => stopping ? Promise.resolve(false) : convertQueue.client
   .set(`fstik:convert-done:${jobId}`, String(process.pid), 'EX', DONE_KEY_TTL_S, 'NX')
   .then((ok) => ok === 'OK')
   .catch((err) => {
@@ -271,4 +280,10 @@ async function handleConvertFailed (jobId, errorData) {
   await job.remove().catch(() => {})
 }
 
-module.exports = { handleConvertCompleted, handleConvertFailed, isForeignJob }
+/** For shutdown: take no more jobs, wait for the ones being added. */
+async function stop () {
+  stopping = true
+  await Promise.allSettled([...running])
+}
+
+module.exports = { handleConvertCompleted, handleConvertFailed, isForeignJob, stop }

@@ -172,7 +172,8 @@ const gracefulShutdown = async (signal) => {
     require('./broadcast').stopWorker(),
     require('./pack-ops/worker').stop(),
     require('./utils/studio-invoices').stop(),
-    require('./utils/placeholder-sweeper').stop()
+    require('./utils/placeholder-sweeper').stop(),
+    require('./utils/convert-results').stop()
   ]).then((results) => {
     for (const r of results) {
       if (r.status === 'rejected') log.error('shutdown error:', r.reason?.stack || r.reason)
