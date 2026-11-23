@@ -64,6 +64,13 @@ const packCommitSchema = mongoose.Schema({
 })
 
 packCommitSchema.index({ name: 1, status: 1 })
+// The publish worker's polls (pack-ops/worker-repo.js), every couple of
+// seconds: a claim, a runnable commit, an unsynced one (status + synced +
+// createdAt), a charge to refund (status + charge.credits). Without them each
+// poll scanned the whole collection, 126k commits nearly all succeeded and
+// synced, about half a core of the shared Mongo (2026-11-23).
+packCommitSchema.index({ status: 1, synced: 1, createdAt: 1 })
+packCommitSchema.index({ status: 1, 'charge.credits': 1 })
 packCommitSchema.index(
   { actorTelegramId: 1, idempotencyKey: 1 },
   { unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } }
