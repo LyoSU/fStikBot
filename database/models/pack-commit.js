@@ -50,6 +50,9 @@ const packCommitSchema = mongoose.Schema({
   packGone: Boolean,
   // Set by the worker while it uploads files; a stale one means it died.
   claimedAt: Date,
+  // A queued commit put back for its owner's upload limit: not claimed before
+  // this (pack-ops/worker.js prepare).
+  prepareAfter: Date,
   // The bot's own sticker docs reflect a succeeded commit.
   synced: Boolean,
   // A failing sync is retried with a growing delay, then left (pack-ops/worker.js).

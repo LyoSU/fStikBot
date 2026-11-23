@@ -49,7 +49,11 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
   w.repo = {
     async claimForPrepare (now, staleMs) {
       const stale = (c) => c.status === 'preparing' && c.claimedAt < new Date(now.getTime() - staleMs)
-      const c = w.commits.find((x) => x.status === 'queued') || w.commits.find(stale)
+      const due = (c) => !c.prepareAfter || c.prepareAfter <= now
+      // As mongoRepo's sort: never put back first, then by prepareAfter.
+      const queued = w.commits.filter((x) => x.status === 'queued' && due(x))
+        .sort((a, b) => (a.prepareAfter ? a.prepareAfter.getTime() : -Infinity) - (b.prepareAfter ? b.prepareAfter.getTime() : -Infinity))
+      const c = w.commits.find(stale) || queued[0]
       if (!c) return null
       c.status = 'preparing'
       c.claimedAt = now
@@ -300,12 +304,88 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     assert.deepStrictEqual(w.published, [])
   })
 
-  await test('a 429 beyond the wait interrupts the commit', async () => {
-    const w = world({ commits: [commit()], assets: threeAssets() })
-    w.uploadFails[0] = telegramError(429, 'Too Many Requests: retry after 900')
+  await test('an owner\'s upload limit puts the commit back in the queue, and the next one goes ahead', async () => {
+    const limited = Object.assign(telegramError(429, 'Too Many Requests: retry after 260'), { parameters: { retry_after: 260 } })
+    // The next commit uploads nothing, so the uploads counted below are c1's.
+    const next = commit({ _id: 'c2', name: 'other_by_bot', draft: [{ assetId: 'k:u1', fileUniqueId: 'u1', emojiList: ['🙂'] }] })
+    const w = world({ commits: [commit(), next], assets: threeAssets() })
+    w.uploadFails[1] = limited
+    assert.strictEqual(await w.worker.step(), true)
+    const parked = w.commits[0]
+    assert.strictEqual(parked.status, 'queued')
+    assert.strictEqual(parked.error, null)
+    assert.strictEqual(parked.claimedAt, null)
+    assert.strictEqual(parked.prepareAfter.getTime(), w.clock.getTime() + 261 * 1000)
+    assert.deepStrictEqual(parked.draft.filter((i) => i.file).map((i) => i.file.fileId), ['fid:x', null, null], 'what it uploaded is kept')
+    assert.deepStrictEqual(w.published, [])
+
+    // Not claimed again before the limit is over: the next commit is.
+    w.uploadFails = []
     await w.worker.step()
-    assert.strictEqual(w.commits[0].status, 'interrupted')
-    assert.match(w.commits[0].error, /retry after/)
+    assert.deepStrictEqual(w.published, ['c2'])
+    assert.strictEqual(w.commits[0].status, 'queued')
+
+    // Once it is over, it goes on from the file it stopped at.
+    w.clock = new Date(w.clock.getTime() + 262 * 1000)
+    const before = w.uploads.length
+    await w.worker.step()
+    assert.deepStrictEqual(w.published, ['c2', 'c1'])
+    assert.strictEqual(w.uploads.length - before, 2)
+  })
+
+  await test('a dead process\'s commit is taken over before the queue, however long the queue', async () => {
+    const dead = commit({ _id: 'c0', name: 'dead_by_bot', status: 'preparing', claimedAt: new Date('2026-10-23T11:00:00Z'), createdAt: new Date('2026-10-23T11:00:00Z') })
+    const w = world({ commits: [commit({ createdAt: new Date('2026-10-23T10:00:00Z') }), dead], assets: threeAssets() })
+    await w.worker.step()
+    assert.deepStrictEqual(w.published, ['c0'])
+  })
+
+  await test('each saved upload renews the claim, so a slow prepare is not taken for a dead one', async () => {
+    const w = world({ commits: [commit()], assets: threeAssets() })
+    const saves = []
+    const save = w.store.save
+    w.store.save = async (c) => { saves.push(c.claimedAt && c.claimedAt.getTime()); return save(c) }
+    const call = w.telegram.callApi
+    // Every upload takes three minutes, past the two a claim stays fresh.
+    w.telegram.callApi = async (method, params) => {
+      if (method === 'uploadStickerFile') w.clock = new Date(w.clock.getTime() + 3 * 60 * 1000)
+      return call(method, params)
+    }
+    const start = w.clock.getTime()
+    await w.worker.step()
+    assert.deepStrictEqual(saves.slice(0, 3), [1, 2, 3].map((n) => start + n * 3 * 60 * 1000))
+  })
+
+  await test('a 429 on reading a copied sticker\'s source set puts the commit back too', async () => {
+    const limited = Object.assign(telegramError(429, 'Too Many Requests: retry after 40'), { parameters: { retry_after: 40 } })
+    const w = world({ commits: [commit({ draft: [{ assetId: 'c:1', file: { copy: { set: 'src_by_bot', fileUniqueId: 's1' }, fileId: null }, emojiList: ['🙂'] }] })] })
+    w.telegram.callApi = async () => { throw limited }
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'queued')
+    assert.strictEqual(w.commits[0].prepareAfter.getTime(), w.clock.getTime() + 41 * 1000)
+  })
+
+  await test('a commit put back goes after the ones never put back, even when older and due', async () => {
+    const limited = Object.assign(telegramError(429, 'Too Many Requests: retry after 5'), { parameters: { retry_after: 5 } })
+    const next = commit({ _id: 'c2', name: 'other_by_bot', draft: [{ assetId: 'k:u1', fileUniqueId: 'u1', emojiList: ['🙂'] }] })
+    const w = world({ commits: [commit(), next], assets: threeAssets() })
+    w.uploadFails[0] = limited
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'queued')
+    // Due again already, yet the newer commit that was never put back goes first.
+    w.clock = new Date(w.clock.getTime() + 10 * 1000)
+    w.uploadFails = []
+    await w.worker.step()
+    await w.worker.step()
+    assert.deepStrictEqual(w.published, ['c2', 'c1'])
+  })
+
+  await test('a 429 that says no wait puts the commit back for a minute', async () => {
+    const w = world({ commits: [commit()], assets: threeAssets() })
+    w.uploadFails[0] = telegramError(429, 'Too Many Requests')
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'queued')
+    assert.strictEqual(w.commits[0].prepareAfter.getTime(), w.clock.getTime() + 61 * 1000)
   })
 
   await test('Telegram refusing a file fails the commit with its text', async () => {

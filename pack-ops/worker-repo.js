@@ -11,14 +11,19 @@ const truncate = (str, max) => (str.length > max ? str.slice(0, max) : str)
  */
 function mongoRepo (db) {
   return {
-    // A fresh queued commit, else a `preparing` one whose claim went stale
-    // (the process that held it died). One atomic update, so two processes
-    // never get the same commit.
+    // A `preparing` commit whose claim went stale (the process that held it
+    // died), first: behind a queue that never empties it would wait forever.
+    // Else a queued one: those never put back first, oldest first, then the
+    // ones put back for a Telegram limit, by when it is over (null sorts
+    // first). By createdAt alone, older commits that kept hitting short limits
+    // came due again and again ahead of a newer one that had none.
+    // One atomic update, so two processes never get the same commit.
     async claimForPrepare (now, staleMs) {
       const claim = { $set: { status: 'preparing', claimedAt: now } }
       const options = { sort: { createdAt: 1 }, returnDocument: 'after', lean: true }
-      return await db.PackCommit.findOneAndUpdate({ status: 'queued' }, claim, options) ||
-        db.PackCommit.findOneAndUpdate({ status: 'preparing', claimedAt: { $lt: new Date(now.getTime() - staleMs) } }, claim, options)
+      const due = { $or: [{ prepareAfter: null }, { prepareAfter: { $lte: now } }] }
+      return await db.PackCommit.findOneAndUpdate({ status: 'preparing', claimedAt: { $lt: new Date(now.getTime() - staleMs) } }, claim, options) ||
+        db.PackCommit.findOneAndUpdate({ status: 'queued', ...due }, claim, { ...options, sort: { prepareAfter: 1, createdAt: 1 } })
     },
     // Only while this process still holds the claim.
     async touchClaim (id, now) {

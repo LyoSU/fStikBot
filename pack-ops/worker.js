@@ -10,7 +10,7 @@
 // update, the publish takes the pack lock, and the sync is idempotent.
 // See pack-ops/README.md.
 
-const { runInCopyScope } = require('../utils/retry-api')
+const { runInCopyScope, getRetryAfter } = require('../utils/retry-api')
 const { LOCK_TTL_MS, ownerProblem } = require('./execute')
 const { bytesOf } = require('./store')
 const log = require('../utils/logger').scope('pack-ops:worker')
@@ -26,6 +26,16 @@ const TICK_INTERVAL_MS = parseInt(process.env.STUDIO_TICK_INTERVAL_MS, 10) || 20
 // A `preparing` claim older than this is a dead process's. Uploads refresh it.
 const CLAIM_STALE_MS = 2 * 60 * 1000
 const CLAIM_HEARTBEAT_MS = 30 * 1000
+// Prepare's Telegram calls never wait out a 429 in place. Telegram limits
+// uploadStickerFile per user, and this process prepares one commit at a time:
+// a 200-file pack that hit its owner's limit waited minutes per file (the copy
+// scope's 300 s), and every commit queued behind it waited too (2026-11-23: 136
+// people for over an hour). Even 15 s a file adds up to most of an hour over a
+// big pack. So a 429 puts the commit back in the queue until the limit is
+// over, with the files it has already, and the next commit goes ahead.
+const PREPARE_CALL = { maxRetries: 0 }
+// Used when a 429 doesn't say how long.
+const PREPARE_RETRY_DEFAULT_S = 60
 // A failing sync is retried after 10 s, 20 s, 40 s … up to 10 min, and given up
 // after this many tries (synced stays false, syncError says why).
 const SYNC_MAX_ATTEMPTS = 10
@@ -133,7 +143,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   // only good for the bot it was issued to. file_unique_id is the same for both.
   async function copiedSticker (sets, copy) {
     if (!sets.has(copy.set)) {
-      const set = await runInCopyScope(() => telegram.callApi('getStickerSet', { name: copy.set }))
+      const set = await runInCopyScope(() => telegram.callApi('getStickerSet', { name: copy.set }), PREPARE_CALL)
         .catch((err) => {
           if (isRefusal(err)) return { stickers: [] }
           throw err
@@ -177,6 +187,16 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       return commit
     }
 
+    // Progress saved as it goes, so a crash resumes with the rest. The claim
+    // is renewed with it: the save writes the whole commit, and a claimedAt
+    // from before a long call would undo the heartbeat's and let another
+    // process take the commit while this one still works on it.
+    const checkpoint = async () => {
+      commit.claimedAt = now()
+      commit.updatedAt = now()
+      await store.save(commit)
+    }
+
     const sets = new Map()
     const skipped = new Set()
 
@@ -200,8 +220,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
           item.emojiList = takenEmoji(item.emojiList)
           item.file.fileId = sticker.file_id
           item.file.format = formatOf(sticker)
-          commit.updatedAt = now()
-          await store.save(commit)
+          await checkpoint()
           continue
         }
 
@@ -211,8 +230,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
           item.file.fileId = sticker.fileId
           if (sticker.fallbackFileId) item.file.fallbackFileId = sticker.fallbackFileId
           if (sticker.format) item.file.format = sticker.format
-          commit.updatedAt = now()
-          await store.save(commit)
+          await checkpoint()
           continue
         }
 
@@ -229,7 +247,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
             user_id: commit.ownerTelegramId,
             sticker: { source: bytesOf(asset.data) },
             sticker_format: item.file.format || asset.format
-          }))
+          }), PREPARE_CALL)
           fileId = uploaded.file_id
           // Telegram has the file now: its bytes leave the database, unless
           // this commit still sends them itself, as the pack's thumbnail.
@@ -238,9 +256,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
         }
 
         item.file.fileId = fileId
-        commit.claimedAt = now()
-        commit.updatedAt = now()
-        await store.save(commit)
+        await checkpoint()
       }
       if (skipped.size) {
         commit.draft = commit.draft.filter((item) => !skipped.has(item))
@@ -249,6 +265,15 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       }
       return await settle('pending')
     } catch (err) {
+      // A Telegram limit (mostly the owner's on uploads): back to the queue
+      // until it is over (claimForPrepare skips it till then).
+      if (errorCode(err) === 429) {
+        const waitS = getRetryAfter(err) || PREPARE_RETRY_DEFAULT_S
+        commit.prepareAfter = new Date(now().getTime() + (waitS + 1) * 1000)
+        commit.claimedAt = null
+        log.info(`commit ${commit._id} back in the queue for ${waitS}s: Telegram's limit`)
+        return await settle('queued')
+      }
       // An owner who hasn't started the bot, or blocked it, is theirs to fix.
       const owner = isRefusal(err) && ownerProblem(err)
       if (owner) {
