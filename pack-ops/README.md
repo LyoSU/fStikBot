@@ -42,7 +42,10 @@ in section 7.1 there.
 step it stopped at was not sent, and the worker runs the commit again from
 there once the limit is over, other commits meanwhile. Or it stops at:
 - `conflict`: the pack changed outside the draft, touching what the draft changes; nothing was done;
-- `interrupted`: a network error, a lost lock. Run it again to continue;
+- `interrupted`: a network error, a lost lock. Run it again to continue (Studio's "Continue", the API's
+  `job/retry`). One nobody continued for an hour ends as `failed`, `error: 'interrupted_expired'` (the worker
+  looks once a minute): until then it holds the pack's publish lock and a place in its starter's cap of unfinished
+  publishes, and a copy's credit comes back only once it ends;
 - `failed`: Telegram refused a step, or the pack changed mid-publish. Steps before it stay applied.
   `error` is Telegram's text, or one of the codes the client explains itself:
   `bot_not_started` (the owner never started the bot: "user not found"),

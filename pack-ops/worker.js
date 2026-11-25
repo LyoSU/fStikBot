@@ -42,6 +42,17 @@ const SYNC_MAX_ATTEMPTS = 10
 // A refund left owed is tried again once its commit is this old.
 const REFUND_RETRY_MS = 60 * 1000
 const syncBackoffMs = (attempts) => Math.min(2 ** attempts * 5000, 10 * 60 * 1000)
+// An interrupted commit (a network error, a lost lock) waits for its starter's
+// "Continue" in Studio (the API's job/retry). One nobody continued for this
+// long ends as failed (`interrupted_expired`): while interrupted it kept its
+// pack locked for every other publish (the API answers 409) and counted
+// against its starter's cap of unfinished publishes, with no end; and a copy's
+// credit only comes back once its commit ends (findUnrefunded). Studio shows
+// the failed job with "Try again", which publishes the draft anew.
+const INTERRUPTED_TTL_MS = 60 * 60 * 1000
+const INTERRUPTED_EXPIRED = 'interrupted_expired'
+// How often the worker looks for them.
+const EXPIRE_EVERY_MS = 60 * 1000
 
 // Same split as the executor: an answer from Telegram is final, anything else
 // (a timeout, a reset connection) says nothing about what Telegram did.
@@ -129,6 +140,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
   let timer = null
   let active = null
   let stopping = false
+  let expiredAt = 0
 
   // The emoji Telegram takes, or the bot's default for a sticker left with none.
   const takenEmoji = (list) => {
@@ -434,8 +446,24 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     return result
   }
 
+  // Ends the interrupted commits nobody continued (INTERRUPTED_TTL_MS), once a
+  // minute at most. Not work of its own: it never keeps a tick going.
+  async function expireInterrupted () {
+    const at = now()
+    if (at.getTime() - expiredAt < EXPIRE_EVERY_MS) return
+    expiredAt = at.getTime()
+    try {
+      const count = await repo.expireInterrupted(new Date(at.getTime() - INTERRUPTED_TTL_MS), INTERRUPTED_EXPIRED, at)
+      if (count) log.info(`${count} interrupted commit(s) left for over an hour ended as failed`)
+    } catch (err) {
+      log.warn('ending stale interrupted commits failed:', err.message)
+    }
+  }
+
   // One unit of work. Returns false when there was nothing to do.
   async function step () {
+    await expireInterrupted()
+
     const claimed = await repo.claimForPrepare(now(), CLAIM_STALE_MS)
     if (claimed) {
       const prepared = await prepare(claimed)

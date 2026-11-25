@@ -46,6 +46,15 @@ function mongoRepo (db) {
         ]
       }).sort({ runAfter: 1, createdAt: 1 }).lean()
     },
+    // Interrupted commits last touched before `before` end as failed, with
+    // `error`. Conditional on the status, so a retry that requeued one first wins.
+    async expireInterrupted (before, error, now) {
+      const { modifiedCount } = await db.PackCommit.updateMany(
+        { status: 'interrupted', updatedAt: { $lt: before } },
+        { $set: { status: 'failed', error, updatedAt: now } }
+      )
+      return modifiedCount
+    },
     // The owner of a commit Telegram refused for them (never started the bot,
     // or blocked it): the bot can't reach them, as a broadcast's 403 says.
     // Studio reads it to ask them to start the bot before they upload

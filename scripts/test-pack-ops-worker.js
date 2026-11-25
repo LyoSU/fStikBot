@@ -71,6 +71,12 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
       return c ? clone(c) : null
     },
     async markUnreachable (telegramId) { w.unreachable.push(telegramId) },
+    async expireInterrupted (before, error, now) {
+      const stale = w.commits.filter((x) => x.status === 'interrupted' && x.updatedAt < before)
+      for (const x of stale) Object.assign(x, { status: 'failed', error, updatedAt: now })
+      w.expireRuns = (w.expireRuns || 0) + 1
+      return stale.length
+    },
     async findUnsynced (now, maxAttempts) {
       const c = w.commits.find((x) => x.status === 'succeeded' && !x.synced &&
         !((x.syncAttempts || 0) >= maxAttempts) && (!x.syncAfter || x.syncAfter <= now))
@@ -430,6 +436,28 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
     other.publishAs = (c) => Object.assign(c, { status: 'failed', error: 'Bad Request: STICKERSET_INVALID' })
     await other.worker.step()
     assert.deepStrictEqual(other.unreachable, [])
+  })
+
+  await test('an interrupted commit nobody continued for an hour ends as failed, and its credit comes back', async () => {
+    const hour = 60 * 60 * 1000
+    const at = (ms) => new Date(new Date('2026-10-23T12:00:00Z').getTime() - ms)
+    const old = commit({ status: 'interrupted', error: 'socket hang up', updatedAt: at(hour + 1000), charge: { credits: 1, user: 'u1' }, create: { state: 'pending' } })
+    const young = commit({ _id: 'c2', name: 'young_by_bot', status: 'interrupted', updatedAt: at(hour - 1000) })
+    const w = world({ commits: [old, young] })
+    assert.strictEqual(await w.worker.step(), false, 'not work of its own')
+    assert.strictEqual(w.commits[0].status, 'failed')
+    assert.strictEqual(w.commits[0].error, 'interrupted_expired')
+    assert.strictEqual(w.commits[1].status, 'interrupted', 'under an hour it still waits for Continue')
+
+    // Once a minute at most.
+    await w.worker.step()
+    assert.strictEqual(w.expireRuns, 1)
+
+    // The credit of a copy that never made its pack, a minute later.
+    w.clock = new Date(w.clock.getTime() + 61 * 1000)
+    await w.worker.step()
+    assert.deepStrictEqual(w.refunds.map((r) => r.id), ['c1'])
+    assert.strictEqual(w.expireRuns, 2)
   })
 
   await test('a commit put back mid-run for a Telegram limit lets the next one run, and runs again once due', async () => {
