@@ -53,6 +53,9 @@ const packCommitSchema = mongoose.Schema({
   // A queued commit put back for its owner's upload limit: not claimed before
   // this (pack-ops/worker.js prepare).
   prepareAfter: Date,
+  // A pending commit put back for a Telegram limit mid-run: not run before
+  // this (pack-ops/execute.js).
+  runAfter: Date,
   // The bot's own sticker docs reflect a succeeded commit.
   synced: Boolean,
   // A failing sync is retried with a growing delay, then left (pack-ops/worker.js).

@@ -43,7 +43,8 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     sourceReads: [],
     refunds: [],
     refundedOnUser: new Set(), // commits marked on the user as refunded
-    removed: [] // packs marked deleted
+    removed: [], // packs marked deleted
+    unreachable: [] // owners marked as the bot can't reach them
   }
 
   w.repo = {
@@ -61,10 +62,15 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     },
     async touchClaim () {},
     async findRunnable (now, staleMs) {
-      const c = w.commits.find((x) => !w.locks.includes(x.name) && (x.status === 'pending' ||
+      const due = (x) => !x.runAfter || x.runAfter <= now
+      // As mongoRepo's sort: never put back first, then by runAfter.
+      const at = (x) => (x.runAfter ? x.runAfter.getTime() : -Infinity)
+      const c = w.commits.filter((x) => !w.locks.includes(x.name) && ((x.status === 'pending' && due(x)) ||
         (x.status === 'running' && x.updatedAt < new Date(now.getTime() - staleMs))))
+        .sort((a, b) => at(a) - at(b))[0]
       return c ? clone(c) : null
     },
+    async markUnreachable (telegramId) { w.unreachable.push(telegramId) },
     async findUnsynced (now, maxAttempts) {
       const c = w.commits.find((x) => x.status === 'succeeded' && !x.synced &&
         !((x.syncAttempts || 0) >= maxAttempts) && (!x.syncAfter || x.syncAfter <= now))
@@ -167,7 +173,9 @@ function world ({ commits = [], assets = [], stickers = [], pack = { _id: 'pack1
     publish: async (id) => {
       w.published.push(id)
       const c = w.commits.find((x) => x._id === id)
-      c.status = w.publishAs
+      // A function decides per commit (the executor's 429: back with runAfter).
+      if (typeof w.publishAs === 'function') w.publishAs(c)
+      else c.status = w.publishAs
       if (w.publishGone) c.packGone = true
       return clone(c)
     }
@@ -408,7 +416,49 @@ const threeAssets = () => ['x', 'y', 'z'].map((id) => asset(id))
       await w.worker.step()
       assert.strictEqual(w.commits[0].status, 'failed')
       assert.strictEqual(w.commits[0].error, code)
+      assert.deepStrictEqual(w.unreachable, [OWNER], 'the owner is marked unreachable')
     }
+  })
+
+  await test('an owner refused in the run is marked unreachable too; other failures mark nobody', async () => {
+    const w = world({ commits: [commit({ status: 'pending' })] })
+    w.publishAs = (c) => Object.assign(c, { status: 'failed', error: 'bot_blocked' })
+    await w.worker.step()
+    assert.deepStrictEqual(w.unreachable, [OWNER])
+
+    const other = world({ commits: [commit({ status: 'pending' })] })
+    other.publishAs = (c) => Object.assign(c, { status: 'failed', error: 'Bad Request: STICKERSET_INVALID' })
+    await other.worker.step()
+    assert.deepStrictEqual(other.unreachable, [])
+  })
+
+  await test('a commit put back mid-run for a Telegram limit lets the next one run, and runs again once due', async () => {
+    const pack = (id, name) => commit({ _id: id, name, status: 'pending', draft: [{ assetId: 'k:u1', fileUniqueId: 'u1', emojiList: ['🙂'] }] })
+    const w = world({ commits: [pack('c1', 'a_by_bot'), pack('c2', 'b_by_bot')] })
+    let limited = true
+    // As runCommit on a 429 of 260 s: pending again, with runAfter.
+    w.publishAs = (c) => {
+      if (c._id === 'c1' && limited) {
+        limited = false
+        Object.assign(c, { status: 'pending', runAfter: new Date(w.clock.getTime() + 261 * 1000) })
+      } else c.status = 'succeeded'
+    }
+    await w.worker.step()
+    assert.strictEqual(w.commits[0].status, 'pending')
+    await w.worker.step()
+    assert.deepStrictEqual(w.published, ['c1', 'c2'], 'the next commit is not held up')
+    assert.strictEqual(w.commits[1].status, 'succeeded')
+
+    // Not before its time.
+    w.telegramSet = [{ file_unique_id: 'u1', file_id: 'f1' }]
+    while (await w.worker.step());
+    assert.deepStrictEqual(w.published, ['c1', 'c2'])
+
+    w.clock = new Date(w.clock.getTime() + 262 * 1000)
+    await w.worker.step()
+    assert.deepStrictEqual(w.published, ['c1', 'c2', 'c1'])
+    assert.strictEqual(w.commits[0].status, 'succeeded')
+    assert.deepStrictEqual(w.unreachable, [], 'a limit is nobody\'s fault')
   })
 
   await test('an uploaded file leaves the database, unless the commit still sends it as the thumbnail', async () => {

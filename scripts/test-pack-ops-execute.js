@@ -398,7 +398,7 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     assert.notStrictEqual(commit.status, 'succeeded')
   })
 
-  await test('a 429 beyond the wait interrupts, and a rerun finishes', async () => {
+  await test('a 429 beyond the wait puts the commit back until the limit is over, and a rerun finishes', async () => {
     const world = { faultAt: -1 }
     const tg = fakeTelegram(['x'], world)
     const real = tg.callApi.bind(tg)
@@ -413,11 +413,31 @@ async function runToEnd (initialCommit, tg, store, lock, world, deps = {}) {
     const draft = [{ assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
     const store = fakeStore(world)
     const lock = fakeLock(world)
-    let commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store, lock })
-    assert.strictEqual(commit.status, 'interrupted')
+    const at = new Date('2026-11-25T10:00:00Z')
+    let commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store, lock, now: () => at })
+    assert.strictEqual(commit.status, 'pending')
+    assert.strictEqual(commit.error, null)
+    assert.strictEqual(commit.runAfter.getTime(), at.getTime() + 401 * 1000)
+    assert.strictEqual(commit.steps.find((step) => step.kind === 'add').state, 'pending', 'nothing was sent')
+    assert.strictEqual(lock.held.size, 0, 'the lock is let go')
     commit = await runCommit(commit, { telegram: tg, store, lock })
     assert.strictEqual(commit.status, 'succeeded', commit.error)
+    assert.strictEqual(commit.runAfter, null)
     assertPackMatches(tg.pack, draft, '429')
+  })
+
+  await test('a 429 that says no wait puts the commit back for a minute', async () => {
+    const world = { faultAt: -1 }
+    const tg = fakeTelegram(['x'], world)
+    const real = tg.callApi.bind(tg)
+    tg.callApi = (method, params) => method === 'addStickerToSet'
+      ? Promise.reject(telegramError(429, 'Too Many Requests'))
+      : real(method, params)
+    const draft = [{ assetId: 'a-x', fileUniqueId: 'x', emojiList: ['🙂'] }, { assetId: 'n', file: { fileId: 'up' }, emojiList: ['😀'] }]
+    const at = new Date('2026-11-25T10:00:00Z')
+    const commit = await runCommit(newCommit({ name: 'p', ownerTelegramId: 1, base: ['x'], draft }), { telegram: tg, store: fakeStore(world), lock: fakeLock(world), now: () => at })
+    assert.strictEqual(commit.status, 'pending')
+    assert.strictEqual(commit.runAfter.getTime(), at.getTime() + 61 * 1000)
   })
 
   await test('a 502 after Telegram added the sticker interrupts; the rerun finds it there, no second add', async () => {

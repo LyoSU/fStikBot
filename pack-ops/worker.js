@@ -406,14 +406,29 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
     }
   }
 
+  // An owner Telegram refused the commit for (never started the bot, or
+  // blocked it) is marked unreachable, so Studio can ask them to start the bot
+  // before their next upload instead of after it. The commit is final either way.
+  async function markOwner (commit) {
+    if (commit?.status !== 'failed' || !OWNER_CODES.has(commit.error)) return
+    try {
+      await repo.markUnreachable(commit.ownerTelegramId)
+    } catch (err) {
+      log.warn(`commit ${commit._id}: marking the owner unreachable failed:`, err.message)
+    }
+  }
+
   async function run (commit) {
     const result = await publish(commit._id)
     if (result?.status === 'succeeded') {
       logDone(result, now())
       await trySync(result)
+    } else if (result?.status === 'pending' && result.runAfter && new Date(result.runAfter) > now()) {
+      log.info(`commit ${commit._id} back in the queue until ${new Date(result.runAfter).toISOString()}: Telegram's limit`)
     } else {
       logOutcome(result, { ran: true })
       if (result?.packGone) await writeGone(result)
+      await markOwner(result)
       await refundIfUnmade(result)
     }
     return result
@@ -427,6 +442,7 @@ function createWorker ({ repo, store, telegram, publish, now = () => new Date() 
       if (prepared.status === 'pending') await run(prepared)
       else {
         logOutcome(prepared)
+        await markOwner(prepared)
         await refundIfUnmade(prepared)
       }
       return true

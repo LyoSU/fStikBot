@@ -16,10 +16,11 @@ const { redactBotToken } = require('../utils/telegram-error')
 const { isServerError } = require('../utils/transient-error')
 
 // Commit status:
-//   pending      created, never run
+//   pending      created, never run; or put back for a Telegram limit, to go
+//                on from where it stopped once `runAfter` has passed
 //   running      a run holds the pack lock
-//   interrupted  stopped by something that may pass (429 beyond the wait,
-//                network); run again to continue
+//   interrupted  stopped by something that may pass (network, a lost lock);
+//                run again to continue
 //   conflict     the pack changed outside the draft in a way the draft
 //                can't be carried over (plan.js mergeOutside); nothing was
 //                changed
@@ -52,6 +53,10 @@ const isTelegramAnswer = (err) => (Number.isInteger(err?.code) || Number.isInteg
 const errorCode = (err) => err?.code ?? err?.response?.error_code
 // Stored on the commit and shown in Studio: never with the bot token in it.
 const errorText = (err) => redactBotToken(err?.description || err?.response?.description || err?.message || String(err))
+
+// A 429 that doesn't say how long: tried again after this.
+const RETRY_DEFAULT_S = 60
+const retryAfterOf = (err) => err?.parameters?.retry_after ?? err?.response?.parameters?.retry_after ?? null
 
 // A delete of a sticker the set no longer holds (measured: a second delete of
 // one sticker is STICKERSET_NOT_MODIFIED).
@@ -111,9 +116,10 @@ class StickerMissing extends Interrupted {}
  *   null when unknown; the draft is planned on these, and they stand in for the Bot API's copy while it lags
  * @param {Function} [deps.onProgress] (commit) after every step
  * @param {number} [deps.lockRenewMs] how often the lock is extended while the run lasts
+ * @param {Function} [deps.now]
  * @returns {Promise<Object>} the commit, with its final status
  */
-async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, readFresh, freshUids, onProgress, lockRenewMs = LOCK_TTL_MS / 4 }) {
+async function runCommit (commit, { telegram, store, lock, assets, formatTitle = (_, title) => title, botUsername, nameTaken, register, readFresh, freshUids, onProgress, lockRenewMs = LOCK_TTL_MS / 4, now: clock = () => new Date() }) {
   if (commit.status === 'succeeded' || commit.status === 'conflict' || commit.status === 'failed') return commit
 
   // A new pack's name changes once it is made; the lock stays under the first.
@@ -159,6 +165,7 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
   try {
     commit.status = 'running'
     commit.error = null
+    commit.runAfter = null
     await save()
 
     if (commit.remove) {
@@ -270,7 +277,17 @@ async function runCommit (commit, { telegram, store, lock, assets, formatTitle =
     return commit
   } catch (err) {
     commit.error = errorText(err)
-    if (err instanceof Interrupted || !isTelegramAnswer(err) || errorCode(err) === 429) {
+    if (isTelegramAnswer(err) && errorCode(err) === 429) {
+      // A Telegram limit (mostly the owner's, on adds and replaces) longer
+      // than the short wait the run allows itself (index.js): back to the
+      // worker's queue until it is over. The worker runs one commit at a time,
+      // and sleeping it out here (up to 300 s a call) held up every other
+      // publish. The step it stopped at is `pending` again, nothing was sent.
+      const waitS = retryAfterOf(err) || RETRY_DEFAULT_S
+      commit.status = 'pending'
+      commit.runAfter = new Date(clock().getTime() + (waitS + 1) * 1000)
+      commit.error = null
+    } else if (err instanceof Interrupted || !isTelegramAnswer(err)) {
       commit.status = 'interrupted'
     } else {
       commit.status = 'failed'

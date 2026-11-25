@@ -37,9 +37,12 @@ in section 7.1 there.
 }
 ```
 
-`status`: `pending` → `running` → `succeeded`, or stops at:
+`status`: `pending` → `running` → `succeeded`, or back to `pending` with
+`runAfter` on a 429 longer than the run's short wait (5 s, `index.js`): the
+step it stopped at was not sent, and the worker runs the commit again from
+there once the limit is over, other commits meanwhile. Or it stops at:
 - `conflict`: the pack changed outside the draft, touching what the draft changes; nothing was done;
-- `interrupted`: a 429 longer than the wait, a network error, a lost lock. Run it again to continue;
+- `interrupted`: a network error, a lost lock. Run it again to continue;
 - `failed`: Telegram refused a step, or the pack changed mid-publish. Steps before it stay applied.
   `error` is Telegram's text, or one of the codes the client explains itself:
   `bot_not_started` (the owner never started the bot: "user not found"),
@@ -288,8 +291,13 @@ queued → preparing → pending → running → succeeded (+ synced)
   the bytes anew; without them the commit fails as `asset_missing`). A missing asset fails the commit as `asset_missing`; a 4xx from
   Telegram (not 429) fails it with Telegram's text; a network error or a 429
   beyond the wait leaves it `interrupted` for the API to requeue.
-- **Run**: `pending` commits, and `running` ones not touched for the lock TTL,
-  go to `publishCommit`, skipping packs whose lock is held (their holder is on it, maybe in a long 429 wait). The pack lock keeps two processes from running one; `runCommit` extends it every 30 s while it runs.
+- **Run**: `pending` commits (not before their `runAfter`), and `running` ones not touched for the lock TTL,
+  go to `publishCommit`, skipping packs whose lock is held (their holder is on it). The pack lock keeps two processes from running one; `runCommit` extends it every 30 s while it runs.
+  A 429 longer than 5 s ends the run with the commit `pending` until the limit is over (`runAfter`), as prepare does with `prepareAfter`:
+  sleeping it out (up to 300 s a call) held up every publish behind it. Commits never put back go first.
+- **Owner unreachable**: a commit that fails as `bot_not_started` or `bot_blocked` sets `blocked` on the owner's
+  `User`, as a broadcast's 403 does; their next update to the bot clears it (`utils/user-update.js`). The Studio API
+  reads it to ask them to start the bot before they upload anything.
 - **Sync**: a `succeeded` commit with no `synced` has the bot's own sticker
   docs brought in line with `getStickerSet`: an upsert per final sticker
   (`emojis` joined with a space, like the bot stores it, `emojiList`,

@@ -17,10 +17,18 @@ const metrics = require('../utils/metrics')
 const config = require('../config.json')
 const plan = require('./plan')
 
+// A publish is long and sequential, so it runs in a copy scope: its calls
+// skip the shared cooldown cache (one long 429 must not fail every later call)
+// and wait out a short 429 in place. A longer one is not slept out here: the
+// worker runs one commit at a time, and a run that slept up to 300 s a call (the
+// copy scope's default) held up every other user's publish. It ends the run
+// instead, and the commit waits in the queue until the limit is over
+// (execute.js, `runAfter`), as prepare's uploads do (worker.js).
+const RUN_CALL = { maxWait: 5, maxRetries: 2 }
+
 /**
  * Run a stored commit to the end (or until it can't go on) with the bot's
- * Telegram client. Inside a copy scope: a publish is long and sequential, so
- * it waits out Telegram's per-user cooldowns instead of failing on them.
+ * Telegram client.
  *
  * @param {Object} db
  * @param {Object} telegram telegraf Telegram instance
@@ -45,7 +53,7 @@ async function publishCommit (db, telegram, commitId, { onProgress } = {}) {
   const nameTaken = (name, { except } = {}) => db.StickerSet.exists({ name, ...(except ? { _id: { $ne: except } } : {}) })
   const readFresh = createFreshReader(telegram, telegramApi.getClient, telegramApi.Api)
   const freshUids = createFreshUids(readFresh)
-  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, readFresh, freshUids, onProgress }))
+  return runInCopyScope(() => runCommit(commit, { telegram, store, lock: mongoLock(db), assets, formatTitle, botUsername, nameTaken, register, readFresh, freshUids, onProgress }), RUN_CALL)
 }
 
 module.exports = {

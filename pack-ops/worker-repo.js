@@ -30,8 +30,10 @@ function mongoRepo (db) {
       await db.PackCommit.updateOne({ _id: id, status: 'preparing' }, { $set: { claimedAt: now } })
     },
     // Ready to publish, or `running` with nobody refreshing it any more. Packs
-    // whose lock is held are skipped: they are being run (maybe through a long
-    // 429 wait), and offering them again would starve the commits behind them.
+    // whose lock is held are skipped: they are being run, and offering them
+    // again would starve the commits behind them. A commit put back for a
+    // Telegram limit waits until `runAfter`, and goes after the ones never put
+    // back (null sorts first), as in claimForPrepare.
     async findRunnable (now, staleMs) {
       const locked = await db.PackLock.find({ expiresAt: { $gt: now } }).select('_id').lean()
       return db.PackCommit.findOne({
@@ -39,10 +41,17 @@ function mongoRepo (db) {
         // A new pack changes its name once it is made; its lock keeps the first.
         lockName: { $nin: locked.map((lock) => lock._id) },
         $or: [
-          { status: 'pending' },
+          { status: 'pending', $or: [{ runAfter: null }, { runAfter: { $lte: now } }] },
           { status: 'running', updatedAt: { $lt: new Date(now.getTime() - staleMs) } }
         ]
-      }).sort({ createdAt: 1 }).lean()
+      }).sort({ runAfter: 1, createdAt: 1 }).lean()
+    },
+    // The owner of a commit Telegram refused for them (never started the bot,
+    // or blocked it): the bot can't reach them, as a broadcast's 403 says.
+    // Studio reads it to ask them to start the bot before they upload
+    // anything; their next update to the bot clears it (utils/user-update.js).
+    async markUnreachable (telegramId) {
+      await db.User.updateOne({ telegram_id: telegramId }, { $set: { blocked: true } })
     },
     // Succeeded but not synced, if its retry is due and it hasn't been given up.
     async findUnsynced (now, maxAttempts) {
