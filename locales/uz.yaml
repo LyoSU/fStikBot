@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Boshqalar topa olishi uchun toʻplamingizga qisqacha tavsif yozing</b>
 
-        <i>Turkumlash uchun heshteglardan foydalanishingiz mumkin [#]</i>
+        <i>${max} tagacha heshteg qoʻshing [#], eng muhimlarini birinchi</i>
         <i>Masalan: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
