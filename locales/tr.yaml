@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Başkalarının bulabilmesi için paketini kısaca açıkla</b>
 
-        <i>Kategorilere ayırmak için hashtag de kullanabilirsin [#]</i>
+        <i>En fazla ${max} hashtag ekle [#], en önemlileri önce</i>
         <i>Örneğin: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
