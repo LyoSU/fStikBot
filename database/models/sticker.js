@@ -131,8 +131,10 @@ stickersSchema.index({ stickerSet: 1, deleted: 1 })
 // Single field index - highly selective, covers most lookups
 stickersSchema.index({ fileUniqueId: 1 })
 
-// Index for duplicate detection on original files
-stickersSchema.index({ 'original.fileUniqueId': 1 }, { sparse: true })
+// No index on `original.fileUniqueId` (nor on `file.file_unique_id`, never
+// declared here): their one reader, findLiveBySource below, goes through
+// { stickerSet, deleted }. Both exist on production until dropped by hand
+// (scripts/README.md, "Sticker uid indexes").
 
 // TTL index - auto-delete documents 30 days after deletedAt is set
 // Note: Created manually in MongoDB, not via Mongoose to avoid recreation issues
@@ -148,6 +150,18 @@ stickersSchema.index({ 'original.fileUniqueId': 1 }, { sparse: true })
 // A live sticker of the pack made from this source file, under any of the
 // fields a source uid has lived in (fileUniqueId; original.* for converted
 // files; file.* in legacy rows). The one duplicate check for adds and restores.
+//
+// Read through { stickerSet, deleted }: a pack's live stickers are at most a
+// few hundred, and the $or is checked on those. Left to the planner, the $or
+// could run as an OR over three uid indexes, and it is the only reader of two
+// of them: `file.file_unique_id` (8.1 GB) and `original.fileUniqueId` (1.2 GB).
+// With this hint neither is read by anything, so they can be dropped
+// (scripts/README.md, "Sticker uid indexes"). `file.file_unique_id` is not a
+// copy of `fileUniqueId`: in legacy rows it is the source the user sent (a
+// photo, a document), and it differs from the sticker's uid in every row
+// sampled (2026-11-27, 18471 of 18471), so the field itself stays.
+const LIVE_BY_PACK = { stickerSet: 1, deleted: 1 }
+
 stickersSchema.statics.findLiveBySource = function (stickerSet, sourceUid, { except } = {}) {
   return this.findOne({
     stickerSet,
@@ -158,7 +172,7 @@ stickersSchema.statics.findLiveBySource = function (stickerSet, sourceUid, { exc
       { 'original.fileUniqueId': sourceUid },
       { 'file.file_unique_id': sourceUid }
     ]
-  }).lean()
+  }).hint(LIVE_BY_PACK).lean()
 }
 
 module.exports = stickersSchema

@@ -265,3 +265,33 @@ Two caveats to earlier versions of this note:
   and the fact that rewriting every doc buys nothing the getters don't already
   provide. Removing the *undeclared* sub-fields is a different matter, and
   that is what `prune-stickers.js` does.
+
+## Sticker uid indexes
+
+`stickers` carries two indexes only the duplicate check read:
+`file.file_unique_id` (8.1 GB, made by hand) and `original.fileUniqueId_1`
+(1.2 GB). `Sticker.findLiveBySource` now reads a pack's live stickers through
+`stickerSet_1_deleted_1` (a hint) and checks the three uid fields on those, so
+nothing reads them. The fields stay: `file.file_unique_id` is the legacy rows'
+source file (what the user sent), not a copy of `fileUniqueId`; the two differ
+in every row sampled.
+
+`fileUniqueId_1` is not one of them: lookups by a sticker's own uid use it
+everywhere.
+
+Before dropping, with the hinted build deployed:
+
+1. `db.stickers.aggregate([{ $indexStats: {} }])`: note `accesses.ops` of the
+   two; a day later they have not grown (a growth means another reader: find
+   it before going on).
+2. `db.stickers.find({ stickerSet: <a big pack's _id>, deleted: false, $or: [...] }).hint({ stickerSet: 1, deleted: 1 }).explain('executionStats')`:
+   `IXSCAN stickerSet_1_deleted_1`, `totalDocsExamined` about the pack's size,
+   a few ms.
+3. `db.stickers.hideIndex('file.file_unique_id')` and
+   `db.stickers.hideIndex('original.fileUniqueId_1')`: the planner stops using
+   them, the index is still maintained, and `unhideIndex` brings it back at
+   once. A week with the bot's sticker adds and restores at their usual
+   latency, nothing new in the slow-query log.
+4. `db.stickers.dropIndex('file.file_unique_id')`, then
+   `db.stickers.dropIndex('original.fileUniqueId_1')`. ~9.3 GB of indexes; the
+   space goes back to WiredTiger at once (the files are dropped).
