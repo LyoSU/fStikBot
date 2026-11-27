@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Басқалар таба алуы үшін жинағыңды қысқаша сипатта</b>
 
-        <i>Санаттарға бөлу үшін хэштегтерді қолдануға болады [#]</i>
+        <i>${max} хэштегке дейін қос [#], ең маңыздыларын алдымен</i>
         <i>Мысалы: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 

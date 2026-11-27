@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Jelaskan paketmu secara singkat agar orang lain bisa menemukannya</b>
 
-        <i>Kamu juga bisa memakai tagar untuk kategori [#]</i>
+        <i>Tambahkan hingga ${max} tagar [#], yang terpenting lebih dulu</i>
         <i>Contoh: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 

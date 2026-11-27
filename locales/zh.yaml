@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>请为你的贴纸包添加简短描述，方便其他人搜索发现</b>
 
-        <i>可以使用话题标签进行分类 [#]</i>
+        <i>最多添加 ${max} 个话题标签 [#]，重要的放在前面</i>
         <i>例如：#anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 

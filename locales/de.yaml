@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Beschreibe dein Paket kurz, damit andere es finden können</b>
 
-        <i>Du kannst Hashtags zur Kategorisierung verwenden [#]</i>
+        <i>Füge bis zu ${max} Hashtags hinzu [#], die wichtigsten zuerst</i>
         <i>Zum Beispiel: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 

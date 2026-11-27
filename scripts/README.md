@@ -39,6 +39,23 @@ node scripts/backfill-placeholder-checks.js --dry-run
 node scripts/backfill-placeholder-checks.js --days 30 --spread-hours 72
 ```
 
+## `backfill-tag-keys.js`
+
+One-off for `utils/tag-normalize.js`. The catalogue scene now saves a pack's
+tags cleaned (edges, duplicates), cut to the first 20, with `about.tagKeys`
+next to them; this brings packs published earlier to the same shape. Dry run
+unless `--apply`; reads only packs with tags, in `_id` batches; writes through
+the driver, so `updatedAt` is untouched. Atlas is not written: fstik-nsfw
+copies the cleaned `about.tags` when it next syncs a pack, and never `tagKeys`.
+On the catalogue export of 2026-11-27 (110k packs with tags): every pack gets
+keys, 1,853 are cut to 20, 1,233 more lose a duplicate or a trimmed edge.
+
+```bash
+node scripts/backfill-tag-keys.js                      # dry run with samples
+node scripts/backfill-tag-keys.js --limit 5000          # dry run on the first 5000
+node scripts/backfill-tag-keys.js --apply --pause-ms 200
+```
+
 ## `inspect-db.js`
 
 Read-only diagnostic of the `Sticker` and `StickerSet` collections. Dumps

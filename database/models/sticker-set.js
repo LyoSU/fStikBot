@@ -110,7 +110,11 @@ const stickerSetsSchema = mongoose.Schema({
   },
   about: {
     description: String,
+    // As the author wrote them, cleaned, deduplicated, at most 20
+    // (utils/tag-normalize.js); `tagKeys` are what they are grouped and
+    // searched by, and stay here: the catalogue (Atlas) copies `tags` only.
     tags: [String],
+    tagKeys: [String],
     languages: [String],
     safe: {
       type: Boolean,

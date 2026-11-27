@@ -1,0 +1,423 @@
+{
+  "comment": "Test vectors for tag-normalize.js spec v1. Copied as is into every repo that has the module; the expected values were written by hand, not generated.",
+  "version": 1,
+  "normalizeTag": [
+    [
+      "#Anime",
+      "anime"
+    ],
+    [
+      "  Котики  ",
+      "котики"
+    ],
+    [
+      "Ёжик",
+      "ежик"
+    ],
+    [
+      "Café",
+      "cafe"
+    ],
+    [
+      "Йожик",
+      "йожик"
+    ],
+    [
+      "Їжак",
+      "їжак"
+    ],
+    [
+      "ＳＴＩＣＫＥＲＳ",
+      "stickers"
+    ],
+    [
+      "🅰🅽🅸🅼🅴",
+      "anime"
+    ],
+    [
+      "𝕬𝖓𝖎𝖒𝖊",
+      "anime"
+    ],
+    [
+      "spider-man",
+      "spider man"
+    ],
+    [
+      "genshin_impact",
+      "genshin impact"
+    ],
+    [
+      "😀",
+      null
+    ],
+    [
+      "#",
+      null
+    ],
+    [
+      "cutе",
+      "cute"
+    ],
+    [
+      "кoт",
+      "кот"
+    ],
+    [
+      "zero​width",
+      "zerowidth"
+    ],
+    [
+      "Stray  Kids!!",
+      "stray kids"
+    ],
+    [
+      "İstanbul",
+      "istanbul"
+    ],
+    [
+      123,
+      null
+    ],
+    [
+      null,
+      null
+    ],
+    [
+      "C++",
+      "c"
+    ],
+    [
+      "東京",
+      "東京"
+    ]
+  ],
+  "tagKey": [
+    [
+      "Аниме",
+      "anime"
+    ],
+    [
+      "anime",
+      "anime"
+    ],
+    [
+      "котики",
+      "kotiki"
+    ],
+    [
+      "kotyky",
+      "kotiki"
+    ],
+    [
+      "хаски",
+      "haski"
+    ],
+    [
+      "khaski",
+      "haski"
+    ],
+    [
+      "Kitty",
+      "kiti"
+    ],
+    [
+      "кис",
+      "кис"
+    ],
+    [
+      "kys",
+      "kys"
+    ],
+    [
+      "кпоп",
+      "kpop"
+    ],
+    [
+      "K-pop",
+      "kpop"
+    ],
+    [
+      "KPOP",
+      "kpop"
+    ],
+    [
+      "jjk",
+      "jjk"
+    ],
+    [
+      "Мем",
+      "mem"
+    ],
+    [
+      "вірт",
+      "virt"
+    ],
+    [
+      "Жираф",
+      "zhiraf"
+    ],
+    [
+      "Щенок",
+      "shenok"
+    ],
+    [
+      "Цукерберг",
+      "tsukerberg"
+    ],
+    [
+      "Юля",
+      "юля"
+    ],
+    [
+      "Ярослав",
+      "iaroslav"
+    ],
+    [
+      "yaroslav",
+      "iaroslav"
+    ],
+    [
+      "Genshin Impact",
+      "genshin impact"
+    ],
+    [
+      "Mammals",
+      "mamals"
+    ],
+    [
+      "мама",
+      "мама"
+    ],
+    [
+      "Ёлочка",
+      "elochka"
+    ],
+    [
+      "Xbox",
+      "xbox"
+    ],
+    [
+      "Wednesday",
+      "vednesdai"
+    ],
+    [
+      "Стикеры2024",
+      "stikeri2024"
+    ],
+    [
+      "22",
+      "22"
+    ],
+    [
+      "東京タワー",
+      "東京タワー"
+    ],
+    [
+      "😀",
+      null
+    ]
+  ],
+  "normalizeTags": [
+    {
+      "in": [
+        "#Anime",
+        "anime",
+        "Аниме",
+        "CAT!",
+        "cat"
+      ],
+      "out": {
+        "tags": [
+          "Anime",
+          "Аниме",
+          "CAT"
+        ],
+        "tagKeys": [
+          "anime",
+          "cat"
+        ]
+      }
+    },
+    {
+      "in": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5",
+        "t6",
+        "t7",
+        "t8",
+        "t9",
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14",
+        "t15",
+        "t16",
+        "t17",
+        "t18",
+        "t19",
+        "t20",
+        "t21",
+        "t22",
+        "t23",
+        "t24",
+        "t25"
+      ],
+      "out": {
+        "tags": [
+          "t1",
+          "t2",
+          "t3",
+          "t4",
+          "t5",
+          "t6",
+          "t7",
+          "t8",
+          "t9",
+          "t10",
+          "t11",
+          "t12",
+          "t13",
+          "t14",
+          "t15",
+          "t16",
+          "t17",
+          "t18",
+          "t19",
+          "t20"
+        ],
+        "tagKeys": [
+          "t1",
+          "t2",
+          "t3",
+          "t4",
+          "t5",
+          "t6",
+          "t7",
+          "t8",
+          "t9",
+          "t10",
+          "t11",
+          "t12",
+          "t13",
+          "t14",
+          "t15",
+          "t16",
+          "t17",
+          "t18",
+          "t19",
+          "t20"
+        ]
+      }
+    },
+    {
+      "in": [
+        "😀",
+        "#",
+        "  ",
+        42,
+        null,
+        "ok"
+      ],
+      "out": {
+        "tags": [
+          "ok"
+        ],
+        "tagKeys": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "in": [
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "cat"
+      ],
+      "out": {
+        "tags": [
+          "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+          "cat"
+        ],
+        "tagKeys": [
+          "z",
+          "cat"
+        ]
+      }
+    },
+    {
+      "in": [
+        "  Stray   Kids  ",
+        "straykids",
+        "Stray_Kids"
+      ],
+      "out": {
+        "tags": [
+          "Stray Kids",
+          "straykids"
+        ],
+        "tagKeys": [
+          "strai kids",
+          "straikids"
+        ]
+      }
+    },
+    {
+      "in": [
+        "😺котики😺",
+        "#котик"
+      ],
+      "out": {
+        "tags": [
+          "котики",
+          "котик"
+        ],
+        "tagKeys": [
+          "kotiki",
+          "kotik"
+        ]
+      }
+    },
+    {
+      "in": [
+        "🔥#hot🔥"
+      ],
+      "out": {
+        "tags": [
+          "hot"
+        ],
+        "tagKeys": [
+          "hot"
+        ]
+      }
+    },
+    {
+      "in": [
+        "a",
+        "b",
+        "c"
+      ],
+      "max": 2,
+      "out": {
+        "tags": [
+          "a",
+          "b"
+        ],
+        "tagKeys": [
+          "a",
+          "b"
+        ]
+      }
+    },
+    {
+      "in": "not a list",
+      "out": {
+        "tags": [],
+        "tagKeys": []
+      }
+    }
+  ]
+}

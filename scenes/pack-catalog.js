@@ -10,6 +10,7 @@ const { db } = require('../database')
 const { escapeHTML, escapeRegex, telegramApi, deriveStickerFlags } = require('../utils')
 const telegram = require('../utils/telegram')
 const decodeStickerSetId = require('../utils/decode-sticker-set-id')
+const { normalizeTags, SUGGESTED_TAGS } = require('../utils/tag-normalize')
 
 const { match } = I18n
 const i18n = new I18n({
@@ -269,7 +270,7 @@ catalogEnterDescription.enter(async (ctx) => {
       title: escapeHTML(publish.stickerSet.title)
     }))
   }
-  parts.push(ctx.i18n.t('scenes.catalog.publish.enter_description'))
+  parts.push(ctx.i18n.t('scenes.catalog.publish.enter_description', { max: SUGGESTED_TAGS }))
   if (publish.description) {
     parts.push(ctx.i18n.t('scenes.catalog.publish.current_description', { description: escapeHTML(publish.description) }))
   }
@@ -321,10 +322,8 @@ catalogEnterDescription.on('text', async (ctx) => {
       }
     }
 
-    // only unique hashtags
-    const uniqueHashtags = [...new Set(hashtags)]
-
-    ctx.session.scene.publish.tags = uniqueHashtags
+    // One per spelling ("#Cat", "#cat"), at most 20, in the author's order.
+    ctx.session.scene.publish.tags = normalizeTags(hashtags).tags
   }
 
   return ctx.scene.enter('catalogSelectLanguage')
@@ -423,13 +422,10 @@ catalogPublishConfirm.enter(async (ctx) => {
     languages.push(ctx.i18n.t('scenes.catalog.publish.button_all_languages'))
   }
 
-  const tags = []
-
-  if (publish.tags && publish.tags.length > 0) {
-    publish.tags.forEach((tag) => {
-      tags.push(`#${tag}`)
-    })
-  }
+  // A published pack's old tags come back as they were stored: shown as
+  // they will be saved.
+  publish.tags = normalizeTags(publish.tags).tags
+  const tags = publish.tags.map((tag) => `#${escapeHTML(tag)}`)
 
   if (tags.length <= 0) {
     tags.push(ctx.i18n.t('scenes.catalog.publish.no_tags'))
@@ -459,9 +455,11 @@ catalogPublishConfirm.hears(match('scenes.catalog.publish.button_confirm'), asyn
   if (!ctx.session.scene?.publish) return ctx.scene.leave()
   const publish = ctx.session.scene.publish
 
+  const { tags, tagKeys } = normalizeTags(publish.tags)
   publish.stickerSet.about = Object.assign(publish.stickerSet.about, {
     description: publish.description,
-    tags: publish.tags,
+    tags,
+    tagKeys,
     languages: publish.languages
   })
 

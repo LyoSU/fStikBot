@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Коратка апішы свой набор, каб іншыя маглі яго знайсці</b>
 
-        <i>Можаш выкарыстоўваць хэштэгі для катэгарызацыі [#]</i>
+        <i>Дадай да ${max} хэштэгаў [#], самыя важныя першымі</i>
         <i>Напрыклад: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
