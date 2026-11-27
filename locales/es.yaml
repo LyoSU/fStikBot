@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Describe brevemente tu pack para que otros puedan encontrarlo</b>
 
-        <i>Puedes usar hashtags para categorizarlo [#]</i>
+        <i>Añade hasta ${max} hashtags [#], los más importantes primero</i>
         <i>Por ejemplo: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
