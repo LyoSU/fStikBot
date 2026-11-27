@@ -1,39 +1,439 @@
 {
-  "comment": "Tags shorter than 5 letters meet their other spelling only here (tag-normalize.js, spec v1). key: every normalized form that means it. Pairs taken from the catalogue (both forms on 15+ packs, same meaning); ambiguous ones (лиса/Lisa, стар/star, пон, вк, бл, ау) left out on purpose.",
-  "version": 1,
+  "comment": "Tags shorter than 5 letters meet their other spelling only here (tag-normalize.js, spec v2). key: every normalized form that means it. Pairs taken from the catalogue (both forms on 15+ packs, same meaning); a word with another meaning in Russian or Ukrainian (лиса/Lisa, стар/star, лука, мина, том, кит, шип, брат, пвз...) left out on purpose. At most 100 keys.",
+  "version": 2,
   "keys": {
-    "kpop": ["kpop", "кпоп", "к поп", "k pop"],
-    "meme": ["meme", "меме"],
-    "mem": ["mem", "мем"],
-    "bsd": ["bsd", "бсд"],
-    "skz": ["skz", "скз"],
-    "bts": ["bts", "бтс"],
-    "virt": ["virt", "вирт", "вірт"],
-    "hsr": ["hsr", "хср"],
-    "itzy": ["itzy", "итзи", "ітзі"],
-    "yaoi": ["yaoi", "яой"],
-    "art": ["art", "арт"],
-    "rofl": ["rofl", "рофл"],
-    "lol": ["lol", "лол"],
-    "fnaf": ["fnaf", "фнаф"],
-    "fnf": ["fnf", "фнф"],
-    "mlp": ["mlp", "млп"],
-    "yuri": ["yuri", "юри", "юрі"],
-    "gif": ["gif", "гиф", "гіф"],
-    "top": ["top", "топ"],
-    "pony": ["pony", "пони", "поні"],
-    "tyan": ["tyan", "тян"],
-    "miku": ["miku", "мику", "міку"],
-    "sans": ["sans", "санс"],
-    "rock": ["rock", "рок"],
-    "dota": ["dota", "дота"],
-    "tg": ["tg", "тг"],
-    "emo": ["emo", "эмо", "емо"],
-    "pepe": ["pepe", "пепе"],
-    "lgbt": ["lgbt", "лгбт"],
-    "lego": ["lego", "лего"],
-    "png": ["png", "пнг"],
-    "nya": ["nya", "ня"],
-    "pack": ["pack", "пак"]
+    "kpop": [
+      "kpop",
+      "кпоп",
+      "к поп",
+      "k pop"
+    ],
+    "meme": [
+      "meme",
+      "меме"
+    ],
+    "mem": [
+      "mem",
+      "мем"
+    ],
+    "bsd": [
+      "bsd",
+      "бсд"
+    ],
+    "skz": [
+      "skz",
+      "скз"
+    ],
+    "bts": [
+      "bts",
+      "бтс"
+    ],
+    "virt": [
+      "virt",
+      "вирт",
+      "вірт"
+    ],
+    "hsr": [
+      "hsr",
+      "хср"
+    ],
+    "itzy": [
+      "itzy",
+      "итзи",
+      "ітзі"
+    ],
+    "yaoi": [
+      "yaoi",
+      "яой"
+    ],
+    "art": [
+      "art",
+      "арт"
+    ],
+    "rofl": [
+      "rofl",
+      "рофл"
+    ],
+    "lol": [
+      "lol",
+      "лол"
+    ],
+    "fnaf": [
+      "fnaf",
+      "фнаф"
+    ],
+    "fnf": [
+      "fnf",
+      "фнф"
+    ],
+    "mlp": [
+      "mlp",
+      "млп"
+    ],
+    "yuri": [
+      "yuri",
+      "юри",
+      "юрі"
+    ],
+    "gif": [
+      "gif",
+      "гиф",
+      "гіф"
+    ],
+    "top": [
+      "top",
+      "топ"
+    ],
+    "pony": [
+      "pony",
+      "пони",
+      "поні"
+    ],
+    "tyan": [
+      "tyan",
+      "тян"
+    ],
+    "miku": [
+      "miku",
+      "мику",
+      "міку"
+    ],
+    "sans": [
+      "sans",
+      "санс"
+    ],
+    "rock": [
+      "rock",
+      "рок"
+    ],
+    "dota": [
+      "dota",
+      "дота"
+    ],
+    "tg": [
+      "tg",
+      "тг"
+    ],
+    "emo": [
+      "emo",
+      "эмо",
+      "емо"
+    ],
+    "pepe": [
+      "pepe",
+      "пепе"
+    ],
+    "lgbt": [
+      "lgbt",
+      "лгбт"
+    ],
+    "lego": [
+      "lego",
+      "лего"
+    ],
+    "png": [
+      "png",
+      "пнг"
+    ],
+    "nya": [
+      "nya",
+      "ня"
+    ],
+    "pack": [
+      "pack",
+      "пак"
+    ],
+    "ddlc": [
+      "ddlc",
+      "ddlk",
+      "ддлк"
+    ],
+    "nana": [
+      "nana",
+      "нана"
+    ],
+    "rui": [
+      "rui",
+      "руи"
+    ],
+    "rei": [
+      "rei",
+      "рей",
+      "рэй"
+    ],
+    "rin": [
+      "rin",
+      "рин",
+      "рін"
+    ],
+    "ena": [
+      "ena",
+      "эна",
+      "ена"
+    ],
+    "moka": [
+      "moka",
+      "мока"
+    ],
+    "kai": [
+      "kai",
+      "кай"
+    ],
+    "nene": [
+      "nene",
+      "нене"
+    ],
+    "crk": [
+      "crk",
+      "крк"
+    ],
+    "ivan": [
+      "ivan",
+      "иван",
+      "іван"
+    ],
+    "emu": [
+      "emu",
+      "эму"
+    ],
+    "vox": [
+      "vox",
+      "вокс"
+    ],
+    "momo": [
+      "momo",
+      "момо"
+    ],
+    "wlw": [
+      "wlw",
+      "влв"
+    ],
+    "mizi": [
+      "mizi",
+      "мизи",
+      "мізі"
+    ],
+    "zoro": [
+      "zoro",
+      "зоро"
+    ],
+    "zzz": [
+      "zzz",
+      "ззз"
+    ],
+    "sua": [
+      "sua",
+      "суа"
+    ],
+    "ukr": [
+      "ukr",
+      "укр"
+    ],
+    "aot": [
+      "aot",
+      "аот"
+    ],
+    "anya": [
+      "anya",
+      "аня"
+    ],
+    "solo": [
+      "solo",
+      "соло"
+    ],
+    "neko": [
+      "neko",
+      "неко"
+    ],
+    "lia": [
+      "lia",
+      "лиа",
+      "ліа"
+    ],
+    "btd": [
+      "btd",
+      "бтд"
+    ],
+    "ruby": [
+      "ruby",
+      "руби",
+      "рубі"
+    ],
+    "nft": [
+      "nft",
+      "нфт"
+    ],
+    "mari": [
+      "mari",
+      "мари",
+      "марі"
+    ],
+    "gta": [
+      "gta",
+      "гта"
+    ],
+    "wuwa": [
+      "wuwa",
+      "вува"
+    ],
+    "teto": [
+      "teto",
+      "тето"
+    ],
+    "rp": [
+      "rp",
+      "рп"
+    ],
+    "reze": [
+      "reze",
+      "резе"
+    ],
+    "mona": [
+      "mona",
+      "мона"
+    ],
+    "mio": [
+      "mio",
+      "мио",
+      "міо"
+    ],
+    "mini": [
+      "mini",
+      "мини",
+      "міні"
+    ],
+    "geto": [
+      "geto",
+      "гето"
+    ],
+    "bmw": [
+      "bmw",
+      "бмв"
+    ],
+    "nagi": [
+      "nagi",
+      "наги",
+      "нагі"
+    ],
+    "dsmp": [
+      "dsmp",
+      "дсмп"
+    ],
+    "uzi": [
+      "uzi",
+      "узи",
+      "узі"
+    ],
+    "niki": [
+      "niki",
+      "ники",
+      "нікі"
+    ],
+    "mlm": [
+      "mlm",
+      "млм"
+    ],
+    "lily": [
+      "lily",
+      "лили",
+      "лілі"
+    ],
+    "leon": [
+      "leon",
+      "леон"
+    ],
+    "boss": [
+      "boss",
+      "босс"
+    ],
+    "airi": [
+      "airi",
+      "айри",
+      "айрі"
+    ],
+    "adam": [
+      "adam",
+      "адам"
+    ],
+    "yuki": [
+      "yuki",
+      "юки",
+      "юкі"
+    ],
+    "ink": [
+      "ink",
+      "инк",
+      "інк"
+    ],
+    "eva": [
+      "eva",
+      "ева"
+    ],
+    "ajax": [
+      "ajax",
+      "аякс"
+    ],
+    "aki": [
+      "aki",
+      "аки",
+      "акі"
+    ],
+    "yui": [
+      "yui",
+      "юи"
+    ],
+    "finn": [
+      "finn",
+      "финн",
+      "фінн"
+    ],
+    "emma": [
+      "emma",
+      "эмма",
+      "емма"
+    ],
+    "feng": [
+      "feng",
+      "фэнг",
+      "фенг"
+    ],
+    "goku": [
+      "goku",
+      "гоку"
+    ],
+    "bot": [
+      "bot",
+      "бот"
+    ],
+    "ado": [
+      "ado",
+      "адо"
+    ],
+    "help": [
+      "help",
+      "хелп"
+    ],
+    "soft": [
+      "soft",
+      "софт"
+    ],
+    "nami": [
+      "nami",
+      "нами",
+      "намі"
+    ],
+    "mlbb": [
+      "mlbb",
+      "млбб"
+    ],
+    "mita": [
+      "mita",
+      "мита",
+      "міта"
+    ],
+    "lana": [
+      "lana",
+      "лана"
+    ]
   }
 }

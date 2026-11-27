@@ -1,6 +1,6 @@
 {
-  "comment": "Test vectors for tag-normalize.js spec v1. Copied as is into every repo that has the module; the expected values were written by hand, not generated.",
-  "version": 1,
+  "comment": "Test vectors for tag-normalize.js spec v2. Copied as is into every repo that has the module; the expected values were written by hand, not generated.",
+  "version": 2,
   "normalizeTag": [
     [
       "#Anime",
@@ -215,6 +215,26 @@
     [
       "😀",
       null
+    ],
+    [
+      "ДДЛК",
+      "ddlc"
+    ],
+    [
+      "Аня",
+      "anya"
+    ],
+    [
+      "#Аня",
+      "anya"
+    ],
+    [
+      "лука",
+      "лука"
+    ],
+    [
+      "Рэй",
+      "rei"
     ]
   ],
   "normalizeTags": [

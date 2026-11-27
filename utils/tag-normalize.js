@@ -1,4 +1,4 @@
-// Pack tags as they are written (spec v1). The same file lives in fStikBot
+// Pack tags as they are written (spec v2: v1 plus a larger short-tag dictionary). The same file lives in fStikBot
 // (utils/tag-normalize.js, which writes `about.tags`) and fstikbot-api
 // (utils/tag-normalize.js), with the same test vectors
 // (tag-normalize.fixtures.json) and the same short-tag dictionary
@@ -17,7 +17,7 @@
 // spelling only through the dictionary (tag-short-keys.json).
 const SHORT_KEYS = require('./tag-short-keys.json')
 
-const SPEC_VERSION = 1
+const SPEC_VERSION = 2
 const MAX_TAGS = 20
 // What the bot asks for; MAX_TAGS is what it keeps.
 const SUGGESTED_TAGS = 10
