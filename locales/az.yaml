@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>Başqalarının tapa bilməsi üçün paketini qısaca təsvir et</b>
 
-        <i>Kateqoriyalara ayırmaq üçün heşteqlərdən istifadə edə bilərsən [#]</i>
+        <i>${max} heşteqə qədər əlavə et [#], ən vacibləri əvvəldə</i>
         <i>Məsələn: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
