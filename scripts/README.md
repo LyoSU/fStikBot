@@ -44,7 +44,10 @@ node scripts/backfill-placeholder-checks.js --days 30 --spread-hours 72
 One-off for `utils/tag-normalize.js`. The catalogue scene now saves a pack's
 tags cleaned (edges, duplicates), cut to the first 20, with `about.tagKeys`
 next to them; this brings packs published earlier to the same shape. Dry run
-unless `--apply`; reads only packs with tags, in `_id` batches; writes through
+unless `--apply`. It pages through every pack by `_id` alone (a tags filter
+made each page walk the index past the untagged majority and time out) on its
+own connection with a long socket timeout, skips packs without tags in the
+script, and logs progress every 50k packs; writes go through
 the driver, so `updatedAt` is untouched. Atlas is not written: fstik-nsfw
 copies the cleaned `about.tags` when it next syncs a pack, and never `tagKeys`.
 On the catalogue export of 2026-11-27 (110k packs with tags): every pack gets

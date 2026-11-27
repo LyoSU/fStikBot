@@ -46,31 +46,44 @@ function plan (about = {}) {
   return { update: { $set: { 'about.tags': tags, 'about.tagKeys': tagKeys } }, reasons, tags, tagKeys }
 }
 
-async function run (db) {
-  await db.connection.asPromise()
-  const collection = db.StickerSet.collection
-  const stats = { withTags: 0, update: 0, tagsChanged: 0, tagsBefore: 0, tagsAfter: 0, keys: 0, written: 0 }
+// Pages by _id alone: a tags filter on top made each page walk the _id index
+// past every pack without tags (most of them) until 1000 matched, and the
+// first page outlasted the socket timeout. A page of the _id index is always
+// bounded; packs without tags are skipped here.
+const PROJECTION = { name: 1, 'about.tags': 1, 'about.tagKeys': 1 }
+const MAX_TIME_MS = 120000
+const PROGRESS_EVERY = 50000
+
+/**
+ * @param {import('mongodb').Collection} collection
+ * @param {{ apply?: boolean, batch?: number, pauseMs?: number, limit?: number, log?: Function }} [options]
+ */
+async function backfill (collection, { apply = false, batch: size = BATCH, pauseMs = PAUSE_MS, limit = LIMIT, log = console.log } = {}) {
+  const stats = { scanned: 0, withTags: 0, update: 0, tagsChanged: 0, tagsBefore: 0, tagsAfter: 0, keys: 0, written: 0 }
   const reasons = {}
   const samples = []
   let last = null
+  let nextProgress = PROGRESS_EVERY
 
-  console.log(`${apply ? 'APPLY' : 'DRY RUN'}: batches of ${BATCH}, pause ${PAUSE_MS} ms`)
+  log(`${apply ? 'APPLY' : 'DRY RUN'}: pages of ${size}, pause ${pauseMs} ms`)
 
-  while (stats.withTags < LIMIT) {
-    const filter = { 'about.tags.0': { $exists: true } }
-    if (last) filter._id = { $gt: last }
-    const batch = await collection
-      .find(filter, { projection: { name: 1, 'about.tags': 1, 'about.tagKeys': 1 } })
+  while (stats.withTags < limit) {
+    const page = await collection
+      .find(last ? { _id: { $gt: last } } : {}, { projection: PROJECTION })
       .sort({ _id: 1 })
-      .limit(BATCH)
+      .limit(size)
+      .maxTimeMS(MAX_TIME_MS)
       .toArray()
-    if (!batch.length) break
-    last = batch[batch.length - 1]._id
+    if (!page.length) break
+    last = page[page.length - 1]._id
+    stats.scanned += page.length
 
     const ops = []
-    for (const pack of batch) {
+    for (const pack of page) {
+      const before = pack.about?.tags
+      if (!Array.isArray(before) || !before.length) continue
+      if (stats.withTags >= limit) break
       stats.withTags++
-      const before = pack.about.tags
       const result = plan(pack.about)
       stats.tagsBefore += before.length
       stats.tagsAfter += result.tags.length
@@ -89,26 +102,43 @@ async function run (db) {
       const res = await collection.bulkWrite(ops, { ordered: false })
       stats.written += res.modifiedCount
     }
-    console.log(`  ${stats.withTags} packs with tags read, ${stats.update} to update${apply ? `, ${stats.written} written` : ''}`)
-    if (PAUSE_MS) await sleep(PAUSE_MS)
+    if (stats.scanned >= nextProgress) {
+      nextProgress += PROGRESS_EVERY
+      log(`  ${stats.scanned} scanned, ${stats.withTags} with tags, ${stats.update} to update${apply ? `, ${stats.written} written` : ''}`)
+    }
+    if (pauseMs) await sleep(pauseMs)
   }
 
-  console.log(JSON.stringify({ apply, ...stats, reasons }, null, 2))
-  for (const sample of samples) console.log(JSON.stringify(sample))
+  log(JSON.stringify({ apply, ...stats, reasons }, null, 2))
+  for (const sample of samples) log(JSON.stringify(sample))
+  return { stats, reasons, samples }
 }
 
 if (require.main === module) {
-  // Required only here: the test loads plan() without a database.
-  const { db } = require('../database')
-  run(db)
+  // Its own connection, not database/connection.js: that one's 30 s socket
+  // timeout and pool of 10-50 are for the bot's requests, not for a scan.
+  const mongoose = require('mongoose')
+  const schemas = require('../database/models')
+  const uri = process.env.MONGODB_URI
+  const connection = mongoose.createConnection(uri, {
+    ...(uri && uri.startsWith('mongodb+srv://') ? {} : { directConnection: true }),
+    autoIndex: false,
+    maxPoolSize: 2,
+    minPoolSize: 0,
+    serverSelectionTimeoutMS: 15000,
+    socketTimeoutMS: MAX_TIME_MS + 60000
+  })
+  const collection = connection.model('StickerSet', schemas.StickerSet).collection
+  connection.asPromise()
+    .then(() => backfill(collection, { apply }))
     .catch((err) => {
       console.error(err)
       process.exitCode = 1
     })
     .finally(async () => {
-      await db.connection.close().catch(() => {})
+      await connection.close().catch(() => {})
       process.exit()
     })
 }
 
-module.exports = { plan }
+module.exports = { plan, backfill }
