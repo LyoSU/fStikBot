@@ -809,7 +809,7 @@ scenes:
       enter_description: |
         <b>اكتب وصفًا موجزًا لحزمتك ليسهل على الآخرين إيجادها</b>
 
-        <i>يمكنك استخدام الوسوم (#) للتصنيف</i>
+        <i>أضف حتى ${max} وسوم (#)، والأهم أولًا</i>
         <i>مثال: #anime #meme #animals #cute #kpop #funny #cat #game</i>
       current_description: |
 
